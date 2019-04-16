@@ -1,0 +1,44 @@
+package page.support;
+
+import java.awt.Component;
+
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+
+import util.system.VImg;
+import util.unit.Form;
+
+public class UnitTCR extends DefaultTableCellRenderer {
+
+	private static final long serialVersionUID = 1L;
+
+	private final int[] lnk;
+
+	public UnitTCR(int[] ints) {
+		lnk = ints;
+	}
+
+	@Override
+	public Component getTableCellRendererComponent(JTable t, Object v, boolean s, boolean f, int r, int c) {
+		Component comp = super.getTableCellRendererComponent(t, v, s, f, r, c);
+		if (lnk != null)
+			c = lnk[c];
+		if (c != 1)
+			return comp;
+		JLabel jl = (JLabel) comp;
+		Form e = (Form) v;
+		if (e == null)
+			return jl;
+		jl.setText(e.name);
+		jl.setIcon(null);
+		jl.setHorizontalTextPosition(SwingConstants.RIGHT);
+		VImg vimg = e.anim.edi;
+		if (vimg == null)
+			return jl;
+		jl.setIcon(vimg.getIcon());
+		return jl;
+	}
+
+}

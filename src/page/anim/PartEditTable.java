@@ -1,0 +1,166 @@
+package page.anim;
+
+import java.awt.Component;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.EventObject;
+import java.util.List;
+
+import javax.swing.ListSelectionModel;
+import javax.swing.text.JTextComponent;
+
+import page.Page;
+import page.support.AnimTable;
+import page.support.AnimTableTH;
+import util.anim.AnimC;
+import util.anim.MaAnim;
+import util.anim.Part;
+
+class PartEditTable extends AnimTable<int[]> {
+
+	private static final long serialVersionUID = 1L;
+
+	private static final String[] strs = new String[] { "frame", "value", "easing", "parameter" };
+
+	protected AnimC anim;
+	protected MaAnim ma;
+	protected Part part;
+	private Page page;
+
+	protected PartEditTable(Page p) {
+		page = p;
+		selectionModel.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		setTransferHandler(new AnimTableTH<>(this, 3));
+	}
+
+	@Override
+	public boolean editCellAt(int row, int column, EventObject e) {
+		boolean result = super.editCellAt(row, column, e);
+		final Component editor = getEditorComponent();
+		if (editor == null || !(editor instanceof JTextComponent))
+			return result;
+		if (e instanceof KeyEvent)
+			((JTextComponent) editor).selectAll();
+		return result;
+	}
+
+	@Override
+	public Class<?> getColumnClass(int c) {
+		return Integer.class;
+	}
+
+	@Override
+	public int getColumnCount() {
+		return strs.length;
+	}
+
+	@Override
+	public String getColumnName(int c) {
+		return strs[lnk[c]];
+	}
+
+	@Override
+	public int getRowCount() {
+		if (part == null)
+			return 0;
+		return part.n;
+	}
+
+	@Override
+	public int[][] getSelected() {
+		int[] rows = getSelectedRows();
+		int[][] ps = new int[rows.length][];
+		for (int i = 0; i < rows.length; i++)
+			ps[i] = part.moves[rows[i]].clone();
+		return ps;
+	}
+
+	@Override
+	public Object getValueAt(int r, int c) {
+		if (part == null || r < 0 || c < 0 || r >= part.n || c >= strs.length)
+			return null;
+		if (lnk[c] == 0)
+			return part.moves[r][0] - part.off;
+		return part.moves[r][lnk[c]];
+	}
+
+	@Override
+	public boolean insert(int dst, int[][] data) {
+		List<int[]> l = new ArrayList<>();
+		int ind = dst;
+		for (int[] p : part.moves)
+			if (p != null)
+				l.add(p);
+		for (int i = 0; i < data.length; i++)
+			l.add(i + ind, data[i]);
+		part.moves = l.toArray(new int[0][]);
+		part.n = part.moves.length;
+		part.validate();
+		part.check(anim);
+		anim.unSave();
+		page.callBack(new int[] { 1, ind, ind + data.length - 1 });
+		return true;
+	}
+
+	@Override
+	public boolean isCellEditable(int r, int c) {
+		return true;
+	}
+
+	@Override
+	public boolean reorder(int dst, int[] ori) {
+		List<int[]> l = new ArrayList<>();
+		List<int[]> ab = new ArrayList<>();
+		for (int row : ori) {
+			ab.add(part.moves[row]);
+			part.moves[row] = null;
+		}
+		for (int i = 0; i < dst; i++)
+			if (part.moves[i] != null)
+				l.add(part.moves[i]);
+		int ind = l.size();
+		l.addAll(ab);
+		for (int i = dst; i < part.n; i++)
+			if (part.moves[i] != null)
+				l.add(part.moves[i]);
+		part.moves = l.toArray(new int[0][]);
+		part.validate();
+		part.check(anim);
+		anim.unSave();
+		page.callBack(new int[] { 1, ind, ind + ori.length - 1 });
+		return true;
+	}
+
+	@Override
+	public synchronized void setValueAt(Object val, int r, int c) {
+		if (part == null)
+			return;
+		c = lnk[c];
+		int v = (int) val;
+		int m = part.ints[1];
+		if (c == 1) {
+			if ((m < 4 || m > 11) && v < 0)
+				v = 0;
+			if (m == 2 && v >= anim.imgcut.n)
+				v = anim.imgcut.n - 1;
+			if (m == 12 && v > anim.mamodel.ints[2])
+				v = anim.mamodel.ints[2];
+		}
+		if (c == 0)
+			v += part.off;
+		part.moves[r][c] = v;
+		part.validate();
+		ma.validate();
+		anim.unSave();
+		page.callBack(null);
+	}
+
+	protected void setAnim(AnimC au, MaAnim maa, Part p) {
+		if (cellEditor != null)
+			cellEditor.stopCellEditing();
+		anim = au;
+		ma = maa;
+		part = p;
+	}
+
+}

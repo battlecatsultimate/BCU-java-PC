@@ -1,0 +1,165 @@
+package util.entity.attack;
+
+import util.entity.EEnemy;
+import util.entity.EUnit;
+import util.entity.Entity;
+import util.entity.data.MaskEntity;
+
+public abstract class AtkModelEntity extends AtkModelAb {
+
+	public static AtkModelEntity getIns(Entity e, double d0) {
+		if (e instanceof EEnemy) {
+			EEnemy ee = (EEnemy) e;
+			return new AtkModelEnemy(ee, d0);
+		}
+		if (e instanceof EUnit) {
+			EUnit eu = (EUnit) e;
+			return new AtkModelUnit(eu, d0);
+		}
+		return null;
+
+	}
+
+	protected final MaskEntity data;
+	protected final Entity e;
+	protected final int[] atks, abis;
+	protected final Object[] acs;
+	protected final boolean range;
+
+	protected AtkModelEntity(Entity ent, double d0) {
+		super(ent.basis);
+		e = ent;
+		data = e.data;
+		int[][] raw = data.rawAtkData();
+		atks = new int[raw.length];
+		abis = new int[raw.length];
+		acs = new Object[raw.length];
+		for (int i = 0; i < raw.length; i++) {
+			atks[i] = (int) (raw[i][0] * d0);
+			abis[i] = raw[i][2];
+			acs[i] = new Object();
+		}
+		range = data.isRange();
+	}
+
+	@Override
+	public int getAbi() {
+		return e.getAbi();
+	}
+
+	/** get the attack, for display only */
+	public int getAtk() {
+		int ans = 0, temp = 0, c = 1;
+		int[][] raw = data.rawAtkData();
+		for (int i = 0; i < raw.length; i++)
+			if (raw[i][1] > 0) {
+				ans += temp / c;
+				temp = data.getAtkModel(i).getDire() > 0 ? atks[i] : 0;
+				c = 1;
+			} else {
+				temp += data.getAtkModel(i).getDire() > 0 ? atks[i] : 0;
+				c++;
+			}
+		ans += temp / c;
+		return ans;
+	}
+
+	/** generate attack entity */
+	public abstract AttackAb getAttack(int ind);
+
+	@Override
+	public int getDire() {
+		return e.dire;
+	}
+
+	@Override
+	public double getPos() {
+		return e.pos;
+	}
+
+	/** get the attack box for nth attack */
+	public double[] inRange(int ind) {
+		int dire = e.dire;
+		double d0, d1;
+		d0 = d1 = e.pos;
+		if (!data.isLD()) {
+			d0 += data.getRange() * dire;
+			d1 -= data.getWidth() * dire;
+		} else {
+			d0 += data.getAtkModel(ind).getShortPoint() * dire;
+			d1 += data.getAtkModel(ind).getLongPoint() * dire;
+		}
+		return new double[] { d0, d1 };
+	}
+
+	@Override
+	public boolean isrange() {
+		return data.isRange();
+	}
+
+	/** get the collide box bound */
+	public double[] touchRange() {
+		int dire = e.dire;
+		double d0, d1;
+		d0 = d1 = e.pos;
+		d0 += data.getRange() * dire;
+		d1 -= data.getWidth() * dire;
+		return new double[] { d0, d1 };
+	}
+
+	protected void extraAtk(int ind) {
+		if (b.r.nextDouble() * 100 < getProc(ind, P_TIME, 0))
+			b.temp_s_stop = Math.max(b.temp_s_stop, getProc(ind, P_TIME, 1));
+		if (b.r.nextDouble() * 100 < getProc(ind, P_THEME, 0))
+			b.changeTheme(getProc(ind, P_THEME, 2), getProc(ind, P_THEME, 1));
+	}
+
+	protected int getProc(int ind, int type, int ety) {
+		if (e.status[P_SEAL][0] > 0)
+			return 0;
+		return data.getAtkModel(ind).getProc(type)[ety];
+	}
+
+	protected void setProc(int ind, int[][] proc) {
+		if (b.r.nextDouble() * 100 < getProc(ind, P_CRIT, 0)) {
+			int crit = getProc(ind, P_CRIT, 1);
+			proc[P_CRIT][0] = crit == 0 ? 200 : crit;
+		}
+		if (b.r.nextDouble() * 100 < getProc(ind, P_WAVE, 0))
+			proc[P_WAVE][0] = getProc(ind, P_WAVE, 1);
+
+		if (b.r.nextDouble() * 100 < getProc(ind, P_KB, 0)) {
+			int time = getProc(ind, P_KB, 1);
+			int dis = getProc(ind, P_KB, 2);
+			proc[P_KB][0] = dis == 0 ? KB_DIS[INT_KB] : dis;
+			proc[P_KB][1] = time == 0 ? KB_TIME[INT_KB] : time;
+		}
+		if (b.r.nextDouble() * 100 < getProc(ind, P_WARP, 0)) {
+			proc[P_WARP][0] = getProc(ind, P_WARP, 1);
+			proc[P_WARP][1] = getProc(ind, P_WARP, 2);
+		}
+		if (b.r.nextDouble() * 100 < getProc(ind, P_STOP, 0))
+			proc[P_STOP][0] = getProc(ind, P_STOP, 1);
+		if (b.r.nextDouble() * 100 < getProc(ind, P_SLOW, 0))
+			proc[P_SLOW][0] = getProc(ind, P_SLOW, 1);
+		if (b.r.nextDouble() * 100 < getProc(ind, P_WEAK, 0)) {
+			proc[P_WEAK][0] = getProc(ind, P_WEAK, 1);
+			proc[P_WEAK][1] = getProc(ind, P_WEAK, 2);
+		}
+		if (b.r.nextDouble() * 100 < getProc(ind, P_MOVEWAVE, 0))
+			for (int i = 0; i < PROC_WIDTH; i++)
+				proc[P_MOVEWAVE][i] = getProc(ind, P_MOVEWAVE, i);
+		if (b.r.nextDouble() * 100 < getProc(ind, P_CURSE, 0))
+			proc[P_CURSE][0] = getProc(ind, P_CURSE, 1);
+
+		if (b.r.nextDouble() * 100 < getProc(ind, P_SNIPER, 0))
+			proc[P_SNIPER][0] = 1;
+
+		if (b.r.nextDouble() * 100 < getProc(ind, P_SEAL, 0))
+			proc[P_SEAL][0] = getProc(ind, P_SEAL, 1);
+
+		if (b.r.nextDouble() * 100 < getProc(ind, P_BREAK, 0))
+			proc[P_BREAK][0] = 1;
+	}
+
+}
