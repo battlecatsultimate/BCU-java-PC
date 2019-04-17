@@ -1,0 +1,214 @@
+package page.battle;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.io.File;
+
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import main.MainBCU;
+import page.JBTN;
+import page.JTF;
+import page.JTG;
+import page.Page;
+import page.info.StageViewPage;
+import util.stage.MapColc;
+import util.stage.Recd;
+
+public class RecdManagePage extends Page {
+
+	private static final long serialVersionUID = 1L;
+
+	private final JBTN back = new JBTN(0, "back");
+	private final JBTN rply = new JBTN(0, "rply");
+	private final JBTN recd = new JBTN(-1, "mp4");
+	private final JBTN dele = new JBTN(0, "rem");
+	private final JBTN vsta = new JBTN(0, "vsta");
+	private final JTF rena = new JTF();
+	private final JTG larg = new JTG(0, "larges");
+	private final JBTN imgs = new JBTN(-1, "PNG");
+	private final JList<Recd> jlr = new JList<>();
+	private final JScrollPane jspr = new JScrollPane(jlr);
+	private final JLabel len = new JLabel();
+
+	private boolean changing;
+	private StageViewPage svp;
+
+	public RecdManagePage(Page p) {
+		super(p);
+
+		ini();
+		resized();
+	}
+
+	@Override
+	protected void renew() {
+		setList();
+		if (svp != null) {
+			Recd r = jlr.getSelectedValue();
+			if (r != null && svp.getStage() != null
+					&& MainBCU.warning("are you sure to change stage?", "confirmation")) {
+				r.st = svp.getStage();
+				r.avail = true;
+			}
+		}
+	}
+
+	@Override
+	protected void resized(int x, int y) {
+		setBounds(0, 0, x, y);
+		set(back, x, y, 0, 0, 200, 50);
+		set(rply, x, y, 400, 100, 300, 50);
+		set(recd, x, y, 400, 200, 300, 50);
+		set(larg, x, y, 750, 200, 300, 50);
+		set(imgs, x, y, 1100, 200, 300, 50);
+		set(len, x, y, 400, 300, 300, 50);
+		set(jspr, x, y, 50, 100, 300, 600);
+		set(dele, x, y, 400, 400, 300, 50);
+		set(rena, x, y, 400, 500, 300, 50);
+		set(vsta, x, y, 400, 600, 300, 50);
+	}
+
+	private void addListeners() {
+		back.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				changePanel(getFront());
+			}
+		});
+
+		vsta.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Recd r = jlr.getSelectedValue();
+				changePanel(svp = new StageViewPage(getThis(), MapColc.MAPS.values(), r.st));
+			}
+		});
+
+		rply.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Recd r = jlr.getSelectedValue();
+				changePanel(new BattleInfoPage(getThis(), r, 0));
+			}
+		});
+
+		recd.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Recd r = jlr.getSelectedValue();
+				int conf = 1;
+				if (larg.isSelected())
+					conf |= 2;
+				changePanel(new BattleInfoPage(getThis(), r, conf));
+			}
+		});
+
+		imgs.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Recd r = jlr.getSelectedValue();
+				int conf = 5;
+				if (larg.isSelected())
+					conf |= 2;
+				changePanel(new BattleInfoPage(getThis(), r, conf));
+			}
+		});
+
+		jlr.addListSelectionListener(new ListSelectionListener() {
+
+			@Override
+			public void valueChanged(ListSelectionEvent arg0) {
+				if (changing || jlr.getValueIsAdjusting())
+					return;
+				setRecd(jlr.getSelectedValue());
+			}
+
+		});
+
+		rena.addFocusListener(new FocusAdapter() {
+
+			@Override
+			public void focusLost(FocusEvent fe) {
+				if (changing || jlr.getValueIsAdjusting())
+					return;
+				Recd r = jlr.getSelectedValue();
+				File f = new File("./replay/" + r.name + ".replay");
+				if (f.exists()) {
+					String str = MainBCU.validate(rena.getText().trim());
+					str = Recd.getAvailable(str);
+					if (f.renameTo(new File("./replay/" + str + ".replay"))) {
+						Recd.map.remove(r.name);
+						r.name = str;
+						Recd.map.put(r.name, r);
+					}
+				}
+				rena.setText(r.name);
+			}
+
+		});
+
+		dele.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Recd r = jlr.getSelectedValue();
+				File f = new File("./replay/" + r.name + ".replay");
+				if (f.exists())
+					f.delete();
+				if (!f.exists()) {
+					Recd.map.remove(r.name);
+					setList();
+				}
+			}
+		});
+
+	}
+
+	private void ini() {
+		add(back);
+		add(jspr);
+		add(rply);
+		add(len);
+		add(recd);
+		add(larg);
+		add(imgs);
+		add(dele);
+		add(rena);
+		add(vsta);
+		len.setBorder(BorderFactory.createEtchedBorder());
+		addListeners();
+	}
+
+	private void setList() {
+		boolean boo = changing;
+		changing = true;
+		Recd r = jlr.getSelectedValue();
+		jlr.setListData(Recd.map.values().toArray(new Recd[0]));
+		jlr.setSelectedValue(r, true);
+		setRecd(r);
+		changing = boo;
+	}
+
+	private void setRecd(Recd r) {
+		rply.setEnabled(r != null && r.avail);
+		recd.setEnabled(r != null && r.avail);
+		dele.setEnabled(r != null);
+		rena.setEditable(r != null);
+		vsta.setEnabled(r != null);
+		if (r == null) {
+			rena.setText("");
+			len.setText("");
+		} else {
+			rena.setText(r.name);
+			len.setText("length: " + r.getLen() + " frame");
+		}
+	}
+
+}
