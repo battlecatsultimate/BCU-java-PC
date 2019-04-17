@@ -23,6 +23,7 @@ import io.BCJSON;
 import io.WebPack;
 import main.MainBCU;
 import page.JBTN;
+import page.MainLocale;
 import page.Page;
 import util.pack.Pack;
 
@@ -34,7 +35,7 @@ public class WebMainPage extends Page {
 	private final JBTN edit = new JBTN(2, "manage");
 	private final JBTN main = new JBTN(2, "full");
 	private final JBTN rfsh = new JBTN(2, "refresh");
-	private final JComboBox<String> sort = new JComboBox<>(WebText.get("sort", 4));
+	private final JComboBox<String> sort = new JComboBox<>(MainLocale.getLoc(2, "sort", 4));
 	private final JPanel cont = new JPanel();
 	private final JScrollPane jsp = new JScrollPane(cont);
 

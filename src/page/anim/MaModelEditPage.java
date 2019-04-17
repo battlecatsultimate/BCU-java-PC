@@ -404,18 +404,18 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			}
 			DefaultMutableTreeNode[] data = new DefaultMutableTreeNode[mm.n];
 			DefaultMutableTreeNode top = new DefaultMutableTreeNode("MaModel");
-			int c=0;
-			while(c<mm.n) {
+			int c = 0;
+			while (c < mm.n) {
 				for (int i = 0; i < mm.n; i++)
-					if(data[i]==null){
-					int[] line = mm.parts[i];
-					DefaultMutableTreeNode pre=(line[0] == -1 ? top : data[line[0]]);
-					if(pre==null)
-						continue;
-					data[i] = new DefaultMutableTreeNode(i + " - " + mm.strs0[i]);
-					pre.add(data[i]);
-					c++;
-				}
+					if (data[i] == null) {
+						int[] line = mm.parts[i];
+						DefaultMutableTreeNode pre = (line[0] == -1 ? top : data[line[0]]);
+						if (pre == null)
+							continue;
+						data[i] = new DefaultMutableTreeNode(i + " - " + mm.strs0[i]);
+						pre.add(data[i]);
+						c++;
+					}
 			}
 			jtr.setModel(new DefaultTreeModel(top));
 		});

@@ -27,13 +27,13 @@ public abstract class Page extends JPanel {
 	}
 
 	public static String get(String str) {
-		return MainLocale.getString(str);
+		return MainLocale.getLoc(0, str);
 	}
 
 	public static String[] get(String... strs) {
 		String[] ans = new String[strs.length];
 		for (int i = 0; i < ans.length; i++)
-			ans[i] = MainLocale.getString(strs[i]);
+			ans[i] = MainLocale.getLoc(0, strs[i]);
 		return ans;
 	}
 

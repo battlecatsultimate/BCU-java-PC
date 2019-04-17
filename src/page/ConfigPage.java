@@ -43,7 +43,7 @@ public class ConfigPage extends Page {
 	private final JLabel jlmax = new JLabel(get("opamax"));
 	private final JSlider jsmin = new JSlider(0, 100);
 	private final JSlider jsmax = new JSlider(0, 100);
-	private final JList<String> jls = new JList<>(MainLocale.strs);
+	private final JList<String> jls = new JList<>(MainLocale.LOC_NAME);
 	private final JScrollPane jsps = new JScrollPane(jls);
 	private final JList<String> jll = new JList<>(EventReader.LOC_NAME);
 	private final JScrollPane jspl = new JScrollPane(jll);

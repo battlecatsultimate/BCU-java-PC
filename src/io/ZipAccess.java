@@ -25,6 +25,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import main.MainBCU;
+import main.Printer;
 import util.Data;
 import util.system.Backup;
 import util.system.VFile;
@@ -51,7 +52,7 @@ public class ZipAccess {
 			try {
 				Queue<String> qs = new ArrayDeque<>(Files.readAllLines(elem));
 				int size = Reader.parseIntN(qs.poll());
-				for (int i = 0; i < size; i++) {
+				for (int i = 0; i < size && !qs.isEmpty(); i++) {
 					qs.poll();
 					String md5 = qs.poll().trim();
 					set.remove(md5);
@@ -86,7 +87,7 @@ public class ZipAccess {
 			ans.newVFile(qs.poll(), qs.poll().getBytes());
 		qs = new ArrayDeque<>(Files.readAllLines(ind1));
 		size = Reader.parseIntN(qs.poll());
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < size && !qs.isEmpty(); i++) {
 			VFile vf = ans.getVFile(qs.poll());
 			String str1 = qs.poll();
 			if (vf != null && new String(vf.data).equals(str1))
@@ -108,7 +109,7 @@ public class ZipAccess {
 		}
 		Queue<String> qs = new ArrayDeque<>(Files.readAllLines(index));
 		int size = Reader.parseIntN(qs.poll());
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < size && !qs.isEmpty(); i++) {
 			String loc = qs.poll().trim();
 			String md5 = qs.poll().trim();
 			if (!loc.equals(part))
@@ -132,7 +133,7 @@ public class ZipAccess {
 		}
 		Queue<String> qs = new ArrayDeque<>(Files.readAllLines(index));
 		int size = Reader.parseIntN(qs.poll());
-		for (int i = 0; i < size; i++) {
+		for (int i = 0; i < size && !qs.isEmpty(); i++) {
 			String loc = qs.poll().trim();
 			String md5 = qs.poll().trim();
 			Writer.check(new File(loc));
@@ -153,7 +154,7 @@ public class ZipAccess {
 				String fn = elem.getFileName().toString();
 				Queue<String> qs = new ArrayDeque<>(Files.readAllLines(elem));
 				int size = Reader.parseIntN(qs.poll());
-				for (int i = 0; i < size; i++) {
+				for (int i = 0; i < size && !qs.isEmpty(); i++) {
 					String pat = qs.poll().trim();
 					String md5 = qs.poll().trim();
 					byte[] bts = md5.getBytes();
@@ -169,7 +170,8 @@ public class ZipAccess {
 					if (b)
 						ans.newVFile(pat + "\\" + fn, bts).size = fsize;
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
+				Printer.p("ZipAccess", 174, elem.getFileName().toString());
 				e.printStackTrace();
 			}
 		});
@@ -197,7 +199,7 @@ public class ZipAccess {
 		VFileRoot ans = new VFileRoot();
 		Queue<String> qs = new ArrayDeque<>(Files.readAllLines(index));
 		int size = Reader.parseIntN(qs.poll());
-		for (int i = 0; i < size; i++)
+		for (int i = 0; i < size && !qs.isEmpty(); i++)
 			ans.newVFile(qs.poll(), qs.poll().getBytes());
 		fs.close();
 		bac.files = ans;

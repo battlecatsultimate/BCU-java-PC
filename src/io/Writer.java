@@ -97,6 +97,18 @@ public class Writer extends DataIO {
 		}
 	}
 
+	public static PrintStream newFile(String str) {
+		File f = new File(str);
+		check(f);
+		PrintStream out = null;
+		try {
+			out = new PrintStream(f);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		return out;
+	}
+
 	public static boolean writeBytes(byte[] bs, String path) {
 		File f = new File(path);
 		check(f);
@@ -205,7 +217,7 @@ public class Writer extends DataIO {
 		}
 		try {
 			MainLocale.saveWorks();
-		}catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -261,18 +273,6 @@ public class Writer extends DataIO {
 			out.println(s);
 		out.println("[end]");
 		out.close();
-	}
-
-	public static PrintStream newFile(String str) {
-		File f = new File(str);
-		check(f);
-		PrintStream out = null;
-		try {
-			out = new PrintStream(f);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		return out;
 	}
 
 	private static void writeOptions() {

@@ -262,7 +262,7 @@ public class Reader extends DataIO {
 		try {
 			ZipAccess.getList();
 			alt = ZipAccess.extractAllList();
-		} catch (IOException e1) {
+		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 		try {

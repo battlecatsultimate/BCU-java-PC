@@ -1,17 +1,13 @@
 package util;
 
 import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-
 import page.MainLocale;
 
 public class Msg {
 
-	private static final ResourceBundle REN = ResourceBundle.getBundle("util.Lang_en");
-
 	public static String get(String key) {
 		try {
-			String str = MainLocale.getDef("util_", REN, key);
+			String str = MainLocale.getLoc(3, key);
 			String[] strs = str.split("#");
 			if (strs.length == 1)
 				return str;

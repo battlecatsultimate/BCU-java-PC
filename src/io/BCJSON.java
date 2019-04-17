@@ -75,7 +75,7 @@ public class BCJSON extends Data {
 		cals[6] = cal + "stage name.txt";
 
 		for (int i = 0; i < 3; i++) {// TODO
-			String lang = "lang/" + MainLocale.LOCALE[i] + "/";
+			String lang = "lang/" + MainLocale.LOC_CODE[i] + "/";
 			cals[i * 4 + 7] = lang + "util.properties";
 			cals[i * 4 + 8] = lang + "page.properties";
 			cals[i * 4 + 9] = lang + "info.properties";
