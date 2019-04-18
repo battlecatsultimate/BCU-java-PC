@@ -11,6 +11,7 @@ import main.MainBCU;
 import util.Data;
 import util.pack.Pack;
 import util.system.BasedCopable;
+import util.system.MultiLangCont;
 import util.system.VFile;
 
 public class Stage extends Data implements BasedCopable<Stage, StageMap> {
@@ -18,7 +19,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap> {
 	public static final MapColc clipmc = new MapColc("clip", -1);
 	public static final StageMap clipsm = clipmc.maps[0];
 
-	public String name = "", desp = "";
+	public String name = "";
 	public final StageMap map;
 	public boolean non_con, trail;
 	public int len, health, max;
@@ -162,7 +163,8 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap> {
 
 	@Override
 	public String toString() {
-		if (desp.length() > 0)
+		String desp=MultiLangCont.get(this);
+		if (desp!=null&&desp.length() > 0)
 			return desp;
 		if (name.length() > 0)
 			return name;

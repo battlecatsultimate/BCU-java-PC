@@ -66,7 +66,7 @@ public class UnitListTable extends SortTable<Form> {
 		if (c == 0)
 			return e0.uid > e1.uid ? 1 : e0.uid < e1.uid ? -1 : e0.fid > e1.fid ? 1 : e0.fid < e1.fid ? -1 : 0;
 		if (c == 1)
-			return e0.name.compareTo(e1.name);
+			return e0.toString().compareTo(e1.toString());
 		int i0 = (int) get(e0, c);
 		int i1 = (int) get(e1, c);
 		return i0 > i1 ? 1 : i0 == i1 ? 0 : -1;

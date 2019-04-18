@@ -1,11 +1,9 @@
 package util.unit;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
-import io.Reader;
 import main.MainBCU;
 import util.Data;
 import util.anim.AnimC;
@@ -14,6 +12,7 @@ import util.entity.data.CustomUnit;
 import util.entity.data.PCoin;
 import util.pack.Pack;
 import util.system.FixIndexList;
+import util.system.MultiLangCont;
 import util.system.VFile;
 
 public class Unit extends Data implements Comparable<Unit> {
@@ -47,15 +46,6 @@ public class Unit extends Data implements Comparable<Unit> {
 			u.maxp = Integer.parseInt(strs[51]);
 		}
 
-		qs = Reader.readLines(new File("./lib/calendar/unit name.txt"));
-		for (String str : qs) {
-			String[] strs = str.split(" \\\\t ");
-			Unit u = Pack.def.us.ulist.get(Reader.parseIntN(strs[0]));
-			if (u == null)
-				continue;
-			for (int i = 0; i < Math.min(u.forms.length, strs.length - 1); i++)
-				u.forms[i].name = strs[i + 1];
-		}
 	}
 
 	public final Pack pack;
@@ -166,6 +156,9 @@ public class Unit extends Data implements Comparable<Unit> {
 
 	@Override
 	public String toString() {
+		String desp=MultiLangCont.get(forms[0]);
+		if(desp!=null&&desp.length()>0)
+			return desp;
 		if (forms[0].name.length() > 0)
 			return forms[0].name;
 		return id + "";

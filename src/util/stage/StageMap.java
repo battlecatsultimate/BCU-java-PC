@@ -7,6 +7,7 @@ import java.util.Queue;
 import io.Reader;
 import util.Data;
 import util.system.BasedCopable;
+import util.system.MultiLangCont;
 import util.system.VFile;
 
 public class StageMap extends Data implements BasedCopable<StageMap, MapColc> {
@@ -14,7 +15,7 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc> {
 	public final List<Stage> list = new ArrayList<>();
 	public final List<Limit> lim = new ArrayList<>();
 
-	public String name = "", desp = "";
+	public String name = "";
 	public int id;
 	public int price = 1, retyp, pllim, set;
 	public final MapColc mc;
@@ -69,7 +70,8 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc> {
 
 	@Override
 	public String toString() {
-		if (desp.length() > 0)
+		String desp=MultiLangCont.get(this);
+		if (desp!=null&&desp.length() > 0)
 			return desp;
 		if (name.length() == 0)
 			return mc + " - " + id + " (" + list.size() + ")";

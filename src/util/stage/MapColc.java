@@ -1,6 +1,5 @@
 package util.stage;
 
-import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -9,10 +8,10 @@ import java.util.TreeMap;
 
 import io.InStream;
 import io.OutStream;
-import io.Reader;
 import util.Data;
 import util.pack.Pack;
 import util.system.FixIndexList;
+import util.system.MultiLangCont;
 import util.system.VFile;
 
 public class MapColc extends Data {
@@ -91,46 +90,11 @@ public class MapColc extends Data {
 			sm.pllim = Integer.parseInt(strs[8]);
 			sm.name += strs[10];
 		}
-		qs = Reader.readLines(new File("./lib/calendar/stage name.txt"));
-		if (qs != null)
-			for (String str : qs) {
-				String[] strs = str.trim().split("\t");
-				if (strs.length == 1)
-					continue;
-				String idstr = strs[0].trim();
-				String name = strs[strs.length - 1].trim();
-				if (idstr.length() == 0 || name.length() == 0)
-					continue;
-				String[] ids = idstr.split("-");
-				int id0 = Reader.parseIntN(ids[0]);
-				MapColc mc = MAPS.get(id0);
-				if (mc == null)
-					continue;
-				if (ids.length == 1) {
-					mc.desp = name;
-					continue;
-				}
-				int id1 = Reader.parseIntN(ids[1]);
-				if (id1 >= mc.maps.length || id1 < 0)
-					continue;
-				StageMap sm = mc.maps[id1];
-				if (sm == null)
-					continue;
-				if (ids.length == 2) {
-					sm.desp = name;
-					continue;
-				}
-				int id2 = Reader.parseIntN(ids[2]);
-				if (id2 >= sm.list.size() || id2 < 0)
-					continue;
-				Stage st = sm.list.get(id2);
-				st.desp = name;
-			}
 	}
 
 	public final Pack pack;
 	public final int id;
-	public String name, desp = "";
+	public String name;
 	public FixIndexList<CharaGroup> groups = new FixIndexList<>(new CharaGroup[1000]);
 	public FixIndexList<LvRestrict> lvrs = new FixIndexList<>(new LvRestrict[1000]);
 	public StageMap[] maps;
@@ -291,7 +255,8 @@ public class MapColc extends Data {
 
 	@Override
 	public String toString() {
-		if (desp.length() > 0)
+		String desp=MultiLangCont.get(this);
+		if (desp!=null&&desp.length() > 0)
 			return desp + " (" + maps.length + ")";
 		return name + " (" + maps.length + ")";
 	}

@@ -25,7 +25,7 @@ public strictfp class MainLocale {
 	public static final String[] LOC_NAME = { "English", "\u4E2D\u6587", "\uD55C\uAD6D\uC5B4", "Japanese", "Russian",
 			"German", "French", "Dutch", "Spainsh" };
 	public static final String[] LOC_CODE = { "en", "zh", "kr", "jp", "ru", "de", "fr", "nl", "es" };
-	private static final String[] RENN = { "page", "info", "internet", "util" };
+	public static final String[] RENN = { "page", "info", "internet", "util" };
 	private static final ResourceBundle[] RENS = new ResourceBundle[4];
 
 	static {
@@ -104,12 +104,6 @@ public strictfp class MainLocale {
 		}
 	}
 
-	protected static String getID(int i) {
-		if (i >= 0 && i < 4)
-			return RENN[i];
-		return "";
-	}
-
 	protected static String getTTT(String page, String text) {
 		String loc = LOC_CODE[MainLocale.lang];
 		String ans = null;
@@ -138,7 +132,9 @@ public strictfp class MainLocale {
 	}
 
 	protected static void setLoc(int i, String key, String value) {
-		String loc = getID(i) + "_" + LOC_CODE[lang];
+		if(i<0)
+			return;
+		String loc = RENN[i] + "_" + LOC_CODE[lang];
 		MainLocale ml = NAMP.get(loc);
 		if (ml == null)
 			NAMP.put(loc, ml = new MainLocale(loc));
