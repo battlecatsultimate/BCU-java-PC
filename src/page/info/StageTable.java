@@ -21,7 +21,11 @@ public class StageTable extends AbJTable {
 	}
 
 	public static void redefine() {
+<<<<<<< HEAD
 		title = Page.get(1, "t", 7);
+=======
+		title = InfoText.get("t", 7);
+>>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 	}
 
 	protected Object[][] data;

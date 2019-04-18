@@ -24,6 +24,7 @@ import javax.swing.event.ListSelectionListener;
 import io.Reader;
 import main.MainBCU;
 import page.JBTN;
+<<<<<<< HEAD
 import page.JL;
 import page.JTF;
 import page.JTG;
@@ -85,6 +86,69 @@ public class EnemyEditPage extends Page {
 	private final JL lpst = new JL(1, "postaa");
 	private final JLabel vpst = new JLabel();
 	private final JL litv = new JL(1, "atkf");
+=======
+import page.JTF;
+import page.JTG;
+import page.Page;
+import page.anim.DIYViewPage;
+import page.info.InfoText;
+import page.info.StageFilterPage;
+import page.info.filter.EnemyEditBox;
+import page.info.filter.EnemyFindPage;
+import page.info.filter.UnitFindPage;
+import page.support.ListJtfPolicy;
+import page.view.EnemyViewPage;
+import util.anim.AnimC;
+import util.basis.Basis;
+import util.basis.BasisSet;
+import util.entity.data.AtkDataModel;
+import util.entity.data.CustomEnemy;
+import util.unit.DIYAnim;
+import util.unit.Enemy;
+import util.unit.Form;
+
+public class EnemyEditPage extends Page {
+
+	private static final long serialVersionUID = 1L;
+
+	private final JBTN back = new JBTN(0, "back");
+
+	private final JLabel lhp = new JLabel("HP");
+	private final JLabel lhb = new JLabel("HB");
+	private final JLabel lsp = new JLabel(InfoText.get("speed"));
+	private final JLabel lra = new JLabel(InfoText.get("range"));
+	private final JLabel lwd = new JLabel(InfoText.get("width"));
+	private final JLabel lsh = new JLabel(InfoText.get("shield"));
+	private final JLabel ltb = new JLabel(InfoText.get("TBA"));
+	private final JLabel lbs = new JLabel(InfoText.get("tbase"));
+	private final JLabel ldr = new JLabel(InfoText.get("drop"));
+	private final JTF fhp = new JTF();
+	private final JTF fhb = new JTF();
+	private final JTF fsp = new JTF();
+	private final JTF fra = new JTF();
+	private final JTF fwd = new JTF();
+	private final JTF fsh = new JTF();
+	private final JTF ftb = new JTF();
+	private final JTF fbs = new JTF();
+	private final JTF fdr = new JTF();
+	private final JTF fsr = new JTF();
+	private final JTG isr = new JTG(1, "isr");
+	private final JList<String> jli = new JList<>();
+	private final JScrollPane jspi = new JScrollPane(jli);
+	private final JBTN add = new JBTN(0, "add");
+	private final JBTN rem = new JBTN(0, "rem");
+	private final JBTN copy = new JBTN(0, "copy");
+	private final JBTN link = new JBTN(0, "link");
+	private final JBTN vene = new JBTN(0, "vene");
+	private final JBTN appr = new JBTN(0, "stage");
+	private final JBTN impt = new JBTN(0, "import");
+	private final JBTN vuni = new JBTN(0, "unit");
+	private final JTG comm = new JTG(1, "common");
+	private final JTF atkn = new JTF();
+	private final JLabel lpst = new JLabel(InfoText.get("postaa"));
+	private final JLabel vpst = new JLabel();
+	private final JLabel litv = new JLabel(InfoText.get("atkf"));
+>>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 	private final JLabel vitv = new JLabel();
 	private final JComboBox<AnimC> jcb = new JComboBox<>();
 	private final ListJtfPolicy ljp = new ListJtfPolicy();

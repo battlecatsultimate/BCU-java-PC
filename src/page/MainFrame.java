@@ -78,7 +78,11 @@ public class MainFrame extends JFrame {
 	private boolean settingsize = false, changingPanel = false;
 
 	public MainFrame(String ver) {
+<<<<<<< HEAD
 		super(Page.get(0, "title") + " Ver " + ver);
+=======
+		super(Page.get("title") + " Ver " + ver);
+>>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 		setLayout(null);
 		addListener();
 		sizer();

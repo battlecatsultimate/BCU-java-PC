@@ -1,5 +1,6 @@
 package page.battle;
 
+<<<<<<< HEAD
 import page.MainLocale;
 import page.support.EnemyTCR;
 import page.support.SortTable;
@@ -22,6 +23,30 @@ class EntityTable extends SortTable<Entity> {
 
 	protected static void redefine() {
 		title = MainLocale.getLoc(1, "u", 3);
+=======
+import page.info.InfoText;
+import page.support.EnemyTCR;
+import page.support.SortTable;
+import page.support.UnitTCR;
+import util.entity.Entity;
+import util.entity.data.MaskEnemy;
+import util.entity.data.MaskUnit;
+import util.unit.Enemy;
+import util.unit.Form;
+
+class EntityTable extends SortTable<Entity> {
+
+	private static final long serialVersionUID = 1L;
+
+	private static String[] title;
+
+	static {
+		redefine();
+	}
+
+	protected static void redefine() {
+		title = InfoText.get("u", 3);
+>>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 	}
 
 	private int dir;

@@ -310,7 +310,11 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+<<<<<<< HEAD
 				if (!MainBCU.warning(get(0, "w0"), "warning"))
+=======
+				if (!MainBCU.warning(get("w0"), "warning"))
+>>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 					return;
 				changing = true;
 				int ind = jlu.getSelectedIndex();

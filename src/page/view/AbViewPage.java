@@ -185,9 +185,15 @@ public abstract class AbViewPage extends Page {
 			eupdate();
 		vb.paint(vb.getGraphics());
 		if (loader == null)
+<<<<<<< HEAD
 			gif.setText(0, "gif");
 		else
 			gif.setText(get(0, "gif") + ": " + loader.getProg());
+=======
+			gif.setText(get("gif"));
+		else
+			gif.setText(get("gif") + ": " + loader.getProg());
+>>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 		if (!gif.isSelected() && gif.isEnabled())
 			loader = null;
 	}

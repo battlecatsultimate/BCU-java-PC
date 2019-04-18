@@ -15,7 +15,11 @@ import util.Data;
 
 public class MainBCU {
 
+<<<<<<< HEAD
 	public static final int ver = 40405, LIBREQ = 80400;
+=======
+	public static final int ver = 40404, LIBREQ = 80400;
+>>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 
 	public static int FILTER_TYPE = 0;
 	public static boolean write = true, preload = false, trueRun = false;

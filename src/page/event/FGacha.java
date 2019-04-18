@@ -15,9 +15,15 @@ class FGacha extends ListFilter<Gacha> {
 
 	private static final int[] CODE = new int[] { 0, 1, 1 };
 
+<<<<<<< HEAD
 	private final JTG jtb0 = new JTG(get(0, "nknn"));
 	private final JTG jtb1 = new JTG(get(0, "usr"));
 	private final JTG jtb2 = new JTG(get(0, "luk"));
+=======
+	private final JTG jtb0 = new JTG(get("nknn"));
+	private final JTG jtb1 = new JTG(get("usr"));
+	private final JTG jtb2 = new JTG(get("luk"));
+>>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 	private final JTG[] jtbs = new JTG[] { jtb0, jtb1, jtb2 };
 
 	protected FGacha(int[] datas, URLPage ep) {

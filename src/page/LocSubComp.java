@@ -63,6 +63,7 @@ class LocSubComp {
 }
 
 class LSCPop extends MouseAdapter {
+<<<<<<< HEAD
 
 	private final LocSubComp lsc;
 
@@ -108,6 +109,52 @@ class LSCPop extends MouseAdapter {
 				String[] ids = id1.getText().trim().split("_", 2);
 				if (ids.length == 2 && ids[0].length() > 0 && ids[1].length() > 0) {
 					MainLocale.setTTT(ids[0], ids[1], ttt);
+=======
+	
+	private final LocSubComp lsc;
+	
+	protected LSCPop(LocSubComp comp){
+		lsc=comp;
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		if (arg0.getButton() == MouseEvent.BUTTON3) {
+			String cls=lsc.page.getClass().getSimpleName();
+			JPanel panel = new JPanel();
+			panel.setPreferredSize(new P(lsc.page.getRootPage().getSize()).times(0.25).toDimension());
+			panel.setLayout(new BorderLayout());
+			JPanel top=new JPanel(new GridLayout(2,2));
+			JTF id0=new JTF(lsc.info);
+			JTF id1=new JTF(cls+"_"+lsc.info);
+			top.add(new JLabel("tooltip ID to edit: "));
+			top.add(id1);
+			top.add(new JLabel("name ID to edit: "+MainLocale.getID(lsc.loc) + "_"));
+			top.add(id0);
+			panel.add(top,BorderLayout.PAGE_START);
+			JTF jtf = new JTF(lsc.lc.getText());
+			panel.add(jtf,BorderLayout.PAGE_END);
+			JTextPane jta = new JTextPane();
+			jta.setText(lsc.lc.getToolTipText());
+			panel.add(new JScrollPane(jta),BorderLayout.CENTER);
+			if(lsc.loc<0) {
+				id0.setEnabled(false);
+				jtf.setEnabled(false);
+			}
+			int type = JOptionPane.OK_CANCEL_OPTION;
+			int ok = JOptionPane.OK_OPTION;
+			int res = JOptionPane.showConfirmDialog(null, panel, "", type);
+			String str = jtf.getText();
+			String ttt = jta.getText();
+			if (res == ok && str != null&&!str.equals(lsc.lc.getText())) {
+				MainLocale.setLoc(lsc.loc, id0.getText().trim(), str);
+				Page.renewLoc(lsc.page);
+			}
+			if (res == ok && ttt != null&&(!ttt.equals(lsc.lc.getToolTipText())||!id1.getText().equals(cls+"_"+lsc.info))) {
+				String[] ids=id1.getText().trim().split("_",2);
+				if(ids.length==2&&ids[0].length()>0&&ids[1].length()>0) {
+					MainLocale.setTTT(ids[0],ids[1], ttt);
+>>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 					Page.renewLoc(lsc.page);
 				}
 			}

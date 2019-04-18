@@ -25,6 +25,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import main.MainBCU;
+<<<<<<< HEAD
 import main.Printer;
 import util.Data;
 import util.system.Backup;
@@ -200,6 +201,181 @@ public class ZipAccess {
 		Queue<String> qs = new ArrayDeque<>(Files.readAllLines(index));
 		int size = Reader.parseIntN(qs.poll());
 		for (int i = 0; i < size && !qs.isEmpty(); i++)
+=======
+import util.Data;
+import util.system.Backup;
+import util.system.VFile;
+import util.system.VFileRoot;
+
+public class ZipAccess {
+
+	private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+
+	public static final Map<String, Backup> bacmap = new TreeMap<>();
+
+	public static boolean delete(List<Backup> strs) throws IOException {
+		if (strs == null)
+			return false;
+		File f = new File("./user/backup.zip");
+		if (!f.exists())
+			return false;
+		FileSystem fs = FileSystems.newFileSystem(f.toPath(), null);
+		Set<String> set = new TreeSet<>();
+		Files.list(fs.getPath("/MD5")).forEach(elem -> set.add(elem.getFileName().toString()));
+		for (Backup bac : strs)
+			Files.deleteIfExists(fs.getPath("/backups/" + bac.time));
+		Files.list(fs.getPath("/backups")).forEach(elem -> {
+			try {
+				Queue<String> qs = new ArrayDeque<>(Files.readAllLines(elem));
+				int size = Reader.parseIntN(qs.poll());
+				for (int i = 0; i < size; i++) {
+					qs.poll();
+					String md5 = qs.poll().trim();
+					set.remove(md5);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+		for (String str : set)
+			Files.deleteIfExists(fs.getPath("/MD5/" + str));
+		fs.close();
+		for (Backup bac : strs)
+			bacmap.remove(bac.time);
+		return true;
+	}
+
+	public static VFileRoot difference(String t0, String t1) throws IOException {
+		File f = new File("./user/backup.zip");
+		if (!f.exists())
+			return null;
+		FileSystem fs = FileSystems.newFileSystem(f.toPath(), null);
+		Path ind0 = fs.getPath("/backups/" + t0);
+		Path ind1 = fs.getPath("/backups/" + t1);
+		if (!Files.exists(ind0) || !Files.exists(ind1)) {
+			fs.close();
+			return null;
+		}
+		VFileRoot ans = new VFileRoot();
+		Queue<String> qs = new ArrayDeque<>(Files.readAllLines(ind0));
+		int size = Reader.parseIntN(qs.poll());
+		for (int i = 0; i < size; i++)
+			ans.newVFile(qs.poll(), qs.poll().getBytes());
+		qs = new ArrayDeque<>(Files.readAllLines(ind1));
+		size = Reader.parseIntN(qs.poll());
+		for (int i = 0; i < size; i++) {
+			VFile vf = ans.getVFile(qs.poll());
+			String str1 = qs.poll();
+			if (vf != null && new String(vf.data).equals(str1))
+				vf.delete();
+		}
+		fs.close();
+		return ans;
+	}
+
+	public static boolean export(String time, String part, Path exp) throws IOException {
+		File f = new File("./user/backup.zip");
+		if (!f.exists())
+			return false;
+		FileSystem fs = FileSystems.newFileSystem(f.toPath(), null);
+		Path index = fs.getPath("/backups/" + time);
+		if (!Files.exists(index)) {
+			fs.close();
+			return false;
+		}
+		Queue<String> qs = new ArrayDeque<>(Files.readAllLines(index));
+		int size = Reader.parseIntN(qs.poll());
+		for (int i = 0; i < size; i++) {
+			String loc = qs.poll().trim();
+			String md5 = qs.poll().trim();
+			if (!loc.equals(part))
+				continue;
+			Writer.check(new File(loc));
+			Files.copy(fs.getPath("/MD5/" + md5), exp, StandardCopyOption.REPLACE_EXISTING);
+		}
+		fs.close();
+		return true;
+	}
+
+	public static boolean extract(Backup bac) throws IOException {
+		File f = new File("./user/backup.zip");
+		if (!f.exists())
+			return false;
+		FileSystem fs = FileSystems.newFileSystem(f.toPath(), null);
+		Path index = fs.getPath("/backups/" + bac.time);
+		if (!Files.exists(index)) {
+			fs.close();
+			return false;
+		}
+		Queue<String> qs = new ArrayDeque<>(Files.readAllLines(index));
+		int size = Reader.parseIntN(qs.poll());
+		for (int i = 0; i < size; i++) {
+			String loc = qs.poll().trim();
+			String md5 = qs.poll().trim();
+			Writer.check(new File(loc));
+			Files.copy(fs.getPath("/MD5/" + md5), Paths.get(loc), StandardCopyOption.REPLACE_EXISTING);
+		}
+		fs.close();
+		return true;
+	}
+
+	public static VFileRoot extractAllList() throws IOException {
+		File f = new File("./user/backup.zip");
+		if (!f.exists())
+			return null;
+		FileSystem fs = FileSystems.newFileSystem(f.toPath(), null);
+		VFileRoot ans = new VFileRoot();
+		Files.list(fs.getPath("/backups")).forEach(elem -> {
+			try {
+				String fn = elem.getFileName().toString();
+				Queue<String> qs = new ArrayDeque<>(Files.readAllLines(elem));
+				int size = Reader.parseIntN(qs.poll());
+				for (int i = 0; i < size; i++) {
+					String pat = qs.poll().trim();
+					String md5 = qs.poll().trim();
+					byte[] bts = md5.getBytes();
+					long fsize = Files.size(fs.getPath("/MD5/" + md5));
+					VFile vf = ans.newVFile(pat, null);
+					vf.mark = 1;
+					boolean b = true;
+					for (VFile c : vf.child)
+						if (Arrays.equals(bts, c.data)) {
+							b = false;
+							c.name = fn;
+						}
+					if (b)
+						ans.newVFile(pat + "\\" + fn, bts).size = fsize;
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+		fs.close();
+		ans.getIf(v -> v.mark == 1 && v.child.size() == 1).forEach(v -> {
+			v.data = v.child.get(0).data;
+			v.size = v.child.get(0).size;
+			v.child = null;
+		});
+		return ans;
+	}
+
+	public static VFileRoot extractList(Backup bac) throws IOException {
+		if (bac.files != null)
+			return bac.files;
+		File f = new File("./user/backup.zip");
+		if (!f.exists())
+			return null;
+		FileSystem fs = FileSystems.newFileSystem(f.toPath(), null);
+		Path index = fs.getPath("/backups/" + bac.time);
+		if (!Files.exists(index)) {
+			fs.close();
+			return null;
+		}
+		VFileRoot ans = new VFileRoot();
+		Queue<String> qs = new ArrayDeque<>(Files.readAllLines(index));
+		int size = Reader.parseIntN(qs.poll());
+		for (int i = 0; i < size; i++)
+>>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 			ans.newVFile(qs.poll(), qs.poll().getBytes());
 		fs.close();
 		bac.files = ans;

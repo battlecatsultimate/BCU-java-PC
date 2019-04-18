@@ -27,6 +27,7 @@ public class HeadTable extends AbJTable {
 	}
 
 	public static void redefine() {
+<<<<<<< HEAD
 		infs = Page.get(1, "ht0", 6);
 		limits = Page.get(1, "ht1", 7);
 		rarity = new String[] { "N", "EX", "R", "SR", "UR", "LR" };
@@ -107,6 +108,88 @@ public class HeadTable extends AbJTable {
 		bas[2] = infs[1] + ": " + st.len;
 		bas[3] = infs[2] + ": " + st.max;
 		bas[4] = Page.get(1, "mus") + ":";
+=======
+		infs = InfoText.get("ht0", 6);
+		limits = InfoText.get("ht1", 7);
+		rarity = new String[] { "N", "EX", "R", "SR", "UR", "LR" };
+	}
+
+	private Object[][] data;
+	private Stage sta;
+	private final Page page;
+
+	protected HeadTable(Page p) {
+		page = p;
+	}
+
+	@Override
+	public Class<?> getColumnClass(int c) {
+		return String.class;
+	}
+
+	@Override
+	public int getColumnCount() {
+		return 8;
+	}
+
+	@Override
+	public String getColumnName(int arg0) {
+		return "";
+	}
+
+	@Override
+	public int getRowCount() {
+		if (data == null)
+			return 0;
+		return data.length;
+	}
+
+	@Override
+	public Object getValueAt(int r, int c) {
+		if (data == null || r < 0 || c < 0 || r >= data.length || c >= data[r].length)
+			return null;
+		return data[r][c];
+	}
+
+	protected void clicked(Point p) {
+		if (data == null)
+			return;
+		int c = getColumnModel().getColumnIndexAtX(p.x);
+		int r = p.y / getRowHeight();
+		if (r == 1 && c == 5)
+			MainFrame.changePanel(new MusicPage(page, sta.mus0));
+		if (r == 1 && c == 7)
+			MainFrame.changePanel(new MusicPage(page, sta.mus1));
+		if (r == 2 && c == 1)
+			MainFrame.changePanel(new BGViewPage(page, null, sta.bg));
+		if (r == 2 && c == 3)
+			MainFrame.changePanel(new CastleViewPage(page, Castles.map.values(), sta.getCastle()));
+		if (r == 2 && c == 5 && data[r][c] != null && data[r][c] instanceof LvRestrict)
+			MainFrame.changePanel(new LvRestrictPage(page, (LvRestrict) data[r][c]));
+		if (r == 2 && c == 7 && data[r][c] != null)
+			MainFrame.changePanel(new CharaGroupPage(page, (CharaGroup) data[r][c]));
+	}
+
+	protected void setData(Stage st) {
+		sta = st;
+		Object[][] lstr = new Object[5][8];
+		Object[] tit, bas, img, rar, reg;
+		tit = lstr[0];
+		bas = lstr[1];
+		img = lstr[2];
+		rar = lstr[3];
+		reg = lstr[4];
+		tit[0] = "ID:";
+		tit[1] = st.map.mc + "-" + st.map.id + "-" + st.id();
+		String star = InfoText.get("star");
+		for (int i = 0; i < st.map.stars.length; i++)
+			tit[2 + i] = (i + 1) + star + ": " + st.map.stars[i] + "%";
+		bas[0] = infs[0];
+		bas[1] = st.health;
+		bas[2] = infs[1] + ": " + st.len;
+		bas[3] = infs[2] + ": " + st.max;
+		bas[4] = InfoText.get("mus") + ":";
+>>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 		bas[5] = st.mus0;
 		bas[6] = "<" + st.mush + "%:";
 		bas[7] = st.mus1;

@@ -9,6 +9,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
 import io.Reader;
+<<<<<<< HEAD
 import page.JL;
 import page.JTF;
 import page.Page;
@@ -25,6 +26,24 @@ class AtkEditTable extends Page {
 	private final JL lp1 = new JL(1, "p1");
 	private final JL ltp = new JL(1, "type");
 	private final JL ldr = new JL(1, "dire");
+=======
+import page.JTF;
+import page.Page;
+import page.info.InfoText;
+import page.support.ListJtfPolicy;
+import util.entity.data.AtkDataModel;
+
+class AtkEditTable extends Page {
+
+	private static final long serialVersionUID = 1L;
+
+	private final JLabel latk = new JLabel("atk");
+	private final JLabel lpre = new JLabel(InfoText.get("preaa"));
+	private final JLabel lp0 = new JLabel(InfoText.get("p0"));
+	private final JLabel lp1 = new JLabel(InfoText.get("p1"));
+	private final JLabel ltp = new JLabel("type");
+	private final JLabel ldr = new JLabel("dire");
+>>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 	private final JTF fatk = new JTF();
 	private final JTF fpre = new JTF();
 	private final JTF fp0 = new JTF();

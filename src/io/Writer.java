@@ -97,6 +97,7 @@ public class Writer extends DataIO {
 		}
 	}
 
+<<<<<<< HEAD
 	public static PrintStream newFile(String str) {
 		File f = new File(str);
 		check(f);
@@ -273,6 +274,184 @@ public class Writer extends DataIO {
 			out.println(s);
 		out.println("[end]");
 		out.close();
+=======
+	public static boolean writeBytes(byte[] bs, String path) {
+		File f = new File(path);
+		check(f);
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(f);
+			fos.write(bs);
+			fos.close();
+			return true;
+		} catch (IOException e) {
+			Printer.w(130, "IOE!!!");
+			if (fos != null)
+				try {
+					fos.close();
+				} catch (IOException e1) {
+					Printer.w(131, "cannot close fos");
+					e1.printStackTrace();
+				}
+			e.printStackTrace();
+		} finally {
+			if (fos != null)
+				try {
+					fos.close();
+				} catch (IOException e1) {
+					Printer.w(139, "finally cannot close fos neither!");
+					e1.printStackTrace();
+				}
+		}
+		return false;
+	}
+
+	public static boolean writeBytes(OutStream os, String path) {
+		os.terminate();
+		File f = new File(path);
+		boolean suc = check(f);
+		if (suc) {
+			FileOutputStream fos = null;
+			try {
+				fos = new FileOutputStream(f);
+				byte[] bs = os.getBytes();
+				byte[] len = new byte[4];
+				fromInt(len, 0, bs.length);
+				fos.write(len);
+				fos.write(bs);
+				fos.close();
+			} catch (IOException e) {
+				suc = false;
+				e.printStackTrace();
+				Printer.w(130, "IOE!!!");
+				if (fos != null)
+					try {
+						fos.close();
+					} catch (IOException e1) {
+						Printer.w(131, "cannot close fos");
+						e1.printStackTrace();
+					}
+				e.printStackTrace();
+			} finally {
+				if (fos != null)
+					try {
+						fos.close();
+					} catch (IOException e1) {
+						Printer.w(139, "finally cannot close fos neither!");
+						e1.printStackTrace();
+					}
+			}
+		}
+		if (!suc) {
+			ps.println("failed to write file: " + f.getPath());
+			if (MainBCU.warning("failed to write file: " + f.getPath() + " do you want to save it in another place?",
+					"IO error"))
+				new Exporter(os, Exporter.EXP_ERR);
+		}
+		return suc;
+	}
+
+	public static void writeData() {
+		try {
+			writeBytes(BasisSet.writeAll(), "./user/basis.v");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			Pack.writeAll();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			for (Recd r : Recd.map.values())
+				if (r.marked)
+					r.write();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		for (DIYAnim da : DIYAnim.map.values())
+			if (!da.getAnimC().isSaved())
+				try {
+					da.getAnimC().save();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		try {
+			ZipAccess.saveWork(MainBCU.getTime());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			MainLocale.saveWorks();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void writeGIF(AnimatedGifEncoder age) {
+		String str = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+		File f = new File("./img/" + str + ".gif");
+		if (!f.getParentFile().exists())
+			f.getParentFile().mkdirs();
+		age.start("./img/" + str + ".gif");
+	}
+
+	public static boolean writeImage(BufferedImage bimg, File f) {
+		if (bimg == null)
+			return false;
+		boolean suc = Writer.check(f);
+		if (suc)
+			try {
+				suc = ImageIO.write(bimg, "PNG", f);
+			} catch (IOException e) {
+				e.printStackTrace();
+				suc = false;
+			}
+		if (!suc) {
+			ps.println("failed to write image: " + f.getPath());
+			if (MainBCU.warning("failed to write image: " + f.getPath() + " do you want to save it in another place?",
+					"IO error"))
+				new Exporter(bimg, Exporter.EXP_ERR);
+		}
+		return suc;
+	}
+
+	public static void writeURL(Queue<String> qs, String name) {
+		File f = new File("./url/" + name + "/" + MainBCU.getTime() + ".tsv");
+		if (!f.getParentFile().exists())
+			f.getParentFile().mkdirs();
+		if (!f.exists())
+			try {
+				f.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		PrintStream out = null;
+		try {
+			out = new PrintStream(new FileOutputStream(f), true, "UTF-8");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (out == null)
+			return;
+		out.println("[start]");
+		for (String s : qs)
+			out.println(s);
+		out.println("[end]");
+		out.close();
+	}
+
+	public static PrintStream newFile(String str) {
+		File f = new File(str);
+		check(f);
+		PrintStream out = null;
+		try {
+			out = new PrintStream(f);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		return out;
+>>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 	}
 
 	private static void writeOptions() {

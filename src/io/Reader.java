@@ -262,7 +262,11 @@ public class Reader extends DataIO {
 		try {
 			ZipAccess.getList();
 			alt = ZipAccess.extractAllList();
+<<<<<<< HEAD
 		} catch (Exception e1) {
+=======
+		} catch (IOException e1) {
+>>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 			e1.printStackTrace();
 		}
 		try {

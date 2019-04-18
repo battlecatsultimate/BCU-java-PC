@@ -418,7 +418,11 @@ public class CGLREditPage extends Page {
 			jlus.setListData(new Unit[0]);
 		else {
 			jlus.setListData(cg.set.toArray(new Unit[0]));
+<<<<<<< HEAD
 			cgt.setText(0, cg.type == 0 ? "include" : "exclude");
+=======
+			cgt.setText(cg.type == 0 ? get("include") : get("exclude"));
+>>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 		}
 	}
 
