@@ -516,7 +516,7 @@ public class BackupTreePage extends Page {
 		}
 		DefaultMutableTreeNode tmc = new DefaultMutableTreeNode("stages/");
 		top.add(tmc);
-		String[] stastr = Page.get(1, "t", 7);
+		String[] stastr = get(1, "t", 7);
 		for (StageMap sm : p.mc.maps) {
 			DefaultMutableTreeNode tsm = new DefaultMutableTreeNode(sm + "/");
 			tmc.add(tsm);

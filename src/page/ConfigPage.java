@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
@@ -37,10 +36,10 @@ public class ConfigPage extends Page {
 	private final JTG extt = new JTG(0, "extip");
 	private final JBTN[] left = new JBTN[4];
 	private final JBTN[] right = new JBTN[4];
-	private final JLabel[] name = new JLabel[4];
-	private final JLabel[] vals = new JLabel[4];
-	private final JLabel jlmin = new JLabel(get(0, "opamin"));
-	private final JLabel jlmax = new JLabel(get(0, "opamax"));
+	private final JL[] name = new JL[4];
+	private final JL[] vals = new JL[4];
+	private final JL jlmin = new JL(0, "opamin");
+	private final JL jlmax = new JL(0, "opamax");
 	private final JSlider jsmin = new JSlider(0, 100);
 	private final JSlider jsmax = new JSlider(0, 100);
 	private final JList<String> jls = new JList<>(MainLocale.LOC_NAME);
@@ -59,11 +58,11 @@ public class ConfigPage extends Page {
 
 	@Override
 	protected void renew() {
-		jlmin.setText(get(0, "opamin"));
-		jlmax.setText(get(0, "opamax"));
+		jlmin.setText(0, "opamin");
+		jlmax.setText(0, "opamax");
 		for (int i = 0; i < 4; i++) {
-			name[i].setText(get(0, ImgCore.NAME[i]));
-			vals[i].setText(get(0, ImgCore.VAL[ImgCore.ints[i]]));
+			name[i].setText(0, ImgCore.NAME[i]);
+			vals[i].setText(0, ImgCore.VAL[ImgCore.ints[i]]);
 		}
 	}
 
@@ -153,7 +152,7 @@ public class ConfigPage extends Page {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					ImgCore.ints[I]--;
-					vals[I].setText(get(0, ImgCore.VAL[ImgCore.ints[I]]));
+					vals[I].setText(0, ImgCore.VAL[ImgCore.ints[I]]);
 					left[I].setEnabled(ImgCore.ints[I] > 0);
 					right[I].setEnabled(ImgCore.ints[I] < 2);
 				}
@@ -164,7 +163,7 @@ public class ConfigPage extends Page {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					ImgCore.ints[I]++;
-					vals[I].setText(get(0, ImgCore.VAL[ImgCore.ints[I]]));
+					vals[I].setText(0, ImgCore.VAL[ImgCore.ints[I]]);
 					left[I].setEnabled(ImgCore.ints[I] > 0);
 					right[I].setEnabled(ImgCore.ints[I] < 2);
 				}
@@ -258,8 +257,8 @@ public class ConfigPage extends Page {
 		for (int i = 0; i < 4; i++) {
 			left[i] = new JBTN("<");
 			right[i] = new JBTN(">");
-			name[i] = new JLabel(get(0, ImgCore.NAME[i]));
-			vals[i] = new JLabel(get(0, ImgCore.VAL[ImgCore.ints[i]]));
+			name[i] = new JL(0, ImgCore.NAME[i]);
+			vals[i] = new JL(0, ImgCore.VAL[ImgCore.ints[i]]);
 			add(left[i]);
 			add(right[i]);
 			add(name[i]);

@@ -23,6 +23,7 @@ import io.BCJSON;
 import io.WebPack;
 import main.MainBCU;
 import page.JBTN;
+import page.JL;
 import page.Page;
 import util.pack.Pack;
 
@@ -151,7 +152,7 @@ public class WebMainPage extends Page {
 		jsp.getVerticalScrollBar().setUnitIncrement(8);
 		title = new JLabel[7];
 		for (int i = 0; i < 7; i++) {
-			add(title[i] = new JLabel(get(2, "t" + i)));
+			add(title[i] = new JL(2, "t" + i));
 			title[i].setHorizontalAlignment(SwingConstants.CENTER);
 			title[i].setBorder(BorderFactory.createEtchedBorder());
 		}

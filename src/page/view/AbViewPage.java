@@ -185,7 +185,7 @@ public abstract class AbViewPage extends Page {
 			eupdate();
 		vb.paint(vb.getGraphics());
 		if (loader == null)
-			gif.setText(get(0, "gif"));
+			gif.setText(0, "gif");
 		else
 			gif.setText(get(0, "gif") + ": " + loader.getProg());
 		if (!gif.isSelected() && gif.isEnabled())

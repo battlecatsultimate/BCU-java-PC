@@ -10,7 +10,6 @@ import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
@@ -19,6 +18,7 @@ import javax.swing.event.ListSelectionListener;
 import io.Reader;
 import main.MainBCU;
 import page.JBTN;
+import page.JL;
 import page.JTF;
 import page.Page;
 import page.info.edit.FormEditPage;
@@ -66,12 +66,12 @@ public class UnitManagePage extends Page {
 	private final JComboBox<String> rar = new JComboBox<>(Interpret.RARITY);
 	private final JComboBox<UnitLevel> cbl = new JComboBox<>();
 
-	private final JLabel lbp = new JLabel(get(0, "pack"));
-	private final JLabel lbu = new JLabel(get(0, "unit"));
-	private final JLabel lbd = new JLabel(get(0, "seleanim"));
-	private final JLabel lbml = new JLabel(get(0, "maxl"));
-	private final JLabel lbmp = new JLabel(get(0, "maxp"));
-	private final JLabel lbf = new JLabel("forms");
+	private final JL lbp = new JL(0, "pack");
+	private final JL lbu = new JL(0, "unit");
+	private final JL lbd = new JL(0, "seleanim");
+	private final JL lbml = new JL(0, "maxl");
+	private final JL lbmp = new JL(0, "maxp");
+	private final JL lbf = new JL(1, "forms");
 
 	private Pack pac;
 	private Unit uni;

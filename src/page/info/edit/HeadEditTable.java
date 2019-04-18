@@ -12,6 +12,7 @@ import javax.swing.SwingConstants;
 
 import io.Reader;
 import page.JBTN;
+import page.JL;
 import page.JTF;
 import page.JTG;
 import page.Page;
@@ -31,27 +32,26 @@ class HeadEditTable extends Page {
 
 	private static final long serialVersionUID = 1L;
 
-	private static String[] infs, limits, rarity;
+	private static String[] limits, rarity;
 
 	static {
 		redefine();
 	}
 
 	protected static void redefine() {
-		infs = Page.get(1, "ht0", 6);
 		limits = Page.get(1, "ht1", 7);
 		rarity = new String[] { "N", "EX", "R", "SR", "UR", "LR" };
 	}
 
-	private final JLabel hea = new JLabel(infs[0]);
-	private final JLabel len = new JLabel(infs[1]);
-	private final JLabel rar = new JLabel(limits[0]);
+	private final JL hea = new JL(1, "ht00");
+	private final JL len = new JL(1, "ht01");
+	private final JL rar = new JL(1, "ht10");
 	private final JBTN cgb = new JBTN(1, "ht15");
 	private final JBTN lrb = new JBTN(1, "ht16");
 	private final JBTN mus = new JBTN(1, "mus");
-	private final JLabel max = new JLabel(infs[2]);
-	private final JBTN bg = new JBTN(infs[4]);
-	private final JBTN cas = new JBTN(infs[5]);
+	private final JL max = new JL(1, "ht02");
+	private final JBTN bg = new JBTN(1, "ht04");
+	private final JBTN cas = new JBTN(1, "ht05");
 	private final JTF name = new JTF();
 	private final JTF jhea = new JTF();
 	private final JTF jlen = new JTF();
@@ -174,7 +174,7 @@ class HeadEditTable extends Page {
 		jm1.setText("" + st.mus1);
 		jmax.setText("" + st.max);
 		con.setSelected(!st.non_con);
-		String str = Page.get(1, "star") + ": ";
+		String str = get(1, "star") + ": ";
 		for (int i = 0; i < 4; i++)
 			if (i < st.map.stars.length)
 				star[i].setText(i + 1 + str + st.map.stars[i] + "%");

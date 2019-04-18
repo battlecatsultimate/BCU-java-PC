@@ -57,12 +57,12 @@ public strictfp class MainLocale {
 			String loci = RENN[loc] + "_";
 			String locl = loci + LOC_CODE[MainLocale.lang];
 			if (NAMP.containsKey(locl) && NAMP.get(locl).contains(key)) {
-				String str=NAMP.get(loci + LOC_CODE[MainLocale.lang]).get(key);
+				String str = NAMP.get(loci + LOC_CODE[MainLocale.lang]).get(key);
 				String[] strs = str.split("#");
 				if (strs.length == 1)
 					return str;
 				for (int i = 1; i < strs.length; i += 2)
-					strs[i] = getLoc(loc,strs[i]);
+					strs[i] = getLoc(loc, strs[i]);
 				String ans = "";
 				for (int i = 0; i < strs.length; i++)
 					ans += strs[i];
@@ -75,6 +75,13 @@ public strictfp class MainLocale {
 			}
 		}
 		return key;
+	}
+
+	public static String[] getLoc(int loc, String... strs) {
+		String[] ans = new String[strs.length];
+		for (int i = 0; i < ans.length; i++)
+			ans[i] = getLoc(loc, strs[i]);
+		return ans;
 	}
 
 	public static String[] getLoc(int loc, String pre, int max) {
@@ -92,7 +99,7 @@ public strictfp class MainLocale {
 			for (int i = 0; i < 4; i++) {
 				MainLocale ml = NAMP.get(RENN[i] + "_" + loc);
 				if (ml != null && ml.edited)
-					ml.write(Writer.newFile("./lib/lang/" + loc + "/" + getID(i) + ".properties"));
+					ml.write(Writer.newFile("./lib/lang/" + loc + "/" + RENN[i] + ".properties"));
 			}
 		}
 	}

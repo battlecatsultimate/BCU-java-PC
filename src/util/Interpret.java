@@ -105,10 +105,10 @@ public class Interpret extends Data {
 			int p0 = Math.min(lds, lds + ldr);
 			int p1 = Math.max(lds, lds + ldr);
 			int r = Math.abs(ldr);
-			l.add(Page.get(3,"ld0") + ": " + tb + ", " + Page.get(3,"ld1") + ": " + p0 + "~" + p1 + ", " + Page.get(3,"ld2")
-					+ ": " + r);
+			l.add(Page.get(3, "ld0") + ": " + tb + ", " + Page.get(3, "ld1") + ": " + p0 + "~" + p1 + ", "
+					+ Page.get(3, "ld2") + ": " + r);
 		}
-		String imu = Page.get(3,"imu");
+		String imu = Page.get(3, "imu");
 		for (int i = 0; i < ABIS.length; i++)
 			if (((me.getAbi() >> i) & 1) > 0)
 				if (ABIS[i].startsWith("IMU"))
@@ -153,7 +153,7 @@ public class Interpret extends Data {
 					ans += PROC[i] + " ";
 				else {
 					int pro = ma.getProc(i)[LOC[i][j]];
-					String rep = pro == -1 ? Page.get(3,"inf") : "" + pro;
+					String rep = pro == -1 ? Page.get(3, "inf") : "" + pro;
 					ans += TEXT[CMP[i][j]].replaceFirst("_", rep) + " ";
 				}
 			l.add(ans);
@@ -173,7 +173,7 @@ public class Interpret extends Data {
 					ans += PROC[i] + " ";
 				else {
 					int pro = ma.getProc(i)[LOC[i][j]];
-					String rep = pro == -1 ? Page.get(3,"inf") : "" + pro;
+					String rep = pro == -1 ? Page.get(3, "inf") : "" + pro;
 					ans += TEXT[CMP[i][j]].replaceFirst("_", rep) + " ";
 				}
 			l.add(ans);
@@ -309,21 +309,21 @@ public class Interpret extends Data {
 	}
 
 	public static void redefine() {
-		ERARE = Page.get(3,"er", 6);
-		RARITY = Page.get(3,"r", 6);
-		TRAIT = Page.get(3,"c", 12);
-		STAR = Page.get(3,"s", 5);
-		ABIS = Page.get(3,"a", 22);
-		SABIS = Page.get(3,"sa", 22);
-		ATKCONF = Page.get(3,"aa", 6);
-		PROC = Page.get(3,"p", 26);
-		SPROC = Page.get(3,"sp", 26);
-		TREA = Page.get(3,"t", 36);
-		TEXT = Page.get(3,"d", 8);
-		COMF = Page.get(3,"na", 6);
-		COMN = Page.get(3,"nb", 25);
-		TCTX = Page.get(3,"tc", 6);
-		PCTX = Page.get(3,"aq", 41);
+		ERARE = Page.get(3, "er", 6);
+		RARITY = Page.get(3, "r", 6);
+		TRAIT = Page.get(3, "c", 12);
+		STAR = Page.get(3, "s", 5);
+		ABIS = Page.get(3, "a", 22);
+		SABIS = Page.get(3, "sa", 22);
+		ATKCONF = Page.get(3, "aa", 6);
+		PROC = Page.get(3, "p", 26);
+		SPROC = Page.get(3, "sp", 26);
+		TREA = Page.get(3, "t", 36);
+		TEXT = Page.get(3, "d", 8);
+		COMF = Page.get(3, "na", 6);
+		COMN = Page.get(3, "nb", 25);
+		TCTX = Page.get(3, "tc", 6);
+		PCTX = Page.get(3, "aq", 41);
 		EABI = new String[EABIIND.length];
 		for (int i = 0; i < EABI.length; i++) {
 			if (EABIIND[i] < 100)

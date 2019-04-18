@@ -34,13 +34,6 @@ public abstract class Page extends JPanel {
 		return MainLocale.getLoc(i, s, m);
 	}
 
-	public static String[] get(String... strs) {
-		String[] ans = new String[strs.length];
-		for (int i = 0; i < ans.length; i++)
-			ans[i] = get(0, strs[i]);
-		return ans;
-	}
-
 	public static void renewLoc(Page p) {
 		MainLocale.redefine();
 		while (p != null) {

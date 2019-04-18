@@ -418,7 +418,7 @@ public class CGLREditPage extends Page {
 			jlus.setListData(new Unit[0]);
 		else {
 			jlus.setListData(cg.set.toArray(new Unit[0]));
-			cgt.setText(cg.type == 0 ? get(0, "include") : get(0, "exclude"));
+			cgt.setText(0, cg.type == 0 ? "include" : "exclude");
 		}
 	}
 
