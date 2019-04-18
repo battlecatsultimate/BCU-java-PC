@@ -8,6 +8,7 @@ import page.MainLocale;
 import util.stage.MapColc;
 import util.stage.Stage;
 import util.stage.StageMap;
+import util.unit.Enemy;
 import util.unit.Form;
 
 public class MultiLangCont<I, T> {
@@ -16,9 +17,10 @@ public class MultiLangCont<I, T> {
 	public static final MultiLangCont<StageMap, String> SMNAME = new MultiLangCont<>();
 	public static final MultiLangCont<Stage, String> STNAME = new MultiLangCont<>();
 	public static final MultiLangCont<Form, String> FNAME = new MultiLangCont<>();
+	public static final MultiLangCont<Enemy, String> ENAME = new MultiLangCont<>();
 
 	public static String get(Object o) {
-		String loc = MainLocale.RENN[MainLocale.lang];
+		String loc = MainLocale.LOC_CODE[MainLocale.lang];
 		if (o instanceof MapColc)
 			return MCNAME.get(loc, (MapColc) o);
 		if (o instanceof StageMap)
@@ -27,6 +29,8 @@ public class MultiLangCont<I, T> {
 			return STNAME.get(loc, (Stage) o);
 		if (o instanceof Form)
 			return FNAME.get(loc, (Form) o);
+		if (o instanceof Enemy)
+			return ENAME.get(loc, (Enemy) o);
 		return null;
 	}
 
@@ -38,8 +42,9 @@ public class MultiLangCont<I, T> {
 
 	public T get(String loc, I x) {
 		T ans = getSub(loc).get(x);
-		if (ans == null)
-			ans = getSub(MainLocale.LOC_CODE[0]).get(x);
+		int lang=0;
+		while(ans == null&&lang<4)
+			ans = getSub(MainLocale.LOC_CODE[lang++]).get(x);
 		return ans;
 	}
 

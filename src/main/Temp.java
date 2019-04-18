@@ -23,7 +23,7 @@ import io.Writer;
 public class Temp {
 
 	public static void main(String[] args) {
-		System.out.println(new Object().equals(new Object()));
+		System.out.println(Reader.parseIntN("001"));
 	}
 
 	public static void main$0(String[] args) throws FileNotFoundException {

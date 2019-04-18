@@ -64,7 +64,7 @@ public class BCJSON extends Data {
 	private static final String[] cals;
 
 	static {
-		cals = new String[17];
+		cals = new String[33];
 		String cal = "calendar/";
 		cals[0] = cal + "event ID.txt";
 		cals[1] = cal + "gacha ID.txt";
@@ -72,15 +72,16 @@ public class BCJSON extends Data {
 		cals[3] = cal + "group event.txt";
 		cals[4] = cal + "group hour.txt";
 
-		for (int i = 0; i < 3; i++) {// TODO
+		for (int i = 0; i < 4; i++) {// TODO
 			String lang = "lang/" + MainLocale.LOC_CODE[i] + "/";
-			cals[i * 4 + 5] = lang + "util.properties";
-			cals[i * 4 + 6] = lang + "page.properties";
-			cals[i * 4 + 7] = lang + "info.properties";
-			cals[i * 4 + 8] = lang + "internet.properties";
+			cals[i * 7 + 5] = lang + "util.properties";
+			cals[i * 7 + 6] = lang + "page.properties";
+			cals[i * 7 + 7] = lang + "info.properties";
+			cals[i * 7 + 8] = lang + "internet.properties";
+			cals[i * 7 + 9] = lang + "StageName.txt";
+			cals[i * 7 + 10] = lang + "UnitName.txt";
+			cals[i * 7 + 11] = lang + "EnemyName.txt";
 			// TODO tutorial
-			// TODO name
-			// TODO stage
 		}
 
 	}

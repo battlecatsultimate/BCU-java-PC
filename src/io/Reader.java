@@ -199,7 +199,7 @@ public class Reader extends DataIO {
 						}
 						continue;
 					}
-					if (nl.equals("stage name.txt")) {
+					if (nl.equals("StageName.txt")) {
 						Queue<String> qs = readLines(fl);
 						if (qs != null)
 							for (String str : qs) {
@@ -237,15 +237,26 @@ public class Reader extends DataIO {
 							}
 						continue;
 					}
-					if (nl.equals("unit name.txt")) {
+					if (nl.equals("UnitName.txt")) {
 						Queue<String> qs = readLines(fl);
 						for (String str : qs) {
-							String[] strs = str.split(" \t ");
+							String[] strs = str.trim().split("\t");
 							Unit u = Pack.def.us.ulist.get(Reader.parseIntN(strs[0]));
 							if (u == null)
 								continue;
 							for (int i = 0; i < Math.min(u.forms.length, strs.length - 1); i++)
-								MultiLangCont.FNAME.put(ni, u.forms[i], strs[i + 1]);
+								MultiLangCont.FNAME.put(ni, u.forms[i], strs[i + 1].trim());
+						}
+						continue;
+					}
+					if (nl.equals("EnemyName.txt")) {
+						Queue<String> qs = readLines(fl);
+						for (String str : qs) {
+							String[] strs = str.trim().split("\t");
+							Enemy e = Pack.def.es.get(Reader.parseIntN(strs[0]));
+							if (e == null||strs.length<2)
+								continue;
+							MultiLangCont.ENAME.put(ni, e, strs[1].trim());
 						}
 						continue;
 					}
