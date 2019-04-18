@@ -25,7 +25,6 @@ public class MainBCU {
 	}
 
 	public static void main(String[] args) {
-		//TEST REBASE
 		trueRun = true;
 		long mem = Runtime.getRuntime().maxMemory();
 		if (mem >> 28 == 0) {
