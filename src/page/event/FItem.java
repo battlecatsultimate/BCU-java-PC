@@ -15,7 +15,6 @@ class FItem extends ListFilter<Item> {
 
 	private static final int[] CODE = new int[] { 0, 1, 0, 0, 1, 0, 1, 0 };
 
-<<<<<<< HEAD
 	private final JTG jtb0 = new JTG(get(0, "perm"));
 	private final JTG jtb1 = new JTG(get(0, "situ"));
 	private final JTG jtb2 = new JTG(get(0, "newv"));
@@ -25,17 +24,6 @@ class FItem extends ListFilter<Item> {
 	private final JTG jcb1 = new JTG(get(0, "popp"));
 	private final JTG jcb2 = new JTG(get(0, "item"));
 	private final JTG jcb3 = new JTG(get(0, "plat"));
-=======
-	private final JTG jtb0 = new JTG(get("perm"));
-	private final JTG jtb1 = new JTG(get("situ"));
-	private final JTG jtb2 = new JTG(get("newv"));
-	private final JTG jtb3 = new JTG(get("ftre"));
-	private final JTG[] jtbs = new JTG[] { jtb0, jtb1, jtb2, jtb3 };
-	private final JTG jcb0 = new JTG(get("nknn"));
-	private final JTG jcb1 = new JTG(get("popp"));
-	private final JTG jcb2 = new JTG(get("item"));
-	private final JTG jcb3 = new JTG(get("plat"));
->>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 	private final JTG[] jcbs = new JTG[] { jcb0, jcb1, jcb2, jcb3 };
 
 	protected FItem(int[] datas, URLPage ep) {

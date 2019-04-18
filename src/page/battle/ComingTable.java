@@ -5,7 +5,6 @@ import java.awt.Point;
 import page.MainFrame;
 import page.Page;
 import page.info.EnemyInfoPage;
-<<<<<<< HEAD
 import page.support.AbJTable;
 import page.support.EnemyTCR;
 import util.stage.EStage;
@@ -25,28 +24,6 @@ class ComingTable extends AbJTable {
 
 	protected static void redefine() {
 		title = Page.get(1, "c", 6);
-=======
-import page.info.InfoText;
-import page.support.AbJTable;
-import page.support.EnemyTCR;
-import util.stage.EStage;
-import util.stage.Stage;
-import util.unit.Enemy;
-import util.unit.EnemyStore;
-
-class ComingTable extends AbJTable {
-
-	private static final long serialVersionUID = 1L;
-
-	private static String[] title;
-
-	static {
-		redefine();
-	}
-
-	protected static void redefine() {
-		title = InfoText.get("c", 6);
->>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 	}
 
 	private Object[][] data;

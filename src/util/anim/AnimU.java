@@ -3,7 +3,6 @@ package util.anim;
 import java.awt.image.BufferedImage;
 
 import main.Printer;
-<<<<<<< HEAD
 import page.MainLocale;
 import util.Res;
 import util.system.VFile;
@@ -29,33 +28,6 @@ public class AnimU extends AnimD {
 		strs0 = MainLocale.getLoc(0, s0, s1, s2, s3);
 		strs1 = MainLocale.getLoc(0, s0, s1, s2, s3, s4, s5, s6);
 		strs2 = MainLocale.getLoc(0, s0, s1, s2, s3, s7);
-=======
-import page.Page;
-import util.Res;
-import util.system.VFile;
-import util.system.VImg;
-
-public class AnimU extends AnimD {
-
-	private static String[] strs0, strs1, strs2;
-
-	static {
-		redefine();
-	}
-
-	public static void redefine() {
-		String s0 = "move";
-		String s1 = "wait";
-		String s2 = "atk";
-		String s3 = "kb";
-		String s4 = "down";
-		String s5 = "under";
-		String s6 = "up";
-		String s7 = "entry";
-		strs0 = Page.get(s0, s1, s2, s3);
-		strs1 = Page.get(s0, s1, s2, s3, s4, s5, s6);
-		strs2 = Page.get(s0, s1, s2, s3, s7);
->>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 
 	}
 

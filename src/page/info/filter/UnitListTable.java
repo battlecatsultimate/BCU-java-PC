@@ -4,7 +4,6 @@ import java.awt.Point;
 
 import page.MainFrame;
 import page.Page;
-<<<<<<< HEAD
 import page.info.UnitInfoPage;
 import page.support.SortTable;
 import page.support.UnitTCR;
@@ -29,34 +28,6 @@ public class UnitListTable extends SortTable<Form> {
 	public static void redefine() {
 		tit = new String[] { "ID", "name", Page.get(1, "pref"), "HP", "HB", "atk", Page.get(1, "range"),
 				Page.get(1, "speed"), "dps", Page.get(1, "preaa"), "CD", Page.get(1, "price"), Page.get(1, "atkf") };
-=======
-import page.info.InfoText;
-import page.info.UnitInfoPage;
-import page.support.SortTable;
-import page.support.UnitTCR;
-import util.basis.Basis;
-import util.basis.BasisSet;
-import util.entity.data.MaskUnit;
-import util.system.Node;
-import util.unit.Enemy;
-import util.unit.Form;
-import util.unit.Unit;
-
-public class UnitListTable extends SortTable<Form> {
-
-	private static final long serialVersionUID = 1L;
-
-	private static String[] tit;
-
-	static {
-		redefine();
-	}
-
-	public static void redefine() {
-		tit = new String[] { "ID", "name", InfoText.get("pref"), "HP", "HB", "atk", InfoText.get("range"),
-				InfoText.get("speed"), "dps", InfoText.get("preaa"), "CD", InfoText.get("price"),
-				InfoText.get("atkf") };
->>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 	}
 
 	private final Page page;

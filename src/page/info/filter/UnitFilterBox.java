@@ -273,11 +273,7 @@ class UFBList extends UnitFilterBox {
 
 	private void ini() {
 		for (int i = 0; i < orop.length; i++)
-<<<<<<< HEAD
 			set(orop[i] = new JTG(get(0, "orop")));
-=======
-			set(orop[i] = new JTG(get("orop")));
->>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 		for (int i = 0; i < 9; i++)
 			vt.add(TRAIT[i]);
 		for (int i = 0; i < SABIS.length; i++)

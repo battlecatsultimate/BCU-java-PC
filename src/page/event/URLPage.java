@@ -54,11 +54,7 @@ public abstract class URLPage extends Page {
 		if (ints[0] < 10)
 			s += "0";
 		s += ints[0];
-<<<<<<< HEAD
 		time.setText(get(0, "refresh") + s);
-=======
-		time.setText(get("refresh") + s);
->>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 	}
 
 	protected abstract void updateList();

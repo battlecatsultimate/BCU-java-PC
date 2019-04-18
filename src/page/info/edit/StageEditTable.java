@@ -11,7 +11,6 @@ import io.Reader;
 import page.MainFrame;
 import page.Page;
 import page.info.EnemyInfoPage;
-<<<<<<< HEAD
 import page.support.AbJTable;
 import page.support.EnemyTCR;
 import page.support.InTableTH;
@@ -33,30 +32,6 @@ class StageEditTable extends AbJTable implements Reorderable {
 
 	protected static void redefine() {
 		title = Page.get(1, "t", 8);
-=======
-import page.info.InfoText;
-import page.support.AbJTable;
-import page.support.EnemyTCR;
-import page.support.InTableTH;
-import page.support.Reorderable;
-import util.stage.Stage;
-import util.unit.AbEnemy;
-import util.unit.Enemy;
-import util.unit.EnemyStore;
-
-class StageEditTable extends AbJTable implements Reorderable {
-
-	private static final long serialVersionUID = 1L;
-
-	private static String[] title;
-
-	static {
-		redefine();
-	}
-
-	protected static void redefine() {
-		title = InfoText.get("t", 8);
->>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 	}
 
 	private Stage stage;

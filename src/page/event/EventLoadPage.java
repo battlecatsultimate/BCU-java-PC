@@ -16,7 +16,6 @@ public class EventLoadPage extends Page {
 
 	private final JBTN back = new JBTN(0, "back");
 	private final JBTN natv = new JBTN(0, "natv");
-<<<<<<< HEAD
 	private final JLabel load = new JLabel(get(0, "load"));
 
 	private final int t;
@@ -52,43 +51,6 @@ public class EventLoadPage extends Page {
 				load.setText(get(0, "error"));
 		else
 			load.setText(get(0, "error"));
-=======
-	private final JLabel load = new JLabel(get("load"));
-
-	private final int t;
-
-	public EventLoadPage(Page p, int type, boolean force) {
-		super(p);
-
-		ini();
-		resized();
-		new EventLoader(this, t = type, force).start();
-	}
-
-	@Override
-	protected void resized(int x, int y) {
-		setBounds(0, 0, x, y);
-		set(back, x, y, 0, 0, 200, 50);
-		set(load, x, y, 1100, 700, 200, 50);
-		set(natv, x, y, 1100, 750, 200, 50);
-
-	}
-
-	protected void turn(boolean success) {
-		if (success)
-			if (t == 0)
-				changePanel(new EventPage(getFront()));
-			else if (t == 1)
-				changePanel(new GachaPage(getFront()));
-			else if (t == 2)
-				changePanel(new ItemPage(getFront()));
-			else if (t == 3)
-				changePanel(new CalendarPage(getFront()));
-			else
-				load.setText(get("error"));
-		else
-			load.setText(get("error"));
->>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 	}
 
 	private void addListeners() {

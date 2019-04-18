@@ -616,11 +616,7 @@ public class BasisPage extends LubCont {
 		if (com != null)
 			b = lu().willRem(com);
 		setc.setForeground(b ? Color.RED : Color.BLACK);
-<<<<<<< HEAD
 		setc.setText(0, "set" + (b ? "1" : "0"));
-=======
-		setc.setText(get("set" + (b ? "1" : "0")));
->>>>>>> branch 'master' of https://github.com/lcy0x1/BCU.git
 
 	}
 
