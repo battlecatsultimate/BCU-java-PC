@@ -75,7 +75,7 @@ class LSCPop extends MouseAdapter {
 		if (arg0.getButton() == MouseEvent.BUTTON3) {
 			String cls = lsc.page.getClass().getSimpleName();
 			JPanel panel = new JPanel();
-			P size=new P(lsc.page.getRootPage().getSize()).times(0.25);
+			P size = new P(lsc.page.getRootPage().getSize()).times(0.25);
 			panel.setPreferredSize(size.toDimension());
 			panel.setLayout(new BorderLayout());
 			JPanel top = new JPanel(new GridLayout(2, 2));
@@ -83,7 +83,7 @@ class LSCPop extends MouseAdapter {
 			JTF id1 = new JTF(cls + "_" + lsc.info);
 			top.add(new JLabel("tooltip ID to edit: "));
 			top.add(id1);
-			String lab=(lsc.loc>=0?MainLocale.RENN[lsc.loc]:"") + "_";
+			String lab = (lsc.loc >= 0 ? MainLocale.RENN[lsc.loc] : "") + "_";
 			top.add(new JLabel("name ID to edit: " + lab));
 			top.add(id0);
 			panel.add(top, BorderLayout.PAGE_START);
@@ -106,8 +106,7 @@ class LSCPop extends MouseAdapter {
 				Page.renewLoc(lsc.page);
 			}
 			if (res == ok && ttt != null
-					&& (!ttt.equals(lsc.lc.getToolTipText()) || 
-					!id1.getText().equals(cls + "_" + lsc.info))) {
+					&& (!ttt.equals(lsc.lc.getToolTipText()) || !id1.getText().equals(cls + "_" + lsc.info))) {
 				String[] ids = id1.getText().trim().split("_", 2);
 				if (ids.length == 2 && ids[0].length() > 0 && ids[1].length() > 0) {
 					MainLocale.setTTT(ids[0], ids[1], ttt);

@@ -255,8 +255,8 @@ public class MapColc extends Data {
 
 	@Override
 	public String toString() {
-		String desp=MultiLangCont.get(this);
-		if (desp!=null&&desp.length() > 0)
+		String desp = MultiLangCont.get(this);
+		if (desp != null && desp.length() > 0)
 			return desp + " (" + maps.length + ")";
 		return name + " (" + maps.length + ")";
 	}

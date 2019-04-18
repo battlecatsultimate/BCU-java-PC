@@ -156,8 +156,8 @@ public class Unit extends Data implements Comparable<Unit> {
 
 	@Override
 	public String toString() {
-		String desp=MultiLangCont.get(forms[0]);
-		if(desp!=null&&desp.length()>0)
+		String desp = MultiLangCont.get(forms[0]);
+		if (desp != null && desp.length() > 0)
 			return desp;
 		if (forms[0].name.length() > 0)
 			return forms[0].name;

@@ -79,8 +79,8 @@ public class BCJSON extends Data {
 			cals[i * 4 + 7] = lang + "info.properties";
 			cals[i * 4 + 8] = lang + "internet.properties";
 			// TODO tutorial
-			//TODO name
-			//TODO stage
+			// TODO name
+			// TODO stage
 		}
 
 	}

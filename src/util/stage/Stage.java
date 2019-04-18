@@ -163,8 +163,8 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap> {
 
 	@Override
 	public String toString() {
-		String desp=MultiLangCont.get(this);
-		if (desp!=null&&desp.length() > 0)
+		String desp = MultiLangCont.get(this);
+		if (desp != null && desp.length() > 0)
 			return desp;
 		if (name.length() > 0)
 			return name;

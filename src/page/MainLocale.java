@@ -132,7 +132,7 @@ public strictfp class MainLocale {
 	}
 
 	protected static void setLoc(int i, String key, String value) {
-		if(i<0)
+		if (i < 0)
 			return;
 		String loc = RENN[i] + "_" + LOC_CODE[lang];
 		MainLocale ml = NAMP.get(loc);

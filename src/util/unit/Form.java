@@ -30,7 +30,7 @@ public class Form extends Animable<AnimU> {
 	public final Unit unit;
 	public final int uid;
 	public int fid;
-	public final VImg udi;//TODO unused
+	public final VImg udi;// TODO unused
 
 	public String name = "";
 
@@ -124,8 +124,8 @@ public class Form extends Animable<AnimU> {
 
 	@Override
 	public String toString() {
-		String desp=MultiLangCont.get(this);
-		if(desp!=null&&desp.length()>0)
+		String desp = MultiLangCont.get(this);
+		if (desp != null && desp.length() > 0)
 			return desp;
 		if (name.length() > 0)
 			return name;
