@@ -254,7 +254,7 @@ public class Reader extends DataIO {
 						for (String str : qs) {
 							String[] strs = str.trim().split("\t");
 							Enemy e = Pack.def.es.get(Reader.parseIntN(strs[0]));
-							if (e == null||strs.length<2)
+							if (e == null || strs.length < 2)
 								continue;
 							MultiLangCont.ENAME.put(ni, e, strs[1].trim());
 						}

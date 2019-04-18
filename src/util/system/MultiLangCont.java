@@ -42,8 +42,8 @@ public class MultiLangCont<I, T> {
 
 	public T get(String loc, I x) {
 		T ans = getSub(loc).get(x);
-		int lang=0;
-		while(ans == null&&lang<4)
+		int lang = 0;
+		while (ans == null && lang < 4)
 			ans = getSub(MainLocale.LOC_CODE[lang++]).get(x);
 		return ans;
 	}

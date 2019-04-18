@@ -50,23 +50,23 @@ public class MusicStore extends FixIndexList<File> {
 	}
 
 	protected OutStream packup() {
-		//TODO not used
+		// TODO not used
 		OutStream mus = new OutStream();
 		mus.writeString("0.3.7");
 		Map<Integer, File> mcas = getMap();
 		mus.writeInt(mcas.size());
 		for (int ind : mcas.keySet()) {
 			mus.writeInt(ind);
-			OutStream data=new OutStream();
+			OutStream data = new OutStream();
 			try {
-				byte[] bs=Files.readAllBytes(mcas.get(ind).toPath());
+				byte[] bs = Files.readAllBytes(mcas.get(ind).toPath());
 				data.writeBytesI(bs);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 			data.terminate();
 			mus.accept(data);
-			
+
 		}
 		mus.terminate();
 		return mus;
@@ -100,7 +100,7 @@ public class MusicStore extends FixIndexList<File> {
 					continue;
 				}
 				if (val >= 0)
-					set(val,fi);
+					set(val, fi);
 			}
 		}
 	}

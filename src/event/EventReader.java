@@ -19,7 +19,7 @@ public class EventReader {
 	public static final int JP = 0, TW = 1, EN = 2, KR = 3;
 	public static final String[] LOC_NAME = new String[] { "BCJP", "BCTW", "BCEN", "BCKR" };
 
-	private static final String[] LOC = new String[] { "", "tw/", "en/", "kr/" };
+	private static final String[] LOC = new String[] { "jp/", "tw/", "en/", "kr/" };
 	private static final String prev = "https://bc-seek.godfat.org/seek/";
 	private static final String sale = "sale.tsv";
 	private static final String gacha = "gatya.tsv";
