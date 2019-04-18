@@ -77,7 +77,7 @@ public class CalendarPage extends URLPage {
 		jlss.setListData(new String[0]);
 		if (fc == null)
 			return;
-		String[] title = new String[] { get("time"), get("perm"), get("situ") };
+		String[] title = new String[] { get(0, "time"), get(0, "perm"), get(0, "situ") };
 		List<TimedEvent> lte = fc.getEvent(mb.getDate());
 		int n = 0, i = 0;
 		for (TimedEvent te : lte)

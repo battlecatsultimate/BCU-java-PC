@@ -15,11 +15,11 @@ class FEvent extends ListFilter<DisplayEvent> {
 
 	private static final int[] CODE = new int[] { 0, 1, 0, 0, 0 };
 
-	private final JTG jtb0 = new JTG(get("perm"));
-	private final JTG jtb1 = new JTG(get("situ"));
-	private final JTG jtb2 = new JTG(get("newv"));
-	private final JTG jtb3 = new JTG(get("ftre"));
-	private final JTG jtb4 = new JTG(get("onet"));
+	private final JTG jtb0 = new JTG(get(0, "perm"));
+	private final JTG jtb1 = new JTG(get(0, "situ"));
+	private final JTG jtb2 = new JTG(get(0, "newv"));
+	private final JTG jtb3 = new JTG(get(0, "ftre"));
+	private final JTG jtb4 = new JTG(get(0, "onet"));
 	private final JTG[] jtbs = new JTG[] { jtb0, jtb1, jtb2, jtb3, jtb4 };
 
 	protected FEvent(int[] datas, URLPage ep) {

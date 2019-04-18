@@ -15,7 +15,6 @@ import page.JBTN;
 import page.JTF;
 import page.JTG;
 import page.Page;
-import page.info.InfoText;
 import page.pack.CharaGroupPage;
 import page.pack.LvRestrictPage;
 import page.view.BGViewPage;
@@ -39,8 +38,8 @@ class HeadEditTable extends Page {
 	}
 
 	protected static void redefine() {
-		infs = InfoText.get("ht0", 6);
-		limits = InfoText.get("ht1", 7);
+		infs = Page.get(1, "ht0", 6);
+		limits = Page.get(1, "ht1", 7);
 		rarity = new String[] { "N", "EX", "R", "SR", "UR", "LR" };
 	}
 
@@ -175,7 +174,7 @@ class HeadEditTable extends Page {
 		jm1.setText("" + st.mus1);
 		jmax.setText("" + st.max);
 		con.setSelected(!st.non_con);
-		String str = InfoText.get("star") + ": ";
+		String str = Page.get(1, "star") + ": ";
 		for (int i = 0; i < 4; i++)
 			if (i < st.map.stars.length)
 				star[i].setText(i + 1 + str + st.map.stars[i] + "%");

@@ -395,7 +395,7 @@ public class StageEditPage extends Page {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!MainBCU.warning(get("w0"), "warning"))
+				if (!MainBCU.warning(get(0, "w0"), "warning"))
 					return;
 				StageMap sm = jlsm.getSelectedValue();
 				int ind = jlst.getSelectedIndex() - 1;

@@ -5,7 +5,6 @@ import java.awt.Point;
 import page.MainFrame;
 import page.Page;
 import page.info.EnemyInfoPage;
-import page.info.InfoText;
 import page.support.AbJTable;
 import page.support.EnemyTCR;
 import util.stage.EStage;
@@ -24,7 +23,7 @@ class ComingTable extends AbJTable {
 	}
 
 	protected static void redefine() {
-		title = InfoText.get("c", 6);
+		title = Page.get(1, "c", 6);
 	}
 
 	private Object[][] data;

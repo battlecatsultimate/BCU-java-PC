@@ -273,7 +273,7 @@ class EFBList extends EnemyFilterBox {
 
 	private void ini() {
 		for (int i = 0; i < orop.length; i++)
-			set(orop[i] = new JTG(get("orop")));
+			set(orop[i] = new JTG(get(0, "orop")));
 		for (int i = 0; i < TRAIT.length; i++)
 			vt.add(TRAIT[i]);
 		for (int i = 0; i < EFILTER; i++)

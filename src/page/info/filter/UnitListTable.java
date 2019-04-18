@@ -4,7 +4,6 @@ import java.awt.Point;
 
 import page.MainFrame;
 import page.Page;
-import page.info.InfoText;
 import page.info.UnitInfoPage;
 import page.support.SortTable;
 import page.support.UnitTCR;
@@ -27,9 +26,8 @@ public class UnitListTable extends SortTable<Form> {
 	}
 
 	public static void redefine() {
-		tit = new String[] { "ID", "name", InfoText.get("pref"), "HP", "HB", "atk", InfoText.get("range"),
-				InfoText.get("speed"), "dps", InfoText.get("preaa"), "CD", InfoText.get("price"),
-				InfoText.get("atkf") };
+		tit = new String[] { "ID", "name", Page.get(1, "pref"), "HP", "HB", "atk", Page.get(1, "range"),
+				Page.get(1, "speed"), "dps", Page.get(1, "preaa"), "CD", Page.get(1, "price"), Page.get(1, "atkf") };
 	}
 
 	private final Page page;

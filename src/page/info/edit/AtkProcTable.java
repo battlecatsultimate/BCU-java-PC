@@ -12,7 +12,6 @@ import javax.swing.SwingConstants;
 import io.Reader;
 import page.JTF;
 import page.Page;
-import page.info.InfoText;
 import page.support.ListJtfPolicy;
 import util.Data;
 import util.Interpret;
@@ -31,13 +30,13 @@ class AtkProcTable extends Page {
 
 	private static String getString(int ind) {
 		if (ind == 0)
-			return InfoText.get("prob");
+			return Page.get(1, "prob");
 		else if (ind == 1)
-			return InfoText.get("time");
+			return Page.get(1, "time");
 		else if (ind == 2)
-			return InfoText.get("dist");
+			return Page.get(1, "dist");
 		else if (ind == 3)
-			return InfoText.get("to");
+			return Page.get(1, "to");
 		else if (ind == 4)
 			return "Lv.";
 		else if (ind == 5)

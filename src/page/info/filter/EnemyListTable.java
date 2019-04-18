@@ -5,7 +5,6 @@ import java.awt.Point;
 import page.MainFrame;
 import page.Page;
 import page.info.EnemyInfoPage;
-import page.info.InfoText;
 import page.support.EnemyTCR;
 import page.support.SortTable;
 import util.basis.Basis;
@@ -23,8 +22,8 @@ public class EnemyListTable extends SortTable<Enemy> {
 	}
 
 	public static void redefine() {
-		tit = new String[] { "ID", "", "HP", "HB", "atk", InfoText.get("range"), InfoText.get("atkf"),
-				InfoText.get("speed"), InfoText.get("drop"), InfoText.get("preaa"), "hp/dps", "HP/HB/dps" };
+		tit = new String[] { "ID", "", "HP", "HB", "atk", Page.get(1, "range"), Page.get(1, "atkf"),
+				Page.get(1, "speed"), Page.get(1, "drop"), Page.get(1, "preaa"), "hp/dps", "HP/HB/dps" };
 	}
 
 	private final Page page;

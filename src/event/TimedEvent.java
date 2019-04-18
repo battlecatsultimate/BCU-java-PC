@@ -7,7 +7,7 @@ import page.Page;
 
 public class TimedEvent implements Displayable {
 
-	private static final String[] strs = new String[] { Page.get("all-day"), "0:00~11:00", "11:00~24:00", "0:00~12:00",
+	private static final String[] strs = new String[] { Page.get(0, "all-day"), "0:00~11:00", "11:00~24:00", "0:00~12:00",
 			"12:00~24:00", "7:00~14:00", "17:00~24:00", };
 
 	protected final int time;

@@ -66,11 +66,11 @@ public class UnitManagePage extends Page {
 	private final JComboBox<String> rar = new JComboBox<>(Interpret.RARITY);
 	private final JComboBox<UnitLevel> cbl = new JComboBox<>();
 
-	private final JLabel lbp = new JLabel(get("pack"));
-	private final JLabel lbu = new JLabel(get("unit"));
-	private final JLabel lbd = new JLabel(get("seleanim"));
-	private final JLabel lbml = new JLabel(get("maxl"));
-	private final JLabel lbmp = new JLabel(get("maxp"));
+	private final JLabel lbp = new JLabel(get(0, "pack"));
+	private final JLabel lbu = new JLabel(get(0, "unit"));
+	private final JLabel lbd = new JLabel(get(0, "seleanim"));
+	private final JLabel lbml = new JLabel(get(0, "maxl"));
+	private final JLabel lbmp = new JLabel(get(0, "maxp"));
 	private final JLabel lbf = new JLabel("forms");
 
 	private Pack pac;
@@ -200,7 +200,7 @@ public class UnitManagePage extends Page {
 		remu.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!MainBCU.warning(get("w0"), "warning"))
+				if (!MainBCU.warning(get(0, "w0"), "warning"))
 					return;
 				changing = true;
 				int ind = jlu.getSelectedIndex();
@@ -302,7 +302,7 @@ public class UnitManagePage extends Page {
 		remf.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!MainBCU.warning(get("w0"), "warning"))
+				if (!MainBCU.warning(get(0, "w0"), "warning"))
 					return;
 				changing = true;
 				int ind = jlf.getSelectedIndex();

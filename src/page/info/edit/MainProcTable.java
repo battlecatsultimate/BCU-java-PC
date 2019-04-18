@@ -13,7 +13,6 @@ import javax.swing.SwingConstants;
 import io.Reader;
 import page.JTF;
 import page.Page;
-import page.info.InfoText;
 import page.support.ListJtfPolicy;
 import util.Res;
 
@@ -26,12 +25,12 @@ class MainProcTable extends Page {
 	private final JLabel lbr = new JLabel(SPROC[11]);
 	private final JLabel lre = new JLabel(SPROC[12]);
 	private final JLabel lstp = new JLabel("HP");
-	private final JLabel lsta = new JLabel(InfoText.get("inc"));
-	private final JLabel llep = new JLabel(InfoText.get("prob"));
-	private final JLabel lbrt = new JLabel(InfoText.get("times"));
-	private final JLabel lbrd = new JLabel(InfoText.get("dist"));
-	private final JLabel lret = new JLabel(InfoText.get("times"));
-	private final JLabel lrei = new JLabel(InfoText.get("time"));
+	private final JLabel lsta = new JLabel(Page.get(1, "inc"));
+	private final JLabel llep = new JLabel(Page.get(1, "prob"));
+	private final JLabel lbrt = new JLabel(Page.get(1, "times"));
+	private final JLabel lbrd = new JLabel(Page.get(1, "dist"));
+	private final JLabel lret = new JLabel(Page.get(1, "times"));
+	private final JLabel lrei = new JLabel(Page.get(1, "time"));
 	private final JLabel lrea = new JLabel("HP");
 	private final JTF fstp = new JTF();
 	private final JTF fsta = new JTF();

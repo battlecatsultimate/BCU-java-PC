@@ -26,14 +26,18 @@ public abstract class Page extends JPanel {
 		ToolTipManager.sharedInstance().setInitialDelay(100);
 	}
 
-	public static String get(String str) {
-		return MainLocale.getLoc(0, str);
+	public static String get(int i, String s) {
+		return MainLocale.getLoc(i, s);
+	}
+
+	public static String[] get(int i, String s, int m) {
+		return MainLocale.getLoc(i, s, m);
 	}
 
 	public static String[] get(String... strs) {
 		String[] ans = new String[strs.length];
 		for (int i = 0; i < ans.length; i++)
-			ans[i] = MainLocale.getLoc(0, strs[i]);
+			ans[i] = get(0, strs[i]);
 		return ans;
 	}
 

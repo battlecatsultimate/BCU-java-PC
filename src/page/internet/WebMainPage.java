@@ -23,7 +23,6 @@ import io.BCJSON;
 import io.WebPack;
 import main.MainBCU;
 import page.JBTN;
-import page.MainLocale;
 import page.Page;
 import util.pack.Pack;
 
@@ -35,7 +34,7 @@ public class WebMainPage extends Page {
 	private final JBTN edit = new JBTN(2, "manage");
 	private final JBTN main = new JBTN(2, "full");
 	private final JBTN rfsh = new JBTN(2, "refresh");
-	private final JComboBox<String> sort = new JComboBox<>(MainLocale.getLoc(2, "sort", 4));
+	private final JComboBox<String> sort = new JComboBox<>(get(2, "sort", 4));
 	private final JPanel cont = new JPanel();
 	private final JScrollPane jsp = new JScrollPane(cont);
 
@@ -152,7 +151,7 @@ public class WebMainPage extends Page {
 		jsp.getVerticalScrollBar().setUnitIncrement(8);
 		title = new JLabel[7];
 		for (int i = 0; i < 7; i++) {
-			add(title[i] = new JLabel(WebText.get("t" + i)));
+			add(title[i] = new JLabel(get(2, "t" + i)));
 			title[i].setHorizontalAlignment(SwingConstants.CENTER);
 			title[i].setBorder(BorderFactory.createEtchedBorder());
 		}

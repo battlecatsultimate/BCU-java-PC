@@ -119,34 +119,34 @@ public class EnemyInfoTable extends Page {
 		main[0][1].setText("" + e.id);
 		if (e.anim.edi != null && e.anim.edi.getImg() != null)
 			main[0][2].setIcon(e.anim.edi.getIcon());
-		main[0][3].setText(InfoText.get("trait"));
+		main[0][3].setText(Page.get(1, "trait"));
 		main[0][4].setText(Interpret.getTrait(e.de.getType(), e.de.getStar()));
-		main[1][0].setText(InfoText.get("mult"));
+		main[1][0].setText(Page.get(1, "mult"));
 		main[1][2].setText("HP");
 		main[1][4].setText("HB");
 		main[1][5].setText("" + e.de.getHb());
-		main[1][6].setText(InfoText.get("drop"));
+		main[1][6].setText(Page.get(1, "drop"));
 		main[1][7].setText("" + (int) (e.de.getDrop() * b.t().getDropMulti()));
-		main[2][0].setText(InfoText.get("range"));
+		main[2][0].setText(Page.get(1, "range"));
 		main[2][1].setText("" + e.de.getRange());
 		main[2][2].setText("dps");
-		main[2][4].setText(InfoText.get("speed"));
+		main[2][4].setText(Page.get(1, "speed"));
 		main[2][5].setText("" + e.de.getSpeed());
-		main[2][6].setText(InfoText.get("atkf"));
+		main[2][6].setText(Page.get(1, "atkf"));
 		main[2][7].setText(itv + "f");
-		main[3][0].setText(InfoText.get("isr"));
+		main[3][0].setText(Page.get(1, "isr"));
 		main[3][1].setText("" + e.de.isRange());
-		main[3][2].setText(InfoText.get("shield"));
+		main[3][2].setText(Page.get(1, "shield"));
 		main[3][3].setText("" + e.de.getShield());
-		main[3][4].setText(InfoText.get("TBA"));
+		main[3][4].setText(Page.get(1, "TBA"));
 		main[3][5].setText(e.de.getTBA() + "f");
-		main[3][6].setText(InfoText.get("postaa"));
+		main[3][6].setText(Page.get(1, "postaa"));
 		int[][] atkData = e.de.rawAtkData();
 		for (int i = 0; i < atks.length; i++) {
 			atks[i][0].setText("atk");
-			atks[i][2].setText(InfoText.get("preaa"));
+			atks[i][2].setText(Page.get(1, "preaa"));
 			atks[i][3].setText(atkData[i][1] + "f");
-			atks[i][4].setText(InfoText.get("use"));
+			atks[i][4].setText(Page.get(1, "use"));
 			atks[i][5].setText("" + (atkData[i][2] == 1));
 			itv -= atkData[i][1];
 		}

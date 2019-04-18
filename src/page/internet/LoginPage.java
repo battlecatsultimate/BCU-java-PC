@@ -18,9 +18,9 @@ public class LoginPage extends Page {
 
 	private final JBTN back = new JBTN(0, "back");
 	private final JBTN rest = new JBTN(2, "reset");
-	private final JLabel jlu = new JLabel(WebText.get("username"));
+	private final JLabel jlu = new JLabel(get(2, "username"));
 	private final JLabel jle = new JLabel();
-	private final JLabel jlc = new JLabel(WebText.get("cont"));
+	private final JLabel jlc = new JLabel(get(2, "cont"));
 	private final JTF jtf = new JTF();
 	private final JBTN login = new JBTN(2, "login");
 
@@ -61,7 +61,7 @@ public class LoginPage extends Page {
 			public void actionPerformed(ActionEvent arg0) {
 				String str = jtf.getText().trim();
 				if (str.length() == 0) {
-					jle.setText(WebText.get("e2"));
+					jle.setText(get(2, "e2"));
 					jlc.setVisible(true);
 					return;
 				}
@@ -73,12 +73,12 @@ public class LoginPage extends Page {
 						BCJSON.USERNAME = str;
 						changePanel(new WebMainPage(getFront()));
 					} else if (id == -100) {
-						jle.setText(WebText.get("e1"));
+						jle.setText(get(2, "e1"));
 						rest.setVisible(true);
 					} else
-						jle.setText(WebText.get("e0"));
+						jle.setText(get(2, "e0"));
 				} catch (IOException e) {
-					jle.setText(WebText.get("e3"));
+					jle.setText(get(2, "e3"));
 					jlc.setVisible(true);
 					e.printStackTrace();
 				}
@@ -90,7 +90,7 @@ public class LoginPage extends Page {
 			public void actionPerformed(ActionEvent arg0) {
 				String str = jtf.getText().trim();
 				if (str.length() == 0) {
-					jle.setText(WebText.get("e2"));
+					jle.setText(get(2, "e2"));
 					jlc.setVisible(true);
 					return;
 				}
@@ -102,11 +102,11 @@ public class LoginPage extends Page {
 						BCJSON.USERNAME = str;
 						changePanel(new WebMainPage(getFront()));
 					} else if (id == -101) {
-						jle.setText(WebText.get("e4"));
+						jle.setText(get(2, "e4"));
 					} else
-						jle.setText(WebText.get("e0"));
+						jle.setText(get(2, "e0"));
 				} catch (IOException e) {
-					jle.setText(WebText.get("e3"));
+					jle.setText(get(2, "e3"));
 					jlc.setVisible(true);
 					e.printStackTrace();
 				}

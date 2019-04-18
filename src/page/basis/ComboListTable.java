@@ -7,8 +7,8 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import page.MainLocale;
 import page.Page;
-import page.info.InfoText;
 import page.support.SortTable;
 import util.Interpret;
 import util.basis.Combo;
@@ -27,9 +27,9 @@ public class ComboListTable extends SortTable<Combo> {
 	}
 
 	public static void redefine() {
-		String str = InfoText.get("unit");
-		tit = new String[] { "Lv.", InfoText.get("desc"), InfoText.get("occu"), str + " 1", str + " 2", str + " 3",
-				str + " 4", str + " 5" };
+		String str = MainLocale.getLoc(1, "unit");
+		tit = new String[] { "Lv.", MainLocale.getLoc(1, "desc"), MainLocale.getLoc(1, "occu"), str + " 1", str + " 2",
+				str + " 3", str + " 4", str + " 5" };
 	}
 
 	private final LineUp lu;

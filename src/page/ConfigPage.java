@@ -39,8 +39,8 @@ public class ConfigPage extends Page {
 	private final JBTN[] right = new JBTN[4];
 	private final JLabel[] name = new JLabel[4];
 	private final JLabel[] vals = new JLabel[4];
-	private final JLabel jlmin = new JLabel(get("opamin"));
-	private final JLabel jlmax = new JLabel(get("opamax"));
+	private final JLabel jlmin = new JLabel(get(0, "opamin"));
+	private final JLabel jlmax = new JLabel(get(0, "opamax"));
 	private final JSlider jsmin = new JSlider(0, 100);
 	private final JSlider jsmax = new JSlider(0, 100);
 	private final JList<String> jls = new JList<>(MainLocale.LOC_NAME);
@@ -59,11 +59,11 @@ public class ConfigPage extends Page {
 
 	@Override
 	protected void renew() {
-		jlmin.setText(get("opamin"));
-		jlmax.setText(get("opamax"));
+		jlmin.setText(get(0, "opamin"));
+		jlmax.setText(get(0, "opamax"));
 		for (int i = 0; i < 4; i++) {
-			name[i].setText(get(ImgCore.NAME[i]));
-			vals[i].setText(get(ImgCore.VAL[ImgCore.ints[i]]));
+			name[i].setText(get(0, ImgCore.NAME[i]));
+			vals[i].setText(get(0, ImgCore.VAL[ImgCore.ints[i]]));
 		}
 	}
 
@@ -153,7 +153,7 @@ public class ConfigPage extends Page {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					ImgCore.ints[I]--;
-					vals[I].setText(get(ImgCore.VAL[ImgCore.ints[I]]));
+					vals[I].setText(get(0, ImgCore.VAL[ImgCore.ints[I]]));
 					left[I].setEnabled(ImgCore.ints[I] > 0);
 					right[I].setEnabled(ImgCore.ints[I] < 2);
 				}
@@ -164,7 +164,7 @@ public class ConfigPage extends Page {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
 					ImgCore.ints[I]++;
-					vals[I].setText(get(ImgCore.VAL[ImgCore.ints[I]]));
+					vals[I].setText(get(0, ImgCore.VAL[ImgCore.ints[I]]));
 					left[I].setEnabled(ImgCore.ints[I] > 0);
 					right[I].setEnabled(ImgCore.ints[I] < 2);
 				}
@@ -258,8 +258,8 @@ public class ConfigPage extends Page {
 		for (int i = 0; i < 4; i++) {
 			left[i] = new JBTN("<");
 			right[i] = new JBTN(">");
-			name[i] = new JLabel(get(ImgCore.NAME[i]));
-			vals[i] = new JLabel(get(ImgCore.VAL[ImgCore.ints[i]]));
+			name[i] = new JLabel(get(0, ImgCore.NAME[i]));
+			vals[i] = new JLabel(get(0, ImgCore.VAL[ImgCore.ints[i]]));
 			add(left[i]);
 			add(right[i]);
 			add(name[i]);

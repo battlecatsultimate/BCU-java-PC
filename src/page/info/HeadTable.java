@@ -27,8 +27,8 @@ public class HeadTable extends AbJTable {
 	}
 
 	public static void redefine() {
-		infs = InfoText.get("ht0", 6);
-		limits = InfoText.get("ht1", 7);
+		infs = Page.get(1, "ht0", 6);
+		limits = Page.get(1, "ht1", 7);
 		rarity = new String[] { "N", "EX", "R", "SR", "UR", "LR" };
 	}
 
@@ -99,14 +99,14 @@ public class HeadTable extends AbJTable {
 		reg = lstr[4];
 		tit[0] = "ID:";
 		tit[1] = st.map.mc + "-" + st.map.id + "-" + st.id();
-		String star = InfoText.get("star");
+		String star = Page.get(1, "star");
 		for (int i = 0; i < st.map.stars.length; i++)
 			tit[2 + i] = (i + 1) + star + ": " + st.map.stars[i] + "%";
 		bas[0] = infs[0];
 		bas[1] = st.health;
 		bas[2] = infs[1] + ": " + st.len;
 		bas[3] = infs[2] + ": " + st.max;
-		bas[4] = InfoText.get("mus") + ":";
+		bas[4] = Page.get(1, "mus") + ":";
 		bas[5] = st.mus0;
 		bas[6] = "<" + st.mush + "%:";
 		bas[7] = st.mus1;

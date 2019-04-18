@@ -13,7 +13,6 @@ import page.JBTN;
 import page.JTG;
 import page.Page;
 import page.basis.BasisPage;
-import page.info.InfoText;
 import util.basis.BasisSet;
 import util.stage.Stage;
 
@@ -123,7 +122,7 @@ public class BattleSetupPage extends Page {
 		add(snip);
 		add(tmax);
 		String[] tit = new String[st.map.stars.length];
-		String star = InfoText.get("star");
+		String star = get(1, "star");
 		for (int i = 0; i < st.map.stars.length; i++)
 			tit[i] = (i + 1) + star + ": " + st.map.stars[i] + "%";
 		jls.setListData(tit);

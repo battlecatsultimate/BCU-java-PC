@@ -22,15 +22,15 @@ public strictfp class MainLocale {
 
 	public static final Map<String, MainLocale> NAMP = new TreeMap<>();
 	public static final Map<String, TTT> TMAP = new TreeMap<>();
-	public static final String[] LOC_NAME = { "English", "\u4E2D\u6587", "\uD55C\uAD6D\uC5B4", "Japanese",
-			"Russian", "German", "French", "Dutch", "Spainsh" };
-	public static final String[] LOC_CODE ={ "en", "zh", "kr", "jp", "ru", "de", "fr", "nl", "es" };
-	private static final String[] RENN = {"page", "info", "internet", "util"};
+	public static final String[] LOC_NAME = { "English", "\u4E2D\u6587", "\uD55C\uAD6D\uC5B4", "Japanese", "Russian",
+			"German", "French", "Dutch", "Spainsh" };
+	public static final String[] LOC_CODE = { "en", "zh", "kr", "jp", "ru", "de", "fr", "nl", "es" };
+	private static final String[] RENN = { "page", "info", "internet", "util" };
 	private static final ResourceBundle[] RENS = new ResourceBundle[4];
-	
+
 	static {
-		for(int i=0;i<4;i++)
-			RENS[i]=ResourceBundle.getBundle("page."+RENN[i]);
+		for (int i = 0; i < 4; i++)
+			RENS[i] = ResourceBundle.getBundle("page." + RENN[i]);
 	}
 
 	public static int lang = 0;
@@ -56,8 +56,18 @@ public strictfp class MainLocale {
 		if (loc >= 0 && loc < 4) {
 			String loci = RENN[loc] + "_";
 			String locl = loci + LOC_CODE[MainLocale.lang];
-			if (NAMP.containsKey(locl) && NAMP.get(locl).contains(key))
-				return NAMP.get(loci + LOC_CODE[MainLocale.lang]).get(key);
+			if (NAMP.containsKey(locl) && NAMP.get(locl).contains(key)) {
+				String str=NAMP.get(loci + LOC_CODE[MainLocale.lang]).get(key);
+				String[] strs = str.split("#");
+				if (strs.length == 1)
+					return str;
+				for (int i = 1; i < strs.length; i += 2)
+					strs[i] = getLoc(loc,strs[i]);
+				String ans = "";
+				for (int i = 0; i < strs.length; i++)
+					ans += strs[i];
+				return ans;
+			}
 			try {
 				return exLang ? "[" + loci + key + "]" : RENS[loc].getString(key);
 			} catch (MissingResourceException e) {
@@ -88,7 +98,7 @@ public strictfp class MainLocale {
 	}
 
 	protected static String getID(int i) {
-		if (i>=0&&i<4)
+		if (i >= 0 && i < 4)
 			return RENN[i];
 		return "";
 	}

@@ -25,7 +25,6 @@ import io.ZipAccess;
 import main.MainBCU;
 import page.JBTN;
 import page.Page;
-import page.info.InfoText;
 import page.info.TreaTable;
 import page.support.Exporter;
 import util.Interpret;
@@ -517,7 +516,7 @@ public class BackupTreePage extends Page {
 		}
 		DefaultMutableTreeNode tmc = new DefaultMutableTreeNode("stages/");
 		top.add(tmc);
-		String[] stastr = InfoText.get("t", 7);
+		String[] stastr = Page.get(1, "t", 7);
 		for (StageMap sm : p.mc.maps) {
 			DefaultMutableTreeNode tsm = new DefaultMutableTreeNode(sm + "/");
 			tmc.add(tsm);
