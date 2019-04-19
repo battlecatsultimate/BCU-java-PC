@@ -77,12 +77,8 @@ public class Unit extends Data implements Comparable<Unit> {
 		maxp = old.maxp;
 		lv = ul;
 		forms = new Form[old.forms.length];
-		for (int i = 0; i < forms.length; i++) {
-			Form fo = old.forms[i];
-			CustomUnit cu = new CustomUnit();
-			cu.importData(fo.du);
-			forms[i] = new Form(this, i, fo.name, (AnimC) fo.anim, cu);
-		}
+		for (int i = 0; i < forms.length; i++)
+			forms[i] = old.forms[i].copy(this);
 	}
 
 	protected Unit(Pack p, DIYAnim da, CustomUnit cu) {

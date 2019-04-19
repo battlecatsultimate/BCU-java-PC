@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import io.InStream;
 import io.OutStream;
 import util.system.FixIndexList;
 
@@ -80,9 +79,8 @@ public class MusicStore extends FixIndexList<File> {
 		return os;
 	}
 
-	protected void zread$t000306(InStream is) {
-		is.nextInt();
-
+	public void load(){
+		clear();
 		File f = new File("./res/img/" + pack.id + "/music/");
 		if (f.exists()) {
 			File[] fs = f.listFiles();
@@ -105,12 +103,11 @@ public class MusicStore extends FixIndexList<File> {
 		}
 	}
 
-	protected void zreadt(int ver, InStream cas) {
-		if (ver >= 307)
-			ver = getVer(cas.nextString());
-
-		if (ver >= 306)
-			zread$t000306(cas);
+	public static int getID(File f) {
+		for(Pack p:Pack.map.values())
+			if(p.ms.contains(f))
+				return p.id*1000+p.ms.indexOf(f);
+		return -1;
 	}
 
 }

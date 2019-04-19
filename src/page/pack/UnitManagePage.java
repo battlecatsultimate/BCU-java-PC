@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
@@ -22,8 +23,7 @@ import page.JL;
 import page.JTF;
 import page.Page;
 import page.info.edit.FormEditPage;
-import page.support.AnimLCR;
-import page.support.UnitLCR;
+import page.support.*;
 import util.Interpret;
 import util.anim.AnimC;
 import util.entity.data.CustomUnit;
@@ -43,7 +43,7 @@ public class UnitManagePage extends Page {
 	private final JScrollPane jspp = new JScrollPane(jlp);
 	private final JList<Unit> jlu = new JList<>();
 	private final JScrollPane jspu = new JScrollPane(jlu);
-	private final JList<Form> jlf = new JList<>();
+	private final ReorderList<Form> jlf = new ReorderList<>();
 	private final JScrollPane jspf = new JScrollPane(jlf);
 	private final JList<DIYAnim> jld = new JList<>(new Vector<>(DIYAnim.map.values()));
 	private final JScrollPane jspd = new JScrollPane(jld);
@@ -165,6 +165,30 @@ public class UnitManagePage extends Page {
 			}
 
 		});
+		
+		jlf.list=new ReorderListener<Form>() {
+
+			@Override
+			public void reordered(int ori, int fin) {
+				List<Form> lsm = new ArrayList<>();
+				for (Form sm : uni.forms)
+					lsm.add(sm);
+				Form sm = lsm.remove(ori);
+				lsm.add(fin, sm);
+				for(int i=0;i<uni.forms.length;i++) {
+					uni.forms[i]=lsm.get(i);
+					uni.forms[i].fid=i;
+				}
+				changing=false;
+			}
+
+			@Override
+			public void reordering() {
+				changing=true;
+			}
+			
+			
+		};
 
 	}
 

@@ -11,12 +11,14 @@ import io.Reader;
 import page.MainFrame;
 import page.Page;
 import page.info.EnemyInfoPage;
+import page.pack.EREditPage;
 import page.support.AbJTable;
 import page.support.EnemyTCR;
 import page.support.InTableTH;
 import page.support.Reorderable;
 import util.stage.Stage;
 import util.unit.AbEnemy;
+import util.unit.EneRand;
 import util.unit.Enemy;
 import util.unit.EnemyStore;
 
@@ -183,6 +185,8 @@ class StageEditTable extends AbJTable implements Reorderable {
 		AbEnemy e = EnemyStore.getAbEnemy(info[ind][0], true);
 		if (e != null && e instanceof Enemy)
 			MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, info[ind][9]));
+		if (e != null && e instanceof EneRand)
+			MainFrame.changePanel(new EREditPage(page,stage.map.mc.pack,(EneRand)e));
 	}
 
 	protected synchronized int remLine() {

@@ -60,6 +60,12 @@ public class EREditPage extends Page {
 		pack = pac;
 		jle.setListData(EnemyStore.getAll(pack, true).toArray(new AbEnemy[0]));
 		ini();
+		resized();
+	}
+
+	public EREditPage(Page page, Pack pac, EneRand e) {
+		this(page,pac);
+		jle.setSelectedValue(e,true);
 	}
 
 	@Override
@@ -268,16 +274,15 @@ public class EREditPage extends Page {
 			adds.setEnabled(false);
 			return;
 		}
+		adds.setEnabled(pack.editable);
 		List<EneRand> l = sm.ers.getList();
 		jlst.setListData(l.toArray(new EneRand[0]));
 		if (l.size() == 0) {
 			jlst.clearSelection();
-			adds.setEnabled(true);
 			setER(null);
 			return;
 		}
 		jlst.setSelectedIndex(0);
-		adds.setEnabled(true);
 		setER(sm.ers.getList().get(0));
 	}
 

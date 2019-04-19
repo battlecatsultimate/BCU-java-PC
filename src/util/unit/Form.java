@@ -11,11 +11,12 @@ import util.entity.data.CustomUnit;
 import util.entity.data.DataUnit;
 import util.entity.data.MaskUnit;
 import util.entity.data.PCoin;
+import util.system.BasedCopable;
 import util.system.MultiLangCont;
 import util.system.VImg;
 
-public class Form extends Animable<AnimU> {
-
+public class Form extends Animable<AnimU> implements BasedCopable<Form,Unit> {
+	
 	public static ImgCut unicut, udicut;
 
 	public static String lvString(int[] lvs) {
@@ -130,6 +131,13 @@ public class Form extends Animable<AnimU> {
 		if (name.length() > 0)
 			return name;
 		return trio(uid) + "-" + fid;
+	}
+
+	@Override
+	public Form copy(Unit b) {
+		CustomUnit cu = new CustomUnit();
+		cu.importData(du);
+		return new Form(b, fid, name, (AnimC) anim, cu);
 	}
 
 }

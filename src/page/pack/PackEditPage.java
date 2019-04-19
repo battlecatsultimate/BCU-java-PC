@@ -30,6 +30,7 @@ import page.support.ReorderListener;
 import page.view.BGViewPage;
 import page.view.CastleViewPage;
 import page.view.EnemyViewPage;
+import page.view.MusicPage;
 import util.entity.data.CustomEnemy;
 import util.pack.Pack;
 import util.stage.MapColc;
@@ -74,6 +75,7 @@ public class PackEditPage extends Page {
 	private final JBTN vrlr = new JBTN(0, "relr");
 	private final JBTN cunt = new JBTN(0, "cunt");
 	private final JBTN ener = new JBTN(0, "ener");
+	private final JBTN vmcs = new JBTN(0, "vmsc");
 	private final JTF jtfp = new JTF();
 	private final JTF jtfe = new JTF();
 	private final JTF jtfs = new JTF();
@@ -147,6 +149,7 @@ public class PackEditPage extends Page {
 		set(jtfs, x, y, w, 850, 300, 50);
 		set(sdiy, x, y, w, 950, 300, 50);
 		set(cunt, x, y, w, 1050, 300, 50);
+		set(vmcs,x,y,w,1150,300,50);
 
 		w += 350;
 
@@ -406,6 +409,16 @@ public class PackEditPage extends Page {
 			}
 
 		});
+		
+		vmcs.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				changePanel(pac.editable?new MusicEditPage(getThis(), pac):
+					new MusicPage(getThis(),pac.ms.getList()));
+			}
+
+		});
 
 		jls.addListSelectionListener(new ListSelectionListener() {
 
@@ -604,6 +617,7 @@ public class PackEditPage extends Page {
 		add(vrlr);
 		add(vbgr);
 		add(ener);
+		add(vmcs);
 		jle.setCellRenderer(new AnimLCR());
 		jld.setCellRenderer(new AnimLCR());
 		setPack(null);

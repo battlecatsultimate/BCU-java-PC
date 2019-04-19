@@ -598,6 +598,7 @@ public class Pack extends Data {
 			MainBCU.pop("custom pack version is too old, use BCU 0-4-1-3 or earlier version to open it",
 					"version error");
 		mc = new MapColc(this, res);
+		ms.load();
 		res = null;
 	}
 

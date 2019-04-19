@@ -262,7 +262,7 @@ class HeadEditTable extends Page {
 		mus.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				mp = new MusicPage(getFront());
+				mp = new MusicPage(getFront(),pac);
 				changePanel(mp);
 			}
 		});
