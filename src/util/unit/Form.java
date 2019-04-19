@@ -15,8 +15,8 @@ import util.system.BasedCopable;
 import util.system.MultiLangCont;
 import util.system.VImg;
 
-public class Form extends Animable<AnimU> implements BasedCopable<Form,Unit> {
-	
+public class Form extends Animable<AnimU> implements BasedCopable<Form, Unit> {
+
 	public static ImgCut unicut, udicut;
 
 	public static String lvString(int[] lvs) {
@@ -58,6 +58,13 @@ public class Form extends Animable<AnimU> implements BasedCopable<Form,Unit> {
 		udi.setCut(udicut);
 		String[] strs = data.split("//")[0].trim().split(",");
 		du = new DataUnit(this, unit, strs);
+	}
+
+	@Override
+	public Form copy(Unit b) {
+		CustomUnit cu = new CustomUnit();
+		cu.importData(du);
+		return new Form(b, fid, name, (AnimC) anim, cu);
 	}
 
 	public int getDefaultPrice(int sta) {
@@ -131,13 +138,6 @@ public class Form extends Animable<AnimU> implements BasedCopable<Form,Unit> {
 		if (name.length() > 0)
 			return name;
 		return trio(uid) + "-" + fid;
-	}
-
-	@Override
-	public Form copy(Unit b) {
-		CustomUnit cu = new CustomUnit();
-		cu.importData(du);
-		return new Form(b, fid, name, (AnimC) anim, cu);
 	}
 
 }

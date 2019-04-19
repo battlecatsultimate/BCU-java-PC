@@ -17,7 +17,7 @@ import util.system.VImg;
 import util.unit.Form;
 import util.unit.Unit;
 
-class LineUpBox extends Canvas {
+public class LineUpBox extends Canvas {
 
 	private static final long serialVersionUID = 1L;
 
@@ -30,7 +30,7 @@ class LineUpBox extends Canvas {
 
 	protected Form sf;
 
-	protected LineUpBox(Page p) {
+	public LineUpBox(Page p) {
 		page = p;
 		setIgnoreRepaint(true);
 	}
@@ -79,6 +79,11 @@ class LineUpBox extends Canvas {
 		if (pt == 5)
 			time = 1 - time;
 		pt %= 5;
+	}
+
+	public void setLU(LineUp l) {
+		lu = l;
+		backup = new Form[5];
 	}
 
 	protected void adjForm() {
@@ -147,11 +152,6 @@ class LineUpBox extends Canvas {
 		time = 1;
 		paint(getGraphics());
 		page.callBack(f);
-	}
-
-	protected void setLU(LineUp l) {
-		lu = l;
-		backup = new Form[5];
 	}
 
 	protected void setLv(int[] lv) {

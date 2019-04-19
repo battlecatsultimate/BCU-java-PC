@@ -119,6 +119,7 @@ public abstract class CustomEntity extends DataEntity {
 		int m = de.getAtkCount();
 		atks = new AtkDataModel[m];
 		int[][] dat = de.rawAtkData();
+		int pre = 0;
 		for (int i = 0; i < m; i++) {
 			atks[i] = new AtkDataModel(this);
 			MaskAtk am = de.getAtkModel(i);
@@ -128,7 +129,7 @@ public abstract class CustomEntity extends DataEntity {
 					atks[i].proc[j] = am.getProc(j);
 			atks[i].ld0 = am.getShortPoint();
 			atks[i].ld1 = am.getLongPoint();
-			atks[i].pre = dat[i][1];
+			pre = atks[i].pre = dat[i][1] - pre;
 			atks[i].atk = dat[i][0];
 		}
 	}
@@ -165,15 +166,15 @@ public abstract class CustomEntity extends DataEntity {
 	protected void write(OutStream os) {
 		os.writeInt(hp);
 		os.writeInt(hb);
-		os.writeInt((byte) speed);
-		os.writeInt((short) range);
+		os.writeInt(speed);
+		os.writeInt(range);
 		os.writeInt(abi);
 		os.writeInt(type);
-		os.writeInt((short) width);
+		os.writeInt(width);
 		os.writeInt(shield);
 		os.writeByte((byte) (isrange ? 1 : 0));
 		os.writeInt(tba);
-		os.writeInt((short) base);
+		os.writeInt(base);
 		os.writeByte((byte) (common ? 1 : 0));
 		rep.write(os);
 		List<AtkDataModel> temp = new ArrayList<>();

@@ -186,7 +186,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 		if (e != null && e instanceof Enemy)
 			MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, info[ind][9]));
 		if (e != null && e instanceof EneRand)
-			MainFrame.changePanel(new EREditPage(page,stage.map.mc.pack,(EneRand)e));
+			MainFrame.changePanel(new EREditPage(page, stage.map.mc.pack, (EneRand) e));
 	}
 
 	protected synchronized int remLine() {

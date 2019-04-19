@@ -24,6 +24,13 @@ public class MusicStore extends FixIndexList<File> {
 		return ans;
 	}
 
+	public static int getID(File f) {
+		for (Pack p : Pack.map.values())
+			if (p.ms.contains(f))
+				return p.id * 1000 + p.ms.indexOf(f);
+		return -1;
+	}
+
 	public static File getMusic(int ind) {
 		int pid = ind / 1000;
 		Pack pack = Pack.map.get(pid);
@@ -37,6 +44,30 @@ public class MusicStore extends FixIndexList<File> {
 	public MusicStore(Pack p) {
 		super(new File[1000]);
 		pack = p;
+	}
+
+	public void load() {
+		clear();
+		File f = new File("./res/img/" + pack.id + "/music/");
+		if (f.exists()) {
+			File[] fs = f.listFiles();
+			for (File fi : fs) {
+				String str = fi.getName();
+				if (str.length() != 7)
+					continue;
+				if (!str.endsWith(".ogg"))
+					continue;
+				int val = -1;
+				try {
+					val = Integer.parseInt(str.substring(0, 3));
+				} catch (NumberFormatException e) {
+					e.printStackTrace();
+					continue;
+				}
+				if (val >= 0)
+					set(val, fi);
+			}
+		}
 	}
 
 	public String nameOf(File f) {
@@ -77,37 +108,6 @@ public class MusicStore extends FixIndexList<File> {
 		os.writeInt(0);
 		os.terminate();
 		return os;
-	}
-
-	public void load(){
-		clear();
-		File f = new File("./res/img/" + pack.id + "/music/");
-		if (f.exists()) {
-			File[] fs = f.listFiles();
-			for (File fi : fs) {
-				String str = fi.getName();
-				if (str.length() != 7)
-					continue;
-				if (!str.endsWith(".ogg"))
-					continue;
-				int val = -1;
-				try {
-					val = Integer.parseInt(str.substring(0, 3));
-				} catch (NumberFormatException e) {
-					e.printStackTrace();
-					continue;
-				}
-				if (val >= 0)
-					set(val, fi);
-			}
-		}
-	}
-
-	public static int getID(File f) {
-		for(Pack p:Pack.map.values())
-			if(p.ms.contains(f))
-				return p.id*1000+p.ms.indexOf(f);
-		return -1;
 	}
 
 }

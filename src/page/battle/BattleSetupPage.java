@@ -13,10 +13,12 @@ import page.JBTN;
 import page.JTG;
 import page.Page;
 import page.basis.BasisPage;
+import page.basis.LineUpBox;
+import page.basis.LubCont;
 import util.basis.BasisSet;
 import util.stage.Stage;
 
-public class BattleSetupPage extends Page {
+public class BattleSetupPage extends LubCont {
 
 	private static final long serialVersionUID = 1L;
 
@@ -29,6 +31,7 @@ public class BattleSetupPage extends Page {
 	private final JScrollPane jsps = new JScrollPane(jls);
 	private final JLabel jl = new JLabel();
 	private final JBTN jlu = new JBTN(0, "line");
+	private final LineUpBox lub = new LineUpBox(this);
 
 	private final Stage st;
 
@@ -41,6 +44,11 @@ public class BattleSetupPage extends Page {
 	}
 
 	@Override
+	protected LineUpBox getLub() {
+		return lub;
+	}
+
+	@Override
 	protected void renew() {
 		BasisSet b = BasisSet.current;
 		jl.setText(b + "-" + b.sele);
@@ -48,6 +56,7 @@ public class BattleSetupPage extends Page {
 			strt.setEnabled(st.lim.lvr.isValid(b.sele.lu));
 		else
 			tmax.setEnabled(false);
+		lub.setLU(b.sele.lu);
 	}
 
 	@Override
@@ -61,7 +70,7 @@ public class BattleSetupPage extends Page {
 		set(rich, x, y, 300, 100, 200, 50);
 		set(snip, x, y, 300, 200, 200, 50);
 		set(tmax, x, y, 300, 500, 200, 50);
-
+		set(lub, x, y, 550, 50, 600, 300);
 	}
 
 	private void addListeners() {
@@ -121,6 +130,7 @@ public class BattleSetupPage extends Page {
 		add(rich);
 		add(snip);
 		add(tmax);
+		add(lub);
 		String[] tit = new String[st.map.stars.length];
 		String star = get(1, "star");
 		for (int i = 0; i < st.map.stars.length; i++)

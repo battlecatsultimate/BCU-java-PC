@@ -8,7 +8,7 @@ import page.info.UnitInfoPage;
 import util.system.Node;
 import util.unit.Unit;
 
-abstract class LubCont extends Page {
+public abstract class LubCont extends Page {
 
 	private static final long serialVersionUID = 1L;
 

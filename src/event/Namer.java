@@ -18,7 +18,7 @@ public strictfp class Namer {
 	static {
 		String s0 = "event.";
 		String[] s1 = new String[] { "stage", "event", "group", "item", "lang" };
-		String[] s2 = new String[] { "_en", "_zh" };
+		String[] s2 = new String[] { "_en", "_zh", "_en", "_en" };
 		ResourceBundle[][] ress = new ResourceBundle[s1.length][s2.length];
 		for (int i = 0; i < s1.length; i++)
 			for (int j = 0; j < s2.length; j++)

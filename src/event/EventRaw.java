@@ -36,7 +36,7 @@ public class EventRaw extends RawLine {
 	}
 
 	protected int loop, stage, type;
-	protected TimePattern[] loops;
+	protected Repeat[] loops;
 	protected int[] stages;
 
 	protected Event[] es;
@@ -56,9 +56,9 @@ public class EventRaw extends RawLine {
 		if (temp != 0)
 			Printer.p("EventRaw", 64, "new mechanism: " + temp);
 		loop = ints.poll();
-		loops = new TimePattern[loop];
+		loops = new Repeat[loop];
 		for (int i = 0; i < loop; i++)
-			loops[i] = new TimePattern(this, ints);
+			loops[i] = Repeat.get(this, ints);
 		stage = ints.poll();
 		stages = new int[stage];
 		for (int i = 0; i < stage; i++)
@@ -81,7 +81,7 @@ public class EventRaw extends RawLine {
 		boolean[] inter = construct(NONE, -1);
 		if (avail == null)
 			return construct(NONE, -1);
-		for (TimePattern l : loops) {
+		for (Repeat l : loops) {
 			boolean[] bs = l.valid(d);
 			if (bs == null)
 				continue;

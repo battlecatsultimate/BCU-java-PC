@@ -38,10 +38,11 @@ public class EnemyEditBox extends Page {
 
 	public void setData(int[] vals) {
 		changing = true;
+		trait.clearSelection();
 		for (int i = 0; i < 9; i++)
 			if (((vals[0] >> i) & 1) > 0)
 				trait.addSelectionInterval(i, i);
-
+		abis.clearSelection();
 		for (int i = 0; i < EABIIND.length; i++) {
 			int ind = EABIIND[i];
 			if (ind < 100 ? ((vals[1] >> ind) & 1) > 0 : ((vals[2] >> (ind - 100 - IMUSFT)) & 1) > 0)

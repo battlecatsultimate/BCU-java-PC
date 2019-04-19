@@ -397,17 +397,18 @@ public class BackupTreePage extends Page {
 		boolean b = sel != null;
 		rept.setEnabled(b);
 		expt.setEnabled(b && sel.child == null);
-		if(b) {
-			String size="Size: ";
-			if(sel.size<10000)
-				size+=sel.size+" Bytes";
-			else if(sel.size<10000000)
-				size+=(sel.size>>10)+" KB";
-			else size+=(sel.size>>20)+" MB";
+		if (b) {
+			String size = "Size: ";
+			if (sel.size < 10000)
+				size += sel.size + " Bytes";
+			else if (sel.size < 10000000)
+				size += (sel.size >> 10) + " KB";
+			else
+				size += (sel.size >> 20) + " MB";
 			jli.setText(size);
-		}
-		else jli.setText("");
-		
+		} else
+			jli.setText("");
+
 	}
 
 	private void setT() {

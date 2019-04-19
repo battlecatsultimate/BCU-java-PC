@@ -165,8 +165,8 @@ public class UnitManagePage extends Page {
 			}
 
 		});
-		
-		jlf.list=new ReorderListener<Form>() {
+
+		jlf.list = new ReorderListener<Form>() {
 
 			@Override
 			public void reordered(int ori, int fin) {
@@ -175,19 +175,18 @@ public class UnitManagePage extends Page {
 					lsm.add(sm);
 				Form sm = lsm.remove(ori);
 				lsm.add(fin, sm);
-				for(int i=0;i<uni.forms.length;i++) {
-					uni.forms[i]=lsm.get(i);
-					uni.forms[i].fid=i;
+				for (int i = 0; i < uni.forms.length; i++) {
+					uni.forms[i] = lsm.get(i);
+					uni.forms[i].fid = i;
 				}
-				changing=false;
+				changing = false;
 			}
 
 			@Override
 			public void reordering() {
-				changing=true;
+				changing = true;
 			}
-			
-			
+
 		};
 
 	}

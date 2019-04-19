@@ -64,8 +64,8 @@ public class EREditPage extends Page {
 	}
 
 	public EREditPage(Page page, Pack pac, EneRand e) {
-		this(page,pac);
-		jle.setSelectedValue(e,true);
+		this(page, pac);
+		jle.setSelectedValue(e, true);
 	}
 
 	@Override

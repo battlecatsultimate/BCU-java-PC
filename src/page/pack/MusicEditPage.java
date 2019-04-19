@@ -28,9 +28,9 @@ public class MusicEditPage extends Page {
 	private final JList<String> jlst = new JList<>();
 	private final JScrollPane jspst = new JScrollPane(jlst);
 
-	private final JBTN relo = new JBTN(0,"read list");
-	private final JBTN play = new JBTN(0,"start");
-	private final JBTN show = new JBTN(0,"show");
+	private final JBTN relo = new JBTN(0, "read list");
+	private final JBTN play = new JBTN(0, "start");
+	private final JBTN show = new JBTN(0, "show");
 
 	private final Pack pack;
 	private final MusicStore ms;
@@ -39,7 +39,7 @@ public class MusicEditPage extends Page {
 
 	public MusicEditPage(Page p, Pack ac) {
 		super(p);
-		pack=ac;
+		pack = ac;
 		ms = ac.ms;
 		ini();
 		resized();
@@ -52,7 +52,7 @@ public class MusicEditPage extends Page {
 		set(jspst, x, y, 50, 100, 300, 1000);
 		set(relo, x, y, 400, 100, 200, 50);
 		set(play, x, y, 400, 200, 200, 50);
-		set(show,x,y,400,300,200,50);
+		set(show, x, y, 400, 300, 200, 50);
 	}
 
 	private void addListeners() {
@@ -62,7 +62,7 @@ public class MusicEditPage extends Page {
 				changePanel(getFront());
 			}
 		});
-		
+
 		relo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -70,11 +70,11 @@ public class MusicEditPage extends Page {
 				setList();
 			}
 		});
-		
+
 		show.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				File f=new File("./res/img/"+pack.id+"/music/");
+				File f = new File("./res/img/" + pack.id + "/music/");
 				Writer.check(f);
 				try {
 					Desktop.getDesktop().open(f);
@@ -83,7 +83,7 @@ public class MusicEditPage extends Page {
 				}
 			}
 		});
-		
+
 		play.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -100,9 +100,9 @@ public class MusicEditPage extends Page {
 				if (isAdjusting() || arg0.getValueIsAdjusting())
 					return;
 				int ind = jlst.getSelectedIndex();
-				sele=null;
+				sele = null;
 				if (ind >= 0)
-					sele=list.get(ind);
+					sele = list.get(ind);
 			}
 
 		});
@@ -120,7 +120,7 @@ public class MusicEditPage extends Page {
 	}
 
 	private void setList() {
-		change(this,p->{
+		change(this, p -> {
 			int ind = jlst.getSelectedIndex();
 			list = ms.getList();
 			String[] str = new String[list.size()];
@@ -133,7 +133,7 @@ public class MusicEditPage extends Page {
 				ind = ms.size() - 1;
 			jlst.setSelectedIndex(ind);
 			if (ind >= 0)
-				sele=list.get(ind);
+				sele = list.get(ind);
 		});
 	}
 

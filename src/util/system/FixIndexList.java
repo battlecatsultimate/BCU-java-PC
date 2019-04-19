@@ -20,17 +20,17 @@ public class FixIndexList<T> extends Data {
 				n++;
 		size = n;
 	}
-	
-	public void clear() {
-		for(int i=0;i<arr.length;i++)
-			arr[i]=null;
-		size=0;
-	}
 
 	public void add(T t) {
 		arr[nextInd()] = t;
 		if (t != null)
 			size++;
+	}
+
+	public void clear() {
+		for (int i = 0; i < arr.length; i++)
+			arr[i] = null;
+		size = 0;
 	}
 
 	public boolean contains(T t) {

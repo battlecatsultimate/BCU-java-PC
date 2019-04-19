@@ -41,7 +41,10 @@ public class Writer extends DataIO {
 		if (suc)
 			try {
 				if (!f.exists())
-					suc &= f.createNewFile();
+					if (f.isDirectory())
+						suc &= f.mkdir();
+					else
+						suc &= f.createNewFile();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 				suc = false;

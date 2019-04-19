@@ -15,7 +15,7 @@ import util.Data;
 
 public class MainBCU {
 
-	public static final int ver = 40406, LIBREQ = 80400;
+	public static final int ver = 40407, LIBREQ = 80400;
 
 	public static int FILTER_TYPE = 0;
 	public static boolean write = true, preload = false, trueRun = false;
