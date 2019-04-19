@@ -11,6 +11,7 @@ import util.entity.data.CustomUnit;
 import util.entity.data.DataUnit;
 import util.entity.data.MaskUnit;
 import util.entity.data.PCoin;
+import util.system.MultiLangCont;
 import util.system.VImg;
 
 public class Form extends Animable<AnimU> {
@@ -29,7 +30,7 @@ public class Form extends Animable<AnimU> {
 	public final Unit unit;
 	public final int uid;
 	public int fid;
-	public final VImg udi;
+	public final VImg udi;// TODO unused
 
 	public String name = "";
 
@@ -42,7 +43,6 @@ public class Form extends Animable<AnimU> {
 		du = cu;
 		cu.pack = this;
 		udi = null;
-		// TODO fill icons
 	}
 
 	protected Form(Unit u, int f, String str, String data) {
@@ -124,6 +124,9 @@ public class Form extends Animable<AnimU> {
 
 	@Override
 	public String toString() {
+		String desp = MultiLangCont.get(this);
+		if (desp != null && desp.length() > 0)
+			return desp;
 		if (name.length() > 0)
 			return name;
 		return trio(uid) + "-" + fid;

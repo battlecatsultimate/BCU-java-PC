@@ -11,9 +11,9 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import io.Reader;
+import page.JL;
 import page.JTF;
 import page.Page;
-import page.info.InfoText;
 import page.support.ListJtfPolicy;
 import util.Res;
 
@@ -21,18 +21,18 @@ class MainProcTable extends Page {
 
 	private static final long serialVersionUID = 1L;
 
-	private final JLabel lst = new JLabel(SPROC[9]);
-	private final JLabel lle = new JLabel(SPROC[10]);
-	private final JLabel lbr = new JLabel(SPROC[11]);
-	private final JLabel lre = new JLabel(SPROC[12]);
-	private final JLabel lstp = new JLabel("HP");
-	private final JLabel lsta = new JLabel(InfoText.get("inc"));
-	private final JLabel llep = new JLabel(InfoText.get("prob"));
-	private final JLabel lbrt = new JLabel(InfoText.get("times"));
-	private final JLabel lbrd = new JLabel(InfoText.get("dist"));
-	private final JLabel lret = new JLabel(InfoText.get("times"));
-	private final JLabel lrei = new JLabel(InfoText.get("time"));
-	private final JLabel lrea = new JLabel("HP");
+	private final JL lst = new JL(SPROC[9]);
+	private final JL lle = new JL(SPROC[10]);
+	private final JL lbr = new JL(SPROC[11]);
+	private final JL lre = new JL(SPROC[12]);
+	private final JL lstp = new JL("HP");
+	private final JL lsta = new JL(1, "inc");
+	private final JL llep = new JL(1, "prob");
+	private final JL lbrt = new JL(1, "times");
+	private final JL lbrd = new JL(1, "dist");
+	private final JL lret = new JL(1, "times");
+	private final JL lrei = new JL(1, "time");
+	private final JL lrea = new JL("HP");
 	private final JTF fstp = new JTF();
 	private final JTF fsta = new JTF();
 	private final JTF flep = new JTF();

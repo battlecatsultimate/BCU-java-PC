@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import io.Reader;
+import page.JL;
 import page.JTF;
 import page.Page;
 import util.Data;
@@ -22,8 +23,8 @@ public class UnitInfoTable extends Page {
 
 	private static final long serialVersionUID = 1L;
 
-	private final JLabel[][] main = new JLabel[4][8];
-	private final JLabel[] atks;
+	private final JL[][] main = new JL[4][8];
+	private final JL[] atks;
 	private final JLabel[] proc;
 	private final JTF jtf = new JTF();
 	private final JLabel pcoin;
@@ -38,7 +39,7 @@ public class UnitInfoTable extends Page {
 
 		f = de;
 		multi = de.unit.getPrefLvs();
-		atks = new JLabel[6];
+		atks = new JL[6];
 		MaskUnit du = f.maxu();
 		List<String> ls = Interpret.getAbi(du);
 		ls.addAll(Interpret.getProc(du, b.t(), du.getType()));
@@ -130,14 +131,14 @@ public class UnitInfoTable extends Page {
 		for (int i = 0; i < 4; i++)
 			for (int j = 0; j < 8; j++)
 				if (i * j != 1 && (i != 0 || j < 5)) {
-					add(main[i][j] = new JLabel());
+					add(main[i][j] = new JL());
 					main[i][j].setBorder(BorderFactory.createEtchedBorder());
 					if (i != 0 && j % 2 == 0 || i == 0 && j < 4)
 						main[i][j].setHorizontalAlignment(SwingConstants.CENTER);
 				}
 		for (int i = 0; i < 6; i++) {
 
-			add(atks[i] = new JLabel());
+			add(atks[i] = new JL());
 			atks[i].setBorder(BorderFactory.createEtchedBorder());
 			if (i % 2 == 0)
 				atks[i].setHorizontalAlignment(SwingConstants.CENTER);
@@ -153,28 +154,28 @@ public class UnitInfoTable extends Page {
 		main[0][1].setText(f.uid + "-" + f.fid);
 		if (f.anim.edi.getImg() != null)
 			main[0][2].setIcon(f.anim.edi.getIcon());
-		main[0][3].setText(InfoText.get("trait"));
+		main[0][3].setText(1, "trait");
 		main[1][0].setText(Interpret.RARITY[f.unit.rarity]);
 		main[1][2].setText("HP / HB");
 		main[1][4].setText("CD");
-		main[1][6].setText(InfoText.get("price"));
-		main[2][0].setText(InfoText.get("range"));
+		main[1][6].setText(1, "price");
+		main[2][0].setText(1, "range");
 		main[2][1].setText("" + f.du.getRange());
 		main[2][2].setText("dps");
-		main[2][4].setText(InfoText.get("speed"));
-		main[2][6].setText(InfoText.get("atkf"));
+		main[2][4].setText(1, "speed");
+		main[2][6].setText(1, "atkf");
 		main[2][7].setText(f.du.getItv() + "f");
-		main[3][0].setText(InfoText.get("isr"));
+		main[3][0].setText(1, "isr");
 		main[3][1].setText("" + f.du.isRange());
-		main[3][2].setText(InfoText.get("shield"));
+		main[3][2].setText(1, "shield");
 		main[3][3].setText("" + f.du.getShield());
-		main[3][4].setText(InfoText.get("TBA"));
+		main[3][4].setText(1, "TBA");
 		main[3][5].setText(f.du.getTBA() + "f");
-		main[3][6].setText(InfoText.get("postaa"));
+		main[3][6].setText(1, "postaa");
 		main[3][7].setText(f.du.getPost() + "f");
 		atks[0].setText("atk");
-		atks[2].setText(InfoText.get("preaa"));
-		atks[4].setText(InfoText.get("use"));
+		atks[2].setText(1, "preaa");
+		atks[4].setText(1, "use");
 		int[][] atkData = f.du.rawAtkData();
 		String pre = "", use = "";
 		for (int i = 0; i < atkData.length; i++) {

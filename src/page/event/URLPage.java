@@ -54,7 +54,7 @@ public abstract class URLPage extends Page {
 		if (ints[0] < 10)
 			s += "0";
 		s += ints[0];
-		time.setText(get("refresh") + s);
+		time.setText(get(0, "refresh") + s);
 	}
 
 	protected abstract void updateList();

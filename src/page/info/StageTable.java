@@ -21,7 +21,7 @@ public class StageTable extends AbJTable {
 	}
 
 	public static void redefine() {
-		title = InfoText.get("t", 7);
+		title = Page.get(1, "t", 7);
 	}
 
 	protected Object[][] data;

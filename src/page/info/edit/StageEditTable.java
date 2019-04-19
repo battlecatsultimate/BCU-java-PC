@@ -11,7 +11,6 @@ import io.Reader;
 import page.MainFrame;
 import page.Page;
 import page.info.EnemyInfoPage;
-import page.info.InfoText;
 import page.support.AbJTable;
 import page.support.EnemyTCR;
 import page.support.InTableTH;
@@ -32,7 +31,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 	}
 
 	protected static void redefine() {
-		title = InfoText.get("t", 8);
+		title = Page.get(1, "t", 8);
 	}
 
 	private Stage stage;

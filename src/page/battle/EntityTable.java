@@ -1,6 +1,6 @@
 package page.battle;
 
-import page.info.InfoText;
+import page.MainLocale;
 import page.support.EnemyTCR;
 import page.support.SortTable;
 import page.support.UnitTCR;
@@ -21,7 +21,7 @@ class EntityTable extends SortTable<Entity> {
 	}
 
 	protected static void redefine() {
-		title = InfoText.get("u", 3);
+		title = MainLocale.getLoc(1, "u", 3);
 	}
 
 	private int dir;

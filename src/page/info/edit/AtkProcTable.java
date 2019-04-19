@@ -10,9 +10,9 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import io.Reader;
+import page.JL;
 import page.JTF;
 import page.Page;
-import page.info.InfoText;
 import page.support.ListJtfPolicy;
 import util.Data;
 import util.Interpret;
@@ -31,13 +31,13 @@ class AtkProcTable extends Page {
 
 	private static String getString(int ind) {
 		if (ind == 0)
-			return InfoText.get("prob");
+			return "prob";
 		else if (ind == 1)
-			return InfoText.get("time");
+			return "time";
 		else if (ind == 2)
-			return InfoText.get("dist");
+			return "dist";
 		else if (ind == 3)
-			return InfoText.get("to");
+			return "to";
 		else if (ind == 4)
 			return "Lv.";
 		else if (ind == 5)
@@ -128,7 +128,7 @@ class AtkProcTable extends Page {
 			jls[i] = new JLabel[vals.length];
 			jtfs[i] = new JTF[vals.length];
 			for (int j = 0; j < vals.length; j++) {
-				jls[i][j] = new JLabel(getString(vals[j]));
+				jls[i][j] = new JL(1, getString(vals[j]));
 				jtfs[i][j] = new JTF();
 				set(jls[i][j]);
 				set(jtfs[i][j]);

@@ -18,6 +18,7 @@ import util.pack.Pack;
 import util.stage.MapColc;
 import util.stage.Stage;
 import util.stage.StageMap;
+import util.system.MultiLangCont;
 import util.system.VFile;
 import util.system.VImg;
 
@@ -140,6 +141,9 @@ public class Enemy extends Animable<AnimU> implements AbEnemy {
 
 	@Override
 	public String toString() {
+		String desp = MultiLangCont.get(this);
+		if (desp != null && desp.length() > 0)
+			return trio(id % 1000) + " - " + desp;
 		if (name.length() == 0)
 			return trio(id % 1000);
 		return trio(id % 1000) + " - " + name;

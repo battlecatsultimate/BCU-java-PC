@@ -23,7 +23,7 @@ public class UnitLCR extends DefaultListCellRenderer {
 		else
 			form = (Form) o;
 		JLabel jl = (JLabel) super.getListCellRendererComponent(l, o, ind, s, f);
-		jl.setText(form.name);
+		jl.setText(form.toString());
 		jl.setIcon(null);
 		jl.setHorizontalTextPosition(SwingConstants.RIGHT);
 		VImg v = form.anim.edi;

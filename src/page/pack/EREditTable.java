@@ -11,7 +11,6 @@ import io.Reader;
 import page.MainFrame;
 import page.Page;
 import page.info.EnemyInfoPage;
-import page.info.InfoText;
 import page.support.AbJTable;
 import page.support.EnemyTCR;
 import page.support.InTableTH;
@@ -33,7 +32,7 @@ class EREditTable extends AbJTable implements Reorderable {
 	}
 
 	protected static void redefine() {
-		title = InfoText.get("er", 3);
+		title = Page.get(1, "er", 3);
 	}
 
 	private EneRand rand;

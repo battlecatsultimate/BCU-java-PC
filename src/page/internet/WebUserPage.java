@@ -20,6 +20,7 @@ import io.BCJSON;
 import io.WebPack;
 import main.MainBCU;
 import page.JBTN;
+import page.JL;
 import page.JTF;
 import page.Page;
 import util.pack.Pack;
@@ -128,7 +129,7 @@ public class WebUserPage extends Page {
 		ndesc.setBorder(BorderFactory.createEtchedBorder());
 		title = new JLabel[3];
 		for (int i = 0; i < 3; i++) {
-			add(title[i] = new JLabel(WebText.get("t" + i * 2)));
+			add(title[i] = new JL(2, "t" + i * 2));
 			title[i].setHorizontalAlignment(SwingConstants.CENTER);
 			title[i].setBorder(BorderFactory.createEtchedBorder());
 		}
@@ -176,7 +177,7 @@ public class WebUserPage extends Page {
 				pkid[i].setHorizontalAlignment(SwingConstants.CENTER);
 				pkid[i].setBorder(BorderFactory.createEtchedBorder());
 
-				cont.add(visi[i] = new JLabel(WebText.get((obj[i].state == 1 ? "in" : "") + "visible")));
+				cont.add(visi[i] = new JL(2, (obj[i].state == 1 ? "in" : "") + "visible"));
 				visi[i].setHorizontalAlignment(SwingConstants.CENTER);
 				visi[i].setBorder(BorderFactory.createEtchedBorder());
 
@@ -221,7 +222,7 @@ public class WebUserPage extends Page {
 							return;
 						}
 						dele[I].setText(2, (obj[I].state == 1 ? "un" : "") + "delete");
-						visi[I].setText(WebText.get((obj[I].state == 1 ? "un" : "") + "visible"));
+						visi[I].setText(get(2, (obj[I].state == 1 ? "un" : "") + "visible"));
 					}
 
 				});

@@ -16,7 +16,7 @@ public class EventLoadPage extends Page {
 
 	private final JBTN back = new JBTN(0, "back");
 	private final JBTN natv = new JBTN(0, "natv");
-	private final JLabel load = new JLabel(get("load"));
+	private final JLabel load = new JLabel(get(0, "load"));
 
 	private final int t;
 
@@ -48,9 +48,9 @@ public class EventLoadPage extends Page {
 			else if (t == 3)
 				changePanel(new CalendarPage(getFront()));
 			else
-				load.setText(get("error"));
+				load.setText(get(0, "error"));
 		else
-			load.setText(get("error"));
+			load.setText(get(0, "error"));
 	}
 
 	private void addListeners() {

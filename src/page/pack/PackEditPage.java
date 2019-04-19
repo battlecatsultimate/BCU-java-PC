@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
@@ -19,6 +18,7 @@ import javax.swing.event.ListSelectionListener;
 import io.Writer;
 import main.MainBCU;
 import page.JBTN;
+import page.JL;
 import page.JTF;
 import page.Page;
 import page.info.StageViewPage;
@@ -78,12 +78,12 @@ public class PackEditPage extends Page {
 	private final JTF jtfe = new JTF();
 	private final JTF jtfs = new JTF();
 
-	private final JLabel lbp = new JLabel(get("pack"));
-	private final JLabel lbe = new JLabel(get("enemy"));
-	private final JLabel lbd = new JLabel(get("seleanim"));
-	private final JLabel lbs = new JLabel(get("stage"));
-	private final JLabel lbr = new JLabel(get("parent"));
-	private final JLabel lbt = new JLabel(get("selepar"));
+	private final JL lbp = new JL(0, "pack");
+	private final JL lbe = new JL(0, "enemy");
+	private final JL lbd = new JL(0, "seleanim");
+	private final JL lbs = new JL(0, "stage");
+	private final JL lbr = new JL(0, "parent");
+	private final JL lbt = new JL(0, "selepar");
 
 	private Pack pac;
 	private Enemy ene;
@@ -242,7 +242,7 @@ public class PackEditPage extends Page {
 		remp.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!MainBCU.warning(get("w0"), "warning"))
+				if (!MainBCU.warning(get(0, "w0"), "warning"))
 					return;
 				changing = true;
 				int ind = jlp.getSelectedIndex();
@@ -331,7 +331,7 @@ public class PackEditPage extends Page {
 		reme.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!MainBCU.warning(get("w0"), "warning"))
+				if (!MainBCU.warning(get(0, "w0"), "warning"))
 					return;
 				changing = true;
 				int ind = jle.getSelectedIndex();
@@ -468,7 +468,7 @@ public class PackEditPage extends Page {
 		rems.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!MainBCU.warning(get("w0"), "warning"))
+				if (!MainBCU.warning(get(0, "w0"), "warning"))
 					return;
 				changing = true;
 				int ind = jls.getSelectedIndex();
@@ -680,7 +680,7 @@ public class PackEditPage extends Page {
 			remr.setEnabled(false);
 			return;
 		}
-		remr.setText(get(re >= 0 ? "rema" : "rem"));
+		remr.setText(0, re >= 0 ? "rema" : "rem");
 		remr.setForeground(re >= 0 ? Color.RED : Color.BLACK);
 		remr.setEnabled(true);
 	}

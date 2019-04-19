@@ -4,13 +4,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import page.JBTN;
+import page.JL;
 import page.Page;
 import page.support.UnitLCR;
 import util.Data;
@@ -30,7 +30,7 @@ public class CharaGroupPage extends Page {
 	private final JScrollPane jsppk = new JScrollPane(jlpk);
 	private final JScrollPane jspcg = new JScrollPane(jlcg);
 	private final JScrollPane jspus = new JScrollPane(jlus);
-	private final JLabel cgt = new JLabel(get("include"));
+	private final JL cgt = new JL(0, "include");
 
 	private boolean changing = false;
 	private Pack pack;
@@ -132,7 +132,7 @@ public class CharaGroupPage extends Page {
 			jlus.setListData(new Unit[0]);
 		else {
 			jlus.setListData(cg.set.toArray(new Unit[0]));
-			cgt.setText(cg.type == 0 ? get("include") : get("exclude"));
+			cgt.setText(0, cg.type == 0 ? "include" : "exclude");
 		}
 	}
 

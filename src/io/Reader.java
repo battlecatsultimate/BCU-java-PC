@@ -41,6 +41,9 @@ import util.stage.CharaGroup;
 import util.stage.Limit;
 import util.stage.MapColc;
 import util.stage.Recd;
+import util.stage.Stage;
+import util.stage.StageMap;
+import util.system.MultiLangCont;
 import util.system.VFile;
 import util.system.VFileRoot;
 import util.unit.DIYAnim;
@@ -177,35 +180,99 @@ public class Reader extends DataIO {
 		if (!f.exists())
 			return;
 		for (File fi : f.listFiles()) {
-			String str = fi.getName();
+			String ni = fi.getName();
 			if (!fi.isDirectory())
 				continue;
-			if (str.length() != 2)
+			if (ni.length() != 2)
 				continue;
-			for (File fl : fi.listFiles()) {
-				String sub = fl.getName();
+			for (File fl : fi.listFiles())
+				try {
+					String nl = fl.getName();
 
-				if (sub.equals("tutorial.txt")) {
+					if (nl.equals("tutorial.txt")) {
+						Queue<String> qs = readLines(fl);
+						for (String line : qs) {
+							String[] strs = line.trim().split("\t");
+							if (strs.length != 3)
+								continue;
+							MainLocale.addTTT(ni, strs[0].trim(), strs[1].trim(), strs[2].trim());
+						}
+						continue;
+					}
+					if (nl.equals("StageName.txt")) {
+						Queue<String> qs = readLines(fl);
+						if (qs != null)
+							for (String str : qs) {
+								String[] strs = str.trim().split("\t");
+								if (strs.length == 1)
+									continue;
+								String idstr = strs[0].trim();
+								String name = strs[strs.length - 1].trim();
+								if (idstr.length() == 0 || name.length() == 0)
+									continue;
+								String[] ids = idstr.split("-");
+								int id0 = Reader.parseIntN(ids[0]);
+								MapColc mc = MapColc.MAPS.get(id0);
+								if (mc == null)
+									continue;
+								if (ids.length == 1) {
+									MultiLangCont.MCNAME.put(ni, mc, name);
+									continue;
+								}
+								int id1 = Reader.parseIntN(ids[1]);
+								if (id1 >= mc.maps.length || id1 < 0)
+									continue;
+								StageMap sm = mc.maps[id1];
+								if (sm == null)
+									continue;
+								if (ids.length == 2) {
+									MultiLangCont.SMNAME.put(ni, sm, name);
+									continue;
+								}
+								int id2 = Reader.parseIntN(ids[2]);
+								if (id2 >= sm.list.size() || id2 < 0)
+									continue;
+								Stage st = sm.list.get(id2);
+								MultiLangCont.STNAME.put(ni, st, name);
+							}
+						continue;
+					}
+					if (nl.equals("UnitName.txt")) {
+						Queue<String> qs = readLines(fl);
+						for (String str : qs) {
+							String[] strs = str.trim().split("\t");
+							Unit u = Pack.def.us.ulist.get(Reader.parseIntN(strs[0]));
+							if (u == null)
+								continue;
+							for (int i = 0; i < Math.min(u.forms.length, strs.length - 1); i++)
+								MultiLangCont.FNAME.put(ni, u.forms[i], strs[i + 1].trim());
+						}
+						continue;
+					}
+					if (nl.equals("EnemyName.txt")) {
+						Queue<String> qs = readLines(fl);
+						for (String str : qs) {
+							String[] strs = str.trim().split("\t");
+							Enemy e = Pack.def.es.get(Reader.parseIntN(strs[0]));
+							if (e == null || strs.length < 2)
+								continue;
+							MultiLangCont.ENAME.put(ni, e, strs[1].trim());
+						}
+						continue;
+					}
+					if (!nl.endsWith(".properties"))
+						continue;
+					MainLocale ml = new MainLocale(nl.split("\\.")[0] + "_" + ni);
 					Queue<String> qs = readLines(fl);
 					for (String line : qs) {
-						String[] strs = line.trim().split("\t");
-						if (strs.length != 3)
+						String[] strs = line.split("=|\t", 2);
+						if (strs.length < 2)
 							continue;
-						MainLocale.addTTT(str, strs[0].trim(), strs[1].trim(), strs[2].trim());
+						ml.res.put(strs[0], strs[1]);
 					}
-					continue;
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-				if (!sub.endsWith(".properties"))
-					continue;
-				MainLocale ml = new MainLocale(sub.split("\\.")[0] + "_" + str);
-				Queue<String> qs = readLines(fl);
-				for (String line : qs) {
-					String[] strs = line.split("=|\t", 2);
-					if (strs.length < 2)
-						continue;
-					ml.res.put(strs[0], strs[1]);
-				}
-			}
 
 		}
 	}
@@ -262,7 +329,7 @@ public class Reader extends DataIO {
 		try {
 			ZipAccess.getList();
 			alt = ZipAccess.extractAllList();
-		} catch (IOException e1) {
+		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 		try {
@@ -411,9 +478,7 @@ public class Reader extends DataIO {
 					e.printStackTrace();
 				}
 			}
-		} catch (
-
-		Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

@@ -310,7 +310,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!MainBCU.warning(get("w0"), "warning"))
+				if (!MainBCU.warning(get(0, "w0"), "warning"))
 					return;
 				changing = true;
 				int ind = jlu.getSelectedIndex();

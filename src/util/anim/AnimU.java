@@ -3,7 +3,7 @@ package util.anim;
 import java.awt.image.BufferedImage;
 
 import main.Printer;
-import page.Page;
+import page.MainLocale;
 import util.Res;
 import util.system.VFile;
 import util.system.VImg;
@@ -25,9 +25,9 @@ public class AnimU extends AnimD {
 		String s5 = "under";
 		String s6 = "up";
 		String s7 = "entry";
-		strs0 = Page.get(s0, s1, s2, s3);
-		strs1 = Page.get(s0, s1, s2, s3, s4, s5, s6);
-		strs2 = Page.get(s0, s1, s2, s3, s7);
+		strs0 = MainLocale.getLoc(0, s0, s1, s2, s3);
+		strs1 = MainLocale.getLoc(0, s0, s1, s2, s3, s4, s5, s6);
+		strs2 = MainLocale.getLoc(0, s0, s1, s2, s3, s7);
 
 	}
 
