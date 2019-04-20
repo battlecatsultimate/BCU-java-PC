@@ -37,7 +37,7 @@ public abstract class LubCont extends Page {
 		if (e.getSource() == getLub())
 			if (e.getButton() == MouseEvent.BUTTON1)
 				getLub().click(e.getPoint());
-			else {
+			else if (getLub().sf != null) {
 				Node<Unit> n = new Node<>(getLub().sf.unit);
 				changePanel(new UnitInfoPage(this, n));
 			}

@@ -72,7 +72,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap> {
 				if (temp.startsWith("0,"))
 					break;
 				String[] ss = temp.split(",");
-				int[] data = new int[10];
+				int[] data = new int[SCDef.SIZE];
 				for (int i = 0; i < intl; i++)
 					data[i] = Integer.parseInt(ss[i]);
 				data[0] -= 2;
