@@ -39,6 +39,9 @@ public abstract class Entity extends AbEntity {
 	/** trait of enemy, also target trait of unit, use bitmask */
 	public int type;
 
+	/** group, used for search */
+	public int group;
+
 	/**
 	 * dead FSM time <br>
 	 * -1 means not dead<br>

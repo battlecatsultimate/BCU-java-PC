@@ -61,7 +61,7 @@ public abstract class StageBasis extends Data {
 		est = stage;
 		st = est.s;
 		elu = new ELineUp(bas.lu, this);
-		est.b = this;
+		est.assign(this);
 		bg = BGStore.getBG(st.bg);
 		EEnemy ee = est.base(this);
 		if (ee != null)
@@ -105,6 +105,14 @@ public abstract class StageBasis extends Data {
 		int ans = 0;
 		for (Entity e : le)
 			if (e.dire == d)
+				ans++;
+		return ans;
+	}
+
+	public int entityCount(int d, int g) {
+		int ans = 0;
+		for (Entity e : le)
+			if (e.dire == d && e.group == g)
 				ans++;
 		return ans;
 	}

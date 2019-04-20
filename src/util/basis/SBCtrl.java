@@ -2,8 +2,6 @@ package util.basis;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
 import io.OutStream;
 import page.KeyHandler;
 import util.stage.EStage;
@@ -21,10 +19,8 @@ public class SBCtrl extends StageBasis {
 
 	public final Recd re;
 
-	public SBCtrl(KeyHandler kh, Stage stage, int star, BasisLU bas, int[] ints) {
-		super(new EStage(stage, star), bas, ints, 0);
-		long seed = new Random().nextLong();
-		r.setSeed(seed);
+	public SBCtrl(KeyHandler kh, Stage stage, int star, BasisLU bas, int[] ints, long seed) {
+		super(new EStage(stage, star), bas, ints, seed);
 		re = new Recd(bas, stage, star, ints, seed);
 		keys = kh;
 	}

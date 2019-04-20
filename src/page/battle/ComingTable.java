@@ -1,5 +1,8 @@
 package page.battle;
 
+import static util.stage.SCDef.C0;
+import static util.stage.SCDef.C1;
+
 import java.awt.Point;
 
 import page.MainFrame;
@@ -89,7 +92,7 @@ class ComingTable extends AbJTable {
 	}
 
 	protected void setData(Stage st) {
-		int[][] info = st.datas;
+		int[][] info = st.data.getSimple();
 		data = new Object[info.length][6];
 		link = new int[info.length];
 		for (int i = 0; i < info.length; i++) {
@@ -99,7 +102,10 @@ class ComingTable extends AbJTable {
 			data[link[i]][0] = info[i][8] == 1 ? "boss" : "";
 			data[link[i]][2] = info[i][9];
 			data[link[i]][3] = info[i][1] == 0 ? "infinite" : info[i][1];
-			data[link[i]][4] = info[i][5] + "%";
+			if (info[i][C0] >= info[i][C1])
+				data[link[i]][4] = info[i][C0] + "%";
+			else
+				data[link[i]][4] = info[i][C0] + "~" + info[i][C1] + "%";
 		}
 	}
 

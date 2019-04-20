@@ -47,8 +47,8 @@ public class StageEditPage extends Page {
 	private final JBTN ptst = new JBTN(0, "ptst");
 	private final JBTN rmsm = new JBTN(0, "rmsm");
 	private final JBTN rmst = new JBTN(0, "rmst");
-	private final StageEditTable jt = new StageEditTable(this);
-	private final JScrollPane jspjt = new JScrollPane(jt);
+	private final StageEditTable jt;
+	private final JScrollPane jspjt;
 	private final ReorderList<StageMap> jlsm = new ReorderList<>();
 	private final JScrollPane jspsm = new JScrollPane(jlsm);
 	private final ReorderList<Stage> jlst = new ReorderList<>();
@@ -76,9 +76,10 @@ public class StageEditPage extends Page {
 
 	public StageEditPage(Page p, MapColc map, Pack pac) {
 		super(p);
-
 		mc = map;
 		pack = pac;
+		jt = new StageEditTable(this, pack);
+		jspjt = new JScrollPane(jt);
 		info = new HeadEditTable(this, pac);
 		jlsm.setListData(mc.maps);
 		jle.setListData(EnemyStore.getAll(pack, true).toArray(new Enemy[0]));

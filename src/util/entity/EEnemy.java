@@ -8,7 +8,6 @@ import util.entity.data.MaskEnemy;
 public class EEnemy extends Entity {
 
 	public final int mark;
-
 	public final double mult;
 
 	public EEnemy(StageBasis b, MaskEnemy de, EAnimU ea, double d, int d0, int d1, int m) {

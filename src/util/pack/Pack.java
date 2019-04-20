@@ -27,7 +27,6 @@ import util.entity.data.MaskAtk;
 import util.stage.AbCastle;
 import util.stage.Castles;
 import util.stage.CharaGroup;
-import util.stage.Limit;
 import util.stage.LvRestrict;
 import util.stage.MapColc;
 import util.stage.Stage;
@@ -48,6 +47,7 @@ public class Pack extends Data {
 
 	public static final int RELY_DEF = 0, RELY_CAS = 1, RELY_BG = 2, RELY_MUS = 3, RELY_ENE = 4, RELY_UNI = 5,
 			RELY_CG = 6, RELY_LR = 7, RELY_ABI = 8;
+	public static final int M_ES = 0, M_UL = 1, M_US = 2, M_CG = 3, M_LR = 4, M_BG = 5, M_CS = 6, M_MS = 7;
 
 	public static String getAvailable(String str) {
 		while (contains(str))
@@ -281,26 +281,8 @@ public class Pack extends Data {
 		if (p == id)
 			return;
 		for (StageMap sm : mc.maps)
-			for (Stage st : sm.list) {
-				if (st.mus0 / 1000 == p)
-					st.mus0 = -1;
-				if (st.mus1 / 1000 == p)
-					st.mus1 = -1;
-				if (st.getCastle() / 1000 == p)
-					st.castle = 0;
-				if (st.bg / 1000 == p)
-					st.bg = 0;
-				Limit l = st.lim;
-				if (l != null) {
-					if (l.group != null && l.group.pack.id == p)
-						l.group = null;
-					if (l.lvr != null && l.lvr.pack.id == p)
-						l.lvr = null;
-				}
-				for (int[] data : st.datas)
-					if (data[0] / 1000 == p)
-						data[0] = 0;
-			}
+			for (Stage st : sm.list)
+				st.removePack(p);
 		for (CharaGroup cg : mc.groups.getList())
 			cg.set.removeIf(u -> u.pack.id == p);
 		for (LvRestrict lr : mc.lvrs.getList())
@@ -326,35 +308,33 @@ public class Pack extends Data {
 	}
 
 	public void merge(Pack p, boolean write) {
-		int[] esind = new int[1000];
+		int[][] inds = new int[8][1000];
+
 		Map<Integer, Enemy> esmap = p.es.getMap();
 		for (Entry<Integer, Enemy> ent : esmap.entrySet()) {
 			int eid = es.nextInd();
 			es.add(new Enemy(eid, ent.getValue(), this));
-			esind[ent.getKey()] = eid;
+			inds[M_ES][ent.getKey()] = eid;
 		}
 
-		int[] ulind = new int[1000];
 		Map<Integer, UnitLevel> ulmap = p.us.lvlist.getMap();
 		for (Entry<Integer, UnitLevel> ent : ulmap.entrySet()) {
 			int ulid = us.lvlist.nextInd();
 			us.lvlist.add(new UnitLevel(this, ulid, ent.getValue()));
-			ulind[ent.getKey()] = ulid;
+			inds[M_UL][ent.getKey()] = ulid;
 		}
 
-		int[] usind = new int[1000];
 		Map<Integer, Unit> usmap = p.us.ulist.getMap();
 		for (Entry<Integer, Unit> ent : usmap.entrySet()) {
 			int uid = us.ulist.nextInd();
 			Unit u = ent.getValue();
 			UnitLevel ul = u.lv;
 			if (ul.id / 1000 == p.id)
-				ul = us.lvlist.get(ulind[ul.id % 1000]);
+				ul = us.lvlist.get(inds[M_UL][ul.id % 1000]);
 			us.ulist.add(u = new Unit(uid, ent.getValue(), this, ul));
-			usind[ent.getKey()] = uid;
+			inds[M_US][ent.getKey()] = uid;
 		}
 
-		int[] cgind = new int[1000];
 		Map<Integer, CharaGroup> cgmap = p.mc.groups.getMap();
 		for (Entry<Integer, CharaGroup> ent : cgmap.entrySet()) {
 			int cgid = mc.groups.nextInd();
@@ -364,14 +344,13 @@ public class Pack extends Data {
 			for (Unit u : cg.set) {
 				int uid = u.id;
 				if (uid / 1000 == p.id)
-					uid = usind[uid % 1000] + id * 1000;
+					uid = inds[M_US][uid % 1000] + id * 1000;
 				units[i++] = uid;
 			}
 			mc.groups.add(new CharaGroup(this, cgid, cg.type, units));
-			cgind[ent.getKey()] = cgid;
+			inds[M_CG][ent.getKey()] = cgid;
 		}
 
-		int[] lrind = new int[1000];
 		Map<Integer, LvRestrict> lrmap = p.mc.lvrs.getMap();
 		for (Entry<Integer, LvRestrict> ent : lrmap.entrySet()) {
 			int lrid = mc.lvrs.nextInd();
@@ -380,20 +359,19 @@ public class Pack extends Data {
 			for (Entry<CharaGroup, int[]> ets : lr.res.entrySet()) {
 				CharaGroup cg = ets.getKey();
 				if (cg.pack == p)
-					lr.res.put(mc.groups.get(cgind[cg.id]), ets.getValue());
+					lr.res.put(mc.groups.get(inds[M_CG][cg.id]), ets.getValue());
 				else
 					lr.res.put(cg, ets.getValue());
 			}
 			mc.lvrs.add(lr);
-			lrind[ent.getKey()] = lrid;
+			inds[M_LR][ent.getKey()] = lrid;
 		}
 
-		int[] bgind = new int[1000];
 		Map<Integer, Background> bgmap = p.bg.getMap();
 		for (Entry<Integer, Background> ent : bgmap.entrySet()) {
 			int bgid = bg.nextInd();
 			bg.add(ent.getValue().copy(this, bgid));
-			bgind[ent.getKey()] = bgid;
+			inds[M_BG][ent.getKey()] = bgid;
 			if (!write)
 				continue;
 			File f = new File("./res/img/" + hex(id) + "/bg/" + trio(bgid) + ".png");
@@ -405,12 +383,11 @@ public class Pack extends Data {
 			}
 		}
 
-		int[] csind = new int[1000];
 		Map<Integer, VImg> csmap = p.cs.getMap();
 		for (Entry<Integer, VImg> ent : csmap.entrySet()) {
 			int csid = cs.nextInd();
 			cs.add(new VImg(ent.getValue().getImg()));
-			csind[ent.getKey()] = csid;
+			inds[M_CS][ent.getKey()] = csid;
 			if (!write)
 				continue;
 			File f = new File("./res/img/" + hex(id) + "/cas/" + trio(csid) + ".png");
@@ -427,36 +404,18 @@ public class Pack extends Data {
 		mc.maps = Arrays.copyOf(mc.maps, n0 + p.mc.maps.length);
 		for (int i = 0; i < p.mc.maps.length; i++) {
 			mc.maps[n0 + i] = p.mc.maps[i].copy(mc);
-			for (Stage st : mc.maps[n0 + i].list) {
-				if (st.castle / 1000 == pid)
-					st.castle = csind[st.castle % 1000] + id * 1000;
-				if (st.bg / 1000 == pid)
-					st.bg = bgind[st.bg % 1000] + id * 1000;
-				if (st.mus0 / 1000 == pid)
-					st.mus0 = st.mus0 % 1000 + id * 1000;// TODO
-				if (st.mus1 / 1000 == pid)
-					st.mus1 = st.mus1 % 1000 + id * 1000;// TODO
-				for (int[] dat : st.datas)
-					if (dat[0] / 1000 == pid)
-						dat[0] = esind[dat[0] % 1000] + id * 1000;
-				if (st.lim == null)
-					continue;
-				Limit lim = st.lim;
-				if (lim.group != null && lim.group.pack == p)
-					lim.group = mc.groups.get(cgind[lim.group.id]);
-				if (lim.lvr != null && lim.lvr.pack == p)
-					lim.lvr = mc.lvrs.get(lrind[lim.lvr.id]);
-			}
+			for (Stage st : mc.maps[n0 + i].list)
+				st.merge(id, pid, p, inds);
 		}
 
 		for (Enemy e : es.getList())
 			for (int[][] proc : ((CustomEntity) e.de).getAllProc()) {
 				int eid = proc[Data.P_SPAWN][1];
 				if (eid / 1000 == pid)
-					proc[Data.P_SPAWN][1] = esind[eid % 1000] + id * 1000;
+					proc[Data.P_SPAWN][1] = inds[M_ES][eid % 1000] + id * 1000;
 				int bgid = proc[Data.P_THEME][2];
 				if (bgid / 1000 == pid)
-					proc[Data.P_THEME][2] = bgind[bgid % 1000] + id * 1000;
+					proc[Data.P_THEME][2] = inds[M_BG][bgid % 1000] + id * 1000;
 			}
 
 		for (Unit u : us.ulist.getList())
@@ -464,10 +423,10 @@ public class Pack extends Data {
 				for (int[][] proc : ((CustomEntity) f.du).getAllProc()) {
 					int uid = proc[Data.P_SPAWN][1];
 					if (uid / 1000 == pid)
-						proc[Data.P_SPAWN][1] = usind[uid] + id * 1000;
+						proc[Data.P_SPAWN][1] = inds[M_US][uid] + id * 1000;
 					int bgid = proc[Data.P_THEME][2];
 					if (bgid / 1000 == pid)
-						proc[Data.P_THEME][2] = bgind[bgid] + id * 1000;
+						proc[Data.P_THEME][2] = inds[M_BG][bgid] + id * 1000;
 				}
 
 		// music TODO
@@ -506,24 +465,9 @@ public class Pack extends Data {
 			return -1;
 		for (StageMap sm : mc.maps)
 			for (Stage st : sm.list) {
-				if (st.mus0 / 1000 == p)
-					return RELY_MUS;
-				if (st.mus1 / 1000 == p)
-					return RELY_MUS;
-				if (st.getCastle() / 1000 == p)
-					return RELY_CAS;
-				if (st.bg / 1000 == p)
-					return RELY_BG;
-				Limit l = st.lim;
-				if (l != null) {
-					if (l.group != null && l.group.pack.id == p)
-						return RELY_CG;
-					if (l.lvr != null && l.lvr.pack.id == p)
-						return RELY_LR;
-				}
-				for (int[] data : st.datas)
-					if (data[0] / 1000 == p)
-						return RELY_ENE;
+				int rel = st.relyOn(p);
+				if (rel >= 0)
+					return rel;
 			}
 		for (CharaGroup cg : mc.groups.getList())
 			for (Unit u : cg.set)

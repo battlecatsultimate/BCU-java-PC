@@ -9,6 +9,7 @@ import page.support.EnemyTCR;
 import util.stage.Stage;
 import util.unit.Enemy;
 import util.unit.EnemyStore;
+import static util.stage.SCDef.*;
 
 public class StageTable extends AbJTable {
 
@@ -81,20 +82,27 @@ public class StageTable extends AbJTable {
 	}
 
 	protected void setData(Stage st) {
-		int[][] info = st.datas;
+		int[][] info = st.data.getSimple();
 		data = new Object[info.length][7];
 		for (int i = 0; i < info.length; i++) {
 			int ind = info.length - i - 1;
-			data[ind][1] = EnemyStore.getEnemy(info[i][0]);
-			data[ind][0] = info[i][8] == 1 ? "boss" : "";
-			data[ind][2] = info[i][9];
-			data[ind][3] = info[i][1] == 0 ? "infinite" : info[i][1];
-			data[ind][4] = info[i][5] + "%";
-			data[ind][5] = info[i][2];
-			if (info[i][3] == info[i][4])
-				data[ind][6] = info[i][3];
+			data[ind][1] = EnemyStore.getEnemy(info[i][E]);
+			data[ind][0] = info[i][B] == 1 ? "boss" : "";
+			data[ind][2] = info[i][M];
+			data[ind][3] = info[i][N] == 0 ? "infinite" : info[i][N];
+			if (info[i][C0] >= info[i][C1])
+				data[ind][4] = info[i][C0] + "%";
 			else
-				data[ind][6] = info[i][3] + "~" + info[i][4];
+				data[ind][4] = info[i][C0] + "~" + info[i][C1] + "%";
+			if (info[i][S0] >= info[i][S1])
+				data[ind][5] = info[i][S0];
+			else
+				data[ind][5] = info[i][S0] + "~" + info[i][S1];
+
+			if (info[i][R0] == info[i][R1])
+				data[ind][6] = info[i][R0];
+			else
+				data[ind][6] = info[i][R0] + "~" + info[i][R1];
 		}
 	}
 

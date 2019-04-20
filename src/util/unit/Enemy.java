@@ -72,11 +72,8 @@ public class Enemy extends Animable<AnimU> implements AbEnemy {
 	public List<Stage> findApp() {
 		List<Stage> ans = new ArrayList<>();
 		for (Stage st : MapColc.getAllStage())
-			for (int[] dat : st.datas)
-				if (dat[0] == id) {
-					ans.add(st);
-					break;
-				}
+			if (st.contains(this))
+				ans.add(st);
 		return ans;
 	}
 
@@ -84,11 +81,8 @@ public class Enemy extends Animable<AnimU> implements AbEnemy {
 		List<Stage> ans = new ArrayList<>();
 		for (StageMap sm : mc.maps)
 			for (Stage st : sm.list)
-				for (int[] dat : st.datas)
-					if (dat[0] == id) {
-						ans.add(st);
-						break;
-					}
+				if (st.contains(this))
+					ans.add(st);
 		return ans;
 	}
 
@@ -99,16 +93,11 @@ public class Enemy extends Animable<AnimU> implements AbEnemy {
 				continue;
 			boolean col = false;
 			for (StageMap sm : mc.maps) {
-				for (Stage st : sm.list) {
-					for (int[] dat : st.datas)
-						if (dat[0] == id) {
-							ans.add(mc);
-							col = true;
-							break;
-						}
-					if (col)
+				for (Stage st : sm.list)
+					if (col = st.contains(this)) {
+						ans.add(mc);
 						break;
-				}
+					}
 				if (col)
 					break;
 			}

@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -80,7 +81,8 @@ public class BattleInfoPage extends KeyHandler {
 
 	protected BattleInfoPage(Page p, Stage st, int star, BasisLU bl, int[] ints) {
 		super(p);
-		SBCtrl sb = new SBCtrl(this, st, star, bl, ints);
+		long seed = new Random().nextLong();
+		SBCtrl sb = new SBCtrl(this, st, star, bl, ints, seed);
 		bb = new BBCtrl(this, sb);
 		basis = sb;
 		ct.setData(basis.st);

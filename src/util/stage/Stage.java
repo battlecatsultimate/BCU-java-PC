@@ -13,6 +13,7 @@ import util.pack.Pack;
 import util.system.BasedCopable;
 import util.system.MultiLangCont;
 import util.system.VFile;
+import util.unit.Enemy;
 
 public class Stage extends Data implements BasedCopable<Stage, StageMap> {
 
@@ -25,7 +26,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap> {
 	public int len, health, max;
 	public int bg, mus0 = -1, mush, mus1 = -1;
 	public int castle;
-	public int[][] datas;
+	public SCDef data;
 	public Limit lim;
 
 	public Stage(StageMap sm) {
@@ -34,8 +35,8 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap> {
 		health = 60000;
 		max = 8;
 		name = "stage " + sm.list.size();
-		datas = new int[0][10];
 		lim = new Limit();
+		data = new SCDef(0);
 	}
 
 	public Stage(StageMap sm, String str, InStream is) {
@@ -84,15 +85,20 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap> {
 				}
 				ll.add(data);
 			}
-		datas = new int[ll.size()][10];
-		validate();
+		SCDef scd = new SCDef(ll.size());
 		for (int i = 0; i < ll.size(); i++)
-			datas[i] = ll.get(datas.length - i - 1);
+			scd.datas[i] = ll.get(scd.datas.length - i - 1);
 		if (strs.length > 6) {
 			int ano = Reader.parseIntN(strs[6]);
 			if (ano == 317)
-				datas[ll.size() - 1][5] = 0;
+				scd.datas[ll.size() - 1][5] = 0;
 		}
+		data = scd;
+		validate();
+	}
+
+	public boolean contains(Enemy e) {
+		return data.contains(e);
 	}
 
 	@Override
@@ -104,9 +110,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap> {
 		ans.bg = bg;
 		ans.castle = castle;
 		ans.name = name;
-		ans.datas = new int[datas.length][];
-		for (int i = 0; i < datas.length; i++)
-			ans.datas[i] = datas[i].clone();
+		ans.data = data.copy();
 		if (lim != null)
 			ans.lim = lim.clone();
 		return ans;
@@ -137,17 +141,65 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap> {
 	}
 
 	public boolean isSuitable(Pack p) {
-		for (int[] ints : datas) {
-			if (ints[0] < 1000)
-				continue;
-			int pac = ints[0] / 1000;
-			boolean b = pac == p.id;
-			for (int rel : p.rely)
-				b |= pac == rel;
-			if (!b)
-				return false;
+		return data.isSuitable(p);
+	}
+
+	public void merge(int id, int pid, Pack p, int[][] inds) {
+		if (castle / 1000 == pid)
+			castle = inds[Pack.M_CS][castle % 1000] + id * 1000;
+		if (bg / 1000 == pid)
+			bg = inds[Pack.M_BG][bg % 1000] + id * 1000;
+		if (mus0 / 1000 == pid)
+			mus0 = inds[Pack.M_MS][mus0 % 1000] + id * 1000;
+		if (mus1 / 1000 == pid)
+			mus1 = inds[Pack.M_MS][mus1 % 1000] + id * 1000;
+		data.merge(id, pid, inds[Pack.M_ES]);
+		if (lim == null)
+			return;
+		if (lim.group != null && lim.group.pack == p)
+			lim.group = map.mc.groups.get(inds[Pack.M_CG][lim.group.id]);
+		if (lim.lvr != null && lim.lvr.pack == p)
+			lim.lvr = map.mc.lvrs.get(inds[Pack.M_LR][lim.lvr.id]);
+	}
+
+	public int relyOn(int p) {
+		if (mus0 / 1000 == p)
+			return Pack.RELY_MUS;
+		if (mus1 / 1000 == p)
+			return Pack.RELY_MUS;
+		if (getCastle() / 1000 == p)
+			return Pack.RELY_CAS;
+		if (bg / 1000 == p)
+			return Pack.RELY_BG;
+		Limit l = lim;
+		if (l != null) {
+			if (l.group != null && l.group.pack.id == p)
+				return Pack.RELY_CG;
+			if (l.lvr != null && l.lvr.pack.id == p)
+				return Pack.RELY_LR;
 		}
-		return true;
+		int rel = data.relyOn(p);
+		if (rel >= 0)
+			return rel;
+		return -1;
+	}
+
+	public void removePack(int p) {
+		if (mus0 / 1000 == p)
+			mus0 = -1;
+		if (mus1 / 1000 == p)
+			mus1 = -1;
+		if (getCastle() / 1000 == p)
+			castle = 0;
+		if (bg / 1000 == p)
+			bg = 0;
+		if (lim != null) {
+			if (lim.group != null && lim.group.pack.id == p)
+				lim.group = null;
+			if (lim.lvr != null && lim.lvr.pack.id == p)
+				lim.lvr = null;
+		}
+		data.removePack(p);
 	}
 
 	public void setCast(int val) {
@@ -173,7 +225,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap> {
 
 	public OutStream write() {
 		OutStream os = new OutStream();
-		os.writeString("0.3.8");
+		os.writeString("0.4.0");
 		os.writeString(toString());
 		os.writeInt(bg);
 		os.writeInt(castle);
@@ -184,21 +236,14 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap> {
 		os.writeInt(mus1);
 		os.writeByte((byte) max);
 		os.writeByte((byte) (non_con ? 1 : 0));
-		os.writeByte((byte) datas.length);
-		for (int i = 0; i < datas.length; i++)
-			for (int j = 0; j < 10; j++)
-				os.writeInt(datas[i][j]);
+		os.accept(data.write());
 		lim.write(os);
 		os.terminate();
 		return os;
 	}
 
 	protected void validate() {
-		boolean t = false;
-		for (int[] data : datas)
-			if (data[5] > 100)
-				t = true;
-		trail = t;
+		trail = data.isTrail();
 	}
 
 	private boolean checkName(String str) {
@@ -210,7 +255,9 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap> {
 
 	private void zread(String ver, InStream is) {
 		int val = getVer(ver);
-		if (val >= 308)
+		if (val >= 400)
+			zread$000400(val, is);
+		else if (val >= 308)
 			zread$000308(val, is);
 		else if (val >= 305)
 			zread$000305(val, is);
@@ -227,14 +274,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap> {
 		len = is.nextInt();
 		max = is.nextByte();
 		non_con = is.nextByte() == 1;
-		int n = is.nextByte();
-		datas = new int[n][10];
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < 10; j++)
-				datas[i][j] = is.nextInt();
-			if (datas[i][5] < 100)
-				datas[i][2] *= -1;
-		}
+		data = new SCDef(is, 203);
 		lim = new Limit(map.mc, 0, is);
 	}
 
@@ -246,11 +286,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap> {
 		len = is.nextInt();
 		max = is.nextByte();
 		non_con = is.nextByte() == 1;
-		int n = is.nextByte();
-		datas = new int[n][10];
-		for (int i = 0; i < n; i++)
-			for (int j = 0; j < 10; j++)
-				datas[i][j] = is.nextInt();
+		data = new SCDef(is, 305);
 		lim = new Limit(map.mc, val, is);
 	}
 
@@ -265,11 +301,22 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap> {
 		mus1 = is.nextInt();
 		max = is.nextByte();
 		non_con = is.nextByte() == 1;
-		int n = is.nextByte();
-		datas = new int[n][10];
-		for (int i = 0; i < n; i++)
-			for (int j = 0; j < 10; j++)
-				datas[i][j] = is.nextInt();
+		data = new SCDef(is, 305);
+		lim = new Limit(map.mc, val, is);
+	}
+
+	private void zread$000400(int val, InStream is) {
+		name = is.nextString();
+		bg = is.nextInt();
+		castle = is.nextInt();
+		health = is.nextInt();
+		len = is.nextInt();
+		mus0 = is.nextInt();
+		mush = is.nextInt();
+		mus1 = is.nextInt();
+		max = is.nextByte();
+		non_con = is.nextByte() == 1;
+		data = StageCont.zread(is.subStream());
 		lim = new Limit(map.mc, val, is);
 	}
 

@@ -534,7 +534,7 @@ public class BackupTreePage extends Page {
 			for (Stage st : sm.list) {
 				DefaultMutableTreeNode tst = new DefaultMutableTreeNode(st + "/");
 				tsm.add(tst);
-				int[][] info = st.datas;
+				int[][] info = st.data.getSimple();
 				Object[][] data = new Object[info.length][7];
 				for (int i = 0; i < info.length; i++) {
 					int ind = info.length - i - 1;
