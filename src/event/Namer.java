@@ -6,10 +6,11 @@ import java.util.ResourceBundle;
 import java.util.TreeMap;
 
 import page.MainLocale;
+import util.stage.MapColc;
 
 public strictfp class Namer {
 
-	private static final ResourceBundle[] SRES, ERES, GRES, IRES, LRES;
+	private static final ResourceBundle[] ERES, GRES, IRES, LRES;
 
 	public static final Map<Integer, String> EMAP, GMAP, IMAP;
 
@@ -17,17 +18,16 @@ public strictfp class Namer {
 
 	static {
 		String s0 = "event.";
-		String[] s1 = new String[] { "stage", "event", "group", "item", "lang" };
+		String[] s1 = new String[] { "event", "group", "item", "lang" };
 		String[] s2 = new String[] { "_en", "_zh", "_en", "_en" };
 		ResourceBundle[][] ress = new ResourceBundle[s1.length][s2.length];
 		for (int i = 0; i < s1.length; i++)
 			for (int j = 0; j < s2.length; j++)
 				ress[i][j] = ResourceBundle.getBundle(s0 + s1[i] + s2[j]);
-		SRES = ress[0];
-		ERES = ress[1];
-		GRES = ress[2];
-		IRES = ress[3];
-		LRES = ress[4];
+		ERES = ress[0];
+		GRES = ress[1];
+		IRES = ress[2];
+		LRES = ress[3];
 		EMAP = new TreeMap<>();
 		GMAP = new TreeMap<>();
 		IMAP = new TreeMap<>();
@@ -44,7 +44,7 @@ public strictfp class Namer {
 	public static String getE(int id) {
 		try {
 			if (id / 1000 == 1)
-				return SRES[MainLocale.lang].getString("" + id);
+				return MapColc.getMap(id).toString();
 			else
 				return ERES[MainLocale.lang].getString("" + id);
 		} catch (MissingResourceException e) {
@@ -73,7 +73,7 @@ public strictfp class Namer {
 	public static String getEPure(int id) {
 		try {
 			if (id / 1000 == 1)
-				return SRES[MainLocale.lang].getString("" + id);
+				return MapColc.getMap(id).toString();
 			else if (id / 1000 != 0 && id / 1000 != 3)
 				return ERES[MainLocale.lang].getString("" + id);
 			return "";

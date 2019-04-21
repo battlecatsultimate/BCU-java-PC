@@ -170,15 +170,17 @@ public class Data {
 	protected static final int P_TIME = 21;
 	protected static final int P_SEAL = 22;
 	/** 0:prob, 1:ID, 2:location, 3: buff, 4:conf, 5:time */
+	/** +0: direct, +1: warp, +2:burrow, +4:disregard limit,
+	 *  +8: fix buff, +16: same health, +32: diff layer*/
 	protected static final int P_SPAWN = 23;
-	/**
-	 * 0:prob, 1:speed, 2:width (left to right), 3:time, 4:origin (center)， 5:itv
-	 */
+	/** 0:prob, 1:speed, 2:width (left to right), 3:time, 4:origin (center), 5:itv */
 	protected static final int P_MOVEWAVE = 24;
 	/** 0:prob, 1:time (-1 means infinite), 2:ID */
 	protected static final int P_THEME = 25;
+	/** 0:prob, 1:time, 2:dmg, 3:itv*/
+	protected static final int P_POISON = 26;
 
-	protected static final int PROC_TOT = 30;// 26
+	protected static final int PROC_TOT = 30;// 27
 	protected static final int PROC_WIDTH = 6;
 
 	protected static final int WT_WAVE = 1;
@@ -308,8 +310,9 @@ public class Data {
 	protected static final int A_U_B = 32;
 	protected static final int A_U_E_B = 33;
 	protected static final int A_SEAL = 34;
+	protected static final int A_POISON= 35;
 
-	protected static final int A_TOT = 35;
+	protected static final int A_TOT = 36;
 
 	// atk type index used in filter page
 	protected static final int ATK_SINGLE = 0;

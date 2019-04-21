@@ -31,7 +31,7 @@ public class EStage {
 	public EEnemy allow() {
 		for (int i = 0; i < rem.length; i++) {
 			int[] data = s.data.getSimple(i);
-			if (inHealth(data[C0], data[C1]) && rem[i] == 0 && num[i] != -1) {
+			if (inHealth(data[C0], data[C1]) &&s.data.allow(b,data[G])&& rem[i] == 0 && num[i] != -1) {
 				rem[i] = data[R0] + (int) (b.r.nextDouble() * (data[R1] - data[R0]));
 				if (num[i] > 0) {
 					num[i]--;
@@ -40,9 +40,8 @@ public class EStage {
 				}
 				if (data[8] == 1)
 					b.shock = true;
-
-				AbEnemy e = EnemyStore.getAbEnemy(data[0], false);
 				double multi = (data[M] == 0 ? 100 : data[M]) * mul * 0.01;
+				AbEnemy e = EnemyStore.getAbEnemy(data[0], false);
 				EEnemy ee = e.getEntity(b, data, multi, data[L0], data[L1], data[B]);
 				ee.group = data[G];
 				return ee;

@@ -24,12 +24,15 @@ public class AtkModelEnemy extends AtkModelEntity {
 				AbEnemy ene = EnemyStore.getAbEnemy(getProc(ind, P_SPAWN, 1), false);
 				int conf = getProc(ind, P_SPAWN, 4);
 				int time = getProc(ind, P_SPAWN, 5);
-				if (ene != null && (b.entityCount(1) < b.st.max || (conf & 4) > 0)) {
+				if (ene != null && (b.st.data.allow(b, ene) || (conf & 4) > 0)) {
 					double ep = getPos() + getDire() * getProc(ind, P_SPAWN, 2);
 					double mult = getProc(ind, P_SPAWN, 3) * 0.01;
 					if ((conf & 8) == 0)
 						mult *= ((EEnemy) e).mult;
-					EEnemy ee = ene.getEntity(b, acs[ind], mult, 0, e.layer, e.layer);
+					int l0=0,l1=9;
+					if ((conf & 32) == 0)
+						l0=l1=e.layer;
+					EEnemy ee = ene.getEntity(b, acs[ind], mult, 0, l0,l1);
 					if (ep < ee.data.getWidth())
 						ep = ee.data.getWidth();
 					if (ep > b.st.len - 800)

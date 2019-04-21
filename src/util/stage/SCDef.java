@@ -1,19 +1,48 @@
 package util.stage;
 
+import java.util.Map;
+import java.util.TreeMap;
+
 import io.InStream;
 import io.OutStream;
+import util.Data;
+import util.basis.StageBasis;
 import util.pack.Pack;
+import util.system.Copable;
+import util.system.FixIndexList;
+import util.unit.AbEnemy;
 import util.unit.Enemy;
 
-public class SCDef implements StageCont {
+public class SCDef implements Copable<SCDef>{
 
 	public static final int SIZE = 13;
 
 	public static final int E = 0, N = 1, S0 = 2, R0 = 3, R1 = 4, C0 = 5, L0 = 6, L1 = 7, B = 8, M = 9, S1 = 10,
 			C1 = 11, G = 12;
 
+	public static SCDef zread(InStream is) {
+		int t = is.nextInt();
+		int ver = Data.getVer(is.nextString());
+		if (t == 0) {
+			if (ver >= 400) {
+				int n = is.nextInt();
+				int m = is.nextInt();
+				SCDef scd = new SCDef(n);
+				for (int i = 0; i < n; i++)
+					for (int j = 0; j < m; j++)
+						scd.datas[i][j] = is.nextInt();
+				return scd;
+			}
+		}
+		return null;
+	}
+	
 	public int[][] datas;
 
+	public final FixIndexList<SCGroup> sub=new FixIndexList<>(new SCGroup[1000]);//TODO
+	public final Map<AbEnemy,Integer> smap=new TreeMap<>();//TODO
+	public int sdef=0;
+	
 	protected SCDef(InStream is, int ver) {
 		if (ver >= 305) {
 			int n = is.nextByte();
@@ -38,7 +67,18 @@ public class SCDef implements StageCont {
 		datas = new int[s][SIZE];
 	}
 
-	@Override
+	public boolean allow(StageBasis sb,AbEnemy e) {
+		Integer o=smap.get(e);
+		return allow(sb,o==null?0:o);
+	}
+	
+	public boolean allow(StageBasis sb,int val) {
+		if(val<0||val>1000||sub.get(val)==null)
+			return sb.entityCount(1)<sb.st.max;
+		SCGroup g=sub.get(val);
+		return sb.entityCount(1,val)<g.max;
+	}
+	
 	public boolean contains(Enemy e) {
 		for (int[] dat : datas)
 			if (dat[0] == e.id)
@@ -46,7 +86,6 @@ public class SCDef implements StageCont {
 		return false;
 	}
 
-	@Override
 	public SCDef copy() {
 		SCDef ans = new SCDef(datas.length);
 		for (int i = 0; i < datas.length; i++)
@@ -54,17 +93,14 @@ public class SCDef implements StageCont {
 		return ans;
 	}
 
-	@Override
 	public int[][] getSimple() {
 		return datas;
 	}
 
-	@Override
 	public int[] getSimple(int i) {
 		return datas[i];
 	}
 
-	@Override
 	public boolean isSuitable(Pack p) {
 		for (int[] ints : datas) {
 			if (ints[0] < 1000)
@@ -79,7 +115,6 @@ public class SCDef implements StageCont {
 		return true;
 	}
 
-	@Override
 	public boolean isTrail() {
 		for (int[] data : datas)
 			if (data[5] > 100)
@@ -87,7 +122,6 @@ public class SCDef implements StageCont {
 		return false;
 	}
 
-	@Override
 	public void merge(int id, int pid, int[] esind) {
 		for (int[] dat : datas)
 			if (dat[0] / 1000 == pid)
@@ -95,7 +129,6 @@ public class SCDef implements StageCont {
 
 	}
 
-	@Override
 	public int relyOn(int p) {
 		for (int[] data : datas)
 			if (data[0] / 1000 == p)
@@ -103,14 +136,12 @@ public class SCDef implements StageCont {
 		return -1;
 	}
 
-	@Override
 	public void removePack(int p) {
 		for (int[] data : datas)
 			if (data[0] / 1000 == p)
 				data[0] = 0;
 	}
 
-	@Override
 	public OutStream write() {
 		OutStream os = new OutStream();
 		os.writeInt(0);
