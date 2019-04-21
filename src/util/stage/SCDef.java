@@ -206,4 +206,14 @@ public class SCDef implements Copable<SCDef> {
 		return os;
 	}
 
+	public int[][] getSMap() {
+		int[][] ans=new int[smap.size()][2];
+		int[] i=new int[1];
+		smap.forEach((e,g)->{
+			ans[i[0]][0]=e;
+			ans[i[0]++][1]=g;
+		});
+		return ans;
+	}
+
 }
