@@ -32,7 +32,7 @@ public class StageTable extends AbJTable {
 	protected StageTable(Page p) {
 		page = p;
 
-		setDefaultRenderer(Enemy.class, new EnemyTCR(lnk));
+		setDefaultRenderer(Enemy.class, new EnemyTCR());
 	}
 
 	@Override

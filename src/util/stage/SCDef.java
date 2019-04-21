@@ -2,7 +2,6 @@ package util.stage;
 
 import java.util.Map;
 import java.util.TreeMap;
-
 import io.InStream;
 import io.OutStream;
 import util.Data;
@@ -24,7 +23,23 @@ public class SCDef implements Copable<SCDef>{
 		int t = is.nextInt();
 		int ver = Data.getVer(is.nextString());
 		if (t == 0) {
-			if (ver >= 400) {
+			if (ver >= 401) {
+				int n = is.nextInt();
+				int m = is.nextInt();
+				SCDef scd = new SCDef(n);
+				for (int i = 0; i < n; i++)
+					for (int j = 0; j < m; j++)
+						scd.datas[i][j] = is.nextInt();
+				scd.sdef=is.nextInt();
+				n=is.nextInt();
+				for(int i=0;i<n;i++)
+					scd.smap.put(is.nextInt(), is.nextInt());
+				n=is.nextInt();
+				for(int i=0;i<n;i++)
+					scd.sub.set(is.nextInt(),new SCGroup(is.nextInt()));
+				return scd;
+			}
+			else if (ver >= 400) {
 				int n = is.nextInt();
 				int m = is.nextInt();
 				SCDef scd = new SCDef(n);
@@ -39,8 +54,8 @@ public class SCDef implements Copable<SCDef>{
 	
 	public int[][] datas;
 
-	public final FixIndexList<SCGroup> sub=new FixIndexList<>(new SCGroup[1000]);//TODO
-	public final Map<AbEnemy,Integer> smap=new TreeMap<>();//TODO
+	public final FixIndexList<SCGroup> sub=new FixIndexList<>(new SCGroup[1000]);
+	public final Map<Integer,Integer> smap=new TreeMap<>();
 	public int sdef=0;
 	
 	protected SCDef(InStream is, int ver) {
@@ -68,8 +83,8 @@ public class SCDef implements Copable<SCDef>{
 	}
 
 	public boolean allow(StageBasis sb,AbEnemy e) {
-		Integer o=smap.get(e);
-		return allow(sb,o==null?0:o);
+		Integer o=smap.get(e.getID());
+		return allow(sb,o==null?sdef:o);
 	}
 	
 	public boolean allow(StageBasis sb,int val) {
@@ -90,6 +105,9 @@ public class SCDef implements Copable<SCDef>{
 		SCDef ans = new SCDef(datas.length);
 		for (int i = 0; i < datas.length; i++)
 			ans.datas[i] = datas[i].clone();
+		ans.sdef=sdef;
+		smap.forEach((e,i)->ans.smap.put(e, i));
+		sub.forEach((i,e)->ans.sub.set(i,e));
 		return ans;
 	}
 
@@ -126,7 +144,6 @@ public class SCDef implements Copable<SCDef>{
 		for (int[] dat : datas)
 			if (dat[0] / 1000 == pid)
 				dat[0] = esind[dat[0] % 1000] + id * 1000;
-
 	}
 
 	public int relyOn(int p) {
@@ -145,12 +162,17 @@ public class SCDef implements Copable<SCDef>{
 	public OutStream write() {
 		OutStream os = new OutStream();
 		os.writeInt(0);
-		os.writeString("0.4.0");
+		os.writeString("0.4.1");
 		os.writeInt(datas.length);
 		os.writeInt(SIZE);
 		for (int i = 0; i < datas.length; i++)
 			for (int j = 0; j < SIZE; j++)
 				os.writeInt(datas[i][j]);
+		os.writeInt(sdef);
+		os.writeInt(smap.size());
+		smap.forEach((e,i)->os.writeIntsN(e,i));
+		os.writeInt(sub.size());
+		sub.forEach((i,e)->os.writeIntsN(i,e.max));
 		os.terminate();
 		return os;
 	}

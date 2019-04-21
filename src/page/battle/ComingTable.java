@@ -36,7 +36,7 @@ class ComingTable extends AbJTable {
 
 	protected ComingTable(Page p) {
 		page = p;
-		setDefaultRenderer(Enemy.class, new EnemyTCR(lnk));
+		setDefaultRenderer(Enemy.class, new EnemyTCR());
 	}
 
 	@Override

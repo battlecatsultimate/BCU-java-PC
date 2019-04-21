@@ -47,7 +47,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 		page = p;
 		pack = pac;
 		setTransferHandler(new InTableTH(this));
-		setDefaultRenderer(Integer.class, new EnemyTCR(lnk));
+		setDefaultRenderer(Integer.class, new EnemyTCR());
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.BiConsumer;
 
 import util.Data;
 
@@ -19,6 +20,12 @@ public class FixIndexList<T> extends Data {
 			if (t != null)
 				n++;
 		size = n;
+	}
+	
+	public void forEach(BiConsumer<Integer,T> c) {
+		for(int i=0;i<arr.length;i++)
+			if(arr[i]!=null)
+				c.accept(i, arr[i]);
 	}
 
 	public void add(T t) {
@@ -49,7 +56,7 @@ public class FixIndexList<T> extends Data {
 	}
 
 	public List<T> getList() {
-		List<T> ans = new ArrayList<>();
+		List<T> ans = new ArrayList<>(size);
 		for (T t : arr)
 			if (t != null)
 				ans.add(t);

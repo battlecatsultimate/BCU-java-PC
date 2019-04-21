@@ -14,16 +14,12 @@ public class EnemyTCR extends DefaultTableCellRenderer {
 
 	private static final long serialVersionUID = 1L;
 
-	private final int[] lnk;
-
-	public EnemyTCR(int[] ints) {
-		lnk = ints;
+	public EnemyTCR() {
 	}
 
 	@Override
 	public Component getTableCellRendererComponent(JTable t, Object v, boolean s, boolean f, int r, int c) {
 		Component comp = super.getTableCellRendererComponent(t, v, s, f, r, c);
-		c = lnk[c];
 		if (v != null && !(v instanceof AbEnemy))
 			return comp;
 		JLabel jl = (JLabel) comp;

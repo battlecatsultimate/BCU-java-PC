@@ -6,11 +6,13 @@ public class SCGroup implements Copable<SCGroup>{
 	
 	public int max;
 	
+	public SCGroup(int n) {
+		max=n;
+	}
+
 	@Override
 	public SCGroup copy() {
-		SCGroup ans=new SCGroup();
-		ans.max=max;
-		return ans;
+		return new SCGroup(max);
 	}
 
 }

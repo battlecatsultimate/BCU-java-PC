@@ -33,7 +33,7 @@ public class EnemyListTable extends SortTable<Enemy> {
 	protected EnemyListTable(Page p) {
 		page = p;
 
-		setDefaultRenderer(Enemy.class, new EnemyTCR(lnk));
+		setDefaultRenderer(Enemy.class, new EnemyTCR());
 
 	}
 
