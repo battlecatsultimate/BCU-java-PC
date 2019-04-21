@@ -28,13 +28,13 @@ public class AtkModelUnit extends AtkModelEntity {
 
 			extraAtk(ind);
 
-			if (b.r.nextDouble() * 100 < getProc(ind, P_SPAWN, 0)) {
-				Unit u = UnitStore.get(getProc(ind, P_SPAWN, 1), true);
-				int conf = getProc(ind, P_SPAWN, 4);
-				int time = getProc(ind, P_SPAWN, 5);
+			if (b.r.nextDouble() * 100 < getProc(ind, P_SUMMON, 0)) {
+				Unit u = UnitStore.get(getProc(ind, P_SUMMON, 1), true);
+				int conf = getProc(ind, P_SUMMON, 4);
+				int time = getProc(ind, P_SUMMON, 5);
 				if (u != null && b.entityCount(-1) < b.max_num) {
-					double up = getPos() + getDire() * getProc(ind, P_SPAWN, 2);
-					int mult = getProc(ind, P_SPAWN, 3);
+					double up = getPos() + getDire() * getProc(ind, P_SUMMON, 2);
+					int mult = getProc(ind, P_SUMMON, 3);
 					EForm ef = new EForm(u.forms[0], mult);
 					EUnit eu = ef.getEntity(b);
 					eu.added(-1, (int) up);

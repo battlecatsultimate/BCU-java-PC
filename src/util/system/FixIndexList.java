@@ -21,12 +21,6 @@ public class FixIndexList<T> extends Data {
 				n++;
 		size = n;
 	}
-	
-	public void forEach(BiConsumer<Integer,T> c) {
-		for(int i=0;i<arr.length;i++)
-			if(arr[i]!=null)
-				c.accept(i, arr[i]);
-	}
 
 	public void add(T t) {
 		arr[nextInd()] = t;
@@ -49,10 +43,25 @@ public class FixIndexList<T> extends Data {
 		return false;
 	}
 
+	public void forEach(BiConsumer<Integer, T> c) {
+		for (int i = 0; i < arr.length; i++)
+			if (arr[i] != null)
+				c.accept(i, arr[i]);
+	}
+
 	public T get(int ind) {
 		if (ind < 0 || ind >= arr.length)
 			return null;
 		return arr[ind];
+	}
+
+	public int getFirstInd() {
+		if (size == 0)
+			return -1;
+		for (int i = 0; i < arr.length; i++)
+			if (arr[i] != null)
+				return i;
+		return -1;
 	}
 
 	public List<T> getList() {

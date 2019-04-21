@@ -107,11 +107,6 @@ public strictfp class OutStream extends DataIO {
 		fromInt(bs, index, n);
 		index += 4;
 	}
-	
-	public void writeIntsN(int... ns) {
-		for(int i:ns)
-			writeInt(i);
-	}
 
 	public void writeIntB(int[] ints) {
 		if (ints == null) {
@@ -131,6 +126,11 @@ public strictfp class OutStream extends DataIO {
 		writeByte((byte) ints.length);
 		for (int[] i : ints)
 			writeIntB(i);
+	}
+
+	public void writeIntsN(int... ns) {
+		for (int i : ns)
+			writeInt(i);
 	}
 
 	public void writeLong(long n) {

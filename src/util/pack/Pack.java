@@ -291,8 +291,8 @@ public class Pack extends Data {
 		for (Enemy e : es.getList())
 			for (int i = 0; i < e.de.getAtkCount(); i++) {
 				MaskAtk am = e.de.getAtkModel(i);
-				if (am.getProc(Data.P_SPAWN)[1] / 1000 == p)
-					am.getProc(Data.P_SPAWN)[1] = 0;
+				if (am.getProc(Data.P_SUMMON)[1] / 1000 == p)
+					am.getProc(Data.P_SUMMON)[1] = 0;
 				if (am.getProc(Data.P_THEME)[2] / 1000 == p)
 					am.getProc(Data.P_THEME)[2] = 0;
 			}
@@ -300,8 +300,8 @@ public class Pack extends Data {
 			for (Form e : u.forms)
 				for (int i = 0; i < e.du.getAtkCount(); i++) {
 					MaskAtk am = e.du.getAtkModel(i);
-					if (am.getProc(Data.P_SPAWN)[1] / 1000 == p)
-						am.getProc(Data.P_SPAWN)[1] = 0;
+					if (am.getProc(Data.P_SUMMON)[1] / 1000 == p)
+						am.getProc(Data.P_SUMMON)[1] = 0;
 					if (am.getProc(Data.P_THEME)[2] / 1000 == p)
 						am.getProc(Data.P_THEME)[2] = 0;
 				}
@@ -410,9 +410,9 @@ public class Pack extends Data {
 
 		for (Enemy e : es.getList())
 			for (int[][] proc : ((CustomEntity) e.de).getAllProc()) {
-				int eid = proc[Data.P_SPAWN][1];
+				int eid = proc[Data.P_SUMMON][1];
 				if (eid / 1000 == pid)
-					proc[Data.P_SPAWN][1] = inds[M_ES][eid % 1000] + id * 1000;
+					proc[Data.P_SUMMON][1] = inds[M_ES][eid % 1000] + id * 1000;
 				int bgid = proc[Data.P_THEME][2];
 				if (bgid / 1000 == pid)
 					proc[Data.P_THEME][2] = inds[M_BG][bgid % 1000] + id * 1000;
@@ -421,9 +421,9 @@ public class Pack extends Data {
 		for (Unit u : us.ulist.getList())
 			for (Form f : u.forms)
 				for (int[][] proc : ((CustomEntity) f.du).getAllProc()) {
-					int uid = proc[Data.P_SPAWN][1];
+					int uid = proc[Data.P_SUMMON][1];
 					if (uid / 1000 == pid)
-						proc[Data.P_SPAWN][1] = inds[M_US][uid] + id * 1000;
+						proc[Data.P_SUMMON][1] = inds[M_US][uid] + id * 1000;
 					int bgid = proc[Data.P_THEME][2];
 					if (bgid / 1000 == pid)
 						proc[Data.P_THEME][2] = inds[M_BG][bgid] + id * 1000;
@@ -480,7 +480,7 @@ public class Pack extends Data {
 		for (Enemy e : es.getList())
 			for (int i = 0; i < e.de.getAtkCount(); i++) {
 				MaskAtk am = e.de.getAtkModel(i);
-				if (am.getProc(Data.P_SPAWN)[1] / 1000 == p)
+				if (am.getProc(Data.P_SUMMON)[1] / 1000 == p)
 					return RELY_ABI;
 				if (am.getProc(Data.P_THEME)[2] / 1000 == p)
 					return RELY_ABI;
@@ -489,7 +489,7 @@ public class Pack extends Data {
 			for (Form e : u.forms)
 				for (int i = 0; i < e.du.getAtkCount(); i++) {
 					MaskAtk am = e.du.getAtkModel(i);
-					if (am.getProc(Data.P_SPAWN)[1] / 1000 == p)
+					if (am.getProc(Data.P_SUMMON)[1] / 1000 == p)
 						return RELY_ABI;
 					if (am.getProc(Data.P_THEME)[2] / 1000 == p)
 						return RELY_ABI;

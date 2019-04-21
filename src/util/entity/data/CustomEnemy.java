@@ -1,9 +1,14 @@
 package util.entity.data;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import io.InStream;
 import io.OutStream;
 import util.basis.Basis;
+import util.unit.AbEnemy;
 import util.unit.Enemy;
+import util.unit.EnemyStore;
 
 public class CustomEnemy extends CustomEntity implements MaskEnemy {
 
@@ -52,6 +57,15 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 	@Override
 	public int getStar() {
 		return star;
+	}
+
+	@Override
+	public Set<AbEnemy> getSummon() {
+		Set<AbEnemy> ans = new TreeSet<>();
+		for (AtkDataModel adm : atks)
+			if (adm.proc[P_SUMMON][0] > 0)
+				ans.add(EnemyStore.getAbEnemy(adm.proc[P_SUMMON][1], false));
+		return ans;
 	}
 
 	@Override

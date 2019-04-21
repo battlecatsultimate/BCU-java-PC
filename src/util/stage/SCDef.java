@@ -1,7 +1,10 @@
 package util.stage;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
+
 import io.InStream;
 import io.OutStream;
 import util.Data;
@@ -11,8 +14,9 @@ import util.system.Copable;
 import util.system.FixIndexList;
 import util.unit.AbEnemy;
 import util.unit.Enemy;
+import util.unit.EnemyStore;
 
-public class SCDef implements Copable<SCDef>{
+public class SCDef implements Copable<SCDef> {
 
 	public static final int SIZE = 13;
 
@@ -30,16 +34,16 @@ public class SCDef implements Copable<SCDef>{
 				for (int i = 0; i < n; i++)
 					for (int j = 0; j < m; j++)
 						scd.datas[i][j] = is.nextInt();
-				scd.sdef=is.nextInt();
-				n=is.nextInt();
-				for(int i=0;i<n;i++)
+				scd.sdef = is.nextInt();
+				n = is.nextInt();
+				for (int i = 0; i < n; i++)
 					scd.smap.put(is.nextInt(), is.nextInt());
-				n=is.nextInt();
-				for(int i=0;i<n;i++)
-					scd.sub.set(is.nextInt(),new SCGroup(is.nextInt()));
+				n = is.nextInt();
+				int id;
+				for (int i = 0; i < n; i++)
+					scd.sub.set(id = is.nextInt(), new SCGroup(id, is.nextInt()));
 				return scd;
-			}
-			else if (ver >= 400) {
+			} else if (ver >= 400) {
 				int n = is.nextInt();
 				int m = is.nextInt();
 				SCDef scd = new SCDef(n);
@@ -51,13 +55,13 @@ public class SCDef implements Copable<SCDef>{
 		}
 		return null;
 	}
-	
+
 	public int[][] datas;
 
-	public final FixIndexList<SCGroup> sub=new FixIndexList<>(new SCGroup[1000]);
-	public final Map<Integer,Integer> smap=new TreeMap<>();
-	public int sdef=0;
-	
+	public final FixIndexList<SCGroup> sub = new FixIndexList<>(new SCGroup[1000]);
+	public final Map<Integer, Integer> smap = new TreeMap<>();
+	public int sdef = 0;
+
 	protected SCDef(InStream is, int ver) {
 		if (ver >= 305) {
 			int n = is.nextByte();
@@ -82,18 +86,18 @@ public class SCDef implements Copable<SCDef>{
 		datas = new int[s][SIZE];
 	}
 
-	public boolean allow(StageBasis sb,AbEnemy e) {
-		Integer o=smap.get(e.getID());
-		return allow(sb,o==null?sdef:o);
+	public boolean allow(StageBasis sb, AbEnemy e) {
+		Integer o = smap.get(e.getID());
+		return allow(sb, o == null ? sdef : o);
 	}
-	
-	public boolean allow(StageBasis sb,int val) {
-		if(val<0||val>1000||sub.get(val)==null)
-			return sb.entityCount(1)<sb.st.max;
-		SCGroup g=sub.get(val);
-		return sb.entityCount(1,val)<g.max;
+
+	public boolean allow(StageBasis sb, int val) {
+		if (val < 0 || val > 1000 || sub.get(val) == null)
+			return sb.entityCount(1) < sb.st.max;
+		SCGroup g = sub.get(val);
+		return sb.entityCount(1, val) < g.max;
 	}
-	
+
 	public boolean contains(Enemy e) {
 		for (int[] dat : datas)
 			if (dat[0] == e.id)
@@ -101,13 +105,14 @@ public class SCDef implements Copable<SCDef>{
 		return false;
 	}
 
+	@Override
 	public SCDef copy() {
 		SCDef ans = new SCDef(datas.length);
 		for (int i = 0; i < datas.length; i++)
 			ans.datas[i] = datas[i].clone();
-		ans.sdef=sdef;
-		smap.forEach((e,i)->ans.smap.put(e, i));
-		sub.forEach((i,e)->ans.sub.set(i,e));
+		ans.sdef = sdef;
+		smap.forEach((e, i) -> ans.smap.put(e, i));
+		sub.forEach((i, e) -> ans.sub.set(i, e.copy(i)));
 		return ans;
 	}
 
@@ -117,6 +122,30 @@ public class SCDef implements Copable<SCDef>{
 
 	public int[] getSimple(int i) {
 		return datas[i];
+	}
+
+	public Set<AbEnemy> getSummon() {
+		Set<AbEnemy> ans = new TreeSet<>();
+		Set<AbEnemy> temp = new TreeSet<>();
+		Set<Enemy> pre = new TreeSet<>();
+		Set<Enemy> post = new TreeSet<>();
+		for (int[] line : datas) {
+			AbEnemy e = EnemyStore.getAbEnemy(line[E], false);
+			if (e != null)
+				pre.addAll(e.getPossible());
+		}
+		while (pre.size() > 0) {
+			for (Enemy e : pre)
+				temp.addAll(e.de.getSummon());
+			ans.addAll(temp);
+			post.addAll(pre);
+			pre.clear();
+			for (AbEnemy e : temp)
+				pre.addAll(e.getPossible());
+			pre.removeAll(post);
+			temp.clear();
+		}
+		return ans;
 	}
 
 	public boolean isSuitable(Pack p) {
@@ -170,9 +199,9 @@ public class SCDef implements Copable<SCDef>{
 				os.writeInt(datas[i][j]);
 		os.writeInt(sdef);
 		os.writeInt(smap.size());
-		smap.forEach((e,i)->os.writeIntsN(e,i));
+		smap.forEach((e, i) -> os.writeIntsN(e, i));
 		os.writeInt(sub.size());
-		sub.forEach((i,e)->os.writeIntsN(i,e.max));
+		sub.forEach((i, e) -> os.writeIntsN(i, e.max));
 		os.terminate();
 		return os;
 	}
