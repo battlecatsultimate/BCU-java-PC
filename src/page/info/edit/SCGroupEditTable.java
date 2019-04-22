@@ -30,9 +30,10 @@ class SCGroupEditTable extends AbJTable {
 		title = MainLocale.getLoc(1, "t1", "t8");
 	}
 
-	private SCDef scd;
+	protected final SCDef scd;
 
-	protected SCGroupEditTable() {
+	protected SCGroupEditTable(SCDef sc) {
+		scd=sc;
 		setDefaultRenderer(Integer.class, new EnemyTCR());
 	}
 
@@ -49,7 +50,7 @@ class SCGroupEditTable extends AbJTable {
 
 	@Override
 	public Class<?> getColumnClass(int c) {
-		return lnk[c] == 1 ? Integer.class : String.class;
+		return lnk[c] == 0 ? Integer.class : String.class;
 	}
 
 	@Override
@@ -66,12 +67,12 @@ class SCGroupEditTable extends AbJTable {
 	public synchronized int getRowCount() {
 		if (scd == null)
 			return 0;
-		return scd.datas.length;
+		return scd.smap.size();
 	}
 
 	@Override
 	public synchronized Object getValueAt(int r, int c) {
-		if (scd == null || r < 0 || c < 0 || r >= scd.datas.length || c > lnk.length)
+		if (scd == null || r < 0 || c < 0 || r >= scd.smap.size() || c > lnk.length)
 			return null;
 		return get(r, lnk[c]);
 	}
@@ -100,9 +101,9 @@ class SCGroupEditTable extends AbJTable {
 		}
 	}
 
-	protected synchronized int addLine(AbEnemy enemy) {
+	protected synchronized void addLine(AbEnemy enemy) {
 		if (scd == null)
-			return -1;
+			return;
 		int ind = getSelectedRow();
 		int eid = 0;
 		if (enemy == null)
@@ -111,24 +112,22 @@ class SCGroupEditTable extends AbJTable {
 		else
 			eid = enemy.getID();
 		if (scd.smap.containsKey(eid))
-			return ind;
-		if (ind == -1)
-			ind = 0;
+			return;
 		scd.smap.put(eid, 0);
 		ind++;
-		return ind;
+		addRowSelectionInterval(ind,ind);
 	}
 	
-	protected synchronized int remLine() {
+	protected synchronized void remLine() {
 		if (scd == null)
-			return -1;
+			return;
 		int ind = getSelectedRow();
 		if(ind==-1)
-			return -1;
+			return;
 		scd.smap.remove(scd.getSMap()[ind][0]);
 		if(ind>=scd.smap.size())
 			ind--;
-		return ind;
+		addRowSelectionInterval(ind,ind);
 	}
 
 	private Object get(int r, int c) {
@@ -153,9 +152,9 @@ class SCGroupEditTable extends AbJTable {
 		int[] data=info[r];
 		if (v < 0)v = 0;
 		if (c == 0)
-			data[0] = v;
+			scd.smap.put(v,scd.smap.remove(data[0]));
 		else if (c == 1)
-			data[1] = v;
+			scd.smap.put(data[0],v);
 	}
 
 }

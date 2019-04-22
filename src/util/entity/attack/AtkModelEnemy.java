@@ -24,7 +24,8 @@ public class AtkModelEnemy extends AtkModelEntity {
 				AbEnemy ene = EnemyStore.getAbEnemy(getProc(ind, P_SUMMON, 1), false);
 				int conf = getProc(ind, P_SUMMON, 4);
 				int time = getProc(ind, P_SUMMON, 5);
-				if (ene != null && (b.st.data.allow(b, ene) || (conf & 4) > 0)) {
+				int allow=b.st.data.allow(b, ene);
+				if (ene != null && (allow>=0 || (conf & 4) > 0)) {
 					double ep = getPos() + getDire() * getProc(ind, P_SUMMON, 2);
 					double mult = getProc(ind, P_SUMMON, 3) * 0.01;
 					if ((conf & 8) == 0)
@@ -33,6 +34,7 @@ public class AtkModelEnemy extends AtkModelEntity {
 					if ((conf & 32) == 0)
 						l0 = l1 = e.layer;
 					EEnemy ee = ene.getEntity(b, acs[ind], mult, 0, l0, l1);
+					ee.group=allow;
 					if (ep < ee.data.getWidth())
 						ep = ee.data.getWidth();
 					if (ep > b.st.len - 800)

@@ -128,7 +128,6 @@ public class StageEditPage extends Page {
 		set(veif, x, y, 600, 0, 300, 50);
 		set(jspe, x, y, 600, 50, 300, 1250);
 		jt.setRowHeight(size(x, y, 50));
-		jle.setFixedCellHeight(size(x, y, 50));
 	}
 
 	private void addListeners$0() {
@@ -154,7 +153,7 @@ public class StageEditPage extends Page {
 			public void actionPerformed(ActionEvent arg0) {
 				if (stage == null)
 					return;
-				changePanel(new AdvStEditPage(getThis(), stage.data));
+				changePanel(new AdvStEditPage(getThis(), stage));
 			}
 		});
 
