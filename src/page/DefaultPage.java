@@ -1,8 +1,5 @@
 package page;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 public class DefaultPage extends Page {
 
 	private static final long serialVersionUID = 1L;
@@ -23,13 +20,7 @@ public class DefaultPage extends Page {
 	}
 
 	private void addListeners() {
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
-		});
-
+		back.setLnr(e -> changePanel(getFront()));
 	}
 
 	private void ini() {

@@ -29,7 +29,7 @@ class EntityTable extends SortTable<Entity> {
 	protected EntityTable(int dire) {
 		dir = dire;
 		if (dire == 1)
-			setDefaultRenderer(Enemy.class, new EnemyTCR(lnk));
+			setDefaultRenderer(Enemy.class, new EnemyTCR());
 		else
 			setDefaultRenderer(Form.class, new UnitTCR(lnk));
 		sign = -1;

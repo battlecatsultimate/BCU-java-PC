@@ -1,5 +1,8 @@
 package util.unit;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import io.InStream;
 import io.OutStream;
 import util.EREnt;
@@ -22,6 +25,20 @@ public class EneRand extends EntRand<Integer> implements AbEnemy {
 		id = ID;
 	}
 
+	public void fillPossible(Set<Enemy> se, Set<EneRand> sr) {
+		sr.add(this);
+		for (EREnt<Integer> e : list) {
+			AbEnemy ae = EnemyStore.getAbEnemy(e.ent, false);
+			if (ae instanceof Enemy)
+				se.add((Enemy) ae);
+			if (ae instanceof EneRand) {
+				EneRand er = (EneRand) ae;
+				if (!sr.contains(er))
+					er.fillPossible(se, sr);
+			}
+		}
+	}
+
 	@Override
 	public EEnemy getEntity(StageBasis sb, Object obj, double mul, int d0, int d1, int m) {
 		return get(getSelection(sb, obj), sb, obj, mul, d0, d1, m);
@@ -35,6 +52,13 @@ public class EneRand extends EntRand<Integer> implements AbEnemy {
 	@Override
 	public int getID() {
 		return pack.id * 1000 + id;
+	}
+
+	@Override
+	public Set<Enemy> getPossible() {
+		Set<Enemy> te = new TreeSet<>();
+		fillPossible(te, new TreeSet<EneRand>());
+		return te;
 	}
 
 	@Override
@@ -81,4 +105,5 @@ public class EneRand extends EntRand<Integer> implements AbEnemy {
 			ere.share = is.nextInt();
 		}
 	}
+
 }

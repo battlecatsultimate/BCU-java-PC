@@ -3,6 +3,8 @@ package util.unit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
+import java.util.TreeSet;
 
 import util.Animable;
 import util.Data;
@@ -126,6 +128,13 @@ public class Enemy extends Animable<AnimU> implements AbEnemy {
 	@Override
 	public int getID() {
 		return id;
+	}
+
+	@Override
+	public Set<Enemy> getPossible() {
+		Set<Enemy> te = new TreeSet<>();
+		te.add(this);
+		return te;
 	}
 
 	@Override

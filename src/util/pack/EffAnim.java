@@ -1,6 +1,7 @@
 package util.pack;
 
 import java.awt.image.BufferedImage;
+import java.util.function.Function;
 
 import util.anim.AnimD;
 import util.anim.ImgCut;
@@ -62,8 +63,11 @@ public class EffAnim extends AnimD {
 		temp = new String[] { "" };
 		effas[A_CURSE] = new EffAnim(stfs[3] + ski + "curse", vfs[3], icfs[3], temp);
 		VImg vseal = new VImg("./org/battle/s3/skill003.png");
-		excBG(vseal.getImg());
+		excColor(vseal.getImg(), (is) -> (is[0] << 24 | is[1] << 16 | is[3] << 8 | is[2]));
 		effas[A_SEAL] = new EffAnim(stfs[3] + ski + "curse", vseal, icfs[3], temp);
+		VImg vpois = new VImg("./org/battle/s3/skill003.png");// TODO poison.png
+		excColor(vpois.getImg(), (is) -> (is[0] << 24 | is[2] << 16 | is[1] << 8 | is[3]));
+		effas[A_POISON] = new EffAnim(stfs[3] + ski + "curse", vpois, icfs[3], temp);
 		String strs = "./org/battle/sniper/";
 		String strm = "img043";
 		VImg vis = new VImg(strs + strm + ".png");
@@ -72,7 +76,7 @@ public class EffAnim extends AnimD {
 		effas[A_SNIPER] = new EffAnim(strs + "000_snyaipa", vis, ics, temp);
 	}
 
-	private static void excBG(BufferedImage b0) {
+	private static void excColor(BufferedImage b0, Function<int[], Integer> f) {
 		int w = b0.getWidth();
 		int h = b0.getHeight();
 		for (int i = 0; i < w; i++)
@@ -82,7 +86,7 @@ public class EffAnim extends AnimD {
 				int g = p >> 8 & 255;
 				int r = p >> 16 & 255;
 				int a = p >> 24;
-				p = a << 24 | r << 16 | b << 8 | g;
+				p = f.apply(new int[] { a, r, g, b });
 				b0.setRGB(i, j, p);
 			}
 	}

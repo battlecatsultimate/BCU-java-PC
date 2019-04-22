@@ -20,16 +20,21 @@ public class AtkModelEnemy extends AtkModelEntity {
 
 			setProc(ind, proc);
 
-			if (b.r.nextDouble() * 100 < getProc(ind, P_SPAWN, 0)) {
-				AbEnemy ene = EnemyStore.getAbEnemy(getProc(ind, P_SPAWN, 1), false);
-				int conf = getProc(ind, P_SPAWN, 4);
-				int time = getProc(ind, P_SPAWN, 5);
-				if (ene != null && (b.entityCount(1) < b.st.max || (conf & 4) > 0)) {
-					double ep = getPos() + getDire() * getProc(ind, P_SPAWN, 2);
-					double mult = getProc(ind, P_SPAWN, 3) * 0.01;
+			if (b.r.nextDouble() * 100 < getProc(ind, P_SUMMON, 0)) {
+				AbEnemy ene = EnemyStore.getAbEnemy(getProc(ind, P_SUMMON, 1), false);
+				int conf = getProc(ind, P_SUMMON, 4);
+				int time = getProc(ind, P_SUMMON, 5);
+				int allow = b.st.data.allow(b, ene);
+				if (ene != null && (allow >= 0 || (conf & 4) > 0)) {
+					double ep = getPos() + getDire() * getProc(ind, P_SUMMON, 2);
+					double mult = getProc(ind, P_SUMMON, 3) * 0.01;
 					if ((conf & 8) == 0)
 						mult *= ((EEnemy) e).mult;
-					EEnemy ee = ene.getEntity(b, acs[ind], mult, 0, e.layer, e.layer);
+					int l0 = 0, l1 = 9;
+					if ((conf & 32) == 0)
+						l0 = l1 = e.layer;
+					EEnemy ee = ene.getEntity(b, acs[ind], mult, 0, l0, l1);
+					ee.group = allow;
 					if (ep < ee.data.getWidth())
 						ep = ee.data.getWidth();
 					if (ep > b.st.len - 800)

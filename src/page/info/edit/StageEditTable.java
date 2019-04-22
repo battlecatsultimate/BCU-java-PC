@@ -16,8 +16,10 @@ import page.support.AbJTable;
 import page.support.EnemyTCR;
 import page.support.InTableTH;
 import page.support.Reorderable;
+import util.Data;
 import util.pack.Pack;
 import util.stage.SCDef;
+import util.stage.SCGroup;
 import util.stage.Stage;
 import util.unit.AbEnemy;
 import util.unit.EneRand;
@@ -36,7 +38,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 	}
 
 	protected static void redefine() {
-		title = Page.get(1, "t", 8);
+		title = Page.get(1, "t", 9);
 	}
 
 	private SCDef stage;
@@ -47,7 +49,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 		page = p;
 		pack = pac;
 		setTransferHandler(new InTableTH(this));
-		setDefaultRenderer(Integer.class, new EnemyTCR(lnk));
+		setDefaultRenderer(Integer.class, new EnemyTCR());
 	}
 
 	@Override
@@ -247,6 +249,12 @@ class StageEditTable extends AbJTable implements Reorderable {
 			return data[R0] == data[R1] ? data[R0] : data[R0] + "~" + data[R1];
 		else if (c == 7)
 			return data[L0] == data[L1] ? data[L0] : data[L0] + "~" + data[L1];
+		else if (c == 8) {
+			int g = data[G];
+			SCGroup scg = stage.sub.get(g);
+			return scg == null ? g != 0 ? Data.trio(g) + " - invalid" : "" : scg.toString();
+		}
+		;
 		return null;
 	}
 
@@ -291,6 +299,8 @@ class StageEditTable extends AbJTable implements Reorderable {
 				data[L0] = Math.min(v, para);
 				data[L1] = Math.max(v, para);
 			}
+		else if (c == 8)
+			data[G] = Math.max(0, v);
 	}
 
 }

@@ -316,7 +316,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap> {
 		mus1 = is.nextInt();
 		max = is.nextByte();
 		non_con = is.nextByte() == 1;
-		data = StageCont.zread(is.subStream());
+		data = SCDef.zread(is.subStream());
 		lim = new Limit(map.mc, val, is);
 	}
 

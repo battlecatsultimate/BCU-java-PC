@@ -135,7 +135,8 @@ class AtkProcTable extends Page {
 			}
 		}
 		jls[12][4].setToolTipText(
-				"use warp animation: +1, use burrow animation: +2" + "disregard limit: +4, fix buff: +8");
+				"<html>" + "use warp animation: +1<br>" + "use burrow animation: +2<br>" + "disregard limit: +4<br>"
+						+ "fix buff: +8<br>" + "same health: +16<br>" + "random layer: +32<br>" + "</html>");
 		setFocusTraversalPolicy(ljp);
 		setFocusCycleRoot(true);
 	}

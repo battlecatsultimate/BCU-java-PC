@@ -128,6 +128,11 @@ public strictfp class OutStream extends DataIO {
 			writeIntB(i);
 	}
 
+	public void writeIntsN(int... ns) {
+		for (int i : ns)
+			writeInt(i);
+	}
+
 	public void writeLong(long n) {
 		check(8);
 		fromLong(bs, index, n);

@@ -57,10 +57,11 @@ public class StageEditPage extends Page {
 	private final JScrollPane jlpsm = new JScrollPane(lpsm);
 	private final JList<Stage> lpst = new JList<>();
 	private final JScrollPane jlpst = new JScrollPane(lpst);
-	private final JBTN adds = new JBTN(0, "addst");
-	private final JBTN rems = new JBTN(0, "rmst");
+	private final JBTN adds = new JBTN(0, "add");
+	private final JBTN rems = new JBTN(0, "rem");
 	private final JBTN addl = new JBTN(0, "addl");
 	private final JBTN reml = new JBTN(0, "reml");
+	private final JBTN advs = new JBTN(0, "advance");
 	private final JList<Enemy> jle = new JList<>();
 	private final JScrollPane jspe = new JScrollPane(jle);
 
@@ -103,27 +104,30 @@ public class StageEditPage extends Page {
 	protected synchronized void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);
-		set(strt, x, y, 400, 0, 300, 50);
-		set(info, x, y, 800, 50, 1400, 250);
-		set(adds, x, y, 800, 350, 200, 50);
-		set(rems, x, y, 1200, 350, 200, 50);
-		set(addl, x, y, 1600, 350, 200, 50);
-		set(reml, x, y, 2000, 350, 200, 50);
-		set(veif, x, y, 400, 100, 300, 50);
-		set(jspe, x, y, 400, 150, 300, 600);
-		set(cpsm, x, y, 50, 750, 300, 50);
-		set(cpst, x, y, 400, 750, 300, 50);
-		set(ptsm, x, y, 50, 800, 300, 50);
-		set(ptst, x, y, 400, 800, 300, 50);
-		set(rmsm, x, y, 50, 850, 300, 50);
-		set(rmst, x, y, 400, 850, 300, 50);
-		set(jspst, x, y, 50, 450, 300, 300);
-		set(jspjt, x, y, 800, 450, 1400, 800);
-		set(jspsm, x, y, 50, 100, 300, 300);
-		set(jlpsm, x, y, 50, 900, 300, 350);
-		set(jlpst, x, y, 400, 900, 300, 350);
+		set(info, x, y, 900, 50, 1400, 250);
+		set(addl, x, y, 900, 350, 200, 50);
+		set(reml, x, y, 1100, 350, 200, 50);
+		set(advs, x, y, 2100, 350, 200, 50);
+		set(jspjt, x, y, 900, 400, 1400, 900);
+
+		set(jspsm, x, y, 0, 50, 300, 800);
+		set(cpsm, x, y, 0, 850, 300, 50);
+		set(ptsm, x, y, 0, 900, 300, 50);
+		set(rmsm, x, y, 0, 950, 300, 50);
+		set(jlpsm, x, y, 0, 1000, 300, 300);
+
+		set(strt, x, y, 300, 0, 300, 50);
+		set(adds, x, y, 300, 50, 150, 50);
+		set(rems, x, y, 450, 50, 150, 50);
+		set(jspst, x, y, 300, 100, 300, 750);
+		set(cpst, x, y, 300, 850, 300, 50);
+		set(ptst, x, y, 300, 900, 300, 50);
+		set(rmst, x, y, 300, 950, 300, 50);
+		set(jlpst, x, y, 300, 1000, 300, 300);
+
+		set(veif, x, y, 600, 0, 300, 50);
+		set(jspe, x, y, 600, 50, 300, 1250);
 		jt.setRowHeight(size(x, y, 50));
-		jle.setFixedCellHeight(size(x, y, 50));
 	}
 
 	private void addListeners$0() {
@@ -141,6 +145,15 @@ public class StageEditPage extends Page {
 				if (stage == null)
 					return;
 				changePanel(new BattleSetupPage(getThis(), stage));
+			}
+		});
+
+		advs.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (stage == null)
+					return;
+				changePanel(new AdvStEditPage(getThis(), stage));
 			}
 		});
 
@@ -463,6 +476,7 @@ public class StageEditPage extends Page {
 		add(rmst);
 		add(jlpsm);
 		add(jlpst);
+		add(advs);
 		setAA(null);
 		setBA(null);
 		jle.setCellRenderer(new AnimLCR());
@@ -550,6 +564,7 @@ public class StageEditPage extends Page {
 		info.setData(st);
 		jt.setData(st);
 		strt.setEnabled(st != null);
+		advs.setEnabled(st != null);
 		jspjt.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
 		resized();
 	}
