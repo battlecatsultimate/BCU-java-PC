@@ -94,6 +94,7 @@ public class Data {
 	protected static final int AB_SNIPERI = 1 << 9;
 	protected static final int AB_TIMEI = 1 << 10;
 
+	protected static final int AB_POII = 1 << 12;
 	protected static final int AB_ZKILL = 1 << 13;
 	protected static final int AB_WKILL = 1 << 14;
 	public static final int AB_GLASS = 1 << 15;
@@ -118,9 +119,10 @@ public class Data {
 	protected static final int ABI_METALIC = 6;
 	protected static final int ABI_MOVEI = 7;
 	protected static final int ABI_WAVES = 8;
-	// 9~12
 	protected static final int ABI_SNIPERI = 9;
 	protected static final int ABI_TIMEI = 10;
+
+	protected static final int ABI_POII = 12;
 	protected static final int ABI_ZKILL = 13;
 	protected static final int ABI_WKILL = 14;
 	protected static final int ABI_GLASS = 15;
@@ -137,11 +139,7 @@ public class Data {
 	@Deprecated
 	protected static final int AB_SLOWI = 1 << 11;
 	@Deprecated
-	protected static final int AB_WEAKI = 1 << 12;
-	@Deprecated
 	protected static final int ABI_SLOWI = 11;
-	@Deprecated
-	protected static final int ABI_WEAKI = 12;
 
 	// proc index
 	protected static final int P_KB = 0;
@@ -181,7 +179,7 @@ public class Data {
 	protected static final int P_MOVEWAVE = 24;
 	/** 0:prob, 1:time (-1 means infinite), 2:ID */
 	protected static final int P_THEME = 25;
-	/** 0:prob, 1:time, 2:dmg, 3:itv */
+	/** 0:prob, 1:time, 2:dmg */
 	protected static final int P_POISON = 26;
 
 	protected static final int PROC_TOT = 30;// 27
@@ -338,10 +336,11 @@ public class Data {
 	protected static final int BASE_TOT = 7;
 
 	// touchable ID
-	protected static final int TCH_N = 1;
+	public static final int TCH_N = 1;
 	protected static final int TCH_KB = 2;
 	protected static final int TCH_UG = 4;
-	protected static final int TCH_DTH = 8;
+	protected static final int TCH_CORPSE = 8;
+	protected static final int TCH_SOUL = 16;
 
 	// After this line all number is game data
 

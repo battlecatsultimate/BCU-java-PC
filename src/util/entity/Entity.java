@@ -293,6 +293,14 @@ public abstract class Entity extends AbEntity {
 				getEff(P_SEAL);
 			} else
 				getEff(INV);
+
+		if (atk.getProc(P_POISON)[0] > 0)
+			if ((getAbi() & AB_POII) == 0) {
+				status[P_POISON][0] = atk.getProc(P_POISON)[1];
+				status[P_POISON][1] = atk.getProc(P_POISON)[2];
+				getEff(P_POISON);
+			} else
+				getEff(INV);
 	}
 
 	/** draw this entity */
@@ -422,6 +430,10 @@ public abstract class Entity extends AbEntity {
 		}
 		if (t == P_CURSE) {
 			int id = A_CURSE;
+			effs[id] = EffAnim.effas[id].getEAnim(0);
+		}
+		if (t == P_POISON) {
+			int id = A_POISON;
 			effs[id] = EffAnim.effas[id].getEAnim(0);
 		}
 		if (t == P_SEAL) {
@@ -563,10 +575,12 @@ public abstract class Entity extends AbEntity {
 	/** get touch mode bitmask */
 	@Override
 	public int touchable() {
+		if (dead > 0)
+			return TCH_SOUL;
 		if (status[P_REVIVE][1] > 0)
-			return TCH_DTH;
+			return TCH_CORPSE;
 		if (status[P_BORROW][2] > 0)
-			return TCH_N | TCH_DTH;
+			return data.getTouch() | TCH_UG;
 		if (kbTime < -1)
 			return TCH_UG;
 		return kbTime == 0 ? TCH_N : TCH_KB;
@@ -645,6 +659,10 @@ public abstract class Entity extends AbEntity {
 			int id = A_CURSE;
 			effs[id] = null;
 		}
+		if (status[P_POISON][0] == 0) {
+			int id = A_POISON;
+			effs[id] = null;
+		}
 		if (status[P_SEAL][0] == 0) {
 			int id = A_SEAL;
 			effs[id] = null;
@@ -682,7 +700,10 @@ public abstract class Entity extends AbEntity {
 		}
 		if (status[P_BORROW][2] > 0)
 			status[P_BORROW][2] = 0;
-
+		if (status[P_REVIVE][1] > 0) {
+			status[P_REVIVE][1] = 0;
+			corpse = null;
+		}
 	}
 
 	/** determine the amount of damage received from this attack */
@@ -740,9 +761,8 @@ public abstract class Entity extends AbEntity {
 			getEff(P_WARP);
 			status[P_WARP][2] = 1;
 		}
-		if (t == INT_KB) {
+		if (t == INT_KB)
 			kbTime = status[P_KB][0];
-		}
 		if (t == INT_HB)
 			back = EffAnim.effas[A_KB].getEAnim(0);
 		if (t == INT_SW)
@@ -750,6 +770,7 @@ public abstract class Entity extends AbEntity {
 		if (t == INT_ASS)
 			back = EffAnim.effas[A_KB].getEAnim(2);
 
+		// Z-kill icon
 		if (health <= 0 && tempZK && status[P_REVIVE][0] > 0) {
 			EAnimD eae = EffAnim.effas[A_Z_STRONG].getEAnim(0);
 			basis.lea.add(new EAnimCont(pos, eae));
@@ -903,6 +924,10 @@ public abstract class Entity extends AbEntity {
 			status[P_CURSE][0]--;
 		if (status[P_SEAL][0] > 0)
 			status[P_SEAL][0]--;
+		if (status[P_POISON][0] > 0) {
+			status[P_POISON][0]--;
+			damage += status[P_POISON][1];
+		}
 
 		// update weak
 		for (int[] ws : weaks)

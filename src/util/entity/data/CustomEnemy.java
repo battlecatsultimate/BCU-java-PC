@@ -40,11 +40,6 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 	}
 
 	@Override
-	public int getAnimLen() {
-		return pack.anim.getAtkLen();
-	}
-
-	@Override
 	public double getDrop() {
 		return drop;
 	}
@@ -114,7 +109,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 				rep.proc[P_IMUWAVE][0] = 100;
 			if ((abi & AB_SLOWI) > 0)
 				rep.proc[P_IMUSLOW][0] = 100;
-			if ((abi & AB_WEAKI) > 0)
+			if ((abi & AB_POII) > 0)
 				rep.proc[P_IMUWEAK][0] = 100;
 			if ((abi & AB_THEMEI) > 0)
 				rep.proc[P_IMUWARP][0] = 100;

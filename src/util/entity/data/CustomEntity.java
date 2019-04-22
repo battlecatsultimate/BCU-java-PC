@@ -10,8 +10,7 @@ public abstract class CustomEntity extends DataEntity {
 
 	public AtkDataModel rep;
 	public AtkDataModel[] atks;
-	public int tba;
-	public int base;
+	public int tba, base, touch;
 	public boolean common = true;
 
 	@Override
@@ -90,6 +89,11 @@ public abstract class CustomEntity extends DataEntity {
 	@Override
 	public int getTBA() {
 		return tba;
+	}
+
+	@Override
+	public int getTouch() {
+		return touch;
 	}
 
 	public void importData(MaskEntity de) {

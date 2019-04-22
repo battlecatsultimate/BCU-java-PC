@@ -1,7 +1,5 @@
 package util.entity.data;
 
-import util.anim.AnimU;
-
 public abstract class DefaultData extends DataEntity implements MaskAtk {
 
 	public int[][] proc;
@@ -19,11 +17,6 @@ public abstract class DefaultData extends DataEntity implements MaskAtk {
 	}
 
 	@Override
-	public int getAnimLen() {
-		return getAnim().getAtkLen();
-	}
-
-	@Override
 	public int getAtkCount() {
 		return atk1 == 0 ? 1 : atk2 == 0 ? 2 : 3;
 	}
@@ -31,11 +24,6 @@ public abstract class DefaultData extends DataEntity implements MaskAtk {
 	@Override
 	public MaskAtk getAtkModel(int ind) {
 		return this;
-	}
-
-	@Override
-	public int getDire() {
-		return 1;
 	}
 
 	@Override
@@ -68,11 +56,6 @@ public abstract class DefaultData extends DataEntity implements MaskAtk {
 	@Override
 	public int getShortPoint() {
 		return lds;
-	}
-
-	@Override
-	public int getTarget() {
-		return TCH_N;
 	}
 
 	@Override
@@ -113,8 +96,6 @@ public abstract class DefaultData extends DataEntity implements MaskAtk {
 	public int touchBase() {
 		return lds > 0 ? lds : range;
 	}
-
-	protected abstract AnimU getAnim();
 
 	protected int getLongPre() {
 		if (pre2 > 0)

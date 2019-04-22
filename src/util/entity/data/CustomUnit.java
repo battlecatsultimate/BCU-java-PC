@@ -28,11 +28,6 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 	}
 
 	@Override
-	public int getAnimLen() {
-		return pack.anim.getAtkLen();
-	}
-
-	@Override
 	public int getBack() {
 		return 9;
 	}
