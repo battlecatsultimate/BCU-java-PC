@@ -1,7 +1,5 @@
 package page;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
@@ -29,7 +27,7 @@ public class JTF extends JTextField implements CustomComp {
 			}
 		});
 	}
-	
+
 	public void setLnr(Consumer<FocusEvent> c) {
 		addFocusListener(new FocusAdapter() {
 
@@ -37,7 +35,7 @@ public class JTF extends JTextField implements CustomComp {
 			public void focusLost(FocusEvent e) {
 				c.accept(e);
 			}
-			
+
 		});
 	}
 

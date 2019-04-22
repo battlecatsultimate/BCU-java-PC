@@ -124,7 +124,7 @@ public class StageEditPage extends Page {
 		set(ptst, x, y, 300, 900, 300, 50);
 		set(rmst, x, y, 300, 950, 300, 50);
 		set(jlpst, x, y, 300, 1000, 300, 300);
-		
+
 		set(veif, x, y, 600, 0, 300, 50);
 		set(jspe, x, y, 600, 50, 300, 1250);
 		jt.setRowHeight(size(x, y, 50));
@@ -147,7 +147,7 @@ public class StageEditPage extends Page {
 				changePanel(new BattleSetupPage(getThis(), stage));
 			}
 		});
-		
+
 		advs.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -564,7 +564,7 @@ public class StageEditPage extends Page {
 		info.setData(st);
 		jt.setData(st);
 		strt.setEnabled(st != null);
-		advs.setEnabled(st!=null);
+		advs.setEnabled(st != null);
 		jspjt.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
 		resized();
 	}

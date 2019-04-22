@@ -33,7 +33,7 @@ class SCGroupEditTable extends AbJTable {
 	protected final SCDef scd;
 
 	protected SCGroupEditTable(SCDef sc) {
-		scd=sc;
+		scd = sc;
 		setDefaultRenderer(Integer.class, new EnemyTCR());
 	}
 
@@ -115,30 +115,30 @@ class SCGroupEditTable extends AbJTable {
 			return;
 		scd.smap.put(eid, 0);
 		ind++;
-		addRowSelectionInterval(ind,ind);
+		addRowSelectionInterval(ind, ind);
 	}
-	
+
 	protected synchronized void remLine() {
 		if (scd == null)
 			return;
 		int ind = getSelectedRow();
-		if(ind==-1)
+		if (ind == -1)
 			return;
 		scd.smap.remove(scd.getSMap()[ind][0]);
-		if(ind>=scd.smap.size())
+		if (ind >= scd.smap.size())
 			ind--;
-		addRowSelectionInterval(ind,ind);
+		addRowSelectionInterval(ind, ind);
 	}
 
 	private Object get(int r, int c) {
 		int[][] info = scd.getSMap();
-		if(r>=info.length)
+		if (r >= info.length)
 			return null;
-		int[] data=info[r];
+		int[] data = info[r];
 		if (c == 0)
 			return EnemyStore.getAbEnemy(data[0], true);
 		else if (c == 1) {
-			int g=data[1];
+			int g = data[1];
 			SCGroup scg = scd.sub.get(g);
 			return scg == null ? g != 0 ? Data.trio(g) + " - invalid" : "" : scg.toString();
 		}
@@ -147,14 +147,15 @@ class SCGroupEditTable extends AbJTable {
 
 	private void set(int r, int c, int v, int para) {
 		int[][] info = scd.getSMap();
-		if(r>=info.length)
+		if (r >= info.length)
 			return;
-		int[] data=info[r];
-		if (v < 0)v = 0;
+		int[] data = info[r];
+		if (v < 0)
+			v = 0;
 		if (c == 0)
-			scd.smap.put(v,scd.smap.remove(data[0]));
+			scd.smap.put(v, scd.smap.remove(data[0]));
 		else if (c == 1)
-			scd.smap.put(data[0],v);
+			scd.smap.put(data[0], v);
 	}
 
 }

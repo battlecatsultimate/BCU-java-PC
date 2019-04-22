@@ -88,14 +88,14 @@ public class SCDef implements Copable<SCDef> {
 
 	public int allow(StageBasis sb, AbEnemy e) {
 		Integer o = smap.get(e.getID());
-		o= o == null ? sdef : o;
-		if(allow(sb,o))
+		o = o == null ? sdef : o;
+		if (allow(sb, o))
 			return o;
 		return -1;
 	}
 
 	public boolean allow(StageBasis sb, int val) {
-		if(sb.entityCount(1) >= sb.st.max)
+		if (sb.entityCount(1) >= sb.st.max)
 			return false;
 		if (val < 0 || val > 1000 || sub.get(val) == null)
 			return true;
@@ -127,6 +127,16 @@ public class SCDef implements Copable<SCDef> {
 
 	public int[] getSimple(int i) {
 		return datas[i];
+	}
+
+	public int[][] getSMap() {
+		int[][] ans = new int[smap.size()][2];
+		int[] i = new int[1];
+		smap.forEach((e, g) -> {
+			ans[i[0]][0] = e;
+			ans[i[0]++][1] = g;
+		});
+		return ans;
 	}
 
 	public Set<AbEnemy> getSummon() {
@@ -209,16 +219,6 @@ public class SCDef implements Copable<SCDef> {
 		sub.forEach((i, e) -> os.writeIntsN(i, e.max));
 		os.terminate();
 		return os;
-	}
-
-	public int[][] getSMap() {
-		int[][] ans=new int[smap.size()][2];
-		int[] i=new int[1];
-		smap.forEach((e,g)->{
-			ans[i[0]][0]=e;
-			ans[i[0]++][1]=g;
-		});
-		return ans;
 	}
 
 }

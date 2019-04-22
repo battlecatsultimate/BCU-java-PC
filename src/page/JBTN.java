@@ -29,7 +29,7 @@ public class JBTN extends JButton implements LocComp {
 	public LocSubComp getLSC() {
 		return lsc;
 	}
-	
+
 	public void setLnr(Consumer<ActionEvent> c) {
 		addActionListener(new ActionListener() {
 
@@ -37,7 +37,7 @@ public class JBTN extends JButton implements LocComp {
 			public void actionPerformed(ActionEvent e) {
 				c.accept(e);
 			}
-			
+
 		});
 	}
 

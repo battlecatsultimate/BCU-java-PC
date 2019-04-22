@@ -20,7 +20,7 @@ public class DefaultPage extends Page {
 	}
 
 	private void addListeners() {
-		back.setLnr(e->changePanel(getFront()));
+		back.setLnr(e -> changePanel(getFront()));
 	}
 
 	private void ini() {

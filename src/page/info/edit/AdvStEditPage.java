@@ -106,10 +106,10 @@ public class AdvStEditPage extends Page {
 	}
 
 	private void addListeners$1() {
-		addl.setLnr(e->sget.addLine(jle.getSelectedValue()));
-		
-		reml.setLnr(e->sget.remLine());
-		
+		addl.setLnr(e -> sget.addLine(jle.getSelectedValue()));
+
+		reml.setLnr(e -> sget.remLine());
+
 	}
 
 	private void ini() {
@@ -153,5 +153,5 @@ public class AdvStEditPage extends Page {
 		smax.setEnabled(scg != null);
 		smax.setText(scg != null ? "max: " + scg.max : "");
 	}
-	
+
 }

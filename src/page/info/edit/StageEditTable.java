@@ -249,11 +249,12 @@ class StageEditTable extends AbJTable implements Reorderable {
 			return data[R0] == data[R1] ? data[R0] : data[R0] + "~" + data[R1];
 		else if (c == 7)
 			return data[L0] == data[L1] ? data[L0] : data[L0] + "~" + data[L1];
-		else if(c==8){
-			int g=data[G];
-			SCGroup scg =stage.sub.get(g);
+		else if (c == 8) {
+			int g = data[G];
+			SCGroup scg = stage.sub.get(g);
 			return scg == null ? g != 0 ? Data.trio(g) + " - invalid" : "" : scg.toString();
-		};
+		}
+		;
 		return null;
 	}
 
@@ -298,8 +299,8 @@ class StageEditTable extends AbJTable implements Reorderable {
 				data[L0] = Math.min(v, para);
 				data[L1] = Math.max(v, para);
 			}
-		else if(c==8)
-			data[G]=Math.max(0,v);
+		else if (c == 8)
+			data[G] = Math.max(0, v);
 	}
 
 }

@@ -37,8 +37,8 @@ public class JTG extends JToggleButton implements LocComp {
 			public void actionPerformed(ActionEvent e) {
 				c.accept(e);
 			}
-			
+
 		});
 	}
-	
+
 }
