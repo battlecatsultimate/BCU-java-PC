@@ -21,7 +21,7 @@ import javax.swing.text.StyleConstants;
 
 import io.BCJSON;
 import io.WebPack;
-import main.MainBCU;
+import main.Opts;
 import page.JBTN;
 import page.JL;
 import page.Page;
@@ -250,9 +250,9 @@ public class WebMainPage extends Page {
 							down[I].setText(2, "downloaded");
 							down[I].setEnabled(false);
 							obj[I].version = p.version;
-							MainBCU.pop("download success", "download success");
+							Opts.pop("download success", "download success");
 						} else
-							MainBCU.pop("failed to download", "download error");
+							Opts.p$d("");
 					}
 
 				});

@@ -22,7 +22,7 @@ import javax.swing.tree.TreePath;
 import io.InStream;
 import io.Writer;
 import io.ZipAccess;
-import main.MainBCU;
+import main.Opts;
 import page.JBTN;
 import page.Page;
 import page.info.TreaTable;
@@ -122,103 +122,86 @@ public class BackupTreePage extends Page {
 			}
 		});
 
-		dele.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (jlm.getSelectedValue() == null)
-					return;
-				if (!MainBCU.warning("w0", "confirmation"))
-					return;
-				try {
-					List<Backup> strs = jlm.getSelectedValuesList();
-					if (ZipAccess.delete(strs))
-						MainBCU.pop("delete success", "backup access success");
-					else
-						MainBCU.pop("failed to delete backup", "backup access error");
-					jlm.setListData(ZipAccess.getList().toArray(new Backup[0]));
-				} catch (IOException e) {
-					e.printStackTrace();
-					MainBCU.pop("failed to delete backup", "backup access error");
-				}
+		dele.setLnr(x -> {
+			if (jlm.getSelectedValue() == null)
+				return;
+			if (!Opts.w$c())
+				return;
+			try {
+				List<Backup> strs = jlm.getSelectedValuesList();
+				if (ZipAccess.delete(strs))
+					Opts.pop("delete success", "backup access success");
+				else
+					Opts.p$b("delete");
+				jlm.setListData(ZipAccess.getList().toArray(new Backup[0]));
+			} catch (IOException e) {
+				e.printStackTrace();
+				Opts.p$b("delete");
 			}
 		});
 
-		rest.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (jlm.getSelectedValue() == null)
-					return;
-				try {
-					if (ZipAccess.extract(jlm.getSelectedValue())) {
-						MainBCU.pop("restoration succeed, please restart program", "backup access success");
-						Writer.logClose(false);
-						System.exit(0);
-					} else
-						MainBCU.pop("failed to restore backup", "backup access error");
-				} catch (IOException e) {
-					e.printStackTrace();
-					MainBCU.pop("failed to restore backup", "backup access error");
-				}
+		rest.setLnr(x -> {
+			if (jlm.getSelectedValue() == null)
+				return;
+			try {
+				if (ZipAccess.extract(jlm.getSelectedValue())) {
+					Opts.pop("restoration succeed, please restart program", "backup access success");
+					Writer.logClose(false);
+					System.exit(0);
+				} else
+					Opts.p$b("restore");
+			} catch (IOException e) {
+				e.printStackTrace();
+				Opts.p$b("restore");
 			}
 		});
 
-		entr.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (jlm.getSelectedValue() == null)
-					return;
-				try {
-					vf = ZipAccess.extractList(jlm.getSelectedValue());
-					if (vf == null)
-						MainBCU.pop("failed to read backup", "backup access error");
-					else
-						setTree(vf);
-				} catch (IOException e) {
-					e.printStackTrace();
-					MainBCU.pop("failed to read backup", "backup access error");
-				}
+		entr.setLnr(x -> {
+			if (jlm.getSelectedValue() == null)
+				return;
+			try {
+				vf = ZipAccess.extractList(jlm.getSelectedValue());
+				if (vf == null)
+					Opts.p$b("read");
+				else
+					setTree(vf);
+			} catch (IOException e) {
+				e.printStackTrace();
+				Opts.p$b("read");
 			}
 
 		});
 
-		diff.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (jlm.getSelectedValue() == null)
-					return;
-				try {
-					Backup str0 = jlm.getSelectedValue();
-					List<Backup> lstr = jlm.getSelectedValuesList();
-					lstr.remove(str0);
-					Backup str1 = lstr.get(0);
-					vf = ZipAccess.difference(str0.time, str1.time);
-					if (vf == null)
-						MainBCU.pop("failed to read backup", "backup access error");
-					else
-						setTree(vf);
-				} catch (IOException e) {
-					e.printStackTrace();
-					MainBCU.pop("failed to read backup", "backup access error");
-				}
+		diff.setLnr(x -> {
+			if (jlm.getSelectedValue() == null)
+				return;
+			try {
+				Backup str0 = jlm.getSelectedValue();
+				List<Backup> lstr = jlm.getSelectedValuesList();
+				lstr.remove(str0);
+				Backup str1 = lstr.get(0);
+				vf = ZipAccess.difference(str0.time, str1.time);
+				if (vf == null)
+					Opts.p$b("read");
+				else
+					setTree(vf);
+			} catch (IOException e) {
+				e.printStackTrace();
+				Opts.p$b("read");
 			}
-
 		});
 
-		vers.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				try {
-					vf = ZipAccess.extractAllList();
-					if (vf == null)
-						MainBCU.pop("failed to read backup", "backup access error");
-					else
-						setTree(vf);
-				} catch (IOException e) {
-					e.printStackTrace();
-					MainBCU.pop("failed to read backup", "backup access error");
-				}
+		vers.setLnr(x -> {
+			try {
+				vf = ZipAccess.extractAllList();
+				if (vf == null)
+					Opts.p$b("read");
+				else
+					setTree(vf);
+			} catch (IOException e) {
+				e.printStackTrace();
+				Opts.p$b("read");
 			}
-
 		});
 
 		jlm.addListSelectionListener(new ListSelectionListener() {
@@ -253,25 +236,25 @@ public class BackupTreePage extends Page {
 					if (b0) {
 						InStream is = ZipAccess.readStream(new String(sel.data));
 						if (is == null)
-							MainBCU.pop("failed to read backup", "backup access error");
+							Opts.p$b("read");
 						setT$Basis(is);
 					}
 					if (b1) {
 						InStream is = ZipAccess.readStream(new String(sel.data));
 						if (is == null)
-							MainBCU.pop("failed to read backup", "backup access error");
+							Opts.p$b("read");
 						setT$Pack(is);
 					}
 					if (b2) {
 						Queue<String> qs = ZipAccess.readLine(new String(sel.data));
 						if (qs == null)
-							MainBCU.pop("failed to read backup", "backup access error");
+							Opts.p$b("read");
 						setT$MA(qs);
 					}
 
 				} catch (IOException e) {
 					e.printStackTrace();
-					MainBCU.pop("failed to read backup", "backup access error");
+					Opts.p$b("read");
 				}
 			}
 
@@ -282,14 +265,14 @@ public class BackupTreePage extends Page {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					if (ZipAccess.extractPartial(new String(sel.data), sel)) {
-						MainBCU.pop("restoration succeed, please restart program", "backup access success");
+						Opts.pop("restoration succeed, please restart program", "backup access success");
 						Writer.logClose(false);
 						System.exit(0);
 					} else
-						MainBCU.pop("failed to restore backup", "backup access error");
+						Opts.p$b("restore");
 				} catch (IOException e) {
 					e.printStackTrace();
-					MainBCU.pop("failed to restore backup", "backup access error");
+					Opts.p$b("restore");
 				}
 			}
 
@@ -388,7 +371,7 @@ public class BackupTreePage extends Page {
 			changing = false;
 		} catch (IOException e) {
 			e.printStackTrace();
-			MainBCU.pop("failed to read backup", "backup access error");
+			Opts.p$b("read");
 		}
 		setBackup(null);
 	}

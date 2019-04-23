@@ -12,7 +12,7 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import main.MainBCU;
+import main.Opts;
 import page.JBTN;
 import page.JTG;
 import page.Page;
@@ -158,26 +158,19 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 
 		});
 
-		icc.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (IconBox.mode == 0 && MainBCU.warning(
-						"are you sure to replace display icon? This action cannot be undone", "confirmation")) {
-					AnimC ac = aep.anim.anim;
-					ac.edi = new VImg(ib.getClip());
-					ac.saveIcon();
-					jlu.repaint();
-				}
-				if (IconBox.mode == 1 && MainBCU
-						.warning("are you sure to replace battle icon? This action cannot be undone", "confirmation")) {
-					AnimC ac = aep.anim.anim;
-					ac.uni = new VImg(ib.getClip());
-					ac.saveUni();
-					uni.setIcon(ac.uni.getIcon());
-				}
+		icc.setLnr(x -> {
+			if (IconBox.mode == 0 && Opts.w$c("are you sure to replace display icon? This action cannot be undone")) {
+				AnimC ac = aep.anim.anim;
+				ac.edi = new VImg(ib.getClip());
+				ac.saveIcon();
+				jlu.repaint();
 			}
-
+			if (IconBox.mode == 1 && Opts.w$c("are you sure to replace battle icon? This action cannot be undone")) {
+				AnimC ac = aep.anim.anim;
+				ac.uni = new VImg(ib.getClip());
+				ac.saveUni();
+				uni.setIcon(ac.uni.getIcon());
+			}
 		});
 
 	}

@@ -22,7 +22,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import io.Reader;
-import main.MainBCU;
+import main.Opts;
 import page.JBTN;
 import page.JTF;
 import page.JTG;
@@ -393,7 +393,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			@Override
 			public void focusLost(FocusEvent e) {
 				double d = Reader.parseIntN(tmul.getText()) * 0.01;
-				if (!MainBCU.warning("times animation length by " + d, "confimration"))
+				if (!Opts.w$c("times animation length by " + d))
 					return;
 				for (Part p : maet.ma.parts) {
 					for (int[] line : p.moves)

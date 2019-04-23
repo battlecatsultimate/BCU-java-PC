@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 
 import event.EventReader;
 import main.MainBCU;
+import main.Opts;
 import main.Printer;
 import page.LoadPage;
 import page.MainFrame;
@@ -51,7 +52,7 @@ public class Writer extends DataIO {
 			}
 		if (!suc) {
 			ps.println("failed to create file: " + f.getPath());
-			MainBCU.pop("failed to create file: " + f.getPath(), "IO error");
+			Opts.pop("failed to create file: " + f.getPath(), "IO error");
 		}
 		return suc;
 	}
@@ -91,7 +92,7 @@ public class Writer extends DataIO {
 			ps = new PrintStream(log);
 		} catch (IOException e) {
 			e.printStackTrace();
-			MainBCU.pop("Failed to access files. Please move BCU to another place", "file permission error");
+			Opts.pop("Failed to access files. Please move BCU to another place", "file permission error");
 			System.exit(0);
 		}
 		if (MainBCU.write) {
@@ -181,8 +182,7 @@ public class Writer extends DataIO {
 		}
 		if (!suc) {
 			ps.println("failed to write file: " + f.getPath());
-			if (MainBCU.warning("failed to write file: " + f.getPath() + " do you want to save it in another place?",
-					"IO error"))
+			if (Opts.w$o(f.getPath()))
 				new Exporter(os, Exporter.EXP_ERR);
 		}
 		return suc;
@@ -246,8 +246,7 @@ public class Writer extends DataIO {
 			}
 		if (!suc) {
 			ps.println("failed to write image: " + f.getPath());
-			if (MainBCU.warning("failed to write image: " + f.getPath() + " do you want to save it in another place?",
-					"IO error"))
+			if (Opts.w$o(f.getPath()))
 				new Exporter(bimg, Exporter.EXP_ERR);
 		}
 		return suc;

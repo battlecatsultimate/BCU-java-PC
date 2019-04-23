@@ -98,6 +98,9 @@ class AtkEditTable extends Page {
 		set(fp0);
 		set(fp1);
 		set(ftp);
+		ftp.setToolTipText(
+				"<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
+						+ "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost</html>");
 		set(ldr);
 		set(fdr);
 		add(jsp);
@@ -135,9 +138,6 @@ class AtkEditTable extends Page {
 			if (jtf == ftp) {
 				if (v < 1)
 					v = 1;
-				if (v > 1)
-					v = 5;
-				// TODO allow more
 				adm.targ = v;
 			}
 			if (jtf == fdr) {

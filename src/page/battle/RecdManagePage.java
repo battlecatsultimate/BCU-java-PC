@@ -14,6 +14,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import main.MainBCU;
+import main.Opts;
 import page.JBTN;
 import page.JTF;
 import page.JTG;
@@ -53,8 +54,7 @@ public class RecdManagePage extends Page {
 		setList();
 		if (svp != null) {
 			Recd r = jlr.getSelectedValue();
-			if (r != null && svp.getStage() != null
-					&& MainBCU.warning("are you sure to change stage?", "confirmation")) {
+			if (r != null && svp.getStage() != null && Opts.w$c("are you sure to change stage?")) {
 				r.st = svp.getStage();
 				r.avail = true;
 			}

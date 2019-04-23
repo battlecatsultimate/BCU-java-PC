@@ -84,7 +84,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 
 	@Override
 	public void write(OutStream os) {
-		os.writeString("0.3.8");
+		os.writeString("0.4.0");
 		super.write(os);
 		os.writeByte((byte) star);
 		os.writeInt(drop);
@@ -94,7 +94,9 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 	private void zread(int val, InStream is) {
 		if (val >= 307)
 			val = getVer(is.nextString());
-		if (val >= 308)
+		if (val >= 400)
+			zread$000400(is);
+		else if (val >= 308)
 			zread$000308(is);
 		else if (val >= 307)
 			zread$000307(is);
@@ -123,6 +125,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private void zread$000301(InStream is) {
 		hp = is.nextInt();
 		hb = is.nextInt();
@@ -149,6 +152,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 			atks[i] = set[is.nextByte()];
 	}
 
+	@SuppressWarnings("deprecation")
 	private void zread$000305(InStream is) {
 		hp = is.nextInt();
 		hb = is.nextInt();
@@ -192,11 +196,11 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		star = is.nextByte();
 		drop = is.nextInt();
 		common = is.nextByte() == 1;
-		rep = new AtkDataModel(this, is, "0.3.7");
+		rep = new AtkDataModel(this, is);
 		int m = is.nextByte();
 		AtkDataModel[] set = new AtkDataModel[m];
 		for (int i = 0; i < m; i++)
-			set[i] = new AtkDataModel(this, is, "0.3.7");
+			set[i] = new AtkDataModel(this, is);
 		int n = is.nextByte();
 		atks = new AtkDataModel[n];
 		for (int i = 0; i < n; i++)
@@ -205,6 +209,12 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 
 	private void zread$000308(InStream is) {
 		zreada$000308(is);
+		star = is.nextByte();
+		drop = is.nextInt();
+	}
+
+	private void zread$000400(InStream is) {
+		zreada(is);
 		star = is.nextByte();
 		drop = is.nextInt();
 	}

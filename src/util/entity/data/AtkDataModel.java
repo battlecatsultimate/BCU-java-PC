@@ -31,6 +31,12 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 			proc[i] = adm.proc[i].clone();
 	}
 
+	protected AtkDataModel(CustomEntity ent, InStream is) {
+		ce = ent;
+		zread("0.3.7", is);
+	}
+
+	@Deprecated
 	protected AtkDataModel(CustomEntity ent, InStream is, String ver) {
 		ce = ent;
 		zread(ver, is);

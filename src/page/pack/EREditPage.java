@@ -13,7 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import main.MainBCU;
+import main.Opts;
 import page.JBTN;
 import page.JTF;
 import page.JTG;
@@ -178,7 +178,7 @@ public class EREditPage extends Page {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!MainBCU.warning(get(0, "w0"), "warning"))
+				if (!Opts.w$c())
 					return;
 				int ind = jlst.getSelectedIndex() - 1;
 				if (ind < 0)

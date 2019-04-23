@@ -5,7 +5,7 @@ import java.util.List;
 
 import io.InStream;
 import io.OutStream;
-import main.MainBCU;
+import main.Opts;
 import util.system.Copable;
 
 public class BasisSet extends Basis implements Copable<BasisSet> {
@@ -61,7 +61,7 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 				ans.add(bs);
 			} catch (Exception e) {
 				e.printStackTrace();
-				MainBCU.pop("error in reading basis #" + i, "loaing error");
+				Opts.p$l("error in reading basis #" + i);
 			}
 		int ind = Math.max(is.nextInt(), ans.size() - 1);
 		if (!bac)
@@ -190,7 +190,7 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 				lb.add(bl);
 			} catch (Exception e) {
 				e.printStackTrace();
-				MainBCU.pop("error in reading lineup " + name + " - " + str, "loading error");
+				Opts.p$l("error in reading lineup " + name + " - " + str);
 			}
 
 		}

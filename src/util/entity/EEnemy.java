@@ -41,8 +41,7 @@ public class EEnemy extends Entity {
 	}
 
 	@Override
-	protected int getDamage(AttackAb atk) {
-		int ans = atk.atk;
+	protected int getDamage(AttackAb atk, int ans) {
 		int overlap = type & atk.type;
 		if (overlap != 0 && (atk.abi & AB_GOOD) != 0)
 			ans *= basis.b.t().getGOODATK(overlap);

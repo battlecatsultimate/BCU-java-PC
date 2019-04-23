@@ -73,10 +73,10 @@ public class EnemyEditPage extends EntityEditPage {
 	@Override
 	protected void resized(int x, int y) {
 		super.resized(x, y);
-		set(ldr, x, y, 50, 350, 100, 50);
-		set(fdr, x, y, 150, 350, 200, 50);
-		set(eeb, x, y, 400, 50, 200, 1100);
-		set(fsr, x, y, 400, 1200, 200, 50);
+		set(ldr, x, y, 50, 400, 100, 50);
+		set(fdr, x, y, 150, 400, 200, 50);
+		set(eeb, x, y, 350, 50, 200, 1100);
+		set(fsr, x, y, 350, 1200, 200, 50);
 		set(vene, x, y, 900, 1200, 200, 50);
 		set(appr, x, y, 1100, 1200, 200, 50);
 		set(impt, x, y, 1350, 1050, 200, 50);

@@ -331,10 +331,10 @@ public class Data {
 
 	// touchable ID
 	public static final int TCH_N = 1;
-	protected static final int TCH_KB = 2;
-	protected static final int TCH_UG = 4;
-	protected static final int TCH_CORPSE = 8;
-	protected static final int TCH_SOUL = 16;
+	public static final int TCH_KB = 2;
+	public static final int TCH_UG = 4;
+	public static final int TCH_CORPSE = 8;
+	public static final int TCH_SOUL = 16;
 	public static final int TCH_EX = 32;
 
 	// After this line all number is game data

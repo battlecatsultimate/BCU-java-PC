@@ -88,7 +88,7 @@ public class Sniper extends AtkModelAb {
 		// find enemy pos
 		pos = -1;
 		for (Entity e : b.le)
-			if (e.dire == 1 && e.pos > pos && !e.isBase)
+			if (e.dire == 1 && e.pos > pos && !e.isBase && (e.touchable() & TCH_N) > 0)
 				pos = e.pos;
 
 	}

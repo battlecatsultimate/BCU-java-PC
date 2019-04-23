@@ -14,7 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import main.MainBCU;
+import main.Opts;
 import page.JBTN;
 import page.Page;
 import page.battle.BattleSetupPage;
@@ -405,27 +405,22 @@ public class StageEditPage extends Page {
 
 		});
 
-		rems.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (!MainBCU.warning(get(0, "w0"), "warning"))
-					return;
-				StageMap sm = jlsm.getSelectedValue();
-				int ind = jlst.getSelectedIndex() - 1;
-				sm.list.remove(stage);
-				changing = true;
-				jlst.setListData(new Vector<>(sm.list));
-				if (ind < 0)
-					ind = -1;
-				if (ind < sm.list.size())
-					jlst.setSelectedIndex(ind);
-				else
-					jlst.setSelectedIndex(sm.list.size() - 1);
-				setAB(jlst.getSelectedValue());
-				changing = false;
-			}
-
+		rems.setLnr(x -> {
+			if (!Opts.w$c())
+				return;
+			StageMap sm = jlsm.getSelectedValue();
+			int ind = jlst.getSelectedIndex() - 1;
+			sm.list.remove(stage);
+			changing = true;
+			jlst.setListData(new Vector<>(sm.list));
+			if (ind < 0)
+				ind = -1;
+			if (ind < sm.list.size())
+				jlst.setSelectedIndex(ind);
+			else
+				jlst.setSelectedIndex(sm.list.size() - 1);
+			setAB(jlst.getSelectedValue());
+			changing = false;
 		});
 
 	}

@@ -9,7 +9,7 @@ import java.util.TreeMap;
 
 import io.InStream;
 import io.OutStream;
-import main.MainBCU;
+import main.Opts;
 import main.Printer;
 import util.Animable;
 import util.anim.AnimC;
@@ -28,7 +28,7 @@ public class DIYAnim extends Animable<AnimC> {
 			if (cd.size() > 0)
 				ai = cd.iterator().next();
 			Printer.e("DIYAnim", 26, "Animation Missing: " + str);
-			MainBCU.pop("Animation Missing: " + str, "loading error");
+			Opts.p$l("Animation Missing: " + str);
 		}
 		if (ai == null) {
 			AnimU au;

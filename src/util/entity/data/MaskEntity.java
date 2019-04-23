@@ -1,6 +1,7 @@
 package util.entity.data;
 
 import util.Animable;
+import util.Data;
 import util.anim.AnimU;
 
 public interface MaskEntity {
@@ -48,6 +49,10 @@ public interface MaskEntity {
 
 	/** get waiting time */
 	public int getTBA();
+
+	public default int getTouch() {
+		return Data.TCH_N;
+	}
 
 	public int getType();
 

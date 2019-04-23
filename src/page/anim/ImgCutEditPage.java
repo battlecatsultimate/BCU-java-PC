@@ -22,6 +22,7 @@ import javax.swing.event.ListSelectionListener;
 
 import io.Writer;
 import main.MainBCU;
+import main.Opts;
 import page.JBTN;
 import page.JTF;
 import page.Page;
@@ -261,9 +262,8 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 					return;
 				DIYAnim da = DIYAnim.map.remove(icet.anim.name);
 				DIYAnim rep = DIYAnim.map.get(str);
-				if (rep != null && MainBCU.warning(
-						"Do you want to replace animation? This action cannot be undone. The animation which originally keeps this name will be replaced by selected animation.",
-						"confirmation")) {
+				if (rep != null && Opts.w$c(
+						"Do you want to replace animation? This action cannot be undone. The animation which originally keeps this name will be replaced by selected animation.")) {
 					da.anim.delete();
 					da.anim.name = rep.anim.name;
 					for (Pack pack : Pack.map.values())
@@ -306,51 +306,45 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 		});
 
-		rem.addActionListener(new ActionListener() {
+		rem.setLnr(x -> {
+			if (!Opts.w$c())
+				return;
+			changing = true;
+			int ind = jlu.getSelectedIndex();
+			AnimC ac = icet.anim;
+			ac.delete();
+			DIYAnim.map.remove(ac.name);
+			Vector<DIYAnim> v = new Vector<>(DIYAnim.map.values());
+			jlu.setListData(v);
+			if (ind >= v.size())
+				ind--;
+			jlu.setSelectedIndex(ind);
+			setA(v.get(ind));
+			changing = false;
+		}
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (!MainBCU.warning(get(0, "w0"), "warning"))
-					return;
-				changing = true;
-				int ind = jlu.getSelectedIndex();
-				AnimC ac = icet.anim;
-				ac.delete();
-				DIYAnim.map.remove(ac.name);
-				Vector<DIYAnim> v = new Vector<>(DIYAnim.map.values());
-				jlu.setListData(v);
-				if (ind >= v.size())
-					ind--;
-				jlu.setSelectedIndex(ind);
-				setA(v.get(ind));
-				changing = false;
-			}
+		);
 
-		});
+		loca.setLnr(x -> {
+			if (!Opts.w$c())
+				return;
+			changing = true;
+			int ind = jlu.getSelectedIndex();
+			AnimC ac = icet.anim;
+			ac.check();
+			ac.delete();
+			ac.inPool = false;
+			DIYAnim.map.remove(ac.name);
+			Vector<DIYAnim> v = new Vector<>(DIYAnim.map.values());
+			jlu.setListData(v);
+			if (ind >= v.size())
+				ind--;
+			jlu.setSelectedIndex(ind);
+			setA(v.get(ind));
+			changing = false;
+		}
 
-		loca.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (!MainBCU.warning("w0", "warning"))
-					return;
-				changing = true;
-				int ind = jlu.getSelectedIndex();
-				AnimC ac = icet.anim;
-				ac.check();
-				ac.delete();
-				ac.inPool = false;
-				DIYAnim.map.remove(ac.name);
-				Vector<DIYAnim> v = new Vector<>(DIYAnim.map.values());
-				jlu.setListData(v);
-				if (ind >= v.size())
-					ind--;
-				jlu.setSelectedIndex(ind);
-				setA(v.get(ind));
-				changing = false;
-			}
-
-		});
+		);
 
 		relo.addActionListener(new ActionListener() {
 

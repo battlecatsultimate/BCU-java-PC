@@ -33,6 +33,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import main.MainBCU;
+import main.Opts;
 import page.LoadPage;
 import page.MainLocale;
 import util.Data;
@@ -101,58 +102,55 @@ public class BCJSON extends Data {
 		LoadPage.prog(0, 8, 1);
 		if (data != null && data.length() >= 7) {
 			if (!f0l.exists() && !download(dld + l0l, f0l))
-				MainBCU.pop("failed to download " + l0l, "download error");
+				Opts.p$d(l0l);
 			LoadPage.prog(0, 8, 2);
 			if (!f0p.exists()) {
 				byte[] bs0 = download(dld + "000/subviewer0.pack");
 				LoadPage.prog(0, 8, 3);
 				byte[] bs1 = download(dld + "000/subviewer1.pack");
 				if (bs0 == null || bs1 == null)
-					MainBCU.pop("failed to download " + l0p, "download error");
+					Opts.p$d(l0p);
 				byte[] bs = Arrays.copyOf(bs0, bs0.length + bs1.length);
 				for (int i = 0; i < bs1.length; i++)
 					bs[bs0.length + i] = bs1[i];
 				if (!Writer.writeBytes(bs, path + l0p))
-					MainBCU.pop("failed to write " + l0p, "file permission error");
+					Opts.pop("failed to write " + l0p, "IO error");
 			}
 			LoadPage.prog(0, 8, 4);
 			if (!f1l.exists() && !download(dld + l1l, f1l))
-				MainBCU.pop("failed to download " + l1l, "download error");
+				Opts.p$d(l1l);
 			if (!f1p.exists() && !download(dld + l1p, f1p))
-				MainBCU.pop("failed to download " + l1p, "download error");
+				Opts.p$d(l1p);
 			for (int i = 0; i < cals.length; i++)
 				if (!(f = new File(path + cals[i])).exists() && !download(dld + cals[i], f))
-					MainBCU.pop("failed to download " + cals[i], "download error");
+					Opts.p$d(cals[i]);
 			LoadPage.prog(0, 8, 5);
 			if (MainBCU.ver < data.getInt("jar")) {
-				if (MainBCU.warning("JAR update available. do you want to update? " + data.getString("jar-desc"),
-						"update check")) {
+				if (Opts.w$upd("JAR", data.getString("jar-desc"))) {
 					String name = "BCU " + revVer(data.getInt("jar")) + ".jar";
 					byte[] bs = download(dld + "jar/" + name);
 					if (bs != null && Writer.writeBytes(bs, "./" + name)) {
 						Writer.logClose(false);
 						System.exit(0);
 					} else
-						MainBCU.pop("failed to download " + name, "download error");
+						Opts.p$d(name);
 				}
 
 			}
 			if (lib_ver < data.getInt("lib")) {
-				if (MainBCU.warning("LIB update available. do you want to update? " + data.getString("lib-desc"),
-						"update check")) {
+				if (Opts.w$upd("LIB", data.getString("lib-desc"))) {
 					if (!download(dld + l1l, f1l))
-						MainBCU.pop("failed to download " + l1l, "download error");
+						Opts.p$d(l1l);
 					if (!download(dld + l1p, f1p))
-						MainBCU.pop("failed to download " + l1p, "download error");
+						Opts.p$d(l1p);
 					lib_ver = data.getInt("lib");
 				}
 			}
 			if (cal_ver < data.getInt("cal")) {
-				if (MainBCU.warning("text update available. do you want to update? " + data.getString("lib-desc"),
-						"update check")) {
+				if (Opts.w$upd("text", "")) {
 					for (int i = 0; i < cals.length; i++)
 						if (!(f = new File(path + cals[i])).exists() && !download(dld + cals[i], f))
-							MainBCU.pop("failed to download " + cals[i], "download error");
+							Opts.p$d(cals[i]);
 					cal_ver = data.getInt("cal");
 				}
 			}
@@ -163,11 +161,11 @@ public class BCJSON extends Data {
 			boolean down = false;
 			for (int i = 0; i < music; i++)
 				down |= mus[i] = !(fs[i] = new File("./lib/music/" + Data.trio(i) + ".ogg")).exists();
-			if (down && MainBCU.warning("do you want to download new music?", "update check"))
+			if (down && Opts.w$upd("music", ""))
 				for (int i = 0; i < music; i++)
 					if (mus[i])
 						if (!download(dld + "music/" + Data.trio(i) + ".ogg", fs[i]))
-							MainBCU.pop("failed to download music #" + i, "download error");
+							Opts.p$d("music #" + i);
 		}
 
 		LoadPage.prog(0, 8, 7);
@@ -188,7 +186,7 @@ public class BCJSON extends Data {
 		for (int i = 0; i < cals.length; i++)
 			need |= !new File(path + cals[i]).exists();
 		if (need) {
-			MainBCU.pop("failed to connect to internet while download is necessary", "download error");
+			Opts.pop("failed to connect to internet while download is necessary", "download error");
 			Writer.logClose(false);
 			System.exit(0);
 		}
@@ -221,7 +219,7 @@ public class BCJSON extends Data {
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			MainBCU.pop("failed to download", "download error");
+			Opts.p$d("");
 			return false;
 		}
 	}
@@ -415,7 +413,7 @@ public class BCJSON extends Data {
 			return os.getBytes();
 		} catch (Exception e) {
 			e.printStackTrace();
-			MainBCU.pop("failed to download", "download error");
+			Opts.p$d("");
 			return null;
 		}
 	}

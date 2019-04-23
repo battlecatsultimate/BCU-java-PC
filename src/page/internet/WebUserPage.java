@@ -18,7 +18,7 @@ import javax.swing.text.StyleConstants;
 
 import io.BCJSON;
 import io.WebPack;
-import main.MainBCU;
+import main.Opts;
 import page.JBTN;
 import page.JL;
 import page.JTF;
@@ -109,9 +109,9 @@ public class WebUserPage extends Page {
 				if (res == 0)
 					load();
 				else if (res == 211)
-					MainBCU.pop("repeat pack ID, please contact developer", "server error");
+					Opts.p$srv("repeat pack ID, please contact developer");
 				else
-					MainBCU.pop("unable to upload pack", "server error");
+					Opts.p$srv("unable to upload pack");
 
 			}
 		});
@@ -218,7 +218,7 @@ public class WebUserPage extends Page {
 					public void actionPerformed(ActionEvent arg0) {
 						boolean b = BCJSON.delete(obj[I].pid);
 						if (!b) {
-							MainBCU.pop("failed to edit", "server error");
+							Opts.p$srv("failed to edit");
 							return;
 						}
 						dele[I].setText(2, (obj[I].state == 1 ? "un" : "") + "delete");
@@ -233,7 +233,7 @@ public class WebUserPage extends Page {
 					public void actionPerformed(ActionEvent arg0) {
 						boolean b = BCJSON.reversion(obj[I].pid);
 						if (!b) {
-							MainBCU.pop("failed to upload", "server error");
+							Opts.p$srv("failed to upload");
 							return;
 						}
 						load();

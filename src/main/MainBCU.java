@@ -3,8 +3,6 @@ package main;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import javax.swing.JOptionPane;
-
 import decode.Decode;
 import io.BCJSON;
 import io.Reader;
@@ -28,7 +26,7 @@ public class MainBCU {
 		trueRun = true;
 		long mem = Runtime.getRuntime().maxMemory();
 		if (mem >> 28 == 0) {
-			pop("not enough memory. Current memory: " + (mem >> 20) + "MB.", "not enough memory");
+			Opts.pop("not enough memory. Current memory: " + (mem >> 20) + "MB.", "not enough memory");
 			System.exit(0);
 		}
 		Reader.getData$0();
@@ -37,7 +35,7 @@ public class MainBCU {
 		new Timer().start();
 		BCJSON.checkDownload();
 		if (BCJSON.lib_ver < LIBREQ) {
-			pop("this version require new lib", "library error");
+			Opts.pop("this version require new lib", "library error");
 			System.exit(0);
 		}
 		Decode.main();
@@ -45,22 +43,11 @@ public class MainBCU {
 		MainFrame.changePanel(new MainPage());
 	}
 
-	public static void pop(String text, String title) {
-		int opt = JOptionPane.PLAIN_MESSAGE;
-		JOptionPane.showMessageDialog(null, text, title, opt);
-	}
-
 	public static String validate(String str) {
 		char[] chs = new char[] { '.', '/', '\\', ':', '*', '?', '"', '<', '>', '|' };
 		for (char c : chs)
 			str = str.replace(c, '#');
 		return str;
-	}
-
-	public static boolean warning(String text, String title) {
-		int opt = JOptionPane.OK_CANCEL_OPTION;
-		int val = JOptionPane.showConfirmDialog(null, text, title, opt);
-		return val == JOptionPane.OK_OPTION;
 	}
 
 }
