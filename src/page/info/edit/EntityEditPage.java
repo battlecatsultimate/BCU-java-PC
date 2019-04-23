@@ -193,13 +193,13 @@ public abstract class EntityEditPage extends Page {
 	@Override
 	protected void renew() {
 		if (efp != null && efp.getEnemy() != null
-				&& Opts.w$c("do you want to overwrite stats? This operation cannot be undone")) {
+				&& Opts.conf("do you want to overwrite stats? This operation cannot be undone")) {
 			Enemy e = efp.getEnemy();
 			ce.importData(e.de);
 			setData(ce);
 		}
 		if (ufp != null && ufp.getForm() != null
-				&& Opts.w$c("do you want to overwrite stats? This operation cannot be undone")) {
+				&& Opts.conf("do you want to overwrite stats? This operation cannot be undone")) {
 			Form f = ufp.getForm();
 			ce.importData(f.du);
 			setData(ce);

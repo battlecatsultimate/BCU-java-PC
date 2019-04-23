@@ -72,7 +72,7 @@ public class Reader extends DataIO {
 			LoadPage.prog(1, 1, 0);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.p$l("error in reading: reading basic data at " + LoadPage.num);
+			Opts.loadErr("error in reading: reading basic data at " + LoadPage.num);
 			System.exit(0);
 		}
 
@@ -85,7 +85,7 @@ public class Reader extends DataIO {
 			LoadPage.prog(1, 1, 0);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.p$l("error in reading: reading additional data at " + LoadPage.num);
+			Opts.loadErr("error in reading: reading additional data at " + LoadPage.num);
 			System.exit(0);
 		}
 
@@ -96,7 +96,7 @@ public class Reader extends DataIO {
 			LoadPage.prog(1, 1, 0);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.p$l("error in reading: reading custom data at " + LoadPage.num);
+			Opts.loadErr("error in reading: reading custom data at " + LoadPage.num);
 			System.exit(0);
 		}
 	}
@@ -147,7 +147,7 @@ public class Reader extends DataIO {
 			in.read(len);
 			int length = toInt(translate(len), 0);
 			if (length > file.length()) {
-				Opts.p$l("corrupt file: " + file.getPath());
+				Opts.loadErr("corrupt file: " + file.getPath());
 				System.exit(0);
 			}
 			byte[] bs = new byte[length];
@@ -337,7 +337,7 @@ public class Reader extends DataIO {
 			DIYAnim.read();
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.p$l("error in reading: reading custom animation");
+			Opts.loadErr("error in reading: reading custom animation");
 			System.exit(0);
 		}
 		LoadPage.prog(1, 0, 0);
@@ -345,7 +345,7 @@ public class Reader extends DataIO {
 			Pack.read();
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.p$l("error in reading: reading custom pack");
+			Opts.loadErr("error in reading: reading custom pack");
 			System.exit(0);
 		}
 		Recd.read();
@@ -355,7 +355,7 @@ public class Reader extends DataIO {
 				BasisSet.read(readBytes(file));
 			} catch (Exception e) {
 				e.printStackTrace();
-				Opts.p$l("error in reading: reading basis");
+				Opts.loadErr("error in reading: reading basis");
 				System.exit(0);
 			}
 	}

@@ -240,31 +240,19 @@ public class WebMainPage extends Page {
 				String url = obj[i].url;
 				int I = i;
 
-				down[i].addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						File f = new File("./pack/" + obj[I].pid + ".bcupack");
-						if (BCJSON.download(url, f)) {
-							Pack p = Pack.read(f);
-							down[I].setText(2, "downloaded");
-							down[I].setEnabled(false);
-							obj[I].version = p.version;
-							Opts.pop("download success", "download success");
-						} else
-							Opts.p$d("");
-					}
-
+				down[i].setLnr(x -> {
+					File f = new File("./pack/" + obj[I].pid + ".bcupack");
+					if (BCJSON.download(url, f)) {
+						Pack pac = Pack.read(f);
+						down[I].setText(2, "downloaded");
+						down[I].setEnabled(false);
+						obj[I].version = pac.version;
+						Opts.success("download success");
+					} else
+						Opts.dloadErr("");
 				});
 
-				auth[i].addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						load(obj[I].uid);
-					}
-
-				});
+				auth[i].setLnr(x -> load(obj[I].uid));
 
 				vote[i].addChangeListener(new ChangeListener() {
 

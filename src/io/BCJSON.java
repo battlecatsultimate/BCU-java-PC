@@ -102,55 +102,55 @@ public class BCJSON extends Data {
 		LoadPage.prog(0, 8, 1);
 		if (data != null && data.length() >= 7) {
 			if (!f0l.exists() && !download(dld + l0l, f0l))
-				Opts.p$d(l0l);
+				Opts.dloadErr(l0l);
 			LoadPage.prog(0, 8, 2);
 			if (!f0p.exists()) {
 				byte[] bs0 = download(dld + "000/subviewer0.pack");
 				LoadPage.prog(0, 8, 3);
 				byte[] bs1 = download(dld + "000/subviewer1.pack");
 				if (bs0 == null || bs1 == null)
-					Opts.p$d(l0p);
+					Opts.dloadErr(l0p);
 				byte[] bs = Arrays.copyOf(bs0, bs0.length + bs1.length);
 				for (int i = 0; i < bs1.length; i++)
 					bs[bs0.length + i] = bs1[i];
 				if (!Writer.writeBytes(bs, path + l0p))
-					Opts.pop("failed to write " + l0p, "IO error");
+					Opts.ioErr("failed to write " + l0p);
 			}
 			LoadPage.prog(0, 8, 4);
 			if (!f1l.exists() && !download(dld + l1l, f1l))
-				Opts.p$d(l1l);
+				Opts.dloadErr(l1l);
 			if (!f1p.exists() && !download(dld + l1p, f1p))
-				Opts.p$d(l1p);
+				Opts.dloadErr(l1p);
 			for (int i = 0; i < cals.length; i++)
 				if (!(f = new File(path + cals[i])).exists() && !download(dld + cals[i], f))
-					Opts.p$d(cals[i]);
+					Opts.dloadErr(cals[i]);
 			LoadPage.prog(0, 8, 5);
 			if (MainBCU.ver < data.getInt("jar")) {
-				if (Opts.w$upd("JAR", data.getString("jar-desc"))) {
+				if (Opts.updateCheck("JAR", data.getString("jar-desc"))) {
 					String name = "BCU " + revVer(data.getInt("jar")) + ".jar";
 					byte[] bs = download(dld + "jar/" + name);
 					if (bs != null && Writer.writeBytes(bs, "./" + name)) {
 						Writer.logClose(false);
 						System.exit(0);
 					} else
-						Opts.p$d(name);
+						Opts.dloadErr(name);
 				}
 
 			}
 			if (lib_ver < data.getInt("lib")) {
-				if (Opts.w$upd("LIB", data.getString("lib-desc"))) {
+				if (Opts.updateCheck("LIB", data.getString("lib-desc"))) {
 					if (!download(dld + l1l, f1l))
-						Opts.p$d(l1l);
+						Opts.dloadErr(l1l);
 					if (!download(dld + l1p, f1p))
-						Opts.p$d(l1p);
+						Opts.dloadErr(l1p);
 					lib_ver = data.getInt("lib");
 				}
 			}
 			if (cal_ver < data.getInt("cal")) {
-				if (Opts.w$upd("text", "")) {
+				if (Opts.updateCheck("text", "")) {
 					for (int i = 0; i < cals.length; i++)
 						if (!(f = new File(path + cals[i])).exists() && !download(dld + cals[i], f))
-							Opts.p$d(cals[i]);
+							Opts.dloadErr(cals[i]);
 					cal_ver = data.getInt("cal");
 				}
 			}
@@ -161,11 +161,11 @@ public class BCJSON extends Data {
 			boolean down = false;
 			for (int i = 0; i < music; i++)
 				down |= mus[i] = !(fs[i] = new File("./lib/music/" + Data.trio(i) + ".ogg")).exists();
-			if (down && Opts.w$upd("music", ""))
+			if (down && Opts.updateCheck("music", ""))
 				for (int i = 0; i < music; i++)
 					if (mus[i])
 						if (!download(dld + "music/" + Data.trio(i) + ".ogg", fs[i]))
-							Opts.p$d("music #" + i);
+							Opts.dloadErr("music #" + i);
 		}
 
 		LoadPage.prog(0, 8, 7);
@@ -186,7 +186,7 @@ public class BCJSON extends Data {
 		for (int i = 0; i < cals.length; i++)
 			need |= !new File(path + cals[i]).exists();
 		if (need) {
-			Opts.pop("failed to connect to internet while download is necessary", "download error");
+			Opts.pop(Opts.REQITN);
 			Writer.logClose(false);
 			System.exit(0);
 		}
@@ -219,7 +219,7 @@ public class BCJSON extends Data {
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.p$d("");
+			Opts.dloadErr("");
 			return false;
 		}
 	}
@@ -413,7 +413,7 @@ public class BCJSON extends Data {
 			return os.getBytes();
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.p$d("");
+			Opts.dloadErr("");
 			return null;
 		}
 	}

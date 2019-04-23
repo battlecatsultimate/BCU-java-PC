@@ -162,7 +162,7 @@ public class AnimC extends AnimU {
 			imgcut = ImgCut.newIns(pre + ".imgcut");
 			if (num == null) {
 				Printer.e("AnimC", 147, "can't read png: " + pre);
-				Opts.p$l("sprite missing: " + pre + ".png");
+				Opts.loadErr("sprite missing: " + pre + ".png");
 				Writer.logClose(false);
 				System.exit(0);
 			}
@@ -174,7 +174,7 @@ public class AnimC extends AnimU {
 				uni.check();
 			history();
 		} catch (Exception e) {
-			Opts.p$l("Error in loading custom animation: " + name);
+			Opts.loadErr("Error in loading custom animation: " + name);
 			e.printStackTrace();
 			System.exit(0);
 		}
@@ -251,7 +251,7 @@ public class AnimC extends AnimU {
 			File f = new File(prev + name + "/" + name + ".png");
 			Writer.check(f);
 			if (!ImageIO.write(num, "PNG", f))
-				Opts.w$o(f.getPath());
+				Opts.writeErr(f.getPath());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -369,7 +369,7 @@ public class AnimC extends AnimU {
 			} catch (Exception e2) {
 				e2.printStackTrace();
 				String str = type == 0 ? ".imgcut" : type == 1 ? ".mamodel" : ".maanim";
-				Opts.pop("cannot save " + pre + str, "IO error");
+				Opts.ioErr("cannot save " + pre + str);
 			}
 		}
 	}

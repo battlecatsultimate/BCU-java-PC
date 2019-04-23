@@ -262,7 +262,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 					return;
 				DIYAnim da = DIYAnim.map.remove(icet.anim.name);
 				DIYAnim rep = DIYAnim.map.get(str);
-				if (rep != null && Opts.w$c(
+				if (rep != null && Opts.conf(
 						"Do you want to replace animation? This action cannot be undone. The animation which originally keeps this name will be replaced by selected animation.")) {
 					da.anim.delete();
 					da.anim.name = rep.anim.name;
@@ -307,7 +307,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		});
 
 		rem.setLnr(x -> {
-			if (!Opts.w$c())
+			if (!Opts.conf())
 				return;
 			changing = true;
 			int ind = jlu.getSelectedIndex();
@@ -326,7 +326,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		);
 
 		loca.setLnr(x -> {
-			if (!Opts.w$c())
+			if (!Opts.conf())
 				return;
 			changing = true;
 			int ind = jlu.getSelectedIndex();

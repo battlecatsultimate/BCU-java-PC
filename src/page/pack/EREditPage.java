@@ -178,7 +178,7 @@ public class EREditPage extends Page {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!Opts.w$c())
+				if (!Opts.conf())
 					return;
 				int ind = jlst.getSelectedIndex() - 1;
 				if (ind < 0)

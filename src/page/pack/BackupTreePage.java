@@ -125,18 +125,18 @@ public class BackupTreePage extends Page {
 		dele.setLnr(x -> {
 			if (jlm.getSelectedValue() == null)
 				return;
-			if (!Opts.w$c())
+			if (!Opts.conf())
 				return;
 			try {
 				List<Backup> strs = jlm.getSelectedValuesList();
 				if (ZipAccess.delete(strs))
-					Opts.pop("delete success", "backup access success");
+					Opts.success("delete success");
 				else
-					Opts.p$b("delete");
+					Opts.backupErr("delete");
 				jlm.setListData(ZipAccess.getList().toArray(new Backup[0]));
 			} catch (IOException e) {
 				e.printStackTrace();
-				Opts.p$b("delete");
+				Opts.backupErr("delete");
 			}
 		});
 
@@ -145,14 +145,14 @@ public class BackupTreePage extends Page {
 				return;
 			try {
 				if (ZipAccess.extract(jlm.getSelectedValue())) {
-					Opts.pop("restoration succeed, please restart program", "backup access success");
+					Opts.success("restoration succeed, please restart program");
 					Writer.logClose(false);
 					System.exit(0);
 				} else
-					Opts.p$b("restore");
+					Opts.backupErr("restore");
 			} catch (IOException e) {
 				e.printStackTrace();
-				Opts.p$b("restore");
+				Opts.backupErr("restore");
 			}
 		});
 
@@ -162,12 +162,12 @@ public class BackupTreePage extends Page {
 			try {
 				vf = ZipAccess.extractList(jlm.getSelectedValue());
 				if (vf == null)
-					Opts.p$b("read");
+					Opts.backupErr("read");
 				else
 					setTree(vf);
 			} catch (IOException e) {
 				e.printStackTrace();
-				Opts.p$b("read");
+				Opts.backupErr("read");
 			}
 
 		});
@@ -182,12 +182,12 @@ public class BackupTreePage extends Page {
 				Backup str1 = lstr.get(0);
 				vf = ZipAccess.difference(str0.time, str1.time);
 				if (vf == null)
-					Opts.p$b("read");
+					Opts.backupErr("read");
 				else
 					setTree(vf);
 			} catch (IOException e) {
 				e.printStackTrace();
-				Opts.p$b("read");
+				Opts.backupErr("read");
 			}
 		});
 
@@ -195,12 +195,12 @@ public class BackupTreePage extends Page {
 			try {
 				vf = ZipAccess.extractAllList();
 				if (vf == null)
-					Opts.p$b("read");
+					Opts.backupErr("read");
 				else
 					setTree(vf);
 			} catch (IOException e) {
 				e.printStackTrace();
-				Opts.p$b("read");
+				Opts.backupErr("read");
 			}
 		});
 
@@ -236,25 +236,25 @@ public class BackupTreePage extends Page {
 					if (b0) {
 						InStream is = ZipAccess.readStream(new String(sel.data));
 						if (is == null)
-							Opts.p$b("read");
+							Opts.backupErr("read");
 						setT$Basis(is);
 					}
 					if (b1) {
 						InStream is = ZipAccess.readStream(new String(sel.data));
 						if (is == null)
-							Opts.p$b("read");
+							Opts.backupErr("read");
 						setT$Pack(is);
 					}
 					if (b2) {
 						Queue<String> qs = ZipAccess.readLine(new String(sel.data));
 						if (qs == null)
-							Opts.p$b("read");
+							Opts.backupErr("read");
 						setT$MA(qs);
 					}
 
 				} catch (IOException e) {
 					e.printStackTrace();
-					Opts.p$b("read");
+					Opts.backupErr("read");
 				}
 			}
 
@@ -265,14 +265,14 @@ public class BackupTreePage extends Page {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					if (ZipAccess.extractPartial(new String(sel.data), sel)) {
-						Opts.pop("restoration succeed, please restart program", "backup access success");
+						Opts.success("restoration succeed, please restart program");
 						Writer.logClose(false);
 						System.exit(0);
 					} else
-						Opts.p$b("restore");
+						Opts.backupErr("restore");
 				} catch (IOException e) {
 					e.printStackTrace();
-					Opts.p$b("restore");
+					Opts.backupErr("restore");
 				}
 			}
 
@@ -371,7 +371,7 @@ public class BackupTreePage extends Page {
 			changing = false;
 		} catch (IOException e) {
 			e.printStackTrace();
-			Opts.p$b("read");
+			Opts.backupErr("read");
 		}
 		setBackup(null);
 	}

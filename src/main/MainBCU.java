@@ -13,7 +13,7 @@ import util.Data;
 
 public class MainBCU {
 
-	public static final int ver = 40411, LIBREQ = 80502;
+	public static final int ver = 40412, LIBREQ = 80502;
 
 	public static int FILTER_TYPE = 0;
 	public static boolean write = true, preload = false, trueRun = false;
@@ -26,7 +26,7 @@ public class MainBCU {
 		trueRun = true;
 		long mem = Runtime.getRuntime().maxMemory();
 		if (mem >> 28 == 0) {
-			Opts.pop("not enough memory. Current memory: " + (mem >> 20) + "MB.", "not enough memory");
+			Opts.pop(Opts.MEMORY, "" + (mem >> 20));
 			System.exit(0);
 		}
 		Reader.getData$0();
@@ -35,7 +35,7 @@ public class MainBCU {
 		new Timer().start();
 		BCJSON.checkDownload();
 		if (BCJSON.lib_ver < LIBREQ) {
-			Opts.pop("this version require new lib", "library error");
+			Opts.loadErr("this version require new lib");
 			System.exit(0);
 		}
 		Decode.main();

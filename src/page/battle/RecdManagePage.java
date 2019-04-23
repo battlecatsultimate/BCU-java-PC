@@ -54,7 +54,7 @@ public class RecdManagePage extends Page {
 		setList();
 		if (svp != null) {
 			Recd r = jlr.getSelectedValue();
-			if (r != null && svp.getStage() != null && Opts.w$c("are you sure to change stage?")) {
+			if (r != null && svp.getStage() != null && Opts.conf("are you sure to change stage?")) {
 				r.st = svp.getStage();
 				r.avail = true;
 			}

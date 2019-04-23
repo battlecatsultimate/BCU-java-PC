@@ -14,7 +14,7 @@ public class Decode {
 	public static void main() {
 		File f = new File("./lib/");
 		if (!f.exists()) {
-			Opts.pop("cannot find ./lib/", "liberary error");
+			Opts.loadErr("cannot find ./lib/");
 			Writer.logClose(false);
 			System.exit(0);
 		}
@@ -30,11 +30,11 @@ public class Decode {
 			File fl = new File(strl + "list");
 			File fp = new File(strl + "pack");
 			if (!fl.exists()) {
-				Opts.pop("cannot find " + strl + "list", "liberary error");
+				Opts.loadErr("cannot find " + strl + "list");
 				System.exit(0);
 			}
 			if (!fp.exists()) {
-				Opts.pop("cannot find " + strl + "pack", "liberary error");
+				Opts.loadErr("cannot find " + strl + "pack");
 				System.exit(0);
 			}
 			List<String> bs = null;

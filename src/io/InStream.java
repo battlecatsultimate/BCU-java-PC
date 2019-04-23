@@ -129,7 +129,7 @@ public strictfp class InStream extends DataIO {
 	public InStream subStream() {
 		int n = nextInt();
 		if (n > size()) {
-			Opts.p$l("corrupted file");
+			Opts.loadErr("corrupted file");
 			new Exception("error in getting subStream").printStackTrace();
 			Writer.logClose(false);
 			System.exit(0);

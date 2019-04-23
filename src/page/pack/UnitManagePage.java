@@ -223,7 +223,7 @@ public class UnitManagePage extends Page {
 		remu.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!Opts.w$c())
+				if (!Opts.conf())
 					return;
 				changing = true;
 				int ind = jlu.getSelectedIndex();
@@ -325,7 +325,7 @@ public class UnitManagePage extends Page {
 		remf.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!Opts.w$c())
+				if (!Opts.conf())
 					return;
 				changing = true;
 				int ind = jlf.getSelectedIndex();

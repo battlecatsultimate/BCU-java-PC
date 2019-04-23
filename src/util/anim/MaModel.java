@@ -26,7 +26,7 @@ public class MaModel extends Data implements Cloneable {
 			return new MaModel(readLine(f));
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.w$i(f.getName());
+			Opts.animErr(f.getName());
 			return new MaModel();
 		}
 

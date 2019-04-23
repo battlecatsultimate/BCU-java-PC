@@ -246,7 +246,7 @@ public class PackEditPage extends Page {
 		remp.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!Opts.w$c())
+				if (!Opts.conf())
 					return;
 				changing = true;
 				int ind = jlp.getSelectedIndex();
@@ -335,7 +335,7 @@ public class PackEditPage extends Page {
 		reme.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!Opts.w$c())
+				if (!Opts.conf())
 					return;
 				changing = true;
 				int ind = jle.getSelectedIndex();
@@ -482,7 +482,7 @@ public class PackEditPage extends Page {
 		rems.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!Opts.w$c())
+				if (!Opts.conf())
 					return;
 				changing = true;
 				int ind = jls.getSelectedIndex();
@@ -557,7 +557,7 @@ public class PackEditPage extends Page {
 				int ind = jlr.getSelectedIndex() - 1;
 				Pack rel = jlr.getSelectedValue();
 				if (pac.relyOn(rel.id) >= 0)
-					if (Opts.w$c("this action cannot be undone. Are you sure to remove "
+					if (Opts.conf("this action cannot be undone. Are you sure to remove "
 							+ "all elements in this pack from the selected parent?"))
 						pac.forceRemoveParent(rel.id);
 				pac.rely.remove((Integer) rel.id);

@@ -87,12 +87,12 @@ public class Pack extends Data {
 					String np = file.getName();
 					String msg = "pack " + op + " conflict with pack " + np + ". Do you want to use " + np
 							+ " instead of " + op + "?";
-					if (!Opts.w$pc(msg)) {
-						if (Opts.w$c("Do you want to delete " + np + "?"))
+					if (!Opts.packConf(msg)) {
+						if (Opts.conf("Do you want to delete " + np + "?"))
 							Writer.delete(file);
 						continue;
 					}
-					if (Opts.w$c("Do you want to delete " + op + "?"))
+					if (Opts.conf("Do you want to delete " + op + "?"))
 						Writer.delete(fmap.get(pack.id));
 				}
 				fmap.put(pack.id, file);
@@ -123,7 +123,7 @@ public class Pack extends Data {
 						all = false;
 				if (all) {
 					if (p.bcuver > MainBCU.ver)
-						Opts.p$v("BCU", revVer(p.bcuver));
+						Opts.verErr("BCU", revVer(p.bcuver));
 					else
 						try {
 							if (p.editable)
@@ -131,7 +131,7 @@ public class Pack extends Data {
 							else
 								p.zreadp();
 						} catch (Exception e) {
-							Opts.p$l("Error in loading custom pack: " + p.id);
+							Opts.loadErr("Error in loading custom pack: " + p.id);
 							e.printStackTrace();
 							System.exit(0);
 						}
@@ -152,7 +152,7 @@ public class Pack extends Data {
 							err += val;
 							b = true;
 						}
-					Opts.p$l(err);
+					Opts.loadErr(err);
 				}
 				break;
 			}
@@ -538,7 +538,7 @@ public class Pack extends Data {
 		else if (ver >= 306)
 			zreadt$000306(res);
 		else
-			Opts.p$v("custom pack", "0-4-1-3");
+			Opts.verErr("custom pack", "0-4-1-3");
 		mc = new MapColc(this, res);
 		ms.load();
 		res = null;
