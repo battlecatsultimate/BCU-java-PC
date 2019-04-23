@@ -13,7 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
 import io.BCMusic;
-import main.MainBCU;
+import main.Opts;
 import page.JBTN;
 import page.JTG;
 import page.KeyHandler;
@@ -222,21 +222,18 @@ public class BattleInfoPage extends KeyHandler {
 
 	private void addListeners() {
 
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				BCMusic.DEF.stop();
-				if (bb instanceof BBRecd) {
-					BBRecd bbr = (BBRecd) bb;
-					if (MainBCU.warning("Do you want to save this video?", "confirm")) {
-						bbr.end();
-						return;
-					} else {
-						bbr.quit();
-					}
+		back.setLnr(x -> {
+			BCMusic.DEF.stop();
+			if (bb instanceof BBRecd) {
+				BBRecd bbr = (BBRecd) bb;
+				if (Opts.w$c("Do you want to save this video?")) {
+					bbr.end();
+					return;
+				} else {
+					bbr.quit();
 				}
-				changePanel(getFront());
 			}
+			changePanel(getFront());
 		});
 
 		rply.addActionListener(new ActionListener() {

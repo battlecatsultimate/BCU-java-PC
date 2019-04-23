@@ -20,7 +20,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import io.Reader;
-import main.MainBCU;
+import main.Opts;
 import page.JBTN;
 import page.JL;
 import page.JTF;
@@ -189,13 +189,13 @@ public abstract class EntityEditPage extends Page {
 	@Override
 	protected void renew() {
 		if (efp != null && efp.getEnemy() != null
-				&& MainBCU.warning("do you want to overwrite stats? This operation cannot be undone", "confirmation")) {
+				&& Opts.w$c("do you want to overwrite stats? This operation cannot be undone")) {
 			Enemy e = efp.getEnemy();
 			ce.importData(e.de);
 			setData(ce);
 		}
 		if (ufp != null && ufp.getForm() != null
-				&& MainBCU.warning("do you want to overwrite stats? This operation cannot be undone", "confirmation")) {
+				&& Opts.w$c("do you want to overwrite stats? This operation cannot be undone")) {
 			Form f = ufp.getForm();
 			ce.importData(f.du);
 			setData(ce);

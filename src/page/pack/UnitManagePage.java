@@ -17,7 +17,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import io.Reader;
-import main.MainBCU;
+import main.Opts;
 import page.JBTN;
 import page.JL;
 import page.JTF;
@@ -223,7 +223,7 @@ public class UnitManagePage extends Page {
 		remu.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!MainBCU.warning(get(0, "w0"), "warning"))
+				if (!Opts.w$c())
 					return;
 				changing = true;
 				int ind = jlu.getSelectedIndex();
@@ -325,7 +325,7 @@ public class UnitManagePage extends Page {
 		remf.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!MainBCU.warning(get(0, "w0"), "warning"))
+				if (!Opts.w$c())
 					return;
 				changing = true;
 				int ind = jlf.getSelectedIndex();

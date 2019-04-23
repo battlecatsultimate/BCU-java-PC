@@ -7,7 +7,7 @@ import java.util.Queue;
 
 import io.InStream;
 import io.OutStream;
-import main.MainBCU;
+import main.Opts;
 import main.Printer;
 import util.Data;
 import util.system.VFile;
@@ -26,10 +26,7 @@ public class MaModel extends Data implements Cloneable {
 			return new MaModel(readLine(f));
 		} catch (Exception e) {
 			e.printStackTrace();
-			if (!ImgCut.notShow)
-				ImgCut.notShow = !MainBCU.warning(
-						"error in reading file " + f.getName() + ", Click Cancel to supress this popup?",
-						"loading error");
+			Opts.w$i(f.getName());
 			return new MaModel();
 		}
 

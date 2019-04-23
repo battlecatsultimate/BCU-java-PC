@@ -6,13 +6,11 @@ import java.util.Queue;
 
 import io.InStream;
 import io.OutStream;
-import main.MainBCU;
+import main.Opts;
 import util.Data;
 import util.system.VFile;
 
 public class ImgCut extends Data implements Cloneable {
-
-	public static boolean notShow;
 
 	public static ImgCut newIns(String path) {
 		VFile f = VFile.getFile(path);
@@ -26,10 +24,7 @@ public class ImgCut extends Data implements Cloneable {
 			return new ImgCut(readLine(f));
 		} catch (Exception e) {
 			e.printStackTrace();
-			if (!notShow)
-				notShow = !MainBCU.warning(
-						"error in reading file " + f.getName() + ", Click Cancel to supress this popup?",
-						"loading error");
+			Opts.w$i(f.getName());
 			return new ImgCut();
 		}
 	}

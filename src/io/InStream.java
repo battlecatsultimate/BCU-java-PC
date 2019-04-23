@@ -2,7 +2,7 @@ package io;
 
 import java.io.UnsupportedEncodingException;
 
-import main.MainBCU;
+import main.Opts;
 
 public strictfp class InStream extends DataIO {
 
@@ -129,7 +129,7 @@ public strictfp class InStream extends DataIO {
 	public InStream subStream() {
 		int n = nextInt();
 		if (n > size()) {
-			MainBCU.pop("corrupted file", "loading error");
+			Opts.p$l("corrupted file");
 			new Exception("error in getting subStream").printStackTrace();
 			Writer.logClose(false);
 			System.exit(0);

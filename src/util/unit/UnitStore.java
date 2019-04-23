@@ -6,7 +6,7 @@ import java.util.Map;
 
 import io.InStream;
 import io.OutStream;
-import main.MainBCU;
+import main.Opts;
 import util.Data;
 import util.anim.AnimC;
 import util.entity.data.CustomUnit;
@@ -22,11 +22,11 @@ public class UnitStore extends Data {
 			if (u != null)
 				return u;
 			if (print)
-				MainBCU.pop("Can't find unit: " + uid, "can't find unit");
+				Opts.w$u("Can't find unit: " + uid);
 			return null;
 		}
 		if (print)
-			MainBCU.pop("can't find pack: " + uid / 1000, "can't find unit");
+			Opts.w$u("can't find pack: " + uid / 1000);
 		return null;
 	}
 
@@ -36,7 +36,7 @@ public class UnitStore extends Data {
 			return null;
 		if (fid >= u.forms.length) {
 			if (print)
-				MainBCU.pop("unit " + trio(uid) + " doesn't have form " + fid, "cannot find unit");
+				Opts.w$u("unit " + trio(uid) + " doesn't have form " + fid);
 			return null;
 		}
 		return get(uid, print).forms[fid];

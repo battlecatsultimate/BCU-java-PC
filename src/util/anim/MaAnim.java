@@ -5,7 +5,7 @@ import java.util.Queue;
 
 import io.InStream;
 import io.OutStream;
-import main.MainBCU;
+import main.Opts;
 import util.Data;
 import util.system.VFile;
 
@@ -23,11 +23,7 @@ public class MaAnim extends Data {
 			return new MaAnim(readLine(f));
 		} catch (Exception e) {
 			e.printStackTrace();
-			if (!ImgCut.notShow)
-				ImgCut.notShow = !MainBCU.warning(
-						"error in reading file " + f.getName() + ", Click Cancel to supress this popup?",
-						"loading error");
-
+			Opts.w$i(f.getName());
 			return new MaAnim();
 		}
 	}

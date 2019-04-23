@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.util.List;
 
 import io.Writer;
-import main.MainBCU;
+import main.Opts;
 import page.LoadPage;
 
 public class Decode {
@@ -14,7 +14,7 @@ public class Decode {
 	public static void main() {
 		File f = new File("./lib/");
 		if (!f.exists()) {
-			MainBCU.pop("cannot find ./lib/", "liberary error");
+			Opts.pop("cannot find ./lib/", "liberary error");
 			Writer.logClose(false);
 			System.exit(0);
 		}
@@ -30,11 +30,11 @@ public class Decode {
 			File fl = new File(strl + "list");
 			File fp = new File(strl + "pack");
 			if (!fl.exists()) {
-				MainBCU.pop("cannot find " + strl + "list", "liberary error");
+				Opts.pop("cannot find " + strl + "list", "liberary error");
 				System.exit(0);
 			}
 			if (!fp.exists()) {
-				MainBCU.pop("cannot find " + strl + "pack", "liberary error");
+				Opts.pop("cannot find " + strl + "pack", "liberary error");
 				System.exit(0);
 			}
 			List<String> bs = null;

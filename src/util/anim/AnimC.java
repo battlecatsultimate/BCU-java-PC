@@ -16,6 +16,7 @@ import io.InStream;
 import io.OutStream;
 import io.Writer;
 import main.MainBCU;
+import main.Opts;
 import main.Printer;
 import page.anim.EditHead;
 import util.system.VFile;
@@ -161,7 +162,7 @@ public class AnimC extends AnimU {
 			imgcut = ImgCut.newIns(pre + ".imgcut");
 			if (num == null) {
 				Printer.e("AnimC", 147, "can't read png: " + pre);
-				MainBCU.pop("sprite missing: " + pre + ".png", "loading error");
+				Opts.p$l("sprite missing: " + pre + ".png");
 				Writer.logClose(false);
 				System.exit(0);
 			}
@@ -173,7 +174,7 @@ public class AnimC extends AnimU {
 				uni.check();
 			history();
 		} catch (Exception e) {
-			MainBCU.pop("Error in loading custom animation: " + name, "loading error");
+			Opts.p$l("Error in loading custom animation: " + name);
 			e.printStackTrace();
 			System.exit(0);
 		}
@@ -250,7 +251,7 @@ public class AnimC extends AnimU {
 			File f = new File(prev + name + "/" + name + ".png");
 			Writer.check(f);
 			if (!ImageIO.write(num, "PNG", f))
-				MainBCU.warning("failed to write sprite", "IO error");
+				Opts.w$o(f.getPath());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -368,7 +369,7 @@ public class AnimC extends AnimU {
 			} catch (Exception e2) {
 				e2.printStackTrace();
 				String str = type == 0 ? ".imgcut" : type == 1 ? ".mamodel" : ".maanim";
-				MainBCU.pop("cannot save " + pre + str, "IO error");
+				Opts.pop("cannot save " + pre + str, "IO error");
 			}
 		}
 	}

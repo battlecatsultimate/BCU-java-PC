@@ -18,6 +18,7 @@ import io.OutStream;
 import io.Reader;
 import io.Writer;
 import main.MainBCU;
+import main.Opts;
 import page.LoadPage;
 import util.Data;
 import util.anim.AnimC;
@@ -86,12 +87,12 @@ public class Pack extends Data {
 					String np = file.getName();
 					String msg = "pack " + op + " conflict with pack " + np + ". Do you want to use " + np
 							+ " instead of " + op + "?";
-					if (!MainBCU.warning(msg, "pack conflict")) {
-						if (MainBCU.warning("Do you want to delete " + np + "?", "delete confirmation"))
+					if (!Opts.w$pc(msg)) {
+						if (Opts.w$c("Do you want to delete " + np + "?"))
 							Writer.delete(file);
 						continue;
 					}
-					if (MainBCU.warning("Do you want to delete " + op + "?", "delete confirmation"))
+					if (Opts.w$c("Do you want to delete " + op + "?"))
 						Writer.delete(fmap.get(pack.id));
 				}
 				fmap.put(pack.id, file);
@@ -122,9 +123,7 @@ public class Pack extends Data {
 						all = false;
 				if (all) {
 					if (p.bcuver > MainBCU.ver)
-						MainBCU.pop(
-								"BCU version is too old, use BCU " + revVer(p.bcuver) + " or newer version to open it",
-								"version error");
+						Opts.p$v("BCU", revVer(p.bcuver));
 					else
 						try {
 							if (p.editable)
@@ -132,7 +131,7 @@ public class Pack extends Data {
 							else
 								p.zreadp();
 						} catch (Exception e) {
-							MainBCU.pop("Error in loading custom pack: " + p.id, "loading error");
+							Opts.p$l("Error in loading custom pack: " + p.id);
 							e.printStackTrace();
 							System.exit(0);
 						}
@@ -153,7 +152,7 @@ public class Pack extends Data {
 							err += val;
 							b = true;
 						}
-					MainBCU.pop(err, "loading error");
+					Opts.p$l(err);
 				}
 				break;
 			}
@@ -539,8 +538,7 @@ public class Pack extends Data {
 		else if (ver >= 306)
 			zreadt$000306(res);
 		else
-			MainBCU.pop("custom pack version is too old, use BCU 0-4-1-3 or earlier version to open it",
-					"version error");
+			Opts.p$v("custom pack", "0-4-1-3");
 		mc = new MapColc(this, res);
 		ms.load();
 		res = null;
