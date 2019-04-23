@@ -58,6 +58,8 @@ public strictfp class MainLocale {
 			String locl = loci + LOC_CODE[MainLocale.lang];
 			if (NAMP.containsKey(locl) && NAMP.get(locl).contains(key)) {
 				String str = NAMP.get(loci + LOC_CODE[MainLocale.lang]).get(key);
+				if (str.equals("(null)"))
+					str = RENS[loc].getString(key);
 				String[] strs = str.split("#");
 				if (strs.length == 1)
 					return str;

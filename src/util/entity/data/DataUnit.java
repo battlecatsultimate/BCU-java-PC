@@ -2,7 +2,6 @@ package util.entity.data;
 
 import io.Reader;
 import main.Printer;
-import util.anim.AnimU;
 import util.unit.Form;
 import util.unit.Unit;
 
@@ -197,11 +196,6 @@ public class DataUnit extends DefaultData implements MaskUnit, Cloneable {
 		for (int i = 0; i < PROC_TOT; i++)
 			ans.proc[i] = proc[i].clone();
 		return ans;
-	}
-
-	@Override
-	protected AnimU getAnim() {
-		return form.anim;
 	}
 
 }

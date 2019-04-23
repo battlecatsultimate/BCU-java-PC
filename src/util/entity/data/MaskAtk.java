@@ -1,8 +1,12 @@
 package util.entity.data;
 
+import util.Data;
+
 public interface MaskAtk {
 
-	public int getDire();
+	public default int getDire() {
+		return 1;
+	}
 
 	public int getLongPoint();
 
@@ -10,6 +14,8 @@ public interface MaskAtk {
 
 	public int getShortPoint();
 
-	public int getTarget();
+	public default int getTarget() {
+		return Data.TCH_N;
+	}
 
 }

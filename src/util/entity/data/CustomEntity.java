@@ -10,8 +10,7 @@ public abstract class CustomEntity extends DataEntity {
 
 	public AtkDataModel rep;
 	public AtkDataModel[] atks;
-	public int tba;
-	public int base;
+	public int tba, base;
 	public boolean common = true;
 
 	@Override
@@ -203,10 +202,10 @@ public abstract class CustomEntity extends DataEntity {
 		type = is.nextInt();
 		width = is.nextInt();
 		shield = is.nextInt();
-		isrange = is.nextByte() == 1;
+		isrange = is.nextByte() > 0;
 		tba = is.nextInt();
 		base = is.nextInt();
-		common = is.nextByte() == 1;
+		common = is.nextByte() > 0;
 		rep = new AtkDataModel(this, is, "0.3.7");
 		int m = is.nextInt();
 		AtkDataModel[] set = new AtkDataModel[m];

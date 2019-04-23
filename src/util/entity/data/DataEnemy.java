@@ -1,7 +1,6 @@
 package util.entity.data;
 
 import main.Printer;
-import util.anim.AnimU;
 import util.basis.Basis;
 import util.unit.Enemy;
 
@@ -153,11 +152,6 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 		if ((type & TB_ALIEN) > 0)
 			return b.t().getAlienMulti();
 		return 1;
-	}
-
-	@Override
-	protected AnimU getAnim() {
-		return enemy.anim;
 	}
 
 }

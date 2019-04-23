@@ -12,7 +12,9 @@ public interface MaskEntity {
 	public int[] getAllProc(int ind);
 
 	/** get the attack animation length */
-	public int getAnimLen();
+	public default int getAnimLen() {
+		return getPack().anim.getAtkLen();
+	}
 
 	public int getAtkCount();
 

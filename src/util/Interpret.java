@@ -57,13 +57,13 @@ public class Interpret extends Data {
 	private static final int[][] CMP = new int[][] { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 2, -1 },
 			{ 0, -1, 3, 1 }, { 0, -1 }, { 0, -1, 1, 4 }, { 0, -1, 1 }, { 5, -1, 7 }, { 0, -1 }, { -1, 4, 6 },
 			{ -1, 1, 5, 6 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { 0, -1 },
-			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 4 }, { 0, -1, 1 }, { 0, -1, 1 } };
+			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 4 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 } };
 
 	/** proc data locator */
 	private static final int[][] LOC = new int[][] { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 1, -1 },
 			{ 0, -1, 2, 1 }, { 0, -1 }, { 0, -1, 1, 2 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { -1, 1, 0 },
 			{ -1, 1, 2, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { 0, -1 },
-			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 2 }, { 0, -1, 3 }, { 0, -1, 1 } };
+			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 2 }, { 0, -1, 3 }, { 0, -1, 1 }, { 0, -1 } };
 
 	/** combo string component */
 	private static final String[][] CDP = new String[][] { { "", "+", "-" }, { "_", "_%", "_f", "Lv._" } };
@@ -73,7 +73,8 @@ public class Interpret extends Data {
 			{ 1, 1 }, { 2, 2 }, {}, { 1, 1 }, { 1, 1 }, { 2, 2 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 },
 			{ 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 } };
 
-	public static final int[] EABIIND = new int[] { 5, 7, 8, 9, 10, 15, 16, 18, 113, 114, 115, 116, 117, 118, 119 };
+	public static final int[] EABIIND = new int[] { 5, 7, 8, 9, 10, 11, 12, 15, 16, 18, 113, 114, 115, 116, 117, 118,
+			119 };
 	public static final int[] ABIIND = new int[] { 113, 114, 115, 116, 117, 118, 119 };
 	public static final int IMUSFT = 13, EFILTER = 8;
 
@@ -316,8 +317,8 @@ public class Interpret extends Data {
 		ABIS = Page.get(3, "a", 22);
 		SABIS = Page.get(3, "sa", 22);
 		ATKCONF = Page.get(3, "aa", 6);
-		PROC = Page.get(3, "p", 26);
-		SPROC = Page.get(3, "sp", 26);
+		PROC = Page.get(3, "p", 27);
+		SPROC = Page.get(3, "sp", 27);
 		TREA = Page.get(3, "t", 36);
 		TEXT = Page.get(3, "d", 8);
 		COMF = Page.get(3, "na", 6);

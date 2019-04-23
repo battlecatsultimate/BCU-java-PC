@@ -22,12 +22,12 @@ class AtkProcTable extends Page {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final int LEN = 15, SEC = 9;
-	private static final int[] INDS = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 20, 21, 22, 23, 24, 25 };
+	private static final int LEN = 16, SEC = 9;
+	private static final int[] INDS = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 20, 21, 22, 23, 24, 25, 26 };
 	private static final int[] TREA = new int[] { 2, 1, 1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 	private static final int[][] STRS = new int[][] { { 0, 1, 2 }, { 0, 1 }, { 0, 1 }, { 0, 9 }, { 0, 4 }, { 0, 1, 3 },
 			{ 0 }, { 0, 1, 2 }, { 0, 1 }, { 0 }, { 0, 1 }, { 0, 1 }, { 0, 5, 2, 9, 6, 1 }, { 0, 7, 8, 1, 2, 10 },
-			{ 0, 1, 5 } };
+			{ 0, 1, 5 }, { 0, 1, 11 } };
 
 	private static String getString(int ind) {
 		if (ind == 0)
@@ -52,6 +52,8 @@ class AtkProcTable extends Page {
 			return "buff";
 		else if (ind == 10)
 			return "itv";
+		else if (ind == 11)
+			return "damage";
 		else
 			return "!";
 	}
