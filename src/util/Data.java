@@ -93,7 +93,7 @@ public class Data {
 	protected static final int AB_WAVES = 1 << 8;
 	protected static final int AB_SNIPERI = 1 << 9;
 	protected static final int AB_TIMEI = 1 << 10;
-
+	protected static final int AB_GHOST = 1 << 11;
 	protected static final int AB_POII = 1 << 12;
 	protected static final int AB_ZKILL = 1 << 13;
 	protected static final int AB_WKILL = 1 << 14;
@@ -121,7 +121,7 @@ public class Data {
 	protected static final int ABI_WAVES = 8;
 	protected static final int ABI_SNIPERI = 9;
 	protected static final int ABI_TIMEI = 10;
-
+	protected static final int ABI_GHOST = 11;
 	protected static final int ABI_POII = 12;
 	protected static final int ABI_ZKILL = 13;
 	protected static final int ABI_WKILL = 14;
@@ -134,12 +134,6 @@ public class Data {
 	protected static final int ABI_MASSIVES = 21;
 
 	protected static final int ABI_TOT = 30;// 20 currently
-
-	// pre 0.3.6
-	@Deprecated
-	protected static final int AB_SLOWI = 1 << 11;
-	@Deprecated
-	protected static final int ABI_SLOWI = 11;
 
 	// proc index
 	protected static final int P_KB = 0;
@@ -341,6 +335,7 @@ public class Data {
 	protected static final int TCH_UG = 4;
 	protected static final int TCH_CORPSE = 8;
 	protected static final int TCH_SOUL = 16;
+	public static final int TCH_EX = 32;
 
 	// After this line all number is game data
 

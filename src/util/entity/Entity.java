@@ -296,8 +296,8 @@ public abstract class Entity extends AbEntity {
 
 		if (atk.getProc(P_POISON)[0] > 0)
 			if ((getAbi() & AB_POII) == 0) {
-				status[P_POISON][0] = atk.getProc(P_POISON)[1];
-				status[P_POISON][1] = atk.getProc(P_POISON)[2];
+				status[P_POISON][0] = atk.getProc(P_POISON)[0];
+				status[P_POISON][1] = atk.getProc(P_POISON)[1] * dmg / atk.atk;
 				getEff(P_POISON);
 			} else
 				getEff(INV);
@@ -517,7 +517,7 @@ public abstract class Entity extends AbEntity {
 		long ext = health * hb % maxH;
 		if (ext == 0)
 			ext = maxH;
-		if (!isBase && damage > 0 && (ext <= damage * hb || health < damage))
+		if (!isBase && damage > 0 && kbTime == 0 && (ext <= damage * hb || health < damage))
 			interrupt(INT_HB, KB_DIS[INT_HB]);
 		health -= damage;
 		if (health > maxH)
@@ -575,15 +575,16 @@ public abstract class Entity extends AbEntity {
 	/** get touch mode bitmask */
 	@Override
 	public int touchable() {
+		int n = (getAbi() & AB_GHOST) > 0 ? TCH_EX : TCH_N;
 		if (dead > 0)
 			return TCH_SOUL;
 		if (status[P_REVIVE][1] > 0)
 			return TCH_CORPSE;
 		if (status[P_BORROW][2] > 0)
-			return data.getTouch() | TCH_UG;
+			return n | TCH_UG;
 		if (kbTime < -1)
 			return TCH_UG;
-		return kbTime == 0 ? TCH_N : TCH_KB;
+		return kbTime == 0 ? n : TCH_KB;
 	}
 
 	/**
@@ -926,7 +927,8 @@ public abstract class Entity extends AbEntity {
 			status[P_SEAL][0]--;
 		if (status[P_POISON][0] > 0) {
 			status[P_POISON][0]--;
-			damage += status[P_POISON][1];
+			if (health > 0)
+				damage += status[P_POISON][1];
 		}
 
 		// update weak

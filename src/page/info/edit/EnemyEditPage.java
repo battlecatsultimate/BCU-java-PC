@@ -6,7 +6,6 @@ import static util.Interpret.IMUSFT;
 import page.JBTN;
 import page.JL;
 import page.JTF;
-import page.JTG;
 import page.Page;
 import page.info.StageFilterPage;
 import page.info.filter.EnemyEditBox;
@@ -21,7 +20,6 @@ public class EnemyEditPage extends EntityEditPage {
 	private final JL ldr = new JL(1, "drop");
 	private final JTF fdr = new JTF();
 	private final JTF fsr = new JTF();
-	private final JTG tch = new JTG(1, "touchable");
 	private final JBTN vene = new JBTN(0, "vene");
 	private final JBTN appr = new JBTN(0, "stage");
 	private final JBTN impt = new JBTN(0, "import");
@@ -64,14 +62,12 @@ public class EnemyEditPage extends EntityEditPage {
 		set(fsr);
 		super.ini();
 		add(eeb);
-		add(tch);
 		add(vene);
 		add(appr);
 		add(impt);
 		add(vuni);
 		appr.setLnr(x -> changePanel(new StageFilterPage(getThis(), ene.findApp())));
 		subListener(impt, vuni, vene, ene);
-
 	}
 
 	@Override
@@ -93,7 +89,6 @@ public class EnemyEditPage extends EntityEditPage {
 		super.setData(data);
 		fsr.setText("star: " + ce.star);
 		fdr.setText("" + (int) (ce.getDrop() * bas.t().getDropMulti()));
-
 		int imu = 0;
 		for (int i = 0; i < EABIIND.length; i++)
 			if (EABIIND[i] > 100) {

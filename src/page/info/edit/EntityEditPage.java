@@ -146,11 +146,9 @@ public abstract class EntityEditPage extends Page {
 		set(fsp);
 		set(fra);
 		set(ftb);
-		// set(fdr);
 		set(fsh);
 		set(fwd);
 		set(fbs);
-		// set(fsr);
 		ljp.end();
 		add(jspi);
 		add(aet);

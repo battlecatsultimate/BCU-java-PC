@@ -26,8 +26,11 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	protected final Object[] acs;
 	protected final boolean range;
 
+	private final double ratk;
+
 	protected AtkModelEntity(Entity ent, double d0) {
 		super(ent.basis);
+		ratk = d0;
 		e = ent;
 		data = e.data;
 		int[][] raw = data.rawAtkData();
@@ -145,6 +148,10 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		if (b.r.nextDouble() * 100 < getProc(ind, P_WEAK, 0)) {
 			proc[P_WEAK][0] = getProc(ind, P_WEAK, 1);
 			proc[P_WEAK][1] = getProc(ind, P_WEAK, 2);
+		}
+		if (b.r.nextDouble() * 100 < getProc(ind, P_POISON, 0)) {
+			proc[P_POISON][0] = getProc(ind, P_POISON, 1);
+			proc[P_POISON][1] = (int) (getProc(ind, P_POISON, 2) * ratk);
 		}
 		if (b.r.nextDouble() * 100 < getProc(ind, P_MOVEWAVE, 0))
 			for (int i = 0; i < PROC_WIDTH; i++)

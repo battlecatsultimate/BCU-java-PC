@@ -10,7 +10,7 @@ public abstract class CustomEntity extends DataEntity {
 
 	public AtkDataModel rep;
 	public AtkDataModel[] atks;
-	public int tba, base, touch;
+	public int tba, base;
 	public boolean common = true;
 
 	@Override
@@ -89,11 +89,6 @@ public abstract class CustomEntity extends DataEntity {
 	@Override
 	public int getTBA() {
 		return tba;
-	}
-
-	@Override
-	public int getTouch() {
-		return touch;
 	}
 
 	public void importData(MaskEntity de) {
@@ -207,10 +202,10 @@ public abstract class CustomEntity extends DataEntity {
 		type = is.nextInt();
 		width = is.nextInt();
 		shield = is.nextInt();
-		isrange = is.nextByte() == 1;
+		isrange = is.nextByte() > 0;
 		tba = is.nextInt();
 		base = is.nextInt();
-		common = is.nextByte() == 1;
+		common = is.nextByte() > 0;
 		rep = new AtkDataModel(this, is, "0.3.7");
 		int m = is.nextInt();
 		AtkDataModel[] set = new AtkDataModel[m];

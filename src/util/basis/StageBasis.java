@@ -167,10 +167,7 @@ public abstract class StageBasis extends Data {
 			if (time % 2 == 1 && ebase.health > 0 && allow > 0) {
 				EEnemy e = est.allow();
 				if (e != null) {
-					if (e.mark == 1)
-						e.added(1, 801);
-					else
-						e.added(1, 700);
+					e.added(1, e.mark == 1 ? 801 : 700);
 					le.add(e);
 				}
 			}

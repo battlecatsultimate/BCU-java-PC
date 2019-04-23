@@ -107,7 +107,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		if (val < 307) {
 			if ((abi & AB_MOVEI) > 0)
 				rep.proc[P_IMUWAVE][0] = 100;
-			if ((abi & AB_SLOWI) > 0)
+			if ((abi & AB_GHOST) > 0)
 				rep.proc[P_IMUSLOW][0] = 100;
 			if ((abi & AB_POII) > 0)
 				rep.proc[P_IMUWEAK][0] = 100;
