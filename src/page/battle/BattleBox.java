@@ -2,6 +2,7 @@ package page.battle;
 
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -9,6 +10,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 import main.Timer;
+import util.Converter;
+import util.Data;
 import util.ImgCore;
 import util.Res;
 import util.basis.StageBasis;
@@ -145,7 +148,7 @@ public class BattleBox extends Canvas {
 		Point rect = new Point(w, h);
 		sb.bg.draw(gra, rect, pos, midh, siz);
 		drawCastle(gra);
-		drawEntity(gra);
+		drawEntity(gra, img);
 		drawBtm(gra);
 		drawTop(gra);
 		gra.dispose();
@@ -315,14 +318,14 @@ public class BattleBox extends Canvas {
 		gra.drawImage(bimg, posx, posy, bw, bh, null);
 	}
 
-	private void drawEntity(Graphics2D gra) {
+	private void drawEntity(Graphics2D gra, BufferedImage img) {
 		AffineTransform at = gra.getTransform();
 		double psiz = siz * sprite;
 		ImgCore.battle = true;
 		for (int i = 0; i < 10; i++) {
 			int dep = i * DEP;
 			for (Entity e : sb.le)
-				if (e.layer == i) {
+				if (e.layer == i && (sb.s_stop == 0 || (e.getAbi() & Data.AB_TIMEI) == 0)) {
 					gra.setTransform(at);
 					double p = getX(e.pos);
 					double y = midh - (road_h - dep) * siz;
@@ -356,6 +359,25 @@ public class BattleBox extends Canvas {
 			ori = new P(getX(sb.sniper.getPos()), midh - road_h * siz);
 			sb.sniper.drawBase(gra, ori, psiz);
 			gra.setTransform(at);
+		}
+
+		if (sb.s_stop > 0) {
+			Composite c = gra.getComposite();
+			gra.setComposite(new Converter(0));
+			gra.fillRect(0, 0, img.getWidth(), img.getHeight());
+			gra.setComposite(c);
+			for (int i = 0; i < 10; i++) {
+				int dep = i * DEP;
+				for (Entity e : sb.le)
+					if (e.layer == i && (e.getAbi() & Data.AB_TIMEI) > 0) {
+						gra.setTransform(at);
+						double p = getX(e.pos);
+						double y = midh - (road_h - dep) * siz;
+						e.draw(gra, new P(p, y), psiz);
+						gra.setTransform(at);
+						e.drawEff(gra, new P(p, y), siz);
+					}
+			}
 		}
 		ImgCore.battle = false;
 	}

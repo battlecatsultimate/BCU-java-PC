@@ -92,7 +92,7 @@ public class Data {
 	protected static final int AB_MOVEI = 1 << 7;
 	protected static final int AB_WAVES = 1 << 8;
 	protected static final int AB_SNIPERI = 1 << 9;
-	protected static final int AB_TIMEI = 1 << 10;
+	public static final int AB_TIMEI = 1 << 10;
 	protected static final int AB_GHOST = 1 << 11;
 	protected static final int AB_POII = 1 << 12;
 	protected static final int AB_ZKILL = 1 << 13;
