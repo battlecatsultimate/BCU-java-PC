@@ -517,7 +517,7 @@ public abstract class Entity extends AbEntity {
 		long ext = health * hb % maxH;
 		if (ext == 0)
 			ext = maxH;
-		if (!isBase && damage > 0 && kbTime == 0 && (ext <= damage * hb || health < damage))
+		if (!isBase && damage > 0 && kbTime <= 0&&kbTime!=-1 && (ext <= damage * hb || health < damage))
 			interrupt(INT_HB, KB_DIS[INT_HB]);
 		health -= damage;
 		if (health > maxH)
@@ -699,8 +699,11 @@ public abstract class Entity extends AbEntity {
 			if (preID == multi)
 				waitTime = data.getTBA();
 		}
-		if (status[P_BORROW][2] > 0)
+		if (kbTime<-1||status[P_BORROW][2] > 0) {
 			status[P_BORROW][2] = 0;
+			bdist=0;
+			kbTime=0;
+		}
 		if (status[P_REVIVE][1] > 0) {
 			status[P_REVIVE][1] = 0;
 			corpse = null;
@@ -804,7 +807,7 @@ public abstract class Entity extends AbEntity {
 
 		if (kbTime == 0 && touch && status[P_BORROW][0] != 0) {
 			double[] ds = aam.touchRange();
-			if (!basis.inRange(TCH_N, dire, ds[0], ds[1]).contains(basis.ubase)) {
+			if (!basis.inRange(data.getTouch(), dire, ds[0], ds[1]).contains(basis.ubase)) {
 				// setup burrow state
 				status[P_BORROW][0]--;
 				anim.changeAnim(4);
@@ -967,7 +970,7 @@ public abstract class Entity extends AbEntity {
 	private void updateTouch() {
 		touch = true;
 		double[] ds = aam.touchRange();
-		List<AbEntity> le = basis.inRange(TCH_N, dire, ds[0], ds[1]);
+		List<AbEntity> le = basis.inRange(data.getTouch(), dire, ds[0], ds[1]);
 		boolean blds = false;
 		if (data.isLD()) {
 			double bpos = basis.getBase(dire).pos;

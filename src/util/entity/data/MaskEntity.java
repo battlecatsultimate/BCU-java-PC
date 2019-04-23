@@ -1,6 +1,7 @@
 package util.entity.data;
 
 import util.Animable;
+import util.Data;
 import util.anim.AnimU;
 
 public interface MaskEntity {
@@ -14,6 +15,10 @@ public interface MaskEntity {
 	/** get the attack animation length */
 	public default int getAnimLen() {
 		return getPack().anim.getAtkLen();
+	}
+	
+	public default int getTouch() {
+		return Data.TCH_N;
 	}
 
 	public int getAtkCount();

@@ -58,6 +58,7 @@ public abstract class EntityEditPage extends Page {
 	private final JL lsh = new JL(1, "shield");
 	private final JL ltb = new JL(1, "TBA");
 	private final JL lbs = new JL(1, "tbase");
+	private final JL ltp = new JL(1, "type");
 	private final JTF fhp = new JTF();
 	private final JTF fhb = new JTF();
 	private final JTF fsp = new JTF();
@@ -66,6 +67,7 @@ public abstract class EntityEditPage extends Page {
 	private final JTF fsh = new JTF();
 	private final JTF ftb = new JTF();
 	private final JTF fbs = new JTF();
+	private final JTF ftp = new JTF();
 	private final JTG isr = new JTG(1, "isr");
 	private final JList<String> jli = new JList<>();
 	private final JScrollPane jspi = new JScrollPane(jli);
@@ -135,20 +137,22 @@ public abstract class EntityEditPage extends Page {
 		set(lhp);
 		set(lhb);
 		set(lsp);
-		set(lra);
 		set(lwd);
 		set(lsh);
+		set(lra);
 		set(ltb);
 		set(lbs);
+		set(ltp);
 
 		set(fhp);
 		set(fhb);
 		set(fsp);
-		set(fra);
-		set(ftb);
 		set(fsh);
 		set(fwd);
+		set(fra);
+		set(ftb);
 		set(fbs);
+		set(ftp);
 		ljp.end();
 		add(jspi);
 		add(aet);
@@ -208,32 +212,36 @@ public abstract class EntityEditPage extends Page {
 	protected void resized(int x, int y) {
 		setSize(x, y);
 		set(back, x, y, 0, 0, 200, 50);
-		set(lhp, x, y, 50, 100, 100, 50);
-		set(fhp, x, y, 150, 100, 200, 50);
-		set(lhb, x, y, 50, 150, 100, 50);
-		set(fhb, x, y, 150, 150, 200, 50);
-		set(lsp, x, y, 50, 200, 100, 50);
-		set(fsp, x, y, 150, 200, 200, 50);
-		set(lra, x, y, 50, 250, 100, 50);
-		set(fra, x, y, 150, 250, 200, 50);
-		set(ltb, x, y, 50, 300, 100, 50);
-		set(ftb, x, y, 150, 300, 200, 50);
-		set(isr, x, y, 50, 400, 300, 50);
-		set(lsh, x, y, 50, 450, 100, 50);
-		set(fsh, x, y, 150, 450, 200, 50);
-		set(lwd, x, y, 50, 500, 100, 50);
-		set(fwd, x, y, 150, 500, 200, 50);
-		set(lbs, x, y, 50, 550, 100, 50);
-		set(fbs, x, y, 150, 550, 200, 50);
+		set(lhp, x, y, 50, 150, 100, 50);
+		set(fhp, x, y, 150, 150, 200, 50);
+		set(lhb, x, y, 50, 200, 100, 50);
+		set(fhb, x, y, 150, 200, 200, 50);
+		set(lsp, x, y, 50, 250, 100, 50);
+		set(fsp, x, y, 150, 250, 200, 50);
+		set(lsh, x, y, 50, 300, 100, 50);
+		set(fsh, x, y, 150, 300, 200, 50);
+		set(lwd, x, y, 50, 350, 100, 50);
+		set(fwd, x, y, 150, 350, 200, 50);
 
 		set(mpt, x, y, 50, 650, 300, 600);
-		set(jspi, x, y, 650, 50, 200, 300);
-		set(add, x, y, 650, 400, 200, 50);
-		set(rem, x, y, 650, 500, 200, 50);
-		set(copy, x, y, 650, 600, 200, 50);
-		set(link, x, y, 650, 700, 200, 50);
-		set(atkn, x, y, 650, 800, 200, 50);
-		set(comm, x, y, 650, 900, 200, 50);
+		
+		set(jspi, x, y, 550, 50, 300, 350);
+		set(add, x, y, 550, 400, 300, 50);
+		set(rem, x, y, 550, 450, 300, 50);
+		set(copy, x, y, 550, 500, 300, 50);
+		set(link, x, y, 550, 550, 300, 50);
+		set(comm, x, y, 550, 600, 300, 50);
+		set(atkn, x, y, 550, 650, 300, 50);
+		
+		set(lra, x, y, 550, 750, 100, 50);
+		set(fra, x, y, 650, 750, 200, 50);
+		set(ltb, x, y, 550, 800, 100, 50);
+		set(ftb, x, y, 650, 800, 200, 50);
+		set(isr, x, y, 550, 850, 300, 50);
+		set(lbs, x, y, 550, 900, 100, 50);
+		set(fbs, x, y, 650, 900, 200, 50);
+		set(ltp, x, y, 550, 950, 100, 50);
+		set(ftp, x, y, 650, 950, 200, 50);
 
 		set(aet, x, y, 900, 50, 1400, 1000);
 
@@ -276,6 +284,7 @@ public abstract class EntityEditPage extends Page {
 		isr.setSelected(ce.isrange);
 		vpst.setText("" + ce.getPost());
 		vitv.setText("" + ce.getItv());
+		ftp.setText(""+ce.touch);
 		comm.setSelected(data.common);
 		mpt.setData(ce.rep.proc);
 		String[] ints = new String[ce.atks.length];
@@ -475,6 +484,11 @@ public abstract class EntityEditPage extends Page {
 				if (v < 0)
 					v = 0;
 				ce.base = v;
+			}
+			if (jtf == ftp) {
+				if (v < 1)
+					v = 1;
+				ce.touch = v;
 			}
 			getInput(jtf, v);
 		}

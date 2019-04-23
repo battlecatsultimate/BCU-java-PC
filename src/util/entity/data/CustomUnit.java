@@ -64,7 +64,7 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 
 	@Override
 	public void write(OutStream os) {
-		os.writeString("0.3.8");
+		os.writeString("0.4.0");
 		super.write(os);
 		os.writeInt(price);
 		os.writeInt(resp);
@@ -72,7 +72,9 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 
 	private void zread(int val, InStream is) {
 		val = getVer(is.nextString());
-		if (val >= 308)
+		if (val >= 400)
+			zread$000400(is);
+		else if (val >= 308)
 			zread$000308(is);
 		else if (val >= 307)
 			zread$000307(is);
@@ -96,11 +98,11 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 		price = is.nextInt();
 		resp = is.nextInt();
 		common = is.nextByte() == 1;
-		rep = new AtkDataModel(this, is, "0.3.7");
+		rep = new AtkDataModel(this, is);
 		int m = is.nextByte();
 		AtkDataModel[] set = new AtkDataModel[m];
 		for (int i = 0; i < m; i++)
-			set[i] = new AtkDataModel(this, is, "0.3.7");
+			set[i] = new AtkDataModel(this, is);
 		int n = is.nextByte();
 		atks = new AtkDataModel[n];
 		for (int i = 0; i < n; i++)
@@ -109,6 +111,12 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 
 	private void zread$000308(InStream is) {
 		zreada$000308(is);
+		price = is.nextInt();
+		resp = is.nextInt();
+	}
+	
+	private void zread$000400(InStream is) {
+		zreada(is);
 		price = is.nextInt();
 		resp = is.nextInt();
 	}
