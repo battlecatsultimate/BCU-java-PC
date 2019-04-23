@@ -224,7 +224,7 @@ public abstract class EntityEditPage extends Page {
 		set(fwd, x, y, 150, 350, 200, 50);
 
 		set(mpt, x, y, 50, 650, 300, 600);
-		
+
 		set(jspi, x, y, 550, 50, 300, 350);
 		set(add, x, y, 550, 400, 300, 50);
 		set(rem, x, y, 550, 450, 300, 50);
@@ -232,7 +232,7 @@ public abstract class EntityEditPage extends Page {
 		set(link, x, y, 550, 550, 300, 50);
 		set(comm, x, y, 550, 600, 300, 50);
 		set(atkn, x, y, 550, 650, 300, 50);
-		
+
 		set(lra, x, y, 550, 750, 100, 50);
 		set(fra, x, y, 650, 750, 200, 50);
 		set(ltb, x, y, 550, 800, 100, 50);
@@ -284,7 +284,7 @@ public abstract class EntityEditPage extends Page {
 		isr.setSelected(ce.isrange);
 		vpst.setText("" + ce.getPost());
 		vitv.setText("" + ce.getItv());
-		ftp.setText(""+ce.touch);
+		ftp.setText("" + ce.touch);
 		comm.setSelected(data.common);
 		mpt.setData(ce.rep.proc);
 		String[] ints = new String[ce.atks.length];

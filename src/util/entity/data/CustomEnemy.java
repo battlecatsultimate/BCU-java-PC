@@ -212,7 +212,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		star = is.nextByte();
 		drop = is.nextInt();
 	}
-	
+
 	private void zread$000400(InStream is) {
 		zreada(is);
 		star = is.nextByte();

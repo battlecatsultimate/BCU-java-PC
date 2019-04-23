@@ -114,7 +114,7 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 		price = is.nextInt();
 		resp = is.nextInt();
 	}
-	
+
 	private void zread$000400(InStream is) {
 		zreada(is);
 		price = is.nextInt();

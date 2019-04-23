@@ -174,7 +174,7 @@ public abstract class Entity extends AbEntity {
 	/** accept attack */
 	@Override
 	public void damaged(AttackAb atk) {
-		int dmg = getDamage(atk);
+		int dmg = getDamage(atk, atk.atk);
 		// if immune to wave and the attack is wave, jump out
 		if (atk.waveType == WT_WAVE) {
 			if (getProc(P_IMUWAVE, 0) > 0)
@@ -195,7 +195,7 @@ public abstract class Entity extends AbEntity {
 			if (atk.getProc(P_BREAK)[0] > 0) {
 				barrier = 0;
 				getEff(BREAK_ABI);
-			} else if (getDamage(atk) >= barrier) {
+			} else if (getDamage(atk, atk.atk) >= barrier) {
 				barrier = 0;
 				getEff(BREAK_ATK);
 				return;
@@ -297,7 +297,7 @@ public abstract class Entity extends AbEntity {
 		if (atk.getProc(P_POISON)[0] > 0)
 			if ((getAbi() & AB_POII) == 0) {
 				status[P_POISON][0] = atk.getProc(P_POISON)[0];
-				status[P_POISON][1] = atk.getProc(P_POISON)[1] * dmg / atk.atk;
+				status[P_POISON][1] = getDamage(atk, atk.getProc(P_POISON)[1]);
 				getEff(P_POISON);
 			} else
 				getEff(INV);
@@ -517,7 +517,7 @@ public abstract class Entity extends AbEntity {
 		long ext = health * hb % maxH;
 		if (ext == 0)
 			ext = maxH;
-		if (!isBase && damage > 0 && kbTime <= 0&&kbTime!=-1 && (ext <= damage * hb || health < damage))
+		if (!isBase && damage > 0 && kbTime <= 0 && kbTime != -1 && (ext <= damage * hb || health < damage))
 			interrupt(INT_HB, KB_DIS[INT_HB]);
 		health -= damage;
 		if (health > maxH)
@@ -699,10 +699,10 @@ public abstract class Entity extends AbEntity {
 			if (preID == multi)
 				waitTime = data.getTBA();
 		}
-		if (kbTime<-1||status[P_BORROW][2] > 0) {
+		if (kbTime < -1 || status[P_BORROW][2] > 0) {
 			status[P_BORROW][2] = 0;
-			bdist=0;
-			kbTime=0;
+			bdist = 0;
+			kbTime = 0;
 		}
 		if (status[P_REVIVE][1] > 0) {
 			status[P_REVIVE][1] = 0;
@@ -711,7 +711,7 @@ public abstract class Entity extends AbEntity {
 	}
 
 	/** determine the amount of damage received from this attack */
-	protected abstract int getDamage(AttackAb atk);
+	protected abstract int getDamage(AttackAb atk, int ans);
 
 	/** get the extra proc time due to fruits, for EEnemy only */
 	protected double getFruit() {

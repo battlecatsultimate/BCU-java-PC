@@ -30,8 +30,7 @@ public class EUnit extends Entity {
 	}
 
 	@Override
-	protected int getDamage(AttackAb atk) {
-		int ans = atk.atk;
+	protected int getDamage(AttackAb atk, int ans) {
 		int overlap = type & atk.type;
 		if (overlap != 0 && (getAbi() & AB_GOOD) != 0)
 			ans *= basis.b.t().getGOODDEF(overlap);

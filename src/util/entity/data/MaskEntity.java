@@ -16,10 +16,6 @@ public interface MaskEntity {
 	public default int getAnimLen() {
 		return getPack().anim.getAtkLen();
 	}
-	
-	public default int getTouch() {
-		return Data.TCH_N;
-	}
 
 	public int getAtkCount();
 
@@ -53,6 +49,10 @@ public interface MaskEntity {
 
 	/** get waiting time */
 	public int getTBA();
+
+	public default int getTouch() {
+		return Data.TCH_N;
+	}
 
 	public int getType();
 
