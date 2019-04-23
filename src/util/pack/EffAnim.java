@@ -65,8 +65,7 @@ public class EffAnim extends AnimD {
 		VImg vseal = new VImg("./org/battle/s3/skill003.png");
 		excColor(vseal.getImg(), (is) -> (is[0] << 24 | is[1] << 16 | is[3] << 8 | is[2]));
 		effas[A_SEAL] = new EffAnim(stfs[3] + ski + "curse", vseal, icfs[3], temp);
-		VImg vpois = new VImg("./org/battle/s3/skill003.png");// TODO poison.png
-		excColor(vpois.getImg(), (is) -> (is[0] << 24 | is[2] << 16 | is[1] << 8 | is[3]));
+		VImg vpois = new VImg("./org/battle/s3/poison.png");
 		effas[A_POISON] = new EffAnim(stfs[3] + ski + "curse", vpois, icfs[3], temp);
 		String strs = "./org/battle/sniper/";
 		String strm = "img043";
