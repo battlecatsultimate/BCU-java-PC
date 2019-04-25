@@ -50,6 +50,8 @@ public class EditHead extends Page {
 	public void review() {
 		undo.setEnabled(anim != null && anim.getAnimC().history.size() > 1);
 		cur.callBack("review");
+		if (anim != null)
+			undo.setToolTipText(anim.getAnimC().getUndo());
 	}
 
 	public void setAnim(DIYAnim da) {

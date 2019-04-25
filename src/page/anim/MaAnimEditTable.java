@@ -98,7 +98,7 @@ public class MaAnimEditTable extends AnimTable<Part> {
 		}
 		ma.parts = l.toArray(new Part[0]);
 		ma.n = ma.parts.length;
-		anim.unSave();
+		anim.unSave("maanim paste part");
 		page.callBack(new int[] { 0, ind, ind + data.length - 1 });
 		return true;
 	}
@@ -125,7 +125,7 @@ public class MaAnimEditTable extends AnimTable<Part> {
 			if (ma.parts[i] != null)
 				l.add(ma.parts[i]);
 		ma.parts = l.toArray(new Part[0]);
-		anim.unSave();
+		anim.unSave("maanim reorder part");
 		page.callBack(new int[] { 0, ind, ind + ori.length - 1 });
 		return true;
 	}
@@ -137,7 +137,7 @@ public class MaAnimEditTable extends AnimTable<Part> {
 		c = lnk[c];
 		if (c == 3) {
 			ma.parts[r].name = ((String) val).trim();
-			anim.unSave();
+			anim.unSave("maanim edit name");
 			return;
 		}
 		int v = (int) val;
@@ -154,7 +154,7 @@ public class MaAnimEditTable extends AnimTable<Part> {
 		ma.parts[r].ints[c] = v;
 		ma.parts[r].validate();
 		ma.validate();
-		anim.unSave();
+		anim.unSave("maanim edit part");
 		page.callBack(null);
 	}
 

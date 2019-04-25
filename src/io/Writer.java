@@ -3,7 +3,6 @@ package io;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -106,8 +105,8 @@ public class Writer extends DataIO {
 		check(f);
 		PrintStream out = null;
 		try {
-			out = new PrintStream(f);
-		} catch (FileNotFoundException e) {
+			out = new PrintStream(f, "UTF-8");
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return out;

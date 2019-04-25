@@ -428,7 +428,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				else
 					ic.cuts[ic.n - 1] = new int[] { 0, 0, 1, 1 };
 				ic.strs[ic.n - 1] = "";
-				icet.anim.unSave();
+				icet.anim.unSave("imgcut add line");
 				resized();
 				lsm.setSelectionInterval(ic.n - 1, ic.n - 1);
 				int h = icet.getRowHeight();
@@ -468,7 +468,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 								if (ints[1] > ind)
 									ints[1]--;
 				icet.anim.ICedited();
-				icet.anim.unSave();
+				icet.anim.unSave("imgcut remove line");
 				if (ind >= ic.n)
 					ind--;
 				lsm.setSelectionInterval(ind, ind);

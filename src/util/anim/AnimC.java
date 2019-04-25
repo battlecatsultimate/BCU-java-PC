@@ -40,7 +40,7 @@ public class AnimC extends AnimU {
 	private boolean saved = false;
 	public boolean inPool;
 	public EditHead link;
-	public Stack<OutStream> history = new Stack<>();
+	public Stack<History> history = new Stack<>();
 	public String name = "";
 	public String prev;
 
@@ -125,11 +125,15 @@ public class AnimC extends AnimU {
 		saveIcon();
 		uni = ori.uni;
 		saveUni();
-		history();
+		history("initial");
 	}
 
 	public void delete() {
 		Writer.delete(new File(prev + name + "/"));
+	}
+
+	public String getUndo() {
+		return history.peek().name;
 	}
 
 	public void hardSave(String str) {
@@ -172,7 +176,7 @@ public class AnimC extends AnimU {
 				edi.check();
 			if (uni != null)
 				uni.check();
-			history();
+			history("initial");
 		} catch (Exception e) {
 			Opts.loadErr("Error in loading custom animation: " + name);
 			e.printStackTrace();
@@ -195,12 +199,12 @@ public class AnimC extends AnimU {
 		saveImg();
 		saveIcon();
 		saveUni();
-		unSave();
+		unSave("rename (not applicapable for undo)");
 	}
 
 	public void restore() {
 		history.pop();
-		InStream is = history.peek().translate();
+		InStream is = history.peek().data.translate();
 		imgcut.restore(is);
 		ICedited();
 		mamodel.restore(is);
@@ -210,13 +214,21 @@ public class AnimC extends AnimU {
 			anims[i] = new MaAnim();
 			anims[i].restore(is);
 		}
+		is = history.peek().mms.translate();
+		n = is.nextInt();
+		for (int i = 0; i < n; i++) {
+			int ind = is.nextInt();
+			int val = is.nextInt();
+			if (ind >= 0 && ind < mamodel.n)
+				mamodel.status.put(mamodel.parts[ind], val);
+		}
 		saved = false;
 	}
 
 	@Override
 	public void revert() {
 		super.revert();
-		unSave();
+		unSave("revert");
 	}
 
 	public void save() {
@@ -274,11 +286,26 @@ public class AnimC extends AnimU {
 		return name;
 	}
 
-	public void unSave() {
+	public void unSave(String str) {
 		saved = false;
-		history();
+		history(str);
 		if (link != null)
 			link.review();
+	}
+
+	public void updateStatus() {
+		OutStream mms = new OutStream();
+		mms.writeInt(mamodel.status.size());
+		mamodel.status.forEach((d, s) -> {
+			int ind = -1;
+			for (int i = 0; i < mamodel.n; i++)
+				if (mamodel.parts[i] == d)
+					ind = i;
+			mms.writeInt(ind);
+			mms.writeInt(s);
+		});
+		mms.terminate();
+		history.peek().mms = mms;
 	}
 
 	public OutStream write() {
@@ -348,7 +375,7 @@ public class AnimC extends AnimU {
 		}
 	}
 
-	private void history() {
+	private void history(String str) {
 		OutStream os = new OutStream();
 		imgcut.write(os);
 		mamodel.write(os);
@@ -356,7 +383,9 @@ public class AnimC extends AnimU {
 		for (MaAnim ma : anims)
 			ma.write(os);
 		os.terminate();
-		history.push(os);
+		History h = new History(str, os);
+		history.push(h);
+		updateStatus();
 	}
 
 	private void save$g(String pre, int type, int para) {
@@ -408,6 +437,21 @@ public class AnimC extends AnimU {
 			save$mm(pre);
 		if (type == 2)
 			save$ma(pre, para);
+	}
+
+}
+
+class History {
+
+	protected final OutStream data;
+
+	protected final String name;
+
+	protected OutStream mms;
+
+	protected History(String str, OutStream os) {
+		name = str;
+		data = os;
 	}
 
 }

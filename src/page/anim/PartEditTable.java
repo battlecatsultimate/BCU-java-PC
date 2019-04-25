@@ -97,7 +97,7 @@ class PartEditTable extends AnimTable<int[]> {
 		part.n = part.moves.length;
 		part.validate();
 		part.check(anim);
-		anim.unSave();
+		anim.unSave("maanim paste line");
 		page.callBack(new int[] { 1, ind, ind + data.length - 1 });
 		return true;
 	}
@@ -126,7 +126,7 @@ class PartEditTable extends AnimTable<int[]> {
 		part.moves = l.toArray(new int[0][]);
 		part.validate();
 		part.check(anim);
-		anim.unSave();
+		anim.unSave("maanim reorder line");
 		page.callBack(new int[] { 1, ind, ind + ori.length - 1 });
 		return true;
 	}
@@ -151,7 +151,7 @@ class PartEditTable extends AnimTable<int[]> {
 		part.moves[r][c] = v;
 		part.validate();
 		ma.validate();
-		anim.unSave();
+		anim.unSave("maanim edit line");
 		page.callBack(null);
 	}
 
