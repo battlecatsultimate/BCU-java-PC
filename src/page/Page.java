@@ -139,8 +139,12 @@ public abstract class Page extends JPanel {
 		return this;
 	}
 
-	protected boolean isAdjusting() {
+	protected boolean isAdj() {
 		return adjusting > 0;
+	}
+
+	protected void change(boolean b) {
+		adjusting += b ? 1 : -1;
 	}
 
 	protected void keyPressed(KeyEvent e) {

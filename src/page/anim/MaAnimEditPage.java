@@ -265,7 +265,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
-				if (isAdjusting() || jlu.getValueIsAdjusting())
+				if (isAdj() || jlu.getValueIsAdjusting())
 					return;
 				setA(jlu.getSelectedValue());
 			}
@@ -276,7 +276,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
-				if (isAdjusting() || jlt.getValueIsAdjusting())
+				if (isAdj() || jlt.getValueIsAdjusting())
 					return;
 				DIYAnim da = jlu.getSelectedValue();
 				int ind = jlt.getSelectedIndex();
@@ -289,7 +289,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
-				if (isAdjusting() || jlp.getValueIsAdjusting())
+				if (isAdj() || jlp.getValueIsAdjusting())
 					return;
 				sb.sele = jlp.getSelectedIndex();
 			}
@@ -300,7 +300,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
-				if (isAdjusting() || jlm.getValueIsAdjusting() || maet.ma == null)
+				if (isAdj() || jlm.getValueIsAdjusting() || maet.ma == null)
 					return;
 				int ind = jlm.getSelectedIndex();
 				for (int i = 0; i < maet.ma.n; i++)
@@ -322,7 +322,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				if (isAdjusting() || lsm.getValueIsAdjusting())
+				if (isAdj() || lsm.getValueIsAdjusting())
 					return;
 				int ind = maet.getSelectedRow();
 				change(ind, i -> setC(i));
@@ -416,7 +416,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				if (isAdjusting() || lsm.getValueIsAdjusting())
+				if (isAdj() || lsm.getValueIsAdjusting())
 					return;
 				setD(lsm.getLeadSelectionIndex());
 			}
@@ -497,7 +497,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		jtl.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
-				if (isAdjusting() || !pause)
+				if (isAdj() || !pause)
 					return;
 				ab.ent.setTime(jtl.getValue());
 			}
