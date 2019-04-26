@@ -30,15 +30,7 @@ public class AtkModelEnemy extends AtkModelEntity {
 	}
 
 	@Override
-	protected int getProc(int ind, int type, int ety) {
-		if (e.status[P_CURSE][0] > 0 && (type == P_KB || type == P_STOP || type == P_SLOW || type == P_WEAK
-				|| type == P_WARP || type == P_CURSE || type == P_SNIPER || type == P_SEAL))
-			return 0;
-		return super.getProc(ind, type, ety);
-	}
-
-	@Override
-	public void summon(int[] proc, Entity ent,Object acs) {
+	public void summon(int[] proc, Entity ent, Object acs) {
 		AbEnemy ene = EnemyStore.getAbEnemy(proc[1], false);
 		int conf = proc[4];
 		int time = proc[5];
@@ -77,6 +69,14 @@ public class AtkModelEnemy extends AtkModelEntity {
 				ee.kbTime = -3;
 		}
 
+	}
+
+	@Override
+	protected int getProc(int ind, int type, int ety) {
+		if (e.status[P_CURSE][0] > 0 && (type == P_KB || type == P_STOP || type == P_SLOW || type == P_WEAK
+				|| type == P_WARP || type == P_CURSE || type == P_SNIPER || type == P_SEAL))
+			return 0;
+		return super.getProc(ind, type, ety);
 	}
 
 }

@@ -36,22 +36,7 @@ public class AtkModelUnit extends AtkModelEntity {
 	}
 
 	@Override
-	protected int getProc(int ind, int type, int ety) {
-		int ans = super.getProc(ind, type, ety);
-		if (type == P_STOP && ety == 1)
-			ans = ans * (100 + bas.getInc(C_STOP)) / 100;
-		if (type == P_SLOW && ety == 1)
-			ans = ans * (100 + bas.getInc(C_SLOW)) / 100;
-		if (type == P_WEAK && ety == 1)
-			ans = ans * (100 + bas.getInc(C_WEAK)) / 100;
-		if (type == P_CRIT && ety == 0 && ans > 0)
-			ans += bas.getInc(C_CRIT);
-		// TODO treasure for unit Warp
-		return ans;
-	}
-
-	@Override
-	public void summon(int[] proc,Entity ent, Object acs) {
+	public void summon(int[] proc, Entity ent, Object acs) {
 
 		Unit u = UnitStore.get(proc[1], true);
 		int conf = proc[4];
@@ -83,6 +68,21 @@ public class AtkModelUnit extends AtkModelEntity {
 				eu.kbTime = -3;
 		}
 
+	}
+
+	@Override
+	protected int getProc(int ind, int type, int ety) {
+		int ans = super.getProc(ind, type, ety);
+		if (type == P_STOP && ety == 1)
+			ans = ans * (100 + bas.getInc(C_STOP)) / 100;
+		if (type == P_SLOW && ety == 1)
+			ans = ans * (100 + bas.getInc(C_SLOW)) / 100;
+		if (type == P_WEAK && ety == 1)
+			ans = ans * (100 + bas.getInc(C_WEAK)) / 100;
+		if (type == P_CRIT && ety == 0 && ans > 0)
+			ans += bas.getInc(C_CRIT);
+		// TODO treasure for unit Warp
+		return ans;
 	}
 
 }

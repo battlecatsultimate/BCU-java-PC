@@ -96,6 +96,16 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	}
 
 	@Override
+	public void invokeLater(AttackAb atk, Entity e) {
+		if (atk.getProc(P_SUMMON)[0] > 0) {
+			int[] proc = atk.getProc(P_SUMMON);
+			int conf = proc[4];
+			if ((conf & 64) > 0 || (conf & 128) > 0 && e.health <= 0)
+				summon(proc, e, e);
+		}
+	}
+
+	@Override
 	public boolean isrange() {
 		return data.isRange();
 	}
@@ -152,6 +162,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		if (b.r.nextDouble() * 100 < getProc(ind, P_POISON, 0)) {
 			proc[P_POISON][0] = getProc(ind, P_POISON, 1);
 			proc[P_POISON][1] = (int) (getProc(ind, P_POISON, 2) * ratk);
+			proc[P_POISON][2] = getProc(ind, P_POISON, 3);
 		}
 		if (b.r.nextDouble() * 100 < getProc(ind, P_MOVEWAVE, 0))
 			for (int i = 0; i < PROC_WIDTH; i++)
@@ -171,22 +182,12 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			int[] sprc = data.getAtkModel(ind).getProc(P_SUMMON);
 			int conf = sprc[4];
 			if ((conf & 192) == 0)
-				summon(sprc,e, acs[ind]);
+				summon(sprc, e, acs[ind]);
 			else
 				proc[P_SUMMON] = sprc;
 		}
 	}
 
-	protected abstract void summon(int[] proc, Entity ent,Object acs);
-
-	@Override
-	public void invokeLater(AttackAb atk, Entity e) {
-		if (atk.getProc(P_SUMMON)[0] > 0) {
-			int[] proc = atk.getProc(P_SUMMON);
-			int conf = proc[4];
-			if ((conf & 64) > 0 || (conf & 128) > 0 && e.health <= 0)
-				summon(proc, e,e);
-		}
-	}
+	protected abstract void summon(int[] proc, Entity ent, Object acs);
 
 }

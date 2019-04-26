@@ -104,7 +104,10 @@ public abstract class Entity extends AbEntity {
 	private final int multi;
 
 	/** weak proc processor */
-	private final List<int[]> weaks = new ArrayList<>();
+	private final WeakToken weaks = new WeakToken();
+
+	/** poison proc processor */
+	private final PoisonToken pois = new PoisonToken();
 
 	/** barrier value, 0 means no barrier or broken */
 	private int barrier;
@@ -116,7 +119,7 @@ public abstract class Entity extends AbEntity {
 	private int preTime;
 
 	/** temp field: damage accumulation */
-	private long damage;
+	protected long damage;
 
 	/** responsive effect FSM time */
 	private int efft;
@@ -299,8 +302,11 @@ public abstract class Entity extends AbEntity {
 
 		if (atk.getProc(P_POISON)[0] > 0)
 			if ((getAbi() & AB_POII) == 0) {
-				status[P_POISON][0] = atk.getProc(P_POISON)[0];
-				status[P_POISON][1] = getDamage(atk, atk.getProc(P_POISON)[1]);
+				int[] ws = new int[4];
+				ws[0] = atk.getProc(P_POISON)[0];
+				ws[1] = getDamage(atk, atk.getProc(P_POISON)[1]);
+				ws[2] = ws[3] = atk.getProc(P_POISON)[2];
+				pois.add(ws);
 				getEff(P_POISON);
 			} else
 				getEff(INV);
@@ -935,24 +941,9 @@ public abstract class Entity extends AbEntity {
 			status[P_CURSE][0]--;
 		if (status[P_SEAL][0] > 0)
 			status[P_SEAL][0]--;
-		if (status[P_POISON][0] > 0) {
-			status[P_POISON][0]--;
-			if (health > 0)
-				damage += status[P_POISON][1];
-		}
-
-		// update weak
-		for (int[] ws : weaks)
-			ws[0]--;
-		weaks.removeIf(w -> w[0] <= 0);
-		int max = 0;
-		int val = 100;
-		for (int[] ws : weaks) {
-			max = Math.max(max, ws[0]);
-			val = Math.min(val, ws[1]);
-		}
-		status[P_WEAK][0] = max;
-		status[P_WEAK][1] = val;
+		// update tokens
+		weaks.update(status[P_WEAK]);
+		pois.update(this);
 	}
 
 	/** update revive status */
@@ -1000,6 +991,57 @@ public abstract class Entity extends AbEntity {
 				if (e.targetable(type))
 					touchEnemy = true;
 		}
+	}
+
+}
+
+class PoisonToken extends Data {
+
+	private final List<int[]> list = new ArrayList<>();
+
+	protected void add(int[] is) {
+		list.add(is);
+	}
+
+	protected void update(Entity e) {
+		for (int[] ws : list)
+			if (ws[0] > 0) {
+				ws[0]--;
+				ws[3]--;
+				if (e.health > 0 && ws[3] <= 0) {
+					e.damage += ws[1];
+					ws[3] += ws[2];
+				}
+			}
+		list.removeIf(w -> w[0] <= 0);
+		int max = 0;
+		for (int[] ws : list)
+			max = Math.max(max, ws[0]);
+		e.status[P_POISON][0] = max;
+	}
+
+}
+
+class WeakToken {
+
+	private final List<int[]> list = new ArrayList<>();
+
+	protected void add(int[] is) {
+		list.add(is);
+	}
+
+	protected void update(int[] status) {
+		for (int[] ws : list)
+			ws[0]--;
+		list.removeIf(w -> w[0] <= 0);
+		int max = 0;
+		int val = 100;
+		for (int[] ws : list) {
+			max = Math.max(max, ws[0]);
+			val = Math.min(val, ws[1]);
+		}
+		status[0] = max;
+		status[1] = val;
 	}
 
 }

@@ -21,11 +21,11 @@ public abstract class AtkModelAb extends Data {
 	/** get the position of the entity */
 	public abstract double getPos();
 
-	/** get whether this entity is range attacker */
-	public abstract boolean isrange();
-
 	/** invoke when damage calculation is finished */
 	public void invokeLater(AttackAb atk, Entity e) {
 	}
+
+	/** get whether this entity is range attacker */
+	public abstract boolean isrange();
 
 }

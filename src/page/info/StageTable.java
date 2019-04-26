@@ -1,5 +1,16 @@
 package page.info;
 
+import static util.stage.SCDef.B;
+import static util.stage.SCDef.C0;
+import static util.stage.SCDef.C1;
+import static util.stage.SCDef.E;
+import static util.stage.SCDef.M;
+import static util.stage.SCDef.N;
+import static util.stage.SCDef.R0;
+import static util.stage.SCDef.R1;
+import static util.stage.SCDef.S0;
+import static util.stage.SCDef.S1;
+
 import java.awt.Point;
 
 import page.MainFrame;
@@ -9,7 +20,6 @@ import page.support.EnemyTCR;
 import util.stage.Stage;
 import util.unit.Enemy;
 import util.unit.EnemyStore;
-import static util.stage.SCDef.*;
 
 public class StageTable extends AbJTable {
 

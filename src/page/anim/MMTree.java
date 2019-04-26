@@ -60,6 +60,12 @@ class MMTree implements TreeExpansionListener {
 		return -1;
 	}
 
+	protected void nav(int p, IntPredicate f) {
+		for (int i = 0; i < mm.n; i++)
+			if (mm.parts[i][0] == p && f.test(i))
+				nav(i, f);
+	}
+
 	protected void renew() {
 		data = new DefaultMutableTreeNode[mm.n];
 		top = new DefaultMutableTreeNode("MaModel");
@@ -90,10 +96,6 @@ class MMTree implements TreeExpansionListener {
 		jtr.addTreeExpansionListener(this);
 	}
 
-	protected void setAdjusting(boolean b) {
-		adj = b;
-	}
-
 	protected void select(int i) {
 		if (adj)
 			return;
@@ -102,10 +104,8 @@ class MMTree implements TreeExpansionListener {
 		jtr.scrollPathToVisible(tp);
 	}
 
-	protected void nav(int p, IntPredicate f) {
-		for (int i = 0; i < mm.n; i++)
-			if (mm.parts[i][0] == p && f.test(i))
-				nav(i, f);
+	protected void setAdjusting(boolean b) {
+		adj = b;
 	}
 
 }

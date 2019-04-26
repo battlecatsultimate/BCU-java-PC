@@ -27,7 +27,7 @@ class AtkProcTable extends Page {
 	private static final int[] TREA = new int[] { 2, 1, 1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 	private static final int[][] STRS = new int[][] { { 0, 1, 2 }, { 0, 1 }, { 0, 1 }, { 0, 9 }, { 0, 4 }, { 0, 1, 3 },
 			{ 0 }, { 0, 1, 2 }, { 0, 1 }, { 0 }, { 0, 1 }, { 0, 1 }, { 0, 5, 2, 9, 6, 1 }, { 0, 7, 8, 1, 2, 10 },
-			{ 0, 1, 5 }, { 0, 1, 11 } };
+			{ 0, 1, 5 }, { 0, 1, 11, 10 } };
 
 	private static String getString(int ind) {
 		if (ind == 0)
