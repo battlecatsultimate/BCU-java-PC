@@ -167,6 +167,26 @@ public abstract class AtkModelEntity extends AtkModelAb {
 
 		if (b.r.nextDouble() * 100 < getProc(ind, P_BREAK, 0))
 			proc[P_BREAK][0] = 1;
+		if (b.r.nextDouble() * 100 < getProc(ind, P_SUMMON, 0)) {
+			int[] sprc = data.getAtkModel(ind).getProc(P_SUMMON);
+			int conf = sprc[4];
+			if ((conf & 192) == 0)
+				summon(sprc, acs[ind]);
+			else
+				proc[P_SUMMON] = sprc;
+		}
+	}
+
+	protected abstract void summon(int[] proc, Object acs);
+
+	@Override
+	public void invokeLater(AttackAb atk, Entity e) {
+		if (atk.getProc(P_SUMMON)[0] > 0) {
+			int[] proc = atk.getProc(P_SUMMON);
+			int conf = proc[4];
+			if ((conf & 64) > 0 || (conf & 128) > 0 && e.health <= 0)
+				summon(proc, e);
+		}
 	}
 
 }

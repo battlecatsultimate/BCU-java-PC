@@ -57,8 +57,10 @@ public class RecdManagePage extends Page {
 			if (r != null && svp.getStage() != null && Opts.conf("are you sure to change stage?")) {
 				r.st = svp.getStage();
 				r.avail = true;
+				r.marked = true;
 			}
 		}
+		svp = null;
 	}
 
 	@Override

@@ -63,8 +63,10 @@ public class EStage {
 	/** get the Entity representing enemy base, return null if none */
 	public EEnemy base(StageBasis sb) {
 		int ind = num.length - 1;
+		if (ind < 0)
+			return null;
 		int[] data = s.data.getSimple(ind);
-		if (ind >= 0 && data[C0] == 0) {
+		if (data[C0] == 0) {
 			num[ind] = -1;
 			double multi = data[M] * mul * 0.01;
 			AbEnemy e = EnemyStore.getAbEnemy(data[E], false);

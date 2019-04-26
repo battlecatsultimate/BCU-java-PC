@@ -150,7 +150,7 @@ public class EREditPage extends Page {
 
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
-				if (isAdjusting() || arg0.getValueIsAdjusting())
+				if (isAdj() || arg0.getValueIsAdjusting())
 					return;
 				setER(jlst.getSelectedValue());
 			}
@@ -216,7 +216,7 @@ public class EREditPage extends Page {
 
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					if (isAdjusting() || rand == null)
+					if (isAdj() || rand == null)
 						return;
 					rand.type = I;
 					setER(rand);

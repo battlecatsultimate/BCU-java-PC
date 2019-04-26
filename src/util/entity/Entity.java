@@ -154,6 +154,9 @@ public abstract class Entity extends AbEntity {
 	/** temp field: marker for zombie killer */
 	private boolean tempZK;
 
+	/** abilities that are activated after it's attacked */
+	private final List<AttackAb> tokens = new ArrayList<>();
+
 	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, double d0, double d1) {
 		super(d1 < 0 ? b.st.health : (int) (de.getHp() * d1));
 		basis = b;
@@ -190,7 +193,7 @@ public abstract class Entity extends AbEntity {
 				getEff(P_WAVE);
 				return;
 			}
-
+		tokens.add(atk);
 		if (barrier > 0) {
 			if (atk.getProc(P_BREAK)[0] > 0) {
 				barrier = 0;
@@ -540,6 +543,9 @@ public abstract class Entity extends AbEntity {
 			status[P_LETHAL][0]++;
 		}
 
+		for (AttackAb atk : tokens)
+			atk.model.invokeLater(atk, this);
+
 		doInterrupt();
 
 		if ((getAbi() & AB_GLASS) > 0 && atkTime == 0 && kbTime == 0 && loop == 0)
@@ -807,7 +813,7 @@ public abstract class Entity extends AbEntity {
 
 		if (kbTime == 0 && touch && status[P_BORROW][0] != 0) {
 			double[] ds = aam.touchRange();
-			if (!basis.inRange(data.getTouch(), dire, ds[0], ds[1]).contains(basis.ubase)) {
+			if (!basis.inRange(data.getTouch(), dire, ds[0], ds[1]).contains(basis.getBase(dire))) {
 				// setup burrow state
 				status[P_BORROW][0]--;
 				anim.changeAnim(4);

@@ -71,7 +71,7 @@ public class AdvStEditPage extends Page {
 
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
-				if (isAdjusting() || jls.getValueIsAdjusting())
+				if (isAdj() || jls.getValueIsAdjusting())
 					return;
 				setSCG(jls.getSelectedValue());
 			}

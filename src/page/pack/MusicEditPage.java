@@ -97,7 +97,7 @@ public class MusicEditPage extends Page {
 
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
-				if (isAdjusting() || arg0.getValueIsAdjusting())
+				if (isAdj() || arg0.getValueIsAdjusting())
 					return;
 				int ind = jlst.getSelectedIndex();
 				sele = null;
