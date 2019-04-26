@@ -51,14 +51,14 @@ public class AtkModelUnit extends AtkModelEntity {
 	}
 
 	@Override
-	public void summon(int[] proc, Object acs) {
+	public void summon(int[] proc,Entity ent, Object acs) {
 
 		Unit u = UnitStore.get(proc[1], true);
 		int conf = proc[4];
 		int time = proc[5];
 		// conf 4
 		if (u != null && (b.entityCount(-1) < b.max_num || (conf & 4) > 0)) {
-			double up = getPos() + getDire() * proc[2];
+			double up = ent.pos + getDire() * proc[2];
 			EForm ef = new EForm(u.forms[0], u.max);
 			EUnit eu = ef.getEntity(b);
 			// conf 16

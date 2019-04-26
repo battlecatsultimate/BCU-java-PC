@@ -2,6 +2,7 @@ package util.entity.attack;
 
 import util.entity.EEnemy;
 import util.entity.EntCont;
+import util.entity.Entity;
 import util.pack.EffAnim;
 import util.unit.AbEnemy;
 import util.unit.EnemyStore;
@@ -37,14 +38,14 @@ public class AtkModelEnemy extends AtkModelEntity {
 	}
 
 	@Override
-	public void summon(int[] proc, Object acs) {
+	public void summon(int[] proc, Entity ent,Object acs) {
 		AbEnemy ene = EnemyStore.getAbEnemy(proc[1], false);
 		int conf = proc[4];
 		int time = proc[5];
 		int allow = b.st.data.allow(b, ene);
 		// conf 4
 		if (ene != null && (allow >= 0 || (conf & 4) > 0)) {
-			double ep = getPos() + getDire() * proc[2];
+			double ep = ent.pos + getDire() * proc[2];
 			double mult = proc[3] * 0.01;
 			// conf 8
 			if ((conf & 8) == 0)

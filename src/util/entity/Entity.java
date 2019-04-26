@@ -545,6 +545,7 @@ public abstract class Entity extends AbEntity {
 
 		for (AttackAb atk : tokens)
 			atk.model.invokeLater(atk, this);
+		tokens.clear();
 
 		doInterrupt();
 
@@ -810,10 +811,10 @@ public abstract class Entity extends AbEntity {
 
 	/** update burrow state */
 	private void updateBurrow() {
-
 		if (kbTime == 0 && touch && status[P_BORROW][0] != 0) {
-			double[] ds = aam.touchRange();
-			if (!basis.inRange(data.getTouch(), dire, ds[0], ds[1]).contains(basis.getBase(dire))) {
+			double bpos = basis.getBase(dire).pos;
+			boolean ntbs = (bpos - pos) * dire > data.touchBase();
+			if (ntbs) {
 				// setup burrow state
 				status[P_BORROW][0]--;
 				anim.changeAnim(4);
