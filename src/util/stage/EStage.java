@@ -1,10 +1,23 @@
 package util.stage;
 
+import static util.stage.SCDef.B;
+import static util.stage.SCDef.C0;
+import static util.stage.SCDef.C1;
+import static util.stage.SCDef.E;
+import static util.stage.SCDef.G;
+import static util.stage.SCDef.L0;
+import static util.stage.SCDef.L1;
+import static util.stage.SCDef.M;
+import static util.stage.SCDef.N;
+import static util.stage.SCDef.R0;
+import static util.stage.SCDef.R1;
+import static util.stage.SCDef.S0;
+import static util.stage.SCDef.S1;
+
 import util.basis.StageBasis;
 import util.entity.EEnemy;
 import util.unit.AbEnemy;
 import util.unit.EnemyStore;
-import static util.stage.SCDef.*;
 
 public class EStage {
 
@@ -63,8 +76,10 @@ public class EStage {
 	/** get the Entity representing enemy base, return null if none */
 	public EEnemy base(StageBasis sb) {
 		int ind = num.length - 1;
+		if (ind < 0)
+			return null;
 		int[] data = s.data.getSimple(ind);
-		if (ind >= 0 && data[C0] == 0) {
+		if (data[C0] == 0) {
 			num[ind] = -1;
 			double multi = data[M] * mul * 0.01;
 			AbEnemy e = EnemyStore.getAbEnemy(data[E], false);

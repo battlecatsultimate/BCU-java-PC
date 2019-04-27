@@ -24,7 +24,7 @@ public class ImgCut extends Data implements Cloneable {
 			return new ImgCut(readLine(f));
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.w$i(f.getName());
+			Opts.animErr(f.getName());
 			return new ImgCut();
 		}
 	}

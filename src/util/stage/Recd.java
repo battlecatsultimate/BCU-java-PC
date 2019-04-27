@@ -59,7 +59,7 @@ public class Recd extends Data {
 		String stid = is.nextString();
 		Pack pack = Pack.map.get(pid);
 		if (pack == null) {
-			Opts.p$rp(name, "pack " + pid);
+			Opts.recdErr(name, "pack " + pid);
 			return null;
 		}
 		MapColc mc = null;
@@ -68,7 +68,7 @@ public class Recd extends Data {
 		else
 			mc = pack.mc;
 		if (!mc.name.equals(mcn)) {
-			Opts.p$rp(name, "map set");
+			Opts.recdErr(name, "map set");
 			return null;
 		}
 		StageMap sm = null;
@@ -76,7 +76,7 @@ public class Recd extends Data {
 			if (map.name.equals(smid))
 				sm = map;
 		if (sm == null) {
-			Opts.p$rp(name, "stage map");
+			Opts.recdErr(name, "stage map");
 			return null;
 		}
 		Stage st = null;
@@ -84,7 +84,7 @@ public class Recd extends Data {
 			if (s.name.equals(stid))
 				st = s;
 		if (st == null) {
-			Opts.p$rp(name, "stage");
+			Opts.recdErr(name, "stage");
 			return null;
 		}
 		Recd ans = new Recd(lu, st, star, conf, seed);
@@ -106,7 +106,7 @@ public class Recd extends Data {
 			StageMap sm = MapColc.getMap(id / 1000);
 			st = sm.list.get(id % 1000);
 			if (st == null) {
-				Opts.p$rp(name, "stage " + id);
+				Opts.recdErr(name, "stage " + id);
 				return null;
 			}
 		} else {
@@ -125,7 +125,7 @@ public class Recd extends Data {
 		String stid = is.nextString();
 		Pack pack = Pack.map.get(pid);
 		if (pack == null) {
-			Opts.p$rp(name, "pack " + pid);
+			Opts.recdErr(name, "pack " + pid);
 			return null;
 		}
 		MapColc mc = null;
@@ -134,7 +134,7 @@ public class Recd extends Data {
 		else
 			mc = pack.mc;
 		if (!mc.name.equals(mcn)) {
-			Opts.p$rp(name, "map set " + mcn);
+			Opts.recdErr(name, "map set " + mcn);
 			return null;
 		}
 		StageMap sm = null;
@@ -142,7 +142,7 @@ public class Recd extends Data {
 			if (map.name.equals(smid))
 				sm = map;
 		if (sm == null) {
-			Opts.p$rp(name, "stage map " + smid);
+			Opts.recdErr(name, "stage map " + smid);
 			return null;
 		}
 		Stage st = null;
@@ -151,7 +151,7 @@ public class Recd extends Data {
 				st = s;
 
 		if (st == null) {
-			Opts.p$rp(name, "stage " + stid);
+			Opts.recdErr(name, "stage " + stid);
 			return null;
 		}
 		return st;

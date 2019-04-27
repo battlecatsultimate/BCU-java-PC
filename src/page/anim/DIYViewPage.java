@@ -159,13 +159,13 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		});
 
 		icc.setLnr(x -> {
-			if (IconBox.mode == 0 && Opts.w$c("are you sure to replace display icon? This action cannot be undone")) {
+			if (IconBox.mode == 0 && Opts.conf("are you sure to replace display icon? This action cannot be undone")) {
 				AnimC ac = aep.anim.anim;
 				ac.edi = new VImg(ib.getClip());
 				ac.saveIcon();
 				jlu.repaint();
 			}
-			if (IconBox.mode == 1 && Opts.w$c("are you sure to replace battle icon? This action cannot be undone")) {
+			if (IconBox.mode == 1 && Opts.conf("are you sure to replace battle icon? This action cannot be undone")) {
 				AnimC ac = aep.anim.anim;
 				ac.uni = new VImg(ib.getClip());
 				ac.saveUni();

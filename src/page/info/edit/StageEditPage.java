@@ -406,7 +406,7 @@ public class StageEditPage extends Page {
 		});
 
 		rems.setLnr(x -> {
-			if (!Opts.w$c())
+			if (!Opts.conf())
 				return;
 			StageMap sm = jlsm.getSelectedValue();
 			int ind = jlst.getSelectedIndex() - 1;

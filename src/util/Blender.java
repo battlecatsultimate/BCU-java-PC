@@ -18,11 +18,6 @@ public class Blender implements Composite, CompositeContext {
 		glow = gl;
 	}
 
-	protected Blender() {
-		opa = 0;
-		glow = 0;
-	}
-
 	@Override
 	public void compose(Raster src, Raster dst, WritableRaster out) {
 		if (ViewBox.white)

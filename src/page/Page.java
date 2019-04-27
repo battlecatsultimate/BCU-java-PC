@@ -112,6 +112,10 @@ public abstract class Page extends JPanel {
 		componentResized(p.x, p.y);
 	}
 
+	protected void change(boolean b) {
+		adjusting += b ? 1 : -1;
+	}
+
 	protected <T> void change(T t, Consumer<T> c) {
 		adjusting++;
 		c.accept(t);
@@ -139,7 +143,7 @@ public abstract class Page extends JPanel {
 		return this;
 	}
 
-	protected boolean isAdjusting() {
+	protected boolean isAdj() {
 		return adjusting > 0;
 	}
 

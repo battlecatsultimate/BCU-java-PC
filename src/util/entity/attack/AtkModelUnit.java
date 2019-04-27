@@ -22,33 +22,9 @@ public class AtkModelUnit extends AtkModelEntity {
 	public AttackAb getAttack(int ind) {
 		int[][] proc = new int[PROC_TOT][PROC_WIDTH];
 		if (abis[ind] == 1) {
-
 			setProc(ind, proc);
 			proc[P_KB][0] = proc[P_KB][0] * (100 + bas.getInc(C_KB)) / 100;
-
 			extraAtk(ind);
-
-			if (b.r.nextDouble() * 100 < getProc(ind, P_SUMMON, 0)) {
-				Unit u = UnitStore.get(getProc(ind, P_SUMMON, 1), true);
-				int conf = getProc(ind, P_SUMMON, 4);
-				int time = getProc(ind, P_SUMMON, 5);
-				if (u != null && b.entityCount(-1) < b.max_num) {
-					double up = getPos() + getDire() * getProc(ind, P_SUMMON, 2);
-					int mult = getProc(ind, P_SUMMON, 3);
-					EForm ef = new EForm(u.forms[0], mult);
-					EUnit eu = ef.getEntity(b);
-					eu.added(-1, (int) up);
-					b.tempe.add(new EntCont(eu, time));
-					conf &= 3;
-					if (conf == 1) {
-						eu.kbType = INT_WARP;
-						eu.kbTime = EffAnim.effas[A_W].len(1);
-						eu.status[P_WARP][2] = 1;
-					}
-					if (conf == 2)
-						eu.kbTime = -3;
-				}
-			}
 		}
 		int atk = atks[ind];
 		if (e.status[P_WEAK][1] != 0)
@@ -57,6 +33,41 @@ public class AtkModelUnit extends AtkModelEntity {
 			atk += atk * (e.status[P_STRONG][0] + bas.getInc(C_STRONG)) / 100;
 		double[] ints = inRange(ind);
 		return new AttackSimple(this, atk, e.type, getAbi(), proc, ints[0], ints[1], e.data.getAtkModel(ind));
+	}
+
+	@Override
+	public void summon(int[] proc, Entity ent, Object acs) {
+
+		Unit u = UnitStore.get(proc[1], true);
+		int conf = proc[4];
+		int time = proc[5];
+		// conf 4
+		if (u != null && (b.entityCount(-1) < b.max_num || (conf & 4) > 0)) {
+			double up = ent.pos + getDire() * proc[2];
+			EForm ef = new EForm(u.forms[0], u.max);
+			EUnit eu = ef.getEntity(b);
+			// conf 16
+			if ((conf & 16) > 0)
+				eu.health = e.health;
+			int l0 = 0, l1 = 9;
+			// conf 32
+			if ((conf & 32) == 0)
+				l0 = l1 = e.layer;
+			eu.layer = (int) (b.r.nextDouble() * (l1 - l0)) + l0;
+			eu.added(-1, (int) up);
+			b.tempe.add(new EntCont(eu, time));
+			conf &= 3;
+			// conf 1
+			if (conf == 1) {
+				eu.kbType = INT_WARP;
+				eu.kbTime = EffAnim.effas[A_W].len(1);
+				eu.status[P_WARP][2] = 1;
+			}
+			// conf 2
+			if (conf == 2)
+				eu.kbTime = -3;
+		}
+
 	}
 
 	@Override

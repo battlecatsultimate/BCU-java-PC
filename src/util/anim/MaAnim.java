@@ -23,7 +23,7 @@ public class MaAnim extends Data {
 			return new MaAnim(readLine(f));
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.w$i(f.getName());
+			Opts.animErr(f.getName());
 			return new MaAnim();
 		}
 	}

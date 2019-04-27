@@ -2,7 +2,9 @@ package util.anim;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 
 import io.InStream;
@@ -26,7 +28,7 @@ public class MaModel extends Data implements Cloneable {
 			return new MaModel(readLine(f));
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.w$i(f.getName());
+			Opts.animErr(f.getName());
 			return new MaModel();
 		}
 
@@ -36,6 +38,8 @@ public class MaModel extends Data implements Cloneable {
 	public int[] ints = new int[3];
 	public int[][] confs, parts;
 	public String[] strs0, strs1;
+
+	public Map<int[], Integer> status = new HashMap<>();
 
 	public MaModel() {
 		n = 1;

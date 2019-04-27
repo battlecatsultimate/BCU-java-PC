@@ -15,9 +15,11 @@ import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
 
+import io.Reader;
 import page.JBTN;
 import page.Page;
 import page.support.AnimLCR;
@@ -50,8 +52,10 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	private final JBTN addl = new JBTN(0, "addl");
 	private final JBTN reml = new JBTN(0, "reml");
 	private final JBTN rema = new JBTN(0, "rema");
+	private final JBTN sort = new JBTN(0, "sort");
 	private final EditHead aep;
 	private Point p = null;
+	private MMTree mmt;
 
 	public MaModelEditPage(Page p) {
 		super(p);
@@ -80,7 +84,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			if (mb.getEnt() != null)
 				mb.getEnt().organize();
 			if (o != null && o.equals("review"))
-				setTree(mmet.mm);
+				setTree(mmet.anim);
 		});
 
 	}
@@ -158,30 +162,54 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		set(mb, x, y, 300, 50, 700, 500);
 		set(jspp, x, y, 1000, 50, 300, 500);
 		set(sb, x, y, 1300, 50, 950, 400);
-		set(revt, x, y, 1300, 500, 200, 50);
-		set(addl, x, y, 1550, 500, 200, 50);
-		set(reml, x, y, 1800, 500, 200, 50);
-		set(rema, x, y, 2050, 500, 200, 50);
+		set(sort, x, y, 1300, 500, 200, 50);
+		set(revt, x, y, 1500, 500, 200, 50);
+		set(addl, x, y, 1700, 500, 200, 50);
+		set(reml, x, y, 1900, 500, 200, 50);
+		set(rema, x, y, 2100, 500, 200, 50);
 		aep.componentResized(x, y);
 		mmet.setRowHeight(size(x, y, 50));
 		sb.paint(sb.getGraphics());
 		mb.paint(mb.getGraphics());
 	}
 
-	private void addListeners() {
-
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
+	private void addLine() {
+		change(0, o -> {
+			int ind = mmet.getSelectedRow() + 1;
+			if (ind == 0)
+				ind++;
+			MaModel mm = mmet.mm;
+			int[] inds = new int[mm.n];
+			for (int i = 0; i < mm.n; i++)
+				inds[i] = i < ind ? i : i + 1;
+			mmet.anim.reorderModel(inds);
+			mm.n++;
+			int[] move = new int[mm.n];
+			for (int i = 0; i < mm.n; i++)
+				move[i] = i < ind ? i : i - 1;
+			mm.reorder(move);
+			int[] newl = new int[14];
+			newl[8] = newl[9] = newl[11] = 1000;
+			mm.parts[ind] = newl;
+			mmet.anim.unSave("mamodel add line");
+			callBack(null);
+			resized();
+			mmet.setRowSelectionInterval(ind, ind);
+			setB(ind);
+			int h = mmet.getRowHeight();
+			mmet.scrollRectToVisible(new Rectangle(0, h * ind, 1, h));
 		});
+	}
+
+	private void addListeners$0() {
+
+		back.setLnr(x -> changePanel(getFront()));
 
 		jlu.addListSelectionListener(new ListSelectionListener() {
 
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
-				if (isAdjusting() || jlu.getValueIsAdjusting())
+				if (isAdj() || jlu.getValueIsAdjusting())
 					return;
 				change(jlu.getSelectedValue(), val -> setA(val));
 			}
@@ -203,123 +231,73 @@ public class MaModelEditPage extends Page implements AbEditPage {
 
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
-				if (isAdjusting() || lsm.getValueIsAdjusting())
+				if (isAdj() || lsm.getValueIsAdjusting())
 					return;
 				change(lsm.getLeadSelectionIndex(), ind -> setB(ind));
 			}
 
 		});
 
-		addl.addActionListener(new ActionListener() {
+		addl.setLnr(x -> addLine());
+
+		reml.setLnr(x -> removeLine());
+
+		rema.setLnr(x -> removeTree());
+
+	}
+
+	private void addListeners$1() {
+
+		revt.setLnr(x -> {
+			mmet.anim.revert();
+			callBack(null);
+		});
+
+		jtr.addTreeSelectionListener(new TreeSelectionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				change(0, o -> {
-					int ind = mmet.getSelectedRow() + 1;
-					if (ind == 0)
-						ind++;
-					MaModel mm = mmet.mm;
-					int[] inds = new int[mm.n];
-					for (int i = 0; i < mm.n; i++)
-						inds[i] = i < ind ? i : i + 1;
-					mmet.anim.reorderModel(inds);
-					mm.n++;
-					int[] move = new int[mm.n];
-					for (int i = 0; i < mm.n; i++)
-						move[i] = i < ind ? i : i - 1;
-					mm.reorder(move);
-					int[] newl = new int[14];
-					newl[8] = newl[9] = newl[11] = 1000;
-					mm.parts[ind] = newl;
-					mmet.anim.unSave();
-					callBack(null);
-					resized();
-					lsm.setSelectionInterval(ind, ind);
-					setB(ind);
-					int h = mmet.getRowHeight();
-					mmet.scrollRectToVisible(new Rectangle(0, h * ind, 1, h));
-				});
+			public void valueChanged(TreeSelectionEvent arg0) {
+				if (isAdj())
+					return;
+				Object o = jtr.getLastSelectedPathComponent();
+				if (o == null)
+					return;
+				String str = o.toString();
+				int ind = Reader.parseIntN(str.split(" - ")[0]);
+				if (ind == -1)
+					return;
+				setB(ind);
 			}
 
 		});
 
-		reml.addActionListener(new ActionListener() {
+		sort.addActionListener(new ActionListener() {
+
+			private int p = 0;
+			private int[] move, inds;
+			private int[][] parts;
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				change(0, o -> {
-					MaModel mm = mmet.mm;
-					int[] rows = mmet.getSelectedRows();
-					int[][] data = mm.parts;
-					mm.n -= rows.length;
-					int[] inds = new int[data.length];
-					int[] move = new int[mm.n];
-					for (int i = 0; i < rows.length; i++)
-						data[rows[i]] = null;
-					int ind = 0;
-					for (int i = 0; i < data.length; i++)
-						if (data[i] != null) {
-							move[ind] = i;
-							inds[i] = ind;
-							ind++;
-						} else
-							inds[i] = -1;
-					mmet.anim.reorderModel(inds);
-					mm.reorder(move);
-					mmet.anim.unSave();
-					callBack(null);
-					if (ind >= mm.n)
-						ind--;
-					lsm.setSelectionInterval(ind, ind);
-					setB(ind);
-				});
+				p = 0;
+				parts = mmet.mm.parts;
+				int n = parts.length;
+				move = new int[n];
+				inds = new int[n];
+				for (int i = 0; i < parts.length; i++)
+					if (parts[i][0] == -1)
+						add(i);
+				mmet.anim.reorderModel(inds);
+				mmet.mm.reorder(move);
+				mmet.anim.unSave("sort");
 			}
 
-		});
-
-		rema.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				change(0, o -> {
-					MaModel mm = mmet.mm;
-					int[] rows = mmet.getSelectedRows();
-					boolean[] bs = new boolean[mm.n];
-					int total = rows.length;
-					for (int ind : rows)
-						bs[ind] = true;
-					total += mm.getChild(bs);
-					mm.clearAnim(bs, mmet.anim.anims);
-					int[] inds = new int[mm.n];
-					int[] move = new int[mm.n - total];
-					int j = 0;
-					for (int i = 0; i < mm.n; i++)
-						if (!bs[i]) {
-							move[j] = i;
-							inds[i] = j;
-							j++;
-						}
-					mmet.anim.reorderModel(inds);
-					mm.n -= total;
-					mm.reorder(move);
-					mmet.anim.unSave();
-					callBack(null);
-					int ind = rows[0];
-					if (ind >= mm.n)
-						ind = mm.n - 1;
-					lsm.setSelectionInterval(ind, ind);
-					setB(ind);
-				});
-			}
-
-		});
-
-		revt.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				mmet.anim.revert();
-				callBack(null);
+			private void add(int n) {
+				inds[n] = p;
+				move[p++] = n;
+				for (int i = 0; i < parts.length; i++)
+					if (parts[i][0] == n)
+						add(i);
 			}
 
 		});
@@ -337,23 +315,87 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		add(reml);
 		add(rema);
 		add(jsptr);
+		add(sort);
 		add(sb);
 		add(mb);
 		jlu.setCellRenderer(new AnimLCR());
 		jtr.setExpandsSelectedPaths(true);
-		addl.setEnabled(false);
-		reml.setEnabled(false);
-		rema.setEnabled(false);
 		reml.setForeground(Color.RED);
 		rema.setForeground(Color.RED);
-		addListeners();
+		setA(null);
+		addListeners$0();
+		addListeners$1();
+	}
+
+	private void removeLine() {
+		change(0, o -> {
+			MaModel mm = mmet.mm;
+			int[] rows = mmet.getSelectedRows();
+			int[][] data = mm.parts;
+			mm.n -= rows.length;
+			int[] inds = new int[data.length];
+			int[] move = new int[mm.n];
+			for (int i = 0; i < rows.length; i++)
+				data[rows[i]] = null;
+			int ind = 0;
+			for (int i = 0; i < data.length; i++)
+				if (data[i] != null) {
+					move[ind] = i;
+					inds[i] = ind;
+					ind++;
+				} else
+					inds[i] = -1;
+			mmet.anim.reorderModel(inds);
+			mm.reorder(move);
+			mmet.anim.unSave("mamodel remove line");
+			callBack(null);
+			if (ind >= mm.n)
+				ind--;
+			mmet.setRowSelectionInterval(ind, ind);
+			setB(ind);
+		});
+	}
+
+	private void removeTree() {
+		change(0, o -> {
+			MaModel mm = mmet.mm;
+			int[] rows = mmet.getSelectedRows();
+			boolean[] bs = new boolean[mm.n];
+			int total = rows.length;
+			for (int ind : rows)
+				bs[ind] = true;
+			total += mm.getChild(bs);
+			mm.clearAnim(bs, mmet.anim.anims);
+			int[] inds = new int[mm.n];
+			int[] move = new int[mm.n - total];
+			int j = 0;
+			for (int i = 0; i < mm.n; i++)
+				if (!bs[i]) {
+					move[j] = i;
+					inds[i] = j;
+					j++;
+				}
+			mmet.anim.reorderModel(inds);
+			mm.n -= total;
+			mm.reorder(move);
+			mmet.anim.unSave("mamodel remove tree");
+			callBack(null);
+			int ind = rows[0];
+			if (ind >= mm.n)
+				ind = mm.n - 1;
+			mmet.setRowSelectionInterval(ind, ind);
+			setB(ind);
+		});
 	}
 
 	private void setA(DIYAnim da) {
 		if (da != null && da.getAnimC().mismatch)
 			da = null;
 		aep.setAnim(da);
-		setTree(da == null ? null : da.anim.mamodel);
+		setTree(da == null ? null : da.anim);
+		addl.setEnabled(da != null);
+		sort.setEnabled(da != null);
+		revt.setEnabled(da != null);
 		if (da == null) {
 			mmet.setMaModel(null);
 			mb.setEntity(null);
@@ -363,7 +405,6 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			return;
 		}
 		AnimC anim = da.getAnimC();
-		addl.setEnabled(anim != null);
 		mmet.setMaModel(anim);
 		mb.setEntity(new EAnimS(anim, anim.mamodel));
 		ImgCut ic = anim.imgcut;
@@ -383,6 +424,13 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		rema.setEnabled(ind != -1);
 		if (ind < 0 || mmet.mm == null)
 			return;
+		if (mmet.getSelectedRow() != ind)
+			change(ind, i -> {
+				mmet.setRowSelectionInterval(i, i);
+				mmet.scrollRectToVisible(mmet.getCellRect(i, 0, true));
+			});
+		if (mmt != null)
+			change(ind, i -> mmt.select(i));
 		int val = mmet.mm.parts[ind][2];
 		jlp.setSelectedIndex(val);
 		for (int row : mmet.getSelectedRows()) {
@@ -396,31 +444,17 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		}
 	}
 
-	private void setTree(MaModel dat) {
-		change(dat, mm -> {
-			if (mm == null) {
+	private void setTree(AnimC dat) {
+		change(dat, anim -> {
+			if (anim == null) {
 				jtr.setModel(new DefaultTreeModel(null));
+				mmt = null;
 				return;
 			}
-			DefaultMutableTreeNode[] data = new DefaultMutableTreeNode[mm.n];
-			DefaultMutableTreeNode top = new DefaultMutableTreeNode("MaModel");
-			int c = 0;
-			while (c < mm.n) {
-				for (int i = 0; i < mm.n; i++)
-					if (data[i] == null) {
-						int[] line = mm.parts[i];
-						DefaultMutableTreeNode pre = (line[0] == -1 ? top : data[line[0]]);
-						if (pre == null)
-							continue;
-						data[i] = new DefaultMutableTreeNode(i + " - " + mm.strs0[i]);
-						pre.add(data[i]);
-						c++;
-					}
-			}
-			jtr.setModel(new DefaultTreeModel(top));
+			if (mmt == null || mmt.anim != anim)
+				mmt = new MMTree(null, anim, jtr);
+			mmt.renew();
 		});
-		for (int i = 0; i < jtr.getRowCount(); i++)
-			jtr.expandRow(i);
 	}
 
 }

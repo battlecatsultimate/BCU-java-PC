@@ -3,7 +3,6 @@ package io;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -52,7 +51,7 @@ public class Writer extends DataIO {
 			}
 		if (!suc) {
 			ps.println("failed to create file: " + f.getPath());
-			Opts.pop("failed to create file: " + f.getPath(), "IO error");
+			Opts.ioErr("failed to create file: " + f.getPath());
 		}
 		return suc;
 	}
@@ -92,7 +91,7 @@ public class Writer extends DataIO {
 			ps = new PrintStream(log);
 		} catch (IOException e) {
 			e.printStackTrace();
-			Opts.pop("Failed to access files. Please move BCU to another place", "file permission error");
+			Opts.pop(Opts.SECTY);
 			System.exit(0);
 		}
 		if (MainBCU.write) {
@@ -106,8 +105,8 @@ public class Writer extends DataIO {
 		check(f);
 		PrintStream out = null;
 		try {
-			out = new PrintStream(f);
-		} catch (FileNotFoundException e) {
+			out = new PrintStream(f, "UTF-8");
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return out;
@@ -182,7 +181,7 @@ public class Writer extends DataIO {
 		}
 		if (!suc) {
 			ps.println("failed to write file: " + f.getPath());
-			if (Opts.w$o(f.getPath()))
+			if (Opts.writeErr(f.getPath()))
 				new Exporter(os, Exporter.EXP_ERR);
 		}
 		return suc;
@@ -246,7 +245,7 @@ public class Writer extends DataIO {
 			}
 		if (!suc) {
 			ps.println("failed to write image: " + f.getPath());
-			if (Opts.w$o(f.getPath()))
+			if (Opts.writeErr(f.getPath()))
 				new Exporter(bimg, Exporter.EXP_ERR);
 		}
 		return suc;

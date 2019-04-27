@@ -38,8 +38,9 @@ class MaModelEditTable extends AnimTable<int[]> {
 		final Component editor = getEditorComponent();
 		if (editor == null || !(editor instanceof JTextComponent))
 			return result;
+		JTextComponent jtc = (JTextComponent) editor;
 		if (e instanceof KeyEvent)
-			((JTextComponent) editor).selectAll();
+			jtc.selectAll();
 		return result;
 	}
 
@@ -126,7 +127,7 @@ class MaModelEditTable extends AnimTable<int[]> {
 		mm.n = mm.n + data.length;
 		mm.reorder(move);
 		mm.check(anim);
-		anim.unSave();
+		anim.unSave("mamodel paste");
 		page.callBack(new int[] { dst, dst + data.length - 1 });
 		return true;
 	}
@@ -162,7 +163,7 @@ class MaModelEditTable extends AnimTable<int[]> {
 
 		anim.reorderModel(inds);
 		mm.reorder(move);
-		anim.unSave();
+		anim.unSave("mamodel reorder");
 		page.callBack(new int[] { fin, fin + ori.length - 1 });
 		return true;
 	}
@@ -192,7 +193,7 @@ class MaModelEditTable extends AnimTable<int[]> {
 		}
 		if (c == 0)
 			mm.check(anim);
-		anim.unSave();
+		anim.unSave("mamodel edit");
 		page.callBack(null);
 	}
 

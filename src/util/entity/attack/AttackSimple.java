@@ -69,7 +69,6 @@ public class AttackSimple extends AttackAb {
 			// generate a wave when hits somebody
 			new ContWaveDef(new AttackWave(this, p0, wid, WT_WAVE), p0);
 		}
-
 	}
 
 }

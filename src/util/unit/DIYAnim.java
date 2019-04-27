@@ -28,7 +28,7 @@ public class DIYAnim extends Animable<AnimC> {
 			if (cd.size() > 0)
 				ai = cd.iterator().next();
 			Printer.e("DIYAnim", 26, "Animation Missing: " + str);
-			Opts.p$l("Animation Missing: " + str);
+			Opts.loadErr("Animation Missing: " + str);
 		}
 		if (ai == null) {
 			AnimU au;

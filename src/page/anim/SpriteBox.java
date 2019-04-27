@@ -128,7 +128,7 @@ class SpriteBox extends Canvas {
 	protected synchronized void mouseReleased(Point p) {
 		if (drag && sele >= 0) {
 			anim.ICedited();
-			anim.unSave();
+			anim.unSave("imgcut drag");
 			drag = false;
 		} else {
 			skip = 0;

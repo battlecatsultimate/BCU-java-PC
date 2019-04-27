@@ -23,7 +23,10 @@ import page.JL;
 import page.JTF;
 import page.Page;
 import page.info.edit.FormEditPage;
-import page.support.*;
+import page.support.AnimLCR;
+import page.support.ReorderList;
+import page.support.ReorderListener;
+import page.support.UnitLCR;
 import util.Interpret;
 import util.anim.AnimC;
 import util.entity.data.CustomUnit;
@@ -223,7 +226,7 @@ public class UnitManagePage extends Page {
 		remu.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!Opts.w$c())
+				if (!Opts.conf())
 					return;
 				changing = true;
 				int ind = jlu.getSelectedIndex();
@@ -325,7 +328,7 @@ public class UnitManagePage extends Page {
 		remf.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (!Opts.w$c())
+				if (!Opts.conf())
 					return;
 				changing = true;
 				int ind = jlf.getSelectedIndex();

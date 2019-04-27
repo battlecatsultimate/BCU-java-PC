@@ -71,7 +71,7 @@ public class AdvStEditPage extends Page {
 
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
-				if (isAdjusting() || jls.getValueIsAdjusting())
+				if (isAdj() || jls.getValueIsAdjusting())
 					return;
 				setSCG(jls.getSelectedValue());
 			}
@@ -101,6 +101,13 @@ public class AdvStEditPage extends Page {
 			if (val > 0)
 				scg.max = val;
 			setSCG(scg);
+		});
+
+		sdef.setLnr(e -> {
+			int i = Reader.parseIntN(sdef.getText());
+			if (i >= 0)
+				data.sdef = i;
+			setList();
 		});
 
 	}
@@ -141,6 +148,7 @@ public class AdvStEditPage extends Page {
 			jls.clearSelection();
 			jls.setListData(l.toArray(new SCGroup[0]));
 		});
+		sdef.setText("default: " + data.sdef);
 		if (scg != null && !l.contains(scg))
 			scg = null;
 		setSCG(scg);

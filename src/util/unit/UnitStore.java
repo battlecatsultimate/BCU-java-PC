@@ -22,11 +22,11 @@ public class UnitStore extends Data {
 			if (u != null)
 				return u;
 			if (print)
-				Opts.w$u("Can't find unit: " + uid);
+				Opts.unitErr("Can't find unit: " + uid);
 			return null;
 		}
 		if (print)
-			Opts.w$u("can't find pack: " + uid / 1000);
+			Opts.unitErr("can't find pack: " + uid / 1000);
 		return null;
 	}
 
@@ -36,7 +36,7 @@ public class UnitStore extends Data {
 			return null;
 		if (fid >= u.forms.length) {
 			if (print)
-				Opts.w$u("unit " + trio(uid) + " doesn't have form " + fid);
+				Opts.unitErr("unit " + trio(uid) + " doesn't have form " + fid);
 			return null;
 		}
 		return get(uid, print).forms[fid];

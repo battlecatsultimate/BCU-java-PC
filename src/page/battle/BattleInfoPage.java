@@ -226,7 +226,7 @@ public class BattleInfoPage extends KeyHandler {
 			BCMusic.DEF.stop();
 			if (bb instanceof BBRecd) {
 				BBRecd bbr = (BBRecd) bb;
-				if (Opts.w$c("Do you want to save this video?")) {
+				if (Opts.conf("Do you want to save this video?")) {
 					bbr.end();
 					return;
 				} else {

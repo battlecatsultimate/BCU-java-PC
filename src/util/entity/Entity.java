@@ -104,7 +104,10 @@ public abstract class Entity extends AbEntity {
 	private final int multi;
 
 	/** weak proc processor */
-	private final List<int[]> weaks = new ArrayList<>();
+	private final WeakToken weaks = new WeakToken();
+
+	/** poison proc processor */
+	private final PoisonToken pois = new PoisonToken();
 
 	/** barrier value, 0 means no barrier or broken */
 	private int barrier;
@@ -116,7 +119,7 @@ public abstract class Entity extends AbEntity {
 	private int preTime;
 
 	/** temp field: damage accumulation */
-	private long damage;
+	protected long damage;
 
 	/** responsive effect FSM time */
 	private int efft;
@@ -154,6 +157,9 @@ public abstract class Entity extends AbEntity {
 	/** temp field: marker for zombie killer */
 	private boolean tempZK;
 
+	/** abilities that are activated after it's attacked */
+	private final List<AttackAb> tokens = new ArrayList<>();
+
 	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, double d0, double d1) {
 		super(d1 < 0 ? b.st.health : (int) (de.getHp() * d1));
 		basis = b;
@@ -190,7 +196,7 @@ public abstract class Entity extends AbEntity {
 				getEff(P_WAVE);
 				return;
 			}
-
+		tokens.add(atk);
 		if (barrier > 0) {
 			if (atk.getProc(P_BREAK)[0] > 0) {
 				barrier = 0;
@@ -296,8 +302,11 @@ public abstract class Entity extends AbEntity {
 
 		if (atk.getProc(P_POISON)[0] > 0)
 			if ((getAbi() & AB_POII) == 0) {
-				status[P_POISON][0] = atk.getProc(P_POISON)[0];
-				status[P_POISON][1] = getDamage(atk, atk.getProc(P_POISON)[1]);
+				int[] ws = new int[4];
+				ws[0] = atk.getProc(P_POISON)[0];
+				ws[1] = getDamage(atk, atk.getProc(P_POISON)[1]);
+				ws[2] = ws[3] = atk.getProc(P_POISON)[2];
+				pois.add(ws);
 				getEff(P_POISON);
 			} else
 				getEff(INV);
@@ -539,6 +548,10 @@ public abstract class Entity extends AbEntity {
 			}
 			status[P_LETHAL][0]++;
 		}
+
+		for (AttackAb atk : tokens)
+			atk.model.invokeLater(atk, this);
+		tokens.clear();
 
 		doInterrupt();
 
@@ -804,10 +817,10 @@ public abstract class Entity extends AbEntity {
 
 	/** update burrow state */
 	private void updateBurrow() {
-
 		if (kbTime == 0 && touch && status[P_BORROW][0] != 0) {
-			double[] ds = aam.touchRange();
-			if (!basis.inRange(data.getTouch(), dire, ds[0], ds[1]).contains(basis.ubase)) {
+			double bpos = basis.getBase(dire).pos;
+			boolean ntbs = (bpos - pos) * dire > data.touchBase();
+			if (ntbs) {
 				// setup burrow state
 				status[P_BORROW][0]--;
 				anim.changeAnim(4);
@@ -928,24 +941,9 @@ public abstract class Entity extends AbEntity {
 			status[P_CURSE][0]--;
 		if (status[P_SEAL][0] > 0)
 			status[P_SEAL][0]--;
-		if (status[P_POISON][0] > 0) {
-			status[P_POISON][0]--;
-			if (health > 0)
-				damage += status[P_POISON][1];
-		}
-
-		// update weak
-		for (int[] ws : weaks)
-			ws[0]--;
-		weaks.removeIf(w -> w[0] <= 0);
-		int max = 0;
-		int val = 100;
-		for (int[] ws : weaks) {
-			max = Math.max(max, ws[0]);
-			val = Math.min(val, ws[1]);
-		}
-		status[P_WEAK][0] = max;
-		status[P_WEAK][1] = val;
+		// update tokens
+		weaks.update(status[P_WEAK]);
+		pois.update(this);
 	}
 
 	/** update revive status */
@@ -993,6 +991,57 @@ public abstract class Entity extends AbEntity {
 				if (e.targetable(type))
 					touchEnemy = true;
 		}
+	}
+
+}
+
+class PoisonToken extends Data {
+
+	private final List<int[]> list = new ArrayList<>();
+
+	protected void add(int[] is) {
+		list.add(is);
+	}
+
+	protected void update(Entity e) {
+		for (int[] ws : list)
+			if (ws[0] > 0) {
+				ws[0]--;
+				ws[3]--;
+				if (e.health > 0 && ws[3] <= 0) {
+					e.damage += ws[1];
+					ws[3] += ws[2];
+				}
+			}
+		list.removeIf(w -> w[0] <= 0);
+		int max = 0;
+		for (int[] ws : list)
+			max = Math.max(max, ws[0]);
+		e.status[P_POISON][0] = max;
+	}
+
+}
+
+class WeakToken {
+
+	private final List<int[]> list = new ArrayList<>();
+
+	protected void add(int[] is) {
+		list.add(is);
+	}
+
+	protected void update(int[] status) {
+		for (int[] ws : list)
+			ws[0]--;
+		list.removeIf(w -> w[0] <= 0);
+		int max = 0;
+		int val = 100;
+		for (int[] ws : list) {
+			max = Math.max(max, ws[0]);
+			val = Math.min(val, ws[1]);
+		}
+		status[0] = max;
+		status[1] = val;
 	}
 
 }

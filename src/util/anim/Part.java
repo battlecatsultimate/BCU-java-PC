@@ -6,7 +6,7 @@ import java.util.Queue;
 import io.InStream;
 import io.OutStream;
 
-public class Part implements Cloneable {
+public class Part implements Cloneable, Comparable<Part> {
 
 	public int[] ints = new int[5];
 	public String name;
@@ -66,6 +66,11 @@ public class Part implements Cloneable {
 	@Override
 	public Part clone() {
 		return new Part(this);
+	}
+
+	@Override
+	public int compareTo(Part o) {
+		return Integer.compare(ints[0], o.ints[0]);
 	}
 
 	public void validate() {

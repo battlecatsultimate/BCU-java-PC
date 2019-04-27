@@ -77,7 +77,7 @@ class ImgCutEditTable extends AbJTable {
 		c = lnk[c];
 		if (c == 5) {
 			ic.strs[r] = ((String) val).trim();
-			anim.unSave();
+			anim.unSave("imgcut edit name");
 			return;
 		}
 		int v = (int) val;
@@ -86,7 +86,7 @@ class ImgCutEditTable extends AbJTable {
 		if (c > 2 && v == 0)
 			v = 1;
 		ic.cuts[r][c - 1] = v;
-		anim.unSave();
+		anim.unSave("imgcut edit data");
 		anim.ICedited();
 	}
 

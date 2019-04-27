@@ -61,7 +61,7 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 				ans.add(bs);
 			} catch (Exception e) {
 				e.printStackTrace();
-				Opts.p$l("error in reading basis #" + i);
+				Opts.loadErr("error in reading basis #" + i);
 			}
 		int ind = Math.max(is.nextInt(), ans.size() - 1);
 		if (!bac)
@@ -190,7 +190,7 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 				lb.add(bl);
 			} catch (Exception e) {
 				e.printStackTrace();
-				Opts.p$l("error in reading lineup " + name + " - " + str);
+				Opts.loadErr("error in reading lineup " + name + " - " + str);
 			}
 
 		}

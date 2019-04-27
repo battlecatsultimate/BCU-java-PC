@@ -109,9 +109,9 @@ public class WebUserPage extends Page {
 				if (res == 0)
 					load();
 				else if (res == 211)
-					Opts.p$srv("repeat pack ID, please contact developer");
+					Opts.servErr("repeat pack ID, please contact developer");
 				else
-					Opts.p$srv("unable to upload pack");
+					Opts.servErr("unable to upload pack");
 
 			}
 		});
@@ -218,7 +218,7 @@ public class WebUserPage extends Page {
 					public void actionPerformed(ActionEvent arg0) {
 						boolean b = BCJSON.delete(obj[I].pid);
 						if (!b) {
-							Opts.p$srv("failed to edit");
+							Opts.servErr("failed to edit");
 							return;
 						}
 						dele[I].setText(2, (obj[I].state == 1 ? "un" : "") + "delete");
@@ -233,7 +233,7 @@ public class WebUserPage extends Page {
 					public void actionPerformed(ActionEvent arg0) {
 						boolean b = BCJSON.reversion(obj[I].pid);
 						if (!b) {
-							Opts.p$srv("failed to upload");
+							Opts.servErr("failed to upload");
 							return;
 						}
 						load();

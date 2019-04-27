@@ -1,5 +1,6 @@
 package page;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 
 public class JL extends JLabel implements LocComp {
@@ -10,6 +11,7 @@ public class JL extends JLabel implements LocComp {
 
 	public JL() {
 		lsc = new LocSubComp(this);
+		setBorder(BorderFactory.createEtchedBorder());
 	}
 
 	public JL(int i, String str) {
