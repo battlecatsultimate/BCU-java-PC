@@ -12,10 +12,7 @@ import util.system.VFile;
 public class MaAnim extends Data {
 
 	public static MaAnim newIns(String str) {
-		VFile f = VFile.getFile(str);
-		if (f == null)
-			return new MaAnim();
-		return newIns(f);
+		return readSave(str, f -> f == null ? new MaAnim() : new MaAnim(f));
 	}
 
 	public static MaAnim newIns(VFile f) {

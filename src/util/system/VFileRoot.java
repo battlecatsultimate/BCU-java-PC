@@ -2,6 +2,17 @@ package util.system;
 
 public class VFileRoot extends VFile {
 
+	public final int type;
+
+	public VFileRoot(int t) {
+		type = t;
+	}
+
+	@Override
+	public VFileRoot getRoot() {
+		return this;
+	}
+
 	public VFile getVFile(String str) {
 		String[] strs = str.split("/|\\\\");
 		VFile par = this;

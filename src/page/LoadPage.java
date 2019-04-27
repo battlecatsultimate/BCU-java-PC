@@ -6,7 +6,7 @@ public class LoadPage extends Page {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final String[] strs = new String[] {
+	public static final String[] strs = new String[] {
 			"update information (2/8 and 3/8 will take a long time if it's your first time opening BCU)", "file list",
 			"files", "units", "enemies", "stages and imgs", "others", "custom data", "pack", "music", "finish" };
 

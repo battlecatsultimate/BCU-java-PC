@@ -81,15 +81,16 @@ public class Pack extends Data {
 				String str = file.getName();
 				if (!str.endsWith("bcupack"))
 					continue;
-				
+
 				Pack pack;
-				try{pack= new Pack(file);}
-				catch(Exception e) {
+				try {
+					pack = new Pack(file);
+				} catch (Exception e) {
 					e.printStackTrace();
-					Opts.loadErr("Error in reading pack "+str);
+					Opts.loadErr("Error in reading pack " + str);
 					continue;
 				}
-				
+
 				if (fmap.containsKey(pack.id)) {
 					String op = fmap.get(pack.id).getName();
 					String np = file.getName();
@@ -118,10 +119,11 @@ public class Pack extends Data {
 				if (!str.endsWith("bcuenemy"))
 					continue;
 				Pack pac;
-				try {pac = new Pack(Reader.readBytes(file), true);}
-				catch(Exception e) {
+				try {
+					pac = new Pack(Reader.readBytes(file), true);
+				} catch (Exception e) {
 					e.printStackTrace();
-					Opts.loadErr("Error in reading pack "+str);
+					Opts.loadErr("Error in reading pack " + str);
 					continue;
 				}
 				list.removeIf(p -> p.id == pac.id);
@@ -443,6 +445,7 @@ public class Pack extends Data {
 				}
 
 		// music TODO
+		// random enemy TODO
 	}
 
 	public void packUp() {

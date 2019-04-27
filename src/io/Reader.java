@@ -332,6 +332,7 @@ public class Reader extends DataIO {
 			alt = ZipAccess.extractAllList();
 		} catch (Exception e1) {
 			e1.printStackTrace();
+			Opts.loadErr("error in reading: reading backup");
 		}
 		try {
 			DIYAnim.read();

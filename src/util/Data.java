@@ -1,10 +1,15 @@
 package util;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.Queue;
+import java.util.function.Function;
 
+import io.Reader;
+import io.ZipAccess;
+import main.Opts;
 import util.system.VFile;
 
 public class Data {
@@ -382,6 +387,14 @@ public class Data {
 	public static Queue<String> readLine(VFile f) {
 		if (f == null)
 			return null;
+		if (f.getRoot() != null && f.getRoot().type == 1)
+			try {
+				return ZipAccess.readLine(new String(f.data));
+			} catch (IOException e1) {
+				e1.printStackTrace();
+				Opts.backupErr("cannot read " + new String(f.data));
+				return null;
+			}
 		Queue<String> ans = new ArrayDeque<>();
 		BufferedReader reader = null;
 		try {
@@ -412,6 +425,40 @@ public class Data {
 
 	protected static String hex(int id) {
 		return trio(id / 1000) + trio(id % 1000);
+	}
+
+	protected static <T> T readSave(String path, Function<Queue<String>, T> func) {
+		VFile f = VFile.getFile(path);
+		VFile b = Reader.alt == null ? null : Reader.alt.getVFile(path);
+		int ind = 0;
+		while (true) {
+			if (f != null) {
+				T ic = null;
+				Queue<String> qs = readLine(f);
+				if (qs != null)
+					try {
+						ic = func.apply(qs);
+					} catch (Exception e) {
+						e.printStackTrace();
+						ic = null;
+					}
+				if (ic != null)
+					return ic;
+			}
+			if (b == null)
+				break;
+			if (b.child == null)
+				if (b != f)
+					f = b;
+				else
+					break;
+			else if (ind < b.child.size())
+				f = b.child.get(ind++);
+			else
+				break;
+		}
+		Opts.animErr(f.getName());
+		return func.apply(null);
 	}
 
 }
