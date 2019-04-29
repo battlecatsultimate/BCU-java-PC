@@ -23,23 +23,14 @@ import util.system.P;
 /** Entity class for units and enemies */
 public abstract class Entity extends AbEntity {
 
-	/** entity data, read only */
-	public final MaskEntity data;
+	/** entity anim */
+	public final EAnimU anim;
 
 	/** game engine, contains environment configuration */
 	public final StageBasis basis;
 
-	/** proc status, contains ability-specific status data */
-	public final int[][] status = new int[PROC_TOT][PROC_WIDTH];
-
-	/** layer of display, constant field */
-	public int layer;
-
-	/** trait of enemy, also target trait of unit, use bitmask */
-	public int type;
-
-	/** group, used for search */
-	public int group;
+	/** entity data, read only */
+	public final MaskEntity data;
 
 	/**
 	 * dead FSM time <br>
@@ -48,14 +39,28 @@ public abstract class Entity extends AbEntity {
 	 */
 	public int dead = -1;
 
-	/** soul anim, null means not dead yet */
-	private EAnimD soul;
+	public final AnimManager eff;
 
-	/** KB anim, null means not being KBed, can have various value during battle */
-	private EAnimD back;
+	/** group, used for search */
+	public int group;
 
-	/** corpse anim */
-	private EAnimD corpse;
+	/** layer of display, constant field */
+	public int layer;
+
+	/** proc status, contains ability-specific status data */
+	public final int[][] status = new int[PROC_TOT][PROC_WIDTH];
+
+	/** trait of enemy, also target trait of unit, use bitmask */
+	public int type;
+
+	/** attack model */
+	protected final AtkModelEntity aam;
+
+	/** temp field: damage accumulation */
+	protected long damage;
+
+	/** const field */
+	protected boolean isBase;
 
 	/**
 	 * KB FSM time, values: <br>
@@ -66,14 +71,42 @@ public abstract class Entity extends AbEntity {
 	 */
 	protected int kbTime;
 
-	/** attack model */
-	protected final AtkModelEntity aam;
+	/** temp field: marker for double income */
+	protected boolean tempearn;
 
-	/** entity anim */
-	public final EAnimU anim;
+	/** wait FSM time */
+	protected int waitTime;
 
-	/** const field */
-	protected boolean isBase;
+	/** acted: temp field, for update sync */
+	private boolean acted;
+
+	private final AtkManager atkm;
+
+	/** KB anim, null means not being KBed, can have various value during battle */
+	private EAnimD back;
+
+	/** barrier value, 0 means no barrier or broken */
+	private int barrier;
+
+	/** remaining burrow distance */
+	private double bdist;
+
+	/** corpse anim */
+	private EAnimD corpse;
+
+	private final KBManager kb = new KBManager(this);
+
+	/** poison proc processor */
+	private final PoisonToken pois = new PoisonToken();
+
+	/** soul anim, null means not dead yet */
+	private EAnimD soul;
+
+	/** temp field: marker for zombie killer */
+	private boolean tempZK;
+
+	/** abilities that are activated after it's attacked */
+	private final List<AttackAb> tokens = new ArrayList<>();
 
 	/**
 	 * temp field within an update loop <br>
@@ -81,50 +114,11 @@ public abstract class Entity extends AbEntity {
 	 */
 	private boolean touch;
 
-	/** acted: temp field, for update sync */
-	private boolean acted;
-
-	/** atk FSM time */
-	protected int atkTime;
-
-	/** wait FSM time */
-	protected int waitTime;
-
-	/** weak proc processor */
-	private final WeakToken weaks = new WeakToken();
-
-	/** poison proc processor */
-	private final PoisonToken pois = new PoisonToken();
-
-	/** barrier value, 0 means no barrier or broken */
-	private int barrier;
-
-	/** temp field: damage accumulation */
-	protected long damage;
-
-	/** atk id primarily for display */
-	protected int tempAtk = -1;
-
-	/** remaining burrow distance */
-	private double bdist;
-
 	/** temp field: whether it can attack */
 	private boolean touchEnemy;
 
-	/** temp field: marker for double income */
-	protected boolean tempearn;
-
-	/** temp field: marker for zombie killer */
-	private boolean tempZK;
-
-	private KBManager kb = new KBManager(this);
-
-	public AnimManager eff = new AnimManager(this);
-
-	private AtkManager atkm;
-
-	/** abilities that are activated after it's attacked */
-	private final List<AttackAb> tokens = new ArrayList<>();
+	/** weak proc processor */
+	private final WeakToken weaks = new WeakToken();
 
 	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, double d0, double d1) {
 		super(d1 < 0 ? b.st.health : (int) (de.getHp() * d1));
@@ -132,6 +126,7 @@ public abstract class Entity extends AbEntity {
 		data = de;
 		aam = AtkModelEntity.getIns(this, d0);
 		anim = ea;
+		eff = new AnimManager(this);
 		atkm = new AtkManager(this);
 		barrier = de.getShield();
 		status[P_BORROW][0] = getProc(P_BORROW, 0);
@@ -312,7 +307,7 @@ public abstract class Entity extends AbEntity {
 			int x = (int) (d0 * rat * siz + poa);
 			int y = (int) (p.y + 100 * i * rat * siz);
 			int w = (int) (ra * rat * siz);
-			if (tempAtk == i)
+			if (atkm.tempAtk == i)
 				gra.fillRect(x, y, w, h);
 			else
 				gra.drawRect(x, y, w, h);
@@ -326,7 +321,7 @@ public abstract class Entity extends AbEntity {
 		gra.drawRect(bx, (int) p.y, bw, h);
 		gra.setColor(Color.CYAN);
 		gra.drawLine((int) (pos * rat * siz + poa), py, (int) (pos * rat * siz + poa), py + h);
-		tempAtk = -1;
+		atkm.tempAtk = -1;
 	}
 
 	/** get the current ability bitmask */
@@ -407,7 +402,7 @@ public abstract class Entity extends AbEntity {
 
 		kb.doInterrupt();
 
-		if ((getAbi() & AB_GLASS) > 0 && atkTime == 0 && kbTime == 0 && atkm.loop == 0)
+		if ((getAbi() & AB_GLASS) > 0 && atkm.atkTime == 0 && kbTime == 0 && atkm.loop == 0)
 			dead = 0;
 		eff.checkEff();
 
@@ -476,7 +471,7 @@ public abstract class Entity extends AbEntity {
 		updateRevive();
 
 		// do move check if available, move if possible
-		if (kbTime == 0 && !acted && atkTime == 0)
+		if (kbTime == 0 && !acted && atkm.atkTime == 0)
 			updateTouch();
 
 		boolean nstop = status[P_STOP][0] == 0;
@@ -487,7 +482,7 @@ public abstract class Entity extends AbEntity {
 
 		// update wait and attack state
 		if (kbTime == 0) {
-			boolean binatk = waitTime + kbTime + atkTime == 0;
+			boolean binatk = waitTime + kbTime + atkm.atkTime == 0;
 			binatk = binatk && touchEnemy && atkm.loop != 0 && nstop;
 
 			// if it can attack, setup attack state
@@ -495,13 +490,13 @@ public abstract class Entity extends AbEntity {
 				atkm.setUp();
 
 			// update waiting state
-			if ((waitTime > 0 || !touchEnemy) && touch && atkTime == 0 && anim.type != 1)
+			if ((waitTime > 0 || !touchEnemy) && touch && atkm.atkTime == 0 && anim.type != 1)
 				anim.changeAnim(1);
 			if (waitTime > 0)
 				waitTime--;
 
 			// update attack status when in attack state
-			if (status[P_STOP][0] == 0 && atkTime > 0)
+			if (status[P_STOP][0] == 0 && atkm.atkTime > 0)
 				atkm.updateAttack();
 		}
 
@@ -775,10 +770,16 @@ public abstract class Entity extends AbEntity {
 
 class AtkManager {
 
-	private final Entity e;
+	/** atk FSM time */
+	protected int atkTime;
 
-	/** pre-atk time const field */
-	private final int[] pres;
+	/** attack times remain */
+	protected int loop;
+
+	/** atk id primarily for display */
+	protected int tempAtk = -1;
+
+	private final Entity e;
 
 	/** const field, attack count */
 	private final int multi;
@@ -786,11 +787,11 @@ class AtkManager {
 	/** atk loop FSM type */
 	private int preID;
 
+	/** pre-atk time const field */
+	private final int[] pres;
+
 	/** atk loop FSM time */
 	private int preTime;
-
-	/** attack times remain */
-	protected int loop;
 
 	protected AtkManager(Entity ent) {
 		e = ent;
@@ -802,7 +803,7 @@ class AtkManager {
 	}
 
 	protected void setUp() {
-		e.atkTime = e.data.getAnimLen();
+		atkTime = e.data.getAnimLen();
 		loop--;
 		preID = 0;
 		preTime = pres[0];
@@ -810,8 +811,8 @@ class AtkManager {
 	}
 
 	protected void stopAtk() {
-		if (e.atkTime > 0) {
-			e.atkTime = 0;
+		if (atkTime > 0) {
+			atkTime = 0;
 			preTime = 0;
 			if (preID == multi)
 				e.waitTime = e.data.getTBA();
@@ -820,20 +821,20 @@ class AtkManager {
 
 	/** update attack state */
 	protected void updateAttack() {
-		e.atkTime--;
+		atkTime--;
 		if (preTime >= 0) {
 			if (preTime == 0) {
 				int atk0 = preID;
 				while (++preID < multi && pres[preID] == 0)
 					;
-				e.tempAtk = (int) (atk0 + e.basis.r.nextDouble() * (preID - atk0));
-				e.basis.getAttack(e.aam.getAttack(e.tempAtk));
+				tempAtk = (int) (atk0 + e.basis.r.nextDouble() * (preID - atk0));
+				e.basis.getAttack(e.aam.getAttack(tempAtk));
 				if (preID < multi)
 					preTime = pres[preID];
 			}
 			preTime--;
 		}
-		if (e.atkTime == 0) {
+		if (atkTime == 0) {
 			e.waitTime = e.data.getTBA();
 			e.anim.changeAnim(1);
 		}
@@ -842,19 +843,19 @@ class AtkManager {
 
 class KBManager extends Data {
 
-	private final Entity e;
+	/** remaining distance to KB */
+	protected double kbDis;
 
 	/** KB FSM type */
 	protected int kbType;
 
-	/** temp field to store wanted KB type */
-	private int tempKBtype = -1;
+	private final Entity e;
 
 	/** temp field to store wanted KB length */
 	private double tempKBdist;
 
-	/** remaining distance to KB */
-	protected double kbDis;
+	/** temp field to store wanted KB type */
+	private int tempKBtype = -1;
 
 	public KBManager(Entity ent) {
 		e = ent;
