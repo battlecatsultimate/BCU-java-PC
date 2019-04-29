@@ -128,7 +128,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	}
 
 	protected int getProc(int ind, int type, int ety) {
-		if (e.status[P_SEAL][0] > 0)
+		if (e.status[P_SEAL][0] > 0&&type!=P_MOVEWAVE)
 			return 0;
 		return data.getAtkModel(ind).getProc(type)[ety];
 	}

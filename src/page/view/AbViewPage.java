@@ -24,8 +24,8 @@ import page.Page;
 import page.anim.ImgCutEditPage;
 import util.Animable;
 import util.anim.AnimC;
+import util.anim.AnimD;
 import util.anim.AnimI;
-import util.anim.AnimU;
 import util.anim.EAnimI;
 import util.unit.DIYAnim;
 
@@ -206,9 +206,9 @@ public abstract class AbViewPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				EAnimI ei = vb.ent;
-				if (ei == null || !(ei.anim() instanceof AnimU))
+				if (ei == null || !(ei.anim() instanceof AnimD))
 					return;
-				AnimU eau = (AnimU) ei.anim();
+				AnimD eau = (AnimD)ei.anim();
 				String str = "new anim";
 				str = AnimC.getAvailable(str);
 				AnimC ac = new AnimC(str, eau);

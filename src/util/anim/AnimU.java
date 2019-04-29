@@ -111,4 +111,10 @@ public class AnimU extends AnimD {
 		}
 	}
 
+	@Override
+	public BufferedImage getNum() {
+		check();
+		return num;
+	}
+
 }

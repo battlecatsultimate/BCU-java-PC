@@ -19,6 +19,8 @@ public abstract class AnimD extends AnimI {
 		anim = this;
 	}
 
+	public abstract BufferedImage getNum();
+	
 	@Override
 	public void check() {
 		if (!loaded)

@@ -131,4 +131,9 @@ public class EffAnim extends AnimD {
 		return ss[ss.length - 1];
 	}
 
+	@Override
+	public BufferedImage getNum() {
+		return vimg.getImg();
+	}
+
 }

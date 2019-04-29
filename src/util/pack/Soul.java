@@ -1,5 +1,7 @@
 package util.pack;
 
+import java.awt.image.BufferedImage;
+
 import util.anim.AnimD;
 import util.anim.ImgCut;
 import util.anim.MaAnim;
@@ -18,16 +20,17 @@ public class Soul extends AnimD {
 	}
 
 	private final int index;
+	private final VImg img;
 
 	private Soul(String st, int i) {
 		super(st);
+		img = new VImg(str + ".png");
 		index = i;
 	}
 
 	@Override
 	public void load() {
 		loaded = true;
-		VImg img = new VImg(str + ".png");
 		imgcut = ImgCut.newIns(str + ".imgcut");
 		mamodel = MaModel.newIns(str + ".mamodel");
 		anims = new MaAnim[] { MaAnim.newIns(str + ".maanim") };
@@ -42,6 +45,11 @@ public class Soul extends AnimD {
 	@Override
 	public String toString() {
 		return "soul_" + trio(index);
+	}
+
+	@Override
+	public BufferedImage getNum() {
+		return img.getImg();
 	}
 
 }

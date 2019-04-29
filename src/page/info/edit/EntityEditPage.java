@@ -212,16 +212,16 @@ public abstract class EntityEditPage extends Page {
 	protected void resized(int x, int y) {
 		setSize(x, y);
 		set(back, x, y, 0, 0, 200, 50);
-		set(lhp, x, y, 50, 150, 100, 50);
-		set(fhp, x, y, 150, 150, 200, 50);
-		set(lhb, x, y, 50, 200, 100, 50);
-		set(fhb, x, y, 150, 200, 200, 50);
-		set(lsp, x, y, 50, 250, 100, 50);
-		set(fsp, x, y, 150, 250, 200, 50);
-		set(lsh, x, y, 50, 300, 100, 50);
-		set(fsh, x, y, 150, 300, 200, 50);
-		set(lwd, x, y, 50, 350, 100, 50);
-		set(fwd, x, y, 150, 350, 200, 50);
+		set(lhp, x, y, 50, 100, 100, 50);
+		set(fhp, x, y, 150, 100, 200, 50);
+		set(lhb, x, y, 50, 150, 100, 50);
+		set(fhb, x, y, 150, 150, 200, 50);
+		set(lsp, x, y, 50, 200, 100, 50);
+		set(fsp, x, y, 150, 200, 200, 50);
+		set(lsh, x, y, 50, 250, 100, 50);
+		set(fsh, x, y, 150, 250, 200, 50);
+		set(lwd, x, y, 50, 300, 100, 50);
+		set(fwd, x, y, 150, 300, 200, 50);
 
 		set(mpt, x, y, 50, 650, 300, 600);
 
