@@ -3,7 +3,6 @@ package util.entity.attack;
 import util.entity.EEnemy;
 import util.entity.EntCont;
 import util.entity.Entity;
-import util.pack.EffAnim;
 import util.unit.AbEnemy;
 import util.unit.EnemyStore;
 
@@ -57,24 +56,16 @@ public class AtkModelEnemy extends AtkModelEntity {
 			// conf 16
 			if ((conf & 16) != 0)
 				ee.health = e.health;
-			conf &= 3;
-			// conf 1
-			if (conf == 1) {
-				ee.kbType = INT_WARP;
-				ee.kbTime = EffAnim.effas[A_W].len(1);
-				ee.status[P_WARP][2] = 1;
-			}
-			// conf 2
-			if (conf == 2 && ee.anim.anim().anims.length >= 7)
-				ee.kbTime = -3;
+			ee.setSummon(conf & 3);
 		}
 
 	}
 
 	@Override
 	protected int getProc(int ind, int type, int ety) {
-		if (e.status[P_CURSE][0] > 0 && (type == P_KB || type == P_STOP || type == P_SLOW || type == P_WEAK
-				|| type == P_WARP || type == P_CURSE || type == P_SNIPER || type == P_SEAL))
+		if (e.status[P_CURSE][0] > 0
+				&& (type == P_KB || type == P_STOP || type == P_SLOW || type == P_WEAK || type == P_WARP
+						|| type == P_CURSE || type == P_SNIPER || type == P_SEAL || type == P_POISON || type == P_BOSS))
 			return 0;
 		return super.getProc(ind, type, ety);
 	}

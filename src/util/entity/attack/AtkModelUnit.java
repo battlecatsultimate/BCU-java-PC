@@ -4,7 +4,6 @@ import util.basis.Basis;
 import util.entity.EUnit;
 import util.entity.EntCont;
 import util.entity.Entity;
-import util.pack.EffAnim;
 import util.unit.EForm;
 import util.unit.Unit;
 import util.unit.UnitStore;
@@ -56,16 +55,7 @@ public class AtkModelUnit extends AtkModelEntity {
 			eu.layer = (int) (b.r.nextDouble() * (l1 - l0)) + l0;
 			eu.added(-1, (int) up);
 			b.tempe.add(new EntCont(eu, time));
-			conf &= 3;
-			// conf 1
-			if (conf == 1) {
-				eu.kbType = INT_WARP;
-				eu.kbTime = EffAnim.effas[A_W].len(1);
-				eu.status[P_WARP][2] = 1;
-			}
-			// conf 2
-			if (conf == 2)
-				eu.kbTime = -3;
+			eu.setSummon(conf & 3);
 		}
 
 	}

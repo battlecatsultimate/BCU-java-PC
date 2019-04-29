@@ -3,7 +3,6 @@ package util.anim;
 import java.awt.image.BufferedImage;
 import java.io.PrintStream;
 import java.util.Queue;
-
 import io.InStream;
 import io.OutStream;
 import main.Opts;
@@ -13,10 +12,7 @@ import util.system.VFile;
 public class ImgCut extends Data implements Cloneable {
 
 	public static ImgCut newIns(String path) {
-		VFile f = VFile.getFile(path);
-		if (f == null)
-			return new ImgCut();
-		return newIns(f);
+		return readSave(path, f -> f == null ? new ImgCut() : new ImgCut(f));
 	}
 
 	protected static ImgCut newIns(VFile f) {

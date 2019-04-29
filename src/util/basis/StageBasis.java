@@ -221,7 +221,7 @@ public abstract class StageBasis extends Data {
 				e.postUpdate();
 
 		if (s_stop == 0) {
-			le.removeIf(e -> e.dead == 0);
+			le.removeIf(e -> e.anim.dead == 0);
 			lw.removeIf(w -> !w.activate);
 			lea.removeIf(a -> a.done());
 		}

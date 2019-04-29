@@ -67,7 +67,7 @@ public class Writer extends DataIO {
 	}
 
 	public static void logClose(boolean save) {
-		if (save && LoadPage.prog > 6 && MainBCU.trueRun) {
+		if (save && LoadPage.prog >= LoadPage.strs.length - 1 && MainBCU.trueRun) {
 			try {
 				writeOptions();
 				writeData();

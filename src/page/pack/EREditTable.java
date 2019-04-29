@@ -45,13 +45,16 @@ class EREditTable extends AbJTable implements Reorderable {
 	}
 
 	@Override
-	public boolean editCellAt(int row, int column, EventObject e) {
-		boolean result = super.editCellAt(row, column, e);
+	public boolean editCellAt(int r, int c, EventObject e) {
+		boolean result = super.editCellAt(r, c, e);
 		Component editor = getEditorComponent();
 		if (editor == null || !(editor instanceof JTextComponent))
 			return result;
+		JTextComponent jtf = ((JTextComponent) editor);
 		if (e instanceof KeyEvent)
-			((JTextComponent) editor).selectAll();
+			jtf.selectAll();
+		if (lnk[c] == 0 && jtf.getText().length() > 0)
+			jtf.setText(((AbEnemy) get(r, c)).getID() + "");
 		return result;
 	}
 

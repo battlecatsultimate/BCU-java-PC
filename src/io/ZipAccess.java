@@ -80,7 +80,7 @@ public class ZipAccess {
 			fs.close();
 			return null;
 		}
-		VFileRoot ans = new VFileRoot();
+		VFileRoot ans = new VFileRoot(1);
 		Queue<String> qs = new ArrayDeque<>(Files.readAllLines(ind0));
 		int size = Reader.parseIntN(qs.poll());
 		for (int i = 0; i < size; i++)
@@ -148,7 +148,7 @@ public class ZipAccess {
 		if (!f.exists())
 			return null;
 		FileSystem fs = FileSystems.newFileSystem(f.toPath(), null);
-		VFileRoot ans = new VFileRoot();
+		VFileRoot ans = new VFileRoot(1);
 		Files.list(fs.getPath("/backups")).forEach(elem -> {
 			try {
 				String fn = elem.getFileName().toString();
@@ -196,7 +196,7 @@ public class ZipAccess {
 			fs.close();
 			return null;
 		}
-		VFileRoot ans = new VFileRoot();
+		VFileRoot ans = new VFileRoot(1);
 		Queue<String> qs = new ArrayDeque<>(Files.readAllLines(index));
 		int size = Reader.parseIntN(qs.poll());
 		for (int i = 0; i < size && !qs.isEmpty(); i++)

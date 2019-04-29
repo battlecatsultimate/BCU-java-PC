@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 
 public class VFile implements Comparable<VFile>, Iterable<VFile> {
 
-	public static VFileRoot root = new VFileRoot();
+	public static VFileRoot root = new VFileRoot(0);
 
 	public static VFile getFile(String str) {
 		if (str.startsWith("./res/")) {
@@ -110,6 +110,12 @@ public class VFile implements Comparable<VFile>, Iterable<VFile> {
 		if (parent == null)
 			return toString();
 		return parent.getPath() + toString();
+	}
+
+	public VFileRoot getRoot() {
+		if (parent == null)
+			return null;
+		return parent.getRoot();
 	}
 
 	@Override

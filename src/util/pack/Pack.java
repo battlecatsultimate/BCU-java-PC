@@ -81,7 +81,16 @@ public class Pack extends Data {
 				String str = file.getName();
 				if (!str.endsWith("bcupack"))
 					continue;
-				Pack pack = new Pack(file);
+
+				Pack pack;
+				try {
+					pack = new Pack(file);
+				} catch (Exception e) {
+					e.printStackTrace();
+					Opts.loadErr("Error in reading pack " + str);
+					continue;
+				}
+
 				if (fmap.containsKey(pack.id)) {
 					String op = fmap.get(pack.id).getName();
 					String np = file.getName();
@@ -109,7 +118,14 @@ public class Pack extends Data {
 				String str = file.getName();
 				if (!str.endsWith("bcuenemy"))
 					continue;
-				Pack pac = new Pack(Reader.readBytes(file), true);
+				Pack pac;
+				try {
+					pac = new Pack(Reader.readBytes(file), true);
+				} catch (Exception e) {
+					e.printStackTrace();
+					Opts.loadErr("Error in reading pack " + str);
+					continue;
+				}
 				list.removeIf(p -> p.id == pac.id);
 				list.add(pac);
 			}
@@ -203,12 +219,12 @@ public class Pack extends Data {
 	public Pack(InStream is, boolean reg) {
 		ver = getVer(is.nextString());
 		id = is.nextInt();
-		if (reg)
-			map.put(id, this);
 		res = is;
 		int n = is.nextByte();
 		for (int i = 0; i < n; i++)
 			rely.add(is.nextInt());
+		if (reg)
+			map.put(id, this);
 		cs = new CasStore(this, reg);
 	}
 
@@ -429,6 +445,7 @@ public class Pack extends Data {
 				}
 
 		// music TODO
+		// random enemy TODO
 	}
 
 	public void packUp() {

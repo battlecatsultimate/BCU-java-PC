@@ -17,10 +17,7 @@ import util.system.VFile;
 public class MaModel extends Data implements Cloneable {
 
 	public static MaModel newIns(String path) {
-		VFile f = VFile.getFile(path);
-		if (f == null)
-			return new MaModel();
-		return newIns(f);
+		return readSave(path, f -> f == null ? new MaModel() : new MaModel(f));
 	}
 
 	public static MaModel newIns(VFile f) {
