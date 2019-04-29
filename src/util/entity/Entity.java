@@ -206,12 +206,12 @@ public abstract class Entity extends AbEntity {
 			} else
 				anim.getEff(INV);
 		}
-		if (atk.getProc(P_SNIPER)[0] > 0) {
-			if ((getAbi() & AB_SNIPERI) == 0)
-				interrupt(INT_ASS, KB_DIS[INT_ASS]);
-			else
-				anim.getEff(INV);
-		}
+		if (atk.getProc(P_SNIPER)[0] > 0)
+			interrupt(INT_ASS, KB_DIS[INT_ASS]);
+
+		if (atk.getProc(P_BOSS)[0] > 0)
+			interrupt(INT_SW, KB_DIS[INT_SW]);
+
 		if (atk.getProc(P_WARP)[0] > 0)
 			if (getProc(P_IMUWARP, 0) < 100) {
 				interrupt(INT_WARP, atk.getProc(P_WARP)[1]);
@@ -733,8 +733,14 @@ class KBManager extends Data {
 	}
 
 	protected void interrupt(int t, double d) {
-		if (t == INT_SW && (e.getAbi() & AB_IMUSW) > 0)
+		if (t == INT_ASS && (e.getAbi() & AB_SNIPERI) > 0) {
+			e.anim.getEff(INV);
 			return;
+		}
+		if (t == INT_SW && (e.getAbi() & AB_IMUSW) > 0) {
+			e.anim.getEff(INV);
+			return;
+		}
 		int prev = tempKBtype;
 		if (prev == -1 || KB_PRI[t] >= KB_PRI[prev]) {
 			tempKBtype = t;

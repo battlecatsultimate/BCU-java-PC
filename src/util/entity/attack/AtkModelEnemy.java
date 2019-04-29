@@ -63,8 +63,9 @@ public class AtkModelEnemy extends AtkModelEntity {
 
 	@Override
 	protected int getProc(int ind, int type, int ety) {
-		if (e.status[P_CURSE][0] > 0 && (type == P_KB || type == P_STOP || type == P_SLOW || type == P_WEAK
-				|| type == P_WARP || type == P_CURSE || type == P_SNIPER || type == P_SEAL || type == P_POISON))
+		if (e.status[P_CURSE][0] > 0
+				&& (type == P_KB || type == P_STOP || type == P_SLOW || type == P_WEAK || type == P_WARP
+						|| type == P_CURSE || type == P_SNIPER || type == P_SEAL || type == P_POISON || type == P_BOSS))
 			return 0;
 		return super.getProc(ind, type, ety);
 	}

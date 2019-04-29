@@ -172,6 +172,8 @@ public abstract class AtkModelEntity extends AtkModelAb {
 
 		if (b.r.nextDouble() * 100 < getProc(ind, P_SNIPER, 0))
 			proc[P_SNIPER][0] = 1;
+		if (b.r.nextDouble() * 100 < getProc(ind, P_BOSS, 0))
+			proc[P_BOSS][0] = 1;
 
 		if (b.r.nextDouble() * 100 < getProc(ind, P_SEAL, 0))
 			proc[P_SEAL][0] = getProc(ind, P_SEAL, 1);

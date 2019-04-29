@@ -180,6 +180,7 @@ public class Data {
 	protected static final int P_THEME = 25;
 	/** 0:prob, 1:time, 2:dmg, 3:itv */
 	protected static final int P_POISON = 26;
+	protected static final int P_BOSS = 27;
 
 	protected static final int PROC_TOT = 30;// 27
 	protected static final int PROC_WIDTH = 6;
