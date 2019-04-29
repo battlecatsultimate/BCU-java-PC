@@ -42,7 +42,7 @@ public abstract class ContWaveAb extends ContAb {
 			for (AbEntity e : atk.capt)
 				if ((e.getAbi() & AB_WAVES) > 0) {
 					if (e instanceof Entity)
-						((Entity) e).eff.getEff(STPWAVE);
+						((Entity) e).anim.getEff(STPWAVE);
 					activate = false;
 					return;
 				}

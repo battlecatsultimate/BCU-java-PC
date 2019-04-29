@@ -4,15 +4,37 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 import util.Data;
+import util.ImgCore;
 import util.anim.AnimD;
 import util.anim.EAnimD;
+import util.anim.EAnimU;
 import util.pack.EffAnim;
+import util.pack.Soul;
 import util.system.P;
 
 public class AnimManager extends Data {
 
 	private final Entity e;
 	private final int[][] status;
+
+	/**
+	 * dead FSM time <br>
+	 * -1 means not dead<br>
+	 * positive value means time remain for death anim to play
+	 */
+	public int dead = -1;
+
+	/** KB anim, null means not being KBed, can have various value during battle */
+	protected EAnimD back;
+
+	/** entity anim */
+	private final EAnimU anim;
+
+	/** corpse anim */
+	protected EAnimD corpse;
+
+	/** soul anim, null means not dead yet */
+	private EAnimD soul;
 
 	/** responsive effect FSM time */
 	private int efft;
@@ -26,14 +48,41 @@ public class AnimManager extends Data {
 	 */
 	private final EAnimD[] effs = new EAnimD[A_TOT];
 
-	public AnimManager(Entity ent) {
+	protected AnimManager(Entity ent, EAnimU ea) {
 		e = ent;
+		anim = ea;
 		status = e.status;
+	}
+
+	/** draw this entity */
+	public void draw(Graphics2D gra, P p, double siz) {
+		if (dead > 0) {
+			soul.draw(gra, p, siz);
+			return;
+		}
+		AffineTransform at = gra.getTransform();
+		if (corpse != null)
+			corpse.draw(gra, p, siz);
+		if (corpse == null || status[P_REVIVE][1] < Data.REVIVE_SHOW_TIME) {
+			if (corpse != null) {
+				gra.setTransform(at);
+				anim.changeAnim(0);
+			}
+		} else
+			return;
+
+		anim.paraTo(back);
+		if (e.kbTime == 0 || e.kb.kbType != INT_WARP)
+			anim.draw(gra, p, siz);
+		anim.paraTo(null);
+		gra.setTransform(at);
+		if (ImgCore.ref)
+			e.drawAxis(gra, p, siz);
 	}
 
 	/** draw the effect icons */
 	public void drawEff(Graphics2D g, P p, double siz) {
-		if (e.dead != -1)
+		if (dead != -1)
 			return;
 		AffineTransform at = g.getTransform();
 		int EWID = 48;
@@ -113,7 +162,7 @@ public class AnimManager extends Data {
 		if (t == P_WARP) {
 			AnimD ea = EffAnim.effas[A_W];
 			int pa = status[P_WARP][2];
-			e.basis.lea.add(new WaprCont(e.pos, pa, e.anim));
+			e.basis.lea.add(new WaprCont(e.pos, pa, anim));
 			status[P_WARP][pa] = ea.len(pa);
 
 		}
@@ -135,8 +184,72 @@ public class AnimManager extends Data {
 		}
 	}
 
+	/**
+	 * process kb animation <br>
+	 * called when kb is applied
+	 */
+	protected void kbAnim() {
+		int t = e.kb.kbType;
+		if (t != INT_SW && t != INT_WARP)
+			setAnim(3);
+		else {
+			setAnim(0);
+			anim.update(false);
+		}
+		if (t == INT_WARP) {
+			e.kbTime = status[P_WARP][0];
+			getEff(P_WARP);
+			status[P_WARP][2] = 1;
+		}
+		if (t == INT_KB)
+			e.kbTime = status[P_KB][0];
+		if (t == INT_HB)
+			back = EffAnim.effas[A_KB].getEAnim(0);
+		if (t == INT_SW)
+			back = EffAnim.effas[A_KB].getEAnim(1);
+		if (t == INT_ASS)
+			back = EffAnim.effas[A_KB].getEAnim(2);
+
+		// Z-kill icon
+		if (e.health <= 0 && e.tempZK && status[P_REVIVE][0] > 0) {
+			EAnimD eae = EffAnim.effas[A_Z_STRONG].getEAnim(0);
+			e.basis.lea.add(new EAnimCont(e.pos, eae));
+		}
+	}
+
+	/** set kill anim */
+	protected void kill() {
+		if (e.data.getDeathAnim() == -1)
+			dead = 0;
+		else
+			dead = (soul = Soul.souls[e.data.getDeathAnim()].getEAnim(0)).len();
+	}
+
+	protected int setAnim(int t) {
+		if (anim.type != t)
+			anim.changeAnim(t);
+		return anim.len();
+	}
+
+	protected void update() {
+		checkEff();
+
+		for (int i = 0; i < effs.length; i++)
+			if (effs[i] != null)
+				effs[i].update(false);
+
+		if (status[P_STOP][0] == 0 && (e.kbTime == 0 || e.kb.kbType != INT_SW))
+			anim.update(false);
+		if (back != null)
+			back.update(false);
+		if (dead > 0) {
+			soul.update(false);
+			dead--;
+		}
+	}
+
 	/** update effect icons animation */
-	protected void checkEff() {
+	private void checkEff() {
 		int dire = e.dire;
 		if (efft == 0)
 			effs[eftp] = null;
@@ -185,12 +298,6 @@ public class AnimManager extends Data {
 			status[P_BREAK][0]--;
 		efft--;
 
-	}
-
-	protected void update() {
-		for (int i = 0; i < effs.length; i++)
-			if (effs[i] != null)
-				effs[i].update(false);
 	}
 
 }

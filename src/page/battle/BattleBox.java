@@ -300,7 +300,7 @@ public class BattleBox extends Canvas {
 			int bh = (int) (bimg.getHeight() * siz);
 			gra.drawImage(bimg, posx - bw, posy - bh, bw, bh, null);
 		} else
-			((Entity) sb.ebase).draw(gra, new P(posx, posy), siz * sprite);
+			((Entity) sb.ebase).anim.draw(gra, new P(posx, posy), siz * sprite);
 		gra.setTransform(at);
 		posx -= castw * siz / 2;
 		posy -= casth * siz;
@@ -329,9 +329,9 @@ public class BattleBox extends Canvas {
 					gra.setTransform(at);
 					double p = getX(e.pos);
 					double y = midh - (road_h - dep) * siz;
-					e.draw(gra, new P(p, y), psiz);
+					e.anim.draw(gra, new P(p, y), psiz);
 					gra.setTransform(at);
-					e.eff.drawEff(gra, new P(p, y), siz);
+					e.anim.drawEff(gra, new P(p, y), siz);
 				}
 		}
 		for (ContAb wc : sb.lw) {
@@ -373,9 +373,9 @@ public class BattleBox extends Canvas {
 						gra.setTransform(at);
 						double p = getX(e.pos);
 						double y = midh - (road_h - dep) * siz;
-						e.draw(gra, new P(p, y), psiz);
+						e.anim.draw(gra, new P(p, y), psiz);
 						gra.setTransform(at);
-						e.eff.drawEff(gra, new P(p, y), siz);
+						e.anim.drawEff(gra, new P(p, y), siz);
 					}
 			}
 		}
