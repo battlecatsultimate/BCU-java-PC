@@ -331,7 +331,7 @@ public class BattleBox extends Canvas {
 					double y = midh - (road_h - dep) * siz;
 					e.draw(gra, new P(p, y), psiz);
 					gra.setTransform(at);
-					e.drawEff(gra, new P(p, y), siz);
+					e.eff.drawEff(gra, new P(p, y), siz);
 				}
 		}
 		for (ContAb wc : sb.lw) {
@@ -375,7 +375,7 @@ public class BattleBox extends Canvas {
 						double y = midh - (road_h - dep) * siz;
 						e.draw(gra, new P(p, y), psiz);
 						gra.setTransform(at);
-						e.drawEff(gra, new P(p, y), siz);
+						e.eff.drawEff(gra, new P(p, y), siz);
 					}
 			}
 		}

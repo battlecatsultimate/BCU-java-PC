@@ -3,7 +3,6 @@ package util.entity.attack;
 import util.entity.EEnemy;
 import util.entity.EntCont;
 import util.entity.Entity;
-import util.pack.EffAnim;
 import util.unit.AbEnemy;
 import util.unit.EnemyStore;
 
@@ -57,7 +56,7 @@ public class AtkModelEnemy extends AtkModelEntity {
 			// conf 16
 			if ((conf & 16) != 0)
 				ee.health = e.health;
-			ee.setSummon(conf&3);
+			ee.setSummon(conf & 3);
 		}
 
 	}

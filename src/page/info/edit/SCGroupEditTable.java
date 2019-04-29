@@ -80,7 +80,7 @@ class SCGroupEditTable extends AbJTable {
 
 	@Override
 	public boolean isCellEditable(int r, int c) {
-		return lnk[c]!=0;
+		return lnk[c] != 0;
 	}
 
 	@Override

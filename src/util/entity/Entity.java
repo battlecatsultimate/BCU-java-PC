@@ -9,7 +9,6 @@ import java.util.List;
 import page.battle.BattleBox;
 import util.Data;
 import util.ImgCore;
-import util.anim.AnimD;
 import util.anim.EAnimD;
 import util.anim.EAnimU;
 import util.basis.StageBasis;
@@ -31,7 +30,7 @@ public abstract class Entity extends AbEntity {
 	public final StageBasis basis;
 
 	/** proc status, contains ability-specific status data */
-	public final int[][] status;
+	public final int[][] status = new int[PROC_TOT][PROC_WIDTH];
 
 	/** layer of display, constant field */
 	public int layer;
@@ -57,7 +56,7 @@ public abstract class Entity extends AbEntity {
 
 	/** corpse anim */
 	private EAnimD corpse;
-	
+
 	/**
 	 * KB FSM time, values: <br>
 	 * 0: not KB <br>
@@ -66,13 +65,6 @@ public abstract class Entity extends AbEntity {
 	 * negative: burrow FSM type
 	 */
 	protected int kbTime;
-
-
-	/**
-	 * on-entity effect icons<br>
-	 * index defined by Data.A_()
-	 */
-	protected final EAnimD[] effs = new EAnimD[A_TOT];
 
 	/** attack model */
 	protected final AtkModelEntity aam;
@@ -93,16 +85,10 @@ public abstract class Entity extends AbEntity {
 	private boolean acted;
 
 	/** atk FSM time */
-	private int atkTime;
+	protected int atkTime;
 
 	/** wait FSM time */
-	private int waitTime;
-
-	/** pre-atk time const field */
-	private final int[] pres;
-
-	/** const field, attack count */
-	private final int multi;
+	protected int waitTime;
 
 	/** weak proc processor */
 	private final WeakToken weaks = new WeakToken();
@@ -113,26 +99,11 @@ public abstract class Entity extends AbEntity {
 	/** barrier value, 0 means no barrier or broken */
 	private int barrier;
 
-	/** atk loop FSM type */
-	private int preID;
-
-	/** atk loop FSM time */
-	private int preTime;
-
 	/** temp field: damage accumulation */
 	protected long damage;
 
-	/** responsive effect FSM time */
-	private int efft;
-
-	/** responsive effect FSM type */
-	private int eftp;
-
-	/** attack times remain */
-	private int loop;
-
 	/** atk id primarily for display */
-	private int tempAtk = -1;
+	protected int tempAtk = -1;
 
 	/** remaining burrow distance */
 	private double bdist;
@@ -146,8 +117,12 @@ public abstract class Entity extends AbEntity {
 	/** temp field: marker for zombie killer */
 	private boolean tempZK;
 
-	public KBManager kb=new KBManager(this);
-	
+	private KBManager kb = new KBManager(this);
+
+	public AnimManager eff = new AnimManager(this);
+
+	private AtkManager atkm;
+
 	/** abilities that are activated after it's attacked */
 	private final List<AttackAb> tokens = new ArrayList<>();
 
@@ -157,13 +132,8 @@ public abstract class Entity extends AbEntity {
 		data = de;
 		aam = AtkModelEntity.getIns(this, d0);
 		anim = ea;
-		int[][] raw = de.rawAtkData();
-		pres = new int[multi = raw.length];
-		for (int i = 0; i < multi; i++)
-			pres[i] = raw[i][1];
-		loop = de.getAtkLoop();
+		atkm = new AtkManager(this);
 		barrier = de.getShield();
-		status = new int[PROC_TOT][PROC_WIDTH];
 		status[P_BORROW][0] = getProc(P_BORROW, 0);
 		status[P_REVIVE][0] = getProc(P_REVIVE, 0);
 	}
@@ -175,7 +145,7 @@ public abstract class Entity extends AbEntity {
 		// if immune to wave and the attack is wave, jump out
 		if (atk.waveType == WT_WAVE) {
 			if (getProc(P_IMUWAVE, 0) > 0)
-				getEff(P_WAVE);
+				eff.getEff(P_WAVE);
 			if (getProc(P_IMUWAVE, 0) == 100)
 				return;
 			else
@@ -184,20 +154,20 @@ public abstract class Entity extends AbEntity {
 
 		if (atk.waveType == WT_MOVE)
 			if ((getAbi() & AB_MOVEI) > 0) {
-				getEff(P_WAVE);
+				eff.getEff(P_WAVE);
 				return;
 			}
 		tokens.add(atk);
 		if (barrier > 0) {
 			if (atk.getProc(P_BREAK)[0] > 0) {
 				barrier = 0;
-				getEff(BREAK_ABI);
+				eff.getEff(BREAK_ABI);
 			} else if (getDamage(atk, atk.atk) >= barrier) {
 				barrier = 0;
-				getEff(BREAK_ATK);
+				eff.getEff(BREAK_ATK);
 				return;
 			} else {
-				getEff(BREAK_NON);
+				eff.getEff(BREAK_NON);
 				return;
 			}
 		}
@@ -222,9 +192,9 @@ public abstract class Entity extends AbEntity {
 			val = val * (100 - rst) / 100;
 			status[P_STOP][0] = Math.max(status[P_STOP][0], val);
 			if (rst < 100)
-				getEff(P_STOP);
+				eff.getEff(P_STOP);
 			else
-				getEff(INV);
+				eff.getEff(INV);
 		}
 		if (atk.getProc(P_SLOW)[0] > 0) {
 			int val = (int) (atk.getProc(P_SLOW)[0] * time);
@@ -232,9 +202,9 @@ public abstract class Entity extends AbEntity {
 			val = val * (100 - rst) / 100;
 			status[P_SLOW][0] = Math.max(status[P_SLOW][0], val);
 			if (rst < 100)
-				getEff(P_SLOW);
+				eff.getEff(P_SLOW);
 			else
-				getEff(INV);
+				eff.getEff(INV);
 		}
 		if (atk.getProc(P_WEAK)[0] > 0) {
 			int val = (int) (atk.getProc(P_WEAK)[0] * time);
@@ -243,9 +213,9 @@ public abstract class Entity extends AbEntity {
 			if (rst < 100) {
 				weaks.add(new int[] { val, atk.getProc(P_WEAK)[1] });
 				updateProc();
-				getEff(P_WEAK);
+				eff.getEff(P_WEAK);
 			} else
-				getEff(INV);
+				eff.getEff(INV);
 		}
 		if (atk.getProc(P_CURSE)[0] > 0) {
 			int val = atk.getProc(P_CURSE)[0];
@@ -253,9 +223,9 @@ public abstract class Entity extends AbEntity {
 			val = val * (100 - rst) / 100;
 			status[P_CURSE][0] = Math.max(status[P_CURSE][0], val);
 			if (rst < 100)
-				getEff(P_CURSE);
+				eff.getEff(P_CURSE);
 			else
-				getEff(INV);
+				eff.getEff(INV);
 		}
 
 		if (atk.getProc(P_KB)[0] != 0) {
@@ -264,13 +234,13 @@ public abstract class Entity extends AbEntity {
 				status[P_KB][0] = atk.getProc(P_KB)[1];
 				interrupt(P_KB, atk.getProc(P_KB)[0] * dist * (100 - rst) / 100);
 			} else
-				getEff(INV);
+				eff.getEff(INV);
 		}
 		if (atk.getProc(P_SNIPER)[0] > 0) {
 			if ((getAbi() & AB_SNIPERI) == 0)
 				interrupt(INT_ASS, KB_DIS[INT_ASS]);
 			else
-				getEff(INV);
+				eff.getEff(INV);
 		}
 		if (atk.getProc(P_WARP)[0] > 0)
 			if (getProc(P_IMUWARP, 0) < 100) {
@@ -282,14 +252,14 @@ public abstract class Entity extends AbEntity {
 				val = val * (100 - rst) / 100;
 				status[P_WARP][0] = val + len;
 			} else
-				getEff(INVWARP);
+				eff.getEff(INVWARP);
 
 		if (atk.getProc(P_SEAL)[0] > 0)
 			if ((getAbi() & AB_SEALI) == 0) {
 				status[P_SEAL][0] = atk.getProc(P_SEAL)[0];
-				getEff(P_SEAL);
+				eff.getEff(P_SEAL);
 			} else
-				getEff(INV);
+				eff.getEff(INV);
 
 		if (atk.getProc(P_POISON)[0] > 0)
 			if ((getAbi() & AB_POII) == 0) {
@@ -298,9 +268,9 @@ public abstract class Entity extends AbEntity {
 				ws[1] = getDamage(atk, atk.getProc(P_POISON)[1]);
 				ws[2] = ws[3] = atk.getProc(P_POISON)[2];
 				pois.add(ws);
-				getEff(P_POISON);
+				eff.getEff(P_POISON);
 			} else
-				getEff(INV);
+				eff.getEff(INV);
 	}
 
 	/** draw this entity */
@@ -359,25 +329,6 @@ public abstract class Entity extends AbEntity {
 		tempAtk = -1;
 	}
 
-	/** draw the effect icons */
-	public void drawEff(Graphics2D g, P p, double siz) {
-		if (dead != -1)
-			return;
-		AffineTransform at = g.getTransform();
-		int EWID = 48;
-		double x = p.x;
-		if (effs[eftp] != null) {
-			effs[eftp].draw(g, p, siz);
-		}
-		for (EAnimD eae : effs) {
-			if (eae == null)
-				continue;
-			g.setTransform(at);
-			eae.draw(g, new P(x, p.y), siz);
-			x -= EWID * dire * siz;
-		}
-	}
-
 	/** get the current ability bitmask */
 	@Override
 	public int getAbi() {
@@ -391,95 +342,16 @@ public abstract class Entity extends AbEntity {
 		return aam.getAtk();
 	}
 
-	/** get a effect icon */
-	public void getEff(int t) {
-		if (t == INV) {
-			effs[eftp] = null;
-			eftp = A_EFF_INV;
-			effs[eftp] = EffAnim.effas[eftp].getEAnim(0);
-			efft = EffAnim.effas[eftp].len(0);
-		}
-		if (t == P_WAVE) {
-			int id = dire == -1 ? A_WAVE_INVALID : A_E_WAVE_INVALID;
-			effs[id] = EffAnim.effas[id].getEAnim(0);
-			status[P_WAVE][0] = EffAnim.effas[id].len(0);
-		}
-		if (t == STPWAVE) {
-			effs[eftp] = null;
-			eftp = dire == -1 ? A_WAVE_STOP : A_E_WAVE_STOP;
-			effs[eftp] = EffAnim.effas[eftp].getEAnim(0);
-			efft = EffAnim.effas[eftp].len(0);
-		}
-		if (t == INVWARP) {
-			effs[eftp] = null;
-			eftp = dire == -1 ? A_FARATTACK : A_E_FARATTACK;
-			effs[eftp] = EffAnim.effas[eftp].getEAnim(0);
-			efft = EffAnim.effas[eftp].len(0);
-		}
-		if (t == P_STOP) {
-			int id = dire == -1 ? A_STOP : A_E_STOP;
-			effs[id] = EffAnim.effas[id].getEAnim(0);
-		}
-		if (t == P_SLOW) {
-			int id = dire == -1 ? A_SLOW : A_E_SLOW;
-			effs[id] = EffAnim.effas[id].getEAnim(0);
-		}
-		if (t == P_WEAK) {
-			int id = dire == -1 ? A_DOWN : A_E_DOWN;
-			effs[id] = EffAnim.effas[id].getEAnim(0);
-		}
-		if (t == P_CURSE) {
-			int id = A_CURSE;
-			effs[id] = EffAnim.effas[id].getEAnim(0);
-		}
-		if (t == P_POISON) {
-			int id = A_POISON;
-			effs[id] = EffAnim.effas[id].getEAnim(0);
-		}
-		if (t == P_SEAL) {
-			int id = A_SEAL;
-			effs[id] = EffAnim.effas[id].getEAnim(0);
-		}
-		if (t == P_STRONG) {
-			int id = dire == -1 ? A_UP : A_E_UP;
-			effs[id] = EffAnim.effas[id].getEAnim(0);
-		}
-		if (t == P_LETHAL) {
-			int id = dire == -1 ? A_SHIELD : A_E_SHIELD;
-			AnimD ea = EffAnim.effas[id];
-			status[P_LETHAL][1] = ea.len(0);
-			effs[id] = ea.getEAnim(0);
-		}
-		if (t == P_WARP) {
-			AnimD ea = EffAnim.effas[A_W];
-			int pa = status[P_WARP][2];
-			basis.lea.add(new WaprCont(pos, pa, anim));
-			status[P_WARP][pa] = ea.len(pa);
-
-		}
-
-		if (t == BREAK_ABI) {
-			int id = dire == -1 ? A_U_E_B : A_E_B;
-			effs[id] = EffAnim.effas[id].getEAnim(0);
-			status[P_BREAK][0] = effs[id].len();
-		}
-		if (t == BREAK_ATK) {
-			int id = dire == -1 ? A_U_E_B : A_E_B;
-			effs[id] = EffAnim.effas[id].getEAnim(1);
-			status[P_BREAK][0] = effs[id].len();
-		}
-		if (t == BREAK_NON) {
-			int id = dire == -1 ? A_U_B : A_B;
-			effs[id] = EffAnim.effas[id].getEAnim(4);
-			status[P_BREAK][0] = effs[id].len();
-		}
-	}
-
 	/** get the current proc array */
 	public int getProc(int ind, int ety) {
 		if (status[P_SEAL][0] > 0)
 			return 0;
 		return data.getProc(ind)[ety];
+	}
+
+	/** receive an interrupt */
+	public void interrupt(int t, double d) {
+		kb.interrupt(t, d);
 	}
 
 	@Override
@@ -517,14 +389,14 @@ public abstract class Entity extends AbEntity {
 		int strong = ma.getProc(P_STRONG)[0];
 		if (status[P_STRONG][0] == 0 && strong > 0 && health * 100 <= maxH * strong) {
 			status[P_STRONG][0] = ma.getProc(P_STRONG)[1];
-			getEff(P_STRONG);
+			eff.getEff(P_STRONG);
 		}
 		// lethal strike
 		if (ma.getProc(P_LETHAL)[0] > 0 && health <= 0) {
 			boolean b = basis.r.nextDouble() * 100 < ma.getProc(P_LETHAL)[0];
 			if (status[P_LETHAL][0] == 0 && b) {
 				health = 1;
-				getEff(P_LETHAL);
+				eff.getEff(P_LETHAL);
 			}
 			status[P_LETHAL][0]++;
 		}
@@ -535,19 +407,16 @@ public abstract class Entity extends AbEntity {
 
 		kb.doInterrupt();
 
-		if ((getAbi() & AB_GLASS) > 0 && atkTime == 0 && kbTime == 0 && loop == 0)
+		if ((getAbi() & AB_GLASS) > 0 && atkTime == 0 && kbTime == 0 && atkm.loop == 0)
 			dead = 0;
-		checkEff();
+		eff.checkEff();
 
 		// update animations
 		if (status[P_STOP][0] == 0 && (kbTime == 0 || kb.kbType != INT_SW))
 			anim.update(false);
 		if (back != null)
 			back.update(false);
-		for (int i = 0; i < effs.length; i++)
-			if (effs[i] != null) {
-				effs[i].update(false);
-			}
+		eff.update();
 		if (dead > 0) {
 			soul.update(false);
 			dead--;
@@ -557,6 +426,18 @@ public abstract class Entity extends AbEntity {
 			tempZK = false;
 		}
 		acted = false;
+	}
+
+	public void setSummon(int conf) {
+		// conf 1
+		if (conf == 1) {
+			kb.kbType = INT_WARP;
+			kbTime = EffAnim.effas[A_W].len(1);
+			status[P_WARP][2] = 1;
+		}
+		// conf 2
+		if (conf == 2 && anim.anim().anims.length >= 7)
+			kbTime = -3;
 	}
 
 	/** can be targeted by the cat with Targer ability of trait t */
@@ -607,16 +488,11 @@ public abstract class Entity extends AbEntity {
 		// update wait and attack state
 		if (kbTime == 0) {
 			boolean binatk = waitTime + kbTime + atkTime == 0;
-			binatk = binatk && touchEnemy && loop != 0 && nstop;
+			binatk = binatk && touchEnemy && atkm.loop != 0 && nstop;
 
 			// if it can attack, setup attack state
-			if (!acted && binatk) {
-				atkTime = data.getAnimLen();
-				loop--;
-				preID = 0;
-				preTime = pres[0];
-				anim.changeAnim(2);
-			}
+			if (!acted && binatk)
+				atkm.setUp();
 
 			// update waiting state
 			if ((waitTime > 0 || !touchEnemy) && touch && atkTime == 0 && anim.type != 1)
@@ -626,72 +502,16 @@ public abstract class Entity extends AbEntity {
 
 			// update attack status when in attack state
 			if (status[P_STOP][0] == 0 && atkTime > 0)
-				updateAttack();
+				atkm.updateAttack();
 		}
 
 		// update proc effects
 		updateProc();
 	}
 
-	/** update effect icons animation */
-	protected void checkEff() {
-		if (efft == 0)
-			effs[eftp] = null;
-		if (status[P_STOP][0] == 0) {
-			int id = dire == -1 ? A_STOP : A_E_STOP;
-			effs[id] = null;
-		}
-		if (status[P_SLOW][0] == 0) {
-			int id = dire == -1 ? A_SLOW : A_E_SLOW;
-			effs[id] = null;
-		}
-		if (status[P_WEAK][0] == 0) {
-			int id = dire == -1 ? A_DOWN : A_E_DOWN;
-			effs[id] = null;
-		}
-		if (status[P_CURSE][0] == 0) {
-			int id = A_CURSE;
-			effs[id] = null;
-		}
-		if (status[P_POISON][0] == 0) {
-			int id = A_POISON;
-			effs[id] = null;
-		}
-		if (status[P_SEAL][0] == 0) {
-			int id = A_SEAL;
-			effs[id] = null;
-		}
-		if (status[P_LETHAL][1] == 0) {
-			int id = dire == -1 ? A_SHIELD : A_E_SHIELD;
-			effs[id] = null;
-		} else
-			status[P_LETHAL][1]--;
-		if (status[P_WAVE][0] == 0) {
-			int id = dire == -1 ? A_WAVE_INVALID : A_E_WAVE_INVALID;
-			effs[id] = null;
-		} else
-			status[P_WAVE][0]--;
-		if (status[P_STRONG][0] == 0) {
-			int id = dire == -1 ? A_UP : A_E_UP;
-			effs[id] = null;
-		}
-		if (status[P_BREAK][0] == 0) {
-			int id = dire == -1 ? A_U_B : A_B;
-			effs[id] = null;
-		} else
-			status[P_BREAK][0]--;
-		efft--;
-
-	}
-
 	/** interrupt whatever this entity is doing */
 	protected void clearState() {
-		if (atkTime > 0) {
-			atkTime = 0;
-			preTime = 0;
-			if (preID == multi)
-				waitTime = data.getTBA();
-		}
+		atkm.stopAtk();
 		if (kbTime < -1 || status[P_BORROW][2] > 0) {
 			status[P_BORROW][2] = 0;
 			bdist = 0;
@@ -713,6 +533,39 @@ public abstract class Entity extends AbEntity {
 
 	/** get max distance to go back */
 	protected abstract double getLim();
+
+	/**
+	 * process kb animation <br>
+	 * called when kb is applied
+	 */
+	protected void kbAnim() {
+		int t = kb.kbType;
+		if (t != INT_SW && t != INT_WARP)
+			anim.changeAnim(3);
+		else {
+			anim.changeAnim(0);
+			anim.update(false);
+		}
+		if (t == INT_WARP) {
+			kbTime = status[P_WARP][0];
+			eff.getEff(P_WARP);
+			status[P_WARP][2] = 1;
+		}
+		if (t == INT_KB)
+			kbTime = status[P_KB][0];
+		if (t == INT_HB)
+			back = EffAnim.effas[A_KB].getEAnim(0);
+		if (t == INT_SW)
+			back = EffAnim.effas[A_KB].getEAnim(1);
+		if (t == INT_ASS)
+			back = EffAnim.effas[A_KB].getEAnim(2);
+
+		// Z-kill icon
+		if (health <= 0 && tempZK && status[P_REVIVE][0] > 0) {
+			EAnimD eae = EffAnim.effas[A_Z_STRONG].getEAnim(0);
+			basis.lea.add(new EAnimCont(pos, eae));
+		}
+	}
 
 	/** can be effected by the ability targeting trait t */
 	protected boolean receive(int t) {
@@ -736,25 +589,28 @@ public abstract class Entity extends AbEntity {
 		return bpos > mov;
 	}
 
-	/** update attack state */
-	private void updateAttack() {
-		atkTime--;
-		if (preTime >= 0) {
-			if (preTime == 0) {
-				int atk0 = preID;
-				while (++preID < multi && pres[preID] == 0)
-					;
-				tempAtk = (int) (atk0 + basis.r.nextDouble() * (preID - atk0));
-				basis.getAttack(aam.getAttack(tempAtk));
-				if (preID < multi)
-					preTime = pres[preID];
-			}
-			preTime--;
-		}
-		if (atkTime == 0) {
-			waitTime = data.getTBA();
-			anim.changeAnim(1);
-		}
+	/** called when last KB reached */
+	private void procDeath() {
+		if (!tempZK && status[P_REVIVE][0] != 0) {
+			// revive
+			waitTime = 0;
+			status[P_REVIVE][0]--;
+			int deadAnim = data.getRepAtk().getProc(P_REVIVE)[1];
+			EffAnim ea = EffAnim.effas[A_ZOMBIE];
+			deadAnim += ea.getEAnim(0).len();
+			status[P_REVIVE][1] = deadAnim;
+			health = maxH * data.getRepAtk().getProc(P_REVIVE)[2] / 100;
+
+			// clear state
+			status[P_STOP] = new int[PROC_WIDTH];
+			status[P_SLOW] = new int[PROC_WIDTH];
+			status[P_WEAK] = new int[PROC_WIDTH];
+			status[P_CURSE] = new int[PROC_WIDTH];
+			status[P_SEAL] = new int[PROC_WIDTH];
+			status[P_STRONG] = new int[PROC_WIDTH];
+			status[P_LETHAL] = new int[PROC_WIDTH];
+		} else
+			kill();
 	}
 
 	/** update burrow state */
@@ -800,6 +656,57 @@ public abstract class Entity extends AbEntity {
 				kbTime = 0;
 		}
 
+	}
+
+	/**
+	 * update KB state <br>
+	 * in KB state: deal with warp, KB go back, and anim change <br>
+	 * end of KB: check whether it's killed, deal with revive
+	 */
+	private void updateKB() {
+		if (kb.kbType != INT_WARP) {
+			double mov = kb.kbDis / kbTime;
+			kb.kbDis -= mov;
+			if (mov < 0)
+				updateMove(-mov, -mov);
+			else {
+				double lim = getLim();
+				if (mov < lim)
+					pos -= mov * dire;
+				else
+					pos -= lim * dire;
+			}
+		} else {
+			anim.changeAnim(0);
+			if (status[P_WARP][0] > 0)
+				status[P_WARP][0]--;
+			if (status[P_WARP][1] > 0)
+				status[P_WARP][1]--;
+			EffAnim ea = EffAnim.effas[A_W];
+			if (kbTime == ea.len(1)) {
+				double mov = kb.kbDis;
+				if (mov < 0)
+					updateMove(-mov, -mov);
+				else {
+					double lim = getLim();
+					if (mov < lim)
+						pos -= mov * dire;
+					else
+						pos -= lim * dire;
+				}
+				kb.kbDis = 0;
+				eff.getEff(P_WARP);
+				status[P_WARP][2] = 0;
+			}
+		}
+		kbTime--;
+		if (kbTime == 0) {
+			back = null;
+			anim.changeAnim(0);
+
+			if (health <= 0)
+				procDeath();
+		}
 	}
 
 	/** update proc status */
@@ -864,128 +771,119 @@ public abstract class Entity extends AbEntity {
 		}
 	}
 
-	/**update KB state <br>
-	 * in KB state: deal with warp, KB go back, and anim change <br>
-	 * end of KB: check whether it's killed, deal with revive
-	 */
-	private void updateKB() {
-		if (kb.kbType != INT_WARP) {
-			double mov = kb.kbDis / kbTime;
-			kb.kbDis -= mov;
-			if (mov < 0)
-				updateMove(-mov, -mov);
-			else {
-				double lim = getLim();
-				if (mov < lim)
-					pos -= mov * dire;
-				else
-					pos -= lim * dire;
+}
+
+class AtkManager {
+
+	private final Entity e;
+
+	/** pre-atk time const field */
+	private final int[] pres;
+
+	/** const field, attack count */
+	private final int multi;
+
+	/** atk loop FSM type */
+	private int preID;
+
+	/** atk loop FSM time */
+	private int preTime;
+
+	/** attack times remain */
+	protected int loop;
+
+	protected AtkManager(Entity ent) {
+		e = ent;
+		int[][] raw = e.data.rawAtkData();
+		pres = new int[multi = raw.length];
+		for (int i = 0; i < multi; i++)
+			pres[i] = raw[i][1];
+		loop = e.data.getAtkLoop();
+	}
+
+	protected void setUp() {
+		e.atkTime = e.data.getAnimLen();
+		loop--;
+		preID = 0;
+		preTime = pres[0];
+		e.anim.changeAnim(2);
+	}
+
+	protected void stopAtk() {
+		if (e.atkTime > 0) {
+			e.atkTime = 0;
+			preTime = 0;
+			if (preID == multi)
+				e.waitTime = e.data.getTBA();
+		}
+	}
+
+	/** update attack state */
+	protected void updateAttack() {
+		e.atkTime--;
+		if (preTime >= 0) {
+			if (preTime == 0) {
+				int atk0 = preID;
+				while (++preID < multi && pres[preID] == 0)
+					;
+				e.tempAtk = (int) (atk0 + e.basis.r.nextDouble() * (preID - atk0));
+				e.basis.getAttack(e.aam.getAttack(e.tempAtk));
+				if (preID < multi)
+					preTime = pres[preID];
 			}
-		} else {
-			anim.changeAnim(0);
-			if (status[P_WARP][0] > 0)
-				status[P_WARP][0]--;
-			if (status[P_WARP][1] > 0)
-				status[P_WARP][1]--;
-			EffAnim ea = EffAnim.effas[A_W];
-			if (kbTime == ea.len(1)) {
-				double mov = kb.kbDis;
-				if (mov < 0)
-					updateMove(-mov, -mov);
-				else {
-					double lim = getLim();
-					if (mov < lim)
-						pos -= mov * dire;
-					else
-						pos -= lim * dire;
-				}
-				kb.kbDis = 0;
-				getEff(P_WARP);
-				status[P_WARP][2] = 0;
-			}
+			preTime--;
 		}
-		kbTime--;
-		if (kbTime == 0) {
-			back = null;
-			anim.changeAnim(0);
+		if (e.atkTime == 0) {
+			e.waitTime = e.data.getTBA();
+			e.anim.changeAnim(1);
+		}
+	}
+}
 
-			if (health <= 0)
-				procDeath();
-		}
-	}
-	
-	/** called when last KB reached*/
-	private void procDeath() {
-		if (!tempZK && status[P_REVIVE][0] != 0) {
-			// revive
-			waitTime = 0;
-			status[P_REVIVE][0]--;
-			int deadAnim = data.getRepAtk().getProc(P_REVIVE)[1];
-			EffAnim ea = EffAnim.effas[A_ZOMBIE];
-			deadAnim += ea.getEAnim(0).len();
-			status[P_REVIVE][1] = deadAnim;
-			health = maxH * data.getRepAtk().getProc(P_REVIVE)[2] / 100;
+class KBManager extends Data {
 
-			// clear state
-			status[P_STOP] = new int[PROC_WIDTH];
-			status[P_SLOW] = new int[PROC_WIDTH];
-			status[P_WEAK] = new int[PROC_WIDTH];
-			status[P_CURSE] = new int[PROC_WIDTH];
-			status[P_SEAL] = new int[PROC_WIDTH];
-			status[P_STRONG] = new int[PROC_WIDTH];
-			status[P_LETHAL] = new int[PROC_WIDTH];
-		} else
-			kill();
-	}
-	
-	/** receive an interrupt */
-	public void interrupt(int t,double d) {
-		kb.interrupt(t, d);
-	}
-	
-	public void setSummon(int conf) {
-		// conf 1
-		if (conf == 1) {
-			kb.kbType = INT_WARP;
-			kbTime = EffAnim.effas[A_W].len(1);
-			status[P_WARP][2] = 1;
-		}
-		// conf 2
-		if (conf == 2 && anim.anim().anims.length >= 7)
-			kbTime = -3;
-	}
-	
-	/** process kb animation <br>
-	 * called when kb is applied*/
-	protected void kbAnim() {
-		int t=kb.kbType;
-		if (t != INT_SW && t != INT_WARP)
-			anim.changeAnim(3);
-		else {
-			anim.changeAnim(0);
-			anim.update(false);
-		}
-		if (t == INT_WARP) {
-			kbTime = status[P_WARP][0];
-			getEff(P_WARP);
-			status[P_WARP][2] = 1;
-		}
-		if (t == INT_KB)
-			kbTime = status[P_KB][0];
-		if (t == INT_HB)
-			back = EffAnim.effas[A_KB].getEAnim(0);
-		if (t == INT_SW)
-			back = EffAnim.effas[A_KB].getEAnim(1);
-		if (t == INT_ASS)
-			back = EffAnim.effas[A_KB].getEAnim(2);
+	private final Entity e;
 
-		// Z-kill icon
-		if (health <= 0 && tempZK && status[P_REVIVE][0] > 0) {
-			EAnimD eae = EffAnim.effas[A_Z_STRONG].getEAnim(0);
-			basis.lea.add(new EAnimCont(pos, eae));
+	/** KB FSM type */
+	protected int kbType;
+
+	/** temp field to store wanted KB type */
+	private int tempKBtype = -1;
+
+	/** temp field to store wanted KB length */
+	private double tempKBdist;
+
+	/** remaining distance to KB */
+	protected double kbDis;
+
+	public KBManager(Entity ent) {
+		e = ent;
+	}
+
+	/** process the interruption received */
+	protected void doInterrupt() {
+		int t = tempKBtype;
+		if (t == -1)
+			return;
+		double d = tempKBdist;
+		tempKBtype = -1;
+		e.clearState();
+		kbType = t;
+		e.kbTime = KB_TIME[t];
+		kbDis = d;
+		e.kbAnim();
+	}
+
+	protected void interrupt(int t, double d) {
+		if (t == INT_SW && (e.getAbi() & AB_IMUSW) > 0)
+			return;
+		int prev = tempKBtype;
+		if (prev == -1 || KB_PRI[t] >= KB_PRI[prev]) {
+			tempKBtype = t;
+			tempKBdist = d;
 		}
 	}
-	
+
 }
 
 class PoisonToken extends Data {
@@ -1037,50 +935,4 @@ class WeakToken {
 		status[1] = val;
 	}
 
-}
-
-class KBManager extends Data{
-
-	private final Entity e;
-	
-	/** KB FSM type */
-	protected int kbType;
-	
-	/** temp field to store wanted KB type */
-	private int tempKBtype = -1;
-
-	/** temp field to store wanted KB length */
-	private double tempKBdist;
-	
-	/** remaining distance to KB */
-	protected double kbDis;
-	
-	public KBManager(Entity ent) {
-		e=ent;
-	}
-	
-	/** process the interruption received */
-	protected void doInterrupt() {
-		int t = tempKBtype;
-		if (t == -1)
-			return;
-		double d = tempKBdist;
-		tempKBtype = -1;
-		e.clearState();
-		kbType = t;
-		e.kbTime = KB_TIME[t];
-		kbDis = d;
-		e.kbAnim();
-	}
-
-	protected void interrupt(int t, double d) {
-		if (t == INT_SW && (e.getAbi() & AB_IMUSW) > 0)
-			return;
-		int prev = tempKBtype;
-		if (prev == -1 || KB_PRI[t] >= KB_PRI[prev]) {
-			tempKBtype = t;
-			tempKBdist = d;
-		}
-	}
-	
 }

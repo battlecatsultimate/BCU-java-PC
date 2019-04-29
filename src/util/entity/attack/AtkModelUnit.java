@@ -4,7 +4,6 @@ import util.basis.Basis;
 import util.entity.EUnit;
 import util.entity.EntCont;
 import util.entity.Entity;
-import util.pack.EffAnim;
 import util.unit.EForm;
 import util.unit.Unit;
 import util.unit.UnitStore;
@@ -56,7 +55,7 @@ public class AtkModelUnit extends AtkModelEntity {
 			eu.layer = (int) (b.r.nextDouble() * (l1 - l0)) + l0;
 			eu.added(-1, (int) up);
 			b.tempe.add(new EntCont(eu, time));
-			eu.setSummon(conf&3);
+			eu.setSummon(conf & 3);
 		}
 
 	}
