@@ -119,8 +119,6 @@ class AtkEditTable extends Page {
 			if (jtf == fpre) {
 				if (v < 0)
 					v = 1;
-				if (v - adm.pre > adm.ce.getPost() - 1)
-					v = adm.pre + adm.ce.getPost() - 1;
 				adm.pre = v;
 			}
 			if (jtf == fp0) {

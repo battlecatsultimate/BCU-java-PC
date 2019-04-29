@@ -14,7 +14,7 @@ import javax.swing.TransferHandler;
 
 import util.system.Copable;
 
-public class InListTH<T extends Copable<T>> extends TransferHandler implements Transferable {
+public class InListTH<T> extends TransferHandler implements Transferable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -89,7 +89,7 @@ public class InListTH<T extends Copable<T>> extends TransferHandler implements T
 		} else {
 			if (!list.copable)
 				return false;
-			T t = list.copymap.get(obj);
+			Copable<T> t = (Copable<T>)list.copymap.get(obj);
 			if (t == null)
 				return false;
 			return list.add(t.copy());

@@ -42,6 +42,14 @@ public interface MaskEntity {
 	public int getRange();
 
 	public MaskAtk getRepAtk();
+	
+	public default MaskAtk getRevenge() {
+		return null;
+	}
+	
+	public default MaskAtk getResurrection() {
+		return null;
+	}
 
 	public int getShield();
 

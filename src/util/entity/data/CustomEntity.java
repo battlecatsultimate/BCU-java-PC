@@ -8,7 +8,7 @@ import io.OutStream;
 
 public abstract class CustomEntity extends DataEntity {
 
-	public AtkDataModel rep;
+	public AtkDataModel rep,rev,res;
 	public AtkDataModel[] atks;
 	public int tba, base, touch = TCH_N;
 	public boolean common = true;
@@ -167,6 +167,14 @@ public abstract class CustomEntity extends DataEntity {
 	public int touchBase() {
 		return base == 0 ? range : base;
 	}
+	
+	public MaskAtk getRevenge() {
+		return rev;
+	}
+	
+	public MaskAtk getResurrection() {
+		return res;
+	}
 
 	protected void write(OutStream os) {
 		os.writeString("0.4.0");
@@ -201,9 +209,10 @@ public abstract class CustomEntity extends DataEntity {
 
 	protected void zreada(InStream is) {
 		int ver = getVer(is.nextString());
-		if (ver >= 400) {
+		if (ver >= 401)
+			zreada$000401(is);
+		else if (ver >= 400)
 			zreada$000400(is);
-		}
 	}
 
 	protected void zreada$000308(InStream is) {
@@ -287,6 +296,17 @@ public abstract class CustomEntity extends DataEntity {
 		atks = new AtkDataModel[n];
 		for (int i = 0; i < n; i++)
 			atks[i] = set[is.nextInt()];
+	}
+	
+	private void zreada$000401(InStream is) {
+		zreada$000400(is);
+		int adi=is.nextInt();
+		if((adi&1)>0) {
+			//TODO
+		}
+		if((adi&2)>0) {
+			//TODO
+		}
 	}
 
 }

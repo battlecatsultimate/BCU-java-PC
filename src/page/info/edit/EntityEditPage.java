@@ -6,14 +6,15 @@ import static util.Interpret.IMUSFT;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
@@ -30,6 +31,8 @@ import page.anim.DIYViewPage;
 import page.info.filter.EnemyFindPage;
 import page.info.filter.UnitFindPage;
 import page.support.ListJtfPolicy;
+import page.support.ReorderList;
+import page.support.ReorderListener;
 import page.view.EnemyViewPage;
 import page.view.UnitViewPage;
 import util.Animable;
@@ -69,7 +72,7 @@ public abstract class EntityEditPage extends Page {
 	private final JTF fbs = new JTF();
 	private final JTF ftp = new JTF();
 	private final JTG isr = new JTG(1, "isr");
-	private final JList<String> jli = new JList<>();
+	private final ReorderList<String> jli = new ReorderList<>();
 	private final JScrollPane jspi = new JScrollPane(jli);
 	private final JBTN add = new JBTN(0, "add");
 	private final JBTN rem = new JBTN(0, "rem");
@@ -287,9 +290,15 @@ public abstract class EntityEditPage extends Page {
 		ftp.setText("" + ce.touch);
 		comm.setSelected(data.common);
 		mpt.setData(ce.rep.proc);
+		int[][] raw=ce.rawAtkData();
+		int pre=0;
 		String[] ints = new String[ce.atks.length];
-		for (int i = 0; i < ints.length; i++)
+		for (int i = 0; i < ints.length; i++) {
 			ints[i] = i + 1 + " " + ce.atks[i].str;
+			pre+=raw[i][1];
+			if(pre>=ce.getAnimLen())
+				ints[i]+=" (out of range)";
+		}
 		int ind = jli.getSelectedIndex();
 		jli.setListData(ints);
 		if (ind < 0)
@@ -298,7 +307,6 @@ public abstract class EntityEditPage extends Page {
 			ind = ints.length - 1;
 		setA(ind);
 		jli.setSelectedIndex(ind);
-		add.setEnabled(editable && ce.getPost() > 1);
 		Animable<AnimU> ene = ce.getPack();
 		if (editable)
 			jcb.setSelectedItem(ene.anim);
@@ -344,6 +352,30 @@ public abstract class EntityEditPage extends Page {
 
 		});
 
+		jli.list = new ReorderListener<String>() {
+
+			@Override
+			public void reordered(int ori, int fin) {
+				if (ori < ce.atks.length) {
+					if (fin >= ce.atks.length)
+						fin = ce.atks.length - 1;
+					List<AtkDataModel> l = new ArrayList<>();
+					for (AtkDataModel adm : ce.atks)
+						l.add(adm);
+					l.add(fin, l.remove(ori));
+					ce.atks = l.toArray(new AtkDataModel[0]);
+					setData(ce);
+				}
+				changing = false;
+			}
+
+			@Override
+			public void reordering() {
+				changing = true;
+			}
+
+		};
+
 		add.setLnr(e -> {
 			changing = true;
 			int n = ce.atks.length;
@@ -362,22 +394,7 @@ public abstract class EntityEditPage extends Page {
 			changing = false;
 		});
 
-		rem.setLnr(e -> {
-			changing = true;
-			int n = ce.atks.length;
-			int ind = jli.getSelectedIndex();
-			AtkDataModel[] datas = new AtkDataModel[n - 1];
-			for (int i = 0; i < ind; i++)
-				datas[i] = ce.atks[i];
-			for (int i = ind + 1; i < n; i++)
-				datas[i - 1] = ce.atks[i];
-			ce.atks = datas;
-			setData(ce);
-			ind--;
-			jli.setSelectedIndex(ind);
-			setA(ind);
-			changing = false;
-		});
+		rem.setLnr(e ->remAtk(jli.getSelectedIndex()));
 
 		copy.setLnr(e -> {
 			changing = true;
@@ -426,6 +443,23 @@ public abstract class EntityEditPage extends Page {
 
 		});
 
+	}
+	
+	private void remAtk(int ind) {
+		changing = true;
+		int n = ce.atks.length;
+		AtkDataModel[] datas = new AtkDataModel[n - 1];
+		for (int i = 0; i < ind; i++)
+			datas[i] = ce.atks[i];
+		for (int i = ind + 1; i < n; i++)
+			datas[i - 1] = ce.atks[i];
+		ce.atks = datas;
+		setData(ce);
+		ind--;
+		if(ind<0)ind=0;
+		jli.setSelectedIndex(ind);
+		setA(ind);
+		changing = false;
 	}
 
 	private void input(JTF jtf, String text) {
@@ -499,7 +533,7 @@ public abstract class EntityEditPage extends Page {
 		AtkDataModel adm = ce.atks[ind];
 		atkn.setText(adm.str);
 		aet.setData(adm, getAtk());
-		rem.setEnabled(editable && ind != 0);
+		rem.setEnabled(editable && ce.atks.length>1);
 	}
 
 }
