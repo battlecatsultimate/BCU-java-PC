@@ -66,13 +66,16 @@ class StageEditTable extends AbJTable implements Reorderable {
 	}
 
 	@Override
-	public boolean editCellAt(int row, int column, EventObject e) {
-		boolean result = super.editCellAt(row, column, e);
+	public boolean editCellAt(int r, int c, EventObject e) {
+		boolean result = super.editCellAt(r, c, e);
 		Component editor = getEditorComponent();
 		if (editor == null || !(editor instanceof JTextComponent))
 			return result;
+		JTextComponent jtf = ((JTextComponent) editor);
 		if (e instanceof KeyEvent)
-			((JTextComponent) editor).selectAll();
+			jtf.selectAll();
+		if (lnk[c] == 1 && jtf.getText().length() > 0)
+			jtf.setText(((AbEnemy) get(r, c)).getID() + "");
 		return result;
 	}
 
@@ -272,6 +275,8 @@ class StageEditTable extends AbJTable implements Reorderable {
 	}
 
 	private void set(int r, int c, int v, int para) {
+		if (c == 1 && v < 0)
+			return;
 		if (c != 5 && v < 0)
 			v = 0;
 		int[][] info = stage.datas;

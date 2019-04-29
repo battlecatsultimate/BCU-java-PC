@@ -38,13 +38,14 @@ class SCGroupEditTable extends AbJTable {
 	}
 
 	@Override
-	public boolean editCellAt(int row, int column, EventObject e) {
-		boolean result = super.editCellAt(row, column, e);
+	public boolean editCellAt(int r, int c, EventObject e) {
+		boolean result = super.editCellAt(r, c, e);
 		Component editor = getEditorComponent();
 		if (editor == null || !(editor instanceof JTextComponent))
 			return result;
+		JTextComponent jtf = ((JTextComponent) editor);
 		if (e instanceof KeyEvent)
-			((JTextComponent) editor).selectAll();
+			jtf.selectAll();
 		return result;
 	}
 
@@ -79,7 +80,7 @@ class SCGroupEditTable extends AbJTable {
 
 	@Override
 	public boolean isCellEditable(int r, int c) {
-		return true;
+		return lnk[c]!=0;
 	}
 
 	@Override
@@ -95,9 +96,6 @@ class SCGroupEditTable extends AbJTable {
 				set(r, c, is[0], -1);
 			else
 				set(r, c, is[0], is[1]);
-		} else {
-			int i = arg0 instanceof Integer ? (Integer) arg0 : Reader.parseIntN((String) arg0);
-			set(r, c, i, 0);
 		}
 	}
 
@@ -115,7 +113,10 @@ class SCGroupEditTable extends AbJTable {
 			return;
 		scd.smap.put(eid, 0);
 		ind++;
-		addRowSelectionInterval(ind, ind);
+		if (ind < 0)
+			clearSelection();
+		else
+			setRowSelectionInterval(ind, ind);
 	}
 
 	protected synchronized void remLine() {
@@ -127,7 +128,10 @@ class SCGroupEditTable extends AbJTable {
 		scd.smap.remove(scd.getSMap()[ind][0]);
 		if (ind >= scd.smap.size())
 			ind--;
-		addRowSelectionInterval(ind, ind);
+		if (ind < 0)
+			clearSelection();
+		else
+			setRowSelectionInterval(ind, ind);
 	}
 
 	private Object get(int r, int c) {
