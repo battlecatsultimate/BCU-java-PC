@@ -105,8 +105,8 @@ public class AnimC extends AnimU {
 		partial = true;
 		imgcut = ori.imgcut.clone();
 		mamodel = ori.mamodel.clone();
-		if(mamodel.confs.length<2)
-			mamodel.confs=new int[2][6];
+		if (mamodel.confs.length < 2)
+			mamodel.confs = new int[2][6];
 		anims = new MaAnim[7];
 		for (int i = 0; i < 7; i++)
 			if (i < ori.anims.length)
@@ -123,8 +123,8 @@ public class AnimC extends AnimU {
 			e.printStackTrace();
 		}
 		reloImg();
-		if(ori instanceof AnimU) {
-			AnimU au=(AnimU)ori;
+		if (ori instanceof AnimU) {
+			AnimU au = (AnimU) ori;
 			edi = au.edi;
 			uni = au.uni;
 		}

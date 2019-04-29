@@ -29,6 +29,11 @@ public class Soul extends AnimD {
 	}
 
 	@Override
+	public BufferedImage getNum() {
+		return img.getImg();
+	}
+
+	@Override
 	public void load() {
 		loaded = true;
 		imgcut = ImgCut.newIns(str + ".imgcut");
@@ -45,11 +50,6 @@ public class Soul extends AnimD {
 	@Override
 	public String toString() {
 		return "soul_" + trio(index);
-	}
-
-	@Override
-	public BufferedImage getNum() {
-		return img.getImg();
 	}
 
 }

@@ -60,6 +60,12 @@ public class AnimU extends AnimD {
 	}
 
 	@Override
+	public BufferedImage getNum() {
+		check();
+		return num;
+	}
+
+	@Override
 	public void load() {
 		loaded = true;
 		try {
@@ -109,12 +115,6 @@ public class AnimU extends AnimD {
 				for (int i = 0; i < 3; i++)
 					anims[i + 4] = MaAnim.newIns(str + "_zombie0" + i + ".maanim");
 		}
-	}
-
-	@Override
-	public BufferedImage getNum() {
-		check();
-		return num;
 	}
 
 }

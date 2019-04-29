@@ -290,15 +290,25 @@ public abstract class EntityEditPage extends Page {
 		ftp.setText("" + ce.touch);
 		comm.setSelected(data.common);
 		mpt.setData(ce.rep.proc);
-		int[][] raw=ce.rawAtkData();
-		int pre=0;
-		String[] ints = new String[ce.atks.length];
-		for (int i = 0; i < ints.length; i++) {
+		int[][] raw = ce.rawAtkData();
+		int pre = 0;
+		int n = ce.atks.length;
+		if (ce.rev != null)
+			n++;
+		if (ce.res != null)
+			n++;
+		String[] ints = new String[n];
+		for (int i = 0; i < ce.atks.length; i++) {
 			ints[i] = i + 1 + " " + ce.atks[i].str;
-			pre+=raw[i][1];
-			if(pre>=ce.getAnimLen())
-				ints[i]+=" (out of range)";
+			pre += raw[i][1];
+			if (pre >= ce.getAnimLen())
+				ints[i] += " (out of range)";
 		}
+		int ix = ce.atks.length;
+		if (ce.rev != null)
+			ints[ix++] = ce.rev.str;
+		if (ce.res != null)
+			ints[ix++] = ce.res.str;
 		int ind = jli.getSelectedIndex();
 		jli.setListData(ints);
 		if (ind < 0)
@@ -364,8 +374,8 @@ public abstract class EntityEditPage extends Page {
 						l.add(adm);
 					l.add(fin, l.remove(ori));
 					ce.atks = l.toArray(new AtkDataModel[0]);
-					setData(ce);
 				}
+				setData(ce);
 				changing = false;
 			}
 
@@ -380,6 +390,8 @@ public abstract class EntityEditPage extends Page {
 			changing = true;
 			int n = ce.atks.length;
 			int ind = jli.getSelectedIndex();
+			if (ind >= ce.atks.length)
+				ind = ce.atks.length - 1;
 			AtkDataModel[] datas = new AtkDataModel[n + 1];
 			for (int i = 0; i <= ind; i++)
 				datas[i] = ce.atks[i];
@@ -394,7 +406,7 @@ public abstract class EntityEditPage extends Page {
 			changing = false;
 		});
 
-		rem.setLnr(e ->remAtk(jli.getSelectedIndex()));
+		rem.setLnr(e -> remAtk(jli.getSelectedIndex()));
 
 		copy.setLnr(e -> {
 			changing = true;
@@ -444,22 +456,14 @@ public abstract class EntityEditPage extends Page {
 		});
 
 	}
-	
-	private void remAtk(int ind) {
-		changing = true;
-		int n = ce.atks.length;
-		AtkDataModel[] datas = new AtkDataModel[n - 1];
-		for (int i = 0; i < ind; i++)
-			datas[i] = ce.atks[i];
-		for (int i = ind + 1; i < n; i++)
-			datas[i - 1] = ce.atks[i];
-		ce.atks = datas;
-		setData(ce);
-		ind--;
-		if(ind<0)ind=0;
-		jli.setSelectedIndex(ind);
-		setA(ind);
-		changing = false;
+
+	private AtkDataModel get(int ind) {
+		if (ind < ce.atks.length)
+			return ce.atks[ind];
+		else if (ind == ce.atks.length)
+			return ce.rev == null ? ce.res : ce.rev;
+		else
+			return ce.res;
 	}
 
 	private void input(JTF jtf, String text) {
@@ -470,6 +474,14 @@ public abstract class EntityEditPage extends Page {
 				return;
 			text = ce.getAvailable(text);
 			adm.str = text;
+			if (text.equals("revenge")) {
+				remAtk(adm);
+				ce.rev = adm;
+			}
+			if (text.equals("resurrection")) {
+				remAtk(adm);
+				ce.res = adm;
+			}
 			return;
 		}
 		if (text.length() > 0) {
@@ -529,11 +541,49 @@ public abstract class EntityEditPage extends Page {
 		setData(ce);
 	}
 
+	private void remAtk(AtkDataModel adm) {
+		for (int i = 0; i < ce.atks.length; i++)
+			if (ce.atks[i] == adm)
+				remAtk(i);
+	}
+
+	private void remAtk(int ind) {
+		changing = true;
+		int n = ce.atks.length;
+		if (ind >= n) {
+			if (ind == n)
+				if (ce.rev != null)
+					ce.rev = null;
+				else
+					ce.res = null;
+			else
+				ce.res = null;
+		} else {
+			AtkDataModel[] datas = new AtkDataModel[n - 1];
+			for (int i = 0; i < ind; i++)
+				datas[i] = ce.atks[i];
+			for (int i = ind + 1; i < n; i++)
+				datas[i - 1] = ce.atks[i];
+			ce.atks = datas;
+		}
+		setData(ce);
+		ind--;
+		if (ind < 0)
+			ind = 0;
+		jli.setSelectedIndex(ind);
+		setA(ind);
+		changing = false;
+	}
+
 	private void setA(int ind) {
-		AtkDataModel adm = ce.atks[ind];
+		AtkDataModel adm = get(ind);
+		assert adm != null;
+		link.setEnabled(ind < ce.atks.length);
+		copy.setEnabled(ind < ce.atks.length);
+		atkn.setEnabled(ind < ce.atks.length);
 		atkn.setText(adm.str);
 		aet.setData(adm, getAtk());
-		rem.setEnabled(editable && ce.atks.length>1);
+		rem.setEnabled(editable && (ce.atks.length > 1 || ind >= ce.atks.length));
 	}
 
 }

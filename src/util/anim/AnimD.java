@@ -19,8 +19,6 @@ public abstract class AnimD extends AnimI {
 		anim = this;
 	}
 
-	public abstract BufferedImage getNum();
-	
 	@Override
 	public void check() {
 		if (!loaded)
@@ -34,6 +32,8 @@ public abstract class AnimD extends AnimI {
 			return null;
 		return new EAnimD(this, mamodel, anims[t]);
 	}
+
+	public abstract BufferedImage getNum();
 
 	public int len(int t) {
 		check();

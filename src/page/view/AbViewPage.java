@@ -208,7 +208,7 @@ public abstract class AbViewPage extends Page {
 				EAnimI ei = vb.ent;
 				if (ei == null || !(ei.anim() instanceof AnimD))
 					return;
-				AnimD eau = (AnimD)ei.anim();
+				AnimD eau = (AnimD) ei.anim();
 				String str = "new anim";
 				str = AnimC.getAvailable(str);
 				AnimC ac = new AnimC(str, eau);

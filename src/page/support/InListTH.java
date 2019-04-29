@@ -89,7 +89,7 @@ public class InListTH<T> extends TransferHandler implements Transferable {
 		} else {
 			if (!list.copable)
 				return false;
-			Copable<T> t = (Copable<T>)list.copymap.get(obj);
+			Copable<T> t = (Copable<T>) list.copymap.get(obj);
 			if (t == null)
 				return false;
 			return list.add(t.copy());
