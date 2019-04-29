@@ -57,16 +57,7 @@ public class AtkModelEnemy extends AtkModelEntity {
 			// conf 16
 			if ((conf & 16) != 0)
 				ee.health = e.health;
-			conf &= 3;
-			// conf 1
-			if (conf == 1) {
-				ee.kbType = INT_WARP;
-				ee.kbTime = EffAnim.effas[A_W].len(1);
-				ee.status[P_WARP][2] = 1;
-			}
-			// conf 2
-			if (conf == 2 && ee.anim.anim().anims.length >= 7)
-				ee.kbTime = -3;
+			ee.setSummon(conf&3);
 		}
 
 	}
