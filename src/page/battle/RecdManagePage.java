@@ -142,7 +142,7 @@ public class RecdManagePage extends Page {
 				if (changing || jlr.getValueIsAdjusting())
 					return;
 				Recd r = jlr.getSelectedValue();
-				if(r==null)
+				if (r == null)
 					return;
 				File f = new File("./replay/" + r.name + ".replay");
 				if (f.exists()) {

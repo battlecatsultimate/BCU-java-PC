@@ -221,8 +221,8 @@ public class AnimManager extends Data {
 
 	/** set kill anim */
 	protected void kill() {
-		Soul s=SoulStore.getSoul(e.data.getDeathAnim());
-		dead = s==null?0:(soul = s.getEAnim(0)).len();
+		Soul s = SoulStore.getSoul(e.data.getDeathAnim());
+		dead = s == null ? 0 : (soul = s.getEAnim(0)).len();
 	}
 
 	protected int setAnim(int t) {

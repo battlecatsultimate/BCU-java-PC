@@ -14,7 +14,6 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import io.Writer;
 import page.JBTN;
 import page.Page;
 import util.pack.MusicStore;
@@ -75,7 +74,7 @@ public class MusicEditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				File f = new File("./res/img/" + pack.id + "/music/");
-				Writer.check(f);
+				f.mkdirs();
 				try {
 					Desktop.getDesktop().open(f);
 				} catch (IOException e) {

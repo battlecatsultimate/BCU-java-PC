@@ -458,7 +458,8 @@ public class Data {
 			else
 				break;
 		}
-		Opts.animErr(f.getName());
+		if (f != null)
+			Opts.animErr(f.getName());
 		return func.apply(null);
 	}
 

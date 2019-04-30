@@ -190,6 +190,15 @@ public class AnimC extends AnimU {
 		validate();
 	}
 
+	public void createNew() {
+		imgcut = new ImgCut();
+		mamodel = new MaModel();
+		anims = new MaAnim[7];
+		for (int i = 0; i < 7; i++)
+			anims[i] = new MaAnim();
+		parts = imgcut.cut(num);
+	}
+
 	public void reloImg() {
 		num = read(VFile.getFile(prev + name + "/" + name + ".png"));
 	}

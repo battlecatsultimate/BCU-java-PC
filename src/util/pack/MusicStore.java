@@ -49,7 +49,7 @@ public class MusicStore extends FixIndexList<File> {
 	public void load() {
 		clear();
 		File f = new File("./res/img/" + pack.id + "/music/");
-		if (f.exists()) {
+		if (f.exists() && f.isDirectory()) {
 			File[] fs = f.listFiles();
 			for (File fi : fs) {
 				String str = fi.getName();
