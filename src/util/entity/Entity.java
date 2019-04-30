@@ -772,6 +772,9 @@ class KBManager extends Data {
 				e.status[P_WARP][2] = 0;
 			}
 		}
+		if (kbType == INT_HB && e.data.getRevenge() != null)
+			if (KB_TIME[INT_HB] - e.kbTime == e.data.getRevenge().pre)
+				e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount()));
 		e.kbTime--;
 		if (e.kbTime == 0) {
 			e.anim.back = null;

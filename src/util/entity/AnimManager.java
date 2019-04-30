@@ -8,6 +8,7 @@ import util.ImgCore;
 import util.anim.AnimD;
 import util.anim.EAnimD;
 import util.anim.EAnimU;
+import util.entity.data.AtkDataModel;
 import util.pack.EffAnim;
 import util.pack.Soul;
 import util.system.P;
@@ -245,6 +246,11 @@ public class AnimManager extends Data {
 		if (dead > 0) {
 			soul.update(false);
 			dead--;
+		}
+		if (e.data.getResurrection() != null && dead >= 0) {
+			AtkDataModel adm = e.data.getResurrection();
+			if (soul == null || adm.pre == soul.len() - dead)
+				e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 1));
 		}
 	}
 
