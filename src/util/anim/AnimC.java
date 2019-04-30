@@ -133,6 +133,15 @@ public class AnimC extends AnimU {
 		history("initial");
 	}
 
+	public void createNew() {
+		imgcut = new ImgCut();
+		mamodel = new MaModel();
+		anims = new MaAnim[7];
+		for (int i = 0; i < 7; i++)
+			anims[i] = new MaAnim();
+		parts = imgcut.cut(num);
+	}
+
 	public void delete() {
 		Writer.delete(new File(prev + name + "/"));
 	}
@@ -188,15 +197,6 @@ public class AnimC extends AnimU {
 			System.exit(0);
 		}
 		validate();
-	}
-
-	public void createNew() {
-		imgcut = new ImgCut();
-		mamodel = new MaModel();
-		anims = new MaAnim[7];
-		for (int i = 0; i < 7; i++)
-			anims[i] = new MaAnim();
-		parts = imgcut.cut(num);
 	}
 
 	public void reloImg() {

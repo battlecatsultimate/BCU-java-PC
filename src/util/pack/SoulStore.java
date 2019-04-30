@@ -19,6 +19,17 @@ public class SoulStore extends FixIndexList<Soul> {
 		return ans;
 	}
 
+	public static int getID(Soul s) {
+		if (s == null)
+			return -1;
+		for (Pack p : Pack.map.values()) {
+			int ind = p.ss.indexOf(s);
+			if (ind >= 0)
+				return p.id * 1000 + ind;
+		}
+		return -1;
+	}
+
 	public static Soul getSoul(int ind) {
 		int pid = ind / 1000;
 		Pack pack = Pack.map.get(pid);
@@ -41,17 +52,6 @@ public class SoulStore extends FixIndexList<Soul> {
 	@Override
 	public String toString() {
 		return pack.toString();
-	}
-
-	public static int getID(Soul s) {
-		if (s == null)
-			return -1;
-		for (Pack p : Pack.map.values()) {
-			int ind = p.ss.indexOf(s);
-			if (ind >= 0)
-				return p.id * 1000 + ind;
-		}
-		return -1;
 	}
 
 }

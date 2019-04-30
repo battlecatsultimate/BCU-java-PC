@@ -137,7 +137,7 @@ public class Reader extends DataIO {
 
 	public static InStream readBytes(File file) {
 		try {
-			byte[] bs=Files.readAllBytes(file.toPath());
+			byte[] bs = Files.readAllBytes(file.toPath());
 			return InStream.getIns(bs);
 		} catch (IOException e) {
 			e.printStackTrace();

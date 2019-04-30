@@ -88,7 +88,7 @@ public class Pack extends Data {
 					pack = new Pack(file);
 				} catch (Exception e) {
 					e.printStackTrace();
-					Opts.loadErr("Error in reading pack " + str);
+					Opts.loadErr("Error in reading pack " + str + " at initialization");
 					continue;
 				}
 
@@ -124,7 +124,7 @@ public class Pack extends Data {
 					pac = new Pack(Reader.readBytes(file), true);
 				} catch (Exception e) {
 					e.printStackTrace();
-					Opts.loadErr("Error in reading pack " + str);
+					Opts.loadErr("Error in reading pack " + str + " at initialization");
 					continue;
 				}
 				list.removeIf(p -> p.id == pac.id);
@@ -148,7 +148,7 @@ public class Pack extends Data {
 							else
 								p.zreadp();
 						} catch (Exception e) {
-							Opts.loadErr("Error in loading custom pack: " + p.id);
+							Opts.loadErr("Error in loading custom pack: " + p.id + ", unknown cause");
 							e.printStackTrace();
 							System.exit(0);
 						}
@@ -558,9 +558,18 @@ public class Pack extends Data {
 			zreadt$000306(res);
 		else
 			Opts.verErr("custom pack", "0-4-1-3");
-		mc = new MapColc(this, res);
-		ms.load();
+		err("stages", () -> mc = new MapColc(this, res));
+		err("music", () -> ms.load());
 		res = null;
+	}
+
+	private void err(String str, Runnable c) {
+		try {
+			c.run();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Opts.loadErr("error at reading " + str + " in pack " + id);
+		}
 	}
 
 	private void zreadp() {
@@ -597,10 +606,10 @@ public class Pack extends Data {
 
 	private void zreadp$000401(InStream is) {
 		name = is.nextString();
-		es.zreadp(is.subStream());
-		us.zreadp(is.subStream());
-		cs.zreadp(ver, is.subStream());
-		bg.zreadp(ver, is.subStream());
+		err("enemies", () -> es.zreadp(is.subStream()));
+		err("units", () -> us.zreadp(is.subStream()));
+		err("castles", () -> cs.zreadp(ver, is.subStream()));
+		err("backgrounds", () -> bg.zreadp(ver, is.subStream()));
 	}
 
 	private void zreadt$000306(InStream is) {
@@ -620,10 +629,11 @@ public class Pack extends Data {
 
 	private void zreadt$000400(InStream is) {
 		name = is.nextString();
-		es.zreadt(ver, is.subStream());
-		cs.zreadt(ver, is.subStream());
-		bg.zreadt(ver, is.subStream());
-		us.zreadt(is.subStream());
+		err("enemies", () -> es.zreadt(ver, is.subStream()));
+		err("castles", () -> cs.zreadt(ver, is.subStream()));
+		err("backgrounds", () -> bg.zreadt(ver, is.subStream()));
+		err("units", () -> us.zreadt(is.subStream()));
+
 	}
 
 }
