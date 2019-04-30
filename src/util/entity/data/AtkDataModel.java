@@ -10,13 +10,14 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 	public final CustomEntity ce;
 	public String str = "";
 	public int atk, pre, ld0, ld1, targ = TCH_N;
-	public boolean rev;
+	public boolean rev, range;
 	public int[][] proc = new int[PROC_TOT][PROC_WIDTH];
 
 	public AtkDataModel(CustomEntity ent) {
 		atk = 0;
 		pre = 1;
 		ce = ent;
+		range = true;
 		str = ce.getAvailable(str);
 	}
 
@@ -80,6 +81,11 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 	}
 
 	@Override
+	public boolean isRange() {
+		return range;
+	}
+
+	@Override
 	public String toString() {
 		return str;
 	}
@@ -97,14 +103,14 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 	}
 
 	protected void write(OutStream os) {
-		os.writeString("0.4.0");
+		os.writeString("0.4.1");
 		os.writeString(str);
 		os.writeInt(atk);
 		os.writeInt(pre);
 		os.writeInt(ld0);
 		os.writeInt(ld1);
 		os.writeInt(targ);
-		os.writeInt(rev ? 1 : 0);
+		os.writeInt((rev ? 1 : 0) + (range ? 2 : 0));
 		os.writeIntBB(proc);
 	}
 
@@ -136,11 +142,30 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 				proc[i][j] = temp[i][j];
 	}
 
+	protected void zread$000401(InStream is) {
+		str = is.nextString();
+		atk = is.nextInt();
+		pre = is.nextInt();
+		ld0 = is.nextInt();
+		ld1 = is.nextInt();
+		targ = is.nextInt();
+		int bm = is.nextInt();
+		rev = (bm & 1) > 0;
+		range = (bm & 2) > 0;
+		int[][] temp = is.nextIntsBB();
+		proc = new int[PROC_TOT][PROC_WIDTH];
+		for (int i = 0; i < temp.length; i++)
+			for (int j = 0; j < temp[i].length; j++)
+				proc[i][j] = temp[i][j];
+	}
+
 	private void zread(String ver, InStream is) {
 		int val = getVer(ver);
 		if (val >= 307)
 			val = getVer(is.nextString());
-		if (val >= 400)
+		if (val >= 401)
+			zread$000401(is);
+		else if (val >= 400)
 			zread$000400(is);
 		else if (val >= 301)
 			zread$000301(is);

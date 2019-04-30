@@ -76,7 +76,8 @@ public class Opts {
 	}
 
 	public static void verErr(String o, String v) {
-		pop(o + " version is too old, use BCU " + v + " or newer version to open it", "version error");
+		pop(o + " version is too old, use BCU " + v + " or " + (o.equals("BCU") ? "newer" : "older")
+				+ " version to open it", "version error");
 	}
 
 	public static boolean writeErr(String f) {

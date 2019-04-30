@@ -92,11 +92,6 @@ public class Cannon extends AtkModelAb {
 		return 0;
 	}
 
-	@Override
-	public boolean isrange() {
-		return true;
-	}
-
 	public void update() {
 		tempAtk = false;
 		if (anim != null && anim.done()) {

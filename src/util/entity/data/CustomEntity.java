@@ -122,7 +122,6 @@ public abstract class CustomEntity extends DataEntity {
 		type = de.getType();
 		width = de.getWidth();
 		shield = de.getShield();
-		isrange = de.isRange();
 		tba = de.getTBA();
 		touch = de.getTouch();
 
@@ -172,6 +171,14 @@ public abstract class CustomEntity extends DataEntity {
 	}
 
 	@Override
+	public boolean isRange() {
+		for (AtkDataModel adm : atks)
+			if (adm.range)
+				return true;
+		return false;
+	}
+
+	@Override
 	public int[][] rawAtkData() {
 		int[][] ans = new int[atks.length][];
 		for (int i = 0; i < atks.length; i++)
@@ -185,7 +192,7 @@ public abstract class CustomEntity extends DataEntity {
 	}
 
 	protected void write(OutStream os) {
-		os.writeString("0.4.1");
+		os.writeString("0.4.2");
 		os.writeInt(hp);
 		os.writeInt(hb);
 		os.writeInt(speed);
@@ -197,7 +204,7 @@ public abstract class CustomEntity extends DataEntity {
 		os.writeInt(tba);
 		os.writeInt(base);
 		os.writeInt(touch);
-		os.writeInt(isrange ? 1 : 0);
+		os.writeInt(0);// TODO
 		os.writeInt(common ? 1 : 0);
 		rep.write(os);
 		List<AtkDataModel> temp = new ArrayList<>();
@@ -222,7 +229,9 @@ public abstract class CustomEntity extends DataEntity {
 
 	protected void zreada(InStream is) {
 		int ver = getVer(is.nextString());
-		if (ver >= 401)
+		if (ver >= 402)
+			zreada$000402(is);
+		else if (ver >= 401)
 			zreada$000401(is);
 		else if (ver >= 400)
 			zreada$000400(is);
@@ -239,15 +248,17 @@ public abstract class CustomEntity extends DataEntity {
 		type = is.nextInt();
 		width = is.nextInt();
 		shield = is.nextInt();
-		isrange = is.nextByte() > 0;
+		boolean isrange = is.nextByte() > 0;
 		tba = is.nextInt();
 		base = is.nextInt();
 		common = is.nextByte() > 0;
 		rep = new AtkDataModel(this, is);
 		int m = is.nextInt();
 		AtkDataModel[] set = new AtkDataModel[m];
-		for (int i = 0; i < m; i++)
+		for (int i = 0; i < m; i++) {
 			set[i] = new AtkDataModel(this, is);
+			set[i].range = isrange;
+		}
 		int n = is.nextInt();
 		atks = new AtkDataModel[n];
 		for (int i = 0; i < n; i++)
@@ -298,7 +309,45 @@ public abstract class CustomEntity extends DataEntity {
 		tba = is.nextInt();
 		base = is.nextInt();
 		touch = is.nextInt();
-		isrange = is.nextInt() > 0;
+		boolean isrange = is.nextInt() > 0;
+		common = is.nextInt() > 0;
+		rep = new AtkDataModel(this, is);
+		int m = is.nextInt();
+		AtkDataModel[] set = new AtkDataModel[m];
+		for (int i = 0; i < m; i++) {
+			set[i] = new AtkDataModel(this, is);
+			set[i].range = isrange;
+		}
+		int n = is.nextInt();
+		atks = new AtkDataModel[n];
+		for (int i = 0; i < n; i++)
+			atks[i] = set[is.nextInt()];
+	}
+
+	private void zreada$000401(InStream is) {
+		zreada$000400(is);
+		int adi = is.nextInt();
+		if ((adi & 1) > 0)
+			rev = new AtkDataModel(this, is);
+		if ((adi & 2) > 0)
+			res = new AtkDataModel(this, is);
+	}
+
+	private void zreada$000402(InStream is) {
+		hp = is.nextInt();
+		hb = is.nextInt();
+		speed = is.nextInt();
+		range = is.nextInt();
+		abi = is.nextInt();
+		if ((abi & AB_GLASS) > 0)
+			loop = 1;
+		type = is.nextInt();
+		width = is.nextInt();
+		shield = is.nextInt();
+		tba = is.nextInt();
+		base = is.nextInt();
+		touch = is.nextInt();
+		is.nextInt();// TODO
 		common = is.nextInt() > 0;
 		rep = new AtkDataModel(this, is);
 		int m = is.nextInt();
@@ -309,10 +358,6 @@ public abstract class CustomEntity extends DataEntity {
 		atks = new AtkDataModel[n];
 		for (int i = 0; i < n; i++)
 			atks[i] = set[is.nextInt()];
-	}
-
-	private void zreada$000401(InStream is) {
-		zreada$000400(is);
 		int adi = is.nextInt();
 		if ((adi & 1) > 0)
 			rev = new AtkDataModel(this, is);

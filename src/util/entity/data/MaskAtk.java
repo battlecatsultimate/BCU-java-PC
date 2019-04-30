@@ -18,4 +18,6 @@ public interface MaskAtk {
 		return Data.TCH_N;
 	}
 
+	public boolean isRange();
+
 }

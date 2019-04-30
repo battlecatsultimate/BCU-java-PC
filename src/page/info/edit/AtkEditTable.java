@@ -11,6 +11,7 @@ import javax.swing.SwingConstants;
 import io.Reader;
 import page.JL;
 import page.JTF;
+import page.JTG;
 import page.Page;
 import page.support.ListJtfPolicy;
 import util.entity.data.AtkDataModel;
@@ -31,6 +32,7 @@ class AtkEditTable extends Page {
 	private final JTF fp1 = new JTF();
 	private final JTF ftp = new JTF();
 	private final JTF fdr = new JTF();
+	private final JTG isr = new JTG(1, "isr");
 
 	private final ListJtfPolicy ljp = new ListJtfPolicy();
 	private final AtkProcTable apt;
@@ -70,6 +72,7 @@ class AtkEditTable extends Page {
 		set(fp1, x, y, 200, 150, 200, 50);
 		set(ftp, x, y, 200, 200, 200, 50);
 		set(fdr, x, y, 200, 250, 200, 50);
+		set(isr, x, y, 200, 300, 200, 50);
 		apt.setPreferredSize(size(x, y, 750, 2000).toDimension());
 		apt.resized(x, y);
 		set(jsp, x, y, 450, 0, 800, 950);
@@ -85,6 +88,7 @@ class AtkEditTable extends Page {
 		ftp.setText("" + adm.targ);
 		apt.setData(adm.ce.common ? adm.ce.rep.proc : adm.proc);
 		fdr.setText("" + (adm.rev ? -1 : 1));
+		isr.setSelected(adm.range);
 	}
 
 	private void ini() {
@@ -98,6 +102,7 @@ class AtkEditTable extends Page {
 		set(fp0);
 		set(fp1);
 		set(ftp);
+		add(isr);
 		ftp.setToolTipText(
 				"<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
 						+ "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost</html>");
@@ -109,6 +114,8 @@ class AtkEditTable extends Page {
 		jsp.getVerticalScrollBar().setUnitIncrement(10);
 		setFocusTraversalPolicy(ljp);
 		setFocusCycleRoot(true);
+
+		isr.setLnr(x -> adm.range = isr.isSelected());
 	}
 
 	private void input(JTF jtf, String text) {

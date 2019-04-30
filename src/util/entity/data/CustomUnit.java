@@ -14,7 +14,6 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 		atks = new AtkDataModel[1];
 		atks[0] = new AtkDataModel(this);
 		width = 320;
-		isrange = true;
 		speed = 8;
 		hp = 1000;
 		hb = 1;
@@ -92,7 +91,7 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 		type = is.nextInt();
 		width = is.nextShort();
 		shield = is.nextInt();
-		isrange = is.nextByte() == 1;
+		boolean isrange = is.nextByte() == 1;
 		tba = is.nextInt();
 		base = is.nextShort();
 		price = is.nextInt();
@@ -101,8 +100,10 @@ public class CustomUnit extends CustomEntity implements MaskUnit {
 		rep = new AtkDataModel(this, is);
 		int m = is.nextByte();
 		AtkDataModel[] set = new AtkDataModel[m];
-		for (int i = 0; i < m; i++)
+		for (int i = 0; i < m; i++) {
 			set[i] = new AtkDataModel(this, is);
+			set[i].range = isrange;
+		}
 		int n = is.nextByte();
 		atks = new AtkDataModel[n];
 		for (int i = 0; i < n; i++)

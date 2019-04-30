@@ -8,12 +8,15 @@ import util.entity.data.MaskAtk;
 
 public class AttackSimple extends AttackAb {
 
-	public AttackSimple(AtkModelAb ent, int ATK, int t, int eab, int[][] pro, double p0, double p1) {
+	private final boolean range;
+
+	public AttackSimple(AtkModelAb ent, int ATK, int t, int eab, int[][] pro, double p0, double p1, boolean isr) {
 		super(ent, ATK, t, eab, pro, p0, p1);
+		range = isr;
 	}
 
 	public AttackSimple(AtkModelAb ent, int ATK, int t, int eab, int[][] pro, double p0, double p1, MaskAtk mask) {
-		this(ent, ATK, t, eab, pro, p0, p1);
+		this(ent, ATK, t, eab, pro, p0, p1, mask.isRange());
 		touch = mask.getTarget();
 		dire *= mask.getDire();
 	}
@@ -31,7 +34,7 @@ public class AttackSimple extends AttackAb {
 			for (AbEntity e : le)
 				if (e.targetable(type))
 					capt.add(e);
-		if (!model.isrange()) {
+		if (!range) {
 			if (capt.size() == 0)
 				return;
 			List<AbEntity> ents = new ArrayList<>();

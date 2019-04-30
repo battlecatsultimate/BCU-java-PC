@@ -24,8 +24,6 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	protected final Entity e;
 	protected final int[] atks, abis;
 	protected final Object[] acs;
-	protected final boolean range;
-
 	private final double ratk;
 
 	protected AtkModelEntity(Entity ent, double d0) {
@@ -52,7 +50,6 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			abis[raw.length + 1] = 1;
 			acs[raw.length + 1] = new Object();
 		}
-		range = data.isRange();
 	}
 
 	@Override
@@ -113,11 +110,6 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			if ((conf & 64) > 0 || (conf & 128) > 0 && e.health <= 0)
 				summon(proc, e, e);
 		}
-	}
-
-	@Override
-	public boolean isrange() {
-		return data.isRange();
 	}
 
 	/** get the collide box bound */

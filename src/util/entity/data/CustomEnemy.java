@@ -20,7 +20,6 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		atks = new AtkDataModel[1];
 		atks[0] = new AtkDataModel(this);
 		width = 320;
-		isrange = true;
 		speed = 8;
 		hp = 10000;
 		hb = 1;
@@ -125,7 +124,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+	@Deprecated
 	private void zread$000301(InStream is) {
 		hp = is.nextInt();
 		hb = is.nextInt();
@@ -135,7 +134,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		type = is.nextInt();
 		width = is.nextShort();
 		shield = is.nextInt();
-		isrange = is.nextByte() == 1;
+		boolean isrange = is.nextByte() == 1;
 		tba = is.nextInt();
 		base = is.nextShort();
 		star = is.nextByte();
@@ -144,15 +143,17 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		rep = new AtkDataModel(this, is, "0.3.1");
 		int m = is.nextByte();
 		AtkDataModel[] set = new AtkDataModel[m];
-		for (int i = 0; i < m; i++)
+		for (int i = 0; i < m; i++) {
 			set[i] = new AtkDataModel(this, is, "0.3.1");
+			set[i].range = isrange;
+		}
 		int n = is.nextByte();
 		atks = new AtkDataModel[n];
 		for (int i = 0; i < n; i++)
 			atks[i] = set[is.nextByte()];
 	}
 
-	@SuppressWarnings("deprecation")
+	@Deprecated
 	private void zread$000305(InStream is) {
 		hp = is.nextInt();
 		hb = is.nextInt();
@@ -162,7 +163,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		type = is.nextInt();
 		width = is.nextShort();
 		shield = is.nextInt();
-		isrange = is.nextByte() == 1;
+		boolean isrange = is.nextByte() == 1;
 		tba = is.nextInt();
 		base = is.nextShort();
 		star = is.nextByte();
@@ -171,8 +172,10 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		rep = new AtkDataModel(this, is, "0.3.5");
 		int m = is.nextByte();
 		AtkDataModel[] set = new AtkDataModel[m];
-		for (int i = 0; i < m; i++)
+		for (int i = 0; i < m; i++) {
 			set[i] = new AtkDataModel(this, is, "0.3.5");
+			set[i].range = isrange;
+		}
 		int n = is.nextByte();
 		atks = new AtkDataModel[n];
 		for (int i = 0; i < n; i++)
@@ -190,7 +193,7 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		type = is.nextInt();
 		width = is.nextShort();
 		shield = is.nextInt();
-		isrange = is.nextByte() == 1;
+		boolean isrange = is.nextByte() == 1;
 		tba = is.nextInt();
 		base = is.nextShort();
 		star = is.nextByte();
@@ -199,8 +202,10 @@ public class CustomEnemy extends CustomEntity implements MaskEnemy {
 		rep = new AtkDataModel(this, is);
 		int m = is.nextByte();
 		AtkDataModel[] set = new AtkDataModel[m];
-		for (int i = 0; i < m; i++)
+		for (int i = 0; i < m; i++) {
 			set[i] = new AtkDataModel(this, is);
+			set[i].range = isrange;
+		}
 		int n = is.nextByte();
 		atks = new AtkDataModel[n];
 		for (int i = 0; i < n; i++)

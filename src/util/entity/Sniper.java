@@ -53,11 +53,6 @@ public class Sniper extends AtkModelAb {
 		return b.st.len + SNIPER_POS;
 	}
 
-	@Override
-	public boolean isrange() {
-		return false;
-	}
-
 	public void update() {
 		if (enabled && coolTime > 0)
 			coolTime--;
@@ -74,7 +69,7 @@ public class Sniper extends AtkModelAb {
 				int atk = b.b.t().getBaseHealth() / 20;
 				int[][] proc = new int[PROC_TOT][PROC_WIDTH];
 				proc[P_SNIPER][0] = 1;
-				AttackAb a = new AttackSimple(this, atk, -1, 0, proc, 0, getPos());
+				AttackAb a = new AttackSimple(this, atk, -1, 0, proc, 0, getPos(), false);
 				a.canon = -1;
 				b.getAttack(a);
 			}

@@ -25,7 +25,4 @@ public abstract class AtkModelAb extends Data {
 	public void invokeLater(AttackAb atk, Entity e) {
 	}
 
-	/** get whether this entity is range attacker */
-	public abstract boolean isrange();
-
 }
