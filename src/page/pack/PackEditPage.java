@@ -354,7 +354,7 @@ public class PackEditPage extends Page {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				EnemyEditPage eet = new EnemyEditPage(getThis(), ene, pac.editable);
+				EnemyEditPage eet = new EnemyEditPage(getThis(), pac, ene);
 				changePanel(eet);
 			}
 		});

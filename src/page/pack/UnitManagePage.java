@@ -363,7 +363,7 @@ public class UnitManagePage extends Page {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				changePanel(new FormEditPage(getThis(), frm, pac.editable));
+				changePanel(new FormEditPage(getThis(), pac, frm));
 			}
 
 		});

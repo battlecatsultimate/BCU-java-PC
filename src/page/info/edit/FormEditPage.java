@@ -10,6 +10,7 @@ import page.Page;
 import page.info.filter.UnitEditBox;
 import util.entity.data.CustomEntity;
 import util.entity.data.CustomUnit;
+import util.pack.Pack;
 import util.unit.Form;
 
 public class FormEditPage extends EntityEditPage {
@@ -32,12 +33,12 @@ public class FormEditPage extends EntityEditPage {
 	private final CustomUnit cu;
 	private int lv;
 
-	public FormEditPage(Page p, Form f, boolean edit) {
-		super(p, (CustomEntity) f.du, edit);
+	public FormEditPage(Page p, Pack pac, Form f) {
+		super(p, pac, (CustomEntity) f.du, pac.editable);
 		form = f;
 		cu = (CustomUnit) form.du;
 		lv = f.unit.getPrefLv();
-		ueb = new UnitEditBox(this, edit);
+		ueb = new UnitEditBox(this, pac.editable);
 		ini();
 		setData((CustomUnit) f.du);
 		resized();

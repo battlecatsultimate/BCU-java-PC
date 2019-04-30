@@ -11,6 +11,7 @@ import page.info.StageFilterPage;
 import page.info.filter.EnemyEditBox;
 import util.entity.data.CustomEnemy;
 import util.entity.data.CustomEntity;
+import util.pack.Pack;
 import util.unit.Enemy;
 
 public class EnemyEditPage extends EntityEditPage {
@@ -28,11 +29,11 @@ public class EnemyEditPage extends EntityEditPage {
 	private final Enemy ene;
 	private final CustomEnemy ce;
 
-	public EnemyEditPage(Page p, Enemy e, boolean edit) {
-		super(p, (CustomEntity) e.de, edit);
+	public EnemyEditPage(Page p, Pack pac, Enemy e) {
+		super(p, pac, (CustomEntity) e.de, pac.editable);
 		ene = e;
 		ce = (CustomEnemy) ene.de;
-		eeb = new EnemyEditBox(this, edit);
+		eeb = new EnemyEditBox(this, pac.editable);
 		ini();
 		setData((CustomEnemy) e.de);
 		resized();

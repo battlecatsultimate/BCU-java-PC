@@ -40,6 +40,7 @@ import util.basis.Basis;
 import util.basis.BasisSet;
 import util.entity.data.AtkDataModel;
 import util.entity.data.CustomEntity;
+import util.pack.Pack;
 import util.pack.Soul;
 import util.pack.SoulStore;
 import util.unit.DIYAnim;
@@ -88,12 +89,14 @@ public abstract class EntityEditPage extends Page {
 	private final JL vrev = new JL();
 	private final JL vres = new JL();
 	private final JL vitv = new JL();
-	private final JComboBox<AnimC> jcb = new JComboBox<>();
+	private final JComboBox<AnimC> jcba = new JComboBox<>();
+	private final JComboBox<Soul> jcbs = new JComboBox<>();
 	private final ListJtfPolicy ljp = new ListJtfPolicy();
 	private final AtkEditTable aet;
 	private final MainProcTable mpt;
 	private final boolean editable;
 	private final CustomEntity ce;
+	private final Pack pack;
 
 	private boolean changing = false;
 	private EnemyFindPage efp;
@@ -101,8 +104,9 @@ public abstract class EntityEditPage extends Page {
 
 	protected final Basis bas = BasisSet.current;
 
-	public EntityEditPage(Page p, CustomEntity e, boolean edit) {
+	public EntityEditPage(Page p, Pack pac, CustomEntity e, boolean edit) {
 		super(p);
+		pack = pac;
 		ce = e;
 		aet = new AtkEditTable(this, edit, false);
 		mpt = new MainProcTable(this, edit);
@@ -180,20 +184,29 @@ public abstract class EntityEditPage extends Page {
 		set(vrev);
 		set(vres);
 		add(comm);
+		add(jcbs);
+		Vector<Soul> vec = new Vector<Soul>();
+		vec.add(null);
+		vec.addAll(SoulStore.getAll(pack));
+		jcbs.setModel(new DefaultComboBoxModel<>(vec));
 		if (editable) {
-			add(jcb);
+			add(jcba);
 			Vector<AnimC> vda = new Vector<>();
 			AnimC ac = ((AnimC) ce.getPack().anim);
 			if (!ac.inPool)
 				vda.add(ac);
 			vda.addAll(DIYAnim.getAnims());
-			jcb.setModel(new DefaultComboBoxModel<>(vda));
+			jcba.setModel(new DefaultComboBoxModel<>(vda));
 		}
 		setFocusTraversalPolicy(ljp);
 		setFocusCycleRoot(true);
 		addListeners();
 		atkn.setToolTipText("<html>use name \"revenge\" for attack during HB animation<br>"
 				+ "use name \"resurrection\" for attack during death animation</html>");
+		ftp.setToolTipText(
+				"<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
+						+ "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost</html>");
+
 		isr.setEnabled(editable);
 		add.setEnabled(editable);
 		rem.setEnabled(editable);
@@ -239,22 +252,22 @@ public abstract class EntityEditPage extends Page {
 		set(mpt, x, y, 50, 650, 300, 600);
 
 		set(jspi, x, y, 550, 50, 300, 350);
-		set(add, x, y, 550, 400, 300, 50);
-		set(rem, x, y, 550, 450, 300, 50);
-		set(copy, x, y, 550, 500, 300, 50);
-		set(link, x, y, 550, 550, 300, 50);
-		set(comm, x, y, 550, 600, 300, 50);
-		set(atkn, x, y, 550, 650, 300, 50);
+		set(add, x, y, 550, 400, 150, 50);
+		set(rem, x, y, 700, 400, 150, 50);
+		set(copy, x, y, 550, 450, 150, 50);
+		set(link, x, y, 700, 450, 150, 50);
+		set(comm, x, y, 550, 500, 300, 50);
+		set(atkn, x, y, 550, 550, 300, 50);
 
-		set(lra, x, y, 550, 750, 100, 50);
-		set(fra, x, y, 650, 750, 200, 50);
-		set(ltb, x, y, 550, 800, 100, 50);
-		set(ftb, x, y, 650, 800, 200, 50);
-		set(isr, x, y, 550, 850, 300, 50);
-		set(lbs, x, y, 550, 900, 100, 50);
-		set(fbs, x, y, 650, 900, 200, 50);
-		set(ltp, x, y, 550, 950, 100, 50);
-		set(ftp, x, y, 650, 950, 200, 50);
+		set(lra, x, y, 550, 650, 100, 50);
+		set(fra, x, y, 650, 650, 200, 50);
+		set(ltb, x, y, 550, 700, 100, 50);
+		set(ftb, x, y, 650, 700, 200, 50);
+		set(isr, x, y, 550, 750, 300, 50);
+		set(lbs, x, y, 550, 800, 100, 50);
+		set(fbs, x, y, 650, 800, 200, 50);
+		set(ltp, x, y, 550, 850, 100, 50);
+		set(ftp, x, y, 650, 850, 200, 50);
 
 		set(aet, x, y, 900, 50, 1400, 1000);
 
@@ -262,12 +275,13 @@ public abstract class EntityEditPage extends Page {
 		set(vpst, x, y, 1100, 1050, 200, 50);
 		set(litv, x, y, 900, 1100, 200, 50);
 		set(vitv, x, y, 1100, 1100, 200, 50);
-		set(jcb, x, y, 900, 1150, 400, 50);
+		set(jcba, x, y, 900, 1150, 400, 50);
 
-		set(lrev, x, y, 1600, 1050, 100, 50);
-		set(vrev, x, y, 1700, 1050, 100, 50);
-		set(lres, x, y, 1600, 1100, 100, 50);
-		set(vres, x, y, 1700, 1100, 100, 50);
+		set(lrev, x, y, 1600, 1050, 200, 50);
+		set(vrev, x, y, 1800, 1050, 100, 50);
+		set(lres, x, y, 1600, 1100, 200, 50);
+		set(vres, x, y, 1800, 1100, 100, 50);
+		set(jcbs, x, y, 1600, 1150, 300, 50);
 
 	}
 
@@ -333,10 +347,11 @@ public abstract class EntityEditPage extends Page {
 		jli.setSelectedIndex(ind);
 		Animable<AnimU> ene = ce.getPack();
 		if (editable)
-			jcb.setSelectedItem(ene.anim);
+			jcba.setSelectedItem(ene.anim);
+		jcbs.setSelectedItem(SoulStore.getSoul(ce.death));
 		vrev.setText(ce.rev == null ? "-" : (KB_TIME[INT_HB] - ce.rev.pre + "f"));
 		Soul s = SoulStore.getSoul(ce.death);
-		vres.setText(ce.res == null ? "-" : s == null ? "x" : (s.len(0) - ce.res.pre + "f"));
+		vres.setText(ce.res == null ? "x" : s == null ? "-" : (s.len(0) - ce.res.pre + "f"));
 		changing = false;
 	}
 
@@ -347,7 +362,7 @@ public abstract class EntityEditPage extends Page {
 
 		a.setLnr(x -> {
 			if (editable)
-				changePanel(new DIYViewPage(getThis(), new DIYAnim((AnimC) jcb.getSelectedItem())));
+				changePanel(new DIYViewPage(getThis(), new DIYAnim((AnimC) jcba.getSelectedItem())));
 			else if (o instanceof Unit)
 				changePanel(new UnitViewPage(getThis(), (Unit) o));
 			else if (o instanceof Enemy)
@@ -456,16 +471,26 @@ public abstract class EntityEditPage extends Page {
 			setData(ce);
 		});
 
-		jcb.addActionListener(new ActionListener() {
+		jcba.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (changing)
 					return;
-				ce.getPack().anim = (AnimC) jcb.getSelectedItem();
-				if (ce.getPost() < 1)
-					for (AtkDataModel adm : ce.atks)
-						adm.pre = 1;
+				ce.getPack().anim = (AnimC) jcba.getSelectedItem();
+				setData(ce);
+
+			}
+
+		});
+
+		jcbs.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (changing)
+					return;
+				ce.death = SoulStore.getID((Soul) jcbs.getSelectedItem());
 				setData(ce);
 
 			}

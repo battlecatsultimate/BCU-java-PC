@@ -34,11 +34,24 @@ public class SoulStore extends FixIndexList<Soul> {
 		pack = p;
 	}
 
-	public int getID(Soul s) {
-		int ind = indexOf(s);
-		if (ind < 0)
+	public String nameOf(Soul f) {
+		return pack.id + trio(indexOf(f));
+	}
+
+	@Override
+	public String toString() {
+		return pack.toString();
+	}
+
+	public static int getID(Soul s) {
+		if (s == null)
 			return -1;
-		return pack.id * 1000 + ind;
+		for (Pack p : Pack.map.values()) {
+			int ind = p.ss.indexOf(s);
+			if (ind >= 0)
+				return p.id * 1000 + ind;
+		}
+		return -1;
 	}
 
 }
