@@ -10,13 +10,11 @@ import util.system.VImg;
 
 public class Soul extends AnimD {
 
-	public static Soul[] souls = new Soul[12];
-
 	public static void read() {
 		String pre = "./org/battle/soul/";
 		String mid = "/battle_soul_";
 		for (int i = 0; i < 12; i++)
-			souls[i] = new Soul(pre + trio(i) + mid + trio(i), i);
+			Pack.def.ss.add(new Soul(pre + trio(i) + mid + trio(i), i));
 	}
 
 	private final int index;

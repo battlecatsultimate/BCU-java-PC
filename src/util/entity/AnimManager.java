@@ -11,6 +11,7 @@ import util.anim.EAnimU;
 import util.entity.data.AtkDataModel;
 import util.pack.EffAnim;
 import util.pack.Soul;
+import util.pack.SoulStore;
 import util.system.P;
 
 public class AnimManager extends Data {
@@ -220,10 +221,8 @@ public class AnimManager extends Data {
 
 	/** set kill anim */
 	protected void kill() {
-		if (e.data.getDeathAnim() == -1)
-			dead = 0;
-		else
-			dead = (soul = Soul.souls[e.data.getDeathAnim()].getEAnim(0)).len();
+		Soul s=SoulStore.getSoul(e.data.getDeathAnim());
+		dead = s==null?0:(soul = s.getEAnim(0)).len();
 	}
 
 	protected int setAnim(int t) {

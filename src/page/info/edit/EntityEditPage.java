@@ -41,6 +41,7 @@ import util.basis.BasisSet;
 import util.entity.data.AtkDataModel;
 import util.entity.data.CustomEntity;
 import util.pack.Soul;
+import util.pack.SoulStore;
 import util.unit.DIYAnim;
 import util.unit.Enemy;
 import util.unit.Form;
@@ -334,7 +335,8 @@ public abstract class EntityEditPage extends Page {
 		if (editable)
 			jcb.setSelectedItem(ene.anim);
 		vrev.setText(ce.rev == null ? "-" : (KB_TIME[INT_HB] - ce.rev.pre + "f"));
-		vres.setText(ce.res == null ? "-" : ce.death == -1 ? "x" : (Soul.souls[ce.death].len(0) - ce.res.pre + "f"));
+		Soul s=SoulStore.getSoul(ce.death);
+		vres.setText(ce.res == null ? "-" : s == null ? "x" : (s.len(0) - ce.res.pre + "f"));
 		changing = false;
 	}
 

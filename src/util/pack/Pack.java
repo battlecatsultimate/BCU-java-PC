@@ -204,6 +204,7 @@ public class Pack extends Data {
 	public final EnemyStore es = new EnemyStore(this);
 	public final BGStore bg = new BGStore(this);
 	public final UnitStore us = new UnitStore(this);
+	public final SoulStore ss=new SoulStore(this);
 
 	public final MusicStore ms = new MusicStore(this);
 	public MapColc mc;
