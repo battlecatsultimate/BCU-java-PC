@@ -142,6 +142,8 @@ public class RecdManagePage extends Page {
 				if (changing || jlr.getValueIsAdjusting())
 					return;
 				Recd r = jlr.getSelectedValue();
+				if(r==null)
+					return;
 				File f = new File("./replay/" + r.name + ".replay");
 				if (f.exists()) {
 					String str = MainBCU.validate(rena.getText().trim());
@@ -168,6 +170,7 @@ public class RecdManagePage extends Page {
 					Recd.map.remove(r.name);
 					setList();
 				}
+				setRecd(null);
 			}
 		});
 

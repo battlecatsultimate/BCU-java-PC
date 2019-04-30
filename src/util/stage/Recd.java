@@ -157,7 +157,7 @@ public class Recd extends Data {
 		return st;
 	}
 
-	public String name;
+	public String name="new record";
 	public long seed;
 	public int[] conf;
 	public int star, len;
