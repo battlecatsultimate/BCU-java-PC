@@ -34,13 +34,23 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		e = ent;
 		data = e.data;
 		int[][] raw = data.rawAtkData();
-		atks = new int[raw.length];
-		abis = new int[raw.length];
-		acs = new Object[raw.length];
+		atks = new int[raw.length + 2];
+		abis = new int[raw.length + 2];
+		acs = new Object[raw.length + 2];
 		for (int i = 0; i < raw.length; i++) {
 			atks[i] = (int) (raw[i][0] * d0);
 			abis[i] = raw[i][2];
 			acs[i] = new Object();
+		}
+		if (data.getRevenge() != null) {
+			atks[raw.length] = (int) (data.getRevenge().atk * d0);
+			abis[raw.length] = 1;
+			acs[raw.length] = new Object();
+		}
+		if (data.getResurrection() != null) {
+			atks[raw.length + 1] = (int) (data.getResurrection().atk * d0);
+			abis[raw.length + 1] = 1;
+			acs[raw.length + 1] = new Object();
 		}
 		range = data.isRange();
 	}
@@ -184,7 +194,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			int[] sprc = data.getAtkModel(ind).getProc(P_SUMMON);
 			int conf = sprc[4];
 			if ((conf & 192) == 0)
-				summon(sprc, e, acs[ind]);
+				summon(sprc, e, acs[ind]);// TODO
 			else
 				proc[P_SUMMON] = sprc;
 		}

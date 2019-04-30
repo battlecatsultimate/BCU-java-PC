@@ -23,6 +23,8 @@ public abstract class DefaultData extends DataEntity implements MaskAtk {
 
 	@Override
 	public MaskAtk getAtkModel(int ind) {
+		if (ind >= getAtkCount())
+			return null;
 		return this;
 	}
 

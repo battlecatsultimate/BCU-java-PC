@@ -43,11 +43,11 @@ public interface MaskEntity {
 
 	public MaskAtk getRepAtk();
 
-	public default MaskAtk getResurrection() {
+	public default AtkDataModel getResurrection() {
 		return null;
 	}
 
-	public default MaskAtk getRevenge() {
+	public default AtkDataModel getRevenge() {
 		return null;
 	}
 

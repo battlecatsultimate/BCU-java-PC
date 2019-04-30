@@ -54,7 +54,13 @@ public abstract class CustomEntity extends DataEntity {
 
 	@Override
 	public MaskAtk getAtkModel(int ind) {
-		return atks[ind];
+		if (ind < atks.length)
+			return atks[ind];
+		if (ind == atks.length)
+			return rev;
+		if (ind == atks.length + 1)
+			return res;
+		return null;
 	}
 
 	public String getAvailable(String str) {
@@ -87,12 +93,12 @@ public abstract class CustomEntity extends DataEntity {
 	}
 
 	@Override
-	public MaskAtk getResurrection() {
+	public AtkDataModel getResurrection() {
 		return res;
 	}
 
 	@Override
-	public MaskAtk getRevenge() {
+	public AtkDataModel getRevenge() {
 		return rev;
 	}
 
