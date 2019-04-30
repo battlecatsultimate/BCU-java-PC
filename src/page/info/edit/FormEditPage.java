@@ -3,8 +3,6 @@ package page.info.edit;
 import static util.Interpret.ABIIND;
 import static util.Interpret.IMUSFT;
 
-import javax.swing.JLabel;
-
 import page.JBTN;
 import page.JL;
 import page.JTF;
@@ -28,7 +26,7 @@ public class FormEditPage extends EntityEditPage {
 	private final JBTN impt = new JBTN(0, "import");
 	private final JBTN vene = new JBTN(0, "enemy");
 	private final JL ldps = new JL("DPS");
-	private final JLabel vdps = new JLabel();
+	private final JL vdps = new JL();
 	private final UnitEditBox ueb;
 	private final Form form;
 	private final CustomUnit cu;

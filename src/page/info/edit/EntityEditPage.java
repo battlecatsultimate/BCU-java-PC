@@ -1,6 +1,6 @@
 package page.info.edit;
 
-import static util.Data.AB_GLASS;
+import static util.Data.*;
 import static util.Interpret.ABIIND;
 import static util.Interpret.IMUSFT;
 
@@ -11,10 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
@@ -42,6 +40,7 @@ import util.basis.Basis;
 import util.basis.BasisSet;
 import util.entity.data.AtkDataModel;
 import util.entity.data.CustomEntity;
+import util.pack.Soul;
 import util.unit.DIYAnim;
 import util.unit.Enemy;
 import util.unit.Form;
@@ -81,9 +80,13 @@ public abstract class EntityEditPage extends Page {
 	private final JTG comm = new JTG(1, "common");
 	private final JTF atkn = new JTF();
 	private final JL lpst = new JL(1, "postaa");
-	private final JLabel vpst = new JLabel();
+	private final JL vpst = new JL();
 	private final JL litv = new JL(1, "atkf");
-	private final JLabel vitv = new JLabel();
+	private final JL lrev = new JL(1, "post-HB");
+	private final JL lres = new JL(1, "post-death");
+	private final JL vrev = new JL();
+	private final JL vres = new JL();
+	private final JL vitv = new JL();
 	private final JComboBox<AnimC> jcb = new JComboBox<>();
 	private final ListJtfPolicy ljp = new ListJtfPolicy();
 	private final AtkEditTable aet;
@@ -171,6 +174,10 @@ public abstract class EntityEditPage extends Page {
 		set(vpst);
 		set(litv);
 		set(vitv);
+		set(lrev);
+		set(lres);
+		set(vrev);
+		set(vres);
 		add(comm);
 		if (editable) {
 			add(jcb);
@@ -184,6 +191,8 @@ public abstract class EntityEditPage extends Page {
 		setFocusTraversalPolicy(ljp);
 		setFocusCycleRoot(true);
 		addListeners();
+		atkn.setToolTipText("<html>use name \"revenge\" for attack during HB animation<br>"
+				+ "use name \"resurrection\" for attack during death animation</html>");
 		isr.setEnabled(editable);
 		add.setEnabled(editable);
 		rem.setEnabled(editable);
@@ -254,11 +263,15 @@ public abstract class EntityEditPage extends Page {
 		set(vitv, x, y, 1100, 1100, 200, 50);
 		set(jcb, x, y, 900, 1150, 400, 50);
 
+		set(lrev, x, y, 1600, 1050, 100, 50);
+		set(vrev, x, y, 1700, 1050, 100, 50);
+		set(lres, x, y, 1600, 1100, 100, 50);
+		set(vres, x, y, 1700, 1100, 100, 50);
+
 	}
 
-	protected void set(JLabel jl) {
+	protected void set(JL jl) {
 		jl.setHorizontalAlignment(SwingConstants.CENTER);
-		jl.setBorder(BorderFactory.createEtchedBorder());
 		add(jl);
 	}
 
@@ -320,6 +333,8 @@ public abstract class EntityEditPage extends Page {
 		Animable<AnimU> ene = ce.getPack();
 		if (editable)
 			jcb.setSelectedItem(ene.anim);
+		vrev.setText(ce.rev == null ? "-" : (KB_TIME[INT_HB] - ce.rev.pre + "f"));
+		vres.setText(ce.res == null ? "-" : ce.death == -1 ? "x" : (Soul.souls[ce.death].len(0) - ce.res.pre + "f"));
 		changing = false;
 	}
 
