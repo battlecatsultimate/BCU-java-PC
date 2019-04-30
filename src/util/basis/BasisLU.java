@@ -82,7 +82,7 @@ public class BasisLU extends Basis implements Copable<BasisLU> {
 	}
 
 	public OutStream write() {
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		os.writeString("0.3.8");
 		os.writeString(name);
 		os.accept(lu.write());

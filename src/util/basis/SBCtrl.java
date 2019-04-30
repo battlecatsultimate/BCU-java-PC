@@ -33,7 +33,7 @@ public class SBCtrl extends StageBasis {
 		}
 		num = 0;
 		rep = 0;
-		OutStream os = new OutStream(recd.size() * 4 + 4);
+		OutStream os = OutStream.getIns();
 		os.writeInt(recd.size());
 		for (int i : recd)
 			os.writeInt(i);

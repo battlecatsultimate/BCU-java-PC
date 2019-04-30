@@ -2,28 +2,21 @@ package io;
 
 import java.io.UnsupportedEncodingException;
 
-import main.Opts;
+public strictfp abstract class InStream extends DataIO {
 
-public strictfp class InStream extends DataIO {
-
-	private final int[] bs;
-	protected int index;
-
-	protected InStream(int[] data) {
-		bs = data;
-		index = 0;
+	protected static InStream getIns(byte[] bs) {
+		int[] is=DataIO.translate(bs);
+		int sig=DataIO.toInt(is, 0);
+		if(sig>0) {
+			InStreamDef ans=new InStreamDef(is,4,is.length);
+			return ans;
+		}
+		return null;
 	}
+	
+	public abstract boolean end();
 
-	public boolean end() {
-		return index == bs.length;
-	}
-
-	public int nextByte() {
-		check(1);
-		int ans = toByte(bs, index);
-		index++;
-		return ans;
-	}
+	public abstract int nextByte();
 
 	public byte[] nextBytesB() {
 		int len = nextByte();
@@ -41,12 +34,7 @@ public strictfp class InStream extends DataIO {
 		return ints;
 	}
 
-	public double nextDouble() {
-		check(8);
-		double ans = toDouble(bs, index);
-		index += 8;
-		return ans;
-	}
+	public abstract double nextDouble();
 
 	public double[] nextDoubles() {
 		int len = nextByte();
@@ -56,19 +44,9 @@ public strictfp class InStream extends DataIO {
 		return ints;
 	}
 
-	public float nextFloat() {
-		check(4);
-		float ans = toFloat(bs, index);
-		index += 4;
-		return ans;
-	}
+	public abstract float nextFloat();
 
-	public int nextInt() {
-		check(4);
-		int ans = toInt(bs, index);
-		index += 4;
-		return ans;
-	}
+	public abstract int nextInt();
 
 	public int[] nextIntsB() {
 		int len = nextByte();
@@ -86,19 +64,9 @@ public strictfp class InStream extends DataIO {
 		return ints;
 	}
 
-	public long nextLong() {
-		check(8);
-		long ans = toLong(bs, index);
-		index += 8;
-		return ans;
-	}
+	public abstract long nextLong();
 
-	public int nextShort() {
-		check(2);
-		int ans = toShort(bs, index);
-		index += 2;
-		return ans;
-	}
+	public abstract int nextShort();
 
 	public String nextString() {
 		byte[] bts = nextBytesB();
@@ -110,44 +78,17 @@ public strictfp class InStream extends DataIO {
 		}
 	}
 
-	public int pos() {
-		return index;
-	}
+	public abstract int pos();
 
-	public void reread() {
-		index = 0;
-	}
+	public abstract void reread();
 
-	public int size() {
-		return bs.length;
-	}
+	public abstract int size();
 
-	public void skip(int n) {
-		index += n;
-	}
+	public abstract void skip(int n);
 
-	public InStream subStream() {
-		int n = nextInt();
-		if (n > size()) {
-			Opts.loadErr("corrupted file");
-			new Exception("error in getting subStream").printStackTrace();
-			Writer.logClose(false);
-			System.exit(0);
-		}
-		int[] bsa = new int[n];
-		for (int i = 0; i < n; i++)
-			bsa[i] = bs[index + i];
-		InStream is = new InStream(bsa);
-		index += n;
-		return is;
-	}
+	public abstract InStream subStream();
 
-	public OutStream translate() {
-		byte[] data = new byte[bs.length];
-		for (int i = 0; i < bs.length; i++)
-			data[i] = (byte) bs[i];
-		return new OutStream(data);
-	}
+	public abstract OutStream translate();
 
 	protected void check(int i) {
 	}

@@ -3,13 +3,12 @@ package io;
 import static java.lang.Character.isDigit;
 
 import java.awt.Rectangle;
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,6 @@ import event.HourGrouper;
 import event.Namer;
 import main.MainBCU;
 import main.Opts;
-import main.Printer;
 import page.LoadPage;
 import page.MainFrame;
 import page.MainLocale;
@@ -138,42 +136,13 @@ public class Reader extends DataIO {
 	}
 
 	public static InStream readBytes(File file) {
-		InStream is = null;
-		InputStream in = null;
 		try {
-			in = new FileInputStream(file);
-			in = new BufferedInputStream(in);
-			byte[] len = new byte[4];
-			in.read(len);
-			int length = toInt(translate(len), 0);
-			if (length > file.length()) {
-				Opts.loadErr("corrupt file: " + file.getPath());
-				System.exit(0);
-			}
-			byte[] bs = new byte[length];
-			in.read(bs);
-			is = new InStream(translate(bs));
-			in.close();
-		} catch (IOException e1) {
-			Printer.r(123, "IOE: " + file.getPath());
-			if (in != null)
-				try {
-					in.close();
-				} catch (IOException e2) {
-					Printer.r(127, "cannot close input");
-					e2.printStackTrace();
-				}
-			e1.printStackTrace();
-		} finally {
-			if (in != null)
-				try {
-					in.close();
-				} catch (IOException e1) {
-					Printer.r(135, "cannot close input");
-					e1.printStackTrace();
-				}
+			byte[] bs=Files.readAllBytes(file.toPath());
+			return InStream.getIns(bs);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		return is;
+		return null;
 	}
 
 	public static void readLang() {

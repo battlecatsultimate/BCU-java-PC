@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 
 import io.InStream;
 import io.OutStream;
+import io.OverReadException;
 import io.Reader;
 import io.Writer;
 import main.MainBCU;
@@ -262,7 +263,7 @@ public class Pack extends Data {
 				bcuver = head.nextInt();
 				time = head.nextString();
 				version = head.nextInt();
-			} catch (IndexOutOfBoundsException e) {
+			} catch (OverReadException e) {
 			}
 		} else {
 			id = is.nextInt();
@@ -450,9 +451,9 @@ public class Pack extends Data {
 	}
 
 	public void packUp() {
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		os.writeString("0.4.1");
-		OutStream head = new OutStream();
+		OutStream head = OutStream.getIns();
 		head.writeInt(id);
 		head.writeByte((byte) rely.size());
 		for (int val : rely)
@@ -533,7 +534,7 @@ public class Pack extends Data {
 
 	public OutStream write() {
 		mc.name = name;
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		os.writeString("0.4.1");
 		os.writeInt(id);
 		os.writeByte((byte) rely.size());

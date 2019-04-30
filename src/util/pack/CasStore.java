@@ -53,7 +53,7 @@ public class CasStore extends FixIndexList<VImg> implements AbCastle {
 	}
 
 	protected OutStream packup() {
-		OutStream cas = new OutStream();
+		OutStream cas = OutStream.getIns();
 		cas.writeString("0.3.7");
 		Map<Integer, VImg> mcas = getMap();
 		cas.writeInt(mcas.size());
@@ -73,7 +73,7 @@ public class CasStore extends FixIndexList<VImg> implements AbCastle {
 	}
 
 	protected OutStream write() {
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		os.writeString("0.3.7");
 		os.writeInt(0);
 		os.terminate();

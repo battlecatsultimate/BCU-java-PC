@@ -349,7 +349,7 @@ public abstract class EntityEditPage extends Page {
 		if (editable)
 			jcba.setSelectedItem(ene.anim);
 		jcbs.setSelectedItem(SoulStore.getSoul(ce.death));
-		vrev.setText(ce.rev == null ? "-" : (KB_TIME[INT_HB] - ce.rev.pre + "f"));
+		vrev.setText(ce.rev == null ? "x" : (KB_TIME[INT_HB] - ce.rev.pre + "f"));
 		Soul s = SoulStore.getSoul(ce.death);
 		vres.setText(ce.res == null ? "x" : s == null ? "-" : (s.len(0) - ce.res.pre + "f"));
 		changing = false;

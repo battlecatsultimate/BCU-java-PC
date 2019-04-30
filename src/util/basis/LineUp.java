@@ -200,7 +200,7 @@ public class LineUp extends Data {
 	/** write data to file */
 	public OutStream write() {
 		validate();
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		os.writeString("0.3.9");
 		for (int i = 0; i < 10; i++)
 			if (getFS(i) == null) {

@@ -201,7 +201,7 @@ public class Recd extends Data {
 	}
 
 	public void write() {
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		os.writeString("0.4.1");
 		os.writeLong(seed);
 		os.writeIntB(conf);

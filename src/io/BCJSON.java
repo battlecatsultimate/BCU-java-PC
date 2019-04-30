@@ -397,7 +397,7 @@ public class BCJSON extends Data {
 		File file = new File("./lib/temp.download");
 		Writer.check(file);
 		file.deleteOnExit();
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		try {
 			FileUtils.copyURLToFile(new URL(url), file, 5000, 5000);
 			InputStream in = new FileInputStream(file);

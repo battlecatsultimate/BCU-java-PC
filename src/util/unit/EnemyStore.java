@@ -76,7 +76,7 @@ public class EnemyStore extends FixIndexList<Enemy> {
 	}
 
 	public OutStream packup() {
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		os.writeString("0.4.2");
 		List<Enemy> list = getList();
 		os.writeInt(list.size());
@@ -98,7 +98,7 @@ public class EnemyStore extends FixIndexList<Enemy> {
 	}
 
 	public OutStream write() {
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		os.writeString("0.4.2");
 		List<Enemy> list = getList();
 		os.writeInt(list.size());

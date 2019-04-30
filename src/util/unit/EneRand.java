@@ -73,7 +73,7 @@ public class EneRand extends EntRand<Integer> implements AbEnemy {
 	}
 
 	protected OutStream write() {
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		os.writeString("0.4.0");
 		os.writeString(name);
 		os.writeInt(type);

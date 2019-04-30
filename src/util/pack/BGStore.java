@@ -73,7 +73,7 @@ public class BGStore extends FixIndexList<Background> {
 	}
 
 	protected OutStream packup() {
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		os.writeString("0.4.0");
 		Map<Integer, Background> mbg = getMap();
 		os.writeInt(mbg.size());
@@ -99,7 +99,7 @@ public class BGStore extends FixIndexList<Background> {
 	}
 
 	protected OutStream write() {
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		os.writeString("0.4.0");
 		Map<Integer, Background> mbg = getMap();
 		os.writeInt(mbg.size());

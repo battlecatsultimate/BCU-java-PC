@@ -87,7 +87,7 @@ public class UnitStore extends Data {
 	}
 
 	public OutStream packup() {
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		os.writeString("0.4.1");
 		os.writeInt(lvlist.size());
 		Map<Integer, UnitLevel> lvmap = lvlist.getMap();
@@ -121,7 +121,7 @@ public class UnitStore extends Data {
 	}
 
 	public OutStream write() {
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		os.writeString("0.4.1");
 		os.writeInt(lvlist.size());
 		Map<Integer, UnitLevel> lvmap = lvlist.getMap();

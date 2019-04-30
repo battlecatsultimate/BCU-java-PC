@@ -1,86 +1,46 @@
 package io;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 
-public strictfp class OutStream extends DataIO {
+public strictfp abstract class OutStream extends DataIO {
 
-	private byte[] bs;
-	private int index;
-
-	public OutStream() {
-		bs = new byte[1024];
+	public static OutStream getIns() {
+		return new OutStreamDef();
 	}
 
-	public OutStream(int size) {
-		bs = new byte[size];
-		index = 0;
-	}
+	public abstract void accept(OutStream os);
 
-	protected OutStream(byte[] data) {
-		bs = data;
-	}
+	public abstract void concat(byte[] s);
 
-	public void accept(OutStream os) {
-		writeInt(os.size());
-		check(os.size());
-		for (int i = 0; i < os.size(); i++)
-			bs[index++] = os.bs[i];
-	}
+	public abstract byte[] getBytes();
 
-	public void concat(byte[] s) {
-		check(s.length);
-		for (byte b : s)
-			fromByte(bs, index++, b);
-	}
+	public abstract byte[] signature();
+	
+	public abstract int pos();
 
-	public byte[] getBytes() {
-		return bs;
-	}
+	public abstract int size();
 
-	public int pos() {
-		return index;
-	}
+	public abstract void terminate();
 
-	public int size() {
-		return bs.length;
-	}
+	public abstract InStream translate();
 
-	public void terminate() {
-		if (index == bs.length)
-			return;
-		bs = Arrays.copyOf(bs, index);
-	}
-
-	public InStream translate() {
-		return new InStream(translate(bs));
-	}
-
-	public void writeByte(byte n) {
-		check(1);
-		fromByte(bs, index, n);
-		index++;
-	}
+	public abstract void writeByte(byte n);
 
 	public void writeBytesB(byte[] s) {
 		check(s.length + 1);
-		fromByte(bs, index++, (byte) s.length);
+		writeByte((byte) s.length);
 		for (byte b : s)
-			fromByte(bs, index++, b);
+			writeByte(b);
 	}
 
 	public void writeBytesI(byte[] s) {
 		writeInt(s.length);
 		check(s.length);
 		for (byte b : s)
-			fromByte(bs, index++, b);
+			writeByte(b);
 	}
 
-	public void writeDouble(double n) {
-		check(8);
-		fromDouble(bs, index, n);
-		index += 8;
-	}
+	public abstract void writeDouble(double n);
 
 	public void writeDoubles(double[] ints) {
 		if (ints == null) {
@@ -96,17 +56,9 @@ public strictfp class OutStream extends DataIO {
 		writeFloat((float) n);
 	}
 
-	public void writeFloat(float n) {
-		check(4);
-		fromFloat(bs, index, n);
-		index += 4;
-	}
+	public abstract void writeFloat(float n);
 
-	public void writeInt(int n) {
-		check(4);
-		fromInt(bs, index, n);
-		index += 4;
-	}
+	public abstract void writeInt(int n);
 
 	public void writeIntB(int[] ints) {
 		if (ints == null) {
@@ -133,18 +85,10 @@ public strictfp class OutStream extends DataIO {
 			writeInt(i);
 	}
 
-	public void writeLong(long n) {
-		check(8);
-		fromLong(bs, index, n);
-		index += 8;
-	}
+	public abstract void writeLong(long n);
 
-	public void writeShort(short n) {
-		check(2);
-		fromShort(bs, index, n);
-		index += 2;
-	}
-
+	public abstract void writeShort(short n);
+	
 	public void writeString(String str) {
 		byte[] bts;
 		try {
@@ -156,11 +100,6 @@ public strictfp class OutStream extends DataIO {
 		writeBytesB(bts);
 	}
 
-	private void check(int i) {
-		if (index + i > bs.length * 2)
-			bs = Arrays.copyOf(bs, index + i);
-		else if (index + i > bs.length)
-			bs = Arrays.copyOf(bs, bs.length * 2);
-	}
+	protected abstract void check(int i);
 
 }

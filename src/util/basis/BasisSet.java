@@ -23,7 +23,7 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 	}
 
 	public static OutStream writeAll() {
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		os.writeString("0.3.8");
 		os.writeInt(list.size());
 		for (BasisSet bs : list)
@@ -131,7 +131,7 @@ public class BasisSet extends Basis implements Copable<BasisSet> {
 	}
 
 	public OutStream write() {
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		os.writeString(name);
 		t.write(os);
 		os.writeString("0.3.8");

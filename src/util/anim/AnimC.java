@@ -308,7 +308,7 @@ public class AnimC extends AnimU {
 	}
 
 	public void updateStatus() {
-		OutStream mms = new OutStream();
+		OutStream mms = OutStream.getIns();
 		mms.writeInt(mamodel.status.size());
 		mamodel.status.forEach((d, s) -> {
 			int ind = -1;
@@ -323,7 +323,7 @@ public class AnimC extends AnimU {
 	}
 
 	public OutStream write() {
-		OutStream osi = new OutStream();
+		OutStream osi = OutStream.getIns();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
 			ImageIO.write(num, "PNG", baos);
@@ -390,7 +390,7 @@ public class AnimC extends AnimU {
 	}
 
 	private void history(String str) {
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		imgcut.write(os);
 		mamodel.write(os);
 		os.writeInt(anims.length);
