@@ -201,7 +201,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				AnimC ac = new AnimC(str);
 				ac.num = bimg;
 				ac.saveImg();
-				ac.check();
+				ac.createNew();
 				DIYAnim da = new DIYAnim(str, ac);
 				DIYAnim.map.put(str, da);
 				Vector<DIYAnim> v = new Vector<>(DIYAnim.map.values());

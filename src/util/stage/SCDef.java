@@ -204,7 +204,7 @@ public class SCDef implements Copable<SCDef> {
 	}
 
 	public OutStream write() {
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		os.writeInt(0);
 		os.writeString("0.4.1");
 		os.writeInt(datas.length);

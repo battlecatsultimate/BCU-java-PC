@@ -8,9 +8,8 @@ import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
 import main.Printer;
-import util.system.Copable;
 
-public class ReorderList<T extends Copable<T>> extends JList<T> implements Reorderable {
+public class ReorderList<T> extends JList<T> implements Reorderable {
 
 	private static final long serialVersionUID = 1L;
 

@@ -63,7 +63,7 @@ public class DIYAnim extends Animable<AnimC> {
 	}
 
 	public static OutStream writeAnim(AnimC anim) {
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		os.writeString("0.4.1");
 		if (anim.inPool) {
 			os.writeInt(0);

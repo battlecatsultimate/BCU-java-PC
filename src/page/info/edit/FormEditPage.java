@@ -3,8 +3,6 @@ package page.info.edit;
 import static util.Interpret.ABIIND;
 import static util.Interpret.IMUSFT;
 
-import javax.swing.JLabel;
-
 import page.JBTN;
 import page.JL;
 import page.JTF;
@@ -12,6 +10,7 @@ import page.Page;
 import page.info.filter.UnitEditBox;
 import util.entity.data.CustomEntity;
 import util.entity.data.CustomUnit;
+import util.pack.Pack;
 import util.unit.Form;
 
 public class FormEditPage extends EntityEditPage {
@@ -28,18 +27,18 @@ public class FormEditPage extends EntityEditPage {
 	private final JBTN impt = new JBTN(0, "import");
 	private final JBTN vene = new JBTN(0, "enemy");
 	private final JL ldps = new JL("DPS");
-	private final JLabel vdps = new JLabel();
+	private final JL vdps = new JL();
 	private final UnitEditBox ueb;
 	private final Form form;
 	private final CustomUnit cu;
 	private int lv;
 
-	public FormEditPage(Page p, Form f, boolean edit) {
-		super(p, (CustomEntity) f.du, edit);
+	public FormEditPage(Page p, Pack pac, Form f) {
+		super(p, pac, (CustomEntity) f.du, pac.editable);
 		form = f;
 		cu = (CustomUnit) form.du;
 		lv = f.unit.getPrefLv();
-		ueb = new UnitEditBox(this, edit);
+		ueb = new UnitEditBox(this, pac.editable);
 		ini();
 		setData((CustomUnit) f.du);
 		resized();
@@ -103,10 +102,10 @@ public class FormEditPage extends EntityEditPage {
 		super.resized(x, y);
 		set(llv, x, y, 50, 50, 100, 50);
 		set(flv, x, y, 150, 50, 200, 50);
-		set(ldr, x, y, 50, 400, 100, 50);
-		set(fdr, x, y, 150, 400, 200, 50);
-		set(lrs, x, y, 50, 450, 100, 50);
-		set(frs, x, y, 150, 450, 200, 50);
+		set(ldr, x, y, 50, 350, 100, 50);
+		set(fdr, x, y, 150, 350, 200, 50);
+		set(lrs, x, y, 50, 400, 100, 50);
+		set(frs, x, y, 150, 400, 200, 50);
 		set(ueb, x, y, 350, 50, 200, 1200);
 		set(ldps, x, y, 900, 1150, 200, 50);
 		set(vdps, x, y, 1100, 1150, 200, 50);

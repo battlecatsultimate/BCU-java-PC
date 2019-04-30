@@ -8,8 +8,10 @@ import util.ImgCore;
 import util.anim.AnimD;
 import util.anim.EAnimD;
 import util.anim.EAnimU;
+import util.entity.data.AtkDataModel;
 import util.pack.EffAnim;
 import util.pack.Soul;
+import util.pack.SoulStore;
 import util.system.P;
 
 public class AnimManager extends Data {
@@ -219,10 +221,8 @@ public class AnimManager extends Data {
 
 	/** set kill anim */
 	protected void kill() {
-		if (e.data.getDeathAnim() == -1)
-			dead = 0;
-		else
-			dead = (soul = Soul.souls[e.data.getDeathAnim()].getEAnim(0)).len();
+		Soul s = SoulStore.getSoul(e.data.getDeathAnim());
+		dead = s == null ? 0 : (soul = s.getEAnim(0)).len();
 	}
 
 	protected int setAnim(int t) {
@@ -245,6 +245,11 @@ public class AnimManager extends Data {
 		if (dead > 0) {
 			soul.update(false);
 			dead--;
+		}
+		if (e.data.getResurrection() != null && dead >= 0) {
+			AtkDataModel adm = e.data.getResurrection();
+			if (soul == null || adm.pre == soul.len() - dead)
+				e.basis.getAttack(e.aam.getAttack(e.data.getAtkCount() + 1));
 		}
 	}
 

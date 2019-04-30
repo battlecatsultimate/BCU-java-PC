@@ -224,7 +224,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap> {
 	}
 
 	public OutStream write() {
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		os.writeString("0.4.0");
 		os.writeString(toString());
 		os.writeInt(bg);

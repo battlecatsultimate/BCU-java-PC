@@ -103,6 +103,11 @@ public class EffAnim extends AnimD {
 	}
 
 	@Override
+	public BufferedImage getNum() {
+		return vimg.getImg();
+	}
+
+	@Override
 	public void load() {
 		loaded = true;
 		parts = imgcut.cut(vimg.getImg());

@@ -265,8 +265,7 @@ public class ZipAccess {
 		InStream ans = null;
 		if (Files.exists(p)) {
 			byte[] bs = Files.readAllBytes(p);
-			ans = new InStream(DataIO.translate(bs));
-			ans.nextInt();
+			ans = InStream.getIns(bs);
 		}
 		fs.close();
 		return ans;

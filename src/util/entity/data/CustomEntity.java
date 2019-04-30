@@ -8,7 +8,7 @@ import io.OutStream;
 
 public abstract class CustomEntity extends DataEntity {
 
-	public AtkDataModel rep;
+	public AtkDataModel rep, rev, res;
 	public AtkDataModel[] atks;
 	public int tba, base, touch = TCH_N;
 	public boolean common = true;
@@ -54,7 +54,13 @@ public abstract class CustomEntity extends DataEntity {
 
 	@Override
 	public MaskAtk getAtkModel(int ind) {
-		return atks[ind];
+		if (ind < atks.length)
+			return atks[ind];
+		if (ind == atks.length)
+			return rev;
+		if (ind == atks.length + 1)
+			return res;
+		return null;
 	}
 
 	public String getAvailable(String str) {
@@ -84,6 +90,16 @@ public abstract class CustomEntity extends DataEntity {
 	@Override
 	public MaskAtk getRepAtk() {
 		return rep;
+	}
+
+	@Override
+	public AtkDataModel getResurrection() {
+		return res;
+	}
+
+	@Override
+	public AtkDataModel getRevenge() {
+		return rev;
 	}
 
 	@Override
@@ -169,7 +185,7 @@ public abstract class CustomEntity extends DataEntity {
 	}
 
 	protected void write(OutStream os) {
-		os.writeString("0.4.0");
+		os.writeString("0.4.1");
 		os.writeInt(hp);
 		os.writeInt(hb);
 		os.writeInt(speed);
@@ -197,13 +213,19 @@ public abstract class CustomEntity extends DataEntity {
 		os.writeInt(inds.length);
 		for (int val : inds)
 			os.writeInt(val);
+		os.writeInt((rev == null ? 0 : 1) + (res == null ? 0 : 2));
+		if (rev != null)
+			rev.write(os);
+		if (res != null)
+			res.write(os);
 	}
 
 	protected void zreada(InStream is) {
 		int ver = getVer(is.nextString());
-		if (ver >= 400) {
+		if (ver >= 401)
+			zreada$000401(is);
+		else if (ver >= 400)
 			zreada$000400(is);
-		}
 	}
 
 	protected void zreada$000308(InStream is) {
@@ -287,6 +309,15 @@ public abstract class CustomEntity extends DataEntity {
 		atks = new AtkDataModel[n];
 		for (int i = 0; i < n; i++)
 			atks[i] = set[is.nextInt()];
+	}
+
+	private void zreada$000401(InStream is) {
+		zreada$000400(is);
+		int adi = is.nextInt();
+		if ((adi & 1) > 0)
+			rev = new AtkDataModel(this, is);
+		if ((adi & 2) > 0)
+			res = new AtkDataModel(this, is);
 	}
 
 }

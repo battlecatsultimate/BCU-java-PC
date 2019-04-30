@@ -97,7 +97,7 @@ public class AnimC extends AnimU {
 			uni = new VImg(f);
 	}
 
-	public AnimC(String str, AnimU ori) {
+	public AnimC(String str, AnimD ori) {
 		inPool = true;
 		prev = "./res/anim/";
 		name = str;
@@ -105,13 +105,15 @@ public class AnimC extends AnimU {
 		partial = true;
 		imgcut = ori.imgcut.clone();
 		mamodel = ori.mamodel.clone();
+		if (mamodel.confs.length < 2)
+			mamodel.confs = new int[2][6];
 		anims = new MaAnim[7];
 		for (int i = 0; i < 7; i++)
 			if (i < ori.anims.length)
 				anims[i] = ori.anims[i].clone();
 			else
 				anims[i] = new MaAnim();
-		num = ori.num;
+		num = ori.getNum();
 		parts = imgcut.cut(num);
 		File f = new File(prev + name + "/" + name + ".png");
 		Writer.check(f);
@@ -121,11 +123,23 @@ public class AnimC extends AnimU {
 			e.printStackTrace();
 		}
 		reloImg();
-		edi = ori.edi;
+		if (ori instanceof AnimU) {
+			AnimU au = (AnimU) ori;
+			edi = au.edi;
+			uni = au.uni;
+		}
 		saveIcon();
-		uni = ori.uni;
 		saveUni();
 		history("initial");
+	}
+
+	public void createNew() {
+		imgcut = new ImgCut();
+		mamodel = new MaModel();
+		anims = new MaAnim[7];
+		for (int i = 0; i < 7; i++)
+			anims[i] = new MaAnim();
+		parts = imgcut.cut(num);
 	}
 
 	public void delete() {
@@ -294,7 +308,7 @@ public class AnimC extends AnimU {
 	}
 
 	public void updateStatus() {
-		OutStream mms = new OutStream();
+		OutStream mms = OutStream.getIns();
 		mms.writeInt(mamodel.status.size());
 		mamodel.status.forEach((d, s) -> {
 			int ind = -1;
@@ -309,7 +323,7 @@ public class AnimC extends AnimU {
 	}
 
 	public OutStream write() {
-		OutStream osi = new OutStream();
+		OutStream osi = OutStream.getIns();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
 			ImageIO.write(num, "PNG", baos);
@@ -376,7 +390,7 @@ public class AnimC extends AnimU {
 	}
 
 	private void history(String str) {
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		imgcut.write(os);
 		mamodel.write(os);
 		os.writeInt(anims.length);

@@ -157,7 +157,7 @@ public class Recd extends Data {
 		return st;
 	}
 
-	public String name;
+	public String name = "new record";
 	public long seed;
 	public int[] conf;
 	public int star, len;
@@ -201,7 +201,7 @@ public class Recd extends Data {
 	}
 
 	public void write() {
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		os.writeString("0.4.1");
 		os.writeLong(seed);
 		os.writeIntB(conf);

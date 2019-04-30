@@ -80,7 +80,7 @@ public class EnemyViewPage extends AbViewPage {
 				if (ene == null)
 					return;
 				if (ene.de instanceof CustomEnemy)
-					changePanel(new EnemyEditPage(getThis(), ene, false));
+					changePanel(new EnemyEditPage(getThis(), ene.pac, ene));
 				else
 					changePanel(new EnemyInfoPage(getThis(), ene));
 			}

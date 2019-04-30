@@ -1,19 +1,18 @@
 package page.info.edit;
 
-import static util.Data.AB_GLASS;
+import static util.Data.*;
 import static util.Interpret.ABIIND;
 import static util.Interpret.IMUSFT;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
 
-import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
@@ -30,6 +29,8 @@ import page.anim.DIYViewPage;
 import page.info.filter.EnemyFindPage;
 import page.info.filter.UnitFindPage;
 import page.support.ListJtfPolicy;
+import page.support.ReorderList;
+import page.support.ReorderListener;
 import page.view.EnemyViewPage;
 import page.view.UnitViewPage;
 import util.Animable;
@@ -39,6 +40,9 @@ import util.basis.Basis;
 import util.basis.BasisSet;
 import util.entity.data.AtkDataModel;
 import util.entity.data.CustomEntity;
+import util.pack.Pack;
+import util.pack.Soul;
+import util.pack.SoulStore;
 import util.unit.DIYAnim;
 import util.unit.Enemy;
 import util.unit.Form;
@@ -69,7 +73,7 @@ public abstract class EntityEditPage extends Page {
 	private final JTF fbs = new JTF();
 	private final JTF ftp = new JTF();
 	private final JTG isr = new JTG(1, "isr");
-	private final JList<String> jli = new JList<>();
+	private final ReorderList<String> jli = new ReorderList<>();
 	private final JScrollPane jspi = new JScrollPane(jli);
 	private final JBTN add = new JBTN(0, "add");
 	private final JBTN rem = new JBTN(0, "rem");
@@ -78,15 +82,21 @@ public abstract class EntityEditPage extends Page {
 	private final JTG comm = new JTG(1, "common");
 	private final JTF atkn = new JTF();
 	private final JL lpst = new JL(1, "postaa");
-	private final JLabel vpst = new JLabel();
+	private final JL vpst = new JL();
 	private final JL litv = new JL(1, "atkf");
-	private final JLabel vitv = new JLabel();
-	private final JComboBox<AnimC> jcb = new JComboBox<>();
+	private final JL lrev = new JL(1, "post-HB");
+	private final JL lres = new JL(1, "post-death");
+	private final JL vrev = new JL();
+	private final JL vres = new JL();
+	private final JL vitv = new JL();
+	private final JComboBox<AnimC> jcba = new JComboBox<>();
+	private final JComboBox<Soul> jcbs = new JComboBox<>();
 	private final ListJtfPolicy ljp = new ListJtfPolicy();
 	private final AtkEditTable aet;
 	private final MainProcTable mpt;
 	private final boolean editable;
 	private final CustomEntity ce;
+	private final Pack pack;
 
 	private boolean changing = false;
 	private EnemyFindPage efp;
@@ -94,8 +104,9 @@ public abstract class EntityEditPage extends Page {
 
 	protected final Basis bas = BasisSet.current;
 
-	public EntityEditPage(Page p, CustomEntity e, boolean edit) {
+	public EntityEditPage(Page p, Pack pac, CustomEntity e, boolean edit) {
 		super(p);
+		pack = pac;
 		ce = e;
 		aet = new AtkEditTable(this, edit, false);
 		mpt = new MainProcTable(this, edit);
@@ -168,19 +179,34 @@ public abstract class EntityEditPage extends Page {
 		set(vpst);
 		set(litv);
 		set(vitv);
+		set(lrev);
+		set(lres);
+		set(vrev);
+		set(vres);
 		add(comm);
+		add(jcbs);
+		Vector<Soul> vec = new Vector<Soul>();
+		vec.add(null);
+		vec.addAll(SoulStore.getAll(pack));
+		jcbs.setModel(new DefaultComboBoxModel<>(vec));
 		if (editable) {
-			add(jcb);
+			add(jcba);
 			Vector<AnimC> vda = new Vector<>();
 			AnimC ac = ((AnimC) ce.getPack().anim);
 			if (!ac.inPool)
 				vda.add(ac);
 			vda.addAll(DIYAnim.getAnims());
-			jcb.setModel(new DefaultComboBoxModel<>(vda));
+			jcba.setModel(new DefaultComboBoxModel<>(vda));
 		}
 		setFocusTraversalPolicy(ljp);
 		setFocusCycleRoot(true);
 		addListeners();
+		atkn.setToolTipText("<html>use name \"revenge\" for attack during HB animation<br>"
+				+ "use name \"resurrection\" for attack during death animation</html>");
+		ftp.setToolTipText(
+				"<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
+						+ "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost</html>");
+
 		isr.setEnabled(editable);
 		add.setEnabled(editable);
 		rem.setEnabled(editable);
@@ -212,36 +238,36 @@ public abstract class EntityEditPage extends Page {
 	protected void resized(int x, int y) {
 		setSize(x, y);
 		set(back, x, y, 0, 0, 200, 50);
-		set(lhp, x, y, 50, 150, 100, 50);
-		set(fhp, x, y, 150, 150, 200, 50);
-		set(lhb, x, y, 50, 200, 100, 50);
-		set(fhb, x, y, 150, 200, 200, 50);
-		set(lsp, x, y, 50, 250, 100, 50);
-		set(fsp, x, y, 150, 250, 200, 50);
-		set(lsh, x, y, 50, 300, 100, 50);
-		set(fsh, x, y, 150, 300, 200, 50);
-		set(lwd, x, y, 50, 350, 100, 50);
-		set(fwd, x, y, 150, 350, 200, 50);
+		set(lhp, x, y, 50, 100, 100, 50);
+		set(fhp, x, y, 150, 100, 200, 50);
+		set(lhb, x, y, 50, 150, 100, 50);
+		set(fhb, x, y, 150, 150, 200, 50);
+		set(lsp, x, y, 50, 200, 100, 50);
+		set(fsp, x, y, 150, 200, 200, 50);
+		set(lsh, x, y, 50, 250, 100, 50);
+		set(fsh, x, y, 150, 250, 200, 50);
+		set(lwd, x, y, 50, 300, 100, 50);
+		set(fwd, x, y, 150, 300, 200, 50);
 
 		set(mpt, x, y, 50, 650, 300, 600);
 
 		set(jspi, x, y, 550, 50, 300, 350);
-		set(add, x, y, 550, 400, 300, 50);
-		set(rem, x, y, 550, 450, 300, 50);
-		set(copy, x, y, 550, 500, 300, 50);
-		set(link, x, y, 550, 550, 300, 50);
-		set(comm, x, y, 550, 600, 300, 50);
-		set(atkn, x, y, 550, 650, 300, 50);
+		set(add, x, y, 550, 400, 150, 50);
+		set(rem, x, y, 700, 400, 150, 50);
+		set(copy, x, y, 550, 450, 150, 50);
+		set(link, x, y, 700, 450, 150, 50);
+		set(comm, x, y, 550, 500, 300, 50);
+		set(atkn, x, y, 550, 550, 300, 50);
 
-		set(lra, x, y, 550, 750, 100, 50);
-		set(fra, x, y, 650, 750, 200, 50);
-		set(ltb, x, y, 550, 800, 100, 50);
-		set(ftb, x, y, 650, 800, 200, 50);
-		set(isr, x, y, 550, 850, 300, 50);
-		set(lbs, x, y, 550, 900, 100, 50);
-		set(fbs, x, y, 650, 900, 200, 50);
-		set(ltp, x, y, 550, 950, 100, 50);
-		set(ftp, x, y, 650, 950, 200, 50);
+		set(lra, x, y, 550, 650, 100, 50);
+		set(fra, x, y, 650, 650, 200, 50);
+		set(ltb, x, y, 550, 700, 100, 50);
+		set(ftb, x, y, 650, 700, 200, 50);
+		set(isr, x, y, 550, 750, 300, 50);
+		set(lbs, x, y, 550, 800, 100, 50);
+		set(fbs, x, y, 650, 800, 200, 50);
+		set(ltp, x, y, 550, 850, 100, 50);
+		set(ftp, x, y, 650, 850, 200, 50);
 
 		set(aet, x, y, 900, 50, 1400, 1000);
 
@@ -249,13 +275,18 @@ public abstract class EntityEditPage extends Page {
 		set(vpst, x, y, 1100, 1050, 200, 50);
 		set(litv, x, y, 900, 1100, 200, 50);
 		set(vitv, x, y, 1100, 1100, 200, 50);
-		set(jcb, x, y, 900, 1150, 400, 50);
+		set(jcba, x, y, 900, 1150, 400, 50);
+
+		set(lrev, x, y, 1600, 1050, 200, 50);
+		set(vrev, x, y, 1800, 1050, 100, 50);
+		set(lres, x, y, 1600, 1100, 200, 50);
+		set(vres, x, y, 1800, 1100, 100, 50);
+		set(jcbs, x, y, 1600, 1150, 300, 50);
 
 	}
 
-	protected void set(JLabel jl) {
+	protected void set(JL jl) {
 		jl.setHorizontalAlignment(SwingConstants.CENTER);
-		jl.setBorder(BorderFactory.createEtchedBorder());
 		add(jl);
 	}
 
@@ -287,9 +318,25 @@ public abstract class EntityEditPage extends Page {
 		ftp.setText("" + ce.touch);
 		comm.setSelected(data.common);
 		mpt.setData(ce.rep.proc);
-		String[] ints = new String[ce.atks.length];
-		for (int i = 0; i < ints.length; i++)
+		int[][] raw = ce.rawAtkData();
+		int pre = 0;
+		int n = ce.atks.length;
+		if (ce.rev != null)
+			n++;
+		if (ce.res != null)
+			n++;
+		String[] ints = new String[n];
+		for (int i = 0; i < ce.atks.length; i++) {
 			ints[i] = i + 1 + " " + ce.atks[i].str;
+			pre += raw[i][1];
+			if (pre >= ce.getAnimLen())
+				ints[i] += " (out of range)";
+		}
+		int ix = ce.atks.length;
+		if (ce.rev != null)
+			ints[ix++] = ce.rev.str;
+		if (ce.res != null)
+			ints[ix++] = ce.res.str;
 		int ind = jli.getSelectedIndex();
 		jli.setListData(ints);
 		if (ind < 0)
@@ -298,10 +345,13 @@ public abstract class EntityEditPage extends Page {
 			ind = ints.length - 1;
 		setA(ind);
 		jli.setSelectedIndex(ind);
-		add.setEnabled(editable && ce.getPost() > 1);
 		Animable<AnimU> ene = ce.getPack();
 		if (editable)
-			jcb.setSelectedItem(ene.anim);
+			jcba.setSelectedItem(ene.anim);
+		jcbs.setSelectedItem(SoulStore.getSoul(ce.death));
+		vrev.setText(ce.rev == null ? "x" : (KB_TIME[INT_HB] - ce.rev.pre + "f"));
+		Soul s = SoulStore.getSoul(ce.death);
+		vres.setText(ce.res == null ? "x" : s == null ? "-" : (s.len(0) - ce.res.pre + "f"));
 		changing = false;
 	}
 
@@ -312,7 +362,7 @@ public abstract class EntityEditPage extends Page {
 
 		a.setLnr(x -> {
 			if (editable)
-				changePanel(new DIYViewPage(getThis(), new DIYAnim((AnimC) jcb.getSelectedItem())));
+				changePanel(new DIYViewPage(getThis(), new DIYAnim((AnimC) jcba.getSelectedItem())));
 			else if (o instanceof Unit)
 				changePanel(new UnitViewPage(getThis(), (Unit) o));
 			else if (o instanceof Enemy)
@@ -344,10 +394,36 @@ public abstract class EntityEditPage extends Page {
 
 		});
 
+		jli.list = new ReorderListener<String>() {
+
+			@Override
+			public void reordered(int ori, int fin) {
+				if (ori < ce.atks.length) {
+					if (fin >= ce.atks.length)
+						fin = ce.atks.length - 1;
+					List<AtkDataModel> l = new ArrayList<>();
+					for (AtkDataModel adm : ce.atks)
+						l.add(adm);
+					l.add(fin, l.remove(ori));
+					ce.atks = l.toArray(new AtkDataModel[0]);
+				}
+				setData(ce);
+				changing = false;
+			}
+
+			@Override
+			public void reordering() {
+				changing = true;
+			}
+
+		};
+
 		add.setLnr(e -> {
 			changing = true;
 			int n = ce.atks.length;
 			int ind = jli.getSelectedIndex();
+			if (ind >= ce.atks.length)
+				ind = ce.atks.length - 1;
 			AtkDataModel[] datas = new AtkDataModel[n + 1];
 			for (int i = 0; i <= ind; i++)
 				datas[i] = ce.atks[i];
@@ -362,22 +438,7 @@ public abstract class EntityEditPage extends Page {
 			changing = false;
 		});
 
-		rem.setLnr(e -> {
-			changing = true;
-			int n = ce.atks.length;
-			int ind = jli.getSelectedIndex();
-			AtkDataModel[] datas = new AtkDataModel[n - 1];
-			for (int i = 0; i < ind; i++)
-				datas[i] = ce.atks[i];
-			for (int i = ind + 1; i < n; i++)
-				datas[i - 1] = ce.atks[i];
-			ce.atks = datas;
-			setData(ce);
-			ind--;
-			jli.setSelectedIndex(ind);
-			setA(ind);
-			changing = false;
-		});
+		rem.setLnr(e -> remAtk(jli.getSelectedIndex()));
 
 		copy.setLnr(e -> {
 			changing = true;
@@ -410,22 +471,41 @@ public abstract class EntityEditPage extends Page {
 			setData(ce);
 		});
 
-		jcb.addActionListener(new ActionListener() {
+		jcba.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (changing)
 					return;
-				ce.getPack().anim = (AnimC) jcb.getSelectedItem();
-				if (ce.getPost() < 1)
-					for (AtkDataModel adm : ce.atks)
-						adm.pre = 1;
+				ce.getPack().anim = (AnimC) jcba.getSelectedItem();
 				setData(ce);
 
 			}
 
 		});
 
+		jcbs.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if (changing)
+					return;
+				ce.death = SoulStore.getID((Soul) jcbs.getSelectedItem());
+				setData(ce);
+
+			}
+
+		});
+
+	}
+
+	private AtkDataModel get(int ind) {
+		if (ind < ce.atks.length)
+			return ce.atks[ind];
+		else if (ind == ce.atks.length)
+			return ce.rev == null ? ce.res : ce.rev;
+		else
+			return ce.res;
 	}
 
 	private void input(JTF jtf, String text) {
@@ -436,6 +516,14 @@ public abstract class EntityEditPage extends Page {
 				return;
 			text = ce.getAvailable(text);
 			adm.str = text;
+			if (text.equals("revenge")) {
+				remAtk(adm);
+				ce.rev = adm;
+			}
+			if (text.equals("resurrection")) {
+				remAtk(adm);
+				ce.res = adm;
+			}
 			return;
 		}
 		if (text.length() > 0) {
@@ -495,11 +583,49 @@ public abstract class EntityEditPage extends Page {
 		setData(ce);
 	}
 
+	private void remAtk(AtkDataModel adm) {
+		for (int i = 0; i < ce.atks.length; i++)
+			if (ce.atks[i] == adm)
+				remAtk(i);
+	}
+
+	private void remAtk(int ind) {
+		changing = true;
+		int n = ce.atks.length;
+		if (ind >= n) {
+			if (ind == n)
+				if (ce.rev != null)
+					ce.rev = null;
+				else
+					ce.res = null;
+			else
+				ce.res = null;
+		} else {
+			AtkDataModel[] datas = new AtkDataModel[n - 1];
+			for (int i = 0; i < ind; i++)
+				datas[i] = ce.atks[i];
+			for (int i = ind + 1; i < n; i++)
+				datas[i - 1] = ce.atks[i];
+			ce.atks = datas;
+		}
+		setData(ce);
+		ind--;
+		if (ind < 0)
+			ind = 0;
+		jli.setSelectedIndex(ind);
+		setA(ind);
+		changing = false;
+	}
+
 	private void setA(int ind) {
-		AtkDataModel adm = ce.atks[ind];
+		AtkDataModel adm = get(ind);
+		assert adm != null;
+		link.setEnabled(ind < ce.atks.length);
+		copy.setEnabled(ind < ce.atks.length);
+		atkn.setEnabled(ind < ce.atks.length);
 		atkn.setText(adm.str);
 		aet.setData(adm, getAtk());
-		rem.setEnabled(editable && ind != 0);
+		rem.setEnabled(editable && (ce.atks.length > 1 || ind >= ce.atks.length));
 	}
 
 }

@@ -4,26 +4,21 @@ import java.io.UnsupportedEncodingException;
 
 import main.Opts;
 
-public strictfp class InStream extends DataIO {
+public strictfp abstract class InStream extends DataIO {
 
-	private final int[] bs;
-	protected int index;
-
-	protected InStream(int[] data) {
-		bs = data;
-		index = 0;
+	protected static InStream getIns(byte[] bs) {
+		int[] is = DataIO.translate(bs);
+		int sig = DataIO.toInt(is, 0);
+		if (sig == bs.length - 4) {
+			InStreamDef ans = new InStreamDef(is, 4, is.length);
+			return ans;
+		}
+		throw new OverReadException("Unsupported version");
 	}
 
-	public boolean end() {
-		return index == bs.length;
-	}
+	public abstract boolean end();
 
-	public int nextByte() {
-		check(1);
-		int ans = toByte(bs, index);
-		index++;
-		return ans;
-	}
+	public abstract int nextByte();
 
 	public byte[] nextBytesB() {
 		int len = nextByte();
@@ -41,12 +36,7 @@ public strictfp class InStream extends DataIO {
 		return ints;
 	}
 
-	public double nextDouble() {
-		check(8);
-		double ans = toDouble(bs, index);
-		index += 8;
-		return ans;
-	}
+	public abstract double nextDouble();
 
 	public double[] nextDoubles() {
 		int len = nextByte();
@@ -56,19 +46,9 @@ public strictfp class InStream extends DataIO {
 		return ints;
 	}
 
-	public float nextFloat() {
-		check(4);
-		float ans = toFloat(bs, index);
-		index += 4;
-		return ans;
-	}
+	public abstract float nextFloat();
 
-	public int nextInt() {
-		check(4);
-		int ans = toInt(bs, index);
-		index += 4;
-		return ans;
-	}
+	public abstract int nextInt();
 
 	public int[] nextIntsB() {
 		int len = nextByte();
@@ -86,19 +66,9 @@ public strictfp class InStream extends DataIO {
 		return ints;
 	}
 
-	public long nextLong() {
-		check(8);
-		long ans = toLong(bs, index);
-		index += 8;
-		return ans;
-	}
+	public abstract long nextLong();
 
-	public int nextShort() {
-		check(2);
-		int ans = toShort(bs, index);
-		index += 2;
-		return ans;
-	}
+	public abstract int nextShort();
 
 	public String nextString() {
 		byte[] bts = nextBytesB();
@@ -110,23 +80,111 @@ public strictfp class InStream extends DataIO {
 		}
 	}
 
+	public abstract int pos();
+
+	public abstract void reread();
+
+	public abstract int size();
+
+	public abstract void skip(int n);
+
+	public abstract InStream subStream();
+
+	public abstract OutStream translate();
+
+	protected void check(int i) {
+	}
+
+}
+
+strictfp class InStreamDef extends InStream {
+
+	private final int[] bs;
+	private final int off, max;
+	private int index;
+
+	protected InStreamDef(int[] data, int ofs, int m) {
+		bs = data;
+		off = ofs;
+		max = m;
+		index = off;
+	}
+
+	@Override
+	public boolean end() {
+		return index == max;
+	}
+
+	@Override
+	public int nextByte() {
+		check(1);
+		int ans = toByte(bs, index);
+		index++;
+		return ans;
+	}
+
+	@Override
+	public double nextDouble() {
+		check(8);
+		double ans = toDouble(bs, index);
+		index += 8;
+		return ans;
+	}
+
+	@Override
+	public float nextFloat() {
+		check(4);
+		float ans = toFloat(bs, index);
+		index += 4;
+		return ans;
+	}
+
+	@Override
+	public int nextInt() {
+		check(4);
+		int ans = toInt(bs, index);
+		index += 4;
+		return ans;
+	}
+
+	@Override
+	public long nextLong() {
+		check(8);
+		long ans = toLong(bs, index);
+		index += 8;
+		return ans;
+	}
+
+	@Override
+	public int nextShort() {
+		check(2);
+		int ans = toShort(bs, index);
+		index += 2;
+		return ans;
+	}
+
+	@Override
 	public int pos() {
-		return index;
+		return index - off;
 	}
 
+	@Override
 	public void reread() {
-		index = 0;
+		index = off;
 	}
 
+	@Override
 	public int size() {
-		return bs.length;
+		return max - off;
 	}
 
+	@Override
 	public void skip(int n) {
 		index += n;
 	}
 
-	public InStream subStream() {
+	@Override
+	public InStreamDef subStream() {
 		int n = nextInt();
 		if (n > size()) {
 			Opts.loadErr("corrupted file");
@@ -134,22 +192,26 @@ public strictfp class InStream extends DataIO {
 			Writer.logClose(false);
 			System.exit(0);
 		}
-		int[] bsa = new int[n];
-		for (int i = 0; i < n; i++)
-			bsa[i] = bs[index + i];
-		InStream is = new InStream(bsa);
+		InStreamDef is = new InStreamDef(bs, index, index + n);
 		index += n;
 		return is;
 	}
 
+	@Override
 	public OutStream translate() {
 		byte[] data = new byte[bs.length];
 		for (int i = 0; i < bs.length; i++)
 			data[i] = (byte) bs[i];
-		return new OutStream(data);
+		return new OutStreamDef(data);
 	}
 
+	@Override
 	protected void check(int i) {
+		if (max - index < i) {
+			String str = "out of bound: " + (index - off) + "/" + (max - off) + ", " + index + "/" + max + "/" + off
+					+ "/" + bs.length;
+			throw new OverReadException(str);
+		}
 	}
 
 }

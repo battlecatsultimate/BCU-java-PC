@@ -101,6 +101,8 @@ class AtkEditTable extends Page {
 		ftp.setToolTipText(
 				"<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
 						+ "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost</html>");
+		fpre.setToolTipText(
+				"<html>use 0 for random attack attaching to previous one.<br>pre=0 for first attack will invalidate it</html>");
 		set(ldr);
 		set(fdr);
 		add(jsp);
@@ -119,8 +121,6 @@ class AtkEditTable extends Page {
 			if (jtf == fpre) {
 				if (v < 0)
 					v = 1;
-				if (v - adm.pre > adm.ce.getPost() - 1)
-					v = adm.pre + adm.ce.getPost() - 1;
 				adm.pre = v;
 			}
 			if (jtf == fp0) {

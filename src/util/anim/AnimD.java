@@ -33,6 +33,8 @@ public abstract class AnimD extends AnimI {
 		return new EAnimD(this, mamodel, anims[t]);
 	}
 
+	public abstract BufferedImage getNum();
+
 	public int len(int t) {
 		check();
 		return anims[t].max + 1;

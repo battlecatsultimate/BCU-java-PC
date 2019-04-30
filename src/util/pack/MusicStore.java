@@ -49,7 +49,7 @@ public class MusicStore extends FixIndexList<File> {
 	public void load() {
 		clear();
 		File f = new File("./res/img/" + pack.id + "/music/");
-		if (f.exists()) {
+		if (f.exists() && f.isDirectory()) {
 			File[] fs = f.listFiles();
 			for (File fi : fs) {
 				String str = fi.getName();
@@ -81,13 +81,13 @@ public class MusicStore extends FixIndexList<File> {
 
 	protected OutStream packup() {
 		// TODO not used
-		OutStream mus = new OutStream();
+		OutStream mus = OutStream.getIns();
 		mus.writeString("0.3.7");
 		Map<Integer, File> mcas = getMap();
 		mus.writeInt(mcas.size());
 		for (int ind : mcas.keySet()) {
 			mus.writeInt(ind);
-			OutStream data = new OutStream();
+			OutStream data = OutStream.getIns();
 			try {
 				byte[] bs = Files.readAllBytes(mcas.get(ind).toPath());
 				data.writeBytesI(bs);
@@ -103,7 +103,7 @@ public class MusicStore extends FixIndexList<File> {
 	}
 
 	protected OutStream write() {
-		OutStream os = new OutStream();
+		OutStream os = OutStream.getIns();
 		os.writeString("0.3.7");
 		os.writeInt(0);
 		os.terminate();

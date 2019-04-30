@@ -60,6 +60,12 @@ public class AnimU extends AnimD {
 	}
 
 	@Override
+	public BufferedImage getNum() {
+		check();
+		return num;
+	}
+
+	@Override
 	public void load() {
 		loaded = true;
 		try {

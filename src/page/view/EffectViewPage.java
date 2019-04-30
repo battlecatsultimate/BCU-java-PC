@@ -11,7 +11,7 @@ import page.Page;
 import util.anim.AnimI;
 import util.pack.EffAnim;
 import util.pack.NyCastle;
-import util.pack.Soul;
+import util.pack.SoulStore;
 
 public class EffectViewPage extends AbViewPage {
 
@@ -28,8 +28,7 @@ public class EffectViewPage extends AbViewPage {
 			va.add(a);
 		for (AnimI a : NyCastle.atks)
 			va.add(a);
-		for (AnimI a : Soul.souls)
-			va.add(a);
+		va.addAll(SoulStore.getAll(null));
 		jlu.setListData(va);
 		ini();
 		resized();

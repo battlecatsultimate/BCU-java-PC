@@ -151,11 +151,8 @@ public class Writer extends DataIO {
 			FileOutputStream fos = null;
 			try {
 				fos = new FileOutputStream(f);
-				byte[] bs = os.getBytes();
-				byte[] len = new byte[4];
-				fromInt(len, 0, bs.length);
-				fos.write(len);
-				fos.write(bs);
+				fos.write(os.signature());
+				fos.write(os.getBytes());
 				fos.close();
 			} catch (IOException e) {
 				suc = false;
