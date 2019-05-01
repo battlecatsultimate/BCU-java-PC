@@ -60,34 +60,54 @@ public class EffAnim extends AnimD {
 		temp = new String[] { "_entrance", "_exit" };
 		effas[A_W] = new EffAnim(stfs[2] + ski + "warp", vfs[2], icfs[2], temp);
 		effas[A_W_C] = new EffAnim(stfs[2] + ski + "warp_chara", vfs[2], icfs[2], temp);
-		temp = new String[] { "" };
-		effas[A_CURSE] = new EffAnim(stfs[3] + ski + "curse", vfs[3], icfs[3], temp);
-		VImg vseal = new VImg("./org/battle/s3/skill003.png");
-		excColor(vseal.getImg(), (is) -> (is[0] << 24 | is[1] << 16 | is[3] << 8 | is[2]));
-		effas[A_SEAL] = new EffAnim(stfs[3] + ski + "curse", vseal, icfs[3], temp);
-		VImg vpois = new VImg("./org/battle/s3/skill003.png");
-		excColor(vpois.getImg(), (is) -> (is[0] << 24 | is[2] << 16 | is[3] << 8 | is[1]));
-		effas[A_POI0] = new EffAnim(stfs[3] + ski + "curse", vpois, icfs[3], temp);
-		vpois = new VImg("./org/battle/s3/poison.png");
-		effas[A_POI1] = new EffAnim(stfs[3] + ski + "curse", vpois, icfs[3], temp);
-		// TODO
-		effas[A_POI2] = new EffAnim(stfs[3] + ski + "curse", vpois, icfs[3], temp);
-		// TODO
-		effas[A_POI3] = new EffAnim(stfs[3] + ski + "curse", vpois, icfs[3], temp);
-		// TODO
-		effas[A_POI4] = new EffAnim(stfs[3] + ski + "curse", vpois, icfs[3], temp);
-		// TODO
-		effas[A_POI5] = new EffAnim(stfs[3] + ski + "curse", vpois, icfs[3], temp);
-		// TODO
-		effas[A_POI6] = new EffAnim(stfs[3] + ski + "curse", vpois, icfs[3], temp);
-		// TODO
-		effas[A_POI7] = new EffAnim(stfs[3] + ski + "curse", vpois, icfs[3], temp);
 		String strs = "./org/battle/sniper/";
 		String strm = "img043";
 		VImg vis = new VImg(strs + strm + ".png");
 		ImgCut ics = ImgCut.newIns(strs + strm + ".imgcut");
 		temp = new String[] { "00", "01" };
 		effas[A_SNIPER] = new EffAnim(strs + "000_snyaipa", vis, ics, temp);
+		temp = new String[] { "" };
+		effas[A_CURSE] = new EffAnim(stfs[3] + ski + "curse", vfs[3], icfs[3], temp);
+		VImg vseal = new VImg(stfs[3] + "skill003.png");
+		excColor(vseal.getImg(), (is) -> (is[0] << 24 | is[1] << 16 | is[3] << 8 | is[2]));
+		effas[A_SEAL] = new EffAnim(stfs[3] + ski + "curse", vseal, icfs[3], temp);
+		VImg vpois = new VImg(stfs[3] + "skill003.png");
+		excColor(vpois.getImg(), (is) -> (is[0] << 24 | is[2] << 16 | is[3] << 8 | is[1]));
+		effas[A_POI0] = new EffAnim(stfs[3] + ski + "curse", vpois, icfs[3], temp);
+		effas[A_POI0].name = "poison_DF";
+		vpois = new VImg(stfs[3] + "poison.png");
+		effas[A_POI1] = new EffAnim(stfs[3] + ski + "curse", vpois, icfs[3], temp);
+		effas[A_POI1].name = "poison_DT0";
+		String strpb = stfs[3] + "poisbub/poisbub";
+		vpois = new VImg(strpb + ".png");
+		ImgCut icpois = ImgCut.newIns(strpb + ".imgcut");
+		effas[A_POI2] = new EffAnim(strpb, vpois, icpois, temp);
+		effas[A_POI2].name = "poison_purple";
+
+		vpois = new VImg(strpb + ".png");
+		excColor(vpois.getImg(), (is) -> (is[0] << 24 | is[1] << 16 | is[3] << 8 | is[2]));
+		effas[A_POI3] = new EffAnim(strpb, vpois, icpois, temp);
+		effas[A_POI3].name = "poison_green";
+
+		vpois = new VImg(strpb + ".png");
+		excColor(vpois.getImg(), (is) -> (is[0] << 24 | is[2] << 16 | is[1] << 8 | is[3]));
+		effas[A_POI4] = new EffAnim(strpb, vpois, icpois, temp);
+		effas[A_POI4].name = "poison_blue";
+
+		vpois = new VImg(strpb + ".png");
+		excColor(vpois.getImg(), (is) -> (is[0] << 24 | is[2] << 16 | is[3] << 8 | is[1]));
+		effas[A_POI5] = new EffAnim(strpb, vpois, icpois, temp);
+		effas[A_POI5].name = "poison_cyan";
+
+		vpois = new VImg(strpb + ".png");
+		excColor(vpois.getImg(), (is) -> (is[0] << 24 | is[3] << 16 | is[1] << 8 | is[2]));
+		effas[A_POI6] = new EffAnim(strpb, vpois, icpois, temp);
+		effas[A_POI6].name = "poison_orange";
+
+		vpois = new VImg(strpb + ".png");
+		excColor(vpois.getImg(), (is) -> (is[0] << 24 | is[3] << 16 | is[2] << 8 | is[1]));
+		effas[A_POI7] = new EffAnim(strpb, vpois, icpois, temp);
+		effas[A_POI7].name = "poison_pink";
 	}
 
 	private static void excColor(BufferedImage b0, Function<int[], Integer> f) {
@@ -108,6 +128,7 @@ public class EffAnim extends AnimD {
 	private VImg vimg;
 	private String[] strs;
 	private boolean rev;
+	private String name = "";
 
 	public EffAnim(String st, VImg vi, ImgCut ic, String[] anims) {
 		super(st);
@@ -147,6 +168,8 @@ public class EffAnim extends AnimD {
 
 	@Override
 	public String toString() {
+		if (name.length() > 0)
+			return name;
 		String[] ss = str.split("/");
 		return ss[ss.length - 1];
 	}

@@ -1,9 +1,11 @@
 package util.entity.attack;
 
+import util.entity.EAnimCont;
 import util.entity.EEnemy;
 import util.entity.EUnit;
 import util.entity.Entity;
 import util.entity.data.MaskEntity;
+import util.pack.EffAnim;
 
 public abstract class AtkModelEntity extends AtkModelAb {
 
@@ -175,8 +177,10 @@ public abstract class AtkModelEntity extends AtkModelAb {
 
 		if (b.r.nextDouble() * 100 < getProc(ind, P_SNIPER, 0))
 			proc[P_SNIPER][0] = 1;
-		if (b.r.nextDouble() * 100 < getProc(ind, P_BOSS, 0))
+		if (b.r.nextDouble() * 100 < getProc(ind, P_BOSS, 0)) {
 			proc[P_BOSS][0] = 1;
+			b.lea.add(new EAnimCont(e.pos, EffAnim.effas[A_SHOCKWAVE].getEAnim(0)));
+		}
 
 		if (b.r.nextDouble() * 100 < getProc(ind, P_SEAL, 0))
 			proc[P_SEAL][0] = getProc(ind, P_SEAL, 1);

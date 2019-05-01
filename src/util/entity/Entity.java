@@ -232,7 +232,7 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(INV);
 
 		if (atk.getProc(P_POISON)[0] > 0)
-			if ((getAbi() & AB_POII) == 0) {
+			if ((getAbi() & AB_POII) == 0 || atk.getProc(P_POISON)[1] < 0) {
 				int[] ws = new int[5];
 				ws[0] = atk.getProc(P_POISON)[0];
 				ws[1] = atk.getProc(P_POISON)[1];
