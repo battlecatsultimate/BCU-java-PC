@@ -233,10 +233,13 @@ public abstract class Entity extends AbEntity {
 
 		if (atk.getProc(P_POISON)[0] > 0)
 			if ((getAbi() & AB_POII) == 0) {
-				int[] ws = new int[4];
+				int[] ws = new int[5];
 				ws[0] = atk.getProc(P_POISON)[0];
-				ws[1] = getDamage(atk, atk.getProc(P_POISON)[1]);
+				ws[1] = atk.getProc(P_POISON)[1];
 				ws[2] = ws[3] = atk.getProc(P_POISON)[2];
+				ws[4] = atk.getProc(P_POISON)[3];
+				if (ws[4] % 4 == 1)
+					ws[1] = getDamage(atk, ws[1]);
 				pois.add(ws);
 				anim.getEff(P_POISON);
 			} else
@@ -807,6 +810,8 @@ class PoisonToken extends Data {
 	}
 
 	protected void add(int[] is) {
+		if ((is[4] & 4) > 0)
+			list.removeIf(e -> (e[4] & 4) > 0 && type(e) == type(is));
 		list.add(is);
 		getMax();
 	}
@@ -817,7 +822,7 @@ class PoisonToken extends Data {
 				ws[0]--;
 				ws[3]--;
 				if (e.health > 0 && ws[3] <= 0) {
-					e.damage += ws[1];
+					damage(ws[1], type(ws));
 					ws[3] += ws[2];
 				}
 			}
@@ -825,11 +830,22 @@ class PoisonToken extends Data {
 		getMax();
 	}
 
+	private void damage(int dmg, int type) {
+		type &= 7;
+		long mul = type == 0 ? 100 : type == 1 ? e.maxH : type == 2 ? e.health : (e.maxH - e.health);
+		e.damage += mul * dmg / 100;
+
+	}
+
 	private void getMax() {
 		int max = 0;
 		for (int[] ws : list)
-			max = Math.max(max, ws[0]);
+			max |= 1 << type(ws);
 		e.status[P_POISON][0] = max;
+	}
+
+	private int type(int[] ws) {
+		return (ws[4] & 3) + (ws[1] < 0 ? 4 : 0);
 	}
 
 }

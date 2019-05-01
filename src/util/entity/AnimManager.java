@@ -144,8 +144,13 @@ public class AnimManager extends Data {
 			effs[id] = EffAnim.effas[id].getEAnim(0);
 		}
 		if (t == P_POISON) {
-			int id = A_POISON;
-			effs[id] = EffAnim.effas[id].getEAnim(0);
+			int mask = status[P_POISON][0];
+			for (int i = 0; i < A_POIS.length; i++)
+				if ((mask & (1 << i)) > 0) {
+					int id = A_POIS[i];
+					effs[id] = EffAnim.effas[id].getEAnim(0);
+				}
+
 		}
 		if (t == P_SEAL) {
 			int id = A_SEAL;
@@ -275,7 +280,7 @@ public class AnimManager extends Data {
 			effs[id] = null;
 		}
 		if (status[P_POISON][0] == 0) {
-			int id = A_POISON;
+			int id = A_POI0;
 			effs[id] = null;
 		}
 		if (status[P_SEAL][0] == 0) {

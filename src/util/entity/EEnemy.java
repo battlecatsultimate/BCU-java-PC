@@ -2,6 +2,7 @@ package util.entity;
 
 import util.anim.EAnimU;
 import util.basis.StageBasis;
+import util.entity.attack.AtkModelUnit;
 import util.entity.attack.AttackAb;
 import util.entity.data.MaskEnemy;
 
@@ -42,13 +43,15 @@ public class EEnemy extends Entity {
 
 	@Override
 	protected int getDamage(AttackAb atk, int ans) {
-		int overlap = type & atk.type;
-		if (overlap != 0 && (atk.abi & AB_GOOD) != 0)
-			ans *= basis.b.t().getGOODATK(overlap);
-		if (overlap != 0 && (atk.abi & AB_MASSIVE) != 0)
-			ans *= basis.b.t().getMASSIVEATK(overlap);
-		if (overlap != 0 && (atk.abi & AB_MASSIVES) != 0)
-			ans *= basis.b.t().getMASSIVESATK(overlap);
+		if (atk.model instanceof AtkModelUnit) {
+			int overlap = type & atk.type;
+			if (overlap != 0 && (atk.abi & AB_GOOD) != 0)
+				ans *= basis.b.t().getGOODATK(overlap);
+			if (overlap != 0 && (atk.abi & AB_MASSIVE) != 0)
+				ans *= basis.b.t().getMASSIVEATK(overlap);
+			if (overlap != 0 && (atk.abi & AB_MASSIVES) != 0)
+				ans *= basis.b.t().getMASSIVESATK(overlap);
+		}
 		if (isBase && (atk.abi & AB_BASE) > 0)
 			ans *= 4;
 		if ((type & TB_WITCH) > 0 && (atk.abi & AB_WKILL) > 0)

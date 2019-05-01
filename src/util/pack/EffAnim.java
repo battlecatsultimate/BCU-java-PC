@@ -65,8 +65,23 @@ public class EffAnim extends AnimD {
 		VImg vseal = new VImg("./org/battle/s3/skill003.png");
 		excColor(vseal.getImg(), (is) -> (is[0] << 24 | is[1] << 16 | is[3] << 8 | is[2]));
 		effas[A_SEAL] = new EffAnim(stfs[3] + ski + "curse", vseal, icfs[3], temp);
-		VImg vpois = new VImg("./org/battle/s3/poison.png");
-		effas[A_POISON] = new EffAnim(stfs[3] + ski + "curse", vpois, icfs[3], temp);
+		VImg vpois = new VImg("./org/battle/s3/skill003.png");
+		excColor(vpois.getImg(), (is) -> (is[0] << 24 | is[2] << 16 | is[3] << 8 | is[1]));
+		effas[A_POI0] = new EffAnim(stfs[3] + ski + "curse", vpois, icfs[3], temp);
+		vpois = new VImg("./org/battle/s3/poison.png");
+		effas[A_POI1] = new EffAnim(stfs[3] + ski + "curse", vpois, icfs[3], temp);
+		// TODO
+		effas[A_POI2] = new EffAnim(stfs[3] + ski + "curse", vpois, icfs[3], temp);
+		// TODO
+		effas[A_POI3] = new EffAnim(stfs[3] + ski + "curse", vpois, icfs[3], temp);
+		// TODO
+		effas[A_POI4] = new EffAnim(stfs[3] + ski + "curse", vpois, icfs[3], temp);
+		// TODO
+		effas[A_POI5] = new EffAnim(stfs[3] + ski + "curse", vpois, icfs[3], temp);
+		// TODO
+		effas[A_POI6] = new EffAnim(stfs[3] + ski + "curse", vpois, icfs[3], temp);
+		// TODO
+		effas[A_POI7] = new EffAnim(stfs[3] + ski + "curse", vpois, icfs[3], temp);
 		String strs = "./org/battle/sniper/";
 		String strm = "img043";
 		VImg vis = new VImg(strs + strm + ".png");

@@ -165,6 +165,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			proc[P_POISON][0] = getProc(ind, P_POISON, 1);
 			proc[P_POISON][1] = (int) (getProc(ind, P_POISON, 2) * ratk);
 			proc[P_POISON][2] = getProc(ind, P_POISON, 3);
+			proc[P_POISON][3] = getProc(ind, P_POISON, 4);
 		}
 		if (b.r.nextDouble() * 100 < getProc(ind, P_MOVEWAVE, 0))
 			for (int i = 0; i < PROC_WIDTH; i++)

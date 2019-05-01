@@ -2,6 +2,7 @@ package util.entity;
 
 import util.anim.EAnimU;
 import util.basis.StageBasis;
+import util.entity.attack.AtkModelEnemy;
 import util.entity.attack.AttackAb;
 import util.entity.data.MaskUnit;
 
@@ -31,13 +32,15 @@ public class EUnit extends Entity {
 
 	@Override
 	protected int getDamage(AttackAb atk, int ans) {
-		int overlap = type & atk.type;
-		if (overlap != 0 && (getAbi() & AB_GOOD) != 0)
-			ans *= basis.b.t().getGOODDEF(overlap);
-		if (overlap != 0 && (getAbi() & AB_RESIST) != 0)
-			ans *= basis.b.t().getRESISTDEF(overlap);
-		if (overlap != 0 && (getAbi() & AB_RESISTS) != 0)
-			ans *= basis.b.t().getRESISTSDEF(overlap);
+		if (atk.model instanceof AtkModelEnemy) {
+			int overlap = type & atk.type;
+			if (overlap != 0 && (getAbi() & AB_GOOD) != 0)
+				ans *= basis.b.t().getGOODDEF(overlap);
+			if (overlap != 0 && (getAbi() & AB_RESIST) != 0)
+				ans *= basis.b.t().getRESISTDEF(overlap);
+			if (overlap != 0 && (getAbi() & AB_RESISTS) != 0)
+				ans *= basis.b.t().getRESISTSDEF(overlap);
+		}
 		if ((atk.type & TB_WITCH) > 0 && (getAbi() & AB_WKILL) > 0)
 			ans *= basis.b.t().getWKDef();
 		if ((atk.type & TB_EVA) > 0 && (getAbi() & AB_EKILL) > 0)
