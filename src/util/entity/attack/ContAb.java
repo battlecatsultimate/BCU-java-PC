@@ -12,10 +12,12 @@ public abstract class ContAb extends Data {
 
 	public double pos;
 	public boolean activate = true;
+	public int layer;
 
-	protected ContAb(StageBasis b, double p) {
+	protected ContAb(StageBasis b, double p, int lay) {
 		sb = b;
 		pos = p;
+		layer = lay;
 		sb.tlw.add(this);
 	}
 

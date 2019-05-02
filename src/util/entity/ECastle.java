@@ -26,7 +26,7 @@ public class ECastle extends AbEntity {
 			ans *= 4;
 		if (atk.getProc(P_CRIT)[0] > 0) {
 			ans *= 0.01 * atk.getProc(P_CRIT)[0];
-			sb.lea.add(new EAnimCont(pos, EffAnim.effas[A_CRIT].getEAnim(0)));
+			sb.lea.add(new EAnimCont(pos, 10, EffAnim.effas[A_CRIT].getEAnim(0)));
 		}
 		health -= ans;
 		if (health > maxH)

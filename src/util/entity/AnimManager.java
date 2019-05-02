@@ -169,7 +169,7 @@ public class AnimManager extends Data {
 		if (t == P_WARP) {
 			AnimD ea = EffAnim.effas[A_W];
 			int pa = status[P_WARP][2];
-			e.basis.lea.add(new WaprCont(e.pos, pa, anim));
+			e.basis.lea.add(new WaprCont(e.pos, pa, e.layer, anim));
 			status[P_WARP][pa] = ea.len(pa);
 
 		}
@@ -220,7 +220,7 @@ public class AnimManager extends Data {
 		// Z-kill icon
 		if (e.health <= 0 && e.tempZK && status[P_REVIVE][0] > 0) {
 			EAnimD eae = EffAnim.effas[A_Z_STRONG].getEAnim(0);
-			e.basis.lea.add(new EAnimCont(e.pos, eae));
+			e.basis.lea.add(new EAnimCont(e.pos, e.layer, eae));
 		}
 	}
 

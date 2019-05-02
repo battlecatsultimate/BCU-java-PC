@@ -25,4 +25,8 @@ public abstract class AtkModelAb extends Data {
 	public void invokeLater(AttackAb atk, Entity e) {
 	}
 
+	protected int getLayer() {
+		return 10;
+	}
+
 }

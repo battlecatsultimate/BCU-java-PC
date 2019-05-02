@@ -147,7 +147,7 @@ public abstract class Entity extends AbEntity {
 		tempZK |= (atk.abi & AB_ZKILL) > 0;
 		tempearn |= (atk.abi & AB_EARN) > 0;
 		if (atk.getProc(P_CRIT)[0] > 0)
-			basis.lea.add(new EAnimCont(pos, EffAnim.effas[A_CRIT].getEAnim(0)));
+			basis.lea.add(new EAnimCont(pos, layer, EffAnim.effas[A_CRIT].getEAnim(0)));
 
 		// process proc part
 		if (atk.type != -1 && !receive(atk.type))

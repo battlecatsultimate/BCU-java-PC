@@ -9,15 +9,12 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 
 	public final CustomEntity ce;
 	public String str = "";
-	public int atk, pre, ld0, ld1, targ = TCH_N;
-	public boolean rev, range;
+	public int atk, pre = 1, ld0, ld1, targ = TCH_N, count = -1;
+	public boolean rev, range = true;
 	public int[][] proc = new int[PROC_TOT][PROC_WIDTH];
 
 	public AtkDataModel(CustomEntity ent) {
-		atk = 0;
-		pre = 1;
 		ce = ent;
-		range = true;
 		str = ce.getAvailable(str);
 	}
 
@@ -28,6 +25,10 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		pre = adm.pre;
 		ld0 = adm.ld0;
 		ld1 = adm.ld1;
+		range = adm.range;
+		rev = adm.rev;
+		count = adm.count;
+		targ = adm.targ;
 		for (int i = 0; i < PROC_TOT; i++)
 			proc[i] = adm.proc[i].clone();
 	}
@@ -103,13 +104,14 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 	}
 
 	protected void write(OutStream os) {
-		os.writeString("0.4.1");
+		os.writeString("0.4.2");
 		os.writeString(str);
 		os.writeInt(atk);
 		os.writeInt(pre);
 		os.writeInt(ld0);
 		os.writeInt(ld1);
 		os.writeInt(targ);
+		os.writeInt(count);
 		os.writeInt((rev ? 1 : 0) + (range ? 2 : 0));
 		os.writeIntBB(proc);
 	}
@@ -142,7 +144,7 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 				proc[i][j] = temp[i][j];
 	}
 
-	protected void zread$000401(InStream is) {
+	private void zread$000401(InStream is) {
 		str = is.nextString();
 		atk = is.nextInt();
 		pre = is.nextInt();
@@ -159,11 +161,31 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 				proc[i][j] = temp[i][j];
 	}
 
+	private void zread$000402(InStream is) {
+		str = is.nextString();
+		atk = is.nextInt();
+		pre = is.nextInt();
+		ld0 = is.nextInt();
+		ld1 = is.nextInt();
+		targ = is.nextInt();
+		count = is.nextInt();
+		int bm = is.nextInt();
+		rev = (bm & 1) > 0;
+		range = (bm & 2) > 0;
+		int[][] temp = is.nextIntsBB();
+		proc = new int[PROC_TOT][PROC_WIDTH];
+		for (int i = 0; i < temp.length; i++)
+			for (int j = 0; j < temp[i].length; j++)
+				proc[i][j] = temp[i][j];
+	}
+
 	private void zread(String ver, InStream is) {
 		int val = getVer(ver);
 		if (val >= 307)
 			val = getVer(is.nextString());
-		if (val >= 401)
+		if (val >= 402)
+			zread$000402(is);
+		else if (val >= 401)
 			zread$000401(is);
 		else if (val >= 400)
 			zread$000400(is);

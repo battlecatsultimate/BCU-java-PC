@@ -179,7 +179,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			proc[P_SNIPER][0] = 1;
 		if (b.r.nextDouble() * 100 < getProc(ind, P_BOSS, 0)) {
 			proc[P_BOSS][0] = 1;
-			b.lea.add(new EAnimCont(e.pos, EffAnim.effas[A_SHOCKWAVE].getEAnim(0)));
+			b.lea.add(new EAnimCont(e.pos, e.layer, EffAnim.effas[A_SHOCKWAVE].getEAnim(0)));
 		}
 
 		if (b.r.nextDouble() * 100 < getProc(ind, P_SEAL, 0))
@@ -195,6 +195,11 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			else
 				proc[P_SUMMON] = sprc;
 		}
+	}
+
+	@Override
+	protected int getLayer() {
+		return e.layer;
 	}
 
 	protected abstract void summon(int[] proc, Entity ent, Object acs);

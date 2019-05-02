@@ -154,10 +154,10 @@ public class Unit extends Data implements Comparable<Unit> {
 	public String toString() {
 		String desp = MultiLangCont.get(forms[0]);
 		if (desp != null && desp.length() > 0)
-			return desp;
+			return trio(id) + " " + desp;
 		if (forms[0].name.length() > 0)
-			return forms[0].name;
-		return id + "";
+			return trio(id) + " " + forms[0].name;
+		return trio(id);
 	}
 
 	private boolean exist(String str, String suf) {

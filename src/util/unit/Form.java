@@ -132,12 +132,13 @@ public class Form extends Animable<AnimU> implements BasedCopable<Form, Unit> {
 
 	@Override
 	public String toString() {
+		String base = trio(uid) + "-" + fid + " ";
 		String desp = MultiLangCont.get(this);
 		if (desp != null && desp.length() > 0)
-			return desp;
+			return base + desp;
 		if (name.length() > 0)
-			return name;
-		return trio(uid) + "-" + fid;
+			return base + name;
+		return base;
 	}
 
 }

@@ -199,9 +199,9 @@ strictfp class InStreamDef extends InStream {
 
 	@Override
 	public OutStream translate() {
-		byte[] data = new byte[bs.length];
-		for (int i = 0; i < bs.length; i++)
-			data[i] = (byte) bs[i];
+		byte[] data = new byte[max - index];
+		for (int i = 0; i < max - index; i++)
+			data[i] = (byte) bs[index + i];
 		return new OutStreamDef(data);
 	}
 
