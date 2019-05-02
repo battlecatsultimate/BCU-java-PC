@@ -105,7 +105,7 @@ public abstract class Entity extends AbEntity {
 		anim = new AnimManager(this, ea);
 		atkm = new AtkManager(this);
 		barrier = de.getShield();
-		status[P_BORROW][0] = getProc(P_BORROW, 0);
+		status[P_BURROW][0] = getProc(P_BURROW, 0);
 		status[P_REVIVE][0] = getProc(P_REVIVE, 0);
 	}
 
@@ -361,7 +361,7 @@ public abstract class Entity extends AbEntity {
 			return TCH_SOUL;
 		if (status[P_REVIVE][1] > 0)
 			return TCH_CORPSE;
-		if (status[P_BORROW][2] > 0)
+		if (status[P_BURROW][2] > 0)
 			return n | TCH_UG;
 		if (kbTime < -1)
 			return TCH_UG;
@@ -419,8 +419,8 @@ public abstract class Entity extends AbEntity {
 	/** interrupt whatever this entity is doing */
 	protected void clearState() {
 		atkm.stopAtk();
-		if (kbTime < -1 || status[P_BORROW][2] > 0) {
-			status[P_BORROW][2] = 0;
+		if (kbTime < -1 || status[P_BURROW][2] > 0) {
+			status[P_BURROW][2] = 0;
 			bdist = 0;
 			kbTime = 0;
 		}
@@ -524,24 +524,24 @@ public abstract class Entity extends AbEntity {
 
 	/** update burrow state */
 	private void updateBurrow() {
-		if (kbTime == 0 && touch && status[P_BORROW][0] != 0) {
+		if (kbTime == 0 && touch && status[P_BURROW][0] != 0) {
 			double bpos = basis.getBase(dire).pos;
 			boolean ntbs = (bpos - pos) * dire > data.touchBase();
 			if (ntbs) {
 				// setup burrow state
-				status[P_BORROW][0]--;
-				status[P_BORROW][2] = anim.setAnim(4);
+				status[P_BURROW][0]--;
+				status[P_BURROW][2] = anim.setAnim(4);
 				kbTime = -2;
 			}
 		}
 		if (kbTime == -2) {
 			acted = true;
 			// burrow down
-			status[P_BORROW][2]--;
-			if (status[P_BORROW][2] == 0) {
+			status[P_BURROW][2]--;
+			if (status[P_BURROW][2] == 0) {
 				kbTime = -3;
 				anim.setAnim(5);
-				bdist = data.getRepAtk().getProc(P_BORROW)[1];
+				bdist = data.getRepAtk().getProc(P_BURROW)[1];
 			}
 		}
 		if (!acted && kbTime == -3) {
@@ -552,14 +552,14 @@ public abstract class Entity extends AbEntity {
 			if (!b) {
 				bdist = 0;
 				kbTime = -4;
-				status[P_BORROW][2] = anim.setAnim(6);
+				status[P_BURROW][2] = anim.setAnim(6);
 			}
 		}
 		if (!acted && kbTime == -4) {
 			// burrow up
 			acted = true;
-			status[P_BORROW][2]--;
-			if (status[P_BORROW][2] == 0)
+			status[P_BURROW][2]--;
+			if (status[P_BURROW][2] == 0)
 				kbTime = 0;
 		}
 

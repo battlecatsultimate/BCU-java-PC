@@ -152,7 +152,7 @@ public class Data {
 	protected static final int P_CURSE = 8;
 	protected static final int P_STRONG = 9;
 	protected static final int P_LETHAL = 10;
-	protected static final int P_BORROW = 11;
+	protected static final int P_BURROW = 11;
 	protected static final int P_REVIVE = 12;
 
 	protected static final int P_IMUKB = 13;
