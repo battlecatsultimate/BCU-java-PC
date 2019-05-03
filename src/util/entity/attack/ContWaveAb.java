@@ -19,8 +19,8 @@ public abstract class ContWaveAb extends ContAb {
 	private int maxt;
 	private boolean tempAtk;
 
-	protected ContWaveAb(AttackWave a, double p, EAnimD ead) {
-		super(a.model.b, p);
+	protected ContWaveAb(AttackWave a, double p, EAnimD ead, int layer) {
+		super(a.model.b, p, layer);
 		atk = a;
 		anim = ead;
 		maxt = anim.len();

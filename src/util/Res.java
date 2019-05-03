@@ -124,8 +124,8 @@ public class Res extends ImgCore {
 		icon[3][TRAIT_ALIEN] = new VImg(parts[82]);
 		icon[3][TRAIT_ZOMBIE] = new VImg(parts[83]);
 		icon[3][TRAIT_RELIC] = new VImg(parts[84]);
+		icon[0][ABI_EKILL] = new VImg(parts[110]);
 		icon[2][ATK_OMNI] = new VImg(parts[112]);
-		icon[0][ABI_EKILL] = new VImg(parts[113]);
 		icon[1][P_IMUCURSE] = new VImg(parts[116]);
 		icon[1][P_WEAK] = new VImg(parts[195]);
 		icon[1][P_STRONG] = new VImg(parts[196]);
@@ -152,9 +152,34 @@ public class Res extends ImgCore {
 		icon[2][ATK_SINGLE] = new VImg(parts[217]);
 		icon[0][ABI_WAVES] = new VImg(parts[218]);
 		icon[0][ABI_WKILL] = new VImg(parts[258]);
-		icon[0][ABI_ZKILL] = new VImg(parts[261]);
-		icon[1][P_IMUWARP] = new VImg(parts[264]);
-		icon[1][P_BREAK] = new VImg(parts[267]);
+		icon[0][ABI_RESISTS] = new VImg(parts[122]);
+		icon[0][ABI_MASSIVES] = new VImg(parts[114]);
+
+		icon[0][ABI_ZKILL] = new VImg(parts[260]);
+		icon[1][P_IMUWARP] = new VImg(parts[262]);
+		icon[1][P_BREAK] = new VImg(parts[264]);
+		icon[1][P_WARP] = new VImg(parts[266]);
+		icon[0][ABI_THEMEI] = new VImg("./org/page/icons/ThemeX.png");
+		icon[0][ABI_TIMEI] = new VImg("./org/page/icons/TimeX.png");
+		icon[0][ABI_IMUSW] = new VImg("./org/page/icons/BossWaveX.png");
+		icon[0][ABI_SNIPERI] = new VImg("./org/page/icons/SnipeX.png");
+		icon[0][ABI_POII] = new VImg("./org/page/icons/PoisonX.png");
+		icon[0][ABI_SEALI] = new VImg("./org/page/icons/SealX.png");
+		icon[0][ABI_GHOST] = new VImg("./org/page/icons/Ghost.png");
+		icon[1][P_THEME] = new VImg("./org/page/icons/Theme.png");
+		icon[1][P_TIME] = new VImg("./org/page/icons/Time.png");
+		icon[1][P_BOSS] = new VImg("./org/page/icons/BossWave.png");
+		icon[1][P_SNIPER] = new VImg("./org/page/icons/Snipe.png");
+		icon[1][P_POISON] = new VImg("./org/page/icons/Poison.png");
+		icon[1][P_SEAL] = new VImg("./org/page/icons/Seal.png");
+		icon[1][P_MOVEWAVE] = new VImg("./org/page/icons/Moving.png");
+		icon[1][P_SUMMON] = new VImg("./org/page/icons/Summon.png");
+		icon[0][ABI_MOVEI] = new VImg("./org/page/icons/MovingX.png");
+		icon[1][P_CURSE] = new VImg("./org/page/icons/Curse.png");
+		icon[0][ABI_GLASS] = new VImg("./org/page/icons/Suicide.png");
+		icon[1][P_BURROW] = new VImg("./org/page/icons/Burrow.png");
+		icon[1][P_REVIVE] = new VImg("./org/page/icons/Revive.png");
+
 	}
 
 	private static void readBattle() {

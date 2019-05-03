@@ -34,8 +34,8 @@ public class DecodeBCU {
 			System.setErr(ps);
 		}
 		try {
-			File fl = new File("./raw/viewer.list");
-			File fp = new File("./raw/viewer.pack");
+			File fl = new File("./lib/001/viewer.list");
+			File fp = new File("./lib/001/viewer.pack");
 			List<String> bs = null;
 			try {
 				bs = Files.readAllLines(fl.toPath());

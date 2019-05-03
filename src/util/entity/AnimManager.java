@@ -144,8 +144,13 @@ public class AnimManager extends Data {
 			effs[id] = EffAnim.effas[id].getEAnim(0);
 		}
 		if (t == P_POISON) {
-			int id = A_POISON;
-			effs[id] = EffAnim.effas[id].getEAnim(0);
+			int mask = status[P_POISON][0];
+			for (int i = 0; i < A_POIS.length; i++)
+				if ((mask & (1 << i)) > 0) {
+					int id = A_POIS[i];
+					effs[id] = EffAnim.effas[id].getEAnim(0);
+				}
+
 		}
 		if (t == P_SEAL) {
 			int id = A_SEAL;
@@ -164,7 +169,7 @@ public class AnimManager extends Data {
 		if (t == P_WARP) {
 			AnimD ea = EffAnim.effas[A_W];
 			int pa = status[P_WARP][2];
-			e.basis.lea.add(new WaprCont(e.pos, pa, anim));
+			e.basis.lea.add(new WaprCont(e.pos, pa, e.layer, anim));
 			status[P_WARP][pa] = ea.len(pa);
 
 		}
@@ -215,7 +220,7 @@ public class AnimManager extends Data {
 		// Z-kill icon
 		if (e.health <= 0 && e.tempZK && status[P_REVIVE][0] > 0) {
 			EAnimD eae = EffAnim.effas[A_Z_STRONG].getEAnim(0);
-			e.basis.lea.add(new EAnimCont(e.pos, eae));
+			e.basis.lea.add(new EAnimCont(e.pos, e.layer, eae));
 		}
 	}
 
@@ -275,7 +280,7 @@ public class AnimManager extends Data {
 			effs[id] = null;
 		}
 		if (status[P_POISON][0] == 0) {
-			int id = A_POISON;
+			int id = A_POI0;
 			effs[id] = null;
 		}
 		if (status[P_SEAL][0] == 0) {

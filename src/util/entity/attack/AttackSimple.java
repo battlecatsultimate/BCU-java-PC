@@ -8,12 +8,15 @@ import util.entity.data.MaskAtk;
 
 public class AttackSimple extends AttackAb {
 
-	public AttackSimple(AtkModelAb ent, int ATK, int t, int eab, int[][] pro, double p0, double p1) {
+	private final boolean range;
+
+	public AttackSimple(AtkModelAb ent, int ATK, int t, int eab, int[][] pro, double p0, double p1, boolean isr) {
 		super(ent, ATK, t, eab, pro, p0, p1);
+		range = isr;
 	}
 
 	public AttackSimple(AtkModelAb ent, int ATK, int t, int eab, int[][] pro, double p0, double p1, MaskAtk mask) {
-		this(ent, ATK, t, eab, pro, p0, p1);
+		this(ent, ATK, t, eab, pro, p0, p1, mask.isRange());
 		touch = mask.getTarget();
 		dire *= mask.getDire();
 	}
@@ -31,7 +34,7 @@ public class AttackSimple extends AttackAb {
 			for (AbEntity e : le)
 				if (e.targetable(type))
 					capt.add(e);
-		if (!model.isrange()) {
+		if (!range) {
 			if (capt.size() == 0)
 				return;
 			List<AbEntity> ents = new ArrayList<>();
@@ -52,11 +55,12 @@ public class AttackSimple extends AttackAb {
 
 	@Override
 	public void excuse() {
+		int layer = model.getLayer();
 		if (proc[P_MOVEWAVE][0] > 0) {
 			int[] conf = proc[P_MOVEWAVE];
 			int dire = model.getDire();
 			double p0 = model.getPos() + dire * conf[4];
-			new ContMove(this, p0, conf[2], conf[1], 1, conf[3], conf[5]);
+			new ContMove(this, p0, conf[2], conf[1], 1, conf[3], conf[5], layer);
 			return;
 		}
 		for (AbEntity e : capt)
@@ -67,7 +71,8 @@ public class AttackSimple extends AttackAb {
 			int addp = (dire == 1 ? W_E_INI : W_U_INI) + wid / 2;
 			double p0 = model.getPos() + dire * addp;
 			// generate a wave when hits somebody
-			new ContWaveDef(new AttackWave(this, p0, wid, WT_WAVE), p0);
+
+			new ContWaveDef(new AttackWave(this, p0, wid, WT_WAVE), p0, layer);
 		}
 	}
 

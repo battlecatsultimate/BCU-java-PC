@@ -152,7 +152,7 @@ public class Data {
 	protected static final int P_CURSE = 8;
 	protected static final int P_STRONG = 9;
 	protected static final int P_LETHAL = 10;
-	protected static final int P_BORROW = 11;
+	protected static final int P_BURROW = 11;
 	protected static final int P_REVIVE = 12;
 
 	protected static final int P_IMUKB = 13;
@@ -178,7 +178,10 @@ public class Data {
 	protected static final int P_MOVEWAVE = 24;
 	/** 0:prob, 1:time (-1 means infinite), 2:ID */
 	protected static final int P_THEME = 25;
-	/** 0:prob, 1:time, 2:dmg, 3:itv */
+	/**
+	 * 0:prob, 1:time, 2:dmg, 3:itv, 4: conf +0: normal, +1: of total, +2: of
+	 * current, +3: of lost, +4: unstackable
+	 */
 	protected static final int P_POISON = 26;
 	protected static final int P_BOSS = 27;
 
@@ -312,9 +315,17 @@ public class Data {
 	protected static final int A_U_B = 32;
 	protected static final int A_U_E_B = 33;
 	protected static final int A_SEAL = 34;
-	protected static final int A_POISON = 35;
+	protected static final int A_POI0 = 35;
+	protected static final int A_POI1 = 36;
+	protected static final int A_POI2 = 37;
+	protected static final int A_POI3 = 38;
+	protected static final int A_POI4 = 39;
+	protected static final int A_POI5 = 40;
+	protected static final int A_POI6 = 41;
+	protected static final int A_POI7 = 42;
+	protected static final int[] A_POIS = { A_POI0, A_POI1, A_POI2, A_POI3, A_POI4, A_POI5, A_POI6, A_POI7 };
 
-	protected static final int A_TOT = 36;
+	protected static final int A_TOT = 43;
 
 	// atk type index used in filter page
 	protected static final int ATK_SINGLE = 0;

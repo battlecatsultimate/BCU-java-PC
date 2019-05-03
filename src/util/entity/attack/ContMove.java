@@ -14,9 +14,9 @@ public class ContMove extends ContAb {
 	private AttackWave atk;
 	private boolean tempAtk;
 
-	/** conf: range, move, itrv, tot, rept */
+	/** conf: range, move, itrv, tot, rept,layer */
 	public ContMove(AttackSimple as, double p, int... conf) {
-		super(as.model.b, p);
+		super(as.model.b, p, conf[5]);
 		move = conf[1];
 		itv = conf[2];
 		t = itv;

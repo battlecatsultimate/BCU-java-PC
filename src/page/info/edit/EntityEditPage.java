@@ -72,7 +72,6 @@ public abstract class EntityEditPage extends Page {
 	private final JTF ftb = new JTF();
 	private final JTF fbs = new JTF();
 	private final JTF ftp = new JTF();
-	private final JTG isr = new JTG(1, "isr");
 	private final ReorderList<String> jli = new ReorderList<>();
 	private final JScrollPane jspi = new JScrollPane(jli);
 	private final JBTN add = new JBTN(0, "add");
@@ -174,7 +173,6 @@ public abstract class EntityEditPage extends Page {
 		add(link);
 		add(back);
 		set(atkn);
-		add(isr);
 		set(lpst);
 		set(vpst);
 		set(litv);
@@ -207,7 +205,6 @@ public abstract class EntityEditPage extends Page {
 				"<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
 						+ "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost</html>");
 
-		isr.setEnabled(editable);
 		add.setEnabled(editable);
 		rem.setEnabled(editable);
 		copy.setEnabled(editable);
@@ -263,11 +260,10 @@ public abstract class EntityEditPage extends Page {
 		set(fra, x, y, 650, 650, 200, 50);
 		set(ltb, x, y, 550, 700, 100, 50);
 		set(ftb, x, y, 650, 700, 200, 50);
-		set(isr, x, y, 550, 750, 300, 50);
-		set(lbs, x, y, 550, 800, 100, 50);
-		set(fbs, x, y, 650, 800, 200, 50);
-		set(ltp, x, y, 550, 850, 100, 50);
-		set(ftp, x, y, 650, 850, 200, 50);
+		set(lbs, x, y, 550, 750, 100, 50);
+		set(fbs, x, y, 650, 750, 200, 50);
+		set(ltp, x, y, 550, 800, 100, 50);
+		set(ftp, x, y, 650, 800, 200, 50);
 
 		set(aet, x, y, 900, 50, 1400, 1000);
 
@@ -312,7 +308,6 @@ public abstract class EntityEditPage extends Page {
 		fsh.setText("" + ce.shield);
 		ftb.setText("" + ce.tba);
 		fbs.setText("" + ce.base);
-		isr.setSelected(ce.isrange);
 		vpst.setText("" + ce.getPost());
 		vitv.setText("" + ce.getItv());
 		ftp.setText("" + ce.touch);
@@ -462,13 +457,6 @@ public abstract class EntityEditPage extends Page {
 			jli.setSelectedIndex(n);
 			setA(n);
 			changing = false;
-		});
-
-		isr.setLnr(e -> {
-			if (changing)
-				return;
-			ce.isrange = isr.isSelected();
-			setData(ce);
 		});
 
 		jcba.addActionListener(new ActionListener() {

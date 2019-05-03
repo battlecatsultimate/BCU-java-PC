@@ -119,6 +119,8 @@ class MainProcTable extends Page {
 
 		lst.setIcon(new ImageIcon(Res.getIcon(1, 9)));
 		lle.setIcon(new ImageIcon(Res.getIcon(1, 10)));
+		lbr.setIcon(new ImageIcon(Res.getIcon(1, 11)));
+		lre.setIcon(new ImageIcon(Res.getIcon(1, 12)));
 
 	}
 

@@ -9,10 +9,12 @@ import util.system.P;
 public class EAnimCont extends Data {
 
 	public final double pos;
+	public final int layer;
 	private final EAnimD anim;
 
-	public EAnimCont(double p, EAnimD ead) {
+	public EAnimCont(double p, int lay, EAnimD ead) {
 		pos = p;
+		layer = lay;
 		anim = ead;
 	}
 

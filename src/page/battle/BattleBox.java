@@ -337,13 +337,13 @@ public class BattleBox extends Canvas {
 		for (ContAb wc : sb.lw) {
 			gra.setTransform(at);
 			double p = (wc.pos * ratio + off - wave) * siz + pos;
-			double y = midh - (road_h - DEP * 10) * siz;
+			double y = midh - (road_h - DEP * wc.layer) * siz;
 			wc.draw(gra, new P(p, y), psiz);
 		}
 		for (EAnimCont eac : sb.lea) {
 			gra.setTransform(at);
 			double p = getX(eac.pos);
-			double y = midh - road_h * siz;
+			double y = midh - (road_h - DEP * eac.layer) * siz;
 			eac.draw(gra, new P(p, y), psiz);
 		}
 		gra.setTransform(at);

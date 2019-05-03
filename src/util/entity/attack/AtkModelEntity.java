@@ -1,9 +1,11 @@
 package util.entity.attack;
 
+import util.entity.EAnimCont;
 import util.entity.EEnemy;
 import util.entity.EUnit;
 import util.entity.Entity;
 import util.entity.data.MaskEntity;
+import util.pack.EffAnim;
 
 public abstract class AtkModelEntity extends AtkModelAb {
 
@@ -24,8 +26,6 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	protected final Entity e;
 	protected final int[] atks, abis;
 	protected final Object[] acs;
-	protected final boolean range;
-
 	private final double ratk;
 
 	protected AtkModelEntity(Entity ent, double d0) {
@@ -52,7 +52,6 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			abis[raw.length + 1] = 1;
 			acs[raw.length + 1] = new Object();
 		}
-		range = data.isRange();
 	}
 
 	@Override
@@ -115,11 +114,6 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		}
 	}
 
-	@Override
-	public boolean isrange() {
-		return data.isRange();
-	}
-
 	/** get the collide box bound */
 	public double[] touchRange() {
 		int dire = e.dire;
@@ -173,6 +167,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			proc[P_POISON][0] = getProc(ind, P_POISON, 1);
 			proc[P_POISON][1] = (int) (getProc(ind, P_POISON, 2) * ratk);
 			proc[P_POISON][2] = getProc(ind, P_POISON, 3);
+			proc[P_POISON][3] = getProc(ind, P_POISON, 4);
 		}
 		if (b.r.nextDouble() * 100 < getProc(ind, P_MOVEWAVE, 0))
 			for (int i = 0; i < PROC_WIDTH; i++)
@@ -182,8 +177,10 @@ public abstract class AtkModelEntity extends AtkModelAb {
 
 		if (b.r.nextDouble() * 100 < getProc(ind, P_SNIPER, 0))
 			proc[P_SNIPER][0] = 1;
-		if (b.r.nextDouble() * 100 < getProc(ind, P_BOSS, 0))
+		if (b.r.nextDouble() * 100 < getProc(ind, P_BOSS, 0)) {
 			proc[P_BOSS][0] = 1;
+			b.lea.add(new EAnimCont(e.pos, e.layer, EffAnim.effas[A_SHOCKWAVE].getEAnim(0)));
+		}
 
 		if (b.r.nextDouble() * 100 < getProc(ind, P_SEAL, 0))
 			proc[P_SEAL][0] = getProc(ind, P_SEAL, 1);
@@ -198,6 +195,11 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			else
 				proc[P_SUMMON] = sprc;
 		}
+	}
+
+	@Override
+	protected int getLayer() {
+		return e.layer;
 	}
 
 	protected abstract void summon(int[] proc, Entity ent, Object acs);

@@ -13,6 +13,7 @@ import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
 
+import io.BCJSON;
 import io.InStream;
 import io.OutStream;
 import io.OverReadException;
@@ -211,7 +212,7 @@ public class Pack extends Data {
 	public MapColc mc;
 	public final List<Integer> rely = new ArrayList<>();
 	public boolean editable = true;
-	public String name = "custom pack", time = "";
+	public String name = "custom pack", time = "", author = "";
 	public File file;
 	public int version;
 	private InStream res;
@@ -263,6 +264,7 @@ public class Pack extends Data {
 				bcuver = head.nextInt();
 				time = head.nextString();
 				version = head.nextInt();
+				author = head.nextString();
 			} catch (OverReadException e) {
 			}
 		} else {
@@ -461,6 +463,7 @@ public class Pack extends Data {
 		head.writeInt(MainBCU.ver);
 		head.writeString(editable ? time = MainBCU.getTime() : time);
 		head.writeInt(version);
+		head.writeString(BCJSON.USERNAME);
 		head.terminate();
 		os.accept(head);
 		os.writeString(name);

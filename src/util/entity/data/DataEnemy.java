@@ -82,8 +82,8 @@ public class DataEnemy extends DefaultData implements MaskEnemy {
 			proc[P_IMUSLOW][0] = 100;
 		if (ints[42] == 1)
 			proc[P_IMUWEAK][0] = 100;
-		proc[P_BORROW][0] = ints[43];
-		proc[P_BORROW][1] = ints[44] / 4;
+		proc[P_BURROW][0] = ints[43];
+		proc[P_BURROW][1] = ints[44] / 4;
 		proc[P_REVIVE][0] = ints[45];
 		proc[P_REVIVE][1] = ints[46];
 		proc[P_REVIVE][2] = ints[47];

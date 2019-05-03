@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.util.Arrays;
 import java.util.Vector;
 
 import javax.swing.JList;
@@ -328,15 +329,19 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	}
 
 	private void removeLine() {
-		change(0, o -> {
+		int[] rows = mmet.getSelectedRows();
+		if (rows.length == 0)
+			return;
+		if (rows[0] == 0)
+			rows = Arrays.copyOfRange(rows, 1, rows.length);
+		change(rows, row -> {
 			MaModel mm = mmet.mm;
-			int[] rows = mmet.getSelectedRows();
 			int[][] data = mm.parts;
-			mm.n -= rows.length;
+			mm.n -= row.length;
 			int[] inds = new int[data.length];
 			int[] move = new int[mm.n];
-			for (int i = 0; i < rows.length; i++)
-				data[rows[i]] = null;
+			for (int i = 0; i < row.length; i++)
+				data[row[i]] = null;
 			int ind = 0;
 			for (int i = 0; i < data.length; i++)
 				if (data[i] != null) {

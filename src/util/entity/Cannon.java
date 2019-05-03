@@ -92,11 +92,6 @@ public class Cannon extends AtkModelAb {
 		return 0;
 	}
 
-	@Override
-	public boolean isrange() {
-		return true;
-	}
-
 	public void update() {
 		tempAtk = false;
 		if (anim != null && anim.done()) {
@@ -161,7 +156,7 @@ public class Cannon extends AtkModelAb {
 					int spe = 137;
 					double p = b.ubase.pos - wid / 2 + spe;
 					AttackCanon eatk = new AttackCanon(this, 0, -1, 0, proc, 0, 0);
-					new ContMove(eatk, p, wid, spe, 1, 31, 0);
+					new ContMove(eatk, p, wid, spe, 1, 31, 0, 10);
 				} else if (id == 2) {
 					// wall canon
 					if (wall != null)

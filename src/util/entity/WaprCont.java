@@ -13,8 +13,8 @@ public class WaprCont extends EAnimCont {
 	private final EAnimU ent;
 	private final EAnimD chara;
 
-	public WaprCont(double p, int pa, EAnimU a) {
-		super(p, EffAnim.effas[A_W].getEAnim(pa));
+	public WaprCont(double p, int pa, int layer, EAnimU a) {
+		super(p, layer, EffAnim.effas[A_W].getEAnim(pa));
 		ent = a;
 		chara = EffAnim.effas[A_W_C].getEAnim(pa);
 	}

@@ -6,6 +6,8 @@ public abstract class DefaultData extends DataEntity implements MaskAtk {
 	protected int lds, ldr;
 	protected int atk, atk1, atk2, pre, pre1, pre2, abi0 = 1, abi1, abi2, tba;
 
+	public boolean isrange;
+
 	@Override
 	public int allAtk() {
 		return (int) ((atk + atk1 + atk2) * (1 + proc[P_CRIT][0] * 0.01));
@@ -73,6 +75,11 @@ public abstract class DefaultData extends DataEntity implements MaskAtk {
 	@Override
 	public boolean isOmni() {
 		return lds > 0 && -ldr > lds;
+	}
+
+	@Override
+	public boolean isRange() {
+		return isrange;
 	}
 
 	@Override

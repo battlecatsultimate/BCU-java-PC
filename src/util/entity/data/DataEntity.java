@@ -7,7 +7,6 @@ public abstract class DataEntity extends Data implements MaskEntity {
 	public int hp, hb, speed, range;
 	public int abi, type, width;
 	public int loop = -1, death, shield;
-	public boolean isrange;
 
 	@Override
 	public int getAbi() {
@@ -57,11 +56,6 @@ public abstract class DataEntity extends Data implements MaskEntity {
 	@Override
 	public int getWidth() {
 		return width;
-	}
-
-	@Override
-	public boolean isRange() {
-		return isrange;
 	}
 
 }
