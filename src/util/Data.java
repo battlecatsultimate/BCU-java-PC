@@ -427,6 +427,7 @@ public class Data {
 	}
 
 	public static String trio(int i) {
+		i %= 1000;
 		String str = "";
 		if (i < 100)
 			str += "0";

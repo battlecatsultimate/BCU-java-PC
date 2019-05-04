@@ -277,7 +277,9 @@ public class AnimC extends AnimU {
 			File f = new File(prev + name + "/" + name + ".png");
 			Writer.check(f);
 			if (!ImageIO.write(num, "PNG", f))
-				Opts.writeErr(f.getPath());
+				if (Opts.writeErr0(f.getPath()))
+					if (ImageIO.write(num, "PNG", f))
+						Opts.ioErr("failed to write");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
