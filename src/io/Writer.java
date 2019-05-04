@@ -67,7 +67,7 @@ public class Writer extends DataIO {
 			for (File i : f.listFiles())
 				delete(i);
 		if (!f.delete())
-			System.out.println("why failed? " + f.getPath());
+			Opts.ioErr("failed to delete " + f);
 	}
 
 	public static void logClose(boolean save) {
@@ -262,6 +262,7 @@ public class Writer extends DataIO {
 			suc = false;
 			e.printStackTrace();
 			Printer.w(130, "IOE!!!");
+			Opts.ioErr("failed to write file " + f);
 			if (fos != null)
 				try {
 					fos.close();

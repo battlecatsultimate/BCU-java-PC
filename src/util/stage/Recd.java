@@ -88,7 +88,7 @@ public class Recd extends Data {
 			return null;
 		}
 		Recd ans = new Recd(lu, st, star, conf, seed);
-		ans.action = action.translate();
+		ans.action = action;
 		ans.name = name;
 		return ans;
 	}
@@ -114,7 +114,7 @@ public class Recd extends Data {
 		}
 
 		Recd ans = new Recd(lu, st, star, conf, seed);
-		ans.action = action.translate();
+		ans.action = action;
 		ans.name = name;
 		return ans;
 	}
@@ -165,7 +165,7 @@ public class Recd extends Data {
 	public boolean avail;
 	public boolean marked;
 
-	public OutStream action;
+	public InStream action;
 
 	public Stage st;
 
@@ -181,7 +181,7 @@ public class Recd extends Data {
 	public int getLen() {
 		if (len > 0)
 			return len;
-		InStream is = action.translate();
+		InStream is = action;
 		int n = is.nextInt();
 		for (int i = 0; i < n / 2; i++) {
 			is.nextInt();
@@ -192,7 +192,7 @@ public class Recd extends Data {
 
 	public SBRply replay() {
 		EStage est = new EStage(st, star);
-		return new SBRply(action.translate(), est, lu, conf, seed);
+		return new SBRply(action, est, lu, conf, seed);
 	}
 
 	@Override
@@ -207,7 +207,7 @@ public class Recd extends Data {
 		os.writeIntB(conf);
 		os.writeInt(star);
 		os.accept(lu.write());
-		os.accept(action);
+		os.accept(action.translate());
 		int pid = st.map.mc.pack.id;
 		os.writeInt(pid);
 		if (pid > 0) {

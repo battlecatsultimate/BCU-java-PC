@@ -127,7 +127,7 @@ strictfp class OutStreamDef extends DataIO implements OutStream {
 	}
 
 	@Override
-	public InStream translate() {
+	public InStreamDef translate() {
 		return new InStreamDef(translate(bs), 0, bs.length);
 	}
 
@@ -257,8 +257,13 @@ strictfp class OutStreamFmt extends DataIO implements OutStream {
 	private final OutStreamDef bs;
 	private int index = 0;
 
-	public OutStreamFmt() {
+	protected OutStreamFmt() {
 		bs = new OutStreamDef();
+	}
+
+	protected OutStreamFmt(OutStreamDef os, int cur) {
+		bs = os;
+		index = cur;
 	}
 
 	@Override
@@ -316,9 +321,8 @@ strictfp class OutStreamFmt extends DataIO implements OutStream {
 	}
 
 	@Override
-	public InStream translate() {
-		// TODO Auto-generated method stub
-		return null;
+	public InStreamFmt translate() {
+		return new InStreamFmt(bs.translate(), index);
 	}
 
 	@Override

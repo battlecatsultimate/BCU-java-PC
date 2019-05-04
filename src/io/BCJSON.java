@@ -219,7 +219,7 @@ public class BCJSON extends Data {
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.dloadErr("");
+			Opts.dloadErr("can't download " + url);
 			return false;
 		}
 	}
@@ -413,7 +413,7 @@ public class BCJSON extends Data {
 			return os.getBytes();
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.dloadErr("");
+			Opts.dloadErr("can't download " + url);
 			return null;
 		}
 	}

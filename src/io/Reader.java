@@ -140,6 +140,7 @@ public class Reader extends DataIO {
 			byte[] bs = Files.readAllBytes(file.toPath());
 			return InStream.getIns(bs);
 		} catch (IOException e) {
+			Opts.ioErr("failed to read file " + file);
 			e.printStackTrace();
 		}
 		return null;
@@ -259,6 +260,7 @@ public class Reader extends DataIO {
 				ans.add(temp);
 			reader.close();
 		} catch (Exception e) {
+			Opts.ioErr("failed to read file " + file);
 			e.printStackTrace();
 		}
 		return ans;

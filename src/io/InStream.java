@@ -214,7 +214,7 @@ strictfp class InStreamDef extends DataIO implements InStream {
 	}
 
 	@Override
-	public OutStream translate() {
+	public OutStreamDef translate() {
 		byte[] data = new byte[max - index];
 		for (int i = 0; i < max - index; i++)
 			data[i] = (byte) bs[index + i];
@@ -243,7 +243,7 @@ strictfp class InStreamFmt extends DataIO implements InStream {
 
 	private int index = 0;
 
-	public InStreamFmt(InStreamDef isd, int n) {
+	protected InStreamFmt(InStreamDef isd, int n) {
 		bs = isd;
 		max = n;
 	}
@@ -352,7 +352,7 @@ strictfp class InStreamFmt extends DataIO implements InStream {
 	}
 
 	@Override
-	public InStream subStream() {
+	public InStreamFmt subStream() {
 		check(SUBS);
 		assert bs.nextInt() == -1;
 		int n = bs.nextInt();
@@ -360,9 +360,8 @@ strictfp class InStreamFmt extends DataIO implements InStream {
 	}
 
 	@Override
-	public OutStream translate() {
-		// TODO Auto-generated method stub
-		return null;
+	public OutStreamFmt translate() {
+		return new OutStreamFmt(bs.translate(), index);
 	}
 
 	private void check(byte f) {
