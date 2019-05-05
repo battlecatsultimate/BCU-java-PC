@@ -105,7 +105,7 @@ public class AnimC extends AnimU {
 		partial = true;
 		imgcut = ori.imgcut.clone();
 		mamodel = ori.mamodel.clone();
-		if (mamodel.confs.length < 2)
+		if (mamodel.confs.length < 1)
 			mamodel.confs = new int[2][6];
 		anims = new MaAnim[7];
 		for (int i = 0; i < 7; i++)
