@@ -53,7 +53,7 @@ public class BCJSON extends Data {
 	private static final String l0p = "000/viewer.pack";
 	private static final String l1l = "001/viewer.list";
 	private static final String l1p = "001/viewer.pack";
-	private static final String path = "./lib/";
+	private static final String path = "./assets/";
 	private static final String login = "login.php";
 	private static final String upload = "upload.php";
 	private static final String rate = "rate.php";

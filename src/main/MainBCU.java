@@ -3,7 +3,7 @@ package main;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import decode.Decode;
+import decode.ZipLib;
 import io.BCJSON;
 import io.Reader;
 import io.Writer;
@@ -33,11 +33,12 @@ public class MainBCU {
 		Writer.logSetup();
 		new MainFrame(Data.revVer(MainBCU.ver)).initialize();
 		new Timer().start();
-		BCJSON.checkDownload();
+		// BCJSON.checkDownload();
 		if (BCJSON.lib_ver < LIBREQ) {
 			Opts.loadErr("this version requires new lib");
 		}
-		Decode.main();
+		// Decode.main();
+		ZipLib.read();
 		Reader.getData$1();
 		MainFrame.changePanel(new MainPage());
 	}

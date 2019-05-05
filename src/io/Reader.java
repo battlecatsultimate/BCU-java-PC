@@ -147,7 +147,7 @@ public class Reader extends DataIO {
 	}
 
 	public static void readLang() {
-		File f = new File("./lib/lang/");
+		File f = new File("./assets/lang/");
 		if (!f.exists())
 			return;
 		for (File fi : f.listFiles()) {
@@ -345,7 +345,7 @@ public class Reader extends DataIO {
 	}
 
 	private static void readGroup() {
-		File f = new File("./lib/calendar/group event.txt");
+		File f = new File("./assets/calendar/group event.txt");
 		Queue<String> qs = readLines(f);
 		try {
 			while (qs.size() > 0) {
@@ -359,7 +359,7 @@ public class Reader extends DataIO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		f = new File("./lib/calendar/group hour.txt");
+		f = new File("./assets/calendar/group hour.txt");
 		qs = readLines(f);
 		try {
 			HourGrouper.process(qs);
@@ -369,7 +369,7 @@ public class Reader extends DataIO {
 	}
 
 	private static void readID() {
-		File f = new File("./lib/calendar/event ID.txt");
+		File f = new File("./assets/calendar/event ID.txt");
 		Queue<String> qs = readLines(f);
 		for (String str : qs) {
 			String[] strs = str.trim().split("\t");
@@ -383,7 +383,7 @@ public class Reader extends DataIO {
 			}
 			Namer.EMAP.put(id, strs[1]);
 		}
-		f = new File("./lib/calendar/gacha ID.txt");
+		f = new File("./assets/calendar/gacha ID.txt");
 		qs = readLines(f);
 		for (String str : qs) {
 			String[] strs = str.trim().split("\t");
@@ -397,7 +397,7 @@ public class Reader extends DataIO {
 			}
 			Namer.GMAP.put(id, strs[1]);
 		}
-		f = new File("./lib/calendar/item ID.txt");
+		f = new File("./assets/calendar/item ID.txt");
 		qs = readLines(f);
 		for (String str : qs) {
 			String[] strs = str.trim().split("\t");
