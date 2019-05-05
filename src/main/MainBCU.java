@@ -35,7 +35,7 @@ public class MainBCU {
 		new Timer().start();
 		BCJSON.checkDownload();
 		if (BCJSON.lib_ver < LIBREQ) {
-			Opts.loadErr("this version require new lib");
+			Opts.loadErr("this version requires new lib");
 			System.exit(0);
 		}
 		Decode.main();
