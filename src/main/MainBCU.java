@@ -13,7 +13,7 @@ import util.Data;
 
 public class MainBCU {
 
-	public static final int ver = 40508, LIBREQ = 80503;
+	public static final int ver = 40510, LIBREQ = 80503;
 
 	public static int FILTER_TYPE = 0;
 	public static boolean write = true, preload = false, trueRun = false;
@@ -36,7 +36,6 @@ public class MainBCU {
 		BCJSON.checkDownload();
 		if (BCJSON.lib_ver < LIBREQ) {
 			Opts.loadErr("this version requires new lib");
-			System.exit(0);
 		}
 		Decode.main();
 		Reader.getData$1();
