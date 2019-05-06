@@ -1,5 +1,6 @@
 package decode;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.CopyOption;
@@ -27,7 +28,7 @@ class LibInfo {
 
 	protected final FileSystem fs;
 
-	protected final Set<VerInfo> libver = new TreeSet<>();
+	protected final Map<String, VerInfo> libver = new TreeMap<>();
 
 	protected final MergedLib merge = new MergedLib();
 
@@ -38,8 +39,9 @@ class LibInfo {
 		ver = Reader.parseIntN(qs.poll());
 		int n = Reader.parseIntN(qs.poll());
 		for (int i = 0; i < n; i++) {
-			VerInfo vi = new VerInfo(fs, qs.poll().trim());
-			libver.add(vi);
+			String v = qs.poll().trim();
+			VerInfo vi = new VerInfo(fs, v);
+			libver.put(v, vi);
 			merge.add(vi);
 		}
 	}
@@ -57,14 +59,27 @@ class LibInfo {
 	}
 
 	protected void merge(LibInfo li) throws IOException {
-		libver.addAll(li.libver);
 		List<PathInfo> ls = merge.merge(li.merge);
 		for (PathInfo p : ls)
-			if (p.type == 0)
-				Files.copy(fs.getPath(p.path), li.fs.getPath(p.path), RE);
-			else if (p.type == 1)
+			if (p.type == 0) {
+				Path target = fs.getPath(p.path);
+				Files.createDirectories(target.getParent());
+				Files.copy(li.fs.getPath(p.path), target, RE);
+			} else if (p.type == 1)
 				Files.deleteIfExists(fs.getPath(p.path));
-
+		for (String v : li.libver.keySet())
+			if (!libver.containsKey(v)) {
+				Files.copy(li.fs.getPath("/info/" + v + ".verinfo"), fs.getPath("/info/" + v + ".verinfo"));
+				libver.put(v, li.libver.get(v));
+			}
+		Path pini = fs.getPath("/info/info.ini");
+		Files.deleteIfExists(pini);
+		BufferedWriter bw = Files.newBufferedWriter(pini);
+		bw.write("file_version = 00040510\r\n");
+		bw.write("number_of_libs = " + libver.size() + "\r\n");
+		for (VerInfo vi : libver.values())
+			bw.write(vi.ver + "\r\n");
+		bw.close();
 	}
 
 }

@@ -6,6 +6,7 @@ import java.io.PrintStream;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +22,8 @@ public class ZipAdmin {
 		// System.out.println("done");
 		// addFile();
 		// newFile();
-		generate();
+		// generate();
+		// merge();
 	}
 
 	protected static void addFile() throws IOException {
@@ -56,6 +58,17 @@ public class ZipAdmin {
 		for (String str : ls)
 			ps.println(str);
 		ps.close();
+	}
+
+	protected static void merge() throws IOException {
+		Path f0 = new File("./assets/libworkspace/080504.zip").toPath();
+		Path f1 = new File("./assets/libworkspace/080505.zip").toPath();
+		LibInfo li0 = new LibInfo(FileSystems.newFileSystem(f0, null));
+		LibInfo li1 = new LibInfo(FileSystems.newFileSystem(f1, null));
+		li0.merge(li1);
+		li0.fs.close();
+		li1.fs.close();
+
 	}
 
 	protected static void newFile() throws IOException {
