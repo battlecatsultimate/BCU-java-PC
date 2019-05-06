@@ -653,7 +653,6 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			if (ind >= 0) {
 				int par = p.ints[0];
 				jlm.setSelectedIndex(par);
-				jlm.scrollRectToVisible(jlm.getCellBounds(par, par));
 				jlv.setSelectedIndex(mpet.part.ints[1]);
 				if (maet.getSelectedRow() != ind) {
 					maet.setRowSelectionInterval(ind, ind);
@@ -662,7 +661,8 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 				ab.setSele(par);
 				int ic = mpet.anim.mamodel.parts[par][2];
 				jlp.setSelectedIndex(ic);
-				jlp.scrollRectToVisible(jlp.getCellBounds(ic, ic));
+				if (ic >= 0)
+					jlp.scrollRectToVisible(jlp.getCellBounds(ic, ic));
 				sb.sele = jlp.getSelectedIndex();
 			} else
 				maet.clearSelection();
