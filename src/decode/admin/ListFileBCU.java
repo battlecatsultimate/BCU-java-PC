@@ -50,7 +50,7 @@ class ListFileBCU {
 	}
 
 	protected void writeAll(String path, byte[] bs) {
-
+		path=path.replace("\\", "/");
 		File f = new File(path);
 		File p = f.getParentFile();
 		if (!p.exists())

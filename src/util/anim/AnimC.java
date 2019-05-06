@@ -105,7 +105,7 @@ public class AnimC extends AnimU {
 		partial = true;
 		imgcut = ori.imgcut.clone();
 		mamodel = ori.mamodel.clone();
-		if (mamodel.confs.length < 2)
+		if (mamodel.confs.length < 1)
 			mamodel.confs = new int[2][6];
 		anims = new MaAnim[7];
 		for (int i = 0; i < 7; i++)
@@ -277,7 +277,9 @@ public class AnimC extends AnimU {
 			File f = new File(prev + name + "/" + name + ".png");
 			Writer.check(f);
 			if (!ImageIO.write(num, "PNG", f))
-				Opts.writeErr(f.getPath());
+				if (Opts.writeErr0(f.getPath()))
+					if (ImageIO.write(num, "PNG", f))
+						Opts.ioErr("failed to write");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

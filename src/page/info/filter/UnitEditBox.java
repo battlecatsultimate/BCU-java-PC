@@ -40,6 +40,7 @@ public class UnitEditBox extends Page {
 	public void setData(int[] vals) {
 		changing = true;
 		trait.clearSelection();
+		abis.clearSelection();
 		for (int i = 0; i < 9; i++)
 			if (((vals[0] >> i) & 1) > 0)
 				trait.addSelectionInterval(i, i);
@@ -48,7 +49,6 @@ public class UnitEditBox extends Page {
 				abis.addSelectionInterval(i, i);
 		}
 		int lev = SABIS.length;
-		abis.clearSelection();
 		for (int i = 0; i < ABIIND.length; i++) {
 			int ind = ABIIND[i];
 			if (((vals[2] >> (ind - 100 - IMUSFT)) & 1) > 0)

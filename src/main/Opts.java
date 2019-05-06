@@ -80,7 +80,11 @@ public class Opts {
 				+ " version to open it", "version error");
 	}
 
-	public static boolean writeErr(String f) {
+	public static boolean writeErr0(String f) {
+		return Opts.warning("failed to write file: " + f + " do you want to retry?", "IO error");
+	}
+
+	public static boolean writeErr1(String f) {
 		return Opts.warning("failed to write file: " + f + " do you want to save it in another place?", "IO error");
 	}
 

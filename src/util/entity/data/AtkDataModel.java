@@ -144,6 +144,20 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 				proc[i][j] = temp[i][j];
 	}
 
+	private void zread(String ver, InStream is) {
+		int val = getVer(ver);
+		if (val >= 307)
+			val = getVer(is.nextString());
+		if (val >= 402)
+			zread$000402(is);
+		else if (val >= 401)
+			zread$000401(is);
+		else if (val >= 400)
+			zread$000400(is);
+		else if (val >= 301)
+			zread$000301(is);
+	}
+
 	private void zread$000401(InStream is) {
 		str = is.nextString();
 		atk = is.nextInt();
@@ -177,20 +191,6 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		for (int i = 0; i < temp.length; i++)
 			for (int j = 0; j < temp[i].length; j++)
 				proc[i][j] = temp[i][j];
-	}
-
-	private void zread(String ver, InStream is) {
-		int val = getVer(ver);
-		if (val >= 307)
-			val = getVer(is.nextString());
-		if (val >= 402)
-			zread$000402(is);
-		else if (val >= 401)
-			zread$000401(is);
-		else if (val >= 400)
-			zread$000400(is);
-		else if (val >= 301)
-			zread$000301(is);
 	}
 
 }

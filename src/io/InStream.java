@@ -1,6 +1,9 @@
 package io;
 
 import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import main.Opts;
 
@@ -46,14 +49,6 @@ public strictfp interface InStream {
 
 	public String nextString();
 
-	public int pos();
-
-	public void reread();
-
-	public int size();
-
-	public void skip(int n);
-
 	public InStream subStream();
 
 	public OutStream translate();
@@ -65,6 +60,12 @@ strictfp class InStreamDef extends DataIO implements InStream {
 	private final int[] bs;
 	private final int off, max;
 	private int index;
+
+	protected InStreamDef(InStreamDef isd) {
+		bs = isd.bs;
+		index = off = isd.index;
+		max = isd.max;
+	}
 
 	protected InStreamDef(int[] data, int ofs, int m) {
 		bs = data;
@@ -87,96 +88,6 @@ strictfp class InStreamDef extends DataIO implements InStream {
 	}
 
 	@Override
-	public double nextDouble() {
-		check(8);
-		double ans = toDouble(bs, index);
-		index += 8;
-		return ans;
-	}
-
-	@Override
-	public float nextFloat() {
-		check(4);
-		float ans = toFloat(bs, index);
-		index += 4;
-		return ans;
-	}
-
-	@Override
-	public int nextInt() {
-		check(4);
-		int ans = toInt(bs, index);
-		index += 4;
-		return ans;
-	}
-
-	@Override
-	public long nextLong() {
-		check(8);
-		long ans = toLong(bs, index);
-		index += 8;
-		return ans;
-	}
-
-	@Override
-	public int nextShort() {
-		check(2);
-		int ans = toShort(bs, index);
-		index += 2;
-		return ans;
-	}
-
-	@Override
-	public int pos() {
-		return index - off;
-	}
-
-	@Override
-	public void reread() {
-		index = off;
-	}
-
-	@Override
-	public int size() {
-		return max - off;
-	}
-
-	@Override
-	public void skip(int n) {
-		index += n;
-	}
-
-	@Override
-	public InStream subStream() {
-		int n = nextInt();
-		if (n > size()) {
-			Opts.loadErr("corrupted file");
-			new Exception("error in getting subStream").printStackTrace();
-			Writer.logClose(false);
-			System.exit(0);
-		}
-		InStream is = new InStreamDef(bs, index, index + n);
-		index += n;
-		return is;
-	}
-
-	@Override
-	public OutStream translate() {
-		byte[] data = new byte[max - index];
-		for (int i = 0; i < max - index; i++)
-			data[i] = (byte) bs[index + i];
-		return new OutStreamDef(data);
-	}
-
-	private void check(int i) {
-		if (max - index < i) {
-			String str = "out of bound: " + (index - off) + "/" + (max - off) + ", " + index + "/" + max + "/" + off
-					+ "/" + bs.length;
-			throw new OverReadException(str);
-		}
-	}
-
-	@Override
 	public byte[] nextBytesB() {
 		int len = nextByte();
 		byte[] ints = new byte[len];
@@ -195,12 +106,36 @@ strictfp class InStreamDef extends DataIO implements InStream {
 	}
 
 	@Override
+	public double nextDouble() {
+		check(8);
+		double ans = toDouble(bs, index);
+		index += 8;
+		return ans;
+	}
+
+	@Override
 	public double[] nextDoubles() {
 		int len = nextByte();
 		double[] ints = new double[len];
 		for (int i = 0; i < len; i++)
 			ints[i] = nextDouble();
 		return ints;
+	}
+
+	@Override
+	public float nextFloat() {
+		check(4);
+		float ans = toFloat(bs, index);
+		index += 4;
+		return ans;
+	}
+
+	@Override
+	public int nextInt() {
+		check(4);
+		int ans = toInt(bs, index);
+		index += 4;
+		return ans;
 	}
 
 	@Override
@@ -222,6 +157,22 @@ strictfp class InStreamDef extends DataIO implements InStream {
 	}
 
 	@Override
+	public long nextLong() {
+		check(8);
+		long ans = toLong(bs, index);
+		index += 8;
+		return ans;
+	}
+
+	@Override
+	public int nextShort() {
+		check(2);
+		int ans = toShort(bs, index);
+		index += 2;
+		return ans;
+	}
+
+	@Override
 	public String nextString() {
 		byte[] bts = nextBytesB();
 		try {
@@ -232,93 +183,106 @@ strictfp class InStreamDef extends DataIO implements InStream {
 		}
 	}
 
+	public int pos() {
+		return index - off;
+	}
+
+	public void reread() {
+		index = off;
+	}
+
+	public int size() {
+		return max - off;
+	}
+
+	public void skip(int n) {
+		index += n;
+	}
+
+	@Override
+	public InStreamDef subStream() {
+		int n = nextInt();
+		if (n > size()) {
+			Opts.loadErr("corrupted file");
+			new Exception("error in getting subStream").printStackTrace();
+			Writer.logClose(false);
+			System.exit(0);
+		}
+		InStreamDef is = new InStreamDef(bs, index, index + n);
+		index += n;
+		return is;
+	}
+
+	@Override
+	public OutStreamDef translate() {
+		byte[] data = new byte[max - index];
+		for (int i = 0; i < max - index; i++)
+			data[i] = (byte) bs[index + i];
+		return new OutStreamDef(data);
+	}
+
+	protected int[] getBytes() {
+		return bs;
+	}
+
+	private void check(int i) {
+		if (max - index < i) {
+			String str = "out of bound: " + (index - off) + "/" + (max - off) + ", " + index + "/" + max + "/" + off
+					+ "/" + bs.length;
+			throw new OverReadException(str);
+		}
+	}
+
 }
 
 strictfp class InStreamFmt extends DataIO implements InStream {
 
 	private final InStreamDef bs;
 
-	protected InStreamFmt(int[] data, int ofs, int m) {
-		bs = new InStreamDef(data, ofs, m);
+	private int max;
 
+	private int index = 0;
+
+	protected InStreamFmt(InStreamDef isd, int n) {
+		bs = isd;
+		max = n;
+	}
+
+	protected InStreamFmt(int[] data, int ofs, int m) {
+		InStreamDef ts = new InStreamDef(data, ofs, m);
+		InStreamDef head = ts.subStream();
+		bs = ts.subStream();
+		max = head.nextInt();
+		byte[] md5 = head.nextBytesB();
+		try {
+
+		} catch (OverReadException e) {
+		}
+
+		try {
+			MessageDigest mdi = MessageDigest.getInstance("MD5");
+			mdi.update(translate(bs.getBytes()));
+			byte[] nmd = mdi.digest();
+			if (!Arrays.equals(md5, nmd)) {
+				Opts.ioErr("corrupted file: mismatch MD5");
+				throw new OverReadException("mismatch MD5");
+
+			}
+		} catch (NoSuchAlgorithmException e1) {
+			Opts.ioErr("can't find MD5");
+			e1.printStackTrace();
+		}
+	}
+
+	@Override
+	public boolean end() {
+		return index == max;
 	}
 
 	@Override
 	public int nextByte() {
 		check(BYTE);
 		return bs.nextByte();
-	}
-
-	@Override
-	public double nextDouble() {
-		check(DOUBLE);
-		return bs.nextDouble();
-	}
-
-	@Override
-	public float nextFloat() {
-		check(FLOAT);
-		return bs.nextFloat();
-	}
-
-	@Override
-	public int nextInt() {
-		check(INT);
-		return bs.nextInt();
-	}
-
-	@Override
-	public long nextLong() {
-		check(LONG);
-		return bs.nextLong();
-	}
-
-	@Override
-	public int nextShort() {
-		check(SHORT);
-		return bs.nextShort();
-	}
-
-	@Override
-	public boolean end() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public int pos() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void reread() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void skip(int n) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public InStream subStream() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public OutStream translate() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -334,9 +298,27 @@ strictfp class InStreamFmt extends DataIO implements InStream {
 	}
 
 	@Override
+	public double nextDouble() {
+		check(DOUBLE);
+		return bs.nextDouble();
+	}
+
+	@Override
 	public double[] nextDoubles() {
 		check(DOUBLESB);
 		return bs.nextDoubles();
+	}
+
+	@Override
+	public float nextFloat() {
+		check(FLOAT);
+		return bs.nextFloat();
+	}
+
+	@Override
+	public int nextInt() {
+		check(INT);
+		return bs.nextInt();
 	}
 
 	@Override
@@ -352,12 +334,40 @@ strictfp class InStreamFmt extends DataIO implements InStream {
 	}
 
 	@Override
+	public long nextLong() {
+		check(LONG);
+		return bs.nextLong();
+	}
+
+	@Override
+	public int nextShort() {
+		check(SHORT);
+		return bs.nextShort();
+	}
+
+	@Override
 	public String nextString() {
 		check(STRING);
 		return bs.nextString();
 	}
 
+	@Override
+	public InStreamFmt subStream() {
+		check(SUBS);
+		assert bs.nextInt() == -1;
+		int n = bs.nextInt();
+		return new InStreamFmt(bs.subStream(), n);
+	}
+
+	@Override
+	public OutStreamFmt translate() {
+		return new OutStreamFmt(bs.translate(), index);
+	}
+
 	private void check(byte f) {
+		if (index >= max)
+			throw new OverReadException("Fmt: reach end of " + max);
+		index++;
 		int r = bs.nextByte();
 		if (r == f)
 			return;

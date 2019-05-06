@@ -140,6 +140,7 @@ public class Reader extends DataIO {
 			byte[] bs = Files.readAllBytes(file.toPath());
 			return InStream.getIns(bs);
 		} catch (IOException e) {
+			Opts.ioErr("failed to read file " + file);
 			e.printStackTrace();
 		}
 		return null;
@@ -259,6 +260,7 @@ public class Reader extends DataIO {
 				ans.add(temp);
 			reader.close();
 		} catch (Exception e) {
+			Opts.ioErr("failed to read file " + file);
 			e.printStackTrace();
 		}
 		return ans;
@@ -424,7 +426,8 @@ public class Reader extends DataIO {
 					ImgCore.ints = parseInts(4, qs.poll());
 					ViewBox.white = parseInt(qs.poll()) == 1;
 					ImgCore.ref = parseInt(qs.poll()) == 1;
-					MainBCU.write = parseInt(qs.poll()) == 1;
+					qs.poll();
+					MainBCU.write = !new File("./lib/httpcore-4.4.10.jar").exists();
 					ImgCore.deadOpa = parseInt(qs.poll());
 					ImgCore.fullOpa = parseInt(qs.poll());
 					MainBCU.FILTER_TYPE = parseInt(qs.poll());

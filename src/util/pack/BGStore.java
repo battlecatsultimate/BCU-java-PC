@@ -147,7 +147,8 @@ public class BGStore extends FixIndexList<Background> {
 				vimg.name = Data.trio(ind);
 			} catch (IOException e) {
 				e.printStackTrace();
-				is.skip(24);
+				for (int j = 0; j < 6; j++)
+					is.nextInt();
 				continue;
 			}
 			Background bg = new Background(pack, vimg, ind);

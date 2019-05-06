@@ -131,6 +131,11 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			b.changeTheme(getProc(ind, P_THEME, 2), getProc(ind, P_THEME, 1));
 	}
 
+	@Override
+	protected int getLayer() {
+		return e.layer;
+	}
+
 	protected int getProc(int ind, int type, int ety) {
 		if (e.status[P_SEAL][0] > 0 && type != P_MOVEWAVE)
 			return 0;
@@ -195,11 +200,6 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			else
 				proc[P_SUMMON] = sprc;
 		}
-	}
-
-	@Override
-	protected int getLayer() {
-		return e.layer;
 	}
 
 	protected abstract void summon(int[] proc, Entity ent, Object acs);

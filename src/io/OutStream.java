@@ -1,111 +1,62 @@
 package io;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-public strictfp abstract class OutStream extends DataIO {
+public strictfp interface OutStream {
 
 	public static OutStream getIns() {
 		return new OutStreamDef();
 	}
 
-	public abstract void accept(OutStream os);
+	public void accept(OutStream os);
 
-	public abstract void concat(byte[] s);
+	public void flush(OutputStream fos) throws IOException;
 
-	public abstract byte[] getBytes();
+	public byte[] MD5();
 
-	public abstract int pos();
+	public void terminate();
 
-	public abstract byte[] signature();
+	public InStream translate();
 
-	public abstract int size();
+	public void writeByte(byte n);
 
-	public abstract void terminate();
+	public void writeBytesB(byte[] s);
 
-	public abstract InStream translate();
+	public void writeBytesI(byte[] s);
 
-	public abstract void writeByte(byte n);
+	public void writeDouble(double n);
 
-	public void writeBytesB(byte[] s) {
-		check(s.length + 1);
-		writeByte((byte) s.length);
-		for (byte b : s)
-			writeByte(b);
-	}
+	public void writeDoubles(double[] ints);
 
-	public void writeBytesI(byte[] s) {
-		writeInt(s.length);
-		check(s.length);
-		for (byte b : s)
-			writeByte(b);
-	}
+	public void writeFloat(double n);
 
-	public abstract void writeDouble(double n);
+	public void writeFloat(float n);
 
-	public void writeDoubles(double[] ints) {
-		if (ints == null) {
-			writeByte((byte) 0);
-			return;
-		}
-		writeByte((byte) ints.length);
-		for (double i : ints)
-			writeDouble(i);
-	}
+	public void writeInt(int n);
 
-	public void writeFloat(double n) {
-		writeFloat((float) n);
-	}
+	public void writeIntB(int[] ints);
 
-	public abstract void writeFloat(float n);
+	public void writeIntBB(int[][] ints);
 
-	public abstract void writeInt(int n);
-
-	public void writeIntB(int[] ints) {
-		if (ints == null) {
-			writeByte((byte) 0);
-			return;
-		}
-		writeByte((byte) ints.length);
-		for (int i : ints)
-			writeInt(i);
-	}
-
-	public void writeIntBB(int[][] ints) {
-		if (ints == null) {
-			writeByte((byte) 0);
-			return;
-		}
-		writeByte((byte) ints.length);
-		for (int[] i : ints)
-			writeIntB(i);
-	}
-
-	public void writeIntsN(int... ns) {
+	public default void writeIntsN(int... ns) {
 		for (int i : ns)
 			writeInt(i);
 	}
 
-	public abstract void writeLong(long n);
+	public void writeLong(long n);
 
-	public abstract void writeShort(short n);
+	public void writeShort(short n);
 
-	public void writeString(String str) {
-		byte[] bts;
-		try {
-			bts = str.getBytes("UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			bts = str.getBytes();
-			e.printStackTrace();
-		}
-		writeBytesB(bts);
-	}
-
-	protected abstract void check(int i);
+	public void writeString(String str);
 
 }
 
-strictfp class OutStreamDef extends OutStream {
+strictfp class OutStreamDef extends DataIO implements OutStream {
 
 	private byte[] bs;
 	private int index;
@@ -125,11 +76,16 @@ strictfp class OutStreamDef extends OutStream {
 
 	@Override
 	public void accept(OutStream os) {
-		if (os instanceof OutStreamDef)
-			accept$0((OutStreamDef) os);
+		if (!(os instanceof OutStreamDef))
+			throw new OverReadException("OutStream type mismatch");
+		os.terminate();
+		byte[] obs = ((OutStreamDef) os).bs;
+		writeInt(obs.length);
+		check(obs.length);
+		for (int i = 0; i < obs.length; i++)
+			bs[index++] = obs[i];
 	}
 
-	@Override
 	public void concat(byte[] s) {
 		check(s.length);
 		for (byte b : s)
@@ -137,25 +93,30 @@ strictfp class OutStreamDef extends OutStream {
 	}
 
 	@Override
+	public void flush(OutputStream fos) throws IOException {
+		terminate();
+		fos.write(getSignature(bs.length));// signature
+		fos.write(getBytes());
+	}
+
 	public byte[] getBytes() {
 		return bs;
 	}
 
 	@Override
+	public byte[] MD5() {
+		try {
+			MessageDigest mdi = MessageDigest.getInstance("MD5");
+			mdi.update(getSignature(bs.length));
+			return mdi.digest(bs);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	public int pos() {
 		return index;
-	}
-
-	@Override
-	public byte[] signature() {
-		byte[] len = new byte[4];
-		fromInt(len, 0, bs.length);
-		return len;
-	}
-
-	@Override
-	public int size() {
-		return bs.length;
 	}
 
 	@Override
@@ -166,7 +127,7 @@ strictfp class OutStreamDef extends OutStream {
 	}
 
 	@Override
-	public InStream translate() {
+	public InStreamDef translate() {
 		return new InStreamDef(translate(bs), 0, bs.length);
 	}
 
@@ -178,10 +139,42 @@ strictfp class OutStreamDef extends OutStream {
 	}
 
 	@Override
+	public void writeBytesB(byte[] s) {
+		check(s.length + 1);
+		writeByte((byte) s.length);
+		for (byte b : s)
+			writeByte(b);
+	}
+
+	@Override
+	public void writeBytesI(byte[] s) {
+		writeInt(s.length);
+		check(s.length);
+		for (byte b : s)
+			writeByte(b);
+	}
+
+	@Override
 	public void writeDouble(double n) {
 		check(8);
 		fromDouble(bs, index, n);
 		index += 8;
+	}
+
+	@Override
+	public void writeDoubles(double[] ints) {
+		if (ints == null) {
+			writeByte((byte) 0);
+			return;
+		}
+		writeByte((byte) ints.length);
+		for (double i : ints)
+			writeDouble(i);
+	}
+
+	@Override
+	public void writeFloat(double n) {
+		writeFloat((float) n);
 	}
 
 	@Override
@@ -199,6 +192,28 @@ strictfp class OutStreamDef extends OutStream {
 	}
 
 	@Override
+	public void writeIntB(int[] ints) {
+		if (ints == null) {
+			writeByte((byte) 0);
+			return;
+		}
+		writeByte((byte) ints.length);
+		for (int i : ints)
+			writeInt(i);
+	}
+
+	@Override
+	public void writeIntBB(int[][] ints) {
+		if (ints == null) {
+			writeByte((byte) 0);
+			return;
+		}
+		writeByte((byte) ints.length);
+		for (int[] i : ints)
+			writeIntB(i);
+	}
+
+	@Override
 	public void writeLong(long n) {
 		check(8);
 		fromLong(bs, index, n);
@@ -213,18 +228,185 @@ strictfp class OutStreamDef extends OutStream {
 	}
 
 	@Override
-	protected void check(int i) {
+	public void writeString(String str) {
+		byte[] bts;
+		try {
+			bts = str.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			bts = str.getBytes();
+			e.printStackTrace();
+		}
+		writeBytesB(bts);
+	}
+
+	protected int size() {
+		return bs.length;
+	}
+
+	private void check(int i) {
 		if (index + i > bs.length * 2)
 			bs = Arrays.copyOf(bs, index + i);
 		else if (index + i > bs.length)
 			bs = Arrays.copyOf(bs, bs.length * 2);
 	}
 
-	private void accept$0(OutStreamDef os) {
-		writeInt(os.size());
-		check(os.size());
-		for (int i = 0; i < os.size(); i++)
-			bs[index++] = os.bs[i];
+}
+
+strictfp class OutStreamFmt extends DataIO implements OutStream {
+
+	private final OutStreamDef bs;
+	private int index = 0;
+
+	protected OutStreamFmt() {
+		bs = new OutStreamDef();
+	}
+
+	protected OutStreamFmt(OutStreamDef os, int cur) {
+		bs = os;
+		index = cur;
+	}
+
+	@Override
+	public void accept(OutStream os) {
+		if (!(os instanceof OutStreamDef))
+			throw new OverReadException("OutStream type mismatch");
+		OutStreamFmt obs = (OutStreamFmt) os;
+		check(SUBS);
+		bs.writeInt(-1);
+		bs.writeInt(obs.index);
+		bs.accept(obs.bs);
+	}
+
+	@Override
+	public void flush(OutputStream fos) throws IOException {
+		bs.terminate();
+		fos.write(getSignature(-1));// signature
+		OutStreamDef osd = new OutStreamDef();
+		osd.writeInt(bs.size());
+		osd.writeInt(index);
+		byte[] md5 = new byte[16];
+		try {
+			md5 = MessageDigest.getInstance("MD5").digest(bs.getBytes());
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		osd.writeBytesB(md5);
+		osd.flush(fos);
+		bs.flush(fos);
+	}
+
+	@Override
+	public byte[] MD5() {
+		try {
+			MessageDigest mdi = MessageDigest.getInstance("MD5");
+			mdi.update(getSignature(-1));
+			OutStreamDef osd = new OutStreamDef();
+			osd.writeInt(bs.size());
+			osd.writeInt(index);
+			osd.writeBytesB(MessageDigest.getInstance("MD5").digest(bs.getBytes()));
+			osd.terminate();
+			mdi.update(getSignature(osd.size()));
+			mdi.update(osd.getBytes());
+			mdi.update(getSignature(bs.size()));
+			return mdi.digest(bs.getBytes());
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public void terminate() {
+		bs.terminate();
+	}
+
+	@Override
+	public InStreamFmt translate() {
+		return new InStreamFmt(bs.translate(), index);
+	}
+
+	@Override
+	public void writeByte(byte n) {
+		check(BYTE);
+		bs.writeByte(n);
+
+	}
+
+	@Override
+	public void writeBytesB(byte[] s) {
+		check(BYTESB);
+		bs.writeBytesB(s);
+	}
+
+	@Override
+	public void writeBytesI(byte[] s) {
+		check(BYTESI);
+		bs.writeBytesI(s);
+	}
+
+	@Override
+	public void writeDouble(double n) {
+		check(DOUBLE);
+		bs.writeDouble(n);
+	}
+
+	@Override
+	public void writeDoubles(double[] ints) {
+		check(DOUBLESB);
+		bs.writeDoubles(ints);
+	}
+
+	@Override
+	public void writeFloat(double n) {
+		check(FLOAT);
+		bs.writeFloat(n);
+	}
+
+	@Override
+	public void writeFloat(float n) {
+		check(FLOAT);
+		bs.writeFloat(n);
+	}
+
+	@Override
+	public void writeInt(int n) {
+		check(INT);
+		bs.writeInt(n);
+	}
+
+	@Override
+	public void writeIntB(int[] ints) {
+		check(INTSB);
+		bs.writeIntB(ints);
+	}
+
+	@Override
+	public void writeIntBB(int[][] ints) {
+		check(INTSSBB);
+		bs.writeIntBB(ints);
+	}
+
+	@Override
+	public void writeLong(long n) {
+		check(LONG);
+		bs.writeLong(n);
+	}
+
+	@Override
+	public void writeShort(short n) {
+		check(SHORT);
+		bs.writeShort(n);
+	}
+
+	@Override
+	public void writeString(String str) {
+		check(STRING);
+		bs.writeString(str);
+	}
+
+	private void check(byte f) {
+		index++;
+		bs.writeByte(f);
 	}
 
 }

@@ -6,7 +6,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Queue;
 
@@ -63,7 +67,7 @@ public class Writer extends DataIO {
 			for (File i : f.listFiles())
 				delete(i);
 		if (!f.delete())
-			System.out.println("why failed? " + f.getPath());
+			Opts.ioErr("failed to delete " + f);
 	}
 
 	public static void logClose(boolean save) {
@@ -145,41 +149,15 @@ public class Writer extends DataIO {
 
 	public static boolean writeBytes(OutStream os, String path) {
 		os.terminate();
+		byte[] md5 = os.MD5();
 		File f = new File(path);
-		boolean suc = check(f);
-		if (suc) {
-			FileOutputStream fos = null;
-			try {
-				fos = new FileOutputStream(f);
-				fos.write(os.signature());
-				fos.write(os.getBytes());
-				fos.close();
-			} catch (IOException e) {
-				suc = false;
-				e.printStackTrace();
-				Printer.w(130, "IOE!!!");
-				if (fos != null)
-					try {
-						fos.close();
-					} catch (IOException e1) {
-						Printer.w(131, "cannot close fos");
-						e1.printStackTrace();
-					}
-				e.printStackTrace();
-			} finally {
-				if (fos != null)
-					try {
-						fos.close();
-					} catch (IOException e1) {
-						Printer.w(139, "finally cannot close fos neither!");
-						e1.printStackTrace();
-					}
-			}
-		}
-		if (!suc) {
+		boolean suc;
+		if (!(suc = writeFile(os, f, md5))) {
 			ps.println("failed to write file: " + f.getPath());
-			if (Opts.writeErr(f.getPath()))
-				new Exporter(os, Exporter.EXP_ERR);
+			if (Opts.writeErr0(f.getPath()))
+				if (!(suc = writeFile(os, f, md5)))
+					if (Opts.writeErr1(f.getPath()))
+						new Exporter(os, Exporter.EXP_ERR);
 		}
 		return suc;
 	}
@@ -242,7 +220,7 @@ public class Writer extends DataIO {
 			}
 		if (!suc) {
 			ps.println("failed to write image: " + f.getPath());
-			if (Opts.writeErr(f.getPath()))
+			if (Opts.writeErr1(f.getPath()))
 				new Exporter(bimg, Exporter.EXP_ERR);
 		}
 		return suc;
@@ -271,6 +249,45 @@ public class Writer extends DataIO {
 			out.println(s);
 		out.println("[end]");
 		out.close();
+	}
+
+	private static boolean writeFile(OutStream os, File f, byte[] md5) {
+		boolean suc = check(f);
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(f);
+			os.flush(fos);
+			fos.close();
+		} catch (IOException e) {
+			suc = false;
+			e.printStackTrace();
+			Printer.w(130, "IOE!!!");
+			Opts.ioErr("failed to write file " + f);
+			if (fos != null)
+				try {
+					fos.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			e.printStackTrace();
+		} finally {
+			if (fos != null)
+				try {
+					fos.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+		}
+		try {
+			byte[] cont = Files.readAllBytes(f.toPath());
+			byte[] nmd = MessageDigest.getInstance("MD5").digest(cont);
+			suc &= Arrays.equals(md5, nmd);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return suc;
 	}
 
 	private static void writeOptions() {
