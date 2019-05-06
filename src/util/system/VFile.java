@@ -156,7 +156,7 @@ public class VFile implements Comparable<VFile>, Iterable<VFile> {
 	@Override
 	public String toString() {
 		if (child != null)
-			return name + "\\";
+			return name + "/";
 		else
 			return name;
 	}
