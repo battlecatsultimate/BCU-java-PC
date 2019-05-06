@@ -20,7 +20,6 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import io.InStream;
-import io.Writer;
 import io.ZipAccess;
 import main.Opts;
 import page.JBTN;
