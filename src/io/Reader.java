@@ -63,38 +63,34 @@ public class Reader extends DataIO {
 
 	public static void getData$1() {
 		try {
+			LoadPage.prog("reading basic images");
 			Res.readData();
 			readUnit();
-			LoadPage.prog(1, 1, 0);
 			readEnemy();
-			LoadPage.prog(1, 1, 0);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.loadErr("error in reading: reading basic data at " + LoadPage.num);
+			Opts.loadErr("error in reading: reading basic data");
 			System.exit(0);
 		}
 
 		try {
+			LoadPage.prog("reading extra data");
 			readOthers();
-			LoadPage.prog(1, 1, 0);
 			readID();
 			readGroup();
 			readLang();
-			LoadPage.prog(1, 1, 0);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.loadErr("error in reading: reading additional data at " + LoadPage.num);
+			Opts.loadErr("error in reading: reading additional data");
 			System.exit(0);
 		}
 
 		try {
 			readCustom();
-			LoadPage.prog(1, 1, 0);
 			BCMusic.read();
-			LoadPage.prog(1, 1, 0);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.loadErr("error in reading: reading custom data at " + LoadPage.num);
+			Opts.loadErr("error in reading: reading custom data");
 			System.exit(0);
 		}
 	}
@@ -147,6 +143,7 @@ public class Reader extends DataIO {
 	}
 
 	public static void readLang() {
+		LoadPage.prog("reading language information");
 		File f = new File("./assets/lang/");
 		if (!f.exists())
 			return;
@@ -312,7 +309,7 @@ public class Reader extends DataIO {
 			Opts.loadErr("error in reading: reading custom animation");
 			System.exit(0);
 		}
-		LoadPage.prog(1, 0, 0);
+		LoadPage.prog("reading custom data...");
 		try {
 			Pack.read();
 		} catch (Exception e) {
@@ -337,10 +334,9 @@ public class Reader extends DataIO {
 		List<VFile> list = f.listFiles();
 		int i = 0;
 		for (VFile fi : list) {
-			LoadPage.prog(0, list.size(), i++);
+			LoadPage.prog("reading enemies " + i++ + "/" + list.size());
 			new Enemy(Integer.parseInt(fi.getName()));
 		}
-		LoadPage.prog(0, list.size(), i++);
 		Enemy.readData();
 	}
 
@@ -475,7 +471,7 @@ public class Reader extends DataIO {
 		List<VFile> list = f.listFiles();
 		int i = 0;
 		for (VFile fi : list) {
-			LoadPage.prog(0, list.size(), i++);
+			LoadPage.prog("reading units: " + i++ + "/" + list.size());
 			new Unit(Integer.parseInt(fi.getName()));
 		}
 	}

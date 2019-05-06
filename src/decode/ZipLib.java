@@ -14,13 +14,11 @@ public class ZipLib {
 
 	public static FileSystem lib;
 
-	public static void read() {
+	public static void init() {
+		LoadPage.prog("finding library...");
 		File f = new File("./assets/assets.zip");
-		if (!f.exists()) {
-			Opts.loadErr("cannot find ./assets/assets.zip");
-			Writer.logClose(false);
-			System.exit(0);
-		}
+		if (!f.exists())
+			return;
 		try {
 			lib = FileSystems.newFileSystem(f.toPath(), null);
 		} catch (IOException e) {
@@ -29,7 +27,10 @@ public class ZipLib {
 			Writer.logClose(false);
 			System.exit(0);
 		}
-		LoadPage.prog(1, 1, 0);
+	}
+
+	public static void read() {
+		LoadPage.prog("reading assets...");
 		try {
 			Files.walk(lib.getPath("org")).forEach(p -> {
 				if (Files.isDirectory(p))
@@ -45,7 +46,6 @@ public class ZipLib {
 			Opts.loadErr("failed to access library");
 			e.printStackTrace();
 		}
-		LoadPage.prog(1, 1, 0);
 	}
 
 }

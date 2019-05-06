@@ -20,7 +20,6 @@ import event.EventReader;
 import main.MainBCU;
 import main.Opts;
 import main.Printer;
-import page.LoadPage;
 import page.MainFrame;
 import page.MainLocale;
 import page.support.Exporter;
@@ -71,7 +70,7 @@ public class Writer extends DataIO {
 	}
 
 	public static void logClose(boolean save) {
-		if (save && LoadPage.prog >= LoadPage.strs.length - 1 && MainBCU.trueRun) {
+		if (save && MainBCU.loaded && MainBCU.trueRun) {
 			try {
 				writeOptions();
 				writeData();

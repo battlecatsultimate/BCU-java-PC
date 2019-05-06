@@ -6,22 +6,15 @@ public class LoadPage extends Page {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final String[] strs = new String[] {
-			"update information (2/8 and 3/8 will take a long time if it's your first time opening BCU)", "file list",
-			"files", "units", "enemies", "stages and imgs", "others", "custom data", "pack", "music", "finish" };
-
-	public static int prog = 0, num = 0;
-
 	private static LoadPage lp;
 
-	public static void prog(int am, int tot, int pr) {
+	public static void prog(String str) {
 		if (lp == null)
 			return;
-		prog += am;
-		lp.jl.setText("reading " + strs[prog] + ": " + (num = pr) + "/" + tot);
+		lp.jl.setText(str);
 	}
 
-	private JLabel jl = new JLabel("reading " + strs[0]);
+	private JLabel jl = new JLabel("reading ");
 
 	protected LoadPage() {
 		super(null);

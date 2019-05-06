@@ -16,7 +16,7 @@ public class MainBCU {
 	public static final int ver = 40510, LIBREQ = 80503;
 
 	public static int FILTER_TYPE = 0;
-	public static boolean write = true, preload = false, trueRun = false;
+	public static boolean write = true, preload = false, trueRun = false, loaded = false;
 
 	public static String getTime() {
 		return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
@@ -30,6 +30,7 @@ public class MainBCU {
 			System.exit(0);
 		}
 		Reader.getData$0();
+		ZipLib.init();
 		Writer.logSetup();
 		new MainFrame(Data.revVer(MainBCU.ver)).initialize();
 		new Timer().start();
@@ -37,9 +38,9 @@ public class MainBCU {
 		if (BCJSON.lib_ver < LIBREQ) {
 			Opts.loadErr("this version requires new lib");
 		}
-		// Decode.main();
 		ZipLib.read();
 		Reader.getData$1();
+		loaded = true;
 		MainFrame.changePanel(new MainPage());
 	}
 
