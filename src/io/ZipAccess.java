@@ -199,8 +199,13 @@ public class ZipAccess {
 		VFileRoot ans = new VFileRoot(1);
 		Queue<String> qs = new ArrayDeque<>(Files.readAllLines(index));
 		int size = Reader.parseIntN(qs.poll());
-		for (int i = 0; i < size && !qs.isEmpty(); i++)
-			ans.newVFile(qs.poll(), qs.poll().getBytes());
+		for (int i = 0; i < size && !qs.isEmpty(); i++) {
+			String p=qs.poll();
+			String md5=qs.poll();
+			long fsize = Files.size(fs.getPath("/MD5/" + md5));
+			ans.newVFile(p, md5.getBytes()).size=fsize;
+			
+		}
 		fs.close();
 		bac.files = ans;
 		return ans;

@@ -146,8 +146,6 @@ public class BackupTreePage extends Page {
 			try {
 				if (ZipAccess.extract(jlm.getSelectedValue())) {
 					Opts.success("restoration succeed, please restart program");
-					Writer.logClose(false);
-					System.exit(0);
 				} else
 					Opts.backupErr("restore");
 			} catch (IOException e) {
@@ -266,8 +264,6 @@ public class BackupTreePage extends Page {
 				try {
 					if (ZipAccess.extractPartial(new String(sel.data), sel)) {
 						Opts.success("restoration succeed, please restart program");
-						Writer.logClose(false);
-						System.exit(0);
 					} else
 						Opts.backupErr("restore");
 				} catch (IOException e) {
