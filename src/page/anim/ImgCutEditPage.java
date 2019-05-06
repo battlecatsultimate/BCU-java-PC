@@ -319,7 +319,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			if (ind >= v.size())
 				ind--;
 			jlu.setSelectedIndex(ind);
-			setA(v.get(ind));
+			setA(ind<0?null:v.get(ind));
 			changing = false;
 		}
 
