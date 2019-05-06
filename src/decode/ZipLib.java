@@ -23,22 +23,23 @@ public class ZipLib {
 			return;
 		try {
 			lib = FileSystems.newFileSystem(f.toPath(), null);
+
 		} catch (IOException e) {
 			e.printStackTrace();
 			Opts.loadErr("cannot access ./assets/assets.zip");
 			Writer.logClose(false);
 			System.exit(0);
 		}
-		
+
 	}
 
 	public static void merge(File f) {
 		try {
-			FileSystem temp=FileSystems.newFileSystem(f.toPath(),null);
-			Files.walk(temp.getPath("org/")).forEach(p->{
-				Path np=lib.getPath(p.toString());
+			FileSystem temp = FileSystems.newFileSystem(f.toPath(), null);
+			Files.walk(temp.getPath("org/")).forEach(p -> {
+				Path np = lib.getPath(p.toString());
 				try {
-					if(Files.isDirectory(p))
+					if (Files.isDirectory(p))
 						Files.createDirectory(np);
 					else
 						Files.copy(p, np);
@@ -51,9 +52,9 @@ public class ZipLib {
 			Opts.loadErr("failed to merge lib");
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	public static void read() {
 		LoadPage.prog("reading assets...");
 		try {
