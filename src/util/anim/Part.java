@@ -130,7 +130,13 @@ public class Part implements Cloneable, Comparable<Part> {
 						vd = ease3(i, frame);
 						es[ints[0]].alter(ints[1], vd);
 						break;
-					}
+					} else if (moves[i][2] == 4)
+						if (moves[i][3] > 0)
+							ti = 1 - Math.cos(ti * Math.PI / 2);
+						else if (moves[i][3] < 0)
+							ti = Math.sin(ti * Math.PI / 2);
+						else
+							ti = (1 - Math.cos(ti * Math.PI)) / 2;
 					vd = (int) ((v1 - v0) * ti + v0);
 					es[ints[0]].alter(ints[1], vd);
 					break;
