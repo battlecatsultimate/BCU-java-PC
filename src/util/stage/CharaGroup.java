@@ -116,7 +116,8 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 	}
 
 	protected void write(OutStream os) {
-		os.writeString("0.3.7");
+		os.writeString("0.3.8");
+		os.writeString(name);
 		os.writeInt(id);
 		os.writeInt(type);
 		os.writeInt(set.size());
@@ -126,8 +127,11 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 
 	private void zread(InStream is) {
 		int ver = getVer(is.nextString());
-		if (ver >= 307)
+		if (ver >= 308)
+			zread$000308(is);
+		else if(ver >= 307)
 			zread$000307(is);
+		
 	}
 
 	private void zread$000307(InStream is) {
@@ -138,6 +142,11 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 			Unit u = UnitStore.get(is.nextInt(), true);
 			set.add(u);
 		}
+	}
+	
+	private void zread$000308(InStream is) {
+		name = is.nextString();
+		zread$000307(is);
 	}
 
 }
