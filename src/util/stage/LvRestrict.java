@@ -20,6 +20,7 @@ public class LvRestrict extends Data {
 	public int[][] rares = new int[RARITY_TOT][6];
 	public int[] all = new int[6];
 	public int id;
+	public String name = "";
 
 	public LvRestrict(MapColc mc, InStream is) {
 		pack = mc.pack;
@@ -86,7 +87,7 @@ public class LvRestrict extends Data {
 
 	@Override
 	public String toString() {
-		return trio(id);
+		return trio(id)+"-"+name;
 	}
 
 	public boolean used() {

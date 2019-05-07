@@ -45,6 +45,8 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 	public final Set<Unit> set = new TreeSet<>();
 
 	public int type = 0;
+	
+	public String name = "";
 
 	public CharaGroup(CharaGroup cg) {
 		pack = null;
@@ -97,7 +99,7 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 
 	@Override
 	public String toString() {
-		return trio(id);
+		return trio(id)+"-"+name;
 	}
 
 	public boolean used() {

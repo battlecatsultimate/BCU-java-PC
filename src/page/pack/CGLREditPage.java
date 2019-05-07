@@ -58,6 +58,7 @@ public class CGLREditPage extends Page {
 	private final JTF jtfsb = new JTF();
 	private final JTF jtfal = new JTF();
 	private final JTF[] jtfra = new JTF[Data.RARITY_TOT];
+	private final JTF jtfna = new JTF();
 
 	private final JBTN vuif = new JBTN(0, "vuif");
 
@@ -117,6 +118,7 @@ public class CGLREditPage extends Page {
 		set(remsb, x, y, 1600, 950, 150, 50);
 		set(jtfal, x, y, 1800, 100, 400, 50);
 		set(jtfsb, x, y, 1800, 550, 400, 50);
+		set(jtfna,x,y,50,900,300,50);
 		for (int i = 0; i < jtfra.length; i++)
 			set(jtfra[i], x, y, 1800, 200 + 50 * i, 400, 50);
 
@@ -333,6 +335,12 @@ public class CGLREditPage extends Page {
 
 		});
 
+		jtfna.setLnr(x->{
+			String str = jtfna.getText();
+			if(cg.name.equals(str))
+				return;
+			cg.name = str;
+		});
 	}
 
 	private void ini() {
@@ -354,6 +362,7 @@ public class CGLREditPage extends Page {
 		add(cgt);
 		set(jtfsb);
 		set(jtfal);
+		set(jtfna);
 		for (int i = 0; i < jtfra.length; i++)
 			set(jtfra[i] = new JTF());
 		jlus.setCellRenderer(new UnitLCR());
@@ -411,7 +420,9 @@ public class CGLREditPage extends Page {
 		remus.setEnabled(cg != null);
 		remcg.setEnabled(cg != null && !cg.used());
 		cgt.setEnabled(cg != null);
+		jtfna.setEnabled(cg != null);
 		cgt.setText("");
+		jtfna.setText("");
 		addsb.setEnabled(lr != null && cg != null && !lr.res.containsKey(cg));
 
 		if (cg == null)
@@ -419,6 +430,7 @@ public class CGLREditPage extends Page {
 		else {
 			jlus.setListData(cg.set.toArray(new Unit[0]));
 			cgt.setText(0, cg.type == 0 ? "include" : "exclude");
+			jtfna.setText(cg.name);
 		}
 	}
 
