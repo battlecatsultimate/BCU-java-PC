@@ -20,6 +20,7 @@ public class LvRestrict extends Data {
 	public int[][] rares = new int[RARITY_TOT][6];
 	public int[] all = new int[6];
 	public int id;
+	public String name = "";
 
 	public LvRestrict(MapColc mc, InStream is) {
 		pack = mc.pack;
@@ -86,7 +87,7 @@ public class LvRestrict extends Data {
 
 	@Override
 	public String toString() {
-		return trio(id);
+		return trio(id) + "-" + name;
 	}
 
 	public boolean used() {
@@ -125,7 +126,8 @@ public class LvRestrict extends Data {
 	}
 
 	protected void write(OutStream os) {
-		os.writeString("0.3.7");
+		os.writeString("0.3.8");
+		os.writeString(name);
 		os.writeInt(id);
 		os.writeIntB(all);
 		os.writeIntBB(rares);
@@ -138,7 +140,9 @@ public class LvRestrict extends Data {
 
 	private void zread(MapColc mc, InStream is) {
 		int ver = getVer(is.nextString());
-		if (ver >= 307)
+		if (ver >= 308)
+			zread$000308(mc, is);
+		else if (ver >= 307)
 			zread$000307(mc, is);
 	}
 
@@ -162,6 +166,11 @@ public class LvRestrict extends Data {
 			if (cgs != null)
 				res.put(cgs, vals);
 		}
+	}
+
+	private void zread$000308(MapColc mc, InStream is) {
+		name = is.nextString();
+		zread$000307(mc, is);
 	}
 
 }

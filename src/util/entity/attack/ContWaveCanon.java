@@ -10,7 +10,7 @@ public class ContWaveCanon extends ContWaveAb {
 	private final int canid;
 
 	public ContWaveCanon(AttackWave a, double p, int id) {
-		super(a, p, NyCastle.atks[id].getEAnim(1), 10);
+		super(a, p, NyCastle.atks[id].getEAnim(1), 9);
 		canid = id;
 	}
 
