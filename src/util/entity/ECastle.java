@@ -31,6 +31,9 @@ public class ECastle extends AbEntity {
 		health -= ans;
 		if (health > maxH)
 			health = maxH;
+		
+		if (health <= 0)
+			health = 0;
 	}
 
 	@Override
