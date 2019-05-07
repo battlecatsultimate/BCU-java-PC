@@ -45,7 +45,7 @@ public class SBCtrl extends StageBasis {
 	/** process the user action */
 	@Override
 	protected void actions() {
-		if (ebase.health < 0)
+		if (ebase.health <= 0)
 			return;
 		int rec = 0;
 		if ((keys.pressed(-1, 0) || action.contains(-1)) && act_mon()) {
