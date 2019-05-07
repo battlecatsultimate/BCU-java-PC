@@ -333,19 +333,22 @@ public class BattleBox extends Canvas {
 					gra.setTransform(at);
 					e.anim.drawEff(gra, new P(p, y), siz);
 				}
+			for (ContAb wc : sb.lw)
+				if (wc.layer == i) {
+					gra.setTransform(at);
+					double p = (wc.pos * ratio + off - wave) * siz + pos;
+					double y = midh - (road_h - DEP * wc.layer) * siz;
+					wc.draw(gra, new P(p, y), psiz);
+				}
+			for (EAnimCont eac : sb.lea)
+				if (eac.layer == i) {
+					gra.setTransform(at);
+					double p = getX(eac.pos);
+					double y = midh - (road_h - DEP * eac.layer) * siz;
+					eac.draw(gra, new P(p, y), psiz);
+				}
 		}
-		for (ContAb wc : sb.lw) {
-			gra.setTransform(at);
-			double p = (wc.pos * ratio + off - wave) * siz + pos;
-			double y = midh - (road_h - DEP * wc.layer) * siz;
-			wc.draw(gra, new P(p, y), psiz);
-		}
-		for (EAnimCont eac : sb.lea) {
-			gra.setTransform(at);
-			double p = getX(eac.pos);
-			double y = midh - (road_h - DEP * eac.layer) * siz;
-			eac.draw(gra, new P(p, y), psiz);
-		}
+
 		gra.setTransform(at);
 		int can = cany[sb.canon.id];
 		int disp = canx[sb.canon.id];
