@@ -9,11 +9,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
 import io.Writer;
 
 public class ZipAdmin {
 
 	public static void main(String[] args) throws IOException {
+		// String
+		// url="https://drive.google.com/uc?export=download&confirm=AbsS&id=1lOgCnw7fjbCXw3aL7w0efGpUZAVnlqt7";
+		// BCJSON.download(url,new File("./assets/libworkspace/test.zip"));
 
 		// ZipLib.init();
 		// new LibInfo(ZipLib.lib);//.clean();
@@ -24,6 +28,9 @@ public class ZipAdmin {
 		// newFile();
 		// generate();
 		// merge();
+		// clean("libworkspace/000001");
+		// clean("libworkspace/000002");
+		// clean("libworkspace/000003");
 	}
 
 	protected static void addFile() throws IOException {
@@ -37,17 +44,37 @@ public class ZipAdmin {
 		fs.close();
 	}
 
+	protected static void clean(String str) throws IOException {
+		FileSystem fs = FileSystems.newFileSystem(new File("./assets/" + str + ".zip").toPath(), null);
+		new LibInfo(fs).clean();
+		fs.close();
+	}
+
+	protected static void fakeLoad() {
+		try {
+			ZipLib.lib = FileSystems.newFileSystem(new File("./assets/000001.zip").toPath(), null);
+			ZipLib.info = new LibInfo(ZipLib.lib);
+			ZipLib.merge(new File("./assets/000002.zip"));
+			ZipLib.merge(new File("./assets/000003.zip"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	protected static void generate() throws IOException {
-		File f = new File("./assets/prelib/org/");
-		PrintStream ps = Writer.newFile("./assets/prelib/info/info.ini");
+		String path = "./assets/libworkspace/prelib/";
+		String ver = "000003";
+		File f = new File(path + "org/");
+		PrintStream ps = Writer.newFile(path + "info/info.ini");
 		ps.println("file_version = 00040510");
 		ps.println("number_of_libs = 1");
-		ps.println("080504");
+		ps.println(ver);
 		ps.close();
 
-		ps = Writer.newFile("./assets/prelib/info/080504.verinfo");
+		ps = Writer.newFile(path + "info/" + ver + ".verinfo");
 		ps.println("file_version = 00040510");
-		ps.println("lib_version = 080504");
+		ps.println("lib_version = " + ver);
 		List<String> ls = new ArrayList<>();
 
 		Files.walk(f.toPath()).forEach(p -> {

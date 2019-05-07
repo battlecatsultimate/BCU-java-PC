@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.Path;
-
 import io.Writer;
 import main.Opts;
 import page.LoadPage;
@@ -15,6 +13,7 @@ import util.system.VFile;
 public class ZipLib {
 
 	public static FileSystem lib;
+	public static LibInfo info;
 
 	public static void init() {
 		LoadPage.prog("finding library...");
@@ -23,31 +22,21 @@ public class ZipLib {
 			return;
 		try {
 			lib = FileSystems.newFileSystem(f.toPath(), null);
-
+			info = new LibInfo(lib);
 		} catch (IOException e) {
 			e.printStackTrace();
 			Opts.loadErr("cannot access ./assets/assets.zip");
 			Writer.logClose(false);
 			System.exit(0);
 		}
-
 	}
 
 	public static void merge(File f) {
 		try {
 			FileSystem temp = FileSystems.newFileSystem(f.toPath(), null);
-			Files.walk(temp.getPath("org/")).forEach(p -> {
-				Path np = lib.getPath(p.toString());
-				try {
-					if (Files.isDirectory(p))
-						Files.createDirectory(np);
-					else
-						Files.copy(p, np);
-				} catch (IOException e) {
-					Opts.loadErr("failed to merge lib");
-					e.printStackTrace();
-				}
-			});
+			LibInfo nlib = new LibInfo(temp);
+			info.merge(nlib);
+			f.delete();
 		} catch (IOException e) {
 			Opts.loadErr("failed to merge lib");
 			e.printStackTrace();

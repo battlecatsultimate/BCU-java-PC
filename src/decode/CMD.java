@@ -2,6 +2,7 @@ package decode;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -9,6 +10,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import io.Writer;
 
 public class CMD {
 
@@ -46,15 +49,57 @@ public class CMD {
 				mkdir();
 			else if (strs[0].equals("touch"))
 				touch();
-			else if (strs[0].equals("help"))
-				System.out.println("quit, pwd, help, cat, cd, cp, enter, exit, ls, cat, mkdir, mv, rm, touch");
-			else
+			else if (strs[0].equals("clean"))
+				clean();
+			else if (strs[0].equals("generate"))
+				generate();
+			else if (strs[0].equals("help")) {
+				System.out.println("quit, pwd, help");
+				System.out.println("cat, cd, cp, enter, exit, ls, cat, mkdir, mv, rm, touch");
+				System.out.println("clean, generate");
+			} else
 				System.out.println("ERROR: unknown command");
 
 		}
 		if (fs != null)
 			fs.close();
 		sc.close();
+	}
+
+	protected static void clean() throws IOException {
+		if (strs.length != 2)
+			System.out.println("ERROR: need parameter");
+		Path p = _getPath(strs[1]);
+		FileSystem fs = FileSystems.newFileSystem(p, null);
+		new LibInfo(fs).clean();
+		fs.close();
+	}
+
+	protected static void generate() throws IOException {
+		if (strs.length < 3)
+			System.out.append("ERROR not enough parameters");
+		String path = _getPath(strs[1]).toString();
+		String ver = strs[2];
+		File f = new File(path + "/org/");
+		PrintStream ps = Writer.newFile(path + "/info/info.ini");
+		ps.println("file_version = 00040510");
+		ps.println("number_of_libs = 1");
+		ps.println(ver);
+		ps.close();
+
+		ps = Writer.newFile(path + "/info/" + ver + ".verinfo");
+		ps.println("file_version = 00040510");
+		ps.println("lib_version = " + ver);
+		List<String> ls = new ArrayList<>();
+
+		Files.walk(f.toPath()).forEach(p -> {
+			if (!Files.isDirectory(p) && !p.endsWith(".DS_Store") && !p.endsWith("desktop.ini"))
+				ls.add("add:\t./org" + p.toString().split("org", 2)[1]);
+		});
+		ps.println("number_of_paths = " + ls.size());
+		for (String str : ls)
+			ps.println(str);
+		ps.close();
 	}
 
 	private static Path _getPath(String str) {
