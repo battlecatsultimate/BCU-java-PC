@@ -119,8 +119,8 @@ public class CGLREditPage extends Page {
 		set(remsb, x, y, 1600, 950, 150, 50);
 		set(jtfal, x, y, 1800, 100, 400, 50);
 		set(jtfsb, x, y, 1800, 550, 400, 50);
-		set(jtfna,x,y,50,900,300,50);
-		set(jtflr,x,y,1100,900,300,50);
+		set(jtfna, x, y, 50, 900, 300, 50);
+		set(jtflr, x, y, 1100, 900, 300, 50);
 		for (int i = 0; i < jtfra.length; i++)
 			set(jtfra[i], x, y, 1800, 200 + 50 * i, 400, 50);
 
@@ -241,9 +241,9 @@ public class CGLREditPage extends Page {
 
 		});
 
-		jtfna.setLnr(x->{
+		jtfna.setLnr(x -> {
 			String str = jtfna.getText();
-			if(cg.name.equals(str))
+			if (cg.name.equals(str))
 				return;
 			cg.name = str;
 		});
@@ -342,10 +342,10 @@ public class CGLREditPage extends Page {
 			}
 
 		});
-		
-		jtflr.setLnr(x->{
+
+		jtflr.setLnr(x -> {
 			String str = jtflr.getText();
-			if(lr.name.equals(str))
+			if (lr.name.equals(str))
 				return;
 			lr.name = str;
 		});

@@ -45,7 +45,7 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 	public final Set<Unit> set = new TreeSet<>();
 
 	public int type = 0;
-	
+
 	public String name = "";
 
 	public CharaGroup(CharaGroup cg) {
@@ -99,7 +99,7 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 
 	@Override
 	public String toString() {
-		return trio(id)+"-"+name;
+		return trio(id) + "-" + name;
 	}
 
 	public boolean used() {
@@ -129,9 +129,9 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 		int ver = getVer(is.nextString());
 		if (ver >= 308)
 			zread$000308(is);
-		else if(ver >= 307)
+		else if (ver >= 307)
 			zread$000307(is);
-		
+
 	}
 
 	private void zread$000307(InStream is) {
@@ -143,7 +143,7 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 			set.add(u);
 		}
 	}
-	
+
 	private void zread$000308(InStream is) {
 		name = is.nextString();
 		zread$000307(is);

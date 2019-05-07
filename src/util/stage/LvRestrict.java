@@ -87,7 +87,7 @@ public class LvRestrict extends Data {
 
 	@Override
 	public String toString() {
-		return trio(id)+"-"+name;
+		return trio(id) + "-" + name;
 	}
 
 	public boolean used() {
@@ -143,7 +143,7 @@ public class LvRestrict extends Data {
 		if (ver >= 308)
 			zread$000308(mc, is);
 		else if (ver >= 307)
-			zread$000307(mc,is);
+			zread$000307(mc, is);
 	}
 
 	private void zread$000307(MapColc mc, InStream is) {
@@ -167,10 +167,10 @@ public class LvRestrict extends Data {
 				res.put(cgs, vals);
 		}
 	}
-	
+
 	private void zread$000308(MapColc mc, InStream is) {
 		name = is.nextString();
-		zread$000307(mc,is);
+		zread$000307(mc, is);
 	}
 
 }

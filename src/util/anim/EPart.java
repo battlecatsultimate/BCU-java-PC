@@ -34,6 +34,48 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		setValue();
 	}
 
+	public void alter(int m, int v) {
+		if (m == 0)
+			if (v < ent.length)
+				fa = ent[par = v];
+			else
+				fa = ent[par = 0];
+		else if (m == 1)
+			id = v;
+		else if (m == 2)
+			img = v;
+		else if (m == 3) {
+			z = v;
+			ea.order.sort(null);
+		} else if (m == 4)
+			pos.x = args[4] + v;
+		else if (m == 5)
+			pos.y = args[5] + v;
+		else if (m == 6)
+			piv.x = args[6] + v;
+		else if (m == 7)
+			piv.y = args[7] + v;
+		else if (m == 8)
+			gsca = v;
+		else if (m == 9)
+			sca.x = args[8] * v / model.ints[0];
+		else if (m == 10)
+			sca.y = args[9] * v / model.ints[0];
+		else if (m == 11)
+			angle = args[10] + v;
+		else if (m == 12)
+			opacity = v * args[11] / model.ints[2];
+		else if (m == 13)
+			hf = v == 0 ? 1 : -1;
+		else if (m == 14)
+			vf = v == 0 ? 1 : -1;
+		else if (m == 50)
+			extend = v;
+		else
+			Printer.p("EPart", 74, "modification can be: " + m);
+
+	}
+
 	@Override
 	public int compareTo(EPart o) {
 		return z > o.z ? 1 : (z == o.z ? 0 : -1);
@@ -78,48 +120,6 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 	@Override
 	public String toString() {
 		return name;
-	}
-
-	public void alter(int m, int v) {
-		if (m == 0)
-			if (v < ent.length)
-				fa = ent[par = v];
-			else
-				fa = ent[par = 0];
-		else if (m == 1)
-			id = v;
-		else if (m == 2)
-			img = v;
-		else if (m == 3) {
-			z = v;
-			ea.order.sort(null);
-		} else if (m == 4)
-			pos.x = args[4] + v;
-		else if (m == 5)
-			pos.y = args[5] + v;
-		else if (m == 6)
-			piv.x = args[6] + v;
-		else if (m == 7)
-			piv.y = args[7] + v;
-		else if (m == 8)
-			gsca = v;
-		else if (m == 9)
-			sca.x = args[8] * v / model.ints[0];
-		else if (m == 10)
-			sca.y = args[9] * v / model.ints[0];
-		else if (m == 11)
-			angle = args[10] + v;
-		else if (m == 12)
-			opacity = v * args[11] / model.ints[2];
-		else if (m == 13)
-			hf = v == 0 ? 1 : -1;
-		else if (m == 14)
-			vf = v == 0 ? 1 : -1;
-		else if (m == 50)
-			extend = v;
-		else
-			Printer.p("EPart", 74, "modification can be: " + m);
-
 	}
 
 	protected void drawPart(Graphics2D g, P base) {

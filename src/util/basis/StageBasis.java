@@ -181,7 +181,7 @@ public abstract class StageBasis extends Data {
 				for (Entity e : le)
 					if (e.dire == -1 && (e.touchable() & TCH_N) > 0)
 						e.interrupt(INT_SW, KB_DIS[INT_SW]);
-				lea.add(new EAnimCont(700, 10, EffAnim.effas[A_SHOCKWAVE].getEAnim(0)));
+				lea.add(new EAnimCont(700, 9, EffAnim.effas[A_SHOCKWAVE].getEAnim(0)));
 				shock = false;
 			}
 
@@ -189,7 +189,7 @@ public abstract class StageBasis extends Data {
 			canon.update();
 			if (sniper != null)
 				sniper.update();
-				
+
 			tempe.forEach(ec -> ec.update());
 		}
 		for (Entity e : le)
