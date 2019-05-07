@@ -14,9 +14,9 @@ public class Sniper extends AtkModelAb {
 
 	private EAnimD anim = EffAnim.effas[A_SNIPER].getEAnim(0);
 	private EAnimD atka = EffAnim.effas[A_SNIPER].getEAnim(1);
-	private int coolTime = SNIPER_CD, preTime = 0, atkTime = 0;
+	private int coolTime = SNIPER_CD, preTime = 0, atkTime = 0, angle = 0;
 	public boolean enabled = true;
-	public double pos, height;
+	public double pos, height,updown;
 
 	public Sniper(StageBasis sb) {
 		super(sb);
@@ -31,10 +31,12 @@ public class Sniper extends AtkModelAb {
 	public void drawBase(Graphics2D g, P ori, double siz) {
 		// TODO
 		// double angle = Math.atan2(getPos() - pos, height);
+		
+		height = ori.y;
 		if (atkTime == 0)
 			anim.draw(g, ori, siz);
 		else
-			atka.draw(g, ori, siz);
+			atka.draw(g,ori, siz);
 
 	}
 
@@ -54,6 +56,7 @@ public class Sniper extends AtkModelAb {
 	}
 
 	public void update() {
+		
 		if (enabled && coolTime > 0)
 			coolTime--;
 		if (coolTime == 0 && enabled && pos > 0) {
@@ -77,15 +80,23 @@ public class Sniper extends AtkModelAb {
 		if (atkTime > 0) {
 			atkTime--;
 			atka.update(false);
-		} else
+		} else {
 			anim.update(true);
+		}
 
 		// find enemy pos
 		pos = -1;
 		for (Entity e : b.le)
 			if (e.dire == 1 && e.pos > pos && !e.isBase && (e.touchable() & TCH_N) > 0)
 				pos = e.pos;
+				
+		//Get angle of cannon and bullet
+		angle =  -(int)(Math.atan2(height,getPos()-pos+300)*1800);
 
+		anim.ent[4].alter(11, angle);
+		atka.ent[4].alter(11, angle);
+		
+		//Get distance which bullet will fly
+		//path = new P(-(getPos()-pos),height);
 	}
-
 }

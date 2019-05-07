@@ -189,6 +189,7 @@ public abstract class StageBasis extends Data {
 			canon.update();
 			if (sniper != null)
 				sniper.update();
+				
 			tempe.forEach(ec -> ec.update());
 		}
 		for (Entity e : le)

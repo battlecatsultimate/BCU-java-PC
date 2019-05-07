@@ -80,7 +80,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		return name;
 	}
 
-	protected void alter(int m, int v) {
+	public void alter(int m, int v) {
 		if (m == 0)
 			if (v < ent.length)
 				fa = ent[par = v];
