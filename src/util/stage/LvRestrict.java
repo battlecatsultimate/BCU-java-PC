@@ -126,7 +126,8 @@ public class LvRestrict extends Data {
 	}
 
 	protected void write(OutStream os) {
-		os.writeString("0.3.7");
+		os.writeString("0.3.8");
+		os.writeString(name);
 		os.writeInt(id);
 		os.writeIntB(all);
 		os.writeIntBB(rares);
@@ -139,8 +140,10 @@ public class LvRestrict extends Data {
 
 	private void zread(MapColc mc, InStream is) {
 		int ver = getVer(is.nextString());
-		if (ver >= 307)
-			zread$000307(mc, is);
+		if (ver >= 308)
+			zread$000308(mc, is);
+		else if (ver >= 307)
+			zread$000307(mc,is);
 	}
 
 	private void zread$000307(MapColc mc, InStream is) {
@@ -163,6 +166,11 @@ public class LvRestrict extends Data {
 			if (cgs != null)
 				res.put(cgs, vals);
 		}
+	}
+	
+	private void zread$000308(MapColc mc, InStream is) {
+		name = is.nextString();
+		zread$000307(mc,is);
 	}
 
 }

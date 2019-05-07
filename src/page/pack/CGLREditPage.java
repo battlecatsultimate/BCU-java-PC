@@ -59,6 +59,7 @@ public class CGLREditPage extends Page {
 	private final JTF jtfal = new JTF();
 	private final JTF[] jtfra = new JTF[Data.RARITY_TOT];
 	private final JTF jtfna = new JTF();
+	private final JTF jtflr = new JTF();
 
 	private final JBTN vuif = new JBTN(0, "vuif");
 
@@ -119,6 +120,7 @@ public class CGLREditPage extends Page {
 		set(jtfal, x, y, 1800, 100, 400, 50);
 		set(jtfsb, x, y, 1800, 550, 400, 50);
 		set(jtfna,x,y,50,900,300,50);
+		set(jtflr,x,y,1100,900,300,50);
 		for (int i = 0; i < jtfra.length; i++)
 			set(jtfra[i], x, y, 1800, 200 + 50 * i, 400, 50);
 
@@ -239,6 +241,12 @@ public class CGLREditPage extends Page {
 
 		});
 
+		jtfna.setLnr(x->{
+			String str = jtfna.getText();
+			if(cg.name.equals(str))
+				return;
+			cg.name = str;
+		});
 	}
 
 	private void addListeners$LR() {
@@ -334,12 +342,12 @@ public class CGLREditPage extends Page {
 			}
 
 		});
-
-		jtfna.setLnr(x->{
-			String str = jtfna.getText();
-			if(cg.name.equals(str))
+		
+		jtflr.setLnr(x->{
+			String str = jtflr.getText();
+			if(lr.name.equals(str))
 				return;
-			cg.name = str;
+			lr.name = str;
 		});
 	}
 
@@ -363,6 +371,7 @@ public class CGLREditPage extends Page {
 		set(jtfsb);
 		set(jtfal);
 		set(jtfna);
+		set(jtflr);
 		for (int i = 0; i < jtfra.length; i++)
 			set(jtfra[i] = new JTF());
 		jlus.setCellRenderer(new UnitLCR());
@@ -444,10 +453,14 @@ public class CGLREditPage extends Page {
 		remlr.setEnabled(lr != null && !lr.used());
 		jlsb.setEnabled(lr != null);
 		addsb.setEnabled(lr != null && cg != null && !lr.res.containsKey(cg));
+		jtflr.setEnabled(lr != null);
+		jtflr.setText("");
 		if (lr == null)
 			jlsb.setListData(new CharaGroup[0]);
-		else
+		else {
 			jlsb.setListData(lr.res.keySet().toArray(new CharaGroup[0]));
+			jtflr.setText(lr.name);
+		}
 		if (lr == null || sb == null || !lr.res.containsKey(sb))
 			sb = null;
 		jlsb.setSelectedValue(sb, true);
