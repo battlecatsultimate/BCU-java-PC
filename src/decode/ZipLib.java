@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+
+import io.BCJSON;
+import io.Reader;
 import io.Writer;
 import main.Opts;
 import page.LoadPage;
@@ -23,6 +26,7 @@ public class ZipLib {
 		try {
 			lib = FileSystems.newFileSystem(f.toPath(), null);
 			info = new LibInfo(lib);
+			checkVer();
 		} catch (IOException e) {
 			e.printStackTrace();
 			Opts.loadErr("cannot access ./assets/assets.zip");
@@ -36,7 +40,9 @@ public class ZipLib {
 			FileSystem temp = FileSystems.newFileSystem(f.toPath(), null);
 			LibInfo nlib = new LibInfo(temp);
 			info.merge(nlib);
+			temp.close();
 			f.delete();
+			checkVer();
 		} catch (IOException e) {
 			Opts.loadErr("failed to merge lib");
 			e.printStackTrace();
@@ -61,6 +67,11 @@ public class ZipLib {
 			Opts.loadErr("failed to access library");
 			e.printStackTrace();
 		}
+	}
+
+	private static void checkVer() {
+		info.merge.set.forEach(s -> BCJSON.lib_ver = Math.max(BCJSON.lib_ver, Reader.parseIntN(s)));
+
 	}
 
 }

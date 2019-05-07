@@ -16,7 +16,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpEntity;
@@ -32,6 +34,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import decode.ZipLib;
 import main.MainBCU;
 import main.Opts;
 import page.LoadPage;
@@ -87,10 +90,14 @@ public class BCJSON extends Data {
 		LoadPage.prog("check download");
 		File f;
 		JSONObject data = null;
+		JSONObject lib = null;
 		try {
-			data = getUpdate();
+			data = getJSON("getupdate.php");
+			lib = getJSON("getAssets.php");
 		} catch (IOException e) {
 		}
+		checkLib(lib);
+
 		if (data != null && data.length() >= 7) {
 
 			for (int i = 0; i < cals.length; i++)
@@ -131,8 +138,7 @@ public class BCJSON extends Data {
 							Opts.dloadErr("music #" + i);
 		}
 
-		boolean need = false;
-
+		boolean need = ZipLib.info != null;
 		f = new File("./lib/calendar/");
 		if (need |= !f.exists())
 			f.mkdirs();
@@ -345,6 +351,46 @@ public class BCJSON extends Data {
 		}
 	}
 
+	private static void checkLib(JSONObject lib) {
+		if (lib != null && lib.length() > 1) {
+			Map<String, String> libmap = new TreeMap<>();
+			JSONArray ja = lib.getJSONArray("assets");
+			int n = ja.length();
+			for (int i = 0; i < n; i++) {
+				JSONArray ent = ja.getJSONArray(i);
+				libmap.put(ent.getString(0), ent.getString(1));
+			}
+			List<String> libs;
+			if (ZipLib.info != null)
+				libs = ZipLib.info.update(libmap.keySet());
+			else
+				libs = new ArrayList<String>(libmap.keySet());
+			boolean updated = false;
+			for (String str : libs) {
+				if (!str.startsWith("00000"))
+					if (!Opts.conf("do you want to download lib update " + str + "? " + libmap.get(str)))
+						continue;
+				LoadPage.prog("downloading asset: " + str + ".zip");
+				File temp = new File(path + (ZipLib.lib == null ? "assets.zip" : "temp.zip"));
+				if (download(dld + "assets/" + str + ".zip", temp))
+					if (ZipLib.info == null)
+						ZipLib.init();
+					else
+						ZipLib.merge(temp);
+				updated = true;
+			}
+			if (updated) {
+				try {
+					ZipLib.lib.close();
+				} catch (IOException e) {
+					Opts.dloadErr("failed to save downloads");
+					e.printStackTrace();
+				}
+				ZipLib.init();
+			}
+		}
+	}
+
 	private static byte[] download(String url) {
 		File file = new File("./lib/temp.download");
 		Writer.check(file);
@@ -370,10 +416,10 @@ public class BCJSON extends Data {
 		}
 	}
 
-	private static JSONObject getUpdate() throws IOException {
+	private static JSONObject getJSON(String url) throws IOException {
 		JSONObject inp = new JSONObject();
 		inp.put("bcuver", MainBCU.ver);
-		JSONObject ans = read(inp.toString(), "getupdate.php");
+		JSONObject ans = read(inp.toString(), url);
 		int ret = ans.getInt("ret");
 		if (ret == 0)
 			return ans;

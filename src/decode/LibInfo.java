@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -20,7 +21,7 @@ import java.util.TreeSet;
 import io.Reader;
 import io.Writer;
 
-class LibInfo {
+public class LibInfo {
 
 	protected static final CopyOption RE = StandardCopyOption.REPLACE_EXISTING;
 
@@ -46,19 +47,7 @@ class LibInfo {
 		}
 	}
 
-	protected void clean() throws IOException {
-		List<Path> list = new ArrayList<>();
-		Files.walk(fs.getPath("/org")).forEach(p -> {
-			if (p.endsWith(".DS_Store") || p.endsWith("desktop.ini") || p.startsWith("/org/unprocessed"))
-				list.add(0, p);
-		});
-		for (Path p : list) {
-			Files.delete(p);
-			System.out.println("Delete: " + p);
-		}
-	}
-
-	protected void merge(LibInfo li) throws IOException {
+	public void merge(LibInfo li) throws IOException {
 		List<PathInfo> ls = merge.merge(li.merge);
 		for (PathInfo p : ls)
 			if (p.type == 0) {
@@ -80,6 +69,26 @@ class LibInfo {
 		for (VerInfo vi : libver.values())
 			bw.write(vi.ver + "\r\n");
 		bw.close();
+	}
+
+	public List<String> update(Collection<String> list) {
+		List<String> ans = new ArrayList<>();
+		for (String s : list)
+			if (!merge.set.contains(s))
+				ans.add(s);
+		return ans;
+	}
+
+	protected void clean() throws IOException {
+		List<Path> list = new ArrayList<>();
+		Files.walk(fs.getPath("/org")).forEach(p -> {
+			if (p.endsWith(".DS_Store") || p.endsWith("desktop.ini") || p.startsWith("/org/unprocessed"))
+				list.add(0, p);
+		});
+		for (Path p : list) {
+			Files.delete(p);
+			System.out.println("Delete: " + p);
+		}
 	}
 
 }

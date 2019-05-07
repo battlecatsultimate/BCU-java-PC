@@ -299,14 +299,14 @@ public class Writer extends DataIO {
 		out.println("render= {" + is[0] + "," + is[1] + "," + is[2] + "," + is[3] + "}");
 		out.println("white bg= " + (ViewBox.white ? 1 : 0));
 		out.println("show axis= " + (ImgCore.ref ? 1 : 0));
-		out.println("write log= " + (MainBCU.write ? 1 : 0));
+		out.println("--- place holder ---");
 		out.println("min opacity= " + ImgCore.deadOpa);
 		out.println("max opacity= " + ImgCore.fullOpa);
 		out.println("filter= " + MainBCU.FILTER_TYPE);
 		out.println("location= " + EventReader.loc);
 		out.println(BCJSON.USERNAME);
 		out.println(BCJSON.PASSWORD);
-		out.println("library version=" + BCJSON.lib_ver);
+		out.println("--- place holder ---");
 		out.println("calendar version= " + BCJSON.cal_ver);
 		out.println("play music= " + (BCMusic.play ? 1 : 0));
 		out.println("edit name= " + (MainLocale.exLang ? 1 : 0));

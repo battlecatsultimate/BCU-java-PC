@@ -30,11 +30,11 @@ public class MainBCU {
 			System.exit(0);
 		}
 		Reader.getData$0();
-		ZipLib.init();
 		Writer.logSetup();
 		new MainFrame(Data.revVer(MainBCU.ver)).initialize();
 		new Timer().start();
-		// BCJSON.checkDownload();
+		ZipLib.init();
+		BCJSON.checkDownload();
 		if (BCJSON.lib_ver < LIBREQ) {
 			Opts.loadErr("this version requires new lib");
 		}
