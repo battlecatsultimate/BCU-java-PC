@@ -93,8 +93,8 @@ public class Sniper extends AtkModelAb {
 		// Get angle of cannon and bullet
 		angle = -(int) (Math.atan2(height, getPos() - pos + 300) * 1800);
 
-		anim.ent[4].alter(11, angle);
-		atka.ent[4].alter(11, angle);
+		anim.ent[5].alter(11, angle);
+		atka.ent[5].alter(11, angle);
 
 		// Get distance which bullet will fly
 		// path = new P(-(getPos()-pos),height);
