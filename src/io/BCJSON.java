@@ -138,7 +138,7 @@ public class BCJSON extends Data {
 							Opts.dloadErr("music #" + i);
 		}
 
-		boolean need = ZipLib.info != null;
+		boolean need = ZipLib.info == null;
 		f = new File("./lib/calendar/");
 		if (need |= !f.exists())
 			f.mkdirs();

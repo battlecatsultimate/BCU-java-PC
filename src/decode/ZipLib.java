@@ -20,6 +20,8 @@ public class ZipLib {
 
 	public static void init() {
 		LoadPage.prog("finding library...");
+		// ZipAdmin.fakeLoad();if(true)return;
+
 		File f = new File("./assets/assets.zip");
 		if (!f.exists())
 			return;

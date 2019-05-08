@@ -81,8 +81,9 @@ public class LibInfo {
 
 	protected void clean() throws IOException {
 		List<Path> list = new ArrayList<>();
-		Files.walk(fs.getPath("/org")).forEach(p -> {
-			if (p.endsWith(".DS_Store") || p.endsWith("desktop.ini") || p.startsWith("/org/unprocessed"))
+		Files.walk(fs.getPath("/")).forEach(p -> {
+			if (p.endsWith(".DS_Store") || p.endsWith("desktop.ini") || p.startsWith("org/unprocessed")
+					|| p.toString().startsWith("/__MACOSX"))
 				list.add(0, p);
 		});
 		for (Path p : list) {

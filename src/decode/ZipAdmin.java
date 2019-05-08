@@ -52,10 +52,10 @@ public class ZipAdmin {
 
 	protected static void fakeLoad() {
 		try {
-			ZipLib.lib = FileSystems.newFileSystem(new File("./assets/000001.zip").toPath(), null);
+			ZipLib.lib = FileSystems.newFileSystem(new File("./assets/libworkspace/assets.zip").toPath(), null);
 			ZipLib.info = new LibInfo(ZipLib.lib);
-			ZipLib.merge(new File("./assets/000002.zip"));
-			ZipLib.merge(new File("./assets/000003.zip"));
+			ZipLib.merge(new File("./assets/libworkspace/080504.zip"));
+			// ZipLib.merge(new File("./assets/000003.zip"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
