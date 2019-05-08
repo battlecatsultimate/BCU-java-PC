@@ -66,6 +66,7 @@ public class CMD {
 		sc.close();
 	}
 
+	/** delete useless contents in a library zip file */
 	protected static void clean() throws IOException {
 		if (strs.length != 2)
 			System.out.println("ERROR: need parameter");
@@ -75,6 +76,11 @@ public class CMD {
 		fs.close();
 	}
 
+	/**
+	 * generate lib info for a pre-zip library <br>
+	 * usage: generate prelib 060505<br>
+	 * pre-condition: prelib contains org directory
+	 */
 	protected static void generate() throws IOException {
 		if (strs.length < 3)
 			System.out.append("ERROR not enough parameters");
@@ -120,6 +126,10 @@ public class CMD {
 		Files.deleteIfExists(p);
 	}
 
+	/**
+	 * display contents of a non-binary file<br>
+	 * usage: cat img043.imgcut
+	 */
 	private static void cat() throws IOException {
 		if (strs.length != 2)
 			System.out.println("ERROR: need parameter");
@@ -132,6 +142,11 @@ public class CMD {
 		}
 	}
 
+	/**
+	 * go into a directory<br>
+	 * usage: cd ..<br>
+	 * usage: cd assets/lang
+	 */
 	private static void cd() {
 		if (strs.length != 2)
 			System.out.println("ERROR: need parameter");
@@ -146,6 +161,10 @@ public class CMD {
 		}
 	}
 
+	/**
+	 * copy file or directory<br>
+	 * cp lib/lang assets/lang
+	 */
 	private static void cp() throws IOException {
 		if (strs.length < 3)
 			System.out.append("ERROR not enough parameters");
@@ -176,6 +195,10 @@ public class CMD {
 		}
 	}
 
+	/**
+	 * enter a zip<br>
+	 * usage: enter assets.zip
+	 */
 	private static void enter() {
 		if (strs.length != 2)
 			System.out.println("ERROR: need parameter");
@@ -195,6 +218,10 @@ public class CMD {
 		}
 	}
 
+	/**
+	 * exit a zip<br>
+	 * usage: exit
+	 */
 	private static void exit() throws IOException {
 		if (fs == null)
 			System.out.println("ERROR: not in zip");
@@ -205,6 +232,10 @@ public class CMD {
 		}
 	}
 
+	/**
+	 * list files under a directory<br>
+	 * usage: ls lib
+	 */
 	private static void ls() throws IOException {
 		Path temp;
 		if (strs.length == 1)
@@ -220,6 +251,11 @@ public class CMD {
 			Files.list(temp).forEach(p -> System.out.println(p.getFileName()));
 	}
 
+	/**
+	 * make directories<br>
+	 * usage: mkdir a/b/c/d/e<br>
+	 * pre-condition: all those directories can be absent
+	 */
 	private static void mkdir() throws IOException {
 		if (strs.length != 2)
 			System.out.println("ERROR: need parameter");
@@ -232,6 +268,10 @@ public class CMD {
 		}
 	}
 
+	/**
+	 * move or rename a file<br>
+	 * usage: mv a.txt b.txt
+	 */
 	private static void mv() throws IOException {
 		if (strs.length < 3)
 			System.out.append("ERROR not enough parameters");
@@ -240,6 +280,11 @@ public class CMD {
 		Files.move(p0, p1);
 	}
 
+	/**
+	 * remove a file or a directory<br>
+	 * usage: rm temp.zip<br>
+	 * usage: rm temp-directory
+	 */
 	private static void rm() throws IOException {
 		if (strs.length < 2)
 			System.out.append("ERROR not enough parameters");
@@ -247,6 +292,10 @@ public class CMD {
 		_rm(p0);
 	}
 
+	/**
+	 * create a file<br>
+	 * usage: touch a.txt
+	 */
 	private static void touch() throws IOException {
 		if (strs.length != 2)
 			System.out.println("ERROR: need parameter");
