@@ -38,7 +38,7 @@ public class SBCtrl extends StageBasis {
 		for (int i : recd)
 			os.writeInt(i);
 		os.terminate();
-		re.action = os.translate();
+		re.action = os;
 		return re;
 	}
 
