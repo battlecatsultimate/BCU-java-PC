@@ -14,8 +14,9 @@ import util.anim.EAnimD;
 import util.anim.ImgCut;
 import util.anim.MaAnim;
 import util.anim.MaModel;
-import util.system.VFile;
 import util.system.VImg;
+import util.system.files.AssetData;
+import util.system.files.VFile;
 
 public class Background extends AnimI {
 
@@ -28,8 +29,7 @@ public class Background extends AnimI {
 
 	public static void read() {
 		String path = "./org/battle/bg/";
-		List<VFile> lf = VFile.getFile(path).listFiles();
-		for (VFile vf : lf) {
+		for (VFile<AssetData> vf : VFile.get("./org/battle/bg").list()) {
 			String name = vf.getName();
 			if (name.length() != 11 || !name.endsWith(".imgcut"))
 				continue;
@@ -39,12 +39,9 @@ public class Background extends AnimI {
 		ewavm = MaModel.newIns("./org/battle/bg/bg_02.mamodel");
 		uwava = MaAnim.newIns("./org/battle/bg/bg_01.maanim");
 		ewava = MaAnim.newIns("./org/battle/bg/bg_02.maanim");
-		path = "./org/battle/bg/bg.csv";
-		Queue<String> qs = readLine(VFile.getFile(path));
+		Queue<String> qs = VFile.readLine("./org/battle/bg/bg.csv");
 		qs.poll();
-		path = "./org/img/bg/";
-		lf = VFile.getFile(path).listFiles();
-		for (VFile vf : lf) {
+		for (VFile<AssetData> vf : VFile.get("./org/img/bg/").list()) {
 			String[] strs = qs.poll().split(",");
 			int[] ints = new int[15];
 			for (int i = 0; i < 15; i++)

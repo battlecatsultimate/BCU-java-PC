@@ -1,13 +1,14 @@
 package util.unit;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.TreeSet;
 
+import io.Reader;
 import util.Animable;
-import util.Data;
 import util.anim.AnimC;
 import util.anim.AnimU;
 import util.anim.EAnimU;
@@ -21,20 +22,20 @@ import util.stage.MapColc;
 import util.stage.Stage;
 import util.stage.StageMap;
 import util.system.MultiLangCont;
-import util.system.VFile;
 import util.system.VImg;
+import util.system.files.AssetData;
+import util.system.files.VFile;
 
 public class Enemy extends Animable<AnimU> implements AbEnemy {
 
-	public static void readData() {
-		VFile f = VFile.getFile("./org/data/t_unit.csv");
-		Queue<String> qs = Data.readLine(f);
+	public static void readData() throws IOException {
+		VFile.get("./org/enemy/").list().forEach(p -> new Enemy(p));
+		Queue<String> qs = VFile.readLine("./org/data/t_unit.csv");
 		qs.poll();
 		qs.poll();
 		for (Enemy e : Pack.def.es.getList())
 			((DataEnemy) e.de).fillData(qs.poll().split("//")[0].trim().split(","));
-		f = VFile.getFile("./org/data/enemy_dictionary_list.csv");
-		qs = Data.readLine(f);
+		qs = VFile.readLine("./org/data/enemy_dictionary_list.csv");
 		for (String str : qs)
 			Pack.def.es.get(Integer.parseInt(str.split(",")[0])).inDic = true;
 	}
@@ -44,16 +45,6 @@ public class Enemy extends Animable<AnimU> implements AbEnemy {
 	public final Pack pac;
 	public String name = "";
 	public boolean inDic = false;
-
-	public Enemy(int ID) {
-		id = ID;
-		Pack.def.es.add(this);
-		pac = Pack.def;
-		String str = "./org/enemy/" + trio(id) + "/";
-		de = new DataEnemy(this);
-		anim = new AnimU(str, trio(id) + "_e", "edi_" + trio(id) + ".png");
-		anim.edi.check();
-	}
 
 	public Enemy(int hash, AnimC ac, CustomEnemy ce) {
 		id = hash;
@@ -69,6 +60,16 @@ public class Enemy extends Animable<AnimU> implements AbEnemy {
 		de = ((CustomEnemy) old.de).copy(this);
 		name = old.name;
 		anim = old.anim;
+	}
+
+	public Enemy(VFile<AssetData> f) {
+		id = Reader.parseIntN(f.getName());
+		Pack.def.es.add(this);
+		pac = Pack.def;
+		String str = "./org/enemy/" + trio(id) + "/";
+		de = new DataEnemy(this);
+		anim = new AnimU(str, trio(id) + "_e", "edi_" + trio(id) + ".png");
+		anim.edi.check();
 	}
 
 	public List<Stage> findApp() {

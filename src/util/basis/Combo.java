@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Queue;
 
 import util.Data;
-import util.system.VFile;
+import util.system.files.VFile;
 
 public class Combo extends Data {
 
@@ -14,8 +14,7 @@ public class Combo extends Data {
 	public static int[][] filter;
 
 	public static void readFile() {
-		VFile vf = VFile.getFile("./org/data/NyancomboData.csv");
-		Queue<String> qs = readLine(vf);
+		Queue<String> qs = VFile.readLine("./org/data/NyancomboData.csv");
 		List<Combo> list = new ArrayList<>();
 		int i = 0;
 		int[] ns = new int[C_TOT];
@@ -34,8 +33,7 @@ public class Combo extends Data {
 		for (Combo c : list)
 			combos[c.type][ns[c.type]++] = c;
 
-		vf = VFile.getFile("./org/data/NyancomboParam.tsv");
-		qs = readLine(vf);
+		qs = VFile.readLine("./org/data/NyancomboParam.tsv");
 		for (i = 0; i < C_TOT; i++) {
 			String[] strs = qs.poll().trim().split("\t");
 			if (strs.length < 5)
@@ -48,8 +46,7 @@ public class Combo extends Data {
 					values[i][j] = (values[i][j] - 10) * 15;
 			}
 		}
-		vf = VFile.getFile("./org/data/NyancomboFilter.tsv");
-		qs = readLine(vf);
+		qs = VFile.readLine("./org/data/NyancomboFilter.tsv");
 		filter = new int[qs.size()][];
 		for (i = 0; i < filter.length; i++) {
 			String[] strs = qs.poll().trim().split("\t");

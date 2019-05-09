@@ -19,8 +19,10 @@ import main.MainBCU;
 import main.Opts;
 import main.Printer;
 import page.anim.EditHead;
-import util.system.VFile;
 import util.system.VImg;
+import util.system.files.FDByte;
+import util.system.files.FileData;
+import util.system.files.VFile;
 
 public class AnimC extends AnimU {
 
@@ -56,12 +58,12 @@ public class AnimC extends AnimU {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		imgcut = ImgCut.newIns(new VFile(null, "", is.nextBytesI()));
-		mamodel = MaModel.newIns(new VFile(null, "", is.nextBytesI()));
+		imgcut = ImgCut.newIns(new FDByte(is.nextBytesI()));
+		mamodel = MaModel.newIns(new FDByte(is.nextBytesI()));
 		int n = is.nextInt();
 		anims = new MaAnim[n];
 		for (int i = 0; i < n; i++)
-			anims[i] = MaAnim.newIns(new VFile(null, "", is.nextBytesI()));
+			anims[i] = MaAnim.newIns(new FDByte(is.nextBytesI()));
 		parts = imgcut.cut(num);
 		if (!is.end()) {
 			bais = new ByteArrayInputStream(is.nextBytesI());
@@ -89,7 +91,7 @@ public class AnimC extends AnimU {
 		inPool = true;
 		prev = "./res/anim/";
 		name = st;
-		VFile f = VFile.getFile(prev + name + "/edi.png");
+		VFile<? extends FileData> f = VFile.getFile(prev + name + "/edi.png");
 		if (f != null)
 			edi = new VImg(f);
 		f = VFile.getFile(prev + name + "/uni.png");
@@ -176,7 +178,7 @@ public class AnimC extends AnimU {
 		loaded = true;
 		try {
 			String pre = prev + name + "/" + name;
-			num = read(VFile.getFile(pre + ".png"));
+			num = VFile.getImg(pre + ".png");
 			imgcut = ImgCut.newIns(pre + ".imgcut");
 			if (num == null) {
 				Printer.e("AnimC", 147, "can't read png: " + pre);
@@ -199,8 +201,8 @@ public class AnimC extends AnimU {
 		validate();
 	}
 
-	public void reloImg() {
-		num = read(VFile.getFile(prev + name + "/" + name + ".png"));
+	public void reloImg() {// TODO
+		num = VFile.getImg(prev + name + "/" + name + ".png");
 	}
 
 	public void renameTo(String str) {
@@ -425,7 +427,7 @@ public class AnimC extends AnimU {
 		PrintStream ps = new PrintStream(f, "UTF-8");
 		imgcut.write(ps);
 		ps.close();
-		new ImgCut(readLine(new VFile(f)));
+		new ImgCut(readLine(f));
 	}
 
 	private void save$ma(String pre, int i) throws Exception {
@@ -434,7 +436,7 @@ public class AnimC extends AnimU {
 		PrintStream ps = new PrintStream(f, "UTF-8");
 		anims[i].write(ps);
 		ps.close();
-		new MaAnim(readLine(new VFile(f)));
+		new MaAnim(readLine(f));
 	}
 
 	private void save$mm(String pre) throws Exception {
@@ -443,7 +445,7 @@ public class AnimC extends AnimU {
 		PrintStream ps = new PrintStream(f, "UTF-8");
 		mamodel.write(ps);
 		ps.close();
-		new MaModel(readLine(new VFile(f)));
+		new MaModel(readLine(f));
 	}
 
 	private void save$s(String pre, int type, int para) throws Exception {

@@ -14,7 +14,6 @@ public class MainPackReform {
 		Reader.getData$0();
 		ZipLib.init();
 		Writer.logSetup();
-		ZipLib.read();
 		Reader.getData$1();
 		System.out.println("loaded");
 		Pack p = new Pack(asg);

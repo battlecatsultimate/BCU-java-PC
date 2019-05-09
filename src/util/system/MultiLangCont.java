@@ -8,6 +8,7 @@ import page.MainLocale;
 import util.stage.MapColc;
 import util.stage.Stage;
 import util.stage.StageMap;
+import util.system.files.AssetData;
 import util.unit.Enemy;
 import util.unit.Form;
 
@@ -18,7 +19,7 @@ public class MultiLangCont<I, T> {
 	public static final MultiLangCont<Stage, String> STNAME = new MultiLangCont<>();
 	public static final MultiLangCont<Form, String> FNAME = new MultiLangCont<>();
 	public static final MultiLangCont<Enemy, String> ENAME = new MultiLangCont<>();
-	public static final MultiLangCont<MultiLangFile, VFile> VFILE = new MultiLangCont<>();
+	public static final MultiLangCont<MultiLangFile, AssetData> VFILE = new MultiLangCont<>();
 
 	public static String get(Object o) {
 		String loc = MainLocale.LOC_CODE[MainLocale.lang];

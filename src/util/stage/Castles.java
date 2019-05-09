@@ -5,8 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import util.system.VFile;
 import util.system.VImg;
+import util.system.files.AssetData;
+import util.system.files.VFile;
 
 public class Castles implements AbCastle {
 
@@ -39,9 +40,7 @@ public class Castles implements AbCastle {
 	public Castles(int hash, String name) {
 		id = hash;
 		str = name;
-		String path = "./org/img/" + name + "/";
-		List<VFile> lf = VFile.getFile(path).listFiles();
-		for (VFile vf : lf)
+		for (VFile<AssetData> vf : VFile.get("./org/img/" + name).list())
 			list.add(new VImg(vf));
 		map.put(id, this);
 		defcas.add(this);

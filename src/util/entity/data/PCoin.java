@@ -4,13 +4,13 @@ import java.util.Queue;
 
 import io.Reader;
 import util.Data;
-import util.system.VFile;
+import util.system.files.VFile;
 import util.unit.UnitStore;
 
 public class PCoin extends Data {
 
 	public static void read() {
-		Queue<String> qs = Data.readLine(VFile.getFile("./org/data/SkillAcquisition.csv"));
+		Queue<String> qs = VFile.readLine("./org/data/SkillAcquisition.csv");
 		qs.poll();
 		for (String str : qs)
 			new PCoin(str.trim().split(","));
