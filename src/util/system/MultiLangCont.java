@@ -19,7 +19,8 @@ public class MultiLangCont<I, T> {
 	public static final MultiLangCont<Stage, String> STNAME = new MultiLangCont<>();
 	public static final MultiLangCont<Form, String> FNAME = new MultiLangCont<>();
 	public static final MultiLangCont<Enemy, String> ENAME = new MultiLangCont<>();
-	public static final MultiLangCont<MultiLangFile, AssetData> VFILE = new MultiLangCont<>();
+
+	public static final Map<MultiLangFile, AssetData> VFILE = new HashMap<>();
 
 	public static String get(Object o) {
 		String loc = MainLocale.LOC_CODE[MainLocale.lang];
@@ -37,8 +38,7 @@ public class MultiLangCont<I, T> {
 	}
 
 	public static void redefine() {
-		String loc = MainLocale.LOC_CODE[MainLocale.lang];
-		VFILE.map.get(loc).forEach((mlf, f) -> mlf.reload(f));
+		VFILE.forEach((mlf, f) -> mlf.reload(f));
 	}
 
 	private final Map<String, HashMap<I, T>> map = new TreeMap<>();

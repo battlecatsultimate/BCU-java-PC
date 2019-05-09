@@ -1,9 +1,46 @@
 package util.system.files;
 
-public class AssetData extends FDByte {
+import java.util.Map;
+import java.util.TreeMap;
 
-	public AssetData(byte[] bytes) {
-		super(bytes);
+import page.MainLocale;
+
+public interface AssetData extends ByteData {
+
+	public static AssetData getAsset(byte[] bs) {
+		return new DefAsset(bs);
+	}
+
+	public static AssetData getAsset(VFile<AssetData> vf) {
+		return new MultiLangAsset(vf);
+	}
+
+}
+
+class DefAsset extends FileByte implements AssetData {
+
+	public DefAsset(byte[] bs) {
+		super(bs);
+	}
+
+}
+
+class MultiLangAsset implements AssetData {
+
+	private Map<String, AssetData> map = new TreeMap<>();
+
+	public MultiLangAsset(VFile<AssetData> vf) {
+		for (VFile<AssetData> f : vf.list())
+			map.put(f.getName().substring(6), f.getData());
+	}
+
+	@Override
+	public byte[] getBytes() {
+		String loc = MainLocale.LOC_CODE[MainLocale.lang];
+		AssetData ad = map.get(loc);
+		if (ad == null)
+			ad = map.values().iterator().next();
+		return ad.getBytes();
 	}
 
 }

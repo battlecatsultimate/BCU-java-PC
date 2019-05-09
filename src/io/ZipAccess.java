@@ -175,7 +175,7 @@ public class ZipAccess {
 			}
 		});
 		fs.close();
-		ans.getIf(v -> v.mark == 1 && v.list().size() == 1).forEach(v -> v.replace());
+		ans.getIf(v -> v.mark == 1 && v.list().size() == 1).forEach(v -> v.replace(v.list().get(0).getData()));
 		return ans;
 	}
 

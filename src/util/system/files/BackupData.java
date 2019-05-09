@@ -7,7 +7,7 @@ import java.util.Queue;
 import io.InStream;
 import io.ZipAccess;
 
-public class BackupData extends FileData {
+public class BackupData implements FileData {
 
 	private final String md5;
 
@@ -25,8 +25,7 @@ public class BackupData extends FileData {
 
 	@Override
 	public BufferedImage getImg() {
-		// TODO Auto-generated method stub
-		return null;
+		return null;// TODO
 	}
 
 	public InStream getIS() {

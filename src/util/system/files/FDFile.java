@@ -9,7 +9,7 @@ import java.util.Queue;
 
 import javax.imageio.ImageIO;
 
-public class FDFile extends FileData {
+public class FDFile implements FileData {
 
 	private final File file;
 

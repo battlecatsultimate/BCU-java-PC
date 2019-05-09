@@ -60,13 +60,21 @@ public class ZipLib {
 				if (Files.isDirectory(p))
 					return;
 				try {
-					VFile.root.build(p.toString(), new AssetData(Files.readAllBytes(p)));
+					VFile.root.build(p.toString(), AssetData.getAsset(Files.readAllBytes(p)));
 				} catch (IOException e) {
 					Opts.loadErr("failed to read " + p.toString());
 					e.printStackTrace();
 				}
 			});
 			VFile.root.sort();
+			VFile.root.getIf(p -> {
+				if (p.list() == null)
+					return false;
+				for (VFile<AssetData> v : p.list())
+					if (!v.getName().startsWith("__LANG_"))
+						return false;
+				return true;
+			}).forEach(p -> p.replace(AssetData.getAsset(p)));
 		} catch (IOException e) {
 			Opts.loadErr("failed to access library");
 			e.printStackTrace();

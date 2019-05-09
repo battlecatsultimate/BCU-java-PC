@@ -14,6 +14,7 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 	public static VFile<AssetData> get(String str) {
 		return root.find(str);
 	}
+
 	public static VFile<? extends FileData> getFile(String path) {
 		if (path.startsWith("./org/"))
 			return root.find(path);
@@ -25,9 +26,11 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 		}
 		return null;
 	}
+
 	public static BufferedImage getImg(String str) {
 		return getFile(str).getData().getImg();
 	}
+
 	public static Queue<String> readLine(String str) {
 		return getFile(str).getData().readLine();
 	}
@@ -117,9 +120,9 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 		return subs;
 	}
 
-	public void replace() {
+	public void replace(T t) {
 		delete();
-		new VFile<T>(parent, name, subs.get(0).getData());
+		new VFile<T>(parent, name, t);
 	}
 
 	public void sort() {
