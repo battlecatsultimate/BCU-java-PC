@@ -15,6 +15,7 @@ import page.info.StageTable;
 import page.info.edit.StageEditPage;
 import page.info.filter.EnemyListTable;
 import page.info.filter.UnitListTable;
+import page.pack.EREditPage;
 import util.Interpret;
 import util.anim.AnimU;
 
@@ -131,6 +132,7 @@ public strictfp class MainLocale {
 		HeadTable.redefine();
 		BattleInfoPage.redefine();
 		StageEditPage.redefine();
+		EREditPage.redefine();
 	}
 
 	protected static void setLoc(int i, String key, String value) {

@@ -36,6 +36,7 @@ public class StageEditPage extends Page {
 	public static void redefine() {
 		StageEditTable.redefine();
 		HeadEditTable.redefine();
+		SCGroupEditTable.redefine();
 	}
 
 	private final JBTN back = new JBTN(0, "back");

@@ -19,7 +19,8 @@ public class ZipAdmin {
 		// url="https://drive.google.com/uc?export=download&confirm=AbsS&id=1lOgCnw7fjbCXw3aL7w0efGpUZAVnlqt7";
 		// BCJSON.download(url,new File("./assets/libworkspace/test.zip"));
 
-		// ZipLib.init();
+		ZipLib.init();
+		System.out.println(Files.readAllLines(ZipLib.lib.getPath("./info/info.ini")));
 		// new LibInfo(ZipLib.lib);//.clean();
 		// new VerInfo("080503").write("./assets/080503.verinfo");
 		// ZipLib.lib.close();

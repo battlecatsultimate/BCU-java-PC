@@ -5,10 +5,12 @@ import java.awt.image.BufferedImage;
 import main.Printer;
 import page.MainLocale;
 import util.Res;
-import util.system.VFile;
+import util.system.MultiLangFile;
 import util.system.VImg;
+import util.system.files.AssetData;
+import util.system.files.VFile;
 
-public class AnimU extends AnimD {
+public class AnimU extends AnimD implements MultiLangFile {
 
 	private static String[] strs0, strs1, strs2;
 
@@ -69,8 +71,7 @@ public class AnimU extends AnimD {
 	public void load() {
 		loaded = true;
 		try {
-			VFile pic;
-			num = read(pic = VFile.getFile(str + ".png"));
+			num = VFile.get(str + ".png").getData().getImg(this);
 			imgcut = ImgCut.newIns(str + ".imgcut");
 			if (num == null) {
 				Printer.e("AnimU", 70, "can't read png: " + str);
@@ -78,8 +79,6 @@ public class AnimU extends AnimD {
 				mismatch = true;
 				return;
 			}
-			if (mismatch = !pic.getName().equals(imgcut.name))
-				Printer.p("AnimU", 67, "imgcut does not match: " + str);
 			parts = imgcut.cut(num);
 			partial();
 		} catch (Exception e) {
@@ -95,6 +94,14 @@ public class AnimU extends AnimD {
 		if (anims.length == 5)
 			return strs2;
 		return strs1;
+	}
+
+	@Override
+	public void reload(AssetData ad) {
+		if (!loaded)
+			return;
+		num = ad.getImg(this);
+		parts = imgcut.cut(num);
 	}
 
 	protected void partial() {

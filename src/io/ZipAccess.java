@@ -13,7 +13,6 @@ import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +27,9 @@ import main.MainBCU;
 import main.Printer;
 import util.Data;
 import util.system.Backup;
-import util.system.VFile;
-import util.system.VFileRoot;
+import util.system.files.BackupData;
+import util.system.files.VFile;
+import util.system.files.VFileRoot;
 
 public class ZipAccess {
 
@@ -69,7 +69,7 @@ public class ZipAccess {
 		return true;
 	}
 
-	public static VFileRoot difference(String t0, String t1) throws IOException {
+	public static VFileRoot<BackupData> difference(String t0, String t1) throws IOException {
 		File f = new File("./user/backup.zip");
 		if (!f.exists())
 			return null;
@@ -80,17 +80,17 @@ public class ZipAccess {
 			fs.close();
 			return null;
 		}
-		VFileRoot ans = new VFileRoot(1);
+		VFileRoot<BackupData> ans = new VFileRoot<>(t0 + "-" + t1);
 		Queue<String> qs = new ArrayDeque<>(Files.readAllLines(ind0));
 		int size = Reader.parseIntN(qs.poll());
 		for (int i = 0; i < size; i++)
-			ans.newVFile(qs.poll(), qs.poll().getBytes());
+			ans.build(qs.poll(), new BackupData(qs.poll()));
 		qs = new ArrayDeque<>(Files.readAllLines(ind1));
 		size = Reader.parseIntN(qs.poll());
 		for (int i = 0; i < size && !qs.isEmpty(); i++) {
-			VFile vf = ans.getVFile(qs.poll());
+			VFile<BackupData> vf = ans.find(qs.poll());
 			String str1 = qs.poll();
-			if (vf != null && new String(vf.data).equals(str1))
+			if (vf != null && vf.getData().toString().equals(str1))
 				vf.delete();
 		}
 		fs.close();
@@ -143,12 +143,12 @@ public class ZipAccess {
 		return true;
 	}
 
-	public static VFileRoot extractAllList() throws IOException {
+	public static VFileRoot<BackupData> extractAllList() throws IOException {
 		File f = new File("./user/backup.zip");
 		if (!f.exists())
 			return null;
 		FileSystem fs = FileSystems.newFileSystem(f.toPath(), null);
-		VFileRoot ans = new VFileRoot(1);
+		VFileRoot<BackupData> ans = new VFileRoot<>("all versions");
 		Files.list(fs.getPath("/backups")).forEach(elem -> {
 			try {
 				String fn = elem.getFileName().toString();
@@ -157,18 +157,17 @@ public class ZipAccess {
 				for (int i = 0; i < size && !qs.isEmpty(); i++) {
 					String pat = qs.poll().trim();
 					String md5 = qs.poll().trim();
-					byte[] bts = md5.getBytes();
 					long fsize = Files.size(fs.getPath("/MD5/" + md5));
-					VFile vf = ans.newVFile(pat, null);
+					VFile<BackupData> vf = ans.build(pat, null);
 					vf.mark = 1;
 					boolean b = true;
-					for (VFile c : vf.child)
-						if (Arrays.equals(bts, c.data)) {
+					for (VFile<BackupData> c : vf.list())
+						if (c.getData().toString().equals(md5)) {
 							b = false;
 							c.name = fn;
 						}
 					if (b)
-						ans.newVFile(pat + "\\" + fn, bts).size = fsize;
+						ans.build(pat + "\\" + fn, new BackupData(md5, fsize));
 				}
 			} catch (Exception e) {
 				Printer.p("ZipAccess", 174, elem.getFileName().toString());
@@ -176,15 +175,11 @@ public class ZipAccess {
 			}
 		});
 		fs.close();
-		ans.getIf(v -> v.mark == 1 && v.child.size() == 1).forEach(v -> {
-			v.data = v.child.get(0).data;
-			v.size = v.child.get(0).size;
-			v.child = null;
-		});
+		ans.getIf(v -> v.mark == 1 && v.list().size() == 1).forEach(v -> v.replace(v.list().get(0).getData()));
 		return ans;
 	}
 
-	public static VFileRoot extractList(Backup bac) throws IOException {
+	public static VFileRoot<BackupData> extractList(Backup bac) throws IOException {
 		if (bac.files != null)
 			return bac.files;
 		File f = new File("./user/backup.zip");
@@ -196,14 +191,14 @@ public class ZipAccess {
 			fs.close();
 			return null;
 		}
-		VFileRoot ans = new VFileRoot(1);
+		VFileRoot<BackupData> ans = new VFileRoot<BackupData>(bac.name);
 		Queue<String> qs = new ArrayDeque<>(Files.readAllLines(index));
 		int size = Reader.parseIntN(qs.poll());
 		for (int i = 0; i < size && !qs.isEmpty(); i++) {
 			String p = qs.poll();
 			String md5 = qs.poll();
 			long fsize = Files.size(fs.getPath("/MD5/" + md5));
-			ans.newVFile(p, md5.getBytes()).size = fsize;
+			ans.build(p, new BackupData(md5, fsize));
 
 		}
 		fs.close();
@@ -211,7 +206,7 @@ public class ZipAccess {
 		return ans;
 	}
 
-	public static boolean extractPartial(String md5, VFile vf) throws IOException {
+	public static boolean extractPartial(String md5, VFile<BackupData> vf) throws IOException {
 		File f = new File("./user/backup.zip");
 		if (!f.exists())
 			return false;
@@ -221,7 +216,7 @@ public class ZipAccess {
 			fs.close();
 			return false;
 		}
-		String loc = vf.parent.mark == 1 ? vf.parent.getPath() : vf.getPath();
+		String loc = vf.getParent().mark == 1 ? vf.getParent().getPath() : vf.getPath();
 		Writer.check(new File(loc));
 		Files.copy(file, Paths.get(loc), StandardCopyOption.REPLACE_EXISTING);
 		fs.close();

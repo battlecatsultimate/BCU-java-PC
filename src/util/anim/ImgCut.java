@@ -7,7 +7,7 @@ import io.InStream;
 import io.OutStream;
 import main.Opts;
 import util.Data;
-import util.system.VFile;
+import util.system.files.FileData;
 
 public class ImgCut extends Data implements Cloneable {
 
@@ -15,12 +15,12 @@ public class ImgCut extends Data implements Cloneable {
 		return readSave(path, f -> f == null ? new ImgCut() : new ImgCut(f));
 	}
 
-	protected static ImgCut newIns(VFile f) {
+	protected static ImgCut newIns(FileData f) {
 		try {
-			return new ImgCut(readLine(f));
+			return new ImgCut(f.readLine());
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.animErr(f.getName());
+			Opts.animErr(f.toString());
 			return new ImgCut();
 		}
 	}
