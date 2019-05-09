@@ -14,3 +14,5 @@
 /.settings/
 **/.DS_Store
 /assets/
+/libs/
+/libs-sources/
