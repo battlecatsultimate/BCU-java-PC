@@ -16,7 +16,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpEntity;
@@ -32,6 +34,7 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import decode.ZipLib;
 import main.MainBCU;
 import main.Opts;
 import page.LoadPage;
@@ -49,11 +52,7 @@ public class BCJSON extends Data {
 
 	private static final String str = "http://battlecatsultimate.cf/api/java/";
 	private static final String dld = "http://battlecatsultimate.cf/api/resources/";
-	private static final String l0l = "000/viewer.list";
-	private static final String l0p = "000/viewer.pack";
-	private static final String l1l = "001/viewer.list";
-	private static final String l1p = "001/viewer.pack";
-	private static final String path = "./lib/";
+	private static final String path = "./assets/";
 	private static final String login = "login.php";
 	private static final String upload = "upload.php";
 	private static final String rate = "rate.php";
@@ -88,43 +87,23 @@ public class BCJSON extends Data {
 	}
 
 	public static void checkDownload() {
-		LoadPage.prog(0, 8, 0);
-		File f0l = new File(path + l0l);
-		File f0p = new File(path + l0p);
-		File f1l = new File(path + l1l);
-		File f1p = new File(path + l1p);
+		LoadPage.prog("check download");
 		File f;
 		JSONObject data = null;
+		JSONObject lib = null;
 		try {
-			data = getUpdate();
+			data = getJSON("getupdate.php");
+			lib = getJSON("getAssets.php");
 		} catch (IOException e) {
 		}
-		LoadPage.prog(0, 8, 1);
+		checkLib(lib);
+
 		if (data != null && data.length() >= 7) {
-			if (!f0l.exists() && !download(dld + l0l, f0l))
-				Opts.dloadErr(l0l);
-			LoadPage.prog(0, 8, 2);
-			if (!f0p.exists()) {
-				byte[] bs0 = download(dld + "000/subviewer0.pack");
-				LoadPage.prog(0, 8, 3);
-				byte[] bs1 = download(dld + "000/subviewer1.pack");
-				if (bs0 == null || bs1 == null)
-					Opts.dloadErr(l0p);
-				byte[] bs = Arrays.copyOf(bs0, bs0.length + bs1.length);
-				for (int i = 0; i < bs1.length; i++)
-					bs[bs0.length + i] = bs1[i];
-				if (!Writer.writeBytes(bs, path + l0p))
-					Opts.ioErr("failed to write " + l0p);
-			}
-			LoadPage.prog(0, 8, 4);
-			if (!f1l.exists() && !download(dld + l1l, f1l))
-				Opts.dloadErr(l1l);
-			if (!f1p.exists() && !download(dld + l1p, f1p))
-				Opts.dloadErr(l1p);
+
 			for (int i = 0; i < cals.length; i++)
 				if (!(f = new File(path + cals[i])).exists() && !download(dld + cals[i], f))
 					Opts.dloadErr(cals[i]);
-			LoadPage.prog(0, 8, 5);
+
 			if (MainBCU.ver < data.getInt("jar")) {
 				if (Opts.updateCheck("JAR", data.getString("jar-desc"))) {
 					String name = "BCU " + revVer(data.getInt("jar")) + ".jar";
@@ -137,15 +116,6 @@ public class BCJSON extends Data {
 				}
 
 			}
-			if (lib_ver < data.getInt("lib")) {
-				if (Opts.updateCheck("LIB", data.getString("lib-desc"))) {
-					if (!download(dld + l1l, f1l))
-						Opts.dloadErr(l1l);
-					if (!download(dld + l1p, f1p))
-						Opts.dloadErr(l1p);
-					lib_ver = data.getInt("lib");
-				}
-			}
 			if (cal_ver < data.getInt("cal")) {
 				if (Opts.updateCheck("text", "")) {
 					for (int i = 0; i < cals.length; i++)
@@ -154,7 +124,7 @@ public class BCJSON extends Data {
 					cal_ver = data.getInt("cal");
 				}
 			}
-			LoadPage.prog(0, 8, 6);
+
 			int music = data.getInt("music");
 			boolean[] mus = new boolean[music];
 			File[] fs = new File[music];
@@ -168,21 +138,10 @@ public class BCJSON extends Data {
 							Opts.dloadErr("music #" + i);
 		}
 
-		LoadPage.prog(0, 8, 7);
-		boolean need = false;
-		f = new File("./lib/000/");
-		if (need |= !f.exists())
-			f.mkdirs();
-		f = new File("./lib/001/");
-		if (need |= !f.exists())
-			f.mkdirs();
+		boolean need = ZipLib.info == null;
 		f = new File("./lib/calendar/");
 		if (need |= !f.exists())
 			f.mkdirs();
-		need |= !f0l.exists();
-		need |= !f0p.exists();
-		need |= !f1l.exists();
-		need |= !f1p.exists();
 		for (int i = 0; i < cals.length; i++)
 			need |= !new File(path + cals[i]).exists();
 		if (need) {
@@ -190,7 +149,6 @@ public class BCJSON extends Data {
 			Writer.logClose(false);
 			System.exit(0);
 		}
-		LoadPage.prog(1, 1, 0);
 	}
 
 	public static boolean delete(int pid) {
@@ -393,6 +351,46 @@ public class BCJSON extends Data {
 		}
 	}
 
+	private static void checkLib(JSONObject lib) {
+		if (lib != null && lib.length() > 1) {
+			Map<String, String> libmap = new TreeMap<>();
+			JSONArray ja = lib.getJSONArray("assets");
+			int n = ja.length();
+			for (int i = 0; i < n; i++) {
+				JSONArray ent = ja.getJSONArray(i);
+				libmap.put(ent.getString(0), ent.getString(1));
+			}
+			List<String> libs;
+			if (ZipLib.info != null)
+				libs = ZipLib.info.update(libmap.keySet());
+			else
+				libs = new ArrayList<String>(libmap.keySet());
+			boolean updated = false;
+			for (String str : libs) {
+				if (!str.startsWith("00000"))
+					if (!Opts.conf("do you want to download lib update " + str + "? " + libmap.get(str)))
+						continue;
+				LoadPage.prog("downloading asset: " + str + ".zip");
+				File temp = new File(path + (ZipLib.lib == null ? "assets.zip" : "temp.zip"));
+				if (download(dld + "assets/" + str + ".zip", temp))
+					if (ZipLib.info == null)
+						ZipLib.init();
+					else
+						ZipLib.merge(temp);
+				updated = true;
+			}
+			if (updated) {
+				try {
+					ZipLib.lib.close();
+				} catch (IOException e) {
+					Opts.dloadErr("failed to save downloads");
+					e.printStackTrace();
+				}
+				ZipLib.init();
+			}
+		}
+	}
+
 	private static byte[] download(String url) {
 		File file = new File("./lib/temp.download");
 		Writer.check(file);
@@ -418,10 +416,10 @@ public class BCJSON extends Data {
 		}
 	}
 
-	private static JSONObject getUpdate() throws IOException {
+	private static JSONObject getJSON(String url) throws IOException {
 		JSONObject inp = new JSONObject();
 		inp.put("bcuver", MainBCU.ver);
-		JSONObject ans = read(inp.toString(), "getupdate.php");
+		JSONObject ans = read(inp.toString(), url);
 		int ret = ans.getInt("ret");
 		if (ret == 0)
 			return ans;

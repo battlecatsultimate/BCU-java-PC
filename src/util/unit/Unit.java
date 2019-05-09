@@ -1,9 +1,11 @@
 package util.unit;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
+import io.Reader;
 import main.MainBCU;
 import util.Data;
 import util.anim.AnimC;
@@ -13,13 +15,14 @@ import util.entity.data.PCoin;
 import util.pack.Pack;
 import util.system.FixIndexList;
 import util.system.MultiLangCont;
-import util.system.VFile;
+import util.system.files.AssetData;
+import util.system.files.VFile;
 
 public class Unit extends Data implements Comparable<Unit> {
 
-	public static void readLevel() {
-		VFile vf = VFile.getFile("./org/data/unitlevel.csv");
-		Queue<String> qs = readLine(vf);
+	public static void readData() throws IOException {
+		VFile.get("./org/unit").list().forEach(p -> new Unit(p));
+		Queue<String> qs = VFile.readLine("./org/data/unitlevel.csv");
 		List<Unit> lu = Pack.def.us.ulist.getList();
 		FixIndexList<UnitLevel> l = Pack.def.us.lvlist;
 		for (Unit u : lu) {
@@ -37,8 +40,7 @@ public class Unit extends Data implements Comparable<Unit> {
 			u.lv.units.add(u);
 		}
 		UnitLevel.def = l.get(2);
-		vf = VFile.getFile("./org/data/unitbuy.csv");
-		qs = readLine(vf);
+		qs = VFile.readLine("./org/data/unitbuy.csv");
 		for (Unit u : lu) {
 			String[] strs = qs.poll().split(",");
 			u.rarity = Integer.parseInt(strs[13]);
@@ -54,21 +56,6 @@ public class Unit extends Data implements Comparable<Unit> {
 	public Form[] forms;
 	public UnitLevel lv;
 
-	public Unit(int ID) {
-		pack = Pack.def;
-		id = ID;
-		Pack.def.us.ulist.add(this);
-		String str = "./org/unit/" + trio(id) + "/";
-		VFile fu = VFile.getFile(str + "unit" + trio(id) + ".csv");
-		Queue<String> qs = readLine(fu);
-		forms = new Form[exist(str, "s") ? 3 : exist(str, "c") ? 2 : exist(str, "f") ? 1 : 0];
-		for (int i = 0; i < forms.length; i++)
-			forms[i] = new Form(this, i, str + SUFX[i] + "/", qs.poll());
-		if (MainBCU.preload)
-			for (Form f : forms)
-				f.anim.edi.check();
-	}
-
 	public Unit(int ID, Unit old, Pack p, UnitLevel ul) {
 		pack = p;
 		id = ID;
@@ -79,6 +66,20 @@ public class Unit extends Data implements Comparable<Unit> {
 		forms = new Form[old.forms.length];
 		for (int i = 0; i < forms.length; i++)
 			forms[i] = old.forms[i].copy(this);
+	}
+
+	public Unit(VFile<AssetData> p) {
+		pack = Pack.def;
+		id = Reader.parseIntN(p.getName());
+		Pack.def.us.ulist.add(this);
+		String str = "./org/unit/" + trio(id) + "/";
+		Queue<String> qs = VFile.readLine(str + "unit" + trio(id) + ".csv");
+		forms = new Form[p.countSubDire()];
+		for (int i = 0; i < forms.length; i++)
+			forms[i] = new Form(this, i, str + SUFX[i] + "/", qs.poll());
+		if (MainBCU.preload)
+			for (Form f : forms)
+				f.anim.edi.check();
 	}
 
 	protected Unit(Pack p, DIYAnim da, CustomUnit cu) {
@@ -158,24 +159,6 @@ public class Unit extends Data implements Comparable<Unit> {
 		if (forms[0].name.length() > 0)
 			return trio(id) + " " + forms[0].name;
 		return trio(id);
-	}
-
-	private boolean exist(String str, String suf) {
-		VFile f = VFile.getFile(str + suf + "/");
-		if (f == null)
-			return false;
-		List<String> l = f.listNames();
-		String nam = trio(id) + "_" + suf;
-		if (!l.contains(nam + ".png"))
-			return false;
-		if (!l.contains(nam + ".imgcut"))
-			return false;
-		if (!l.contains(nam + ".mamodel"))
-			return false;
-		for (int i = 0; i < 4; i++)
-			if (!l.contains(nam + "0" + i + ".maanim"))
-				return false;
-		return true;
 	}
 
 }

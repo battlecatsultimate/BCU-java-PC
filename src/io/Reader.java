@@ -11,7 +11,6 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Queue;
 
 import event.EventReader;
@@ -43,15 +42,15 @@ import util.stage.Recd;
 import util.stage.Stage;
 import util.stage.StageMap;
 import util.system.MultiLangCont;
-import util.system.VFile;
-import util.system.VFileRoot;
+import util.system.files.BackupData;
+import util.system.files.VFileRoot;
 import util.unit.DIYAnim;
 import util.unit.Enemy;
 import util.unit.Unit;
 
 public class Reader extends DataIO {
 
-	public static VFileRoot alt;
+	public static VFileRoot<BackupData> alt;
 
 	public static void getData$0() {
 		try {
@@ -63,38 +62,34 @@ public class Reader extends DataIO {
 
 	public static void getData$1() {
 		try {
+			LoadPage.prog("reading basic images");
 			Res.readData();
-			readUnit();
-			LoadPage.prog(1, 1, 0);
-			readEnemy();
-			LoadPage.prog(1, 1, 0);
+			Unit.readData();
+			Enemy.readData();
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.loadErr("error in reading: reading basic data at " + LoadPage.num);
+			Opts.loadErr("error in reading: reading basic data");
 			System.exit(0);
 		}
 
 		try {
+			LoadPage.prog("reading extra data");
 			readOthers();
-			LoadPage.prog(1, 1, 0);
 			readID();
 			readGroup();
 			readLang();
-			LoadPage.prog(1, 1, 0);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.loadErr("error in reading: reading additional data at " + LoadPage.num);
+			Opts.loadErr("error in reading: reading additional data");
 			System.exit(0);
 		}
 
 		try {
 			readCustom();
-			LoadPage.prog(1, 1, 0);
 			BCMusic.read();
-			LoadPage.prog(1, 1, 0);
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.loadErr("error in reading: reading custom data at " + LoadPage.num);
+			Opts.loadErr("error in reading: reading custom data");
 			System.exit(0);
 		}
 	}
@@ -147,7 +142,8 @@ public class Reader extends DataIO {
 	}
 
 	public static void readLang() {
-		File f = new File("./lib/lang/");
+		LoadPage.prog("reading language information");
+		File f = new File("./assets/lang/");
 		if (!f.exists())
 			return;
 		for (File fi : f.listFiles()) {
@@ -312,7 +308,7 @@ public class Reader extends DataIO {
 			Opts.loadErr("error in reading: reading custom animation");
 			System.exit(0);
 		}
-		LoadPage.prog(1, 0, 0);
+		LoadPage.prog("reading custom data...");
 		try {
 			Pack.read();
 		} catch (Exception e) {
@@ -332,20 +328,8 @@ public class Reader extends DataIO {
 			}
 	}
 
-	private static void readEnemy() {
-		VFile f = VFile.getFile("./org/enemy/");
-		List<VFile> list = f.listFiles();
-		int i = 0;
-		for (VFile fi : list) {
-			LoadPage.prog(0, list.size(), i++);
-			new Enemy(Integer.parseInt(fi.getName()));
-		}
-		LoadPage.prog(0, list.size(), i++);
-		Enemy.readData();
-	}
-
 	private static void readGroup() {
-		File f = new File("./lib/calendar/group event.txt");
+		File f = new File("./assets/calendar/group event.txt");
 		Queue<String> qs = readLines(f);
 		try {
 			while (qs.size() > 0) {
@@ -359,7 +343,7 @@ public class Reader extends DataIO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		f = new File("./lib/calendar/group hour.txt");
+		f = new File("./assets/calendar/group hour.txt");
 		qs = readLines(f);
 		try {
 			HourGrouper.process(qs);
@@ -369,7 +353,7 @@ public class Reader extends DataIO {
 	}
 
 	private static void readID() {
-		File f = new File("./lib/calendar/event ID.txt");
+		File f = new File("./assets/calendar/event ID.txt");
 		Queue<String> qs = readLines(f);
 		for (String str : qs) {
 			String[] strs = str.trim().split("\t");
@@ -383,7 +367,7 @@ public class Reader extends DataIO {
 			}
 			Namer.EMAP.put(id, strs[1]);
 		}
-		f = new File("./lib/calendar/gacha ID.txt");
+		f = new File("./assets/calendar/gacha ID.txt");
 		qs = readLines(f);
 		for (String str : qs) {
 			String[] strs = str.trim().split("\t");
@@ -397,7 +381,7 @@ public class Reader extends DataIO {
 			}
 			Namer.GMAP.put(id, strs[1]);
 		}
-		f = new File("./lib/calendar/item ID.txt");
+		f = new File("./assets/calendar/item ID.txt");
 		qs = readLines(f);
 		for (String str : qs) {
 			String[] strs = str.trim().split("\t");
@@ -434,7 +418,7 @@ public class Reader extends DataIO {
 					EventReader.loc = parseInt(qs.poll());
 					BCJSON.USERNAME = qs.poll().trim();
 					BCJSON.PASSWORD = Long.parseLong(qs.poll());
-					BCJSON.lib_ver = parseInt(qs.poll());
+					qs.poll();
 					BCJSON.cal_ver = parseInt(qs.poll());
 					BCMusic.play = parseInt(qs.poll()) == 1;
 					MainLocale.exLang = parseInt(qs.poll()) == 1;
@@ -459,7 +443,6 @@ public class Reader extends DataIO {
 
 	private static void readOthers() {
 		Combo.readFile();
-		Unit.readLevel();
 		PCoin.read();
 		EffAnim.read();
 		Background.read();
@@ -468,16 +451,6 @@ public class Reader extends DataIO {
 		Limit.read();
 		NyCastle.read();
 		Soul.read();
-	}
-
-	private static void readUnit() {
-		VFile f = VFile.getFile("./org/unit/");
-		List<VFile> list = f.listFiles();
-		int i = 0;
-		for (VFile fi : list) {
-			LoadPage.prog(0, list.size(), i++);
-			new Unit(Integer.parseInt(fi.getName()));
-		}
 	}
 
 }

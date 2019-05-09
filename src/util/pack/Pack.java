@@ -140,6 +140,7 @@ public class Pack extends Data {
 					if (!map.containsKey(pre) || map.get(pre).res != null)
 						all = false;
 				if (all) {
+					LoadPage.prog("reading packs: " + (tot - list.size() + rem) + "/" + tot);
 					if (p.bcuver > MainBCU.ver)
 						Opts.verErr("BCU", revVer(p.bcuver));
 					else
@@ -154,7 +155,7 @@ public class Pack extends Data {
 							System.exit(0);
 						}
 					rem++;
-					LoadPage.prog(0, tot, tot - list.size() + rem);
+
 				}
 			}
 			list.removeIf(p -> p.res == null);

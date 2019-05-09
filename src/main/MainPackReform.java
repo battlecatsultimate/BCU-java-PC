@@ -1,6 +1,6 @@
 package main;
 
-import decode.Decode;
+import decode.ZipLib;
 import io.Reader;
 import io.Writer;
 import util.pack.Pack;
@@ -12,8 +12,8 @@ public class MainPackReform {
 	public static void main(String[] str) {
 		System.out.println("start");
 		Reader.getData$0();
+		ZipLib.init();
 		Writer.logSetup();
-		Decode.main();
 		Reader.getData$1();
 		System.out.println("loaded");
 		Pack p = new Pack(asg);

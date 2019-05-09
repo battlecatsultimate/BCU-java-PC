@@ -1,16 +1,17 @@
 package util;
 
-import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.function.Function;
 
 import io.Reader;
-import io.ZipAccess;
 import main.Opts;
-import util.system.VFile;
+import util.system.files.BackupData;
+import util.system.files.FileData;
+import util.system.files.VFile;
 
 public class Data {
 
@@ -396,30 +397,13 @@ public class Data {
 		return ans;
 	}
 
-	public static Queue<String> readLine(VFile f) {
-		if (f == null)
-			return null;
-		if (f.getRoot() != null && f.getRoot().type == 1)
-			try {
-				return ZipAccess.readLine(new String(f.data));
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				Opts.backupErr("cannot read " + new String(f.data));
-				return null;
-			}
-		Queue<String> ans = new ArrayDeque<>();
-		BufferedReader reader = null;
+	public static Queue<String> readLine(File f) {
 		try {
-			InputStreamReader isr = new InputStreamReader(f.getData(), "UTF-8");
-			reader = new BufferedReader(isr);
-			String temp = null;
-			while ((temp = reader.readLine()) != null)
-				ans.add(temp);
-			reader.close();
-		} catch (Exception e) {
+			return new ArrayDeque<String>(Files.readAllLines(f.toPath()));
+		} catch (IOException e) {
 			e.printStackTrace();
+			return null;
 		}
-		return ans;
 	}
 
 	public static String revVer(int ver) {
@@ -441,13 +425,13 @@ public class Data {
 	}
 
 	protected static <T> T readSave(String path, Function<Queue<String>, T> func) {
-		VFile f = VFile.getFile(path);
-		VFile b = Reader.alt == null ? null : Reader.alt.getVFile(path);
+		FileData f = VFile.getFile(path).getData();
+		VFile<BackupData> b = Reader.alt == null ? null : Reader.alt.find(path);
 		int ind = 0;
 		while (true) {
 			if (f != null) {
 				T ic = null;
-				Queue<String> qs = readLine(f);
+				Queue<String> qs = f.readLine();
 				if (qs != null)
 					try {
 						ic = func.apply(qs);
@@ -460,18 +444,18 @@ public class Data {
 			}
 			if (b == null)
 				break;
-			if (b.child == null)
-				if (b != f)
-					f = b;
+			if (b.list() == null)
+				if (b.getData() != f)
+					f = b.getData();
 				else
 					break;
-			else if (ind < b.child.size())
-				f = b.child.get(ind++);
+			else if (ind < b.list().size())
+				f = b.list().get(ind++).getData();
 			else
 				break;
 		}
 		if (f != null)
-			Opts.animErr(f.getName());
+			Opts.animErr(path);
 		return func.apply(null);
 	}
 

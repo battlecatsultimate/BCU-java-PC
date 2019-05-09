@@ -8,7 +8,7 @@ import io.Reader;
 import util.Data;
 import util.system.BasedCopable;
 import util.system.MultiLangCont;
-import util.system.VFile;
+import util.system.files.AssetData;
 
 public class StageMap extends Data implements BasedCopable<StageMap, MapColc> {
 
@@ -29,15 +29,15 @@ public class StageMap extends Data implements BasedCopable<StageMap, MapColc> {
 		name = "new stage map";
 	}
 
-	protected StageMap(MapColc map, int ID, VFile m) {
+	protected StageMap(MapColc map, int ID, AssetData m) {
 		mc = map;
 		id = ID;
-		qs = readLine(m);
+		qs = m.readLine();
 		qs.poll();
 		qs.poll();
 	}
 
-	protected StageMap(MapColc map, int ID, VFile m, int cas) {
+	protected StageMap(MapColc map, int ID, AssetData m, int cas) {
 		this(map, ID, m);
 		cast = cas;
 	}

@@ -11,10 +11,7 @@ import java.awt.RenderingHints;
 import java.awt.RenderingHints.Key;
 import java.awt.image.BufferedImage;
 
-import javax.imageio.ImageIO;
-
 import util.system.P;
-import util.system.VFile;
 
 public class ImgCore extends Data {
 
@@ -96,21 +93,6 @@ public class ImgCore extends Data {
 		g.drawRect(x, y, sx, sy);
 		g.setColor(Color.YELLOW);
 		g.drawRect(x - 40, y - 40, sx + 80, sy + 80);
-	}
-
-	protected static BufferedImage read(VFile f) {
-		if (f == null)
-			return null;
-		BufferedImage img = null;
-		try {
-			if (f.f != null)
-				img = ImageIO.read(f.f);
-			else
-				img = ImageIO.read(f.getData());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return img;
 	}
 
 	private static void drawImage(Graphics2D g, BufferedImage bimg, double x, double y, double w, double h) {

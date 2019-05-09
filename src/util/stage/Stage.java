@@ -12,7 +12,8 @@ import util.Data;
 import util.pack.Pack;
 import util.system.BasedCopable;
 import util.system.MultiLangCont;
-import util.system.VFile;
+import util.system.files.AssetData;
+import util.system.files.VFile;
 import util.unit.Enemy;
 
 public class Stage extends Data implements BasedCopable<Stage, StageMap> {
@@ -44,8 +45,8 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap> {
 		zread(str, is);
 	}
 
-	protected Stage(StageMap sm, int id, VFile f, int type) {
-		Queue<String> qs = readLine(f);
+	protected Stage(StageMap sm, int id, VFile<AssetData> f, int type) {
+		Queue<String> qs = f.getData().readLine();
 		name = "" + id;
 		map = sm;
 		String temp;

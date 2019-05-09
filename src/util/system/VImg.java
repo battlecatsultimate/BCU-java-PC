@@ -7,6 +7,8 @@ import javax.swing.ImageIcon;
 
 import util.ImgCore;
 import util.anim.ImgCut;
+import util.system.files.FileData;
+import util.system.files.VFile;
 
 public class VImg extends ImgCore {
 
@@ -27,7 +29,7 @@ public class VImg extends ImgCore {
 		return ans;
 	}
 
-	private final VFile file;
+	private final VFile<? extends FileData> file;
 
 	public String name = "";
 
@@ -50,7 +52,7 @@ public class VImg extends ImgCore {
 		this(VFile.getFile(str));
 	}
 
-	public VImg(VFile vf) {
+	public VImg(VFile<? extends FileData> vf) {
 		file = vf;
 	}
 
@@ -103,7 +105,7 @@ public class VImg extends ImgCore {
 		loaded = true;
 		if (file == null)
 			return;
-		bimg = read(file);
+		bimg = file.getData().getImg();
 		if (ic != null)
 			bimg = ic.cut(bimg)[0];
 	}

@@ -7,22 +7,22 @@ import io.InStream;
 import io.OutStream;
 import main.Opts;
 import util.Data;
-import util.system.VFile;
+import util.system.files.FileData;
 
 public class MaAnim extends Data {
 
-	public static MaAnim newIns(String str) {
-		return readSave(str, f -> f == null ? new MaAnim() : new MaAnim(f));
-	}
-
-	public static MaAnim newIns(VFile f) {
+	public static MaAnim newIns(FileData f) {
 		try {
-			return new MaAnim(readLine(f));
+			return new MaAnim(f.readLine());
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.animErr(f.getName());
+			Opts.animErr(f.toString());
 			return new MaAnim();
 		}
+	}
+
+	public static MaAnim newIns(String str) {
+		return readSave(str, f -> f == null ? new MaAnim() : new MaAnim(f));
 	}
 
 	public int n;
