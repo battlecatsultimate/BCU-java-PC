@@ -8,6 +8,7 @@ import page.MainLocale;
 import util.stage.MapColc;
 import util.stage.Stage;
 import util.stage.StageMap;
+import util.system.files.AssetData;
 import util.unit.Enemy;
 import util.unit.Form;
 
@@ -18,6 +19,8 @@ public class MultiLangCont<I, T> {
 	public static final MultiLangCont<Stage, String> STNAME = new MultiLangCont<>();
 	public static final MultiLangCont<Form, String> FNAME = new MultiLangCont<>();
 	public static final MultiLangCont<Enemy, String> ENAME = new MultiLangCont<>();
+
+	public static final Map<MultiLangFile, AssetData> VFILE = new HashMap<>();
 
 	public static String get(Object o) {
 		String loc = MainLocale.LOC_CODE[MainLocale.lang];
@@ -34,11 +37,11 @@ public class MultiLangCont<I, T> {
 		return null;
 	}
 
-	private final Map<String, HashMap<I, T>> map = new TreeMap<>();
-
-	public MultiLangCont() {
-
+	public static void redefine() {
+		VFILE.forEach((mlf, f) -> mlf.reload(f));
 	}
+
+	private final Map<String, HashMap<I, T>> map = new TreeMap<>();
 
 	public T get(String loc, I x) {
 		T ans = getSub(loc).get(x);

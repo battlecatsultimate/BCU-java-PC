@@ -196,7 +196,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 			int[] sprc = data.getAtkModel(ind).getProc(P_SUMMON);
 			int conf = sprc[4];
 			if ((conf & 192) == 0)
-				summon(sprc, e, acs[ind]);// TODO
+				summon(sprc, e, acs[ind]);
 			else
 				proc[P_SUMMON] = sprc;
 		}

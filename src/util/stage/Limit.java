@@ -5,13 +5,12 @@ import java.util.Queue;
 import io.InStream;
 import io.OutStream;
 import util.Data;
-import util.system.VFile;
+import util.system.files.VFile;
 
 public class Limit extends Data {
 
 	public static void read() {
-		VFile vf = VFile.getFile("./org/data/Stage_option.csv");
-		Queue<String> qs = readLine(vf);
+		Queue<String> qs = VFile.readLine("./org/data/Stage_option.csv");
 		qs.poll();
 		for (String str : qs)
 			new Limit(str.split(","));

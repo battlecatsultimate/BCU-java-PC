@@ -40,8 +40,9 @@ import util.stage.LvRestrict;
 import util.stage.Stage;
 import util.stage.StageMap;
 import util.system.Backup;
-import util.system.VFile;
-import util.system.VFileRoot;
+import util.system.files.BackupData;
+import util.system.files.VFile;
+import util.system.files.VFileRoot;
 import util.unit.Enemy;
 import util.unit.Form;
 import util.unit.Unit;
@@ -71,8 +72,8 @@ public class BackupTreePage extends Page {
 	private final JScrollPane jspf = new JScrollPane(jlf);
 
 	private Backup backup;
-	private VFileRoot vf;
-	private VFile sel;
+	private VFileRoot<BackupData> vf;
+	private VFile<BackupData> sel;
 	private boolean changing;
 
 	public BackupTreePage(Page p, boolean ntr) {
@@ -219,39 +220,33 @@ public class BackupTreePage extends Page {
 		sntr.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				try {
-					if (sel.parent == null || sel.data == null)
-						return;
-					String s0 = sel.getName();
-					String s1 = sel.parent.getName();
-					boolean b0 = s0.equals("basis.v") || s1.equals("basis.v");
-					boolean b1 = s0.endsWith(".bcuenemy") || s1.endsWith(".bcuenemy");
-					boolean b2 = s0.endsWith(".maanim") || s1.endsWith(".maanim");
-					if (!b0 && !b1 && !b2)
-						return;
+				if (sel.getData() == null)
+					return;
+				String s0 = sel.getName();
+				String s1 = sel.getParent().getName();
+				boolean b0 = s0.equals("basis.v") || s1.equals("basis.v");
+				boolean b1 = s0.endsWith(".bcuenemy") || s1.endsWith(".bcuenemy");
+				boolean b2 = s0.endsWith(".maanim") || s1.endsWith(".maanim");
+				if (!b0 && !b1 && !b2)
+					return;
 
-					if (b0) {
-						InStream is = ZipAccess.readStream(new String(sel.data));
-						if (is == null)
-							Opts.backupErr("read");
-						setT$Basis(is);
-					}
-					if (b1) {
-						InStream is = ZipAccess.readStream(new String(sel.data));
-						if (is == null)
-							Opts.backupErr("read");
-						setT$Pack(is);
-					}
-					if (b2) {
-						Queue<String> qs = ZipAccess.readLine(new String(sel.data));
-						if (qs == null)
-							Opts.backupErr("read");
-						setT$MA(qs);
-					}
-
-				} catch (IOException e) {
-					e.printStackTrace();
-					Opts.backupErr("read");
+				if (b0) {
+					InStream is = sel.getData().getIS();
+					if (is == null)
+						Opts.backupErr("read");
+					setT$Basis(is);
+				}
+				if (b1) {
+					InStream is = sel.getData().getIS();
+					if (is == null)
+						Opts.backupErr("read");
+					setT$Pack(is);
+				}
+				if (b2) {
+					Queue<String> qs = sel.getData().readLine();
+					if (qs == null)
+						Opts.backupErr("read");
+					setT$MA(qs);
 				}
 			}
 
@@ -261,7 +256,7 @@ public class BackupTreePage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					if (ZipAccess.extractPartial(new String(sel.data), sel)) {
+					if (ZipAccess.extractPartial(sel.getData().toString(), sel)) {
 						Opts.success("restoration succeed, please restart program");
 					} else
 						Opts.backupErr("restore");
@@ -284,6 +279,7 @@ public class BackupTreePage extends Page {
 
 		jls.addTreeSelectionListener(new TreeSelectionListener() {
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public void valueChanged(TreeSelectionEvent arg0) {
 				if (changing)
@@ -294,7 +290,7 @@ public class BackupTreePage extends Page {
 					obj = tp.getLastPathComponent();
 					if (obj != null)
 						obj = ((DefaultMutableTreeNode) obj).getUserObject();
-					sel = obj instanceof VFile ? (VFile) obj : null;
+					sel = obj instanceof VFile ? (VFile<BackupData>) obj : null;
 				} else
 					sel = null;
 				setSele();
@@ -304,11 +300,11 @@ public class BackupTreePage extends Page {
 
 	}
 
-	private void addTree(DefaultMutableTreeNode par, VFile vf) {
-		for (VFile c : vf.child) {
+	private void addTree(DefaultMutableTreeNode par, VFile<BackupData> vf) {
+		for (VFile<BackupData> c : vf.list()) {
 			DefaultMutableTreeNode cur = new DefaultMutableTreeNode(c);
 			par.add(cur);
-			if (c.child != null)
+			if (c.list() != null)
 				addTree(cur, c);
 		}
 	}
@@ -374,15 +370,15 @@ public class BackupTreePage extends Page {
 	private void setSele() {
 		boolean b = sel != null;
 		rept.setEnabled(b);
-		expt.setEnabled(b && sel.child == null);
-		if (b) {
+		expt.setEnabled(b && sel.list() == null);
+		if (b && sel.getData() != null) {
 			String size = "Size: ";
-			if (sel.size < 10000)
-				size += sel.size + " Bytes";
-			else if (sel.size < 10000000)
-				size += (sel.size >> 10) + " KB";
+			if (sel.getData().size < 10000)
+				size += sel.getData().size + " Bytes";
+			else if (sel.getData().size < 10000000)
+				size += (sel.getData().size >> 10) + " KB";
 			else
-				size += (sel.size >> 20) + " MB";
+				size += (sel.getData().size >> 20) + " MB";
 			jli.setText(size);
 		} else
 			jli.setText("");
@@ -576,7 +572,7 @@ public class BackupTreePage extends Page {
 		jlf.setModel(new DefaultTreeModel(top));
 	}
 
-	private void setTree(VFileRoot vfr) {
+	private void setTree(VFileRoot<BackupData> vfr) {
 		if (vfr == null) {
 			jls.setModel(new DefaultTreeModel(null));
 			return;

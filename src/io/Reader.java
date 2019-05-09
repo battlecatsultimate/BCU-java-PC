@@ -11,7 +11,6 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Queue;
 
 import event.EventReader;
@@ -43,15 +42,15 @@ import util.stage.Recd;
 import util.stage.Stage;
 import util.stage.StageMap;
 import util.system.MultiLangCont;
-import util.system.VFile;
-import util.system.VFileRoot;
+import util.system.files.BackupData;
+import util.system.files.VFileRoot;
 import util.unit.DIYAnim;
 import util.unit.Enemy;
 import util.unit.Unit;
 
 public class Reader extends DataIO {
 
-	public static VFileRoot alt;
+	public static VFileRoot<BackupData> alt;
 
 	public static void getData$0() {
 		try {
@@ -65,8 +64,8 @@ public class Reader extends DataIO {
 		try {
 			LoadPage.prog("reading basic images");
 			Res.readData();
-			readUnit();
-			readEnemy();
+			Unit.readData();
+			Enemy.readData();
 		} catch (Exception e) {
 			e.printStackTrace();
 			Opts.loadErr("error in reading: reading basic data");
@@ -329,17 +328,6 @@ public class Reader extends DataIO {
 			}
 	}
 
-	private static void readEnemy() {
-		VFile f = VFile.getFile("./org/enemy/");
-		List<VFile> list = f.listFiles();
-		int i = 0;
-		for (VFile fi : list) {
-			LoadPage.prog("reading enemies " + i++ + "/" + list.size());
-			new Enemy(Integer.parseInt(fi.getName()));
-		}
-		Enemy.readData();
-	}
-
 	private static void readGroup() {
 		File f = new File("./assets/calendar/group event.txt");
 		Queue<String> qs = readLines(f);
@@ -455,7 +443,6 @@ public class Reader extends DataIO {
 
 	private static void readOthers() {
 		Combo.readFile();
-		Unit.readLevel();
 		PCoin.read();
 		EffAnim.read();
 		Background.read();
@@ -464,16 +451,6 @@ public class Reader extends DataIO {
 		Limit.read();
 		NyCastle.read();
 		Soul.read();
-	}
-
-	private static void readUnit() {
-		VFile f = VFile.getFile("./org/unit/");
-		List<VFile> list = f.listFiles();
-		int i = 0;
-		for (VFile fi : list) {
-			LoadPage.prog("reading units: " + i++ + "/" + list.size());
-			new Unit(Integer.parseInt(fi.getName()));
-		}
 	}
 
 }

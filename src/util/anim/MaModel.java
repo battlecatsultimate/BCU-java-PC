@@ -12,23 +12,23 @@ import io.OutStream;
 import main.Opts;
 import main.Printer;
 import util.Data;
-import util.system.VFile;
+import util.system.files.FileData;
 
 public class MaModel extends Data implements Cloneable {
 
-	public static MaModel newIns(String path) {
-		return readSave(path, f -> f == null ? new MaModel() : new MaModel(f));
-	}
-
-	public static MaModel newIns(VFile f) {
+	public static MaModel newIns(FileData f) {
 		try {
-			return new MaModel(readLine(f));
+			return new MaModel(f.readLine());
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.animErr(f.getName());
+			Opts.animErr(f.toString());
 			return new MaModel();
 		}
 
+	}
+
+	public static MaModel newIns(String path) {
+		return readSave(path, f -> f == null ? new MaModel() : new MaModel(f));
 	}
 
 	public int n, m;

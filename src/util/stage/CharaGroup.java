@@ -11,7 +11,7 @@ import io.OutStream;
 import io.Reader;
 import util.Data;
 import util.pack.Pack;
-import util.system.VFile;
+import util.system.files.VFile;
 import util.unit.Unit;
 import util.unit.UnitStore;
 
@@ -27,7 +27,7 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 	}
 
 	public static void read() {
-		Queue<String> qs = readLine(VFile.getFile("./org/data/Charagroup.csv"));
+		Queue<String> qs = VFile.readLine("./org/data/Charagroup.csv");
 		qs.poll();
 		for (String str : qs) {
 			String[] strs = str.split(",");
