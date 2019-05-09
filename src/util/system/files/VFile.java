@@ -1,6 +1,5 @@
 package util.system.files;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +24,6 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 			return new VFile<FDFile>(null, f.getName(), new FDFile(f));
 		}
 		return null;
-	}
-
-	public static BufferedImage getImg(String str) {
-		return getFile(str).getData().getImg();
 	}
 
 	public static Queue<String> readLine(String str) {

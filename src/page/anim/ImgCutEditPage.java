@@ -540,6 +540,8 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		add(ico);
 		add.setEnabled(aep.focus == null);
 		jtf.setEnabled(aep.focus == null);
+		relo.setEnabled(aep.focus == null);
+		swcl.setEnabled(aep.focus == null);
 		jlu.setCellRenderer(new AnimLCR());
 		setA(null);
 		jlf.setSelectedIndex(0);

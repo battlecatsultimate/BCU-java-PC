@@ -1,9 +1,12 @@
 package util.system.files;
 
+import java.awt.image.BufferedImage;
 import java.util.Map;
 import java.util.TreeMap;
 
 import page.MainLocale;
+import util.system.MultiLangCont;
+import util.system.MultiLangFile;
 
 public interface AssetData extends ByteData {
 
@@ -15,12 +18,19 @@ public interface AssetData extends ByteData {
 		return new MultiLangAsset(vf);
 	}
 
+	public BufferedImage getImg(MultiLangFile mlf);
+
 }
 
 class DefAsset extends FileByte implements AssetData {
 
 	public DefAsset(byte[] bs) {
 		super(bs);
+	}
+
+	@Override
+	public BufferedImage getImg(MultiLangFile mlf) {
+		return getImg();
 	}
 
 }
@@ -41,6 +51,13 @@ class MultiLangAsset implements AssetData {
 		if (ad == null)
 			ad = map.values().iterator().next();
 		return ad.getBytes();
+	}
+
+	@Override
+	public BufferedImage getImg(MultiLangFile mlf) {
+		if (!MultiLangCont.VFILE.containsKey(mlf))
+			MultiLangCont.VFILE.put(mlf, this);
+		return getImg();
 	}
 
 }
