@@ -85,7 +85,8 @@ public class Writer extends DataIO {
 		if (log.length() == 0)
 			log.deleteOnExit();
 		else
-			BCJSON.report(log);
+			if(Opts.conf("Error happened. Do you want to submit error log?"))
+				BCJSON.report(log);
 	}
 
 	public static void logSetup() {
