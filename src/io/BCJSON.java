@@ -47,6 +47,8 @@ import util.pack.Pack;
 
 public class BCJSON extends Data {
 
+	private static final int CHUCK_SIZE=131072;
+	
 	public static String USERNAME = "";
 	public static long PASSWORD = 0;
 	public static int ID = 0;
@@ -146,7 +148,7 @@ public class BCJSON extends Data {
 		}
 
 		boolean need = ZipLib.info == null;
-		f = new File("./lib/calendar/");
+		f = new File(path+"calendar/");
 		if (need |= !f.exists())
 			f.mkdirs();
 		for (int i = 0; i < cals.length; i++)
@@ -187,15 +189,15 @@ public class BCJSON extends Data {
 			GenericUrl gurl = new GenericUrl(url);
 
 			MediaHttpDownloader downloader = new MediaHttpDownloader(transport, null);
-			downloader.setChunkSize(1000000);
-			downloader.setDirectDownloadEnabled(c==null);
+			downloader.setChunkSize(CHUCK_SIZE);
 			downloader.setProgressListener(new Progress(c));
 			downloader.download(gurl, out);
+			
 			out.close();
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
-			Opts.dloadErr("can't download " + url);
+			Opts.dloadErr(url);
 			return false;
 		}
 	}
@@ -401,7 +403,7 @@ public class BCJSON extends Data {
 				try {
 					ZipLib.lib.close();
 				} catch (IOException e) {
-					Opts.dloadErr("failed to save downloads");
+					Opts.ioErr("failed to save downloads");
 					e.printStackTrace();
 				}
 				ZipLib.init();
