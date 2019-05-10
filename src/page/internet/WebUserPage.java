@@ -105,7 +105,7 @@ public class WebUserPage extends Page {
 					strn = "title";
 				if (strd.length() == 0)
 					strd = "description";
-				int res = BCJSON.upload(p.id, strn, strd);
+				int res = BCJSON.initUpload(p.id, strn, strd);
 				if (res == 0)
 					load();
 				else if (res == 211)
@@ -200,7 +200,6 @@ public class WebUserPage extends Page {
 						String s1 = desp[I].getText().trim();
 						boolean b0 = s0.length() == 0;
 						boolean b1 = s1.length() == 0;
-						System.out.println(obj[I].pid + ", " + s0 + ", " + s1);
 						boolean b2 = false;
 						if (!b0 && !b1)
 							b2 = BCJSON.update(obj[I].pid, s0, s1);

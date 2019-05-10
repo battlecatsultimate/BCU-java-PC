@@ -84,6 +84,8 @@ public class Writer extends DataIO {
 		ps.close();
 		if (log.length() == 0)
 			log.deleteOnExit();
+		else
+			BCJSON.report(log);
 	}
 
 	public static void logSetup() {

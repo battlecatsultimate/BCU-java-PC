@@ -291,7 +291,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 			String str = "";
 			for (int i : times)
 				str += i == 0 ? "-" : "X";
-			System.out.println(str);
+			System.out.println(str);// TODO
 		});
 	}
 

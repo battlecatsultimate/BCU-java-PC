@@ -74,7 +74,7 @@ public abstract class StageBasis extends Data {
 		int sttime = 3;
 		if (st.map.mc.name.equals("CH")) {
 			if (st.map.id == 9)
-				sttime = (int) Math.round(Math.log(est.mul));
+				sttime = (int) Math.round(Math.log(est.mul) / Math.log(2));
 			if (st.map.id < 3)
 				sttime = st.map.id;
 		}

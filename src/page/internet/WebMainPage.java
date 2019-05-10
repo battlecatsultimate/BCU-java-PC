@@ -20,7 +20,7 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
 import io.BCJSON;
-import io.Downloader;
+import io.WebFileIO;
 import io.WebPack;
 import main.Opts;
 import page.JBTN;
@@ -243,7 +243,7 @@ public class WebMainPage extends Page {
 
 				down[i].setLnr(x -> {
 					File f = new File("./pack/" + obj[I].pid + ".bcupack");
-					if (Downloader.download(url, f, null)) {
+					if (WebFileIO.download(url, f, null)) {
 						Pack pac = Pack.read(f);
 						down[I].setText(2, "downloaded");
 						down[I].setEnabled(false);

@@ -128,4 +128,9 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 			v.sort();
 	}
 
+	@Override
+	public String toString() {
+		return name;
+	}
+
 }

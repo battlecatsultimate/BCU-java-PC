@@ -250,7 +250,10 @@ public class Treasure extends Data {
 	/** get canon recharge time */
 	protected int CanonTime(int map) {
 		int base = 1503 + 50 * (tech[LV_CATK] - tech[LV_RECH]);
-		base -= (int) (1.5 * trea[T_RECH]);
+		if (trea[T_RECH] <= 300)
+			base -= (int) (1.5 * trea[T_RECH]);
+		else
+			base -= 3 * trea[T_RECH] - 450;
 		base -= b.getInc(C_C_SPE);
 		base = Math.max(950, base + map * 450);
 		return base;
@@ -278,11 +281,9 @@ public class Treasure extends Data {
 
 	/** save data to file */
 	protected void write(OutStream os) {
-		os.writeString("0.3.5");
-		for (int i = 0; i < LV_TOT; i++)
-			os.writeByte((byte) tech[i]);
-		for (int i = 0; i < T_TOT; i++)
-			os.writeShort((short) trea[i]);
+		os.writeString("0.4.0");
+		os.writeIntB(tech);
+		os.writeIntB(trea);
 		os.writeInt(alien);
 		os.writeInt(star);
 		os.writeIntB(fruit);
@@ -297,7 +298,9 @@ public class Treasure extends Data {
 		if (val >= 305)
 			val = getVer(is.nextString());
 
-		if (val >= 305)
+		if (val >= 400)
+			zread$000400(is);
+		else if (val >= 305)
 			zread$000305(is);
 		else if (val >= 304)
 			zread$000304(is);
@@ -350,6 +353,22 @@ public class Treasure extends Data {
 		int[] temp = is.nextIntsB();
 		for (int i = 0; i < temp.length; i++)
 			bslv[i] = temp[i];
+	}
+
+	private void zread$000400(InStream is) {
+		int[] lv = is.nextIntsB();
+		int[] tr = is.nextIntsB();
+		for (int i = 0; i < Math.min(LV_TOT, lv.length); i++)
+			tech[i] = lv[i];
+		for (int i = 0; i < Math.min(T_TOT, tr.length); i++)
+			trea[i] = tr[i];
+		alien = is.nextInt();
+		star = is.nextInt();
+		fruit = is.nextIntsB();
+		gods = is.nextIntsB();
+		int[] bs = is.nextIntsB();
+		for (int i = 0; i < bs.length; i++)
+			bslv[i] = bs[i];
 	}
 
 }

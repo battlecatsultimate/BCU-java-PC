@@ -47,35 +47,38 @@ public class Interpret extends Data {
 	public static String[] PCTX;
 
 	/** treasure orderer */
-	public static final int[] TIND = new int[] { 0, 1, 18, 19, 20, 21, 22, 23, 2, 3, 4, 5, 24, 25, 26, 27, 28, 6, 7, 8,
-			9, 10, 11, 12, 13, 14, 15, 16, 17, 29, 30, 31, 32, 33, 34, 35 };
+	public static final int[] TIND = { 0, 1, 18, 19, 20, 21, 22, 23, 2, 3, 4, 5, 24, 25, 26, 27, 28, 6, 7, 8, 9, 10, 11,
+			12, 13, 14, 15, 16, 17, 29, 30, 31, 32, 33, 34, 35 };
 
 	/** treasure grouper */
-	public static final int[][] TCOLP = new int[][] { { 0, 6 }, { 8, 6 }, { 14, 3 }, { 17, 4 }, { 21, 3 }, { 29, 7 } };
+	public static final int[][] TCOLP = { { 0, 6 }, { 8, 6 }, { 14, 3 }, { 17, 4 }, { 21, 3 }, { 29, 7 } };
+
+	/** treasure max */
+	private static final int[] TMAX = { 30, 30, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 600, 1500, 100,
+			100, 100, 30, 30, 30, 30, 30, 10, 300, 300, 600, 600, 600, 20, 20, 20, 20, 20, 20, 20 };
 
 	/** proc data formatter */
-	private static final int[][] CMP = new int[][] { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 2, -1 },
+	private static final int[][] CMP = { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 2, -1 },
 			{ 0, -1, 3, 1 }, { 0, -1 }, { 0, -1, 1, 4 }, { 0, -1, 1 }, { 5, -1, 7 }, { 0, -1 }, { -1, 4, 6 },
 			{ -1, 1, 5, 6 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { 0, -1 },
 			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 4 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 } };
 
 	/** proc data locator */
-	private static final int[][] LOC = new int[][] { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 1, -1 },
+	private static final int[][] LOC = { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 1, -1 },
 			{ 0, -1, 2, 1 }, { 0, -1 }, { 0, -1, 1, 2 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { -1, 1, 0 },
 			{ -1, 1, 2, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { 0, -1 },
 			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 2 }, { 0, -1, 3 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 } };
 
 	/** combo string component */
-	private static final String[][] CDP = new String[][] { { "", "+", "-" }, { "_", "_%", "_f", "Lv._" } };
+	private static final String[][] CDP = { { "", "+", "-" }, { "_", "_%", "_f", "Lv._" } };
 
 	/** combo string formatter */
-	private static final int[][] CDC = new int[][] { { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 3 }, { 1, 0 },
-			{ 1, 1 }, { 2, 2 }, {}, { 1, 1 }, { 1, 1 }, { 2, 2 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 },
-			{ 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 } };
+	private static final int[][] CDC = { { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 3 }, { 1, 0 }, { 1, 1 }, { 2, 2 },
+			{}, { 1, 1 }, { 1, 1 }, { 2, 2 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 },
+			{ 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 } };
 
-	public static final int[] EABIIND = new int[] { 5, 7, 8, 9, 10, 11, 12, 15, 16, 18, 113, 114, 115, 116, 117, 118,
-			119 };
-	public static final int[] ABIIND = new int[] { 113, 114, 115, 116, 117, 118, 119 };
+	public static final int[] EABIIND = { 5, 7, 8, 9, 10, 11, 12, 15, 16, 18, 113, 114, 115, 116, 117, 118, 119 };
+	public static final int[] ABIIND = { 113, 114, 115, 116, 117, 118, 119 };
 	public static final int IMUSFT = 13, EFILTER = 8;
 
 	static {
@@ -352,6 +355,12 @@ public class Interpret extends Data {
 	}
 
 	private static void setVal(int ind, int v, Treasure t) {
+
+		if (v < 0)
+			v = 0;
+		if (v > TMAX[ind])
+			v = TMAX[ind];
+
 		if (ind == 0)
 			t.tech[LV_RES] = v;
 		else if (ind == 1)
