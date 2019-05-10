@@ -13,7 +13,7 @@ import util.Data;
 
 public class MainBCU {
 
-	public static final int ver = 40600, LIBREQ = 80504;
+	public static final int ver = 40602;
 
 	public static int FILTER_TYPE = 0;
 	public static boolean write = true, preload = false, trueRun = false, loaded = false;
@@ -35,9 +35,6 @@ public class MainBCU {
 		new Timer().start();
 		ZipLib.init();
 		BCJSON.checkDownload();
-		if (BCJSON.lib_ver < LIBREQ) {
-			Opts.loadErr("this version requires new lib");
-		}
 		ZipLib.read();
 		Reader.getData$1();
 		loaded = true;

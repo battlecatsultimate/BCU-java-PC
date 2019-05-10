@@ -114,7 +114,7 @@ public abstract class Entity extends AbEntity {
 	public void damaged(AttackAb atk) {
 		int dmg = getDamage(atk, atk.atk);
 		// if immune to wave and the attack is wave, jump out
-		if (atk.waveType == WT_WAVE) {
+		if ((atk.waveType & WT_WAVE) > 0) {
 			if (getProc(P_IMUWAVE, 0) > 0)
 				anim.getEff(P_WAVE);
 			if (getProc(P_IMUWAVE, 0) == 100)
@@ -123,7 +123,7 @@ public abstract class Entity extends AbEntity {
 				dmg = dmg * (100 - getProc(P_IMUWAVE, 0)) / 100;
 		}
 
-		if (atk.waveType == WT_MOVE)
+		if ((atk.waveType & WT_MOVE) > 0)
 			if ((getAbi() & AB_MOVEI) > 0) {
 				anim.getEff(P_WAVE);
 				return;

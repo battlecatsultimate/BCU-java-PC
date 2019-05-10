@@ -7,25 +7,26 @@
 	<classpathentry kind="lib" path="lib/vorbisspi-1.0.3.3.jar"/>
 	<classpathentry kind="lib" path="lib/json-20180813.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.10.jar"/>
-	<classpathentry kind="lib" path="lib/commons-logging-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/httpclient-4.5.6.jar"/>
 	<classpathentry kind="lib" path="lib/httpcore-4.4.10.jar"/>
 	<classpathentry kind="lib" path="lib/httpmime-4.5.6.jar"/>
-	<classpathentry kind="lib" path="lib/commons-io-2.6-tests.jar" sourcepath="lib/commons-io-2.6-test-sources.jar"/>
-	<classpathentry kind="lib" path="lib/commons-io-2.6.jar" sourcepath="lib/commons-io-2.6-sources.jar">
+	<classpathentry kind="lib" path="lib/commons-io-2.6.jar" sourcepath="libs/commons-io-2.6-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/viewer/lib/commons-io-2.6-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/viewer/libs/commons-io-2.6-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/jcodec-javase-0.2.3.jar" sourcepath="lib/jcodec-javase-0.2.3-sources.jar">
+	<classpathentry kind="lib" path="lib/jcodec-javase-0.2.3.jar" sourcepath="libs/jcodec-javase-0.2.3-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Users/arthur/eclipse-workspace/viewer/lib/jcodec-javase-0.2.3-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/viewer/libs/jcodec-javase-0.2.3-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/jcodec-0.2.3.jar" sourcepath="lib/jcodec-0.2.3-sources.jar">
+	<classpathentry kind="lib" path="lib/jcodec-0.2.3.jar" sourcepath="libs/jcodec-0.2.3-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Users/arthur/eclipse-workspace/viewer/lib/jcodec-0.2.3-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/viewer/libs/jcodec-0.2.3-sources.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/google-api-client-1.24.1.jar" sourcepath="libs/google-api-client-1.24.1-sources.jar"/>
+	<classpathentry kind="lib" path="lib/google-http-client-1.24.1.jar" sourcepath="libs/google-http-client-1.24.1-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

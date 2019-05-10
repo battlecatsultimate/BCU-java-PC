@@ -6,8 +6,6 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 
-import io.BCJSON;
-import io.Reader;
 import io.Writer;
 import main.Opts;
 import page.LoadPage;
@@ -16,8 +14,20 @@ import util.system.files.VFile;
 
 public class ZipLib {
 
+	public static final String[] LIBREQS = { "000001", "000002", "000003" };
+	public static final String[] OPTREQS = { "080504" };
+
 	public static FileSystem lib;
 	public static LibInfo info;
+
+	public static void check() {
+		for (String req : LIBREQS)
+			if (!info.merge.set.contains(req)) {
+				Opts.loadErr("this version requires lib " + req);
+				Writer.logClose(false);
+				System.exit(0);
+			}
+	}
 
 	public static void init() {
 		LoadPage.prog("finding library...");
@@ -29,7 +39,6 @@ public class ZipLib {
 		try {
 			lib = FileSystems.newFileSystem(f.toPath(), null);
 			info = new LibInfo(lib);
-			checkVer();
 		} catch (IOException e) {
 			e.printStackTrace();
 			Opts.loadErr("cannot access ./assets/assets.zip");
@@ -45,27 +54,24 @@ public class ZipLib {
 			info.merge(nlib);
 			temp.close();
 			f.delete();
-			checkVer();
 		} catch (IOException e) {
 			Opts.loadErr("failed to merge lib");
 			e.printStackTrace();
 		}
-
 	}
 
 	public static void read() {
 		LoadPage.prog("reading assets...");
 		try {
-			Files.walk(lib.getPath("org")).forEach(p -> {
-				if (Files.isDirectory(p))
-					return;
-				try {
-					VFile.root.build(p.toString(), AssetData.getAsset(Files.readAllBytes(p)));
-				} catch (IOException e) {
-					Opts.loadErr("failed to read " + p.toString());
-					e.printStackTrace();
-				}
-			});
+			int i = 0;
+			int tot = info.merge.paths.size();
+			for (PathInfo pi : info.merge.paths.values()) {
+				if (pi.type != 0)
+					continue;
+				byte[] data = Files.readAllBytes(lib.getPath(pi.path));
+				VFile.root.build(pi.path, AssetData.getAsset(data));
+				LoadPage.prog("reading assets " + i++ + "/" + tot);
+			}
 			VFile.root.sort();
 			VFile.root.getIf(p -> {
 				if (p.list() == null)
@@ -79,11 +85,6 @@ public class ZipLib {
 			Opts.loadErr("failed to access library");
 			e.printStackTrace();
 		}
-	}
-
-	private static void checkVer() {
-		info.merge.set.forEach(s -> BCJSON.lib_ver = Math.max(BCJSON.lib_ver, Reader.parseIntN(s)));
-
 	}
 
 }
