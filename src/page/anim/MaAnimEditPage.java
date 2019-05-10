@@ -661,8 +661,8 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 				ab.setSele(par);
 				int ic = mpet.anim.mamodel.parts[par][2];
 				jlp.setSelectedIndex(ic);
-				Rectangle r=jlp.getCellBounds(ic, ic);
-				if (r!=null)
+				Rectangle r = jlp.getCellBounds(ic, ic);
+				if (r != null)
 					jlp.scrollRectToVisible(r);
 				sb.sele = jlp.getSelectedIndex();
 			} else

@@ -4,7 +4,6 @@ import static io.WebPack.packlist;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,8 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
-import java.util.function.Consumer;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -32,11 +29,6 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.googleapis.media.MediaHttpDownloader;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpTransport;
-
 import decode.ZipLib;
 import main.MainBCU;
 import main.Opts;
@@ -45,18 +37,15 @@ import page.MainLocale;
 import util.Data;
 import util.pack.Pack;
 
-public class BCJSON extends Data {
+public class BCJSON extends Downloader {
 
-	private static final int CHUCK_SIZE=131072;
-	
 	public static String USERNAME = "";
 	public static long PASSWORD = 0;
 	public static int ID = 0;
-	public static int lib_ver = 1;
 	public static int cal_ver = 0;
 
-	private static final String str = "http://battlecatsultimate.cf/api/java/";
-	private static final String dld = "http://battlecatsultimate.cf/api/resources/";
+	private static final String req = "http://battlecatsultimate.cf/api/java/";
+	private static final String ast = "http://battlecatsultimate.cf/api/resources/";
 	private static final String path = "./assets/";
 	private static final String login = "login.php";
 	private static final String upload = "upload.php";
@@ -67,8 +56,6 @@ public class BCJSON extends Data {
 	private static final String retrieve = "acquire.php";
 
 	private static final String[] cals;
-
-	private static HttpTransport transport;
 
 	static {
 		cals = new String[33];
@@ -109,8 +96,8 @@ public class BCJSON extends Data {
 			LoadPage.prog("check jar update...");
 			if (MainBCU.ver < data.getInt("jar")) {
 				if (Opts.updateCheck("JAR", data.getString("jar-desc"))) {
-					String name = "BCU " + revVer(data.getInt("jar")) + ".jar";
-					if (download(dld + "jar/" + name, new File("./" + name), LoadPage.lp)) {
+					String name = "BCU " + Data.revVer(data.getInt("jar")) + ".jar";
+					if (download(ast + "jar/" + name, new File("./" + name), LoadPage.lp)) {
 						Writer.logClose(false);
 						System.exit(0);
 					} else
@@ -120,12 +107,12 @@ public class BCJSON extends Data {
 			}
 			LoadPage.prog("check text update...");
 			for (int i = 0; i < cals.length; i++)
-				if (!(f = new File(path + cals[i])).exists() && !download(dld + cals[i], f, null))
+				if (!(f = new File(path + cals[i])).exists() && !download(ast + cals[i], f, null))
 					Opts.dloadErr(cals[i]);
 			if (cal_ver < data.getInt("cal")) {
 				if (Opts.updateCheck("text", "")) {
 					for (int i = 0; i < cals.length; i++)
-						if (!download(dld + cals[i], new File(path + cals[i]), null))
+						if (!download(ast + cals[i], new File(path + cals[i]), null))
 							Opts.dloadErr(cals[i]);
 					cal_ver = data.getInt("cal");
 				}
@@ -142,13 +129,13 @@ public class BCJSON extends Data {
 				for (int i = 0; i < music; i++)
 					if (mus[i]) {
 						LoadPage.prog("download musics: " + i + "/" + mus.length);
-						if (!download(dld + "music/" + Data.trio(i) + ".ogg", fs[i], LoadPage.lp))
+						if (!download(ast + "music/" + Data.trio(i) + ".ogg", fs[i], LoadPage.lp))
 							Opts.dloadErr("music #" + i);
 					}
 		}
 
 		boolean need = ZipLib.info == null;
-		f = new File(path+"calendar/");
+		f = new File(path + "calendar/");
 		if (need |= !f.exists())
 			f.mkdirs();
 		for (int i = 0; i < cals.length; i++)
@@ -175,29 +162,6 @@ public class BCJSON extends Data {
 			return ret == 0;
 		} catch (IOException e) {
 			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public static boolean download(String url, File file, Consumer<Progress> c) {
-		Writer.check(file);
-		try {
-			if (transport == null)
-				transport = GoogleNetHttpTransport.newTrustedTransport();
-
-			OutputStream out = new FileOutputStream(file);
-			GenericUrl gurl = new GenericUrl(url);
-
-			MediaHttpDownloader downloader = new MediaHttpDownloader(transport, null);
-			downloader.setChunkSize(CHUCK_SIZE);
-			downloader.setProgressListener(new Progress(c));
-			downloader.download(gurl, out);
-			
-			out.close();
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			Opts.dloadErr(url);
 			return false;
 		}
 	}
@@ -359,7 +323,7 @@ public class BCJSON extends Data {
 				wp.desp = desc;
 				wp.name = name;
 				wp.uid = ID;
-				wp.url = str + "downloadpack.php?packid=" + pid;
+				wp.url = req + "downloadpack.php?packid=" + pid;
 				boolean b = reversion(pid);
 				return b ? 0 : 5;
 			} else if (ret == 2)
@@ -392,7 +356,7 @@ public class BCJSON extends Data {
 						continue;
 				LoadPage.prog("downloading asset: " + str + ".zip");
 				File temp = new File(path + (ZipLib.lib == null ? "assets.zip" : "temp.zip"));
-				if (download(dld + "assets/" + str + ".zip", temp, LoadPage.lp))
+				if (download(ast + "assets/" + str + ".zip", temp, LoadPage.lp))
 					if (ZipLib.info == null)
 						ZipLib.init();
 					else
@@ -409,6 +373,8 @@ public class BCJSON extends Data {
 				ZipLib.init();
 			}
 		}
+		ZipLib.check();
+
 	}
 
 	private static JSONObject getJSON(String url) throws IOException {
@@ -428,7 +394,7 @@ public class BCJSON extends Data {
 
 	private static JSONObject read(String json, String app) throws IOException {
 
-		URL url = new URL(str + app);
+		URL url = new URL(req + app);
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setConnectTimeout(5000);
 		conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -463,7 +429,7 @@ public class BCJSON extends Data {
 
 	private static boolean write(File file) throws IOException {
 		CloseableHttpClient client = HttpClients.createDefault();
-		HttpPost post = new HttpPost(str + fileio);
+		HttpPost post = new HttpPost(req + fileio);
 		FileBody fileBody = new FileBody(file, ContentType.DEFAULT_BINARY);
 		MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 		builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);

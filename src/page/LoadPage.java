@@ -33,6 +33,12 @@ public class LoadPage extends Page implements Consumer<Progress> {
 	}
 
 	@Override
+	public void accept(Progress dl) {
+		jpb.setMaximum(1000);
+		jpb.setValue((int) (dl.prog * 1000));
+	}
+
+	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(jl, x, y, 100, 500, 2000, 50);
@@ -50,12 +56,6 @@ public class LoadPage extends Page implements Consumer<Progress> {
 
 	private void set(String str) {
 		temp = str;
-	}
-
-	@Override
-	public void accept(Progress dl) {
-		jpb.setMaximum(1000);
-		jpb.setValue((int) (dl.prog * 1000));
 	}
 
 }
