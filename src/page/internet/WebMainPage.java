@@ -242,7 +242,7 @@ public class WebMainPage extends Page {
 
 				down[i].setLnr(x -> {
 					File f = new File("./pack/" + obj[I].pid + ".bcupack");
-					if (BCJSON.download(url, f)) {
+					if (BCJSON.download(url, f, null)) {
 						Pack pac = Pack.read(f);
 						down[I].setText(2, "downloaded");
 						down[I].setEnabled(false);

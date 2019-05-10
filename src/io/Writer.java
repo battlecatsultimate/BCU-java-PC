@@ -16,6 +16,7 @@ import java.util.Queue;
 
 import javax.imageio.ImageIO;
 
+import decode.ZipLib;
 import event.EventReader;
 import main.MainBCU;
 import main.Opts;
@@ -70,13 +71,15 @@ public class Writer extends DataIO {
 	}
 
 	public static void logClose(boolean save) {
-		if (save && MainBCU.loaded && MainBCU.trueRun) {
-			try {
-				writeOptions();
+		try {
+			writeOptions();
+			if (save && MainBCU.loaded && MainBCU.trueRun) {
 				writeData();
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
+			if (ZipLib.lib != null)
+				ZipLib.lib.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		ps.close();
 		if (log.length() == 0)

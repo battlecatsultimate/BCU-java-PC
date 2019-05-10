@@ -56,16 +56,15 @@ public class ZipLib {
 	public static void read() {
 		LoadPage.prog("reading assets...");
 		try {
-			Files.walk(lib.getPath("org")).forEach(p -> {
-				if (Files.isDirectory(p))
-					return;
-				try {
-					VFile.root.build(p.toString(), AssetData.getAsset(Files.readAllBytes(p)));
-				} catch (IOException e) {
-					Opts.loadErr("failed to read " + p.toString());
-					e.printStackTrace();
-				}
-			});
+			int i = 0;
+			int tot = info.merge.paths.size();
+			for (PathInfo pi : info.merge.paths.values()) {
+				if (pi.type != 0)
+					continue;
+				byte[] data = Files.readAllBytes(lib.getPath(pi.path));
+				VFile.root.build(pi.path, AssetData.getAsset(data));
+				LoadPage.prog("reading assets " + i++ + "/" + tot);
+			}
 			VFile.root.sort();
 			VFile.root.getIf(p -> {
 				if (p.list() == null)

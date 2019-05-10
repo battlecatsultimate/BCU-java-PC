@@ -7,57 +7,26 @@
 	<classpathentry kind="lib" path="lib/vorbisspi-1.0.3.3.jar"/>
 	<classpathentry kind="lib" path="lib/json-20180813.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.10.jar"/>
-	<classpathentry kind="lib" path="lib/commons-logging-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/httpclient-4.5.6.jar"/>
 	<classpathentry kind="lib" path="lib/httpcore-4.4.10.jar"/>
 	<classpathentry kind="lib" path="lib/httpmime-4.5.6.jar"/>
-	<classpathentry kind="lib" path="lib/commons-io-2.6-tests.jar" sourcepath="lib/commons-io-2.6-test-sources.jar"/>
-	<classpathentry kind="lib" path="lib/commons-io-2.6.jar" sourcepath="lib/commons-io-2.6-sources.jar">
+	<classpathentry kind="lib" path="lib/commons-io-2.6.jar" sourcepath="libs/commons-io-2.6-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/viewer/lib/commons-io-2.6-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/viewer/libs/commons-io-2.6-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/jcodec-javase-0.2.3.jar" sourcepath="lib/jcodec-javase-0.2.3-sources.jar">
+	<classpathentry kind="lib" path="lib/jcodec-javase-0.2.3.jar" sourcepath="libs/jcodec-javase-0.2.3-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Users/arthur/eclipse-workspace/viewer/lib/jcodec-javase-0.2.3-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/viewer/libs/jcodec-javase-0.2.3-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/jcodec-0.2.3.jar" sourcepath="lib/jcodec-0.2.3-sources.jar">
+	<classpathentry kind="lib" path="lib/jcodec-0.2.3.jar" sourcepath="libs/jcodec-0.2.3-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Users/arthur/eclipse-workspace/viewer/lib/jcodec-0.2.3-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/viewer/libs/jcodec-0.2.3-sources.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/google-api-client-1.24.1.jar" sourcepath="libs-sources/google-api-client-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-api-client-android-1.24.1.jar" sourcepath="libs-sources/google-api-client-android-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-api-client-appengine-1.24.1.jar" sourcepath="libs-sources/google-api-client-appengine-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-api-client-gson-1.24.1.jar" sourcepath="libs-sources/google-api-client-gson-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-api-client-jackson2-1.24.1.jar" sourcepath="libs-sources/google-api-client-jackson2-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-api-client-java6-1.24.1.jar" sourcepath="libs-sources/google-api-client-java6-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-api-client-protobuf-1.24.1.jar" sourcepath="libs-sources/google-api-client-protobuf-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-api-client-servlet-1.24.1.jar" sourcepath="libs-sources/google-api-client-servlet-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-api-client-xml-1.24.1.jar" sourcepath="libs-sources/google-api-client-xml-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-oauth-client-1.24.1.jar" sourcepath="libs-sources/google-oauth-client-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-oauth-client-appengine-1.24.1.jar" sourcepath="libs-sources/google-oauth-client-appengine-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-oauth-client-java6-1.24.1.jar" sourcepath="libs-sources/google-oauth-client-java6-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-oauth-client-jetty-1.24.1.jar" sourcepath="libs-sources/google-oauth-client-jetty-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-oauth-client-servlet-1.24.1.jar" sourcepath="libs-sources/google-oauth-client-servlet-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-http-client-1.24.1.jar" sourcepath="libs-sources/google-http-client-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-http-client-android-1.24.1.jar" sourcepath="libs-sources/google-http-client-android-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-http-client-appengine-1.24.1.jar" sourcepath="libs-sources/google-http-client-appengine-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-http-client-protobuf-1.24.1.jar" sourcepath="libs-sources/google-http-client-protobuf-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-http-client-gson-1.24.1.jar" sourcepath="libs-sources/google-http-client-gson-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-http-client-jackson-1.24.1.jar" sourcepath="libs-sources/google-http-client-jackson-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-http-client-jackson2-1.24.1.jar" sourcepath="libs-sources/google-http-client-jackson2-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-http-client-jdo-1.24.1.jar" sourcepath="libs-sources/google-http-client-jdo-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/google-http-client-xml-1.24.1.jar" sourcepath="libs-sources/google-http-client-xml-1.24.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/gson-2.1.jar" sourcepath="libs-sources/gson-2.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/httpclient-4.5.3.jar" sourcepath="libs-sources/httpclient-4.5.3-sources.jar"/>
-	<classpathentry kind="lib" path="libs/jackson-core-asl-1.9.11.jar" sourcepath="libs-sources/jackson-core-asl-1.9.11-sources.jar"/>
-	<classpathentry kind="lib" path="libs/jackson-core-2.9.2.jar" sourcepath="libs-sources/jackson-core-2.9.2-sources.jar"/>
-	<classpathentry kind="lib" path="libs/jdo2-api-2.3-eb.jar" sourcepath="libs-sources/jdo2-api-2.3-eb-sources.jar"/>
-	<classpathentry kind="lib" path="libs/jsr305-3.0.2.jar"/>
-	<classpathentry kind="lib" path="libs/protobuf-java-2.6.1.jar" sourcepath="libs-sources/protobuf-java-2.6.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/transaction-api-1.1.jar" sourcepath="libs-sources/transaction-api-1.1-sources.jar"/>
-	<classpathentry kind="lib" path="libs/xpp3-1.1.4c.jar" sourcepath="libs-sources/xpp3-1.1.4c-sources.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/google-api-client-1.24.1.jar" sourcepath="libs/google-api-client-1.24.1-sources.jar"/>
+	<classpathentry kind="lib" path="lib/google-http-client-1.24.1.jar" sourcepath="libs/google-http-client-1.24.1-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

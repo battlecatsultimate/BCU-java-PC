@@ -2,10 +2,9 @@ package io;
 
 import static io.WebPack.packlist;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,13 +13,12 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -33,6 +31,11 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.googleapis.media.MediaHttpDownloader;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpTransport;
 
 import decode.ZipLib;
 import main.MainBCU;
@@ -63,6 +66,8 @@ public class BCJSON extends Data {
 
 	private static final String[] cals;
 
+	private static HttpTransport transport;
+
 	static {
 		cals = new String[33];
 		String cal = "calendar/";
@@ -72,7 +77,7 @@ public class BCJSON extends Data {
 		cals[3] = cal + "group event.txt";
 		cals[4] = cal + "group hour.txt";
 
-		for (int i = 0; i < 4; i++) {// TODO
+		for (int i = 0; i < 4; i++) {
 			String lang = "lang/" + MainLocale.LOC_CODE[i] + "/";
 			cals[i * 7 + 5] = lang + "util.properties";
 			cals[i * 7 + 6] = lang + "page.properties";
@@ -99,16 +104,11 @@ public class BCJSON extends Data {
 		checkLib(lib);
 
 		if (data != null && data.length() >= 7) {
-
-			for (int i = 0; i < cals.length; i++)
-				if (!(f = new File(path + cals[i])).exists() && !download(dld + cals[i], f))
-					Opts.dloadErr(cals[i]);
-
+			LoadPage.prog("check jar update...");
 			if (MainBCU.ver < data.getInt("jar")) {
 				if (Opts.updateCheck("JAR", data.getString("jar-desc"))) {
 					String name = "BCU " + revVer(data.getInt("jar")) + ".jar";
-					byte[] bs = download(dld + "jar/" + name);
-					if (bs != null && Writer.writeBytes(bs, "./" + name)) {
+					if (download(dld + "jar/" + name, new File("./" + name), LoadPage.lp)) {
 						Writer.logClose(false);
 						System.exit(0);
 					} else
@@ -116,26 +116,33 @@ public class BCJSON extends Data {
 				}
 
 			}
+			LoadPage.prog("check text update...");
+			for (int i = 0; i < cals.length; i++)
+				if (!(f = new File(path + cals[i])).exists() && !download(dld + cals[i], f, null))
+					Opts.dloadErr(cals[i]);
 			if (cal_ver < data.getInt("cal")) {
 				if (Opts.updateCheck("text", "")) {
 					for (int i = 0; i < cals.length; i++)
-						if (!(f = new File(path + cals[i])).exists() && !download(dld + cals[i], f))
+						if (!download(dld + cals[i], new File(path + cals[i]), null))
 							Opts.dloadErr(cals[i]);
 					cal_ver = data.getInt("cal");
 				}
 			}
 
+			LoadPage.prog("check music update...");
 			int music = data.getInt("music");
 			boolean[] mus = new boolean[music];
 			File[] fs = new File[music];
 			boolean down = false;
 			for (int i = 0; i < music; i++)
-				down |= mus[i] = !(fs[i] = new File("./lib/music/" + Data.trio(i) + ".ogg")).exists();
+				down |= mus[i] = !(fs[i] = new File(path + "music/" + Data.trio(i) + ".ogg")).exists();
 			if (down && Opts.updateCheck("music", ""))
 				for (int i = 0; i < music; i++)
-					if (mus[i])
-						if (!download(dld + "music/" + Data.trio(i) + ".ogg", fs[i]))
+					if (mus[i]) {
+						LoadPage.prog("download musics: " + i + "/" + mus.length);
+						if (!download(dld + "music/" + Data.trio(i) + ".ogg", fs[i], LoadPage.lp))
 							Opts.dloadErr("music #" + i);
+					}
 		}
 
 		boolean need = ZipLib.info == null;
@@ -170,10 +177,21 @@ public class BCJSON extends Data {
 		}
 	}
 
-	public static boolean download(String url, File file) {
+	public static boolean download(String url, File file, Consumer<Progress> c) {
 		Writer.check(file);
 		try {
-			FileUtils.copyURLToFile(new URL(url), file);
+			if (transport == null)
+				transport = GoogleNetHttpTransport.newTrustedTransport();
+
+			OutputStream out = new FileOutputStream(file);
+			GenericUrl gurl = new GenericUrl(url);
+
+			MediaHttpDownloader downloader = new MediaHttpDownloader(transport, null);
+			downloader.setChunkSize(1000000);
+			downloader.setDirectDownloadEnabled(c==null);
+			downloader.setProgressListener(new Progress(c));
+			downloader.download(gurl, out);
+			out.close();
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -372,7 +390,7 @@ public class BCJSON extends Data {
 						continue;
 				LoadPage.prog("downloading asset: " + str + ".zip");
 				File temp = new File(path + (ZipLib.lib == null ? "assets.zip" : "temp.zip"));
-				if (download(dld + "assets/" + str + ".zip", temp))
+				if (download(dld + "assets/" + str + ".zip", temp, LoadPage.lp))
 					if (ZipLib.info == null)
 						ZipLib.init();
 					else
@@ -388,31 +406,6 @@ public class BCJSON extends Data {
 				}
 				ZipLib.init();
 			}
-		}
-	}
-
-	private static byte[] download(String url) {
-		File file = new File("./lib/temp.download");
-		Writer.check(file);
-		file.deleteOnExit();
-		OutStreamDef os = new OutStreamDef();
-		try {
-			FileUtils.copyURLToFile(new URL(url), file, 5000, 5000);
-			InputStream in = new FileInputStream(file);
-			in = new BufferedInputStream(in);
-			byte[] bts = new byte[1024];
-			int len = -1;
-			while ((len = in.read(bts)) == 1024)
-				os.concat(bts);
-			in.close();
-			if (len > 0)
-				os.concat(Arrays.copyOf(bts, len));
-			os.terminate();
-			return os.getBytes();
-		} catch (Exception e) {
-			e.printStackTrace();
-			Opts.dloadErr("can't download " + url);
-			return null;
 		}
 	}
 

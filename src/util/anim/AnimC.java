@@ -178,7 +178,7 @@ public class AnimC extends AnimU {
 		loaded = true;
 		try {
 			String pre = prev + name + "/" + name;
-			num = VFile.get(pre + ".png").getData().getImg();
+			num = VFile.getFile(pre + ".png").getData().getImg();
 			imgcut = ImgCut.newIns(pre + ".imgcut");
 			if (num == null) {
 				Printer.e("AnimC", 147, "can't read png: " + pre);
@@ -202,7 +202,7 @@ public class AnimC extends AnimU {
 	}
 
 	public void reloImg() {
-		num = VFile.get(prev + name + "/" + name + ".png").getData().getImg();
+		num = VFile.getFile(prev + name + "/" + name + ".png").getData().getImg();
 	}
 
 	public void renameTo(String str) {
