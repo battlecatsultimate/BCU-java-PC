@@ -73,7 +73,7 @@ public class EEnemy extends Entity {
 		else if (atk.getProc(P_CRIT)[0] > 0)
 			ans *= 0.01 * atk.getProc(P_CRIT)[0];
 		else if (atk.getProc(P_CRIT)[0] < 0)
-			ans = 1;
+			ans = (int) Math.ceil(maxH * 0.0001);
 		return ans;
 	}
 

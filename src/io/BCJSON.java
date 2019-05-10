@@ -16,16 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -37,7 +27,7 @@ import page.MainLocale;
 import util.Data;
 import util.pack.Pack;
 
-public class BCJSON extends Downloader {
+public class BCJSON extends WebFileIO {
 
 	public static String USERNAME = "";
 	public static long PASSWORD = 0;
@@ -53,6 +43,7 @@ public class BCJSON extends Downloader {
 	private static final String getinfo = "getinfo.php";
 	private static final String delete = "delete.php";
 	private static final String fileio = "fileio.php";
+	private static final String logio = "logio.php";
 	private static final String retrieve = "acquire.php";
 
 	private static final String[] cals;
@@ -223,6 +214,37 @@ public class BCJSON extends Downloader {
 		return ans;
 	}
 
+	/** upload a pack */
+	public static int initUpload(int pid, String name, String desc) {
+		JSONObject inp = new JSONObject();
+		inp.put("uid", ID);
+		inp.put("password", PASSWORD);
+		inp.put("pid", pid);
+		inp.put("name", process(name));
+		inp.put("desc", process(desc));
+		inp.put("bcuver", MainBCU.ver);
+
+		try {
+			JSONObject ans = read(inp.toString(), upload);
+			int ret = ans.getInt("ret");
+			if (ret == 0) {
+				WebPack wp = new WebPack(pid);
+				wp.author = USERNAME;
+				wp.desp = desc;
+				wp.name = name;
+				wp.uid = ID;
+				wp.url = req + "downloadpack.php?packid=" + pid;
+				boolean b = reversion(pid);
+				return b ? 0 : 5;
+			} else if (ret == 2)
+				return ans.getInt("err");
+			return ret;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return 4;
+		}
+	}
+
 	public static int[][] rate(int pid, int val) {
 		JSONObject inp = new JSONObject();
 		inp.put("uid", ID);
@@ -252,6 +274,16 @@ public class BCJSON extends Downloader {
 		}
 	}
 
+	public static boolean report(File f) {
+		try {
+			return upload(f, req + logio);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	/** update a pack */
 	public static boolean reversion(int pid) {
 		Pack p = Pack.map.get(pid);
 		WebPack wp = packlist.get(pid);
@@ -261,7 +293,7 @@ public class BCJSON extends Downloader {
 		File f = new File("./pack/" + pid + ".bcupack");
 		if (f.exists())
 			try {
-				boolean b = write(f);
+				boolean b = upload(f, req + fileio);
 				if (b) {
 					JSONObject inp = new JSONObject();
 					inp.put("uid", ID);
@@ -281,6 +313,7 @@ public class BCJSON extends Downloader {
 		return false;
 	}
 
+	/** update pack information */
 	public static boolean update(int pid, String name, String desc) {
 		JSONObject inp = new JSONObject();
 		inp.put("uid", ID);
@@ -302,36 +335,6 @@ public class BCJSON extends Downloader {
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
-		}
-	}
-
-	public static int upload(int pid, String name, String desc) {
-		JSONObject inp = new JSONObject();
-		inp.put("uid", ID);
-		inp.put("password", PASSWORD);
-		inp.put("pid", pid);
-		inp.put("name", process(name));
-		inp.put("desc", process(desc));
-		inp.put("bcuver", MainBCU.ver);
-
-		try {
-			JSONObject ans = read(inp.toString(), upload);
-			int ret = ans.getInt("ret");
-			if (ret == 0) {
-				WebPack wp = new WebPack(pid);
-				wp.author = USERNAME;
-				wp.desp = desc;
-				wp.name = name;
-				wp.uid = ID;
-				wp.url = req + "downloadpack.php?packid=" + pid;
-				boolean b = reversion(pid);
-				return b ? 0 : 5;
-			} else if (ret == 2)
-				return ans.getInt("err");
-			return ret;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return 4;
 		}
 	}
 
@@ -409,7 +412,7 @@ public class BCJSON extends Downloader {
 		InputStreamReader isr = new InputStreamReader(in, "UTF-8");
 		String result = readAll(new BufferedReader(isr));
 		if (!MainBCU.write)
-			System.out.println("result: " + result);// TODO
+			System.out.println("result: " + result);
 		if (!result.startsWith("{"))
 			throw new IOException(result);
 		JSONObject ans = new JSONObject(result);
@@ -426,28 +429,4 @@ public class BCJSON extends Downloader {
 		}
 		return sb.toString();
 	}
-
-	private static boolean write(File file) throws IOException {
-		CloseableHttpClient client = HttpClients.createDefault();
-		HttpPost post = new HttpPost(req + fileio);
-		FileBody fileBody = new FileBody(file, ContentType.DEFAULT_BINARY);
-		MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-		builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-		builder.addPart("catFile", fileBody);
-
-		HttpEntity reqEntity = builder.build();
-		post.setEntity(reqEntity);
-		HttpResponse response = client.execute(post);
-
-		int statusCode = response.getStatusLine().getStatusCode();
-		if (statusCode == 200)
-			return true;
-		System.err.println("statusCode: " + statusCode);
-		HttpEntity respEntity = response.getEntity();
-		String responseString = EntityUtils.toString(respEntity, "UTF-8");
-		System.err.println("response body: ");
-		System.err.println(responseString);
-		return false;
-	}
-
 }

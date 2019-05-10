@@ -29,7 +29,7 @@ public class BCMusic {
 	}
 
 	public static void read() {
-		File dict = new File("./lib/music/");
+		File dict = new File("./assets/music/");
 		if (!dict.exists())
 			return;
 		File[] fs = dict.listFiles();
