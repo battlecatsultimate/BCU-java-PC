@@ -17,7 +17,7 @@ public class MainPackReform {
 		Reader.getData$1();
 		System.out.println("loaded");
 		Pack p = new Pack(asg);
-		p.merge(Pack.map.get(pid), false);
+		p.merge(Pack.map.get(pid));
 		Writer.writeBytes(p.write(), "./res/enemy/00" + asg + ".bcuenemy");
 		System.out.println("done");
 	}
