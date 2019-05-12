@@ -25,7 +25,7 @@ import main.Printer;
  * 4. Array field of type 1~4 <br>
  * 5. Cloneable Collection field with generic type of 1~4
  */
-public strictfp class Copible extends ImgCore implements Cloneable {
+public strictfp class BattleObj extends ImgCore implements Cloneable {
 
 	public static final String NONC = "NONC_";
 
@@ -39,8 +39,8 @@ public strictfp class Copible extends ImgCore implements Cloneable {
 			return true;
 		if (tc == String.class)
 			return true;
-		boolean b0 = Copible.class.isAssignableFrom(tc);
-		boolean b1 = NonCopible.class.isAssignableFrom(tc);
+		boolean b0 = BattleObj.class.isAssignableFrom(tc);
+		boolean b1 = BattleStatic.class.isAssignableFrom(tc);
 		if (b0 && b1)
 			return false;
 		if (b0 || b1)
@@ -51,7 +51,7 @@ public strictfp class Copible extends ImgCore implements Cloneable {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static List<Field> getField(Class<? extends Copible> cls) {
+	private static List<Field> getField(Class<? extends BattleObj> cls) {
 		List<Field> fl = new ArrayList<Field>();
 		Field[] fs = cls.getDeclaredFields();
 		for (Field f : fs)
@@ -59,9 +59,9 @@ public strictfp class Copible extends ImgCore implements Cloneable {
 				f.setAccessible(true);
 				fl.add(f);
 			}
-		Class<? extends Copible> sc = null;
-		if (Copible.class.isAssignableFrom(cls) && Copible.class != cls.getSuperclass())
-			sc = (Class<? extends Copible>) cls.getSuperclass();
+		Class<? extends BattleObj> sc = null;
+		if (BattleObj.class.isAssignableFrom(cls) && BattleObj.class != cls.getSuperclass())
+			sc = (Class<? extends BattleObj>) cls.getSuperclass();
 		if (sc != null)
 			fl.addAll(getField(sc));
 		return fl;
@@ -72,10 +72,10 @@ public strictfp class Copible extends ImgCore implements Cloneable {
 		if (obj == null)
 			return null;
 		Class<?> c = obj.getClass();
-		if (c.isPrimitive() || c == String.class || NonCopible.class.isAssignableFrom(c))
+		if (c.isPrimitive() || c == String.class || BattleStatic.class.isAssignableFrom(c))
 			return obj;
-		if (obj instanceof Copible)
-			return ((Copible) obj).copy();
+		if (obj instanceof BattleObj)
+			return ((BattleObj) obj).copy();
 		if (MAP.containsKey(obj.hashCode()))
 			return MAP.get(obj.hashCode());
 		if (obj.getClass().isArray()) {
@@ -102,11 +102,11 @@ public strictfp class Copible extends ImgCore implements Cloneable {
 		throw new BCUException("cannot copy class " + obj.getClass());
 	}
 
-	protected Copible copy = null;
+	protected BattleObj copy = null;
 
 	@Override
-	public Copible clone() {
-		Copible c = copy();
+	public BattleObj clone() {
+		BattleObj c = copy();
 		terminate();
 		MAP.clear();
 		UNCHECKED.removeAll(OLD);
@@ -117,12 +117,12 @@ public strictfp class Copible extends ImgCore implements Cloneable {
 		return c;
 	}
 
-	protected Copible copy() {
+	protected BattleObj copy() {
 		if (copy != null)
 			return copy;
 		try {
 			// copy primary types
-			copy = (Copible) super.clone();
+			copy = (BattleObj) super.clone();
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
@@ -155,7 +155,7 @@ public strictfp class Copible extends ImgCore implements Cloneable {
 					e.printStackTrace();
 				}
 				for (Object o : f2)
-					if (!(o instanceof Copible))
+					if (!(o instanceof BattleObj))
 						UNCHECKED.add(o.getClass());
 				continue;
 			}
@@ -167,7 +167,7 @@ public strictfp class Copible extends ImgCore implements Cloneable {
 	private void terminate() {
 		if (copy == null)
 			return;
-		Copible temp = copy;
+		BattleObj temp = copy;
 		copy = null;
 		if (temp != null)
 			temp.terminate();
@@ -175,25 +175,25 @@ public strictfp class Copible extends ImgCore implements Cloneable {
 		for (Field f : lf) {
 			f.setAccessible(true);
 			Class<?> tc = f.getType();
-			if (Copible.class.isAssignableFrom(tc)) {
-				Copible f2 = null;
+			if (BattleObj.class.isAssignableFrom(tc)) {
+				BattleObj f2 = null;
 				try {
-					f2 = (Copible) f.get(this);
+					f2 = (BattleObj) f.get(this);
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();
 				}
 				if (f2 != null)
 					f2.terminate();
 			}
-			if (tc.isArray() && Copible.class.isAssignableFrom(tc.getComponentType())) {
-				Copible[] f2 = null;
+			if (tc.isArray() && BattleObj.class.isAssignableFrom(tc.getComponentType())) {
+				BattleObj[] f2 = null;
 				try {
-					f2 = (Copible[]) f.get(this);
+					f2 = (BattleObj[]) f.get(this);
 				} catch (IllegalAccessException e) {
 					e.printStackTrace();
 				}
 				if (f2 != null)
-					for (Copible c : f2)
+					for (BattleObj c : f2)
 						if (c != null)
 							c.terminate();
 			}
@@ -208,8 +208,8 @@ public strictfp class Copible extends ImgCore implements Cloneable {
 				}
 				if (f2 != null)
 					for (Object c : f2)
-						if (c != null && c instanceof Copible)
-							((Copible) c).terminate();
+						if (c != null && c instanceof BattleObj)
+							((BattleObj) c).terminate();
 			}
 		}
 	}

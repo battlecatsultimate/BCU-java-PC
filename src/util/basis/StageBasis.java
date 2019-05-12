@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import util.Copible;
+import util.BattleObj;
 import util.entity.AbEntity;
 import util.entity.Cannon;
 import util.entity.EAnimCont;
@@ -23,7 +23,7 @@ import util.stage.EStage;
 import util.stage.Stage;
 import util.unit.EForm;
 
-public class StageBasis extends Copible {
+public class StageBasis extends BattleObj {
 
 	public static boolean testing = true;
 
@@ -211,11 +211,6 @@ public class StageBasis extends Copible {
 	 * entities
 	 */
 	protected void update() {
-		if (time % 90 == 0) {
-			clone();
-
-			// TODO
-		}
 		tempe.removeIf(e -> {
 			if (e.t == 0)
 				le.add(e.ent);

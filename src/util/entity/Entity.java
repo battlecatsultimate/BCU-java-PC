@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import page.battle.BattleBox;
-import util.Copible;
+import util.BattleObj;
 import util.anim.EAnimU;
 import util.basis.StageBasis;
 import util.entity.attack.AtkModelEntity;
@@ -628,7 +628,7 @@ public abstract class Entity extends AbEntity {
 
 }
 
-class AtkManager extends Copible {
+class AtkManager extends BattleObj {
 
 	/** atk FSM time */
 	protected int atkTime;
@@ -701,7 +701,7 @@ class AtkManager extends Copible {
 	}
 }
 
-class KBManager extends Copible {
+class KBManager extends BattleObj {
 
 	/** KB FSM type */
 	protected int kbType;
@@ -799,7 +799,7 @@ class KBManager extends Copible {
 
 }
 
-class PoisonToken extends Copible {
+class PoisonToken extends BattleObj {
 
 	private final Entity e;
 
@@ -850,7 +850,7 @@ class PoisonToken extends Copible {
 
 }
 
-class WeakToken extends Copible {
+class WeakToken extends BattleObj {
 
 	private final Entity e;
 

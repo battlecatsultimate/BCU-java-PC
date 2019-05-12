@@ -9,7 +9,7 @@ import io.OutStream;
 import io.Reader;
 import main.MainBCU;
 import util.Data;
-import util.NonCopible;
+import util.BattleStatic;
 import util.pack.Pack;
 import util.system.BasedCopable;
 import util.system.MultiLangCont;
@@ -17,7 +17,7 @@ import util.system.files.AssetData;
 import util.system.files.VFile;
 import util.unit.Enemy;
 
-public class Stage extends Data implements BasedCopable<Stage, StageMap>, NonCopible {
+public class Stage extends Data implements BasedCopable<Stage, StageMap>, BattleStatic {
 
 	public static final MapColc clipmc = new MapColc("clip", -1);
 	public static final StageMap clipsm = clipmc.maps[0];

@@ -3,9 +3,9 @@ package util.anim;
 import java.awt.image.BufferedImage;
 
 import util.Animable;
-import util.NonCopible;
+import util.BattleStatic;
 
-public abstract class AnimI extends Animable<AnimI> implements NonCopible {
+public abstract class AnimI extends Animable<AnimI> implements BattleStatic {
 
 	public abstract void check();
 

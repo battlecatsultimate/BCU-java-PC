@@ -1,9 +1,9 @@
 package util.entity;
 
-import util.Copible;
+import util.BattleObj;
 import util.entity.attack.AttackAb;
 
-public abstract class AbEntity extends Copible {
+public abstract class AbEntity extends BattleObj {
 
 	public long health, maxH;
 	public int dire;

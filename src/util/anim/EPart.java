@@ -6,10 +6,10 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 import main.Printer;
-import util.Copible;
+import util.BattleObj;
 import util.system.P;
 
-public class EPart extends Copible implements Comparable<EPart> {
+public class EPart extends BattleObj implements Comparable<EPart> {
 
 	private final String name;
 	private final MaModel model;

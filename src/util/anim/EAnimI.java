@@ -4,10 +4,10 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import util.Copible;
+import util.BattleObj;
 import util.system.P;
 
-public abstract class EAnimI extends Copible {
+public abstract class EAnimI extends BattleObj {
 
 	public int sele = -1;
 	public EPart[] ent = null;

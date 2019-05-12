@@ -1,9 +1,9 @@
 package util.basis;
 
-import util.Copible;
+import util.BattleObj;
 import util.stage.Limit;
 
-public class ELineUp extends Copible {
+public class ELineUp extends BattleObj {
 
 	private final StageBasis b;
 	public final int[][] price, cool, maxC;

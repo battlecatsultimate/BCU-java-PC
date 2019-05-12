@@ -2,10 +2,10 @@ package util.entity.data;
 
 import util.Animable;
 import util.Data;
-import util.NonCopible;
+import util.BattleStatic;
 import util.anim.AnimU;
 
-public interface MaskEntity extends NonCopible {
+public interface MaskEntity extends BattleStatic {
 
 	public int allAtk();
 

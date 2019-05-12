@@ -1,10 +1,10 @@
 package util.entity.attack;
 
-import util.Copible;
+import util.BattleObj;
 import util.basis.StageBasis;
 import util.entity.Entity;
 
-public abstract class AtkModelAb extends Copible {
+public abstract class AtkModelAb extends BattleObj {
 
 	public final StageBasis b;
 

@@ -18,9 +18,9 @@ import javax.swing.UIManager.LookAndFeelInfo;
 
 import io.Reader;
 import io.Writer;
-import util.Copible;
+import util.BattleObj;
 
-public class Temp extends Copible {
+public class Temp extends BattleObj {
 
 	public static void main(String[] args) throws Exception {
 

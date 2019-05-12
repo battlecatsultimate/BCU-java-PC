@@ -1,8 +1,8 @@
 package util.entity;
 
-import util.Copible;
+import util.BattleObj;
 
-public class EntCont extends Copible {
+public class EntCont extends BattleObj {
 
 	public Entity ent;
 
