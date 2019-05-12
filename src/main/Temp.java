@@ -12,19 +12,18 @@ import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Queue;
-
 import javax.imageio.ImageIO;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import io.Reader;
 import io.Writer;
+import util.Copible;
 
-public class Temp {
+public class Temp extends Copible {
 
-	public static void main(String[] args) {
-		int i = 1;
-		System.out.println(i++ + ++i);
+	public static void main(String[] args) throws Exception {
+
 	}
 
 	public static void main$0(String[] args) throws FileNotFoundException {

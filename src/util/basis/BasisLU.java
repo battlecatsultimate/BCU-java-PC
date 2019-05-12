@@ -2,9 +2,10 @@ package util.basis;
 
 import io.InStream;
 import io.OutStream;
+import util.NonCopible;
 import util.system.Copable;
 
-public class BasisLU extends Basis implements Copable<BasisLU> {
+public class BasisLU extends Basis implements Copable<BasisLU>, NonCopible {
 
 	public static BasisLU zread(InStream is) {
 		int ver = getVer(is.nextString());

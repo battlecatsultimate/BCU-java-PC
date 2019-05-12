@@ -20,7 +20,7 @@ public strictfp interface InStream {
 			InStream ans = new InStreamFmt(is, 4, is.length);
 			return ans;
 		}
-		throw new OverReadException("Unsupported version");
+		throw new BCUException("Unsupported version");
 	}
 
 	public boolean end();
@@ -229,7 +229,7 @@ strictfp class InStreamDef extends DataIO implements InStream {
 		if (max - index < i) {
 			String str = "out of bound: " + (index - off) + "/" + (max - off) + ", " + index + "/" + max + "/" + off
 					+ "/" + bs.length;
-			throw new OverReadException(str);
+			throw new BCUException(str);
 		}
 	}
 
@@ -256,7 +256,7 @@ strictfp class InStreamFmt extends DataIO implements InStream {
 		byte[] md5 = head.nextBytesB();
 		try {
 
-		} catch (OverReadException e) {
+		} catch (BCUException e) {
 		}
 
 		try {
@@ -265,7 +265,7 @@ strictfp class InStreamFmt extends DataIO implements InStream {
 			byte[] nmd = mdi.digest();
 			if (!Arrays.equals(md5, nmd)) {
 				Opts.ioErr("corrupted file: mismatch MD5");
-				throw new OverReadException("mismatch MD5");
+				throw new BCUException("mismatch MD5");
 
 			}
 		} catch (NoSuchAlgorithmException e1) {
@@ -366,14 +366,14 @@ strictfp class InStreamFmt extends DataIO implements InStream {
 
 	private void check(byte f) {
 		if (index >= max)
-			throw new OverReadException("Fmt: reach end of " + max);
+			throw new BCUException("Fmt: reach end of " + max);
 		index++;
 		int r = bs.nextByte();
 		if (r == f)
 			return;
 		if (r >= names.length || r == 0)
-			throw new OverReadException("unknown data type: " + r);
-		throw new OverReadException("Expected to Read " + names[f] + " but read " + names[r]);
+			throw new BCUException("unknown data type: " + r);
+		throw new BCUException("Expected to Read " + names[f] + " but read " + names[r]);
 	}
 
 }

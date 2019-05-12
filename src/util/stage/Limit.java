@@ -5,9 +5,10 @@ import java.util.Queue;
 import io.InStream;
 import io.OutStream;
 import util.Data;
+import util.NonCopible;
 import util.system.files.VFile;
 
-public class Limit extends Data {
+public class Limit extends Data implements NonCopible {
 
 	public static void read() {
 		Queue<String> qs = VFile.readLine("./org/data/Stage_option.csv");

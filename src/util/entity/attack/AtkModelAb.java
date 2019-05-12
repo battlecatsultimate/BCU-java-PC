@@ -1,10 +1,10 @@
 package util.entity.attack;
 
-import util.Data;
+import util.Copible;
 import util.basis.StageBasis;
 import util.entity.Entity;
 
-public abstract class AtkModelAb extends Data {
+public abstract class AtkModelAb extends Copible {
 
 	public final StageBasis b;
 

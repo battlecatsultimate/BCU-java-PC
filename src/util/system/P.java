@@ -7,7 +7,9 @@ import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-public strictfp class P {
+import util.Copible;
+
+public strictfp class P extends Copible {
 
 	public static P polar(double r, double t) {
 		return new P(r * Math.cos(t), r * Math.sin(t));
@@ -58,6 +60,7 @@ public strictfp class P {
 		return sf(p).atan2();
 	}
 
+	@Override
 	public P copy() {
 		return new P(x, y);
 	}

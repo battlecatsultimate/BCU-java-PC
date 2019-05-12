@@ -4,10 +4,10 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import util.ImgCore;
+import util.Copible;
 import util.system.P;
 
-public abstract class EAnimI extends ImgCore {
+public abstract class EAnimI extends Copible {
 
 	public int sele = -1;
 	public EPart[] ent = null;

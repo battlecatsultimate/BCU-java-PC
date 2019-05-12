@@ -16,7 +16,7 @@ import javax.imageio.ImageIO;
 import io.BCJSON;
 import io.InStream;
 import io.OutStream;
-import io.OverReadException;
+import io.BCUException;
 import io.Reader;
 import io.Writer;
 import main.MainBCU;
@@ -266,7 +266,7 @@ public class Pack extends Data {
 				time = head.nextString();
 				version = head.nextInt();
 				author = head.nextString();
-			} catch (OverReadException e) {
+			} catch (BCUException e) {
 			}
 		} else {
 			id = is.nextInt();

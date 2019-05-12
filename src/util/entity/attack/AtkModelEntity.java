@@ -1,5 +1,6 @@
 package util.entity.attack;
 
+import util.Copible;
 import util.entity.EAnimCont;
 import util.entity.EEnemy;
 import util.entity.EUnit;
@@ -25,7 +26,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	protected final MaskEntity data;
 	protected final Entity e;
 	protected final int[] atks, abis;
-	protected final Object[] acs;
+	protected final Copible[] acs;
 	private final double ratk;
 
 	protected AtkModelEntity(Entity ent, double d0) {
@@ -36,21 +37,21 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		int[][] raw = data.rawAtkData();
 		atks = new int[raw.length + 2];
 		abis = new int[raw.length + 2];
-		acs = new Object[raw.length + 2];
+		acs = new Copible[raw.length + 2];
 		for (int i = 0; i < raw.length; i++) {
 			atks[i] = (int) (raw[i][0] * d0);
 			abis[i] = raw[i][2];
-			acs[i] = new Object();
+			acs[i] = new Copible();
 		}
 		if (data.getRevenge() != null) {
 			atks[raw.length] = (int) (data.getRevenge().atk * d0);
 			abis[raw.length] = 1;
-			acs[raw.length] = new Object();
+			acs[raw.length] = new Copible();
 		}
 		if (data.getResurrection() != null) {
 			atks[raw.length + 1] = (int) (data.getResurrection().atk * d0);
 			abis[raw.length + 1] = 1;
-			acs[raw.length + 1] = new Object();
+			acs[raw.length + 1] = new Copible();
 		}
 	}
 

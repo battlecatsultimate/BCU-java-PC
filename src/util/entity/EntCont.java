@@ -1,6 +1,8 @@
 package util.entity;
 
-public class EntCont {
+import util.Copible;
+
+public class EntCont extends Copible {
 
 	public Entity ent;
 

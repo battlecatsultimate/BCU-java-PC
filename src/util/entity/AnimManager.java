@@ -3,6 +3,7 @@ package util.entity;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
+import util.Copible;
 import util.Data;
 import util.ImgCore;
 import util.anim.AnimD;
@@ -14,7 +15,7 @@ import util.pack.Soul;
 import util.pack.SoulStore;
 import util.system.P;
 
-public class AnimManager extends Data {
+public class AnimManager extends Copible {
 
 	private final Entity e;
 	private final int[][] status;

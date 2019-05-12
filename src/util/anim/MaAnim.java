@@ -6,10 +6,10 @@ import java.util.Queue;
 import io.InStream;
 import io.OutStream;
 import main.Opts;
-import util.Data;
+import util.Copible;
 import util.system.files.FileData;
 
-public class MaAnim extends Data {
+public class MaAnim extends Copible {
 
 	public static MaAnim newIns(FileData f) {
 		try {

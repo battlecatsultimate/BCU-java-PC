@@ -2,11 +2,11 @@ package util.entity;
 
 import java.awt.Graphics2D;
 
-import util.Data;
+import util.Copible;
 import util.anim.EAnimD;
 import util.system.P;
 
-public class EAnimCont extends Data {
+public class EAnimCont extends Copible {
 
 	public final double pos;
 	public final int layer;

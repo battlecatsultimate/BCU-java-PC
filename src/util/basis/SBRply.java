@@ -6,7 +6,7 @@ import java.util.Queue;
 import io.InStream;
 import util.stage.EStage;
 
-public class SBRply extends StageBasis {
+public class SBRply extends BattleField {
 
 	private final Queue<Integer> recd = new ArrayDeque<>();
 

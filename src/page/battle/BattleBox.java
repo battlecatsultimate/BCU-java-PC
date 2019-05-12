@@ -14,6 +14,7 @@ import util.Converter;
 import util.Data;
 import util.ImgCore;
 import util.Res;
+import util.basis.BattleField;
 import util.basis.StageBasis;
 import util.entity.EAnimCont;
 import util.entity.Entity;
@@ -60,21 +61,23 @@ public class BattleBox extends Canvas {
 	}
 
 	protected final BattleInfoPage page;
-	protected final StageBasis sb;
+	protected final BattleField bf;
 	private int maxW, maxH, minH; // in p
 	private int pos, midh, prew, preh; // in pix
 	private int pt = -1;
 	private BufferedImage prev;
 
+	private StageBasis sb;
+
 	protected double siz, corr, unir; // siz = pix/p;
 
 	private P mouse; // in pix
 
-	protected BattleBox(BattleInfoPage bip, StageBasis bas) {
+	protected BattleBox(BattleInfoPage bip, BattleField bas) {
 		page = bip;
 		setIgnoreRepaint(true);
-		sb = bas;
-		maxW = (int) (bas.st.len * ratio + off * 2);
+		bf = bas;
+		maxW = (int) (bas.sb.st.len * ratio + off * 2);
 		maxH = 510 * 3;
 		minH = 510;
 	}
@@ -85,6 +88,7 @@ public class BattleBox extends Canvas {
 
 	@Override
 	public synchronized void paint(Graphics g) {
+		sb = bf.sb;
 		int w = getWidth();
 		int h = getHeight();
 		if (w * h == 0)

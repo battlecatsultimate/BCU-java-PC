@@ -26,7 +26,7 @@ public class BBCtrl extends BattleBox {
 		int h = getHeight();
 		double hr = unir;
 		for (int i = 0; i < 10; i++) {
-			Form f = sbc.b.lu.fs[i / 5][i % 5];
+			Form f = sbc.sb.b.lu.fs[i / 5][i % 5];
 			BufferedImage img = f == null ? Res.slot[0].getImg() : f.anim.uni.getImg();
 			int iw = (int) (hr * img.getWidth());
 			int ih = (int) (hr * img.getHeight());
@@ -49,7 +49,7 @@ public class BBCtrl extends BattleBox {
 		if (!new P(p).out(new P(w - iw, h - ih), new P(w, h), 0))
 			sbc.action.add(-2);
 
-		if ((sbc.conf[0] & 2) > 0) {
+		if ((sbc.sb.conf[0] & 2) > 0) {
 			BufferedImage bimg = Res.battle[2][1].getImg();
 			int cw = bimg.getWidth();
 			int ch = bimg.getHeight();

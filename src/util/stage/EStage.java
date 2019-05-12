@@ -14,12 +14,13 @@ import static util.stage.SCDef.R1;
 import static util.stage.SCDef.S0;
 import static util.stage.SCDef.S1;
 
+import util.Copible;
 import util.basis.StageBasis;
 import util.entity.EEnemy;
 import util.unit.AbEnemy;
 import util.unit.EnemyStore;
 
-public class EStage {
+public class EStage extends Copible {
 
 	public final Stage s;
 	public final Limit lim;
