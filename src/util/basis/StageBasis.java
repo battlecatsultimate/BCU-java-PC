@@ -2,9 +2,8 @@ package util.basis;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
 import util.BattleObj;
+import util.CopRand;
 import util.entity.AbEntity;
 import util.entity.Cannon;
 import util.entity.EAnimCont;
@@ -42,7 +41,7 @@ public class StageBasis extends BattleObj {
 	public final List<ContAb> tlw = new ArrayList<>();
 	public final List<EAnimCont> lea = new ArrayList<>();
 	public final int[] conf;
-	public final Random r;
+	public final CopRand r;
 
 	public int work_lv, max_mon, can, max_can, next_lv, max_num;
 	public double mon;
@@ -56,7 +55,7 @@ public class StageBasis extends BattleObj {
 
 	public StageBasis(EStage stage, BasisLU bas, int[] ints, long seed) {
 		b = bas;
-		r = new Random(seed);
+		r = new CopRand(seed);
 		nyc = bas.nyc;
 		est = stage;
 		st = est.s;
