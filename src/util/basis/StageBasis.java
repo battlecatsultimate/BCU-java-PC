@@ -1,7 +1,10 @@
 package util.basis;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 import util.BattleObj;
 import util.CopRand;
 import util.entity.AbEntity;
@@ -21,6 +24,7 @@ import util.pack.EffAnim;
 import util.stage.EStage;
 import util.stage.Stage;
 import util.unit.EForm;
+import util.unit.EneRand;
 
 public class StageBasis extends BattleObj {
 
@@ -40,6 +44,7 @@ public class StageBasis extends BattleObj {
 	public final List<ContAb> lw = new ArrayList<>();
 	public final List<ContAb> tlw = new ArrayList<>();
 	public final List<EAnimCont> lea = new ArrayList<>();
+	public final Set<EneRand> rege = new HashSet<>();
 	public final int[] conf;
 	public final CopRand r;
 
@@ -202,6 +207,12 @@ public class StageBasis extends BattleObj {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	protected void performDeepCopy() {
+		for (EneRand er : rege)
+			er.updateCopy((StageBasis) hardCopy(this), hardCopy(er.map.get(this)));
 	}
 
 	/**

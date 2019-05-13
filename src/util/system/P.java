@@ -60,7 +60,6 @@ public strictfp class P extends BattleObj {
 		return sf(p).atan2();
 	}
 
-	@Override
 	public P copy() {
 		return new P(x, y);
 	}

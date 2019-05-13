@@ -13,9 +13,15 @@ public abstract class EntRand<X> extends Data {
 
 	public final List<EREnt<X>> list = new ArrayList<>();
 
-	private final Map<StageBasis, Lock<X>> map = new HashMap<>();
+	public final Map<StageBasis, Lock<X>> map = new HashMap<>();
 
 	public int type = 0;
+
+	@SuppressWarnings("unchecked")
+	public void updateCopy(StageBasis sb, Object o) {
+		if (o != null)
+			map.put(sb, (Lock<X>) o);
+	}
 
 	protected EREnt<X> getSelection(StageBasis sb, Object obj) {
 		if (type != T_NL) {
@@ -56,7 +62,7 @@ interface Lock<X> {
 
 }
 
-class LockGL<X> implements Lock<X> {
+class LockGL<X> extends BattleObj implements Lock<X> {
 
 	private EREnt<X> ae;
 
