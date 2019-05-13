@@ -22,7 +22,7 @@ public class ZipLib {
 
 	public static void check() {
 		for (String req : LIBREQS)
-			if (!info.merge.set.contains(req)) {
+			if (info == null || !info.merge.set.contains(req)) {
 				Opts.loadErr("this version requires lib " + req);
 				Writer.logClose(false);
 				System.exit(0);

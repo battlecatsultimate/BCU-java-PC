@@ -3,6 +3,7 @@ package io;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -27,6 +28,7 @@ import page.support.Exporter;
 import page.support.Importer;
 import page.view.ViewBox;
 import res.AnimatedGifEncoder;
+import util.Data;
 import util.ImgCore;
 import util.basis.BasisSet;
 import util.pack.Pack;
@@ -36,7 +38,7 @@ import util.unit.DIYAnim;
 public class Writer extends DataIO {
 
 	private static File log;
-	private static PrintStream ps;
+	private static WriteStream ps;
 
 	public static boolean check(File f) {
 		boolean suc = true;
@@ -81,6 +83,10 @@ public class Writer extends DataIO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		if (ps.writed) {
+			ps.println("version: " + Data.revVer(MainBCU.ver));
+			ps.println("user: " + BCJSON.USERNAME);
+		}
 		ps.close();
 		if (log.length() == 0)
 			log.deleteOnExit();
@@ -96,7 +102,7 @@ public class Writer extends DataIO {
 		try {
 			if (!log.exists())
 				log.createNewFile();
-			ps = new PrintStream(log);
+			ps = new WriteStream(log);
 		} catch (IOException e) {
 			e.printStackTrace();
 			Opts.pop(Opts.SECTY);
@@ -319,6 +325,28 @@ public class Writer extends DataIO {
 		Exporter.write(out);
 		Importer.write(out);
 		out.close();
+	}
+
+}
+
+class WriteStream extends PrintStream {
+
+	protected boolean writed = false;
+
+	public WriteStream(File file) throws FileNotFoundException {
+		super(file);
+	}
+
+	@Override
+	public void println(Object str) {
+		super.println(str);
+		writed = true;
+	}
+
+	@Override
+	public void println(String str) {
+		super.println(str);
+		writed = true;
 	}
 
 }

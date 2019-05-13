@@ -84,8 +84,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			}
 			if (mb.getEnt() != null)
 				mb.getEnt().organize();
-			if (o != null && o.equals("review"))
-				setTree(mmet.anim);
+			setTree(mmet.anim);
 		});
 
 	}

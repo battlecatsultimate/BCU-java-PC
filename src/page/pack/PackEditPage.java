@@ -572,6 +572,10 @@ public class PackEditPage extends Page {
 	}
 
 	private void checkAddr() {
+		if (pac == null) {
+			addr.setEnabled(false);
+			return;
+		}
 		Pack rel = jlt.getSelectedValue();
 		boolean b = pac.editable;
 		b &= rel != null && !pac.rely.contains(rel.id);
@@ -666,14 +670,13 @@ public class PackEditPage extends Page {
 		if (pac == null) {
 			jle.setListData(new Enemy[0]);
 			jlr.setListData(new Pack[0]);
-			addr.setEnabled(false);
 		} else {
 			jle.setListData(pac.es.getList().toArray(new Enemy[0]));
 			jle.clearSelection();
 			updateJlr();
 			jlr.clearSelection();
-			checkAddr();
 		}
+		checkAddr();
 		boolean b0 = pac != null && pac != Pack.def;
 		sdiy.setEnabled(b0);
 		if (b0) {
