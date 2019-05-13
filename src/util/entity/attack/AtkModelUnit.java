@@ -1,6 +1,6 @@
 package util.entity.attack;
 
-import util.basis.Basis;
+import util.basis.BasisLU;
 import util.entity.EUnit;
 import util.entity.EntCont;
 import util.entity.Entity;
@@ -10,7 +10,7 @@ import util.unit.UnitStore;
 
 public class AtkModelUnit extends AtkModelEntity {
 
-	private final Basis bas;
+	private final BasisLU bas;
 
 	protected AtkModelUnit(Entity ent, double d0) {
 		super(ent, d0);

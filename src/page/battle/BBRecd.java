@@ -12,7 +12,7 @@ import org.jcodec.api.awt.AWTSequenceEncoder;
 
 import io.Writer;
 import page.Page;
-import util.basis.StageBasis;
+import util.basis.BattleField;
 
 public class BBRecd extends BattleBox {
 
@@ -23,7 +23,7 @@ public class BBRecd extends BattleBox {
 
 	private int time = -1;
 
-	protected BBRecd(BattleInfoPage bip, StageBasis bas, String out, boolean img) {
+	protected BBRecd(BattleInfoPage bip, BattleField bas, String out, boolean img) {
 		super(bip, bas);
 		th = img ? new PNGThread(qb, out, bip) : new MP4Thread(qb, out, bip);
 		th.start();
@@ -38,10 +38,10 @@ public class BBRecd extends BattleBox {
 	@Override
 	protected BufferedImage getImage() {
 		BufferedImage bimg = super.getImage();
-		if (sb.time > time)
+		if (bf.sb.time > time)
 			synchronized (qb) {
 				qb.add(bimg);
-				time = sb.time;
+				time = bf.sb.time;
 			}
 		return bimg;
 	}

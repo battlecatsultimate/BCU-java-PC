@@ -6,10 +6,11 @@ import java.util.Queue;
 import io.InStream;
 import io.OutStream;
 import main.Opts;
+import util.BattleStatic;
 import util.Data;
 import util.system.files.FileData;
 
-public class MaAnim extends Data {
+public class MaAnim extends Data implements BattleStatic {
 
 	public static MaAnim newIns(FileData f) {
 		try {

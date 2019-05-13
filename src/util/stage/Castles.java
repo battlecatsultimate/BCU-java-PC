@@ -16,19 +16,23 @@ public class Castles implements AbCastle {
 	public static List<AbCastle> defcas = new ArrayList<>();
 
 	public static VImg getCastle(int cind) {
+		if (cind < 0)
+			return getCastle(0);
 		int set = cind / 1000;
 		int id = cind % 1000;
 		AbCastle c = map.get(set);
+		if (c == null)
+			return getCastle(0);
 		int n = c.size();
 		VImg ans = null;
 		if (n == 0)
-			ans = getCastle(0);
+			return getCastle(0);
 		else if (id < n)
 			ans = c.get(id);
 		else
 			ans = c.get(0);
 		if (ans == null)
-			ans = getCastle(0);
+			return getCastle(0);
 		return ans;
 	}
 

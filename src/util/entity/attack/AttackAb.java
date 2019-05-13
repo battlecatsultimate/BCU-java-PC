@@ -3,10 +3,10 @@ package util.entity.attack;
 import java.util.ArrayList;
 import java.util.List;
 
-import util.Data;
+import util.BattleObj;
 import util.entity.AbEntity;
 
-public abstract class AttackAb extends Data {
+public abstract class AttackAb extends BattleObj {
 
 	public final int atk, type, abi;
 	public final AtkModelAb model;

@@ -425,13 +425,13 @@ public class Data {
 	}
 
 	protected static <T> T readSave(String path, Function<Queue<String>, T> func) {
-		FileData f = VFile.getFile(path).getData();
+		VFile<? extends FileData> f = VFile.getFile(path);
 		VFile<BackupData> b = Reader.alt == null ? null : Reader.alt.find(path);
 		int ind = 0;
 		while (true) {
-			if (f != null) {
+			if (f != null && f.getData() != null) {
 				T ic = null;
-				Queue<String> qs = f.readLine();
+				Queue<String> qs = f.getData().readLine();
 				if (qs != null)
 					try {
 						ic = func.apply(qs);
@@ -445,12 +445,12 @@ public class Data {
 			if (b == null)
 				break;
 			if (b.list() == null)
-				if (b.getData() != f)
-					f = b.getData();
+				if (b != f)
+					f = b;
 				else
 					break;
 			else if (ind < b.list().size())
-				f = b.list().get(ind++).getData();
+				f = b.list().get(ind++);
 			else
 				break;
 		}

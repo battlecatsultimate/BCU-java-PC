@@ -7,7 +7,9 @@ import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-public strictfp class P {
+import util.BattleObj;
+
+public strictfp class P extends BattleObj {
 
 	public static P polar(double r, double t) {
 		return new P(r * Math.cos(t), r * Math.sin(t));

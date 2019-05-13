@@ -1,8 +1,9 @@
 package util.basis;
 
+import util.BattleObj;
 import util.stage.Limit;
 
-public class ELineUp {
+public class ELineUp extends BattleObj {
 
 	private final StageBasis b;
 	public final int[][] price, cool, maxC;

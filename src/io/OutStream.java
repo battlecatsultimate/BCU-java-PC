@@ -77,7 +77,7 @@ strictfp class OutStreamDef extends DataIO implements OutStream {
 	@Override
 	public void accept(OutStream os) {
 		if (!(os instanceof OutStreamDef))
-			throw new OverReadException("OutStream type mismatch");
+			throw new BCUException("OutStream type mismatch");
 		os.terminate();
 		byte[] obs = ((OutStreamDef) os).bs;
 		writeInt(obs.length);
@@ -269,7 +269,7 @@ strictfp class OutStreamFmt extends DataIO implements OutStream {
 	@Override
 	public void accept(OutStream os) {
 		if (!(os instanceof OutStreamDef))
-			throw new OverReadException("OutStream type mismatch");
+			throw new BCUException("OutStream type mismatch");
 		OutStreamFmt obs = (OutStreamFmt) os;
 		check(SUBS);
 		bs.writeInt(-1);

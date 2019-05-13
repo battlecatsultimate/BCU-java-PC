@@ -16,7 +16,7 @@ import javax.imageio.ImageIO;
 import io.BCJSON;
 import io.InStream;
 import io.OutStream;
-import io.OverReadException;
+import io.BCUException;
 import io.Reader;
 import io.Writer;
 import main.MainBCU;
@@ -266,7 +266,7 @@ public class Pack extends Data {
 				time = head.nextString();
 				version = head.nextInt();
 				author = head.nextString();
-			} catch (OverReadException e) {
+			} catch (BCUException e) {
 			}
 		} else {
 			id = is.nextInt();
@@ -327,7 +327,7 @@ public class Pack extends Data {
 				}
 	}
 
-	public void merge(Pack p, boolean write) {
+	public void merge(Pack p) {
 		int[][] inds = new int[8][1000];
 
 		Map<Integer, Enemy> esmap = p.es.getMap();
@@ -392,8 +392,6 @@ public class Pack extends Data {
 			int bgid = bg.nextInd();
 			bg.add(ent.getValue().copy(this, bgid));
 			inds[M_BG][ent.getKey()] = bgid;
-			if (!write)
-				continue;
 			File f = new File("./res/img/" + hex(id) + "/bg/" + trio(bgid) + ".png");
 			Writer.check(f);
 			try {
@@ -408,8 +406,6 @@ public class Pack extends Data {
 			int csid = cs.nextInd();
 			cs.add(new VImg(ent.getValue().getImg()));
 			inds[M_CS][ent.getKey()] = csid;
-			if (!write)
-				continue;
 			File f = new File("./res/img/" + hex(id) + "/cas/" + trio(csid) + ".png");
 			Writer.check(f);
 			try {

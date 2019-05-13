@@ -1,9 +1,9 @@
 package util.entity;
 
-import util.Data;
+import util.BattleObj;
 import util.entity.attack.AttackAb;
 
-public abstract class AbEntity extends Data {
+public abstract class AbEntity extends BattleObj {
 
 	public long health, maxH;
 	public int dire;

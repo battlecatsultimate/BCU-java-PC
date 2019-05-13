@@ -12,9 +12,10 @@ import io.OutStream;
 import main.Opts;
 import main.Printer;
 import util.Data;
+import util.BattleStatic;
 import util.system.files.FileData;
 
-public class MaModel extends Data implements Cloneable {
+public class MaModel extends Data implements Cloneable, BattleStatic {
 
 	public static MaModel newIns(FileData f) {
 		try {

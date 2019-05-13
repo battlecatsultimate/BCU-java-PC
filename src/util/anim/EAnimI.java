@@ -4,16 +4,16 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import util.ImgCore;
+import util.BattleObj;
 import util.system.P;
 
-public abstract class EAnimI extends ImgCore {
+public abstract class EAnimI extends BattleObj {
 
 	public int sele = -1;
 	public EPart[] ent = null;
 
 	protected final AnimI a;
-	protected MaModel mamodel;
+	protected final MaModel mamodel;
 	protected List<EPart> order;
 
 	public EAnimI(AnimI ia, MaModel mm) {
@@ -45,5 +45,15 @@ public abstract class EAnimI extends ImgCore {
 	public abstract void setTime(int value);
 
 	public abstract void update(boolean b);
+
+	@Override
+	protected void performDeepCopy() {
+		organize();
+	}
+
+	@Override
+	protected void terminate() {
+		copy = null;
+	}
 
 }

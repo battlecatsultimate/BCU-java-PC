@@ -142,6 +142,7 @@ public class AnimC extends AnimU {
 		for (int i = 0; i < 7; i++)
 			anims[i] = new MaAnim();
 		parts = imgcut.cut(num);
+		history("initial");
 	}
 
 	public void delete() {

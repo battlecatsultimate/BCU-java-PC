@@ -1,6 +1,8 @@
 package util.entity;
 
-public class EntCont {
+import util.BattleObj;
+
+public class EntCont extends BattleObj {
 
 	public Entity ent;
 

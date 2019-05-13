@@ -11,7 +11,7 @@ public class Part implements Cloneable, Comparable<Part> {
 	public int[] ints = new int[5];
 	public String name;
 	public int n, max, off, fir;
-	public int frame, vd;// temp
+	public int frame, vd;// for editor only
 	public int[][] moves;
 
 	public Part() {

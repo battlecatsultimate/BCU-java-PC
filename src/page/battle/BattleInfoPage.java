@@ -19,6 +19,7 @@ import page.JTG;
 import page.KeyHandler;
 import page.Page;
 import util.basis.BasisLU;
+import util.basis.BattleField;
 import util.basis.SBCtrl;
 import util.basis.SBRply;
 import util.basis.StageBasis;
@@ -55,7 +56,7 @@ public class BattleInfoPage extends KeyHandler {
 	private final JLabel stream = new JLabel();
 	private final JTG jtb = new JTG(0, "larges");
 	private final BattleBox bb;
-	private final StageBasis basis;
+	private final BattleField basis;
 
 	private boolean pause = false;
 	private Recd recd;
@@ -72,7 +73,7 @@ public class BattleInfoPage extends KeyHandler {
 			bb = new BBRecd(this, basis, rec.name, (conf & 4) != 0);
 		jtb.setSelected((conf & 2) != 0);
 		jtb.setEnabled((conf & 1) == 0);
-		ct.setData(basis.st);
+		ct.setData(basis.sb.st);
 
 		ini();
 		rply.setText(0, "save");
@@ -85,7 +86,7 @@ public class BattleInfoPage extends KeyHandler {
 		SBCtrl sb = new SBCtrl(this, st, star, bl, ints, seed);
 		bb = new BBCtrl(this, sb);
 		basis = sb;
-		ct.setData(basis.st);
+		ct.setData(basis.sb.st);
 
 		ini();
 		rply.setText(0, "rply");
@@ -138,10 +139,10 @@ public class BattleInfoPage extends KeyHandler {
 
 	@Override
 	protected void renew() {
-		if (basis.getEBHP() * 100 < basis.st.mush)
-			BCMusic.play(basis.st.mus1);
+		if (basis.sb.getEBHP() * 100 < basis.sb.st.mush)
+			BCMusic.play(basis.sb.st.mus1);
 		else
-			BCMusic.play(basis.st.mus0);
+			BCMusic.play(basis.sb.st.mus0);
 	}
 
 	@Override
@@ -185,6 +186,7 @@ public class BattleInfoPage extends KeyHandler {
 
 	@Override
 	protected synchronized void timer(int t) {
+		StageBasis sb = basis.sb;
 		if (!pause) {
 			upd++;
 			if (spe < 0)
@@ -195,25 +197,25 @@ public class BattleInfoPage extends KeyHandler {
 			if (spe > 0)
 				for (int i = 0; i < Math.pow(2, spe); i++)
 					basis.update();
-			ct.update(basis.est);
+			ct.update(sb.est);
 			List<Entity> le = new ArrayList<>();
 			List<Entity> lu = new ArrayList<>();
-			for (Entity e : basis.le)
+			for (Entity e : sb.le)
 				(e.dire == 1 ? le : lu).add(e);
 			et.setList(le);
 			ut.setList(lu);
 		}
 		bb.paint(bb.getGraphics());
-		AbEntity eba = basis.ebase;
+		AbEntity eba = sb.ebase;
 		long h = eba.health;
 		long mh = eba.maxH;
 		ebase.setText("HP: " + h + "/" + mh + ", " + 10000 * h / mh / 100.0 + "%");
-		ubase.setText("HP: " + basis.ubase.health);
-		ecount.setText(basis.entityCount(1) + "/" + basis.st.max);
-		ucount.setText(basis.entityCount(-1) + "/" + basis.max_num);
+		ubase.setText("HP: " + sb.ubase.health);
+		ecount.setText(sb.entityCount(1) + "/" + sb.st.max);
+		ucount.setText(sb.entityCount(-1) + "/" + sb.max_num);
 		resized();
-		if (basis.getEBHP() * 100 < basis.st.mush && BCMusic.music != basis.st.mus1)
-			BCMusic.play(basis.st.mus1);
+		if (sb.getEBHP() * 100 < sb.st.mush && BCMusic.music != sb.st.mus1)
+			BCMusic.play(sb.st.mus1);
 		if (bb instanceof BBRecd) {
 			BBRecd bbr = (BBRecd) bb;
 			stream.setText("frame left: " + bbr.info());

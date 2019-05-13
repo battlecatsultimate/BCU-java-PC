@@ -9,7 +9,7 @@ import util.stage.EStage;
 import util.stage.Recd;
 import util.stage.Stage;
 
-public class SBCtrl extends StageBasis {
+public class SBCtrl extends BattleField {
 
 	private final KeyHandler keys;
 
@@ -45,7 +45,7 @@ public class SBCtrl extends StageBasis {
 	/** process the user action */
 	@Override
 	protected void actions() {
-		if (ebase.health <= 0)
+		if (sb.ebase.health <= 0)
 			return;
 		int rec = 0;
 		if ((keys.pressed(-1, 0) || action.contains(-1)) && act_mon()) {

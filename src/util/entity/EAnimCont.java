@@ -2,11 +2,11 @@ package util.entity;
 
 import java.awt.Graphics2D;
 
-import util.Data;
+import util.BattleObj;
 import util.anim.EAnimD;
 import util.system.P;
 
-public class EAnimCont extends Data {
+public class EAnimCont extends BattleObj {
 
 	public final double pos;
 	public final int layer;

@@ -3,8 +3,9 @@ package util.anim;
 import java.awt.image.BufferedImage;
 
 import util.Animable;
+import util.BattleStatic;
 
-public abstract class AnimI extends Animable<AnimI> {
+public abstract class AnimI extends Animable<AnimI> implements BattleStatic {
 
 	public abstract void check();
 

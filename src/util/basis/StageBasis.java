@@ -1,10 +1,12 @@
 package util.basis;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
+import java.util.Set;
 
-import util.Data;
+import util.BattleObj;
+import util.CopRand;
 import util.entity.AbEntity;
 import util.entity.Cannon;
 import util.entity.EAnimCont;
@@ -22,8 +24,9 @@ import util.pack.EffAnim;
 import util.stage.EStage;
 import util.stage.Stage;
 import util.unit.EForm;
+import util.unit.EneRand;
 
-public abstract class StageBasis extends Data {
+public class StageBasis extends BattleObj {
 
 	public static boolean testing = true;
 
@@ -41,8 +44,9 @@ public abstract class StageBasis extends Data {
 	public final List<ContAb> lw = new ArrayList<>();
 	public final List<ContAb> tlw = new ArrayList<>();
 	public final List<EAnimCont> lea = new ArrayList<>();
+	public final Set<EneRand> rege = new HashSet<>();
 	public final int[] conf;
-	public final Random r;
+	public final CopRand r;
 
 	public int work_lv, max_mon, can, max_can, next_lv, max_num;
 	public double mon;
@@ -56,7 +60,7 @@ public abstract class StageBasis extends Data {
 
 	public StageBasis(EStage stage, BasisLU bas, int[] ints, long seed) {
 		b = bas;
-		r = new Random(seed);
+		r = new CopRand(seed);
 		nyc = bas.nyc;
 		est = stage;
 		st = est.s;
@@ -148,14 +152,75 @@ public abstract class StageBasis extends Data {
 		return ans;
 	}
 
+	protected boolean act_can() {
+		if (can == max_can) {
+			canon.activate();
+			can = 0;
+			return true;
+		}
+		return false;
+	}
+
+	protected void act_lock(int i, int j) {
+		locks[i][j] = !locks[i][j];
+	}
+
+	protected boolean act_mon() {
+		if (work_lv < 8 && mon > next_lv) {
+			mon -= next_lv;
+			work_lv++;
+			next_lv = b.t().getLvCost(work_lv);
+			max_mon = b.t().getMaxMon(work_lv);
+			if (work_lv == 8)
+				next_lv = -1;
+			return true;
+		}
+		return false;
+	};
+
+	protected boolean act_sniper() {
+		if (sniper != null) {
+			sniper.enabled = !sniper.enabled;
+			return true;
+		}
+		return false;
+	}
+
+	protected boolean act_spawn(int i, int j, boolean boo) {
+		if (elu.cool[i][j] > 0)
+			return false;
+		if (elu.price[i][j] == -1)
+			return false;
+		if (elu.price[i][j] > mon)
+			return false;
+		if (locks[i][j] || boo) {
+			if (entityCount(-1) >= max_num)
+				return false;
+			EForm f = b.lu.efs[i][j];
+			if (f == null)
+				return false;
+			elu.get(i, j);
+			EUnit eu = f.getEntity(this);
+			eu.added(-1, st.len - 700);
+			le.add(eu);
+			mon -= elu.price[i][j];
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	protected void performDeepCopy() {
+		for (EneRand er : rege)
+			er.updateCopy((StageBasis) hardCopy(this), hardCopy(er.map.get(this)));
+	}
+
 	/**
 	 * process actions and add enemies from stage first then update each entities
 	 * and receive attacks then excuse attacks and do post update then delete dead
 	 * entities
 	 */
-	public void update() {
-		time++;
-		actions();
+	protected void update() {
 		tempe.removeIf(e -> {
 			if (e.t == 0)
 				le.add(e.ent);
@@ -234,65 +299,6 @@ public abstract class StageBasis extends Data {
 		can = Math.min(max_can, Math.max(0, can));
 		mon = Math.min(max_mon, Math.max(0, mon));
 	}
-
-	protected boolean act_can() {
-		if (can == max_can) {
-			canon.activate();
-			can = 0;
-			return true;
-		}
-		return false;
-	}
-
-	protected void act_lock(int i, int j) {
-		locks[i][j] = !locks[i][j];
-	};
-
-	protected boolean act_mon() {
-		if (work_lv < 8 && mon > next_lv) {
-			mon -= next_lv;
-			work_lv++;
-			next_lv = b.t().getLvCost(work_lv);
-			max_mon = b.t().getMaxMon(work_lv);
-			if (work_lv == 8)
-				next_lv = -1;
-			return true;
-		}
-		return false;
-	}
-
-	protected boolean act_sniper() {
-		if (sniper != null) {
-			sniper.enabled = !sniper.enabled;
-			return true;
-		}
-		return false;
-	}
-
-	protected boolean act_spawn(int i, int j, boolean boo) {
-		if (elu.cool[i][j] > 0)
-			return false;
-		if (elu.price[i][j] == -1)
-			return false;
-		if (elu.price[i][j] > mon)
-			return false;
-		if (locks[i][j] || boo) {
-			if (entityCount(-1) >= max_num)
-				return false;
-			EForm f = b.lu.efs[i][j];
-			if (f == null)
-				return false;
-			elu.get(i, j);
-			EUnit eu = f.getEntity(this);
-			eu.added(-1, st.len - 700);
-			le.add(eu);
-			mon -= elu.price[i][j];
-			return true;
-		}
-		return false;
-	}
-
-	protected abstract void actions();
 
 	private void updateTheme() {
 		if (theme >= 0) {
