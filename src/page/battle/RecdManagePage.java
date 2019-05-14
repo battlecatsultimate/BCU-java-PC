@@ -2,8 +2,6 @@ package page.battle;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.io.File;
 
 import javax.swing.BorderFactory;
@@ -13,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import io.Reader;
 import main.MainBCU;
 import main.Opts;
 import page.JBTN;
@@ -33,6 +32,7 @@ public class RecdManagePage extends Page {
 	private final JBTN dele = new JBTN(0, "rem");
 	private final JBTN vsta = new JBTN(0, "vsta");
 	private final JTF rena = new JTF();
+	private final JTF seed = new JTF();
 	private final JTG larg = new JTG(0, "larges");
 	private final JBTN imgs = new JBTN(-1, "PNG");
 	private final JList<Recd> jlr = new JList<>();
@@ -76,6 +76,7 @@ public class RecdManagePage extends Page {
 		set(dele, x, y, 400, 400, 300, 50);
 		set(rena, x, y, 400, 500, 300, 50);
 		set(vsta, x, y, 400, 600, 300, 50);
+		set(seed, x, y, 750, 300, 500, 50);
 	}
 
 	private void addListeners() {
@@ -135,28 +136,33 @@ public class RecdManagePage extends Page {
 
 		});
 
-		rena.addFocusListener(new FocusAdapter() {
-
-			@Override
-			public void focusLost(FocusEvent fe) {
-				if (changing || jlr.getValueIsAdjusting())
-					return;
-				Recd r = jlr.getSelectedValue();
-				if (r == null)
-					return;
-				File f = new File("./replay/" + r.name + ".replay");
-				if (f.exists()) {
-					String str = MainBCU.validate(rena.getText().trim());
-					str = Recd.getAvailable(str);
-					if (f.renameTo(new File("./replay/" + str + ".replay"))) {
-						Recd.map.remove(r.name);
-						r.name = str;
-						Recd.map.put(r.name, r);
-					}
+		rena.setLnr(x -> {
+			if (changing || jlr.getValueIsAdjusting())
+				return;
+			Recd r = jlr.getSelectedValue();
+			if (r == null)
+				return;
+			File f = new File("./replay/" + r.name + ".replay");
+			if (f.exists()) {
+				String str = MainBCU.validate(rena.getText().trim());
+				str = Recd.getAvailable(str);
+				if (f.renameTo(new File("./replay/" + str + ".replay"))) {
+					Recd.map.remove(r.name);
+					r.name = str;
+					Recd.map.put(r.name, r);
 				}
-				rena.setText(r.name);
 			}
+			rena.setText(r.name);
+		});
 
+		seed.setLnr(x -> {
+			if (changing || jlr.getValueIsAdjusting())
+				return;
+			Recd r = jlr.getSelectedValue();
+			if (r == null)
+				return;
+			r.seed = Reader.parseLongN(seed.getText());
+			setRecd(r);
 		});
 
 		dele.addActionListener(new ActionListener() {
@@ -187,6 +193,7 @@ public class RecdManagePage extends Page {
 		add(dele);
 		add(rena);
 		add(vsta);
+		add(seed);
 		len.setBorder(BorderFactory.createEtchedBorder());
 		addListeners();
 	}
@@ -206,11 +213,14 @@ public class RecdManagePage extends Page {
 		recd.setEnabled(r != null && r.avail);
 		dele.setEnabled(r != null);
 		rena.setEditable(r != null);
+		seed.setEditable(r != null);
 		vsta.setEnabled(r != null);
 		if (r == null) {
 			rena.setText("");
 			len.setText("");
+			seed.setText("");
 		} else {
+			seed.setText("seed: " + r.seed);
 			rena.setText(r.name);
 			len.setText("length: " + r.getLen() + " frame");
 		}

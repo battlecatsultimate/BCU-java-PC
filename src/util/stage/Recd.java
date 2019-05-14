@@ -11,7 +11,6 @@ import io.Writer;
 import main.Opts;
 import util.Data;
 import util.basis.BasisLU;
-import util.basis.SBRply;
 import util.pack.Pack;
 
 public class Recd extends Data {
@@ -178,6 +177,11 @@ public class Recd extends Data {
 		avail = st != null;
 	}
 
+	@Override
+	public Recd clone() {
+		return new Recd(lu.copy(), st, star, conf.clone(), seed);
+	}
+
 	public int getLen() {
 		if (len > 0)
 			return len;
@@ -188,11 +192,6 @@ public class Recd extends Data {
 			len += is.nextInt();
 		}
 		return len;
-	}
-
-	public SBRply replay() {
-		EStage est = new EStage(st, star);
-		return new SBRply(action.translate(), est, lu, conf, seed);
 	}
 
 	@Override

@@ -47,6 +47,7 @@ public class StageBasis extends BattleObj {
 	public final Set<EneRand> rege = new HashSet<>();
 	public final int[] conf;
 	public final CopRand r;
+	public final Recorder rx = new Recorder();
 
 	public int work_lv, max_mon, can, max_can, next_lv, max_num;
 	public double mon;
