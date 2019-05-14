@@ -5,6 +5,7 @@ import java.util.List;
 
 import io.OutStream;
 import page.KeyHandler;
+import util.BattleObj;
 import util.stage.EStage;
 import util.stage.Recd;
 import util.stage.Stage;
@@ -14,9 +15,6 @@ public class SBCtrl extends BattleField {
 	private final KeyHandler keys;
 
 	public final List<Integer> action = new ArrayList<>();
-	public final List<Integer> recd = new ArrayList<>();
-
-	private int num, rep;
 
 	public final Recd re;
 
@@ -26,19 +24,15 @@ public class SBCtrl extends BattleField {
 		keys = kh;
 	}
 
+	protected SBCtrl(KeyHandler kh, StageBasis sb, Recd r) {
+		super(sb);
+		keys = kh;
+		re = r.clone();
+	}
+
 	public Recd getData() {
-		if (rep > 0) {
-			recd.add(num);
-			recd.add(rep);
-		}
-		num = 0;
-		rep = 0;
-		OutStream os = OutStream.getIns();
-		os.writeInt(recd.size());
-		for (int i : recd)
-			os.writeInt(i);
-		os.terminate();
-		re.action = os;
+		re.name = "";
+		re.action = sb.rx.write();
 		return re;
 	}
 
@@ -78,6 +72,19 @@ public class SBCtrl extends BattleField {
 					rec |= 1 << (i * 5 + j + 13);
 			}
 		action.clear();
+		sb.rx.add(rec);
+
+	}
+
+}
+
+class Recorder extends BattleObj {
+
+	private final List<Integer> recd = new ArrayList<>();
+
+	private int num, rep;
+
+	protected void add(int rec) {
 		if (rec == num)
 			rep++;
 		else {
@@ -88,6 +95,21 @@ public class SBCtrl extends BattleField {
 			num = rec;
 			rep = 1;
 		}
+	}
+
+	protected OutStream write() {
+		OutStream os = OutStream.getIns();
+		if (rep > 0) {
+			recd.add(num);
+			recd.add(rep);
+		}
+		num = 0;
+		rep = 0;
+		os.writeInt(recd.size());
+		for (int i : recd)
+			os.writeInt(i);
+		os.terminate();
+		return os;
 	}
 
 }

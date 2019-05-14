@@ -66,7 +66,7 @@ public class BattleInfoPage extends KeyHandler {
 	public BattleInfoPage(Page p, Recd rec, int conf) {
 		super(p);
 		recd = rec;
-		basis = rec.replay();
+		basis = new SBRply(rec);
 		if ((conf & 1) == 0)
 			bb = new BattleBox(this, basis);
 		else
@@ -76,14 +76,26 @@ public class BattleInfoPage extends KeyHandler {
 		ct.setData(basis.sb.st);
 
 		ini();
-		rply.setText(0, "save");
+		rply.setText(0, recd.name.length() == 0 ? "save" : "start");
 		resized();
+	}
+
+	protected BattleInfoPage(Page p, SBCtrl ctrl) {
+		super(p);
+		bb = new BBCtrl(this, ctrl);
+		pause = true;
+		basis = ctrl;
+		ct.setData(basis.sb.st);
+		ini();
+		rply.setText(0, "rply");
+		resized();
+		current = this;
 	}
 
 	protected BattleInfoPage(Page p, Stage st, int star, BasisLU bl, int[] ints) {
 		super(p);
 		long seed = new Random().nextLong();
-		SBCtrl sb = new SBCtrl(this, st, star, bl, ints, seed);
+		SBCtrl sb = new SBCtrl(this, st, star, bl.copy(), ints, seed);
 		bb = new BBCtrl(this, sb);
 		basis = sb;
 		ct.setData(basis.sb.st);
@@ -103,7 +115,7 @@ public class BattleInfoPage extends KeyHandler {
 	protected synchronized void keyTyped(KeyEvent e) {
 		if (spe > -5 && e.getKeyChar() == ',')
 			spe--;
-		if (spe < 5 && e.getKeyChar() == '.')
+		if (spe < (basis instanceof SBCtrl ? 5 : 7) && e.getKeyChar() == '.')
 			spe++;
 	}
 
@@ -238,14 +250,14 @@ public class BattleInfoPage extends KeyHandler {
 			changePanel(getFront());
 		});
 
-		rply.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (basis instanceof SBCtrl)
-					changePanel(new BattleInfoPage(getThis(), ((SBCtrl) basis).getData(), 0));
-				if (basis instanceof SBRply)
+		rply.setLnr(x -> {
+			if (basis instanceof SBCtrl)
+				changePanel(new BattleInfoPage(getThis(), ((SBCtrl) basis).getData(), 0));
+			if (basis instanceof SBRply)
+				if (recd.name.length() == 0)
 					changePanel(new RecdSavePage(getThis(), recd));
-			}
+				else
+					changePanel(new BattleInfoPage(this, ((SBRply) basis).transform(this)));
 		});
 
 		paus.addActionListener(new ActionListener() {
