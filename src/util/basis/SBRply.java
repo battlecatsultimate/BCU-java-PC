@@ -106,6 +106,11 @@ class Release {
 		rex = r.rex;
 	}
 
+	@Override
+	protected Release clone() {
+		return new Release(this);
+	}
+
 	protected int get() {
 		if (rex == 0)
 			if (recd.recd.length <= ind)
@@ -116,11 +121,6 @@ class Release {
 			}
 		rex--;
 		return rec;
-	}
-
-	@Override
-	protected Release clone() {
-		return new Release(this);
 	}
 
 }
@@ -152,7 +152,7 @@ class ShortMirror extends MirrorSet {
 	@Override
 	protected void add(SBRply sb) {
 		int t = sb.sb.time;
-		if(t*size/len>=size)
+		if (t * size / len >= size)
 			return;
 		if (mis[t * size / len] == null)
 			mis[t * size / len] = new Mirror(sb);
