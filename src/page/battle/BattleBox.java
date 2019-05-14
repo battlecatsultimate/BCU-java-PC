@@ -109,6 +109,7 @@ public class BattleBox extends Canvas {
 		g.setColor(Color.ORANGE);
 		g.drawString("Time cost: " + Timer.inter + "%, " + sb.time, 20, 20);
 		g.dispose();
+		sb = null;
 	}
 
 	public void regulate() {
@@ -130,6 +131,11 @@ public class BattleBox extends Canvas {
 
 	}
 
+	public void reset() {
+		pt = bf.sb.time;
+		prev = null;
+	}
+
 	protected synchronized void click(Point p, int button) {
 	}
 
@@ -138,6 +144,7 @@ public class BattleBox extends Canvas {
 			P temp = new P(p);
 			adjust((int) (temp.x - mouse.x), 0);
 			mouse.setTo(temp);
+			reset();
 		}
 	}
 
@@ -175,6 +182,7 @@ public class BattleBox extends Canvas {
 			return;
 		int dif = -(int) ((p.x - pos) * (Math.pow(exp, ind) - 1));
 		adjust(dif, ind);
+		reset();
 	}
 
 	private void adjust(int w, int s) {

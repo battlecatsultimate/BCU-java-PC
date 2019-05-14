@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import io.BCUException;
 import main.Printer;
 
@@ -23,7 +22,7 @@ import main.Printer;
  * 3. Copible field <br>
  * 4. Array field of type 1~4 <br>
  * 5. Cloneable Collection and Map field with generic type of 1~4<br>
- * <br>
+ * note: Collections are not Hashed <br>
  * exclusion:<br>
  * EAnimI (override)<br>
  * EneRand (update map reference) <br>
@@ -32,26 +31,31 @@ public strictfp class BattleObj extends ImgCore implements Cloneable {
 
 	public static final String NONC = "NONC_";
 
-	private static final Set<Class<?>> OLD = new HashSet<Class<?>>();
-	private static final Set<Class<?>> UNCHECKED = new HashSet<Class<?>>();
-	private static final Map<Integer, Object> MAP = new HashMap<>();
+	private static final Class<?>[] EXCLUDE = { Number.class, String.class, Boolean.class, BattleStatic.class };
+
+	private static final Set<Class<?>> OLD = new HashSet<>();
+	private static final Set<Class<?>> UNCHECKED = new HashSet<>();
+	private static final Map<Integer, Object> ARRMAP = new HashMap<>();
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected static Object hardCopy(Object obj) {
 		if (obj == null)
 			return null;
 		Class<?> c = obj.getClass();
-		if (c.isPrimitive() || c == String.class || BattleStatic.class.isAssignableFrom(c))
+		if (c.isPrimitive())
 			return obj;
+		for (Class<?> cls : EXCLUDE)
+			if (cls.isAssignableFrom(c))
+				return obj;
 		if (obj instanceof BattleObj)
 			return ((BattleObj) obj).sysCopy();
-		if (MAP.containsKey(obj.hashCode()))
-			return MAP.get(obj.hashCode());
+		if (ARRMAP.containsKey(obj.hashCode()))
+			return ARRMAP.get(obj.hashCode());
 		if (obj.getClass().isArray()) {
 			Object ans = Array.newInstance(c.getComponentType(), Array.getLength(obj));
 			for (int i = 0; i < Array.getLength(ans); i++)
 				Array.set(ans, i, hardCopy(Array.get(obj, i)));
-			MAP.put(obj.hashCode(), ans);
+			ARRMAP.put(obj.hashCode(), ans);
 			return ans;
 		}
 		if (Collection.class.isAssignableFrom(c)) {
@@ -65,7 +69,6 @@ public strictfp class BattleObj extends ImgCore implements Cloneable {
 			if (f3 != null)
 				for (Object o : f2)
 					f3.add(hardCopy(o));
-			MAP.put(f2.hashCode(), f3);
 			return f3;
 		}
 		if (Map.class.isAssignableFrom(c)) {
@@ -77,10 +80,8 @@ public strictfp class BattleObj extends ImgCore implements Cloneable {
 				e.printStackTrace();
 			}
 			Map f4 = f3;
-			if (f4 != null) {
+			if (f4 != null)
 				f2.forEach((k, v) -> f4.put(hardCopy(k), hardCopy(v)));
-			}
-			MAP.put(f2.hashCode(), f4);
 			return f3;
 		}
 		throw new BCUException("cannot copy class " + obj.getClass());
@@ -89,14 +90,15 @@ public strictfp class BattleObj extends ImgCore implements Cloneable {
 	private static boolean checkField(Class<?> tc) {
 		if (tc.isPrimitive())
 			return true;
-		if (tc == String.class)
-			return true;
 		boolean b0 = BattleObj.class.isAssignableFrom(tc);
 		boolean b1 = BattleStatic.class.isAssignableFrom(tc);
 		if (b0 && b1)
 			return false;
 		if (b0 || b1)
 			return true;
+		for (Class<?> cls : EXCLUDE)
+			if (cls.isAssignableFrom(tc))
+				return true;
 		if (tc.isArray())
 			return checkField(tc.getComponentType());
 		return false;
@@ -125,7 +127,7 @@ public strictfp class BattleObj extends ImgCore implements Cloneable {
 	public final BattleObj clone() {
 		BattleObj c = sysCopy();
 		terminate();
-		MAP.clear();
+		ARRMAP.clear();
 		UNCHECKED.removeAll(OLD);
 		for (Class<?> cls : UNCHECKED)
 			Printer.e("Copible", 80, "Unchecked: " + cls);
@@ -152,7 +154,7 @@ public strictfp class BattleObj extends ImgCore implements Cloneable {
 			if (f.getName().startsWith(NONC))
 				continue;
 			try {
-				f.set(this, hardCopy(f.get(this)));
+				f.set(copy, hardCopy(f.get(this)));
 			} catch (IllegalAccessException e3) {
 				e3.printStackTrace();
 			}
@@ -176,6 +178,7 @@ public strictfp class BattleObj extends ImgCore implements Cloneable {
 		for (Field f : lf) {
 			f.setAccessible(true);
 			Class<?> tc = f.getType();
+
 			if (BattleObj.class.isAssignableFrom(tc)) {
 				BattleObj f2 = null;
 				try {
@@ -199,7 +202,7 @@ public strictfp class BattleObj extends ImgCore implements Cloneable {
 							c.terminate();
 			}
 			if (Collection.class.isAssignableFrom(tc)) {
-				if (f.getName().equals("uncp"))
+				if (f.getName().equals(NONC))
 					continue;
 				Collection f2 = null;
 				try {
@@ -231,14 +234,9 @@ public strictfp class BattleObj extends ImgCore implements Cloneable {
 			if (checkField(tc))
 				continue;
 			if (Collection.class.isAssignableFrom(tc)) {
-				Collection f2 = null;
-				try {
-					f2 = (Collection) f.get(this);
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				}
+				Collection f2 = (Collection) obj;
 				for (Object o : f2)
-					if (!(o instanceof BattleObj))
+					if (!checkField(o.getClass()))
 						UNCHECKED.add(o.getClass());
 				continue;
 			}

@@ -212,6 +212,7 @@ public class StageBasis extends BattleObj {
 
 	@Override
 	protected void performDeepCopy() {
+		super.performDeepCopy();
 		for (EneRand er : rege)
 			er.updateCopy((StageBasis) hardCopy(this), hardCopy(er.map.get(this)));
 	}

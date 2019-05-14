@@ -57,7 +57,7 @@ public class BBCtrl extends BattleBox {
 			if (!new P(p).out(new P(w - cw, mh), new P(w, mh + ch), 0))
 				sbc.action.add(-3);
 		}
-
+		reset();
 	}
 
 }

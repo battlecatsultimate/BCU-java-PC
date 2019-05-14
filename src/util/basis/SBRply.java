@@ -2,7 +2,6 @@ package util.basis;
 
 import io.InStream;
 import page.KeyHandler;
-import util.BattleStatic;
 import util.stage.EStage;
 import util.stage.Recd;
 
@@ -14,7 +13,7 @@ public class SBRply extends Mirror {
 	public SBRply(Recd re) {
 		super(re);
 		r = re;
-		mir = MirrorSet.newIns(r);
+		mir = new MirrorSet(r);
 	}
 
 	public void back(int t) {
@@ -23,8 +22,14 @@ public class SBRply extends Mirror {
 		rl = m.rl;
 	}
 
+	public int prog() {
+		return Math.min(100, sb.time * 100 / r.len);
+	}
+
 	public void restoreTo(int perc) {
 		Mirror m = mir.getRaw(r.len * perc / 100);
+		if (m == null)
+			return;
 		sb = m.sb;
 		rl = m.rl;
 	}
@@ -76,27 +81,51 @@ class Mirror extends BattleField {
 
 }
 
-abstract class MirrorSet {
+class MirrorSet {
 
-	protected static MirrorSet newIns(Recd r) {
-		return new ShortMirror(r);
+	private final Mirror[] mis;
+	private final int len, size;
+
+	protected MirrorSet(Recd r) {
+		len = r.len + 1;
+		size = (int) Math.sqrt(len);
+		mis = new Mirror[size];
 	}
 
-	protected abstract void add(SBRply sb);
+	protected void add(SBRply sb) {
+		int t = sb.sb.time;
+		if (t * size / len >= size)
+			return;
+		if (mis[t * size / len] == null)
+			mis[t * size / len] = new Mirror(sb);
+	}
 
-	protected abstract Mirror getRaw(int t);
+	protected Mirror getRaw(int t) {
+		Mirror mr = mis[t * size / len];
+		if (mr == null)
+			return null;
+		return new Mirror(mr);
+	}
 
-	protected abstract Mirror getReal(int t);
+	protected Mirror getReal(int t) {
+		Mirror m = getRaw(t);
+		while (m.sb.time < t)
+			m.update();
+		return m;
+	}
 
 }
 
 class Release {
 
-	private final ReleaseSource recd;
+	protected final int[] recd;
 	private int ind, rec, rex;
 
 	protected Release(InStream in) {
-		recd = new ReleaseSource(in);
+		int n = in.nextInt();
+		recd = new int[n];
+		for (int i = 0; i < n; i++)
+			recd[i] = in.nextInt();
 	}
 
 	private Release(Release r) {
@@ -113,65 +142,14 @@ class Release {
 
 	protected int get() {
 		if (rex == 0)
-			if (recd.recd.length <= ind)
+			if (recd.length <= ind)
 				rec = 0;
 			else {
-				rec = recd.recd[ind++];
-				rex = recd.recd[ind++];
+				rec = recd[ind++];
+				rex = recd[ind++];
 			}
 		rex--;
 		return rec;
-	}
-
-}
-
-class ReleaseSource implements BattleStatic {
-
-	protected final int[] recd;
-
-	protected ReleaseSource(InStream in) {
-		int n = in.nextInt();
-		recd = new int[n];
-		for (int i = 0; i < n; i++)
-			recd[i] = in.nextInt();
-	}
-
-}
-
-class ShortMirror extends MirrorSet {
-
-	private final Mirror[] mis;
-	private final int len, size;
-
-	protected ShortMirror(Recd r) {
-		len = r.len + 1;
-		size = (int) Math.sqrt(len);
-		mis = new Mirror[size];
-	}
-
-	@Override
-	protected void add(SBRply sb) {
-		int t = sb.sb.time;
-		if (t * size / len >= size)
-			return;
-		if (mis[t * size / len] == null)
-			mis[t * size / len] = new Mirror(sb);
-	}
-
-	@Override
-	protected Mirror getRaw(int t) {
-		Mirror mr = mis[t * size / len];
-		if (mr == null)
-			return null;
-		return new Mirror(mr);
-	}
-
-	@Override
-	protected Mirror getReal(int t) {
-		Mirror m = getRaw(t);
-		while (m.sb.time < t)
-			m.update();
-		return m;
 	}
 
 }
