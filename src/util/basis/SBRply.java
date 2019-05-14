@@ -23,15 +23,21 @@ public class SBRply extends Mirror {
 	}
 
 	public int prog() {
-		return Math.min(100, sb.time * 100 / r.len);
+		return Math.min(mir.size - 1, sb.time * mir.size / r.len);
 	}
 
 	public void restoreTo(int perc) {
-		Mirror m = mir.getRaw(r.len * perc / 100);
+		Mirror m = mir.getRaw(perc);
 		if (m == null)
 			return;
 		sb = m.sb;
 		rl = m.rl;
+		while (prog() < perc)
+			update();
+	}
+
+	public int size() {
+		return mir.size - 1;
 	}
 
 	public SBCtrl transform(KeyHandler kh) {
@@ -84,7 +90,8 @@ class Mirror extends BattleField {
 class MirrorSet {
 
 	private final Mirror[] mis;
-	private final int len, size;
+	private final int len;
+	protected final int size;
 
 	protected MirrorSet(Recd r) {
 		len = r.len + 1;
@@ -101,14 +108,18 @@ class MirrorSet {
 	}
 
 	protected Mirror getRaw(int t) {
-		Mirror mr = mis[t * size / len];
-		if (mr == null)
+		Mirror mr = mis[t];
+		if (mr == null) {
+			for (int i = t - 1; i >= 0; i--)
+				if (mis[i] != null)
+					return new Mirror(mis[i]);
 			return null;
+		}
 		return new Mirror(mr);
 	}
 
 	protected Mirror getReal(int t) {
-		Mirror m = getRaw(t);
+		Mirror m = getRaw(t * size / len);
 		while (m.sb.time < t)
 			m.update();
 		return m;

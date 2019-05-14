@@ -79,6 +79,7 @@ public class BattleInfoPage extends KeyHandler {
 		jtb.setEnabled((conf & 1) == 0);
 		ct.setData(basis.sb.st);
 
+		jsl.setMaximum(((SBRply) basis).size());
 		ini();
 		rply.setText(0, recd.name.length() == 0 ? "save" : "start");
 		resized();

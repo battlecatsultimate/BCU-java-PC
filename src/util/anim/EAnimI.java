@@ -48,7 +48,7 @@ public abstract class EAnimI extends BattleObj {
 
 	@Override
 	protected void performDeepCopy() {
-		organize();
+		((EAnimI) copy).organize();
 	}
 
 	@Override

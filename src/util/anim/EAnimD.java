@@ -60,4 +60,10 @@ public class EAnimD extends EAnimI {
 		ma.update(f, this, rotate);
 	}
 
+	@Override
+	protected void performDeepCopy() {
+		super.performDeepCopy();
+		((EAnimD) copy).setTime(f);
+	}
+
 }
