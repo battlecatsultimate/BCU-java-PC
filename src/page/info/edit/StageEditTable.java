@@ -136,6 +136,8 @@ class StageEditTable extends AbJTable implements Reorderable {
 	public synchronized void setValueAt(Object arg0, int r, int c) {
 		if (stage == null)
 			return;
+		if (r >= getRowCount())
+			return;
 		c = lnk[c];
 		if (c > 3) {
 			int[] is = Reader.parseIntsN((String) arg0);
@@ -245,6 +247,8 @@ class StageEditTable extends AbJTable implements Reorderable {
 	}
 
 	private Object get(int r, int c) {
+		if (r < 0 || r >= stage.datas.length)
+			return null;
 		int[][] info = stage.datas;
 		int[] data = info[info.length - r - 1];
 		if (data == null)
@@ -260,7 +264,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 		else if (c == 4)
 			return (data[C0] >= data[C1] ? data[C0] : data[C0] + "~" + data[C1]) + "%";
 		else if (c == 5)
-			return data[S0] >= data[S1] ? data[S0] : data[S0] + "~" + data[S1];
+			return Math.abs(data[S0]) >= Math.abs(data[S1]) ? data[S0] : data[S0] + "~" + data[S1];
 		else if (c == 6)
 			return data[R0] == data[R1] ? data[R0] : data[R0] + "~" + data[R1];
 		else if (c == 7)
@@ -275,6 +279,8 @@ class StageEditTable extends AbJTable implements Reorderable {
 	}
 
 	private void set(int r, int c, int v, int para) {
+		if (r < 0 || r >= stage.datas.length)
+			return;
 		if (c == 1 && v < 0)
 			return;
 		if (c != 5 && v < 0)
@@ -300,8 +306,13 @@ class StageEditTable extends AbJTable implements Reorderable {
 			if (para == -1)
 				data[S0] = data[S1] = v;
 			else {
-				data[S0] = Math.min(v, para);
-				data[S1] = Math.max(v, para);
+				if (Math.abs(v) > Math.abs(para)) {
+					data[S1] = v;
+					data[S0] = para;
+				} else {
+					data[S0] = v;
+					data[S1] = para;
+				}
 			}
 		else if (c == 6)
 			if (para == -1)
