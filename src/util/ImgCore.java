@@ -5,12 +5,11 @@ import static java.awt.AlphaComposite.getInstance;
 
 import java.awt.Color;
 import java.awt.Composite;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.RenderingHints.Key;
-import java.awt.image.BufferedImage;
-
+import util.system.FakeGraphics;
+import util.system.FakeImage;
 import util.system.P;
 
 public class ImgCore extends Data {
@@ -41,14 +40,14 @@ public class ImgCore extends Data {
 	public static int[] ints = new int[] { 1, 1, 1, 1 };
 	public static boolean ref = true, battle = false;
 
-	public static void set(Graphics2D g) {
+	public static void set(FakeGraphics g) {
 		if (battle)
 			return;
 		for (int i = 0; i < 4; i++)
 			g.setRenderingHint(KEYS[i], VALS[i][ints[i]]);
 	}
 
-	protected static void drawImg(Graphics2D g, BufferedImage bimg, P piv, P sc, double opa, boolean glow,
+	protected static void drawImg(FakeGraphics g, FakeImage bimg, P piv, P sc, double opa, boolean glow,
 			double extend) {
 		Composite c = g.getComposite();
 		if (opa < fullOpa * 0.01 - 1e-5)
@@ -71,14 +70,14 @@ public class ImgCore extends Data {
 			int w = (int) (bimg.getWidth() * extend);
 			int h = bimg.getHeight();
 			if (w > 0) {
-				BufferedImage par = bimg.getSubimage(0, 0, w, h);
+				FakeImage par = bimg.getSubimage(0, 0, w, h);
 				drawImage(g, par, x, -piv.y, sc.x * extend, sc.y);
 			}
 		}
 		g.setComposite(c);
 	}
 
-	protected static void drawSca(Graphics2D g, Point piv, Point sc) {
+	protected static void drawSca(FakeGraphics g, Point piv, Point sc) {
 		g.setColor(Color.RED);
 		g.fillOval(-10, -10, 20, 20);
 		g.drawOval(-40, -40, 80, 80);
@@ -95,12 +94,12 @@ public class ImgCore extends Data {
 		g.drawRect(x - 40, y - 40, sx + 80, sy + 80);
 	}
 
-	private static void drawImage(Graphics2D g, BufferedImage bimg, double x, double y, double w, double h) {
+	private static void drawImage(FakeGraphics g, FakeImage bimg, double x, double y, double w, double h) {
 		int ix = (int) Math.round(x);
 		int iy = (int) Math.round(y);
 		int iw = (int) Math.round(w);
 		int ih = (int) Math.round(h);
-		g.drawImage(bimg, ix, iy, iw, ih, null);
+		g.drawImage(bimg, ix, iy, iw, ih);
 
 	}
 

@@ -9,6 +9,7 @@ import java.awt.Paint;
 import java.awt.image.BufferedImage;
 
 import util.anim.EAnimS;
+import util.system.FG2D;
 import util.system.P;
 
 class ModelBox extends Canvas {
@@ -58,7 +59,7 @@ class ModelBox extends Canvas {
 		gra.setPaint(p);
 		gra.translate(w / 2, h * 3 / 4);
 		if (getEnt() != null)
-			getEnt().draw(gra, ori.copy().times(-1), siz);
+			getEnt().draw(new FG2D(gra), ori.copy().times(-1), siz);
 		gra.dispose();
 		return img;
 	}

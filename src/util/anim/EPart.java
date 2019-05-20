@@ -1,12 +1,11 @@
 package util.anim;
 
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
-
 import main.Printer;
 import util.ImgCore;
+import util.system.FakeGraphics;
+import util.system.FakeImage;
 import util.system.P;
 
 public class EPart extends ImgCore implements Comparable<EPart> {
@@ -122,12 +121,12 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		return name;
 	}
 
-	protected void drawPart(Graphics2D g, P base) {
+	protected void drawPart(FakeGraphics g, P base) {
 		if (img < 0 || id < 0 || opa() < deadOpa * 0.01 + 1e-5 || a.parts(img) == null)
 			return;
 		AffineTransform at = g.getTransform();
 		transform(g, base);
-		BufferedImage bimg = a.parts(img);
+		FakeImage bimg = a.parts(img);
 		int w = bimg.getWidth();
 		int h = bimg.getHeight();
 		P tpiv = piv.copy().times(getSize()).times(base);
@@ -136,8 +135,8 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		g.setTransform(at);
 	}
 
-	protected void drawScale(Graphics2D g, P base) {
-		BufferedImage bimg = a.parts(img);
+	protected void drawScale(FakeGraphics g, P base) {
+		FakeImage bimg = a.parts(img);
 		if (bimg == null)
 			return;
 		AffineTransform at = g.getTransform();
@@ -193,7 +192,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		return 1.0 * opacity / model.ints[2];
 	}
 
-	private void transform(Graphics2D g, P sizer) {
+	private void transform(FakeGraphics g, P sizer) {
 		P siz = sizer;
 		if (fa != null) {
 			fa.transform(g, sizer);

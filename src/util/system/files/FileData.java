@@ -1,6 +1,5 @@
 package util.system.files;
 
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -8,11 +7,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-import javax.imageio.ImageIO;
+import util.system.FakeImage;
 
 public interface FileData {
 
-	public abstract BufferedImage getImg();
+	public abstract FakeImage getImg();
 
 	public abstract Queue<String> readLine();
 
@@ -23,9 +22,9 @@ interface ByteData extends FileData {
 	public byte[] getBytes();
 
 	@Override
-	public default BufferedImage getImg() {
+	public default FakeImage getImg() {
 		try {
-			return ImageIO.read(new ByteArrayInputStream(getBytes()));
+			return FakeImage.read(new ByteArrayInputStream(getBytes()));
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;

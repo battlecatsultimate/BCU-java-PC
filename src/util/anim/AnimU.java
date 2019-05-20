@@ -1,10 +1,9 @@
 package util.anim;
 
-import java.awt.image.BufferedImage;
-
 import main.Printer;
 import page.MainLocale;
 import util.Res;
+import util.system.FakeImage;
 import util.system.MultiLangFile;
 import util.system.VImg;
 import util.system.files.AssetData;
@@ -33,7 +32,7 @@ public class AnimU extends AnimD implements MultiLangFile {
 
 	}
 
-	public BufferedImage num;
+	public FakeImage num;
 
 	public VImg uni = Res.slot[0], edi;
 
@@ -62,7 +61,7 @@ public class AnimU extends AnimD implements MultiLangFile {
 	}
 
 	@Override
-	public BufferedImage getNum() {
+	public FakeImage getNum() {
 		check();
 		return num;
 	}

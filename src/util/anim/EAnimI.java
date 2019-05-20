@@ -1,10 +1,10 @@
 package util.anim;
 
-import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
 import util.BattleObj;
+import util.system.FakeGraphics;
 import util.system.P;
 
 public abstract class EAnimI extends BattleObj {
@@ -26,7 +26,7 @@ public abstract class EAnimI extends BattleObj {
 		return a;
 	}
 
-	public abstract void draw(Graphics2D g, P ori, double siz);
+	public abstract void draw(FakeGraphics g, P ori, double siz);
 
 	public abstract int ind();
 

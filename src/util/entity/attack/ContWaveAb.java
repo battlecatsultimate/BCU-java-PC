@@ -1,7 +1,6 @@
 package util.entity.attack;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 import page.battle.BattleBox;
@@ -9,6 +8,7 @@ import util.ImgCore;
 import util.anim.EAnimD;
 import util.entity.AbEntity;
 import util.entity.Entity;
+import util.system.FakeGraphics;
 import util.system.P;
 
 public abstract class ContWaveAb extends ContAb {
@@ -27,7 +27,7 @@ public abstract class ContWaveAb extends ContAb {
 	}
 
 	@Override
-	public void draw(Graphics2D gra, P p, double siz) {
+	public void draw(FakeGraphics gra, P p, double siz) {
 		AffineTransform at = gra.getTransform();
 		anim.draw(gra, p, siz);
 		gra.setTransform(at);
@@ -57,7 +57,7 @@ public abstract class ContWaveAb extends ContAb {
 		t++;
 	}
 
-	protected void drawAxis(Graphics2D gra, P p, double siz) {
+	protected void drawAxis(FakeGraphics gra, P p, double siz) {
 		if (!ImgCore.ref)
 			return;
 

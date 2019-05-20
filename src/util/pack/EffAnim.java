@@ -1,12 +1,12 @@
 package util.pack;
 
-import java.awt.image.BufferedImage;
 import java.util.function.Function;
 
 import util.anim.AnimD;
 import util.anim.ImgCut;
 import util.anim.MaAnim;
 import util.anim.MaModel;
+import util.system.FakeImage;
 import util.system.VImg;
 
 public class EffAnim extends AnimD {
@@ -110,18 +110,18 @@ public class EffAnim extends AnimD {
 		effas[A_POI7].name = "poison_pink";
 	}
 
-	private static void excColor(BufferedImage b0, Function<int[], Integer> f) {
-		int w = b0.getWidth();
-		int h = b0.getHeight();
+	private static void excColor(FakeImage fakeImage, Function<int[], Integer> f) {
+		int w = fakeImage.getWidth();
+		int h = fakeImage.getHeight();
 		for (int i = 0; i < w; i++)
 			for (int j = 0; j < h; j++) {
-				int p = b0.getRGB(i, j);
+				int p = fakeImage.getRGB(i, j);
 				int b = p & 255;
 				int g = p >> 8 & 255;
 				int r = p >> 16 & 255;
 				int a = p >> 24;
 				p = f.apply(new int[] { a, r, g, b });
-				b0.setRGB(i, j, p);
+				fakeImage.setRGB(i, j, p);
 			}
 	}
 
@@ -139,7 +139,7 @@ public class EffAnim extends AnimD {
 	}
 
 	@Override
-	public BufferedImage getNum() {
+	public FakeImage getNum() {
 		return vimg.getImg();
 	}
 

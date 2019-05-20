@@ -1,9 +1,9 @@
 package util.anim;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Point;
 
+import util.system.FakeGraphics;
 import util.system.P;
 
 public class EAnimS extends EAnimI {
@@ -13,7 +13,7 @@ public class EAnimS extends EAnimI {
 	}
 
 	@Override
-	public void draw(Graphics2D g, P ori, double siz) {
+	public void draw(FakeGraphics g, P ori, double siz) {
 		set(g);
 		g.translate(ori.x, ori.y);
 		if (ref && !battle) {

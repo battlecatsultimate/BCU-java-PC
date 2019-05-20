@@ -1,7 +1,6 @@
 package util.entity;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 import page.battle.BattleBox;
@@ -14,6 +13,7 @@ import util.entity.attack.AttackWave;
 import util.entity.attack.ContMove;
 import util.entity.attack.ContWaveCanon;
 import util.pack.NyCastle;
+import util.system.FakeGraphics;
 import util.system.P;
 import util.unit.Form;
 import util.unit.UnitStore;
@@ -39,7 +39,7 @@ public class Cannon extends AtkModelAb {
 	}
 
 	/** attack part of animation */
-	public void drawAtk(Graphics2D g, P ori, double siz) {
+	public void drawAtk(FakeGraphics g, P ori, double siz) {
 		AffineTransform at = g.getTransform();
 		if (atka != null)
 			atka.draw(g, ori, siz);
@@ -70,7 +70,7 @@ public class Cannon extends AtkModelAb {
 	}
 
 	/** base part of animation */
-	public void drawBase(Graphics2D g, P ori, double siz) {
+	public void drawBase(FakeGraphics g, P ori, double siz) {
 		if (anim == null)
 			return;
 		anim.draw(g, ori, siz);

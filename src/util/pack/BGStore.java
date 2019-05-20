@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 import io.InStream;
 import io.OutStream;
 import util.Data;
+import util.system.FakeImage;
 import util.system.FixIndexList;
 import util.system.VImg;
 
@@ -81,7 +82,7 @@ public class BGStore extends FixIndexList<Background> {
 			os.writeInt(ind);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			try {
-				ImageIO.write(mbg.get(ind).img.getImg(), "PNG", baos);
+				FakeImage.write(mbg.get(ind).img.getImg(), "PNG", baos);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 				break;

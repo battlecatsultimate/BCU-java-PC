@@ -1,13 +1,13 @@
 package util.anim;
 
-import java.awt.image.BufferedImage;
+import util.system.FakeImage;
 
 public abstract class AnimD extends AnimI {
 
 	public ImgCut imgcut;
 	public MaModel mamodel;
 	public MaAnim[] anims;
-	public BufferedImage[] parts;
+	public FakeImage[] parts;
 
 	public boolean mismatch;
 
@@ -33,7 +33,7 @@ public abstract class AnimD extends AnimI {
 		return new EAnimD(this, mamodel, anims[t]);
 	}
 
-	public abstract BufferedImage getNum();
+	public abstract FakeImage getNum();
 
 	public int len(int t) {
 		check();
@@ -47,7 +47,7 @@ public abstract class AnimD extends AnimI {
 	public abstract String[] names();
 
 	@Override
-	public BufferedImage parts(int i) {
+	public FakeImage parts(int i) {
 		if (i < 0 || i >= parts.length)
 			return null;
 		return parts[i];

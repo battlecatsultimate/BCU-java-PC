@@ -12,6 +12,7 @@ import main.Timer;
 import util.ImgCore;
 import util.anim.EAnimD;
 import util.anim.EAnimU;
+import util.system.FG2D;
 import util.system.P;
 
 class AnimBox extends Canvas {
@@ -59,7 +60,7 @@ class AnimBox extends Canvas {
 		gra.setPaint(p);
 		gra.translate(w / 2, h * 3 / 4);
 		if (ent != null)
-			ent.draw(gra, ori.copy().times(-1), siz);
+			ent.draw(new FG2D(gra), ori.copy().times(-1), siz);
 		gra.dispose();
 		return img;
 	}

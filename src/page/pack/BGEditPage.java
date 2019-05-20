@@ -30,6 +30,8 @@ import page.view.BGViewPage;
 import util.pack.BGStore;
 import util.pack.Background;
 import util.pack.Pack;
+import util.system.FIBI;
+import util.system.FakeImage;
 import util.system.VImg;
 
 public class BGEditPage extends Page {
@@ -77,7 +79,7 @@ public class BGEditPage extends Page {
 				try {
 					File file = new File(path + bg.nameOf(bgr) + ".png");
 					Writer.check(file);
-					ImageIO.write(bgr.img.getImg(), "PNG", file);
+					FakeImage.write(bgr.img.getImg(), "PNG", file);
 				} catch (IOException e) {
 					e.printStackTrace();
 					getFile("Failed to save file", bgr);
@@ -144,7 +146,7 @@ public class BGEditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (bgr != null)
-					new Exporter(bgr.img.getImg(), Exporter.EXP_IMG);
+					new Exporter(bgr.img.getImg().bimg(), Exporter.EXP_IMG);
 			}
 		});
 
@@ -211,7 +213,7 @@ public class BGEditPage extends Page {
 		if (bgr == null)
 			bgr = bg.add(new VImg(bimg));
 		else {
-			bgr.img.setImg(bimg);
+			bgr.img.setImg(FIBI.build(bimg));
 			bgr.load();
 		}
 		String path = "./res/img/" + pack.id + "/bg/";

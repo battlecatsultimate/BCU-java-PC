@@ -4,7 +4,6 @@ import java.awt.Canvas;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.image.BufferedImage;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -12,6 +11,9 @@ import page.Page;
 import util.Res;
 import util.basis.Combo;
 import util.basis.LineUp;
+import util.system.FG2D;
+import util.system.FakeGraphics;
+import util.system.FakeImage;
 import util.system.P;
 import util.system.VImg;
 import util.unit.Form;
@@ -40,7 +42,7 @@ public class LineUpBox extends Canvas {
 		Image bimg = createImage(600, 300);
 		if (bimg == null)
 			return;
-		Graphics gra = bimg.getGraphics();
+		FakeGraphics gra = new FG2D(bimg.getGraphics());
 		for (int i = 0; i < 3; i++)
 			for (int j = 0; j < 5; j++) {
 				Form f = getForm(i, j);
@@ -50,29 +52,29 @@ public class LineUpBox extends Canvas {
 				else
 					img = f.anim.uni;
 				if (sf == null || sf != f || relative == null)
-					gra.drawImage(img.getImg(), 120 * j, 100 * i, null);
+					gra.drawImage(img.getImg(), 120 * j, 100 * i);
 				if (f == null)
 					continue;
 				if (time == 0 && sc != null)
 					for (int[] fc : sc.units)
 						if (f.uid == fc[0] && f.fid >= fc[1])
-							gra.drawImage(Res.slot[2].getImg(), 120 * j, 100 * i, null);
+							gra.drawImage(Res.slot[2].getImg(), 120 * j, 100 * i);
 				if (time == 1 && sf != null && f.uid == sf.uid && relative == null)
-					gra.drawImage(Res.slot[1].getImg(), 120 * j, 100 * i, null);
-				BufferedImage lv = Res.getCost(lu.getLv(f.unit)[0], true);
+					gra.drawImage(Res.slot[1].getImg(), 120 * j, 100 * i);
+				FakeImage lv = Res.getCost(lu.getLv(f.unit)[0], true);
 				int x = 120 * j;
 				int y = 100 * i + img.getImg().getHeight() - lv.getHeight();
 				if (sf == null || sf != f || relative == null)
-					gra.drawImage(lv, x, y, null);
+					gra.drawImage(lv, x, y);
 			}
 		if (relative != null && sf != null) {
 			Point p = relative.sf(mouse).toPoint();
-			BufferedImage uni = sf.anim.uni.getImg();
-			gra.drawImage(uni, p.x, p.y, null);
-			BufferedImage lv = Res.getCost(lu.getLv(sf.unit)[0], true);
+			FakeImage uni = sf.anim.uni.getImg();
+			gra.drawImage(uni, p.x, p.y);
+			FakeImage lv = Res.getCost(lu.getLv(sf.unit)[0], true);
 			int x = p.x;
 			int y = p.y + uni.getHeight() - lv.getHeight();
-			gra.drawImage(lv, x, y, null);
+			gra.drawImage(lv, x, y);
 		}
 		g.drawImage(bimg, 0, 0, getWidth(), getHeight(), null);
 		pt++;

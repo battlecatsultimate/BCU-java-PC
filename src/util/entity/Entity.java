@@ -1,7 +1,6 @@
 package util.entity;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +13,7 @@ import util.entity.attack.AttackAb;
 import util.entity.data.MaskAtk;
 import util.entity.data.MaskEntity;
 import util.pack.EffAnim;
+import util.system.FakeGraphics;
 import util.system.P;
 
 /** Entity class for units and enemies */
@@ -430,7 +430,7 @@ public abstract class Entity extends AbEntity {
 		}
 	}
 
-	protected void drawAxis(Graphics2D gra, P p, double siz) {
+	protected void drawAxis(FakeGraphics gra, P p, double siz) {
 		// after this is the drawing of hit boxes
 		siz *= 1.25;
 		double rat = BattleBox.ratio;

@@ -1,10 +1,10 @@
 package util.system.files;
 
-import java.awt.image.BufferedImage;
 import java.util.Map;
 import java.util.TreeMap;
 
 import page.MainLocale;
+import util.system.FakeImage;
 import util.system.MultiLangCont;
 import util.system.MultiLangFile;
 
@@ -18,7 +18,7 @@ public interface AssetData extends ByteData {
 		return new MultiLangAsset(vf);
 	}
 
-	public BufferedImage getImg(MultiLangFile mlf);
+	public FakeImage getImg(MultiLangFile mlf);
 
 }
 
@@ -29,7 +29,7 @@ class DefAsset extends FileByte implements AssetData {
 	}
 
 	@Override
-	public BufferedImage getImg(MultiLangFile mlf) {
+	public FakeImage getImg(MultiLangFile mlf) {
 		return getImg();
 	}
 
@@ -54,7 +54,7 @@ class MultiLangAsset implements AssetData {
 	}
 
 	@Override
-	public BufferedImage getImg(MultiLangFile mlf) {
+	public FakeImage getImg(MultiLangFile mlf) {
 		if (!MultiLangCont.VFILE.containsKey(mlf))
 			MultiLangCont.VFILE.put(mlf, this);
 		return getImg();

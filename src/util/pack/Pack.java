@@ -11,8 +11,6 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.TreeMap;
 
-import javax.imageio.ImageIO;
-
 import io.BCJSON;
 import io.InStream;
 import io.OutStream;
@@ -34,6 +32,7 @@ import util.stage.LvRestrict;
 import util.stage.MapColc;
 import util.stage.Stage;
 import util.stage.StageMap;
+import util.system.FakeImage;
 import util.system.VImg;
 import util.unit.Enemy;
 import util.unit.EnemyStore;
@@ -395,7 +394,7 @@ public class Pack extends Data {
 			File f = new File("./res/img/" + hex(id) + "/bg/" + trio(bgid) + ".png");
 			Writer.check(f);
 			try {
-				ImageIO.write(ent.getValue().img.getImg(), "PNG", f);
+				FakeImage.write(ent.getValue().img.getImg(), "PNG", f);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
@@ -409,7 +408,7 @@ public class Pack extends Data {
 			File f = new File("./res/img/" + hex(id) + "/cas/" + trio(csid) + ".png");
 			Writer.check(f);
 			try {
-				ImageIO.write(ent.getValue().getImg(), "PNG", f);
+				FakeImage.write(ent.getValue().getImg(), "PNG", f);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}

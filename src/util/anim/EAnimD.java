@@ -1,7 +1,6 @@
 package util.anim;
 
-import java.awt.Graphics2D;
-
+import util.system.FakeGraphics;
 import util.system.P;
 
 public class EAnimD extends EAnimI {
@@ -20,7 +19,7 @@ public class EAnimD extends EAnimI {
 	}
 
 	@Override
-	public void draw(Graphics2D g, P ori, double siz) {
+	public void draw(FakeGraphics g, P ori, double siz) {
 		if (f == -1) {
 			f = 0;
 			setup();
