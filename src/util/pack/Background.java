@@ -1,7 +1,5 @@
 package util.pack;
 
-import java.awt.Color;
-import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -15,6 +13,7 @@ import util.anim.ImgCut;
 import util.anim.MaAnim;
 import util.anim.MaModel;
 import util.system.VImg;
+import util.system.fake.FG2D;
 import util.system.fake.FakeGraphics;
 import util.system.fake.FakeImage;
 import util.system.files.AssetData;
@@ -55,7 +54,7 @@ public class Background extends AnimI {
 	public final Pack pack;
 	public final int id;
 	public final VImg img;
-	public final Color[] cs = new Color[4];
+	public final int[][] cs = new int[4][3];
 	private final WaveAnim uwav, ewav;
 
 	public int ic;
@@ -69,8 +68,6 @@ public class Background extends AnimI {
 		img = vimg;
 		ic = 1;
 		top = true;
-		for (int i = 0; i < 4; i++)
-			cs[i] = new Color(0, 0, 0);
 		uwav = BGStore.getBG(0).uwav;
 		ewav = BGStore.getBG(0).ewav;
 	}
@@ -82,7 +79,7 @@ public class Background extends AnimI {
 		top = ints[14] == 1;
 		ic = ints[13];
 		for (int i = 0; i < 4; i++)
-			cs[i] = new Color(ints[i * 3 + 1], ints[i * 3 + 2], ints[i * 3 + 3]);
+			cs[i] = new int[] { ints[i * 3 + 1], ints[i * 3 + 2], ints[i * 3 + 3] };
 		Pack.def.bg.add(this);
 		uwav = new WaveAnim(this, uwavm, uwava);
 		ewav = new WaveAnim(this, ewavm, ewava);
@@ -133,17 +130,16 @@ public class Background extends AnimI {
 		check();
 		BufferedImage temp = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 		Graphics2D g = (Graphics2D) temp.getGraphics();
+		FG2D fg = new FG2D(g);
 		if (top && parts.length > TOP)
 			for (int i = 0; i * fw < w; i++)
-				g.drawImage(parts[TOP].bimg(), fw * i, 0, fw, fh, null);
+				fg.drawImage(parts[TOP], fw * i, 0, fw, fh);
 		else {
-			g.setPaint(new GradientPaint(0, 0, cs[0], 0, fh, cs[1]));
-			g.fillRect(0, 0, w, fh);
+			fg.gradRect(0, 0, w, fh, 0, 0, cs[0], 0, fh, cs[1]);
 		}
 		for (int i = 0; i * fw < w; i++)
-			g.drawImage(parts[BG].bimg(), fw * i, fh, fw, fh, null);
-		g.setPaint(new GradientPaint(0, fh * 2, cs[2], 0, fh * 3, cs[3]));
-		g.fillRect(0, fh * 2, w, h - fh * 2);
+			fg.drawImage(parts[BG], fw * i, fh, fw, fh);
+		fg.gradRect(0, fh * 2, w, h - fh * 2, 0, fh * 2, cs[2], 0, fh * 3, cs[3]);
 		g.dispose();
 		return temp;
 	}

@@ -1,10 +1,12 @@
 package util.system.fake;
 
-import java.awt.Color;
 import java.awt.Composite;
-import java.awt.RenderingHints.Key;
 
 public interface FakeGraphics {
+
+	public static final int RED = 0, YELLOW = 1, BLACK = 2, MAGENTA = 3, BLUE = 4, CYAN = 5;
+
+	public void colRect(int x, int y, int w, int h, int r, int g, int b, int... a);
 
 	public void drawImage(FakeImage bimg, int i, int j);
 
@@ -24,17 +26,17 @@ public interface FakeGraphics {
 
 	public FakeTransform getTransform();
 
-	public void gradRect(int i, int j, int x, int k, int l, int y, Color color, int m, int n, Color color2);
+	public void gradRect(int x, int y, int w, int h, int a, int b, int[] c, int d, int e, int[] f);
 
 	public void rotate(double d);
 
 	public void scale(int hf, int vf);
 
-	public void setColor(Color red);
+	public void setColor(int c);
 
 	public void setComposite(Composite c);
 
-	public void setRenderingHint(Key key, Object object);
+	public void setRenderingHint(int key, int object);
 
 	public void setTransform(FakeTransform at);
 

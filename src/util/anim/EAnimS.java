@@ -1,6 +1,5 @@
 package util.anim;
 
-import java.awt.Color;
 import java.awt.Point;
 
 import util.system.P;
@@ -21,7 +20,7 @@ public class EAnimS extends EAnimI {
 			Point p1 = new P(400, 100).times(siz).toPoint();
 			Point p2 = new P(0, -300).times(siz).toPoint();
 			g.drawRect(p0.x, p0.y, p1.x, p1.y);
-			g.setColor(Color.RED);
+			g.setColor(FakeGraphics.RED);
 			g.drawLine(0, 0, p2.x, p2.y);
 		}
 		for (EPart e : order)

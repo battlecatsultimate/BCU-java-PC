@@ -1,6 +1,5 @@
 package page.anim;
 
-import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -67,7 +66,7 @@ class IconBox extends ViewBox {
 			int bw = bimg.getWidth();
 			int bh = bimg.getHeight();
 			double r = Math.min(1.0 * line[2] / bw, 1.0 * line[3] / bh);
-			gra.setColor(Color.BLACK);
+			gra.setColor(FakeGraphics.BLACK);
 			gra.drawRect(line[0] - 1, line[1] - 1, line[2] + 1, line[3] + 1);
 			if (glow == 1) {
 				Composite c = gra.getComposite();

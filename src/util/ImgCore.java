@@ -3,37 +3,14 @@ package util;
 import static java.awt.AlphaComposite.SRC_OVER;
 import static java.awt.AlphaComposite.getInstance;
 
-import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Point;
-import java.awt.RenderingHints;
-import java.awt.RenderingHints.Key;
-
 import util.system.P;
 import util.system.fake.FakeGraphics;
 import util.system.fake.FakeImage;
 
 public class ImgCore extends Data {
 
-	private static final Object KAS = RenderingHints.VALUE_ALPHA_INTERPOLATION_SPEED;
-	private static final Object KAD = RenderingHints.VALUE_ALPHA_INTERPOLATION_DEFAULT;
-	private static final Object KAQ = RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY;
-	private static final Object KCS = RenderingHints.VALUE_COLOR_RENDER_SPEED;
-	private static final Object KCD = RenderingHints.VALUE_COLOR_RENDER_DEFAULT;
-	private static final Object KCQ = RenderingHints.VALUE_COLOR_RENDER_QUALITY;
-	private static final Object KFS = RenderingHints.VALUE_FRACTIONALMETRICS_OFF;
-	private static final Object KFD = RenderingHints.VALUE_FRACTIONALMETRICS_DEFAULT;
-	private static final Object KFQ = RenderingHints.VALUE_FRACTIONALMETRICS_ON;
-	private static final Object KIS = RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR;
-	private static final Object KID = RenderingHints.VALUE_INTERPOLATION_BILINEAR;
-	private static final Object KIQ = RenderingHints.VALUE_INTERPOLATION_BICUBIC;
-	private static final Key KA = RenderingHints.KEY_ALPHA_INTERPOLATION;
-	private static final Key KC = RenderingHints.KEY_COLOR_RENDERING;
-	private static final Key KF = RenderingHints.KEY_FRACTIONALMETRICS;
-	private static final Key KI = RenderingHints.KEY_INTERPOLATION;
-	private static final Key[] KEYS = new Key[] { KA, KC, KF, KI };
-	private static final Object[][] VALS = new Object[][] { { KAS, KAD, KAQ }, { KCS, KCD, KCQ }, { KFS, KFD, KFQ },
-			{ KIS, KID, KIQ } };
 	public static final String[] NAME = new String[] { "opacity", "color", "accuracy", "scale" };
 	public static final String[] VAL = new String[] { "fast", "default", "quality" };
 
@@ -45,7 +22,7 @@ public class ImgCore extends Data {
 		if (battle)
 			return;
 		for (int i = 0; i < 4; i++)
-			g.setRenderingHint(KEYS[i], VALS[i][ints[i]]);
+			g.setRenderingHint(i, ints[i]);
 	}
 
 	protected static void drawImg(FakeGraphics g, FakeImage bimg, P piv, P sc, double opa, boolean glow,
@@ -79,7 +56,7 @@ public class ImgCore extends Data {
 	}
 
 	protected static void drawSca(FakeGraphics g, Point piv, Point sc) {
-		g.setColor(Color.RED);
+		g.setColor(FakeGraphics.RED);
 		g.fillOval(-10, -10, 20, 20);
 		g.drawOval(-40, -40, 80, 80);
 		int x = -piv.x;
@@ -91,7 +68,7 @@ public class ImgCore extends Data {
 		int sx = Math.abs(sc.x);
 		int sy = Math.abs(sc.y);
 		g.drawRect(x, y, sx, sy);
-		g.setColor(Color.YELLOW);
+		g.setColor(FakeGraphics.YELLOW);
 		g.drawRect(x - 40, y - 40, sx + 80, sy + 80);
 	}
 

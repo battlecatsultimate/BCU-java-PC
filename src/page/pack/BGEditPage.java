@@ -1,6 +1,5 @@
 package page.pack;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -191,7 +190,7 @@ public class BGEditPage extends Page {
 				public void focusLost(FocusEvent arg0) {
 					int[] inp = Reader.parseIntsN(cs[I].getText());
 					if (inp.length == 3)
-						bgr.cs[I] = new Color(inp[0], inp[1], inp[2]);
+						bgr.cs[I] = new int[] { inp[0], inp[1], inp[2] };
 					setCSText(I);
 
 				}
@@ -281,10 +280,7 @@ public class BGEditPage extends Page {
 	}
 
 	private void setCSText(int i) {
-		float[] fs = bgr.cs[i].getRGBColorComponents(null);
-		int[] is = new int[3];
-		for (int j = 0; j < 3; j++)
-			is[j] = (int) (fs[j] * 256 - 1e-5);
+		int[] is = bgr.cs[i];
 		String str = is[0] + "," + is[1] + "," + is[2];
 		cs[i].setText(str);
 	}
