@@ -79,7 +79,8 @@ public class BattleInfoPage extends KeyHandler {
 		jtb.setEnabled((conf & 1) == 0);
 		ct.setData(basis.sb.st);
 
-		jsl.setMaximum(((SBRply) basis).size());
+		if (recd.name.length() > 0)
+			jsl.setMaximum(((SBRply) basis).size());
 		ini();
 		rply.setText(0, recd.name.length() == 0 ? "save" : "start");
 		resized();
@@ -228,7 +229,7 @@ public class BattleInfoPage extends KeyHandler {
 			et.setList(le);
 			ut.setList(lu);
 		}
-		if (basis instanceof SBRply)
+		if (basis instanceof SBRply && recd.name.length() > 0)
 			change((SBRply) basis, b -> jsl.setValue(b.prog()));
 		bb.paint(bb.getGraphics());
 		AbEntity eba = sb.ebase;
@@ -239,7 +240,7 @@ public class BattleInfoPage extends KeyHandler {
 		ecount.setText(sb.entityCount(1) + "/" + sb.st.max);
 		ucount.setText(sb.entityCount(-1) + "/" + sb.max_num);
 		resized();
-		if (sb.getEBHP() * 100 < sb.st.mush && BCMusic.music != sb.st.mus1)
+		if (sb.getEBHP() * 100 <= sb.st.mush && BCMusic.music != sb.st.mus1)
 			BCMusic.play(sb.st.mus1);
 		if (bb instanceof BBRecd) {
 			BBRecd bbr = (BBRecd) bb;
@@ -321,8 +322,10 @@ public class BattleInfoPage extends KeyHandler {
 			add(stream);
 		else {
 			add(rply);
-			add(jsl);
-			jsl.setEnabled(pause);
+			if (recd != null && recd.name.length() > 0) {
+				add(jsl);
+				jsl.setEnabled(pause);
+			}
 		}
 		addListeners();
 	}
