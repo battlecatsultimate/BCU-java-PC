@@ -1,8 +1,5 @@
 package util.entity;
 
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-
 import util.BattleObj;
 import util.Data;
 import util.ImgCore;
@@ -14,6 +11,8 @@ import util.pack.EffAnim;
 import util.pack.Soul;
 import util.pack.SoulStore;
 import util.system.P;
+import util.system.fake.FakeGraphics;
+import util.system.fake.FakeTransform;
 
 public class AnimManager extends BattleObj {
 
@@ -58,12 +57,12 @@ public class AnimManager extends BattleObj {
 	}
 
 	/** draw this entity */
-	public void draw(Graphics2D gra, P p, double siz) {
+	public void draw(FakeGraphics gra, P p, double siz) {
 		if (dead > 0) {
 			soul.draw(gra, p, siz);
 			return;
 		}
-		AffineTransform at = gra.getTransform();
+		FakeTransform at = gra.getTransform();
 		if (corpse != null)
 			corpse.draw(gra, p, siz);
 		if (corpse == null || status[P_REVIVE][1] < Data.REVIVE_SHOW_TIME) {
@@ -84,10 +83,10 @@ public class AnimManager extends BattleObj {
 	}
 
 	/** draw the effect icons */
-	public void drawEff(Graphics2D g, P p, double siz) {
+	public void drawEff(FakeGraphics g, P p, double siz) {
 		if (dead != -1)
 			return;
-		AffineTransform at = g.getTransform();
+		FakeTransform at = g.getTransform();
 		int EWID = 48;
 		double x = p.x;
 		if (effs[eftp] != null) {

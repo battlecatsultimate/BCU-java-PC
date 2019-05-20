@@ -1,12 +1,11 @@
 package util.pack;
 
-import java.awt.image.BufferedImage;
-
 import util.anim.AnimD;
 import util.anim.ImgCut;
 import util.anim.MaAnim;
 import util.anim.MaModel;
 import util.system.VImg;
+import util.system.fake.FakeImage;
 
 public class Soul extends AnimD {
 
@@ -27,7 +26,7 @@ public class Soul extends AnimD {
 	}
 
 	@Override
-	public BufferedImage getNum() {
+	public FakeImage getNum() {
 		return img.getImg();
 	}
 

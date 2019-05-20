@@ -6,7 +6,6 @@ import java.awt.Composite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 import main.Timer;
@@ -23,6 +22,10 @@ import util.pack.NyCastle;
 import util.stage.Castles;
 import util.system.P;
 import util.system.VImg;
+import util.system.fake.FG2D;
+import util.system.fake.FakeGraphics;
+import util.system.fake.FakeImage;
+import util.system.fake.FakeTransform;
 import util.unit.Form;
 
 public class BattleBox extends Canvas {
@@ -42,22 +45,22 @@ public class BattleBox extends Canvas {
 	private static final int[] cany = new int[] { -134, -134, -134, -250, -250, -134, -134 };
 	private static final int[] canx = new int[] { 0, 0, 0, 64, 64, 0, 0 };
 
-	public static void drawNyCast(Graphics gra, int y, int x, double siz, int[] inf) {
-		BufferedImage bimg = NyCastle.main[2][inf[2]].getImg();
+	public static void drawNyCast(FakeGraphics gra, int y, int x, double siz, int[] inf) {
+		FakeImage bimg = NyCastle.main[2][inf[2]].getImg();
 		int bw = bimg.getWidth();
 		int bh = bimg.getHeight();
 		int cy = (int) (y + c0y * siz);
-		gra.drawImage(bimg, x, cy, (int) (bw * siz), (int) (bh * siz), null);
+		gra.drawImage(bimg, x, cy, (int) (bw * siz), (int) (bh * siz));
 		bimg = NyCastle.main[0][inf[0]].getImg();
 		bw = bimg.getWidth();
 		bh = bimg.getHeight();
 		cy = (int) (y + c2y * siz);
-		gra.drawImage(bimg, x, cy, (int) (bw * siz), (int) (bh * siz), null);
+		gra.drawImage(bimg, x, cy, (int) (bw * siz), (int) (bh * siz));
 		bimg = NyCastle.main[1][inf[1]].getImg();
 		bw = bimg.getWidth();
 		bh = bimg.getHeight();
 		cy = (int) (y + c1y * siz);
-		gra.drawImage(bimg, x, cy, (int) (bw * siz), (int) (bh * siz), null);
+		gra.drawImage(bimg, x, cy, (int) (bw * siz), (int) (bh * siz));
 	}
 
 	protected final BattleInfoPage page;
@@ -155,13 +158,14 @@ public class BattleBox extends Canvas {
 		if (img == null)
 			return null;
 		Graphics2D gra = (Graphics2D) img.getGraphics();
-		ImgCore.set(gra);
+		FakeGraphics g = new FG2D(gra);
+		ImgCore.set(g);
 		Point rect = new Point(w, h);
-		sb.bg.draw(gra, rect, pos, midh, siz);
-		drawCastle(gra);
-		drawEntity(gra, img);
-		drawBtm(gra);
-		drawTop(gra);
+		sb.bg.draw(g, rect, pos, midh, siz);
+		drawCastle(g);
+		drawEntity(g, img);
+		drawBtm(g);
+		drawTop(g);
 		gra.dispose();
 		return img;
 	}
@@ -197,7 +201,7 @@ public class BattleBox extends Canvas {
 		midh = 0;
 	}
 
-	private void drawBtm(Graphics2D gra) {
+	private void drawBtm(FakeGraphics g) {
 		int w = getWidth();
 		int h = getHeight();
 		int cw = 0;
@@ -205,9 +209,9 @@ public class BattleBox extends Canvas {
 		int mtype = sb.mon < sb.next_lv ? 0 : time == 0 ? 1 : 2;
 		if (sb.work_lv == 8)
 			mtype = 2;
-		BufferedImage left = Res.battle[0][mtype].getImg();
+		FakeImage left = Res.battle[0][mtype].getImg();
 		int ctype = sb.can == sb.max_can && time == 0 ? 1 : 0;
-		BufferedImage right = Res.battle[1][ctype].getImg();
+		FakeImage right = Res.battle[1][ctype].getImg();
 		cw += left.getWidth();
 		cw += right.getWidth();
 		cw += Res.slot[0].getImg().getWidth() * 5;
@@ -217,27 +221,27 @@ public class BattleBox extends Canvas {
 		corr = hr = Math.min(r, hr);
 		int ih = (int) (hr * left.getHeight());
 		int iw = (int) (hr * left.getWidth());
-		gra.drawImage(left, 0, h - ih, iw, ih, null);
+		g.drawImage(left, 0, h - ih, iw, ih);
 		left = Res.getCost(sb.next_lv, mtype > 0);
 		iw = (int) (hr * left.getWidth());
 		ih = (int) (hr * left.getHeight());
 		int dw = (int) (hr * 5);
 		int dh = (int) (hr * 5);
-		gra.drawImage(left, dw, h - ih - dh, iw, ih, null);
+		g.drawImage(left, dw, h - ih - dh, iw, ih);
 		left = Res.getWorkerLv(sb.work_lv, mtype > 0);
 		iw = (int) (hr * left.getWidth());
 		ih = (int) (hr * left.getHeight());
 		dw = (int) (hr * 5);
 		dh = (int) (hr * 130);
-		gra.drawImage(left, dw, h - dh, iw, ih, null);
+		g.drawImage(left, dw, h - dh, iw, ih);
 		iw = (int) (hr * right.getWidth());
 		ih = (int) (hr * right.getHeight());
-		gra.drawImage(right, w - iw, h - ih, iw, ih, null);
+		g.drawImage(right, w - iw, h - ih, iw, ih);
 		int hi = h;
 		double marg = 0;
 		if (ctype == 0)
 			for (int i = 0; i < 10 * sb.can / sb.max_can; i++) {
-				BufferedImage img = Res.battle[1][2 + i].getImg();
+				FakeImage img = Res.battle[1][2 + i].getImg();
 				iw = (int) (hr * img.getWidth());
 				ih = (int) (hr * img.getHeight());
 				marg += hr * img.getHeight() - ih;
@@ -246,59 +250,59 @@ public class BattleBox extends Canvas {
 					ih++;
 				}
 				hi -= ih;
-				gra.drawImage(img, w - iw, hi, iw, ih, null);
+				g.drawImage(img, w - iw, hi, iw, ih);
 			}
 		hr = avah / 2 / Res.slot[0].getImg().getHeight();
 		hr = Math.min(r, hr);
 		for (int i = 0; i < 10; i++) {
 			Form f = sb.b.lu.fs[i / 5][i % 5];
-			BufferedImage img = f == null ? Res.slot[0].getImg() : f.anim.uni.getImg();
+			FakeImage img = f == null ? Res.slot[0].getImg() : f.anim.uni.getImg();
 			iw = (int) (hr * img.getWidth());
 			ih = (int) (hr * img.getHeight());
 			int x = (w - iw * 5) / 2 + iw * (i % 5);
 			int y = h - ih * (2 - i / 5);
-			gra.drawImage(img, x, y, iw, ih, null);
+			g.drawImage(img, x, y, iw, ih);
 			if (f == null)
 				continue;
 			int pri = sb.elu.price[i / 5][i % 5];
 			if (pri == -1) {
-				gra.setColor(new Color(255, 0, 0, 100));
-				gra.fillRect(x, y, iw, ih);
+				g.setColor(new Color(255, 0, 0, 100));
+				g.fillRect(x, y, iw, ih);
 				continue;
 			}
 			int cool = sb.elu.cool[i / 5][i % 5];
 			boolean b = pri > sb.mon || cool > 0;
 			if (b) {
-				gra.setColor(new Color(0, 0, 0, 100));
-				gra.fillRect(x, y, iw, ih);
+				g.setColor(new Color(0, 0, 0, 100));
+				g.fillRect(x, y, iw, ih);
 			}
 			if (sb.locks[i / 5][i % 5]) {
-				gra.setColor(new Color(0, 255, 0, 100));
-				gra.fillRect(x, y, iw, ih);
+				g.setColor(new Color(0, 255, 0, 100));
+				g.fillRect(x, y, iw, ih);
 			}
 			if (cool > 0) {
 				dw = (int) (hr * 10);
 				dh = (int) (hr * 12);
 				double cd = 1.0 * cool / sb.elu.maxC[i / 5][i % 5];
 				int xw = (int) (cd * (iw - dw * 2));
-				gra.setColor(new Color(0, 0, 0));
-				gra.fillRect(x + iw - dw - xw, y + ih - dh * 2, xw, dh);
-				gra.setColor(new Color(100, 212, 255));
-				gra.fillRect(x + dw, y + ih - dh * 2, iw - dw * 2 - xw, dh);
+				g.setColor(new Color(0, 0, 0));
+				g.fillRect(x + iw - dw - xw, y + ih - dh * 2, xw, dh);
+				g.setColor(new Color(100, 212, 255));
+				g.fillRect(x + dw, y + ih - dh * 2, iw - dw * 2 - xw, dh);
 			} else {
 				img = Res.getCost(pri, !b);
 				x += iw;
 				y += ih;
 				iw = (int) (hr * img.getWidth());
 				ih = (int) (hr * img.getHeight());
-				gra.drawImage(img, x - iw, y - ih, iw, ih, null);
+				g.drawImage(img, x - iw, y - ih, iw, ih);
 			}
 		}
 		unir = hr;
 	}
 
-	private void drawCastle(Graphics2D gra) {
-		AffineTransform at = gra.getTransform();
+	private void drawCastle(FakeGraphics gra) {
+		FakeTransform at = gra.getTransform();
 		boolean drawCast = sb.ebase instanceof Entity;
 		int posy = (int) (midh - road_h * siz);
 		int posx = (int) ((800 * ratio + off) * siz + pos);
@@ -307,19 +311,19 @@ public class BattleBox extends Canvas {
 			if (cind == -1)
 				cind = 0;
 			VImg cast = Castles.getCastle(cind);
-			BufferedImage bimg = cast.getImg();
+			FakeImage bimg = cast.getImg();
 			int bw = (int) (bimg.getWidth() * siz);
 			int bh = (int) (bimg.getHeight() * siz);
-			gra.drawImage(bimg, posx - bw, posy - bh, bw, bh, null);
+			gra.drawImage(bimg, posx - bw, posy - bh, bw, bh);
 		} else
 			((Entity) sb.ebase).anim.draw(gra, new P(posx, posy), siz * sprite);
 		gra.setTransform(at);
 		posx -= castw * siz / 2;
 		posy -= casth * siz;
-		BufferedImage bimg = Res.getBase(sb.ebase);
+		FakeImage bimg = Res.getBase(sb.ebase);
 		int bw = (int) (bimg.getWidth() * siz);
 		int bh = (int) (bimg.getHeight() * siz);
-		gra.drawImage(bimg, posx, posy, bw, bh, null);
+		gra.drawImage(bimg, posx, posy, bw, bh);
 		posx = (int) (((sb.st.len - 800) * ratio + off) * siz + pos);
 		drawNyCast(gra, (int) (midh - road_h * siz), posx, siz, sb.nyc);
 		posx += castw * siz / 2;
@@ -327,11 +331,11 @@ public class BattleBox extends Canvas {
 		bw = (int) (bimg.getWidth() * siz);
 		bh = (int) (bimg.getHeight() * siz);
 		posx -= bw;
-		gra.drawImage(bimg, posx, posy, bw, bh, null);
+		gra.drawImage(bimg, posx, posy, bw, bh);
 	}
 
-	private void drawEntity(Graphics2D gra, BufferedImage img) {
-		AffineTransform at = gra.getTransform();
+	private void drawEntity(FakeGraphics gra, BufferedImage img) {
+		FakeTransform at = gra.getTransform();
 		double psiz = siz * sprite;
 		ImgCore.battle = true;
 		for (int i = 0; i < 10; i++) {
@@ -397,27 +401,27 @@ public class BattleBox extends Canvas {
 		ImgCore.battle = false;
 	}
 
-	private void drawTop(Graphics2D gra) {
+	private void drawTop(FakeGraphics g) {
 		int w = getWidth();
-		BufferedImage bimg = Res.getMoney((int) sb.mon, sb.max_mon);
+		FakeImage bimg = Res.getMoney((int) sb.mon, sb.max_mon);
 		int ih = bimg.getHeight();
-		gra.drawImage(bimg, w - bimg.getWidth(), 0, null);
+		g.drawImage(bimg, w - bimg.getWidth(), 0);
 		int n = 0;
 		bimg = Res.battle[2][1].getImg();
 		int cw = bimg.getWidth();
 		if ((sb.conf[0] & 2) > 0) {
 			bimg = Res.battle[2][sb.sniper.enabled ? 2 : 4].getImg();
-			gra.drawImage(bimg, w - cw, ih, null);
+			g.drawImage(bimg, w - cw, ih);
 			n++;
 		}
 		bimg = Res.battle[2][1].getImg();
 		if ((sb.conf[0] & 1) > 0) {
-			gra.drawImage(bimg, w - cw * (n + 1), ih, null);
+			g.drawImage(bimg, w - cw * (n + 1), ih);
 			n++;
 		}
 		bimg = Res.battle[2][page.spe > 0 ? 0 : 3].getImg();
 		for (int i = 0; i < Math.abs(page.spe); i++)
-			gra.drawImage(bimg, w - cw * (i + 1 + n), ih, null);
+			g.drawImage(bimg, w - cw * (i + 1 + n), ih);
 	}
 
 }

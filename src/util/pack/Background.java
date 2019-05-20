@@ -15,6 +15,8 @@ import util.anim.ImgCut;
 import util.anim.MaAnim;
 import util.anim.MaModel;
 import util.system.VImg;
+import util.system.fake.FakeGraphics;
+import util.system.fake.FakeImage;
 import util.system.files.AssetData;
 import util.system.files.VFile;
 
@@ -59,7 +61,7 @@ public class Background extends AnimI {
 	public int ic;
 	public boolean top;
 
-	protected BufferedImage[] parts = null;
+	protected FakeImage[] parts = null;
 
 	protected Background(Pack p, VImg vimg, int ID) {
 		pack = p;
@@ -103,7 +105,7 @@ public class Background extends AnimI {
 		return bg;
 	}
 
-	public void draw(Graphics2D g, Point rect, int pos, int h, double siz) {
+	public void draw(FakeGraphics g, Point rect, int pos, int h, double siz) {
 		check();
 		int off = (int) (pos - shift * siz);
 		int fw = (int) (768 * siz);
@@ -113,17 +115,15 @@ public class Background extends AnimI {
 			if (top && parts.length > TOP) {
 				for (int x = off; x < rect.x; x += fw)
 					if (x + fw > 0)
-						g.drawImage(parts[TOP], x, y, fw, fh, null);
+						g.drawImage(parts[TOP], x, y, fw, fh);
 			} else {
-				g.setPaint(new GradientPaint(0, y, cs[0], 0, y + fh, cs[1]));
-				g.fillRect(0, 0, rect.x, fh + y);
+				g.gradRect(0, 0, rect.x, fh + y, 0, y, cs[0], 0, y + fh, cs[1]);
 			}
 		}
 		for (int x = off; x < rect.x; x += fw)
 			if (x + fw > 0)
-				g.drawImage(parts[BG], x, h - fh, fw, fh, null);
-		g.setPaint(new GradientPaint(0, h, cs[2], 0, h + fh, cs[3]));
-		g.fillRect(0, h, rect.x, rect.y - h);
+				g.drawImage(parts[BG], x, h - fh, fw, fh);
+		g.gradRect(0, h, rect.x, rect.y - h, 0, h, cs[2], 0, h + fh, cs[3]);
 	}
 
 	public BufferedImage getBg(int w, int h) {
@@ -135,13 +135,13 @@ public class Background extends AnimI {
 		Graphics2D g = (Graphics2D) temp.getGraphics();
 		if (top && parts.length > TOP)
 			for (int i = 0; i * fw < w; i++)
-				g.drawImage(parts[TOP], fw * i, 0, fw, fh, null);
+				g.drawImage(parts[TOP].bimg(), fw * i, 0, fw, fh, null);
 		else {
 			g.setPaint(new GradientPaint(0, 0, cs[0], 0, fh, cs[1]));
 			g.fillRect(0, 0, w, fh);
 		}
 		for (int i = 0; i * fw < w; i++)
-			g.drawImage(parts[BG], fw * i, fh, fw, fh, null);
+			g.drawImage(parts[BG].bimg(), fw * i, fh, fw, fh, null);
 		g.setPaint(new GradientPaint(0, fh * 2, cs[2], 0, fh * 3, cs[3]));
 		g.fillRect(0, fh * 2, w, h - fh * 2);
 		g.dispose();
@@ -169,7 +169,7 @@ public class Background extends AnimI {
 	}
 
 	@Override
-	public BufferedImage parts(int i) {
+	public FakeImage parts(int i) {
 		return parts[i];
 	}
 

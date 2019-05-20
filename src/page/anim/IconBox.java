@@ -2,11 +2,9 @@ package page.anim;
 
 import java.awt.Color;
 import java.awt.Composite;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 import page.view.ViewBox;
@@ -14,6 +12,9 @@ import util.Blender;
 import util.ImgCore;
 import util.Res;
 import util.system.P;
+import util.system.fake.FakeGraphics;
+import util.system.fake.FakeImage;
+import util.system.fake.FakeTransform;
 
 class IconBox extends ViewBox {
 
@@ -31,38 +32,38 @@ class IconBox extends ViewBox {
 	}
 
 	protected void changeType() {
-		BufferedImage bimg = Res.ico[mode][type].getImg();
+		FakeImage bimg = Res.ico[mode][type].getImg();
 		line[2] = bimg.getWidth();
 		line[3] = bimg.getHeight();
 	}
 
 	@Override
-	protected synchronized void draw(Graphics2D gra) {
+	protected synchronized void draw(FakeGraphics gra) {
 		boolean b = ImgCore.ref;
 		ImgCore.ref = false;
 		if (blank) {
 			if (mode == 0 && type > 1 || mode == 1) {
-				BufferedImage bimg = Res.ico[mode][type].getImg();
+				FakeImage bimg = Res.ico[mode][type].getImg();
 				int bw = bimg.getWidth();
 				int bh = bimg.getHeight();
 				double r = Math.min(1.0 * line[2] / bw, 1.0 * line[3] / bh);
-				gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r), null);
+				gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r));
 				if (glow == 1) {
 					Composite c = gra.getComposite();
 					gra.setComposite(new Blender(256, -1));
 					bimg = Res.ico[0][4].getImg();
-					gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r), null);
+					gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r));
 					gra.setComposite(c);
 				}
 			}
 		}
-		AffineTransform at = gra.getTransform();
+		FakeTransform at = gra.getTransform();
 		super.draw(gra);
 		gra.setTransform(at);
 		ImgCore.ref = b;
 		if (blank) {
 			int t = mode == 0 ? type == 1 ? 1 : 0 : 3;
-			BufferedImage bimg = Res.ico[mode][t].getImg();
+			FakeImage bimg = Res.ico[mode][t].getImg();
 			int bw = bimg.getWidth();
 			int bh = bimg.getHeight();
 			double r = Math.min(1.0 * line[2] / bw, 1.0 * line[3] / bh);
@@ -72,22 +73,22 @@ class IconBox extends ViewBox {
 				Composite c = gra.getComposite();
 				gra.setComposite(new Blender(256, 1));
 				bimg = Res.ico[0][4].getImg();
-				gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r), null);
+				gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r));
 				gra.setComposite(c);
 			}
 			if (mode == 0 && type > 1) {
 				bimg = Res.ico[0][5].getImg();
-				gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r), null);
+				gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r));
 			} else {
 				bimg = Res.ico[mode][t].getImg();
-				gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r), null);
+				gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r));
 			}
 
 		}
 	}
 
 	protected BufferedImage getClip() {
-		BufferedImage bimg = Res.ico[mode][type].getImg();
+		FakeImage bimg = Res.ico[mode][type].getImg();
 		int bw = bimg.getWidth();
 		int bh = bimg.getHeight();
 		double r = Math.min(1.0 * line[2] / bw, 1.0 * line[3] / bh);

@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import page.battle.BattleBox;
+import util.system.fake.FG2D;
 
 class NyCasBox extends Canvas {
 
@@ -29,7 +30,7 @@ class NyCasBox extends Canvas {
 		BufferedImage img = (BufferedImage) createImage(w, h);
 		if (img == null)
 			return;
-		BattleBox.drawNyCast(img.getGraphics(), h, 0, r, ints);
+		BattleBox.drawNyCast(new FG2D(img.getGraphics()), h, 0, r, ints);
 		g.drawImage(img, 0, 0, null);
 		g.dispose();
 	}

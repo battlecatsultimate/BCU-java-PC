@@ -1,10 +1,10 @@
 package util.anim;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Point;
 
 import util.system.P;
+import util.system.fake.FakeGraphics;
 
 public class EAnimU extends EAnimD {
 
@@ -30,7 +30,7 @@ public class EAnimU extends EAnimD {
 	}
 
 	@Override
-	public void draw(Graphics2D g, P ori, double siz) {
+	public void draw(FakeGraphics g, P ori, double siz) {
 		if (f == -1) {
 			f = 0;
 			setup();

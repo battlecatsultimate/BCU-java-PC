@@ -16,6 +16,7 @@ import util.stage.AbCastle;
 import util.stage.Castles;
 import util.system.FixIndexList;
 import util.system.VImg;
+import util.system.fake.FakeImage;
 
 public class CasStore extends FixIndexList<VImg> implements AbCastle {
 
@@ -61,7 +62,7 @@ public class CasStore extends FixIndexList<VImg> implements AbCastle {
 			cas.writeInt(ind);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			try {
-				ImageIO.write(mcas.get(ind).getImg(), "PNG", baos);
+				FakeImage.write(mcas.get(ind).getImg(), "PNG", baos);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 				break;

@@ -1,13 +1,12 @@
 package util.system.files;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-import javax.imageio.ImageIO;
+import util.system.fake.FakeImage;
 
 public class FDFile implements FileData {
 
@@ -18,9 +17,9 @@ public class FDFile implements FileData {
 	}
 
 	@Override
-	public BufferedImage getImg() {
+	public FakeImage getImg() {
 		try {
-			return ImageIO.read(file);
+			return FakeImage.read(file);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;

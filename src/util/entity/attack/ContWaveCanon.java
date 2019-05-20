@@ -1,9 +1,8 @@
 package util.entity.attack;
 
-import java.awt.Graphics2D;
-
 import util.pack.NyCastle;
 import util.system.P;
+import util.system.fake.FakeGraphics;
 
 public class ContWaveCanon extends ContWaveAb {
 
@@ -15,7 +14,7 @@ public class ContWaveCanon extends ContWaveAb {
 	}
 
 	@Override
-	public void draw(Graphics2D gra, P p, double psiz) {
+	public void draw(FakeGraphics gra, P p, double psiz) {
 		drawAxis(gra, p, psiz);
 		if (canid == 0)
 			psiz *= 1.25;

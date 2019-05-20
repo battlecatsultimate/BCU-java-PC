@@ -1,11 +1,10 @@
 package util.entity.attack;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
-
 import page.battle.BattleBox;
 import util.ImgCore;
 import util.system.P;
+import util.system.fake.FakeGraphics;
 
 public class ContMove extends ContAb {
 
@@ -28,7 +27,7 @@ public class ContMove extends ContAb {
 	}
 
 	@Override
-	public void draw(Graphics2D gra, P p, double siz) {
+	public void draw(FakeGraphics gra, P p, double siz) {
 		if (!ImgCore.ref)
 			return;
 
