@@ -36,6 +36,7 @@ import util.anim.MaAnim;
 import util.anim.Part;
 import util.pack.Pack;
 import util.system.VImg;
+import util.system.fake.FIBI;
 import util.unit.DIYAnim;
 import util.unit.Enemy;
 
@@ -199,7 +200,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				changing = true;
 				String str = AnimC.getAvailable("new anim");
 				AnimC ac = new AnimC(str);
-				ac.num = bimg;
+				ac.num = FIBI.build(bimg);
 				ac.saveImg();
 				ac.createNew();
 				DIYAnim da = new DIYAnim(str, ac);
@@ -220,7 +221,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				BufferedImage bimg = new Importer("Update your sprite").getImg();
 				if (bimg != null) {
 					AnimC ac = icet.anim;
-					ac.num = bimg;
+					ac.num = FIBI.build(bimg);
 					ac.saveImg();
 					ac.ICedited();
 
@@ -233,7 +234,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new Exporter(icet.anim.num, Exporter.EXP_IMG);
+				new Exporter(icet.anim.num.bimg(), Exporter.EXP_IMG);
 			}
 
 		});
@@ -488,7 +489,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 					ImgCut ic = icet.ic;
 					data = ic.cuts[ind];
 				}
-				ReColor.transcolor(icet.anim.num, data, jlf.getSelectedIndex(), jlt.getSelectedIndex());
+				ReColor.transcolor(icet.anim.num.bimg(), data, jlf.getSelectedIndex(), jlt.getSelectedIndex());
 				icet.anim.ICedited();
 			}
 

@@ -104,7 +104,7 @@ public class StageTable extends AbJTable {
 				data[ind][4] = info[i][C0] + "%";
 			else
 				data[ind][4] = info[i][C0] + "~" + info[i][C1] + "%";
-			if (info[i][S0] >= info[i][S1])
+			if (Math.abs(info[i][S0]) >= Math.abs(info[i][S1]))
 				data[ind][5] = info[i][S0];
 			else
 				data[ind][5] = info[i][S0] + "~" + info[i][S1];

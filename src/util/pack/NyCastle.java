@@ -1,13 +1,12 @@
 package util.pack;
 
-import java.awt.image.BufferedImage;
-
 import util.anim.AnimI;
 import util.anim.EAnimD;
 import util.anim.ImgCut;
 import util.anim.MaAnim;
 import util.anim.MaModel;
 import util.system.VImg;
+import util.system.fake.FakeImage;
 
 public class NyCastle extends AnimI {
 
@@ -36,7 +35,7 @@ public class NyCastle extends AnimI {
 	private final ImgCut ic;
 	private final MaModel model, atkm, extm;
 	private final MaAnim manim, atka, exta;
-	private BufferedImage[] parts;
+	private FakeImage[] parts;
 
 	private NyCastle(String str, int t) {
 		anim = this;
@@ -94,7 +93,7 @@ public class NyCastle extends AnimI {
 	}
 
 	@Override
-	public BufferedImage parts(int i) {
+	public FakeImage parts(int i) {
 		return parts[i];
 	}
 

@@ -1,7 +1,5 @@
 package util.entity;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +13,7 @@ import util.entity.data.MaskAtk;
 import util.entity.data.MaskEntity;
 import util.pack.EffAnim;
 import util.system.P;
+import util.system.fake.FakeGraphics;
 
 /** Entity class for units and enemies */
 public abstract class Entity extends AbEntity {
@@ -430,14 +429,14 @@ public abstract class Entity extends AbEntity {
 		}
 	}
 
-	protected void drawAxis(Graphics2D gra, P p, double siz) {
+	protected void drawAxis(FakeGraphics gra, P p, double siz) {
 		// after this is the drawing of hit boxes
 		siz *= 1.25;
 		double rat = BattleBox.ratio;
 		double poa = p.x - pos * rat * siz;
 		int py = (int) p.y;
 		int h = (int) (640 * rat * siz);
-		gra.setColor(Color.RED);
+		gra.setColor(FakeGraphics.RED);
 		for (int i = 0; i < data.getAtkCount(); i++) {
 			double[] ds = aam.inRange(i);
 			double d0 = Math.min(ds[0], ds[1]);
@@ -450,14 +449,14 @@ public abstract class Entity extends AbEntity {
 			else
 				gra.drawRect(x, y, w, h);
 		}
-		gra.setColor(Color.YELLOW);
+		gra.setColor(FakeGraphics.YELLOW);
 		int x = (int) ((pos + data.getRange() * dire) * rat * siz + poa);
 		gra.drawLine(x, py, x, py + h);
-		gra.setColor(Color.BLUE);
+		gra.setColor(FakeGraphics.BLUE);
 		int bx = (int) ((dire == -1 ? pos : pos - data.getWidth()) * rat * siz + poa);
 		int bw = (int) (data.getWidth() * rat * siz);
 		gra.drawRect(bx, (int) p.y, bw, h);
-		gra.setColor(Color.CYAN);
+		gra.setColor(FakeGraphics.CYAN);
 		gra.drawLine((int) (pos * rat * siz + poa), py, (int) (pos * rat * siz + poa), py + h);
 		atkm.tempAtk = -1;
 	}

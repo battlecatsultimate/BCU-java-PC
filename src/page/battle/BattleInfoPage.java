@@ -11,6 +11,9 @@ import java.util.Random;
 
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import io.BCMusic;
 import main.Opts;
@@ -55,6 +58,7 @@ public class BattleInfoPage extends KeyHandler {
 	private final JLabel ucount = new JLabel();
 	private final JLabel stream = new JLabel();
 	private final JTG jtb = new JTG(0, "larges");
+	private final JSlider jsl = new JSlider();
 	private final BattleBox bb;
 	private final BattleField basis;
 
@@ -75,6 +79,8 @@ public class BattleInfoPage extends KeyHandler {
 		jtb.setEnabled((conf & 1) == 0);
 		ct.setData(basis.sb.st);
 
+		if (recd.name.length() > 0)
+			jsl.setMaximum(((SBRply) basis).size());
 		ini();
 		rply.setText(0, recd.name.length() == 0 ? "save" : "start");
 		resized();
@@ -113,10 +119,14 @@ public class BattleInfoPage extends KeyHandler {
 
 	@Override
 	protected synchronized void keyTyped(KeyEvent e) {
-		if (spe > -5 && e.getKeyChar() == ',')
+		if (spe > -5 && e.getKeyChar() == ',') {
 			spe--;
-		if (spe < (basis instanceof SBCtrl ? 5 : 7) && e.getKeyChar() == '.')
+			bb.reset();
+		}
+		if (spe < (basis instanceof SBCtrl ? 5 : 7) && e.getKeyChar() == '.') {
 			spe++;
+			bb.reset();
+		}
 	}
 
 	@Override
@@ -175,6 +185,7 @@ public class BattleInfoPage extends KeyHandler {
 			set(eup, x, y, 50, 400, 0, 0);
 			set(ecount, x, y, 50, 50, 0, 0);
 			set(ucount, x, y, 50, 350, 0, 0);
+			set(jsl, x, y, 0, 0, 0, 0);
 		} else {
 			set(back, x, y, 0, 0, 200, 50);
 			set(jtb, x, y, 2100, 0, 200, 50);
@@ -190,6 +201,7 @@ public class BattleInfoPage extends KeyHandler {
 			set(ubase, x, y, 1300, 250, 200, 50);
 			set(ecount, x, y, 50, 50, 600, 50);
 			set(ucount, x, y, 1650, 50, 600, 50);
+			set(jsl, x, y, 700, 800, 800, 50);
 		}
 		ct.setRowHeight(size(x, y, 50));
 		et.setRowHeight(size(x, y, 50));
@@ -217,6 +229,8 @@ public class BattleInfoPage extends KeyHandler {
 			et.setList(le);
 			ut.setList(lu);
 		}
+		if (basis instanceof SBRply && recd.name.length() > 0)
+			change((SBRply) basis, b -> jsl.setValue(b.prog()));
 		bb.paint(bb.getGraphics());
 		AbEntity eba = sb.ebase;
 		long h = eba.health;
@@ -226,7 +240,7 @@ public class BattleInfoPage extends KeyHandler {
 		ecount.setText(sb.entityCount(1) + "/" + sb.st.max);
 		ucount.setText(sb.entityCount(-1) + "/" + sb.max_num);
 		resized();
-		if (sb.getEBHP() * 100 < sb.st.mush && BCMusic.music != sb.st.mus1)
+		if (sb.getEBHP() * 100 <= sb.st.mush && BCMusic.music != sb.st.mus1)
 			BCMusic.play(sb.st.mus1);
 		if (bb instanceof BBRecd) {
 			BBRecd bbr = (BBRecd) bb;
@@ -264,6 +278,7 @@ public class BattleInfoPage extends KeyHandler {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				pause = !pause;
+				jsl.setEnabled(pause);
 			}
 		});
 
@@ -274,6 +289,18 @@ public class BattleInfoPage extends KeyHandler {
 				timer(0);
 				pause = true;
 			}
+		});
+
+		jsl.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				if (jsl.getValueIsAdjusting() || isAdj() || !(basis instanceof SBRply))
+					return;
+				((SBRply) basis).restoreTo(jsl.getValue());
+				bb.reset();
+			}
+
 		});
 
 	}
@@ -293,8 +320,13 @@ public class BattleInfoPage extends KeyHandler {
 		add(jtb);
 		if (bb instanceof BBRecd)
 			add(stream);
-		else
+		else {
 			add(rply);
+			if (recd != null && recd.name.length() > 0) {
+				add(jsl);
+				jsl.setEnabled(pause);
+			}
+		}
 		addListeners();
 	}
 

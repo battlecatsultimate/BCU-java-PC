@@ -1,6 +1,5 @@
 package util.pack;
 
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,6 +16,7 @@ import io.OutStream;
 import util.Data;
 import util.system.FixIndexList;
 import util.system.VImg;
+import util.system.fake.FakeImage;
 
 public class BGStore extends FixIndexList<Background> {
 
@@ -81,7 +81,7 @@ public class BGStore extends FixIndexList<Background> {
 			os.writeInt(ind);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			try {
-				ImageIO.write(mbg.get(ind).img.getImg(), "PNG", baos);
+				FakeImage.write(mbg.get(ind).img.getImg(), "PNG", baos);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 				break;
@@ -91,8 +91,8 @@ public class BGStore extends FixIndexList<Background> {
 			Background bg = mbg.get(ind);
 			os.writeInt(bg.top ? 1 : 0);
 			os.writeInt(bg.ic);
-			for (Color c : bg.cs)
-				os.writeInt(c.getRGB());
+			for (int[] c : bg.cs)
+				os.writeInt(c[0] << 16 | c[1] << 8 | c[2]);
 		}
 		os.terminate();
 		return os;
@@ -108,8 +108,8 @@ public class BGStore extends FixIndexList<Background> {
 			Background bg = mbg.get(ind);
 			os.writeInt(bg.top ? 1 : 0);
 			os.writeInt(bg.ic);
-			for (Color c : bg.cs)
-				os.writeInt(c.getRGB());
+			for (int[] c : bg.cs)
+				os.writeInt(c[0] << 16 | c[1] << 8 | c[2]);
 		}
 		os.terminate();
 		return os;
@@ -155,8 +155,10 @@ public class BGStore extends FixIndexList<Background> {
 			set(ind, bg);
 			bg.top = is.nextInt() > 0;
 			bg.ic = is.nextInt();
-			for (int j = 0; j < 4; j++)
-				bg.cs[j] = new Color(is.nextInt());
+			for (int j = 0; j < 4; j++) {
+				int p = is.nextInt();
+				bg.cs[j] = new int[] { p >> 24, p >> 16 & 8, p & 8 };
+			}
 		}
 	}
 
@@ -196,8 +198,10 @@ public class BGStore extends FixIndexList<Background> {
 				continue;
 			bg.top = is.nextInt() > 0;
 			bg.ic = is.nextInt();
-			for (int j = 0; j < 4; j++)
-				bg.cs[j] = new Color(is.nextInt());
+			for (int j = 0; j < 4; j++) {
+				int p = is.nextInt();
+				bg.cs[j] = new int[] { p >> 24, p >> 16 & 8, p & 8 };
+			}
 		}
 	}
 

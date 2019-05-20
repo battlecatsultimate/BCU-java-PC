@@ -1,10 +1,9 @@
 package util.entity;
 
-import java.awt.Graphics2D;
-
 import util.BattleObj;
 import util.anim.EAnimD;
 import util.system.P;
+import util.system.fake.FakeGraphics;
 
 public class EAnimCont extends BattleObj {
 
@@ -23,7 +22,7 @@ public class EAnimCont extends BattleObj {
 		return anim.done();
 	}
 
-	public void draw(Graphics2D gra, P p, double psiz) {
+	public void draw(FakeGraphics gra, P p, double psiz) {
 		anim.draw(gra, p, psiz);
 	}
 

@@ -1,12 +1,12 @@
 package util.anim;
 
-import java.awt.image.BufferedImage;
 import java.io.PrintStream;
 import java.util.Queue;
 import io.InStream;
 import io.OutStream;
 import main.Opts;
 import util.Data;
+import util.system.fake.FakeImage;
 import util.system.files.FileData;
 
 public class ImgCut extends Data implements Cloneable {
@@ -68,10 +68,10 @@ public class ImgCut extends Data implements Cloneable {
 		return new ImgCut(this);
 	}
 
-	public BufferedImage[] cut(BufferedImage bimg) {
+	public FakeImage[] cut(FakeImage bimg) {
 		int w = bimg.getWidth();
 		int h = bimg.getHeight();
-		BufferedImage[] parts = new BufferedImage[n];
+		FakeImage[] parts = new FakeImage[n];
 		for (int i = 0; i < n; i++) {
 			int[] cut = cuts[i].clone();
 			if (cut[0] < 0)

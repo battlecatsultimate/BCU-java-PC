@@ -19,6 +19,8 @@ import res.AnimatedGifEncoder;
 import util.ImgCore;
 import util.anim.EAnimI;
 import util.system.P;
+import util.system.fake.FG2D;
+import util.system.fake.FakeGraphics;
 
 public class ViewBox extends Canvas {
 
@@ -68,7 +70,7 @@ public class ViewBox extends Canvas {
 			lbimg.add(prev);
 	}
 
-	protected void draw(Graphics2D gra) {
+	protected void draw(FakeGraphics gra) {
 		int w = getWidth();
 		int h = getHeight();
 		gra.translate(w / 2, h * 3 / 4);
@@ -103,7 +105,7 @@ public class ViewBox extends Canvas {
 				gra.setPaint(p);
 			}
 		}
-		draw(gra);
+		draw(new FG2D(gra));
 		gra.dispose();
 		return img;
 	}

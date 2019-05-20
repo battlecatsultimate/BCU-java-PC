@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import util.anim.ImgCut;
 import util.entity.AbEntity;
 import util.system.VImg;
+import util.system.fake.FakeImage;
 import util.unit.Form;
 
 public class Res extends ImgCore {
@@ -16,7 +17,7 @@ public class Res extends ImgCore {
 
 	private static VImg[][] icon = new VImg[4][];
 
-	public static BufferedImage getBase(AbEntity ae) {
+	public static FakeImage getBase(AbEntity ae) {
 		long h = ae.health;
 		if (h < 0)
 			h = 0;
@@ -31,7 +32,7 @@ public class Res extends ImgCore {
 		return VImg.combine(input);
 	}
 
-	public static BufferedImage getCost(int cost, boolean enable) {
+	public static FakeImage getCost(int cost, boolean enable) {
 		if (cost == -1)
 			return battle[0][3].getImg();
 		int[] val = getLab(cost);
@@ -46,10 +47,10 @@ public class Res extends ImgCore {
 		id %= 100;
 		if (icon[type][id] == null)
 			return null;
-		return icon[type][id].getImg();
+		return icon[type][id].getImg().bimg();
 	}
 
-	public static BufferedImage getMoney(int mon, int max) {
+	public static FakeImage getMoney(int mon, int max) {
 		int[] val0 = getLab(mon);
 		int[] val1 = getLab(max);
 		VImg[] input = new VImg[val0.length + val1.length + 1];
@@ -61,7 +62,7 @@ public class Res extends ImgCore {
 		return VImg.combine(input);
 	}
 
-	public static BufferedImage getWorkerLv(int lv, boolean enable) {
+	public static FakeImage getWorkerLv(int lv, boolean enable) {
 		return VImg.combine(num[enable ? 1 : 2][10], num[enable ? 1 : 2][lv]);
 	}
 
@@ -89,7 +90,7 @@ public class Res extends ImgCore {
 
 		ImgCut ic029 = ImgCut.newIns("./org/page/img029.imgcut");
 		VImg img029 = new VImg("./org/page/img029.png");
-		BufferedImage[] parts = ic029.cut(img029.getImg());
+		FakeImage[] parts = ic029.cut(img029.getImg());
 		slot[1] = new VImg(parts[9]);
 		slot[2] = new VImg(parts[10]);
 		readAbiIcon();
@@ -111,7 +112,7 @@ public class Res extends ImgCore {
 	private static void readAbiIcon() {
 		ImgCut ic015 = ImgCut.newIns("./org/page/img015.imgcut");
 		VImg img015 = new VImg("./org/page/img015.png");
-		BufferedImage[] parts = ic015.cut(img015.getImg());
+		FakeImage[] parts = ic015.cut(img015.getImg());
 		icon[0] = new VImg[ABI_TOT];
 		icon[1] = new VImg[PROC_TOT];
 		icon[2] = new VImg[ATK_TOT];
@@ -188,7 +189,7 @@ public class Res extends ImgCore {
 		battle[2] = new VImg[5];
 		ImgCut ic001 = ImgCut.newIns("./org/page/img001.imgcut");
 		VImg img001 = new VImg("./org/page/img001.png");
-		BufferedImage[] parts = ic001.cut(img001.getImg());
+		FakeImage[] parts = ic001.cut(img001.getImg());
 		int[] vals = new int[] { 5, 19, 30, 40, 51, 62, 73, 88, 115 };
 		int[] adds = new int[] { 1, 2, 2, 0, 0, 1, 1, 1, 0 };
 		for (int i = 0; i < 9; i++) {

@@ -69,7 +69,7 @@ public class EStage extends BattleObj {
 		int[][] datas = s.data.getSimple();
 		for (int i = 0; i < rem.length; i++) {
 			rem[i] = datas[i][S0];
-			if (datas[i][S0] < datas[i][S1])
+			if (Math.abs(datas[i][S0]) < Math.abs(datas[i][S1]))
 				rem[i] += (int) ((datas[i][S1] - datas[i][S0]) * b.r.nextDouble());
 		}
 	}

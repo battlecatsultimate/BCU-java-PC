@@ -20,6 +20,7 @@ import main.Opts;
 import main.Printer;
 import page.anim.EditHead;
 import util.system.VImg;
+import util.system.fake.FakeImage;
 import util.system.files.FDByte;
 import util.system.files.FileData;
 import util.system.files.VFile;
@@ -54,7 +55,7 @@ public class AnimC extends AnimU {
 		saved = true;
 		ByteArrayInputStream bais = new ByteArrayInputStream(is.nextBytesI());
 		try {
-			num = ImageIO.read(bais);
+			num = FakeImage.read(bais);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -120,7 +121,7 @@ public class AnimC extends AnimU {
 		File f = new File(prev + name + "/" + name + ".png");
 		Writer.check(f);
 		try {
-			ImageIO.write(num, "PNG", f);
+			FakeImage.write(num, "PNG", f);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -270,7 +271,7 @@ public class AnimC extends AnimU {
 		try {
 			File f = new File(prev + name + "/edi.png");
 			Writer.check(f);
-			ImageIO.write(edi.getImg(), "PNG", f);
+			FakeImage.write(edi.getImg(), "PNG", f);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -280,9 +281,9 @@ public class AnimC extends AnimU {
 		try {
 			File f = new File(prev + name + "/" + name + ".png");
 			Writer.check(f);
-			if (!ImageIO.write(num, "PNG", f))
+			if (!FakeImage.write(num, "PNG", f))
 				if (Opts.writeErr0(f.getPath()))
-					if (ImageIO.write(num, "PNG", f))
+					if (FakeImage.write(num, "PNG", f))
 						Opts.ioErr("failed to write");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -295,7 +296,7 @@ public class AnimC extends AnimU {
 		try {
 			File f = new File(prev + name + "/uni.png");
 			Writer.check(f);
-			ImageIO.write(uni.getImg(), "PNG", f);
+			FakeImage.write(uni.getImg(), "PNG", f);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -332,7 +333,7 @@ public class AnimC extends AnimU {
 		OutStream osi = OutStream.getIns();
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
-			ImageIO.write(num, "PNG", baos);
+			FakeImage.write(num, "PNG", baos);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 			osi.terminate();
@@ -358,7 +359,7 @@ public class AnimC extends AnimU {
 		if (edi != null && edi.getImg() != null) {
 			baos = new ByteArrayOutputStream();
 			try {
-				ImageIO.write(edi.getImg(), "PNG", baos);
+				FakeImage.write(edi.getImg(), "PNG", baos);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 				osi.terminate();
@@ -369,7 +370,7 @@ public class AnimC extends AnimU {
 		if (uni != null && uni.getImg() != null) {
 			baos = new ByteArrayOutputStream();
 			try {
-				ImageIO.write(uni.getImg(), "PNG", baos);
+				FakeImage.write(uni.getImg(), "PNG", baos);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 				osi.terminate();

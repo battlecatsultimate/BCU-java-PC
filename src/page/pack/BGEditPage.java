@@ -1,6 +1,5 @@
 package page.pack;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -31,6 +30,8 @@ import util.pack.BGStore;
 import util.pack.Background;
 import util.pack.Pack;
 import util.system.VImg;
+import util.system.fake.FIBI;
+import util.system.fake.FakeImage;
 
 public class BGEditPage extends Page {
 
@@ -77,7 +78,7 @@ public class BGEditPage extends Page {
 				try {
 					File file = new File(path + bg.nameOf(bgr) + ".png");
 					Writer.check(file);
-					ImageIO.write(bgr.img.getImg(), "PNG", file);
+					FakeImage.write(bgr.img.getImg(), "PNG", file);
 				} catch (IOException e) {
 					e.printStackTrace();
 					getFile("Failed to save file", bgr);
@@ -144,7 +145,7 @@ public class BGEditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (bgr != null)
-					new Exporter(bgr.img.getImg(), Exporter.EXP_IMG);
+					new Exporter(bgr.img.getImg().bimg(), Exporter.EXP_IMG);
 			}
 		});
 
@@ -189,7 +190,7 @@ public class BGEditPage extends Page {
 				public void focusLost(FocusEvent arg0) {
 					int[] inp = Reader.parseIntsN(cs[I].getText());
 					if (inp.length == 3)
-						bgr.cs[I] = new Color(inp[0], inp[1], inp[2]);
+						bgr.cs[I] = new int[] { inp[0], inp[1], inp[2] };
 					setCSText(I);
 
 				}
@@ -211,7 +212,7 @@ public class BGEditPage extends Page {
 		if (bgr == null)
 			bgr = bg.add(new VImg(bimg));
 		else {
-			bgr.img.setImg(bimg);
+			bgr.img.setImg(FIBI.build(bimg));
 			bgr.load();
 		}
 		String path = "./res/img/" + pack.id + "/bg/";
@@ -279,10 +280,7 @@ public class BGEditPage extends Page {
 	}
 
 	private void setCSText(int i) {
-		float[] fs = bgr.cs[i].getRGBColorComponents(null);
-		int[] is = new int[3];
-		for (int j = 0; j < 3; j++)
-			is[j] = (int) (fs[j] * 256 - 1e-5);
+		int[] is = bgr.cs[i];
 		String str = is[0] + "," + is[1] + "," + is[2];
 		cs[i].setText(str);
 	}

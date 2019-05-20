@@ -23,6 +23,7 @@ import page.support.Importer;
 import util.pack.CasStore;
 import util.pack.Pack;
 import util.system.VImg;
+import util.system.fake.FIBI;
 
 public class CastleEditPage extends Page {
 
@@ -119,7 +120,7 @@ public class CastleEditPage extends Page {
 				if (ind >= 0) {
 					VImg s = list.get(ind);
 					if (s != null)
-						new Exporter(s.getImg(), Exporter.EXP_IMG);
+						new Exporter(s.getImg().bimg(), Exporter.EXP_IMG);
 				}
 			}
 		});
@@ -153,7 +154,7 @@ public class CastleEditPage extends Page {
 		if (vimg == null)
 			cas.add(vimg = new VImg(bimg));
 		else
-			vimg.setImg(bimg);
+			vimg.setImg(FIBI.build(bimg));
 		String path = "./res/img/" + pack.id + "/cas/";
 		try {
 			File file = new File(path + cas.nameOf(vimg) + ".png");

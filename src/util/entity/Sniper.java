@@ -1,7 +1,5 @@
 package util.entity;
 
-import java.awt.Graphics2D;
-
 import util.anim.EAnimD;
 import util.basis.StageBasis;
 import util.entity.attack.AtkModelAb;
@@ -9,6 +7,7 @@ import util.entity.attack.AttackAb;
 import util.entity.attack.AttackSimple;
 import util.pack.EffAnim;
 import util.system.P;
+import util.system.fake.FakeGraphics;
 
 public class Sniper extends AtkModelAb {
 
@@ -23,20 +22,20 @@ public class Sniper extends AtkModelAb {
 	}
 
 	/** attack part of animation */
-	public void drawAtk(Graphics2D g, P ori, double siz) {
+	public void drawAtk(FakeGraphics g, P ori, double siz) {
 		// TODO
 	}
 
 	/** base part of animation */
-	public void drawBase(Graphics2D g, P ori, double siz) {
+	public void drawBase(FakeGraphics gra, P ori, double siz) {
 		// TODO
 		// double angle = Math.atan2(getPos() - pos, height);
 
 		height = ori.y;
 		if (atkTime == 0)
-			anim.draw(g, ori, siz);
+			anim.draw(gra, ori, siz);
 		else
-			atka.draw(g, ori, siz);
+			atka.draw(gra, ori, siz);
 
 	}
 

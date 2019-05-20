@@ -1,11 +1,10 @@
 package util.pack;
 
-import java.awt.image.BufferedImage;
-
 import util.anim.AnimI;
 import util.anim.EAnimD;
 import util.anim.MaAnim;
 import util.anim.MaModel;
+import util.system.fake.FakeImage;
 
 public class WaveAnim extends AnimI {
 
@@ -13,7 +12,7 @@ public class WaveAnim extends AnimI {
 	private final MaModel mamodel;
 	private final MaAnim maanim;
 
-	private BufferedImage[] parts;
+	private FakeImage[] parts;
 
 	public WaveAnim(Background BG, MaModel model, MaAnim anim) {
 		bg = BG;
@@ -44,7 +43,7 @@ public class WaveAnim extends AnimI {
 	}
 
 	@Override
-	public BufferedImage parts(int i) {
+	public FakeImage parts(int i) {
 		check();
 		return parts[i];
 	}

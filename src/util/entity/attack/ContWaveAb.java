@@ -1,15 +1,13 @@
 package util.entity.attack;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-
 import page.battle.BattleBox;
 import util.ImgCore;
 import util.anim.EAnimD;
 import util.entity.AbEntity;
 import util.entity.Entity;
 import util.system.P;
+import util.system.fake.FakeGraphics;
+import util.system.fake.FakeTransform;
 
 public abstract class ContWaveAb extends ContAb {
 
@@ -27,8 +25,8 @@ public abstract class ContWaveAb extends ContAb {
 	}
 
 	@Override
-	public void draw(Graphics2D gra, P p, double siz) {
-		AffineTransform at = gra.getTransform();
+	public void draw(FakeGraphics gra, P p, double siz) {
+		FakeTransform at = gra.getTransform();
 		anim.draw(gra, p, siz);
 		gra.setTransform(at);
 		drawAxis(gra, p, siz);
@@ -57,7 +55,7 @@ public abstract class ContWaveAb extends ContAb {
 		t++;
 	}
 
-	protected void drawAxis(Graphics2D gra, P p, double siz) {
+	protected void drawAxis(FakeGraphics gra, P p, double siz) {
 		if (!ImgCore.ref)
 			return;
 
@@ -65,7 +63,7 @@ public abstract class ContWaveAb extends ContAb {
 		siz *= 1.25;
 		double rat = BattleBox.ratio;
 		int h = (int) (640 * rat * siz);
-		gra.setColor(Color.MAGENTA);
+		gra.setColor(FakeGraphics.MAGENTA);
 		double d0 = Math.min(atk.sta, atk.end);
 		double ra = Math.abs(atk.sta - atk.end);
 		int x = (int) ((d0 - pos) * rat * siz + p.x);

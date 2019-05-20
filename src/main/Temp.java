@@ -18,9 +18,8 @@ import javax.swing.UIManager.LookAndFeelInfo;
 
 import io.Reader;
 import io.Writer;
-import util.BattleObj;
 
-public class Temp extends BattleObj {
+public class Temp {
 
 	public static void main(String[] args) throws Exception {
 

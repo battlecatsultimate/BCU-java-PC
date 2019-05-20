@@ -1,12 +1,11 @@
 package util.entity;
 
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-
 import util.anim.EAnimD;
 import util.anim.EAnimU;
 import util.pack.EffAnim;
 import util.system.P;
+import util.system.fake.FakeGraphics;
+import util.system.fake.FakeTransform;
 
 public class WaprCont extends EAnimCont {
 
@@ -20,8 +19,8 @@ public class WaprCont extends EAnimCont {
 	}
 
 	@Override
-	public void draw(Graphics2D gra, P p, double psiz) {
-		AffineTransform at = gra.getTransform();
+	public void draw(FakeGraphics gra, P p, double psiz) {
+		FakeTransform at = gra.getTransform();
 		super.draw(gra, p, psiz);
 		gra.setTransform(at);
 		ent.paraTo(chara);

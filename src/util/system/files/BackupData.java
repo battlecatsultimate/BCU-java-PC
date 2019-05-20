@@ -1,11 +1,11 @@
 package util.system.files;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Queue;
 
 import io.InStream;
 import io.ZipAccess;
+import util.system.fake.FakeImage;
 
 public class BackupData implements FileData {
 
@@ -24,7 +24,7 @@ public class BackupData implements FileData {
 	}
 
 	@Override
-	public BufferedImage getImg() {
+	public FakeImage getImg() {
 		return null;// TODO
 	}
 

@@ -46,6 +46,7 @@ public class Unit extends Data implements Comparable<Unit> {
 			u.rarity = Integer.parseInt(strs[13]);
 			u.max = Integer.parseInt(strs[50]);
 			u.maxp = Integer.parseInt(strs[51]);
+			u.info.fillBuy(strs);
 		}
 
 	}
@@ -55,6 +56,7 @@ public class Unit extends Data implements Comparable<Unit> {
 	public int rarity, max, maxp;
 	public Form[] forms;
 	public UnitLevel lv;
+	public final UnitInfo info = new UnitInfo();
 
 	public Unit(int ID, Unit old, Pack p, UnitLevel ul) {
 		pack = p;
@@ -159,6 +161,29 @@ public class Unit extends Data implements Comparable<Unit> {
 		if (forms[0].name.length() > 0)
 			return trio(id) + " " + forms[0].name;
 		return trio(id);
+	}
+
+}
+
+class UnitInfo {
+
+	public int[][] evo;
+	public int[] price = new int[10];
+	public int type;
+
+	protected void fillBuy(String[] strs) {
+		for (int i = 0; i < 10; i++)
+			price[i] = Integer.parseInt(strs[2 + i]);
+		type = Integer.parseInt(strs[12]);
+		int et = Integer.parseInt(strs[23]);
+		if (et >= 15000 && et < 17000) {
+			evo = new int[6][2];
+			evo[0][0] = Integer.parseInt(strs[27]);
+			for (int i = 0; i < 5; i++) {
+				evo[i][0] = Integer.parseInt(strs[28 + i * 2]);
+				evo[i][1] = Integer.parseInt(strs[29 + i * 2]);
+			}
+		}
 	}
 
 }
