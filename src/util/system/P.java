@@ -239,4 +239,5 @@ public strictfp class P extends BattleObj {
 	public String toString() {
 		return x + "," + y;
 	}
+
 }

@@ -1,5 +1,7 @@
 package util.system.fake;
 
+import static java.awt.AlphaComposite.SRC_OVER;
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.GradientPaint;
@@ -31,9 +33,11 @@ public class FG2D implements FakeGraphics {
 			{ KIS, KID, KIQ } };
 
 	private final Graphics2D g;
+	private final Composite comp;
 
 	public FG2D(Graphics graphics) {
 		g = (Graphics2D) graphics;
+		comp = g.getComposite();
 	}
 
 	@Override
@@ -80,11 +84,6 @@ public class FG2D implements FakeGraphics {
 	}
 
 	@Override
-	public Composite getComposite() {
-		return g.getComposite();
-	}
-
-	@Override
 	public FakeTransform getTransform() {
 		return new FTAT(g.getTransform());
 	}
@@ -122,8 +121,16 @@ public class FG2D implements FakeGraphics {
 	}
 
 	@Override
-	public void setComposite(Composite c) {
-		g.setComposite(c);
+	public void setComposite(int mode, int... para) {
+		if (mode == DEF)
+			g.setComposite(comp);
+		if (mode == TRANS)
+			g.setComposite(AlphaComposite.getInstance(SRC_OVER, (float) (para[0] / 256.0)));
+		if (mode == BLEND)
+			g.setComposite(new Blender(para[0], para[1]));
+		if (mode == GRAY)
+			g.setComposite(new Converter(para[0]));
+
 	}
 
 	@Override
