@@ -2,7 +2,7 @@ package util.anim;
 
 import util.Animable;
 import util.BattleStatic;
-import util.system.FakeImage;
+import util.system.fake.FakeImage;
 
 public abstract class AnimI extends Animable<AnimI> implements BattleStatic {
 

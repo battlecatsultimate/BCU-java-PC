@@ -5,16 +5,16 @@ import java.awt.Composite;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 import page.view.ViewBox;
 import util.Blender;
 import util.ImgCore;
 import util.Res;
-import util.system.FakeGraphics;
-import util.system.FakeImage;
 import util.system.P;
+import util.system.fake.FakeGraphics;
+import util.system.fake.FakeImage;
+import util.system.fake.FakeTransform;
 
 class IconBox extends ViewBox {
 
@@ -57,7 +57,7 @@ class IconBox extends ViewBox {
 				}
 			}
 		}
-		AffineTransform at = gra.getTransform();
+		FakeTransform at = gra.getTransform();
 		super.draw(gra);
 		gra.setTransform(at);
 		ImgCore.ref = b;

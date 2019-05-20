@@ -6,7 +6,7 @@ import io.InStream;
 import io.OutStream;
 import main.Opts;
 import util.Data;
-import util.system.FakeImage;
+import util.system.fake.FakeImage;
 import util.system.files.FileData;
 
 public class ImgCut extends Data implements Cloneable {

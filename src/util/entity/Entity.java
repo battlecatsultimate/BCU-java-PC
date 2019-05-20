@@ -13,8 +13,8 @@ import util.entity.attack.AttackAb;
 import util.entity.data.MaskAtk;
 import util.entity.data.MaskEntity;
 import util.pack.EffAnim;
-import util.system.FakeGraphics;
 import util.system.P;
+import util.system.fake.FakeGraphics;
 
 /** Entity class for units and enemies */
 public abstract class Entity extends AbEntity {

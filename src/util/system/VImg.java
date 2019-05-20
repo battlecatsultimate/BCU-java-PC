@@ -7,6 +7,8 @@ import javax.swing.ImageIcon;
 
 import util.ImgCore;
 import util.anim.ImgCut;
+import util.system.fake.FIBI;
+import util.system.fake.FakeImage;
 import util.system.files.FileData;
 import util.system.files.VFile;
 

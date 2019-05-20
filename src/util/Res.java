@@ -4,8 +4,8 @@ import java.awt.image.BufferedImage;
 
 import util.anim.ImgCut;
 import util.entity.AbEntity;
-import util.system.FakeImage;
 import util.system.VImg;
+import util.system.fake.FakeImage;
 import util.unit.Form;
 
 public class Res extends ImgCore {

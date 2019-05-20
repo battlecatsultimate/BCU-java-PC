@@ -1,6 +1,6 @@
 package util.anim;
 
-import util.system.FakeImage;
+import util.system.fake.FakeImage;
 
 public abstract class AnimD extends AnimI {
 

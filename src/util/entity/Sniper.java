@@ -8,8 +8,8 @@ import util.entity.attack.AtkModelAb;
 import util.entity.attack.AttackAb;
 import util.entity.attack.AttackSimple;
 import util.pack.EffAnim;
-import util.system.FakeGraphics;
 import util.system.P;
+import util.system.fake.FakeGraphics;
 
 public class Sniper extends AtkModelAb {
 

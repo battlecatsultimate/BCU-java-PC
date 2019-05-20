@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-import util.system.FakeImage;
+import util.system.fake.FakeImage;
 
 public class FDFile implements FileData {
 

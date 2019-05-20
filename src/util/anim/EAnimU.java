@@ -3,8 +3,8 @@ package util.anim;
 import java.awt.Color;
 import java.awt.Point;
 
-import util.system.FakeGraphics;
 import util.system.P;
+import util.system.fake.FakeGraphics;
 
 public class EAnimU extends EAnimD {
 

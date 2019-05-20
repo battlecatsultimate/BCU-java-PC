@@ -1,7 +1,5 @@
 package util.entity;
 
-import java.awt.geom.AffineTransform;
-
 import util.BattleObj;
 import util.Data;
 import util.ImgCore;
@@ -12,8 +10,9 @@ import util.entity.data.AtkDataModel;
 import util.pack.EffAnim;
 import util.pack.Soul;
 import util.pack.SoulStore;
-import util.system.FakeGraphics;
 import util.system.P;
+import util.system.fake.FakeGraphics;
+import util.system.fake.FakeTransform;
 
 public class AnimManager extends BattleObj {
 
@@ -63,7 +62,7 @@ public class AnimManager extends BattleObj {
 			soul.draw(gra, p, siz);
 			return;
 		}
-		AffineTransform at = gra.getTransform();
+		FakeTransform at = gra.getTransform();
 		if (corpse != null)
 			corpse.draw(gra, p, siz);
 		if (corpse == null || status[P_REVIVE][1] < Data.REVIVE_SHOW_TIME) {
@@ -87,7 +86,7 @@ public class AnimManager extends BattleObj {
 	public void drawEff(FakeGraphics g, P p, double siz) {
 		if (dead != -1)
 			return;
-		AffineTransform at = g.getTransform();
+		FakeTransform at = g.getTransform();
 		int EWID = 48;
 		double x = p.x;
 		if (effs[eftp] != null) {

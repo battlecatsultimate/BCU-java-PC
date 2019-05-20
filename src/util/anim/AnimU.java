@@ -3,9 +3,9 @@ package util.anim;
 import main.Printer;
 import page.MainLocale;
 import util.Res;
-import util.system.FakeImage;
 import util.system.MultiLangFile;
 import util.system.VImg;
+import util.system.fake.FakeImage;
 import util.system.files.AssetData;
 import util.system.files.VFile;
 

@@ -4,9 +4,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import page.MainLocale;
-import util.system.FakeImage;
 import util.system.MultiLangCont;
 import util.system.MultiLangFile;
+import util.system.fake.FakeImage;
 
 public interface AssetData extends ByteData {
 

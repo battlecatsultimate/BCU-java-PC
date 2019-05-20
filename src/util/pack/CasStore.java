@@ -14,9 +14,9 @@ import io.OutStream;
 import util.Data;
 import util.stage.AbCastle;
 import util.stage.Castles;
-import util.system.FakeImage;
 import util.system.FixIndexList;
 import util.system.VImg;
+import util.system.fake.FakeImage;
 
 public class CasStore extends FixIndexList<VImg> implements AbCastle {
 

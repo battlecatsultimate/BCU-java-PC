@@ -4,8 +4,8 @@ import util.anim.AnimD;
 import util.anim.ImgCut;
 import util.anim.MaAnim;
 import util.anim.MaModel;
-import util.system.FakeImage;
 import util.system.VImg;
+import util.system.fake.FakeImage;
 
 public class Soul extends AnimD {
 

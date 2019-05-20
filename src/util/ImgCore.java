@@ -8,9 +8,10 @@ import java.awt.Composite;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.RenderingHints.Key;
-import util.system.FakeGraphics;
-import util.system.FakeImage;
+
 import util.system.P;
+import util.system.fake.FakeGraphics;
+import util.system.fake.FakeImage;
 
 public class ImgCore extends Data {
 

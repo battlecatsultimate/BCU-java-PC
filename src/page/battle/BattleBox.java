@@ -6,7 +6,6 @@ import java.awt.Composite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 import main.Timer;
@@ -21,11 +20,12 @@ import util.entity.Entity;
 import util.entity.attack.ContAb;
 import util.pack.NyCastle;
 import util.stage.Castles;
-import util.system.FG2D;
-import util.system.FakeGraphics;
-import util.system.FakeImage;
 import util.system.P;
 import util.system.VImg;
+import util.system.fake.FG2D;
+import util.system.fake.FakeGraphics;
+import util.system.fake.FakeImage;
+import util.system.fake.FakeTransform;
 import util.unit.Form;
 
 public class BattleBox extends Canvas {
@@ -302,7 +302,7 @@ public class BattleBox extends Canvas {
 	}
 
 	private void drawCastle(FakeGraphics gra) {
-		AffineTransform at = gra.getTransform();
+		FakeTransform at = gra.getTransform();
 		boolean drawCast = sb.ebase instanceof Entity;
 		int posy = (int) (midh - road_h * siz);
 		int posx = (int) ((800 * ratio + off) * siz + pos);
@@ -335,7 +335,7 @@ public class BattleBox extends Canvas {
 	}
 
 	private void drawEntity(FakeGraphics gra, BufferedImage img) {
-		AffineTransform at = gra.getTransform();
+		FakeTransform at = gra.getTransform();
 		double psiz = siz * sprite;
 		ImgCore.battle = true;
 		for (int i = 0; i < 10; i++) {

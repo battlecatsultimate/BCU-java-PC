@@ -30,9 +30,9 @@ import page.view.BGViewPage;
 import util.pack.BGStore;
 import util.pack.Background;
 import util.pack.Pack;
-import util.system.FIBI;
-import util.system.FakeImage;
 import util.system.VImg;
+import util.system.fake.FIBI;
+import util.system.fake.FakeImage;
 
 public class BGEditPage extends Page {
 

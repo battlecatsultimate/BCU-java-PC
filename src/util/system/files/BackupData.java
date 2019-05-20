@@ -5,7 +5,7 @@ import java.util.Queue;
 
 import io.InStream;
 import io.ZipAccess;
-import util.system.FakeImage;
+import util.system.fake.FakeImage;
 
 public class BackupData implements FileData {
 

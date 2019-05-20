@@ -18,9 +18,9 @@ import page.JTG;
 import res.AnimatedGifEncoder;
 import util.ImgCore;
 import util.anim.EAnimI;
-import util.system.FG2D;
-import util.system.FakeGraphics;
 import util.system.P;
+import util.system.fake.FG2D;
+import util.system.fake.FakeGraphics;
 
 public class ViewBox extends Canvas {
 

@@ -5,8 +5,8 @@ import util.anim.EAnimD;
 import util.anim.ImgCut;
 import util.anim.MaAnim;
 import util.anim.MaModel;
-import util.system.FakeImage;
 import util.system.VImg;
+import util.system.fake.FakeImage;
 
 public class NyCastle extends AnimI {
 

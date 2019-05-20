@@ -1,12 +1,12 @@
 package util.anim;
 
 import java.awt.Point;
-import java.awt.geom.AffineTransform;
 import main.Printer;
 import util.ImgCore;
-import util.system.FakeGraphics;
-import util.system.FakeImage;
 import util.system.P;
+import util.system.fake.FakeGraphics;
+import util.system.fake.FakeImage;
+import util.system.fake.FakeTransform;
 
 public class EPart extends ImgCore implements Comparable<EPart> {
 
@@ -124,7 +124,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 	protected void drawPart(FakeGraphics g, P base) {
 		if (img < 0 || id < 0 || opa() < deadOpa * 0.01 + 1e-5 || a.parts(img) == null)
 			return;
-		AffineTransform at = g.getTransform();
+		FakeTransform at = g.getTransform();
 		transform(g, base);
 		FakeImage bimg = a.parts(img);
 		int w = bimg.getWidth();
@@ -139,7 +139,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		FakeImage bimg = a.parts(img);
 		if (bimg == null)
 			return;
-		AffineTransform at = g.getTransform();
+		FakeTransform at = g.getTransform();
 		transform(g, base);
 		int w = bimg.getWidth();
 		int h = bimg.getHeight();

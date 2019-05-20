@@ -1,7 +1,7 @@
 package util.anim;
 
-import util.system.FakeGraphics;
 import util.system.P;
+import util.system.fake.FakeGraphics;
 
 public class EAnimD extends EAnimI {
 

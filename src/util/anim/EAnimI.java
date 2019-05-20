@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import util.BattleObj;
-import util.system.FakeGraphics;
 import util.system.P;
+import util.system.fake.FakeGraphics;
 
 public abstract class EAnimI extends BattleObj {
 

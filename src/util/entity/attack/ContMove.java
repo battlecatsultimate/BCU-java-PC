@@ -3,8 +3,8 @@ package util.entity.attack;
 import java.awt.Color;
 import page.battle.BattleBox;
 import util.ImgCore;
-import util.system.FakeGraphics;
 import util.system.P;
+import util.system.fake.FakeGraphics;
 
 public class ContMove extends ContAb {
 

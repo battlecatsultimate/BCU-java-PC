@@ -15,9 +15,9 @@ import javax.imageio.ImageIO;
 import io.InStream;
 import io.OutStream;
 import util.Data;
-import util.system.FakeImage;
 import util.system.FixIndexList;
 import util.system.VImg;
+import util.system.fake.FakeImage;
 
 public class BGStore extends FixIndexList<Background> {
 

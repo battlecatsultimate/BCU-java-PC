@@ -2,8 +2,8 @@ package util.entity;
 
 import util.BattleObj;
 import util.anim.EAnimD;
-import util.system.FakeGraphics;
 import util.system.P;
+import util.system.fake.FakeGraphics;
 
 public class EAnimCont extends BattleObj {
 

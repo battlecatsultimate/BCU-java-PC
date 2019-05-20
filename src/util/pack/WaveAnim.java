@@ -4,7 +4,7 @@ import util.anim.AnimI;
 import util.anim.EAnimD;
 import util.anim.MaAnim;
 import util.anim.MaModel;
-import util.system.FakeImage;
+import util.system.fake.FakeImage;
 
 public class WaveAnim extends AnimI {
 

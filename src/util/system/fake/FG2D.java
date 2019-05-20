@@ -1,12 +1,11 @@
-package util.system;
+package util.system.fake;
 
 import java.awt.Color;
 import java.awt.Composite;
+import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Paint;
 import java.awt.RenderingHints.Key;
-import java.awt.geom.AffineTransform;
 
 public class FG2D implements FakeGraphics {
 
@@ -57,8 +56,14 @@ public class FG2D implements FakeGraphics {
 	}
 
 	@Override
-	public AffineTransform getTransform() {
-		return g.getTransform();
+	public FakeTransform getTransform() {
+		return new FTAT(g.getTransform());
+	}
+
+	@Override
+	public void gradRect(int x, int y, int w, int h, int a, int b, Color c, int d, int e, Color f) {
+		g.setPaint(new GradientPaint(a, b, c, d, e, f));
+		g.fillRect(x, y, w, h);
 	}
 
 	@Override
@@ -82,18 +87,13 @@ public class FG2D implements FakeGraphics {
 	}
 
 	@Override
-	public void setPaint(Paint gradientPaint) {
-		g.setPaint(gradientPaint);
-	}
-
-	@Override
 	public void setRenderingHint(Key key, Object object) {
 		g.setRenderingHint(key, object);
 	}
 
 	@Override
-	public void setTransform(AffineTransform at) {
-		g.setTransform(at);
+	public void setTransform(FakeTransform at) {
+		g.setTransform(at.getAT());
 	}
 
 	@Override

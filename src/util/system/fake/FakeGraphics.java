@@ -1,10 +1,8 @@
-package util.system;
+package util.system.fake;
 
 import java.awt.Color;
 import java.awt.Composite;
-import java.awt.Paint;
 import java.awt.RenderingHints.Key;
-import java.awt.geom.AffineTransform;
 
 public interface FakeGraphics {
 
@@ -24,7 +22,9 @@ public interface FakeGraphics {
 
 	public Composite getComposite();
 
-	public AffineTransform getTransform();
+	public FakeTransform getTransform();
+
+	public void gradRect(int i, int j, int x, int k, int l, int y, Color color, int m, int n, Color color2);
 
 	public void rotate(double d);
 
@@ -34,11 +34,9 @@ public interface FakeGraphics {
 
 	public void setComposite(Composite c);
 
-	public void setPaint(Paint gradientPaint);
-
 	public void setRenderingHint(Key key, Object object);
 
-	public void setTransform(AffineTransform at);
+	public void setTransform(FakeTransform at);
 
 	public void translate(double x, double y);
 

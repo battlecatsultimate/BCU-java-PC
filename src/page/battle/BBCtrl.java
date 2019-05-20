@@ -4,8 +4,8 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import util.Res;
 import util.basis.SBCtrl;
-import util.system.FakeImage;
 import util.system.P;
+import util.system.fake.FakeImage;
 import util.unit.Form;
 
 public class BBCtrl extends BattleBox {

@@ -7,7 +7,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-import util.system.FakeImage;
+import util.system.fake.FakeImage;
 
 public interface FileData {
 

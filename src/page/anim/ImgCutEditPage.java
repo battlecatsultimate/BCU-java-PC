@@ -35,8 +35,8 @@ import util.anim.ImgCut;
 import util.anim.MaAnim;
 import util.anim.Part;
 import util.pack.Pack;
-import util.system.FIBI;
 import util.system.VImg;
+import util.system.fake.FIBI;
 import util.unit.DIYAnim;
 import util.unit.Enemy;
 

@@ -11,11 +11,11 @@ import page.Page;
 import util.Res;
 import util.basis.Combo;
 import util.basis.LineUp;
-import util.system.FG2D;
-import util.system.FakeGraphics;
-import util.system.FakeImage;
 import util.system.P;
 import util.system.VImg;
+import util.system.fake.FG2D;
+import util.system.fake.FakeGraphics;
+import util.system.fake.FakeImage;
 import util.unit.Form;
 import util.unit.Unit;
 

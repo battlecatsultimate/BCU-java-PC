@@ -2,8 +2,8 @@ package util.entity.attack;
 
 import util.BattleObj;
 import util.basis.StageBasis;
-import util.system.FakeGraphics;
 import util.system.P;
+import util.system.fake.FakeGraphics;
 
 public abstract class ContAb extends BattleObj {
 

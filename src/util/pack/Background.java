@@ -14,9 +14,9 @@ import util.anim.EAnimD;
 import util.anim.ImgCut;
 import util.anim.MaAnim;
 import util.anim.MaModel;
-import util.system.FakeGraphics;
-import util.system.FakeImage;
 import util.system.VImg;
+import util.system.fake.FakeGraphics;
+import util.system.fake.FakeImage;
 import util.system.files.AssetData;
 import util.system.files.VFile;
 
@@ -117,15 +117,13 @@ public class Background extends AnimI {
 					if (x + fw > 0)
 						g.drawImage(parts[TOP], x, y, fw, fh);
 			} else {
-				g.setPaint(new GradientPaint(0, y, cs[0], 0, y + fh, cs[1]));
-				g.fillRect(0, 0, rect.x, fh + y);
+				g.gradRect(0, 0, rect.x, fh + y, 0, y, cs[0], 0, y + fh, cs[1]);
 			}
 		}
 		for (int x = off; x < rect.x; x += fw)
 			if (x + fw > 0)
 				g.drawImage(parts[BG], x, h - fh, fw, fh);
-		g.setPaint(new GradientPaint(0, h, cs[2], 0, h + fh, cs[3]));
-		g.fillRect(0, h, rect.x, rect.y - h);
+		g.gradRect(0, h, rect.x, rect.y - h, 0, h, cs[2], 0, h + fh, cs[3]);
 	}
 
 	public BufferedImage getBg(int w, int h) {

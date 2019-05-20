@@ -12,8 +12,8 @@ import main.Timer;
 import util.ImgCore;
 import util.anim.EAnimD;
 import util.anim.EAnimU;
-import util.system.FG2D;
 import util.system.P;
+import util.system.fake.FG2D;
 
 class AnimBox extends Canvas {
 

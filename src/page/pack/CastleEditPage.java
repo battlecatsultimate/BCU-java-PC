@@ -22,8 +22,8 @@ import page.support.Exporter;
 import page.support.Importer;
 import util.pack.CasStore;
 import util.pack.Pack;
-import util.system.FIBI;
 import util.system.VImg;
+import util.system.fake.FIBI;
 
 public class CastleEditPage extends Page {
 

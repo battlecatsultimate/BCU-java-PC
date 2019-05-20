@@ -1,14 +1,14 @@
-package util.system;
+package util.system.fake;
 
 import java.awt.image.BufferedImage;
 
 public class FIBI implements FakeImage {
 
-	private final BufferedImage bimg;
-
 	public static FIBI build(BufferedImage read) {
 		return read == null ? null : new FIBI(read);
 	}
+
+	private final BufferedImage bimg;
 
 	private FIBI(BufferedImage read) {
 		if (read == null)
