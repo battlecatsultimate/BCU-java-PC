@@ -2,14 +2,12 @@ package page.battle;
 
 import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Composite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 import main.Timer;
-import util.Converter;
 import util.Data;
 import util.ImgCore;
 import util.Res;
@@ -372,10 +370,9 @@ public class BattleBox extends Canvas {
 		}
 
 		if (sb.s_stop > 0) {
-			Composite c = gra.getComposite();
-			gra.setComposite(new Converter(0));
+			gra.setComposite(FakeGraphics.GRAY, 0);
 			gra.fillRect(0, 0, img.getWidth(), img.getHeight());
-			gra.setComposite(c);
+			gra.setComposite(FakeGraphics.DEF);
 			for (int i = 0; i < 10; i++) {
 				int dep = i * DEP;
 				for (Entity e : sb.le)

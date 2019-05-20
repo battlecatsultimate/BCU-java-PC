@@ -157,7 +157,7 @@ public class BGStore extends FixIndexList<Background> {
 			bg.ic = is.nextInt();
 			for (int j = 0; j < 4; j++) {
 				int p = is.nextInt();
-				bg.cs[j] = new int[] { p >> 24, p >> 16 & 8, p & 8 };
+				bg.cs[j] = new int[] { p >> 8 & 255, p >> 8 & 255, p & 255 };
 			}
 		}
 	}
@@ -200,7 +200,7 @@ public class BGStore extends FixIndexList<Background> {
 			bg.ic = is.nextInt();
 			for (int j = 0; j < 4; j++) {
 				int p = is.nextInt();
-				bg.cs[j] = new int[] { p >> 24, p >> 16 & 8, p & 8 };
+				bg.cs[j] = new int[] { p >> 16 & 255, p >> 8 & 255, p & 255 };
 			}
 		}
 	}

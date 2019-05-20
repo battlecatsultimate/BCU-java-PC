@@ -26,6 +26,7 @@ import page.Page;
 import page.support.Exporter;
 import page.support.Importer;
 import page.view.BGViewPage;
+import util.Data;
 import util.pack.BGStore;
 import util.pack.Background;
 import util.pack.Pack;
@@ -127,9 +128,9 @@ public class BGEditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				list.remove(bgr);
-				bg.remove(bgr);
 				int name = bg.indexOf(bgr);
-				new File("./res/img/" + pack.id + "/bg/" + name + ".png");
+				bg.remove(bgr);
+				new File("./res/img/" + pack.id + "/bg/" + Data.trio(name) + ".png").delete();
 				setList(null);
 			}
 		});
