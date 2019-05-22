@@ -120,7 +120,7 @@ public class CastleEditPage extends Page {
 				if (ind >= 0) {
 					VImg s = list.get(ind);
 					if (s != null)
-						new Exporter(s.getImg().bimg(), Exporter.EXP_IMG);
+						new Exporter((BufferedImage) s.getImg().bimg(), Exporter.EXP_IMG);
 				}
 			}
 		});

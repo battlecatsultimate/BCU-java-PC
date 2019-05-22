@@ -7,6 +7,7 @@ import java.awt.Composite;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.RenderingHints.Key;
 
@@ -50,12 +51,12 @@ public class FG2D implements FakeGraphics {
 
 	@Override
 	public void drawImage(FakeImage bimg, int i, int j) {
-		g.drawImage(bimg.bimg(), i, j, null);
+		g.drawImage((Image) bimg.bimg(), i, j, null);
 	}
 
 	@Override
 	public void drawImage(FakeImage bimg, int ix, int iy, int iw, int ih) {
-		g.drawImage(bimg.bimg(), ix, iy, iw, ih, null);
+		g.drawImage((Image) bimg.bimg(), ix, iy, iw, ih, null);
 	}
 
 	@Override

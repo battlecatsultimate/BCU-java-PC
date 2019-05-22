@@ -146,7 +146,7 @@ public class BGEditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (bgr != null)
-					new Exporter(bgr.img.getImg().bimg(), Exporter.EXP_IMG);
+					new Exporter((BufferedImage) bgr.img.getImg().bimg(), Exporter.EXP_IMG);
 			}
 		});
 

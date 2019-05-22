@@ -1,6 +1,6 @@
 package util.system.fake;
 
-import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,14 +19,16 @@ public interface FakeImage {
 	}
 
 	public static boolean write(FakeImage num, String str, File f) throws IOException {
-		return ImageIO.write(num.bimg(), str, f);
+		return ImageIO.write((RenderedImage) num.bimg(), str, f);
 	}
 
 	public static boolean write(FakeImage img, String str, OutputStream out) throws IOException {
-		return ImageIO.write(img.bimg(), str, out);
+		return ImageIO.write((RenderedImage) img.bimg(), str, out);
 	}
 
-	public BufferedImage bimg();
+	public Object bimg();
+	
+	public Object gl();
 
 	public int getHeight();
 

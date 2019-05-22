@@ -1,11 +1,24 @@
 package util.system.fake;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.imageio.ImageIO;
 
 public class FIBI implements FakeImage {
 
 	public static FIBI build(BufferedImage read) {
 		return read == null ? null : new FIBI(read);
+	}
+	
+	public static FIBI read(File file) throws IOException {
+		return build(ImageIO.read(file));
+	}
+
+	public static FIBI read(InputStream in) throws IOException {
+		return build(ImageIO.read(in));
 	}
 
 	private final BufferedImage bimg;
@@ -32,7 +45,7 @@ public class FIBI implements FakeImage {
 	}
 
 	@Override
-	public FakeImage getSubimage(int i, int j, int k, int l) {
+	public FIBI getSubimage(int i, int j, int k, int l) {
 		return FIBI.build(bimg.getSubimage(i, j, k, l));
 	}
 
@@ -44,6 +57,11 @@ public class FIBI implements FakeImage {
 	@Override
 	public void setRGB(int i, int j, int p) {
 		bimg.setRGB(i, j, p);
+	}
+
+	@Override
+	public Object gl() {
+		return null;
 	}
 
 }

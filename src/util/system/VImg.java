@@ -1,6 +1,7 @@
 package util.system;
 
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
@@ -26,7 +27,7 @@ public class VImg extends ImgCore {
 		BufferedImage ans = new BufferedImage(pos[imgs.length], h, BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics g = ans.getGraphics();
 		for (int i = 0; i < imgs.length; i++)
-			g.drawImage(parts[i].bimg(), pos[i], 0, null);
+			g.drawImage((Image) parts[i].bimg(), pos[i], 0, null);
 		g.dispose();
 		return FIBI.build(ans);
 	}
@@ -73,7 +74,7 @@ public class VImg extends ImgCore {
 		check();
 		if (bimg == null)
 			return null;
-		return new ImageIcon(bimg.bimg());
+		return new ImageIcon((Image)bimg.bimg());
 	}
 
 	public FakeImage getImg() {

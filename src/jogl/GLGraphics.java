@@ -40,14 +40,12 @@ public class GLGraphics implements FakeGraphics {
 
 	@Override
 	public void drawImage(FakeImage bimg, int i, int j) {
-		GLImage gli = (GLImage) bimg;
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void drawImage(FakeImage bimg, int ix, int iy, int iw, int ih) {
-		GLImage gli = (GLImage) bimg;
 		// TODO Auto-generated method stub
 
 	}
