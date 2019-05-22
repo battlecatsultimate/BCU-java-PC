@@ -1,4 +1,4 @@
-package util.system.fake;
+package util.system.fake.awt;
 
 import static java.awt.AlphaComposite.SRC_OVER;
 import java.awt.AlphaComposite;
@@ -10,6 +10,11 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.RenderingHints.Key;
+import java.awt.geom.AffineTransform;
+
+import util.system.fake.FakeGraphics;
+import util.system.fake.FakeImage;
+import util.system.fake.FakeTransform;
 
 public class FG2D implements FakeGraphics {
 
@@ -141,7 +146,7 @@ public class FG2D implements FakeGraphics {
 
 	@Override
 	public void setTransform(FakeTransform at) {
-		g.setTransform(at.getAT());
+		g.setTransform((AffineTransform) at.getAT());
 	}
 
 	@Override

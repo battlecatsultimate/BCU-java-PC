@@ -31,7 +31,6 @@ import util.pack.BGStore;
 import util.pack.Background;
 import util.pack.Pack;
 import util.system.VImg;
-import util.system.fake.FIBI;
 import util.system.fake.FakeImage;
 
 public class BGEditPage extends Page {
@@ -213,7 +212,7 @@ public class BGEditPage extends Page {
 		if (bgr == null)
 			bgr = bg.add(new VImg(bimg));
 		else {
-			bgr.img.setImg(FIBI.build(bimg));
+			bgr.img.setImg(bimg);
 			bgr.load();
 		}
 		String path = "./res/img/" + pack.id + "/bg/";

@@ -1,34 +1,18 @@
 package util.system.fake;
 
-import java.awt.image.RenderedImage;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
-import javax.imageio.ImageIO;
 
 public interface FakeImage {
 
-	public static FakeImage read(File file) throws IOException {
-		return FIBI.build(ImageIO.read(file));
+	public static FakeImage read(Object o) throws IOException {
+		return ImageBuilder.builder.build(o);
 	}
 
-	public static FakeImage read(InputStream in) throws IOException {
-		return FIBI.build(ImageIO.read(in));
-	}
-
-	public static boolean write(FakeImage num, String str, File f) throws IOException {
-		return ImageIO.write((RenderedImage) num.bimg(), str, f);
-	}
-
-	public static boolean write(FakeImage img, String str, OutputStream out) throws IOException {
-		return ImageIO.write((RenderedImage) img.bimg(), str, out);
+	public static boolean write(FakeImage img, String str, Object o) throws IOException {
+		return ImageBuilder.builder.write(img, str, o);
 	}
 
 	public Object bimg();
-	
-	public Object gl();
 
 	public int getHeight();
 
@@ -37,6 +21,8 @@ public interface FakeImage {
 	public FakeImage getSubimage(int i, int j, int k, int l);
 
 	public int getWidth();
+
+	public Object gl();
 
 	public void setRGB(int i, int j, int p);
 

@@ -3,12 +3,12 @@ package util.system;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import javax.swing.ImageIcon;
 
 import util.ImgCore;
 import util.anim.ImgCut;
-import util.system.fake.FIBI;
 import util.system.fake.FakeImage;
 import util.system.files.FileData;
 import util.system.files.VFile;
@@ -29,7 +29,12 @@ public class VImg extends ImgCore {
 		for (int i = 0; i < imgs.length; i++)
 			g.drawImage((Image) parts[i].bimg(), pos[i], 0, null);
 		g.dispose();
-		return FIBI.build(ans);
+		try {
+			return FakeImage.read(ans);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	private final VFile<? extends FileData> file;
@@ -40,29 +45,21 @@ public class VImg extends ImgCore {
 	private boolean loaded = false;
 	private ImgCut ic;
 
-	public VImg(BufferedImage img) {
-		file = null;
-		loaded = true;
-		bimg = FIBI.build(img);
-	}
+	public VImg(Object o) {
+		if (o instanceof String)
+			file = VFile.getFile((String) o);
+		else if (o instanceof VFile)
+			file = (VFile<?>) o;
+		else
+			file = null;
 
-	public VImg(BufferedImage img, String str) {
-		this(img);
-		name = str;
-	}
-
-	public VImg(FakeImage img) {
-		file = null;
-		loaded = true;
-		bimg = img;
-	}
-
-	public VImg(String str) {
-		this(VFile.getFile(str));
-	}
-
-	public VImg(VFile<? extends FileData> vf) {
-		file = vf;
+		if (file == null)
+			try {
+				bimg = FakeImage.read(o);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		loaded = bimg != null;
 	}
 
 	public synchronized void check() {
@@ -74,7 +71,7 @@ public class VImg extends ImgCore {
 		check();
 		if (bimg == null)
 			return null;
-		return new ImageIcon((Image)bimg.bimg());
+		return new ImageIcon((Image) bimg.bimg());
 	}
 
 	public FakeImage getImg() {
@@ -86,8 +83,12 @@ public class VImg extends ImgCore {
 		ic = cut;
 	}
 
-	public void setImg(FakeImage img) {
-		bimg = img;
+	public void setImg(Object img) {
+		try {
+			bimg = FakeImage.read(img);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		if (ic != null)
 			bimg = ic.cut(bimg)[0];
 		loaded = true;

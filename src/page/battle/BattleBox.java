@@ -20,10 +20,10 @@ import util.pack.NyCastle;
 import util.stage.Castles;
 import util.system.P;
 import util.system.VImg;
-import util.system.fake.FG2D;
 import util.system.fake.FakeGraphics;
 import util.system.fake.FakeImage;
 import util.system.fake.FakeTransform;
+import util.system.fake.awt.FG2D;
 import util.unit.Form;
 
 public class BattleBox extends Canvas {

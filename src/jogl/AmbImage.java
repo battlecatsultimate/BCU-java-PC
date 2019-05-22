@@ -5,8 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import util.system.fake.FIBI;
 import util.system.fake.FakeImage;
+import util.system.fake.awt.FIBI;
 
 public class AmbImage implements FakeImage {
 
@@ -19,63 +19,16 @@ public class AmbImage implements FakeImage {
 	private FIBI bimg;
 	private GLImage gl;
 
-	private void checkBI() {
-		if (bimg != null)
-			return;
-		try {
-			if (stream != null)
-
-				bimg = FIBI.read(stream);
-			else if (file != null)
-				bimg = FIBI.read(file);
-			else {
-				par.checkBI();
-				bimg = par.bimg.getSubimage(cs[0], cs[1], cs[2], cs[3]);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void forceBI() {
-		checkBI();
-		force = true;
-		gl = null;
-	}
-
-	private void checkGL() {
-		if (gl != null)
-			return;
-		try {
-			if (force)
-				gl = new GLImage(bimg.bimg());
-			if (stream != null)
-				gl = new GLImage(stream);
-			else if (file != null)
-				gl = new GLImage(file);
-			else {
-				par.checkBI();
-				bimg = par.bimg.getSubimage(cs[0], cs[1], cs[2], cs[3]);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void check() {
-		checkBI();
+	public AmbImage(File f) {
+		stream = null;
+		file = f;
+		par = null;
+		cs = null;
 	}
 
 	public AmbImage(InputStream is) {
 		stream = is;
 		file = null;
-		par = null;
-		cs = null;
-	}
-
-	public AmbImage(File f) {
-		stream = null;
-		file = f;
 		par = null;
 		cs = null;
 	}
@@ -117,15 +70,61 @@ public class AmbImage implements FakeImage {
 	}
 
 	@Override
+	public Object gl() {
+		checkGL();
+		return gl;
+	}
+
+	@Override
 	public void setRGB(int i, int j, int p) {
 		forceBI();
 		bimg.setRGB(i, j, p);
 	}
 
-	@Override
-	public Object gl() {
-		checkGL();
-		return gl;
+	private void check() {
+		checkBI();
+	}
+
+	private void checkBI() {
+		if (bimg != null)
+			return;
+		try {
+			if (stream != null)
+				bimg = (FIBI) FIBI.builder.build(stream);
+			else if (file != null)
+				bimg = (FIBI) FIBI.builder.build(file);
+			else {
+				par.checkBI();
+				bimg = par.bimg.getSubimage(cs[0], cs[1], cs[2], cs[3]);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void checkGL() {
+		if (gl != null)
+			return;
+		try {
+			if (force)
+				gl = new GLImage(bimg.bimg());
+			if (stream != null)
+				gl = new GLImage(stream);
+			else if (file != null)
+				gl = new GLImage(file);
+			else {
+				par.checkBI();
+				bimg = par.bimg.getSubimage(cs[0], cs[1], cs[2], cs[3]);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void forceBI() {
+		checkBI();
+		force = true;
+		gl = null;
 	}
 
 }

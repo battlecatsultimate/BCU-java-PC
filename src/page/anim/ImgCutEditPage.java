@@ -36,7 +36,7 @@ import util.anim.MaAnim;
 import util.anim.Part;
 import util.pack.Pack;
 import util.system.VImg;
-import util.system.fake.FIBI;
+import util.system.fake.awt.FIBI;
 import util.unit.DIYAnim;
 import util.unit.Enemy;
 
@@ -234,7 +234,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new Exporter((BufferedImage)icet.anim.num.bimg(), Exporter.EXP_IMG);
+				new Exporter((BufferedImage) icet.anim.num.bimg(), Exporter.EXP_IMG);
 			}
 
 		});
@@ -489,7 +489,8 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 					ImgCut ic = icet.ic;
 					data = ic.cuts[ind];
 				}
-				ReColor.transcolor((BufferedImage) icet.anim.num.bimg(), data, jlf.getSelectedIndex(), jlt.getSelectedIndex());
+				ReColor.transcolor((BufferedImage) icet.anim.num.bimg(), data, jlf.getSelectedIndex(),
+						jlt.getSelectedIndex());
 				icet.anim.ICedited();
 			}
 

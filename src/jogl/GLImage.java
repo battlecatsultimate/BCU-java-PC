@@ -22,12 +22,6 @@ public class GLImage implements FakeImage {
 	@SuppressWarnings("unused")
 	private Texture t;
 
-	protected GLImage(InputStream is) throws IOException {
-		par = null;
-		data = TextureIO.newTextureData(GLStatic.GLP, is, GLStatic.MIP, "PNG");
-		rect = new int[] { 0, 0, data.getWidth(), data.getHeight() };
-	}
-
 	protected GLImage(BufferedImage b) throws IOException {
 		par = null;
 		data = AWTTextureIO.newTextureData(GLStatic.GLP, b, GLStatic.MIP);
@@ -44,6 +38,12 @@ public class GLImage implements FakeImage {
 		par = p;
 		data = p.data;
 		rect = r;
+	}
+
+	protected GLImage(InputStream is) throws IOException {
+		par = null;
+		data = TextureIO.newTextureData(GLStatic.GLP, is, GLStatic.MIP, "PNG");
+		rect = new int[] { 0, 0, data.getWidth(), data.getHeight() };
 	}
 
 	@Override
@@ -72,12 +72,12 @@ public class GLImage implements FakeImage {
 	}
 
 	@Override
-	public void setRGB(int i, int j, int p) {
+	public Object gl() {
+		return this;
 	}
 
 	@Override
-	public Object gl() {
-		return this;
+	public void setRGB(int i, int j, int p) {
 	}
 
 }
