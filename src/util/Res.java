@@ -47,7 +47,7 @@ public class Res extends ImgCore {
 		id %= 100;
 		if (icon[type][id] == null)
 			return null;
-		return icon[type][id].getImg().bimg();
+		return (BufferedImage) icon[type][id].getImg().bimg();
 	}
 
 	public static FakeImage getMoney(int mon, int max) {

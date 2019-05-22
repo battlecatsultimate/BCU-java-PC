@@ -19,8 +19,8 @@ import res.AnimatedGifEncoder;
 import util.ImgCore;
 import util.anim.EAnimI;
 import util.system.P;
-import util.system.fake.FG2D;
 import util.system.fake.FakeGraphics;
+import util.system.fake.awt.FG2D;
 
 public class ViewBox extends Canvas {
 

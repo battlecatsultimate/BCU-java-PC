@@ -13,9 +13,9 @@ import util.anim.ImgCut;
 import util.anim.MaAnim;
 import util.anim.MaModel;
 import util.system.VImg;
-import util.system.fake.FG2D;
 import util.system.fake.FakeGraphics;
 import util.system.fake.FakeImage;
+import util.system.fake.awt.FG2D;
 import util.system.files.AssetData;
 import util.system.files.VFile;
 
