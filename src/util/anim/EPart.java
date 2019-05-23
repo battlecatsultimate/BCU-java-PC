@@ -1,6 +1,5 @@
 package util.anim;
 
-import java.awt.Point;
 import main.Printer;
 import util.ImgCore;
 import util.system.P;
@@ -143,8 +142,8 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		transform(g, base);
 		int w = bimg.getWidth();
 		int h = bimg.getHeight();
-		Point tpiv = piv.copy().times(getSize()).times(base).toPoint();
-		Point sc = new P(w, h).times(getSize()).times(base).toPoint();
+		P tpiv = piv.copy().times(getSize()).times(base);
+		P sc = new P(w, h).times(getSize()).times(base);
 		drawSca(g, tpiv, sc);
 		g.setTransform(at);
 	}
@@ -206,7 +205,7 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 			if (model.confs.length > 0) {
 				int[] data = model.confs[0];
 				P shi = new P(data[2], data[3]).times(getSize());
-				Point p3 = shi.times(sizer).toPoint();
+				P p3 = shi.times(sizer);
 				g.translate(-p3.x, -p3.y);
 			}
 			P p = piv.copy().times(getSize()).times(sizer);

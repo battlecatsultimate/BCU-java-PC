@@ -258,6 +258,8 @@ public class UnitManagePage extends Page {
 
 			@Override
 			public void focusLost(FocusEvent fe) {
+				if (changing || uni == null)
+					return;
 				int lv = Reader.parseIntN(maxp.getText());
 				if (lv >= 0)
 					uni.maxp = lv;
@@ -281,7 +283,7 @@ public class UnitManagePage extends Page {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (changing)
+				if (changing || uni == null)
 					return;
 				UnitLevel sel = (UnitLevel) cbl.getSelectedItem();
 				uni.lv.units.remove(uni);

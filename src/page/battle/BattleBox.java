@@ -2,14 +2,12 @@ package page.battle;
 
 import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Composite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 import main.Timer;
-import util.Converter;
 import util.Data;
 import util.ImgCore;
 import util.Res;
@@ -22,10 +20,10 @@ import util.pack.NyCastle;
 import util.stage.Castles;
 import util.system.P;
 import util.system.VImg;
-import util.system.fake.FG2D;
 import util.system.fake.FakeGraphics;
 import util.system.fake.FakeImage;
 import util.system.fake.FakeTransform;
+import util.system.fake.awt.FG2D;
 import util.unit.Form;
 
 public class BattleBox extends Canvas {
@@ -265,30 +263,21 @@ public class BattleBox extends Canvas {
 			if (f == null)
 				continue;
 			int pri = sb.elu.price[i / 5][i % 5];
-			if (pri == -1) {
-				g.setColor(new Color(255, 0, 0, 100));
-				g.fillRect(x, y, iw, ih);
-				continue;
-			}
+			if (pri == -1)
+				g.colRect(x, y, iw, ih, 255, 0, 0, 100);
 			int cool = sb.elu.cool[i / 5][i % 5];
 			boolean b = pri > sb.mon || cool > 0;
-			if (b) {
-				g.setColor(new Color(0, 0, 0, 100));
-				g.fillRect(x, y, iw, ih);
-			}
-			if (sb.locks[i / 5][i % 5]) {
-				g.setColor(new Color(0, 255, 0, 100));
-				g.fillRect(x, y, iw, ih);
-			}
+			if (b)
+				g.colRect(x, y, iw, ih, 0, 0, 0, 100);
+			if (sb.locks[i / 5][i % 5])
+				g.colRect(x, y, iw, ih, 0, 255, 0, 100);
 			if (cool > 0) {
 				dw = (int) (hr * 10);
 				dh = (int) (hr * 12);
 				double cd = 1.0 * cool / sb.elu.maxC[i / 5][i % 5];
 				int xw = (int) (cd * (iw - dw * 2));
-				g.setColor(new Color(0, 0, 0));
-				g.fillRect(x + iw - dw - xw, y + ih - dh * 2, xw, dh);
-				g.setColor(new Color(100, 212, 255));
-				g.fillRect(x + dw, y + ih - dh * 2, iw - dw * 2 - xw, dh);
+				g.colRect(x + iw - dw - xw, y + ih - dh * 2, xw, dh, 0, 0, 0);
+				g.colRect(x + dw, y + ih - dh * 2, iw - dw * 2 - xw, dh, 100, 212, 255);
 			} else {
 				img = Res.getCost(pri, !b);
 				x += iw;
@@ -381,10 +370,9 @@ public class BattleBox extends Canvas {
 		}
 
 		if (sb.s_stop > 0) {
-			Composite c = gra.getComposite();
-			gra.setComposite(new Converter(0));
+			gra.setComposite(FakeGraphics.GRAY, 0);
 			gra.fillRect(0, 0, img.getWidth(), img.getHeight());
-			gra.setComposite(c);
+			gra.setComposite(FakeGraphics.DEF);
 			for (int i = 0; i < 10; i++) {
 				int dep = i * DEP;
 				for (Entity e : sb.le)

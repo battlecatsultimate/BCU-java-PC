@@ -1,6 +1,5 @@
 package util.entity.attack;
 
-import java.awt.Color;
 import page.battle.BattleBox;
 import util.ImgCore;
 import util.anim.EAnimD;
@@ -64,7 +63,7 @@ public abstract class ContWaveAb extends ContAb {
 		siz *= 1.25;
 		double rat = BattleBox.ratio;
 		int h = (int) (640 * rat * siz);
-		gra.setColor(Color.MAGENTA);
+		gra.setColor(FakeGraphics.MAGENTA);
 		double d0 = Math.min(atk.sta, atk.end);
 		double ra = Math.abs(atk.sta - atk.end);
 		int x = (int) ((d0 - pos) * rat * siz + p.x);

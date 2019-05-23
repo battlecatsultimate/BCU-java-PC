@@ -1,6 +1,5 @@
 package util.entity;
 
-import java.awt.Color;
 import page.battle.BattleBox;
 import util.ImgCore;
 import util.anim.EAnimD;
@@ -53,7 +52,7 @@ public class Cannon extends AtkModelAb {
 		siz *= 1.25;
 		double rat = BattleBox.ratio;
 		int h = (int) (640 * rat * siz);
-		g.setColor(Color.MAGENTA);
+		g.setColor(FakeGraphics.MAGENTA);
 		double d0 = pos, ra = NYRAN[id];
 		if (id == BASE_STOP || id == BASE_WATER)
 			d0 -= ra / 2;

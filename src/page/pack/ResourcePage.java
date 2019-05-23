@@ -64,7 +64,8 @@ public class ResourcePage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				File f = new Exporter(Exporter.EXP_RES).file;
-				filemove(f.getPath() + "\\", sel);
+				if (f != null)
+					filemove(f.getPath() + "\\", sel);
 			}
 
 		});

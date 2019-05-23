@@ -1,14 +1,11 @@
 package page.anim;
 
-import java.awt.Color;
-import java.awt.Composite;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 import page.view.ViewBox;
-import util.Blender;
 import util.ImgCore;
 import util.Res;
 import util.system.P;
@@ -49,11 +46,10 @@ class IconBox extends ViewBox {
 				double r = Math.min(1.0 * line[2] / bw, 1.0 * line[3] / bh);
 				gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r));
 				if (glow == 1) {
-					Composite c = gra.getComposite();
-					gra.setComposite(new Blender(256, -1));
+					gra.setComposite(FakeGraphics.BLEND, 256, -1);
 					bimg = Res.ico[0][4].getImg();
 					gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r));
-					gra.setComposite(c);
+					gra.setComposite(FakeGraphics.DEF);
 				}
 			}
 		}
@@ -67,14 +63,13 @@ class IconBox extends ViewBox {
 			int bw = bimg.getWidth();
 			int bh = bimg.getHeight();
 			double r = Math.min(1.0 * line[2] / bw, 1.0 * line[3] / bh);
-			gra.setColor(Color.BLACK);
+			gra.setColor(FakeGraphics.BLACK);
 			gra.drawRect(line[0] - 1, line[1] - 1, line[2] + 1, line[3] + 1);
 			if (glow == 1) {
-				Composite c = gra.getComposite();
-				gra.setComposite(new Blender(256, 1));
+				gra.setComposite(FakeGraphics.BLEND, 256, 1);
 				bimg = Res.ico[0][4].getImg();
 				gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r));
-				gra.setComposite(c);
+				gra.setComposite(FakeGraphics.DEF);
 			}
 			if (mode == 0 && type > 1) {
 				bimg = Res.ico[0][5].getImg();
