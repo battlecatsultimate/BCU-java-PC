@@ -190,7 +190,7 @@ public class BGEditPage extends Page {
 				public void focusLost(FocusEvent arg0) {
 					int[] inp = Reader.parseIntsN(cs[I].getText());
 					if (inp.length == 3)
-						bgr.cs[I] = new int[] { inp[0], inp[1], inp[2] };
+						bgr.cs[I] = new int[] { inp[0] & 255, inp[1] & 255, inp[2] & 255 };
 					setCSText(I);
 
 				}

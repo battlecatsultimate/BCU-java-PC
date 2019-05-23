@@ -588,7 +588,7 @@ public abstract class EntityEditPage extends Page {
 					ce.res = null;
 			else
 				ce.res = null;
-		} else {
+		} else if (n > 1) {
 			AtkDataModel[] datas = new AtkDataModel[n - 1];
 			for (int i = 0; i < ind; i++)
 				datas[i] = ce.atks[i];
