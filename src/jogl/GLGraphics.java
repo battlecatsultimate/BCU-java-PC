@@ -136,8 +136,8 @@ public class GLGraphics implements GeoAuto {
 		}
 
 		private void setColor(int r, int gr, int b) {
-			//TODO
-			//g.glColor3f(r / 256f, gr / 256f, b / 256f);
+			// TODO
+			// g.glColor3f(r / 256f, gr / 256f, b / 256f);
 		}
 	}
 
@@ -151,9 +151,9 @@ public class GLGraphics implements GeoAuto {
 		}
 
 	}
-	
+
 	private static final int PURE = 0, IMG = 1;
-	
+
 	private final GL2 g;
 	private final TextureManager tm;
 
@@ -317,6 +317,8 @@ interface GeoAuto extends FakeGraphics {
 		getGeo().fillRect(x, y, w, h);
 	}
 
+	public GeomG getGeo();
+
 	@Override
 	public default void gradRect(int x, int y, int w, int h, int a, int b, int[] c, int d, int e, int[] f) {
 		getGeo().gradRect(x, y, w, h, a, b, c, d, e, f);
@@ -326,7 +328,5 @@ interface GeoAuto extends FakeGraphics {
 	public default void setColor(int c) {
 		getGeo().setColor(c);
 	}
-
-	public GeomG getGeo();
 
 }
