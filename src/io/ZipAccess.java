@@ -162,7 +162,7 @@ public class ZipAccess {
 					vf.mark = 1;
 					boolean b = true;
 					for (VFile<BackupData> c : vf.list())
-						if (c.getData().toString().equals(md5)) {
+						if (c.getData() != null && c.getData().toString().equals(md5)) {
 							b = false;
 							c.name = fn;
 						}

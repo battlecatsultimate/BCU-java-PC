@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import page.battle.BattleBox;
-import util.system.fake.FG2D;
+import util.system.fake.awt.FG2D;
 
 class NyCasBox extends Canvas {
 

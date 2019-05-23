@@ -13,9 +13,9 @@ import util.basis.Combo;
 import util.basis.LineUp;
 import util.system.P;
 import util.system.VImg;
-import util.system.fake.FG2D;
 import util.system.fake.FakeGraphics;
 import util.system.fake.FakeImage;
+import util.system.fake.awt.FG2D;
 import util.unit.Form;
 import util.unit.Unit;
 

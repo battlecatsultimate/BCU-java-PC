@@ -31,7 +31,6 @@ import util.pack.BGStore;
 import util.pack.Background;
 import util.pack.Pack;
 import util.system.VImg;
-import util.system.fake.FIBI;
 import util.system.fake.FakeImage;
 
 public class BGEditPage extends Page {
@@ -146,7 +145,7 @@ public class BGEditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (bgr != null)
-					new Exporter(bgr.img.getImg().bimg(), Exporter.EXP_IMG);
+					new Exporter((BufferedImage) bgr.img.getImg().bimg(), Exporter.EXP_IMG);
 			}
 		});
 
@@ -191,7 +190,7 @@ public class BGEditPage extends Page {
 				public void focusLost(FocusEvent arg0) {
 					int[] inp = Reader.parseIntsN(cs[I].getText());
 					if (inp.length == 3)
-						bgr.cs[I] = new int[] { inp[0], inp[1], inp[2] };
+						bgr.cs[I] = new int[] { inp[0] & 255, inp[1] & 255, inp[2] & 255 };
 					setCSText(I);
 
 				}
@@ -213,7 +212,7 @@ public class BGEditPage extends Page {
 		if (bgr == null)
 			bgr = bg.add(new VImg(bimg));
 		else {
-			bgr.img.setImg(FIBI.build(bimg));
+			bgr.img.setImg(bimg);
 			bgr.load();
 		}
 		String path = "./res/img/" + pack.id + "/bg/";

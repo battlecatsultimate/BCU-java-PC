@@ -10,10 +10,12 @@ import io.Writer;
 import page.MainFrame;
 import page.MainPage;
 import util.Data;
+import util.system.fake.ImageBuilder;
+import util.system.fake.awt.PCIB;
 
 public class MainBCU {
 
-	public static final int ver = 406010;
+	public static final int ver = 40612;
 
 	public static int FILTER_TYPE = 0;
 	public static boolean write = true, preload = false, trueRun = false, loaded = false;
@@ -29,6 +31,7 @@ public class MainBCU {
 			Opts.pop(Opts.MEMORY, "" + (mem >> 20));
 			System.exit(0);
 		}
+		ImageBuilder.builder = new PCIB();
 		Reader.getData$0();
 		Writer.logSetup();
 		new MainFrame(Data.revVer(MainBCU.ver)).initialize();
