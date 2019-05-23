@@ -9,13 +9,139 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2ES3;
 import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 
+import jogl.GLGraphics.GeomG;
 import util.system.fake.FakeGraphics;
 import util.system.fake.FakeImage;
 import util.system.fake.FakeTransform;
 
-public class GLGraphics implements FakeGraphics {
+public class GLGraphics implements GeoAuto {
 
-	static class GLT implements FakeTransform {
+	static class GeomG {
+
+		private final GLGraphics gra;
+
+		private final GL2 g;
+
+		private int color = -1;
+
+		private GeomG(GLGraphics glg, GL2 gl2) {
+			gra = glg;
+			g = gl2;
+		}
+
+		protected void colRect(int x, int y, int w, int h, int r, int gr, int b, int... a) {
+			checkMode();
+			if (a.length == 0)
+				setColor(r, gr, b);
+			else
+				g.glColor4f(r / 256f, gr / 256f, b / 256f, a[0] / 256f);
+			color = -1;
+			g.glBegin(GL2ES3.GL_QUADS);
+			addP(x, y);
+			addP(x + w, y);
+			addP(x + w, y + h);
+			addP(x, y + h);
+			g.glEnd();
+
+		}
+
+		protected void drawLine(int i, int j, int x, int y) {
+			checkMode();
+			setColor();
+			g.glBegin(GL.GL_LINES);
+			addP(i, j);
+			addP(x, y);
+			g.glEnd();
+
+		}
+
+		protected void drawOval(int i, int j, int k, int l) {
+			checkMode();
+			setColor();
+			// TODO
+
+		}
+
+		protected void drawRect(int x, int y, int w, int h) {
+			checkMode();
+			setColor();
+			g.glBegin(GL.GL_LINE_LOOP);
+			addP(x, y);
+			addP(x + w, y);
+			addP(x + w, y + h);
+			addP(x, y + h);
+			g.glEnd();
+		}
+
+		protected void fillOval(int i, int j, int k, int l) {
+			checkMode();
+			setColor();
+			// TODO
+
+		}
+
+		protected void fillRect(int x, int y, int w, int h) {
+			checkMode();
+			setColor();
+			g.glBegin(GL2ES3.GL_QUADS);
+			addP(x, y);
+			addP(x + w, y);
+			addP(x + w, y + h);
+			addP(x, y + h);
+			g.glEnd();
+		}
+
+		protected void gradRect(int x, int y, int w, int h, int a, int b, int[] c, int d, int e, int[] f) {
+			checkMode();
+			g.glBegin(GL2ES3.GL_QUADS);
+			setColor(c[0], c[1], c[2]);
+			addP(x, y);
+			setColor(c[0], c[1], c[2]);
+			addP(x, y + h);
+			setColor(f[0], f[1], f[2]);
+			addP(x + w, y + h);
+			setColor(c[0], c[1], c[2]);
+			addP(x + w, y);
+			g.glEnd();
+			color = -1;
+		}
+
+		protected void setColor(int c) {
+			if (c == RED)
+				color = Color.RED.getRGB();
+			if (c == YELLOW)
+				color = Color.YELLOW.getRGB();
+			if (c == BLACK)
+				color = Color.BLACK.getRGB();
+			if (c == MAGENTA)
+				color = Color.MAGENTA.getRGB();
+			if (c == BLUE)
+				color = Color.BLUE.getRGB();
+			if (c == CYAN)
+				color = Color.CYAN.getRGB();
+		}
+
+		private void addP(int x, int y) {
+			gra.addP(x, y);
+		}
+
+		private void checkMode() {
+			gra.checkMode(PURE);
+		}
+
+		private void setColor() {
+			if (color == -1)
+				return;
+			setColor(color >> 16 & 8, color >> 8 & 8, color & 8);
+		}
+
+		private void setColor(int r, int gr, int b) {
+			//TODO
+			//g.glColor3f(r / 256f, gr / 256f, b / 256f);
+		}
+	}
+
+	private static class GLT implements FakeTransform {
 
 		private float[] data = new float[16];
 
@@ -25,40 +151,26 @@ public class GLGraphics implements FakeGraphics {
 		}
 
 	}
-
+	
 	private static final int PURE = 0, IMG = 1;
+	
 	private final GL2 g;
 	private final TextureManager tm;
 
+	private final GeomG geo;
 	private final int sw, sh;
 	private int mode = PURE;
-	private int bind = 0;
 
-	private int color = -1;
+	private int bind = 0;
 
 	public GLGraphics(GL2 gl2, int wid, int hei) {
 		g = gl2;
+		geo = new GeomG(this, gl2);
 		tm = TextureManager.get(g);
 		sw = wid;
 		sh = hei;
 		g.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		g.glLoadIdentity();
-	}
-
-	@Override
-	public void colRect(int x, int y, int w, int h, int r, int gr, int b, int... a) {
-		checkMode(PURE);
-		g.glBegin(GL2ES3.GL_QUADS);
-		if (a.length == 0)
-			setColor(r, gr, b);
-		else
-			g.glColor4f(r / 256f, gr / 256f, b / 256f, a[0] / 256f);
-		addP(x, y);
-		addP(x + w, y);
-		addP(x + w, y + h);
-		addP(x, y + h);
-		g.glEnd();
-
 	}
 
 	@Override
@@ -101,53 +213,8 @@ public class GLGraphics implements FakeGraphics {
 	}
 
 	@Override
-	public void drawLine(int i, int j, int x, int y) {
-		checkMode(PURE);
-		g.glBegin(GL.GL_LINES);
-		setColor();
-		addP(i, j);
-		addP(x, y);
-		g.glEnd();
-
-	}
-
-	@Override
-	public void drawOval(int i, int j, int k, int l) {
-		checkMode(PURE);
-
-		// TODO
-
-	}
-
-	@Override
-	public void drawRect(int x, int y, int w, int h) {
-		checkMode(PURE);
-		g.glBegin(GL.GL_LINE_LOOP);
-		setColor();
-		addP(x, y);
-		addP(x + w, y);
-		addP(x + w, y + h);
-		addP(x, y + h);
-		g.glEnd();
-	}
-
-	@Override
-	public void fillOval(int i, int j, int k, int l) {
-		checkMode(PURE);
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void fillRect(int x, int y, int w, int h) {
-		checkMode(PURE);
-		g.glBegin(GL2ES3.GL_QUADS);
-		setColor();
-		addP(x, y);
-		addP(x + w, y);
-		addP(x + w, y + h);
-		addP(x, y + h);
-		g.glEnd();
+	public GeomG getGeo() {
+		return geo;
 	}
 
 	@Override
@@ -158,20 +225,6 @@ public class GLGraphics implements FakeGraphics {
 	}
 
 	@Override
-	public void gradRect(int x, int y, int w, int h, int a, int b, int[] c, int d, int e, int[] f) {
-		checkMode(PURE);
-		g.glBegin(GL2ES3.GL_QUADS);
-		setColor(c[0], c[1], c[2]);
-		addP(x, y);
-		addP(x, y + h);
-		setColor(f[0], f[1], f[2]);
-		addP(x + w, y + h);
-		addP(x + w, y);
-		g.glEnd();
-		// TODO
-	}
-
-	@Override
 	public void rotate(double d) {
 		g.glRotated(d, 0, 0, 1);
 	}
@@ -179,22 +232,6 @@ public class GLGraphics implements FakeGraphics {
 	@Override
 	public void scale(int hf, int vf) {
 		g.glScalef(hf, vf, 0);
-	}
-
-	@Override
-	public void setColor(int c) {
-		if (c == RED)
-			color = Color.RED.getRGB();
-		if (c == YELLOW)
-			color = Color.YELLOW.getRGB();
-		if (c == BLACK)
-			color = Color.BLACK.getRGB();
-		if (c == MAGENTA)
-			color = Color.MAGENTA.getRGB();
-		if (c == BLUE)
-			color = Color.BLUE.getRGB();
-		if (c == CYAN)
-			color = Color.CYAN.getRGB();
 	}
 
 	@Override
@@ -246,15 +283,50 @@ public class GLGraphics implements FakeGraphics {
 			g.glEnable(GL_TEXTURE_2D);
 	}
 
-	private void setColor() {
-		if (color == -1)
-			return;
-		setColor(color >> 16 & 8, color >> 8 & 8, color & 8);
+}
+
+interface GeoAuto extends FakeGraphics {
+
+	@Override
+	public default void colRect(int x, int y, int w, int h, int r, int gr, int b, int... a) {
+		getGeo().colRect(x, y, w, h, r, gr, b, a);
 	}
 
-	private void setColor(int r, int gr, int b) {
-
-		// TODO g.glColor3f(r / 256f, gr / 256f, b / 256f);
+	@Override
+	public default void drawLine(int i, int j, int x, int y) {
+		getGeo().drawLine(i, j, x, y);
 	}
+
+	@Override
+	public default void drawOval(int i, int j, int k, int l) {
+		getGeo().drawOval(i, j, k, l);
+	}
+
+	@Override
+	public default void drawRect(int x, int y, int x2, int y2) {
+		getGeo().drawRect(x, y, x2, y2);
+	}
+
+	@Override
+	public default void fillOval(int i, int j, int k, int l) {
+		getGeo().fillOval(i, j, k, l);
+	}
+
+	@Override
+	public default void fillRect(int x, int y, int w, int h) {
+		getGeo().fillRect(x, y, w, h);
+	}
+
+	@Override
+	public default void gradRect(int x, int y, int w, int h, int a, int b, int[] c, int d, int e, int[] f) {
+		getGeo().gradRect(x, y, w, h, a, b, c, d, e, f);
+	}
+
+	@Override
+	public default void setColor(int c) {
+		getGeo().setColor(c);
+	}
+
+	public GeomG getGeo();
 
 }
