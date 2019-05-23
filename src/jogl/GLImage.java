@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
@@ -14,13 +13,9 @@ import util.system.fake.FakeImage;
 
 public class GLImage implements FakeImage {
 
-	@SuppressWarnings("unused")
 	private final GLImage par;
-	private final TextureData data;
-	private final int[] rect;
-
-	@SuppressWarnings("unused")
-	private Texture t;
+	protected final TextureData data;
+	protected final int[] rect;
 
 	protected GLImage(BufferedImage b) throws IOException {
 		par = null;
@@ -56,13 +51,24 @@ public class GLImage implements FakeImage {
 		return rect[3];
 	}
 
+	public float[] getRect() {
+		float[] ans = new float[4];
+		int[] br = root().rect;
+		ans[0] = 1.0f * rect[0] / br[2];
+		ans[1] = 1.0f * rect[1] / br[3];
+		ans[2] = 1.0f * rect[2] / br[2];
+		ans[3] = -1.0f * rect[3] / br[3];
+		ans[1] = 1 - ans[1];
+		return ans;
+	}
+
 	@Override
 	public int getRGB(int i, int j) {
 		return 0;
 	}
 
 	@Override
-	public FakeImage getSubimage(int i, int j, int k, int l) {
+	public GLImage getSubimage(int i, int j, int k, int l) {
 		return new GLImage(this, i, j, k, l);
 	}
 
@@ -78,6 +84,10 @@ public class GLImage implements FakeImage {
 
 	@Override
 	public void setRGB(int i, int j, int p) {
+	}
+
+	protected GLImage root() {
+		return par == null ? this : par.root();
 	}
 
 }

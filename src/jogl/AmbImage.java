@@ -19,14 +19,23 @@ public class AmbImage implements FakeImage {
 	private FIBI bimg;
 	private GLImage gl;
 
-	public AmbImage(File f) {
+	protected AmbImage(BufferedImage b) {
+		stream = null;
+		file = null;
+		par = null;
+		cs = null;
+		bimg = (FIBI) FIBI.build(b);
+		force = true;
+	}
+
+	protected AmbImage(File f) {
 		stream = null;
 		file = f;
 		par = null;
 		cs = null;
 	}
 
-	public AmbImage(InputStream is) {
+	protected AmbImage(InputStream is) {
 		stream = is;
 		file = null;
 		par = null;
@@ -113,8 +122,8 @@ public class AmbImage implements FakeImage {
 			else if (file != null)
 				gl = new GLImage(file);
 			else {
-				par.checkBI();
-				bimg = par.bimg.getSubimage(cs[0], cs[1], cs[2], cs[3]);
+				par.checkGL();
+				gl = par.gl.getSubimage(cs[0], cs[1], cs[2], cs[3]);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
