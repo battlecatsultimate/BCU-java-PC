@@ -15,7 +15,7 @@ import util.system.fake.awt.PCIB;
 
 public class MainBCU {
 
-	public static final int ver = 40612;
+	public static final int ver = 40613;
 
 	public static int FILTER_TYPE = 0;
 	public static boolean write = true, preload = false, trueRun = false, loaded = false;

@@ -439,6 +439,7 @@ public class Reader extends DataIO {
 			if (f.exists()) {
 				try {
 					Queue<String> qs = readLines(f);
+					MainBCU.write = !new File("./.project").exists();
 					MainLocale.lang = parseInt(qs.poll());
 					int[] r = parseInts(4, qs.poll());
 					MainFrame.crect = new Rectangle(r[0], r[1], r[2], r[3]);
@@ -447,7 +448,6 @@ public class Reader extends DataIO {
 					ViewBox.white = parseInt(qs.poll()) == 1;
 					ImgCore.ref = parseInt(qs.poll()) == 1;
 					qs.poll();
-					MainBCU.write = !new File("./.project").exists();
 					ImgCore.deadOpa = parseInt(qs.poll());
 					ImgCore.fullOpa = parseInt(qs.poll());
 					MainBCU.FILTER_TYPE = parseInt(qs.poll());

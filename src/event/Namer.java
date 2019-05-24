@@ -5,6 +5,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 
+import main.MainBCU;
 import page.MainLocale;
 import util.stage.MapColc;
 
@@ -14,10 +15,11 @@ public strictfp class Namer {
 
 	public static final Map<Integer, String> EMAP, GMAP, IMAP;
 
-	private static final ResourceBundle RGEN = ResourceBundle.getBundle("event.gacha_en");
+	private static final ResourceBundle RGEN;
 
 	static {
-		String s0 = "event.";
+		String s0 = (MainBCU.write ? "src/" : "") + "event/";
+		RGEN = ResourceBundle.getBundle(s0 + "gacha_en");
 		String[] s1 = new String[] { "event", "group", "item", "lang" };
 		String[] s2 = new String[] { "_en", "_zh", "_en", "_en" };
 		ResourceBundle[][] ress = new ResourceBundle[s1.length][s2.length];
