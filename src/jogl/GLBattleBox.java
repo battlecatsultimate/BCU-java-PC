@@ -5,9 +5,11 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLCanvas;
 
+import page.battle.BBCtrl;
 import page.battle.BattleBox;
 import page.battle.BattleInfoPage;
 import util.basis.BattleField;
+import util.basis.SBCtrl;
 
 public class GLBattleBox extends GLCanvas implements BattleBox, GLEventListener {
 
@@ -15,8 +17,8 @@ public class GLBattleBox extends GLCanvas implements BattleBox, GLEventListener 
 
 	private final BBPainter bbp;
 
-	public GLBattleBox(BattleInfoPage bip, BattleField bf) {
-		bbp = new BBPainter(bip, bf, this);
+	public GLBattleBox(BattleInfoPage bip, BattleField bf, int type) {
+		bbp = type == 0 ? new BBPainter(bip, bf, this) : new BBCtrl(bip, (SBCtrl) bf, this);
 		addGLEventListener(this);
 	}
 

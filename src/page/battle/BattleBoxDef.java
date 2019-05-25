@@ -8,10 +8,11 @@ import java.awt.image.BufferedImage;
 
 import main.Timer;
 import util.basis.BattleField;
+import util.basis.SBCtrl;
 import util.system.fake.FakeGraphics;
 import util.system.fake.awt.FG2D;
 
-public class BattleBoxDef extends Canvas implements BattleBox {
+class BattleBoxDef extends Canvas implements BattleBox {
 
 	private static final long serialVersionUID = 1L;
 
@@ -19,8 +20,8 @@ public class BattleBoxDef extends Canvas implements BattleBox {
 
 	protected BufferedImage prev;
 
-	protected BattleBoxDef(BattleInfoPage bip, BattleField bas) {
-		bbp = new BBPainter(bip, bas, this);
+	protected BattleBoxDef(BattleInfoPage bip, BattleField bas, int p) {
+		bbp = p == 0 ? new BBPainter(bip, bas, this) : new BBCtrl(bip, (SBCtrl) bas, this);
 		setIgnoreRepaint(true);
 	}
 

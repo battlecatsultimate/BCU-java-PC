@@ -36,7 +36,7 @@ public class MainBCU {
 			System.exit(0);
 		}
 		ImageBuilder.builder = new PCIB();
-		BBBuilder.def = new AWTBBB();
+		BBBuilder.def = AWTBBB.INS;
 		Reader.getData$0();
 		Writer.logSetup();
 		new MainFrame(Data.revVer(MainBCU.ver)).initialize();

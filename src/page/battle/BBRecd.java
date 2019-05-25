@@ -14,7 +14,17 @@ import io.Writer;
 import page.Page;
 import util.basis.BattleField;
 
-public class BBRecd extends BattleBoxDef {
+public interface BBRecd extends BattleBox {
+
+	public void end();
+
+	public String info();
+
+	public void quit();
+
+}
+
+class BBRecdAWT extends BattleBoxDef implements BBRecd {
 
 	private static final long serialVersionUID = 1L;
 
@@ -23,15 +33,32 @@ public class BBRecd extends BattleBoxDef {
 
 	private int time = -1;
 
-	protected BBRecd(BattleInfoPage bip, BattleField bas, String out, boolean img) {
-		super(bip, bas);
+	public BBRecdAWT(BattleInfoPage bip, BattleField bas, String out, boolean img) {
+		super(bip, bas, 0);
 		th = img ? new PNGThread(qb, out, bip) : new MP4Thread(qb, out, bip);
 		th.start();
 	}
 
-	protected void end() {
+	@Override
+	public void end() {
 		synchronized (th) {
 			th.end = true;
+		}
+	}
+
+	@Override
+	public String info() {
+		int size;
+		synchronized (qb) {
+			size = qb.size();
+		}
+		return "" + size;
+	}
+
+	@Override
+	public void quit() {
+		synchronized (th) {
+			th.quit = true;
 		}
 	}
 
@@ -44,20 +71,6 @@ public class BBRecd extends BattleBoxDef {
 				time = bbp.bf.sb.time;
 			}
 		return bimg;
-	}
-
-	protected String info() {
-		int size;
-		synchronized (qb) {
-			size = qb.size();
-		}
-		return "" + size;
-	}
-
-	protected void quit() {
-		synchronized (th) {
-			th.quit = true;
-		}
 	}
 
 }

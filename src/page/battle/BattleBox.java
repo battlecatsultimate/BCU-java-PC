@@ -52,12 +52,11 @@ public interface BattleBox {
 
 		protected final BattleInfoPage page;
 		protected final BattleField bf;
-		private final BattleBox box;
+		protected final BattleBox box;
 		private StageBasis sb;
 		protected int pt = -1;
 		private int maxW, maxH, minH; // in p
 		private int pos, midh, prew, preh; // in pix
-
 		protected double siz, corr, unir; // siz = pix/p;
 
 		private P mouse; // in pix
@@ -69,6 +68,9 @@ public interface BattleBox {
 			maxW = (int) (bas.sb.st.len * ratio + off * 2);
 			maxH = 510 * 3;
 			minH = 510;
+		}
+
+		public void click(Point p, int button) {
 		}
 
 		public void draw(FakeGraphics g) {
@@ -378,6 +380,7 @@ public interface BattleBox {
 	}
 
 	public default void click(Point p, int button) {
+		getPainter().click(p, button);
 	}
 
 	public default void drag(Point p) {
