@@ -12,6 +12,7 @@ import util.Res;
 import util.basis.Combo;
 import util.basis.LineUp;
 import util.system.P;
+import util.system.SymCoord;
 import util.system.VImg;
 import util.system.fake.FakeGraphics;
 import util.system.fake.FakeImage;
@@ -61,20 +62,15 @@ public class LineUpBox extends Canvas {
 							gra.drawImage(Res.slot[2].getImg(), 120 * j, 100 * i);
 				if (time == 1 && sf != null && f.uid == sf.uid && relative == null)
 					gra.drawImage(Res.slot[1].getImg(), 120 * j, 100 * i);
-				FakeImage lv = Res.getCost(lu.getLv(f.unit)[0], true);
-				int x = 120 * j;
-				int y = 100 * i + img.getImg().getHeight() - lv.getHeight();
 				if (sf == null || sf != f || relative == null)
-					gra.drawImage(lv, x, y);
+					Res.getCost(lu.getLv(f.unit)[0], true,
+							new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
 			}
 		if (relative != null && sf != null) {
 			Point p = relative.sf(mouse).toPoint();
 			FakeImage uni = sf.anim.uni.getImg();
 			gra.drawImage(uni, p.x, p.y);
-			FakeImage lv = Res.getCost(lu.getLv(sf.unit)[0], true);
-			int x = p.x;
-			int y = p.y + uni.getHeight() - lv.getHeight();
-			gra.drawImage(lv, x, y);
+			Res.getCost(lu.getLv(sf.unit)[0], true, new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
 		}
 		g.drawImage(bimg, 0, 0, getWidth(), getHeight(), null);
 		pt++;

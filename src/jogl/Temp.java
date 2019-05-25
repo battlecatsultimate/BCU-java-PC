@@ -9,19 +9,28 @@ import javax.swing.JFrame;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
 
-import util.anim.AnimC;
+import decode.ZipLib;
+import io.Reader;
+import util.anim.AnimU;
 import util.anim.EAnimU;
 import util.system.P;
 import util.system.fake.FakeTransform;
 import util.system.fake.ImageBuilder;
+import util.unit.UnitStore;
 
 public class Temp extends StdGLC {
 
-	private static AnimC test;
+	private static AnimU test;
 	private static EAnimU ent;
 
 	public static void main(String[] args) throws IOException {
 		ImageBuilder.builder = new GLIB();
+		Reader.getData$0();
+		ZipLib.init();
+		ZipLib.read();
+		Reader.getData$1();
+		System.out.println("finish reading");
+
 		final GLCanvas glcanvas = new GLCanvas(GLStatic.GLC);
 		Temp b = new Temp();
 		glcanvas.addGLEventListener(b);
@@ -38,8 +47,8 @@ public class Temp extends StdGLC {
 			}
 
 		});
-
-		test = new AnimC("dart");
+		// 91, 377
+		test = UnitStore.get(377, 2, false).anim;
 		test.check();
 		ent = test.getEAnim(2);
 
@@ -59,8 +68,8 @@ public class Temp extends StdGLC {
 		System.out.println(tt - time);
 		time = tt;
 		FakeTransform ft = fg.getTransform();
-		for (int i = 0; i < 10; i++)
-			for (int j = 0; j < 10; j++) {
+		for (int i = 0; i < 1; i++)
+			for (int j = 0; j < 1; j++) {
 				ent.draw(fg, new P(800 + j * 10, 750 + i * 10), 1);
 				fg.setTransform(ft);
 			}

@@ -174,7 +174,7 @@ public class GLGraphics implements GeoAuto {
 	}
 
 	@Override
-	public void drawImage(FakeImage bimg, int x, int y) {
+	public void drawImage(FakeImage bimg, double x, double y) {
 		checkMode(IMG);
 		GLImage gl = (GLImage) bimg.gl();
 		bind(tm.load(this, gl));
@@ -195,7 +195,7 @@ public class GLGraphics implements GeoAuto {
 	}
 
 	@Override
-	public void drawImage(FakeImage bimg, int x, int y, int w, int h) {
+	public void drawImage(FakeImage bimg, double x, double y, double w, double h) {
 		checkMode(IMG);
 		GLImage gl = (GLImage) bimg.gl();
 		bind(tm.load(this, gl));
@@ -306,8 +306,8 @@ public class GLGraphics implements GeoAuto {
 		checkMode(PURE);
 	}
 
-	private void addP(int x, int y) {
-		g.glVertex2f(2.0f * x / sw - 1, 1 - 2.0f * y / sh);
+	private void addP(double x, double y) {
+		g.glVertex2f((float) (2 * x / sw - 1), (float) (1 - 2 * y / sh));
 	}
 
 	private void checkMode(int i) {

@@ -7,9 +7,9 @@ public interface FakeGraphics {
 
 	public void colRect(int x, int y, int w, int h, int r, int g, int b, int... a);
 
-	public void drawImage(FakeImage bimg, int i, int j);
+	public void drawImage(FakeImage bimg, double x, double y);
 
-	public void drawImage(FakeImage bimg, int ix, int iy, int iw, int ih);
+	public void drawImage(FakeImage bimg, double x, double y, double d, double e);
 
 	public void drawLine(int i, int j, int x, int y);
 

@@ -55,13 +55,13 @@ public class FG2D implements FakeGraphics {
 	}
 
 	@Override
-	public void drawImage(FakeImage bimg, int i, int j) {
-		g.drawImage((Image) bimg.bimg(), i, j, null);
+	public void drawImage(FakeImage bimg, double i, double j) {
+		g.drawImage((Image) bimg.bimg(), (int) i, (int) j, null);
 	}
 
 	@Override
-	public void drawImage(FakeImage bimg, int ix, int iy, int iw, int ih) {
-		g.drawImage((Image) bimg.bimg(), ix, iy, iw, ih, null);
+	public void drawImage(FakeImage bimg, double ix, double iy, double iw, double ih) {
+		g.drawImage((Image) bimg.bimg(), (int) ix, (int) iy, (int) iw, (int) ih, null);
 	}
 
 	@Override
