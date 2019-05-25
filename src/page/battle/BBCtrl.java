@@ -2,27 +2,27 @@ package page.battle;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
+
+import page.battle.BattleBox.BBPainter;
 import util.Res;
 import util.basis.SBCtrl;
 import util.system.P;
 import util.system.fake.FakeImage;
 import util.unit.Form;
 
-public class BBCtrl extends BattleBox {
-
-	private static final long serialVersionUID = 1L;
+public class BBCtrl extends BBPainter {
 
 	private final SBCtrl sbc;
 
-	protected BBCtrl(BattleInfoPage bip, SBCtrl bas) {
-		super(bip, bas);
+	public BBCtrl(BattleInfoPage bip, SBCtrl bas, BattleBox bb) {
+		super(bip, bas, bb);
 		sbc = bas;
 	}
 
 	@Override
-	protected synchronized void click(Point p, int button) {
-		int w = getWidth();
-		int h = getHeight();
+	public synchronized void click(Point p, int button) {
+		int w = box.getWidth();
+		int h = box.getHeight();
 		double hr = unir;
 		for (int i = 0; i < 10; i++) {
 			Form f = sbc.sb.b.lu.fs[i / 5][i % 5];

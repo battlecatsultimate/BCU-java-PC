@@ -1,5 +1,6 @@
 package main;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -9,16 +10,19 @@ import io.Reader;
 import io.Writer;
 import page.MainFrame;
 import page.MainPage;
+import page.battle.AWTBBB;
+import page.battle.BBBuilder;
 import util.Data;
 import util.system.fake.ImageBuilder;
 import util.system.fake.awt.PCIB;
 
 public class MainBCU {
 
-	public static final int ver = 40612;
+	public static final int ver = 40613;
 
 	public static int FILTER_TYPE = 0;
-	public static boolean write = true, preload = false, trueRun = false, loaded = false;
+	public static final boolean write = !new File("./.project").exists();
+	public static boolean preload = false, trueRun = false, loaded = false;
 
 	public static String getTime() {
 		return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
@@ -32,6 +36,7 @@ public class MainBCU {
 			System.exit(0);
 		}
 		ImageBuilder.builder = new PCIB();
+		BBBuilder.def = AWTBBB.INS;
 		Reader.getData$0();
 		Writer.logSetup();
 		new MainFrame(Data.revVer(MainBCU.ver)).initialize();

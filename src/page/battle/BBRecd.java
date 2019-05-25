@@ -14,7 +14,17 @@ import io.Writer;
 import page.Page;
 import util.basis.BattleField;
 
-public class BBRecd extends BattleBox {
+public interface BBRecd extends BattleBox {
+
+	public void end();
+
+	public String info();
+
+	public void quit();
+
+}
+
+class BBRecdAWT extends BattleBoxDef implements BBRecd {
 
 	private static final long serialVersionUID = 1L;
 
@@ -23,30 +33,21 @@ public class BBRecd extends BattleBox {
 
 	private int time = -1;
 
-	protected BBRecd(BattleInfoPage bip, BattleField bas, String out, boolean img) {
-		super(bip, bas);
+	public BBRecdAWT(BattleInfoPage bip, BattleField bas, String out, boolean img) {
+		super(bip, bas, 0);
 		th = img ? new PNGThread(qb, out, bip) : new MP4Thread(qb, out, bip);
 		th.start();
 	}
 
-	protected void end() {
+	@Override
+	public void end() {
 		synchronized (th) {
 			th.end = true;
 		}
 	}
 
 	@Override
-	protected BufferedImage getImage() {
-		BufferedImage bimg = super.getImage();
-		if (bf.sb.time > time)
-			synchronized (qb) {
-				qb.add(bimg);
-				time = bf.sb.time;
-			}
-		return bimg;
-	}
-
-	protected String info() {
+	public String info() {
 		int size;
 		synchronized (qb) {
 			size = qb.size();
@@ -54,10 +55,22 @@ public class BBRecd extends BattleBox {
 		return "" + size;
 	}
 
-	protected void quit() {
+	@Override
+	public void quit() {
 		synchronized (th) {
 			th.quit = true;
 		}
+	}
+
+	@Override
+	protected BufferedImage getImage() {
+		BufferedImage bimg = super.getImage();
+		if (bbp.bf.sb.time > time)
+			synchronized (qb) {
+				qb.add(bimg);
+				time = bbp.bf.sb.time;
+			}
+		return bimg;
 	}
 
 }

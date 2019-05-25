@@ -2,6 +2,7 @@ package decode;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.ClosedFileSystemException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -84,6 +85,7 @@ public class ZipLib {
 		} catch (IOException e) {
 			Opts.loadErr("failed to access library");
 			e.printStackTrace();
+		} catch (ClosedFileSystemException e) {
 		}
 	}
 

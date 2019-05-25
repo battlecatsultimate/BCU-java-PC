@@ -50,7 +50,7 @@ public class Cannon extends AtkModelAb {
 
 		// after this is the drawing of hit boxes
 		siz *= 1.25;
-		double rat = BattleBox.ratio;
+		double rat = BattleBox.BBPainter.ratio;
 		int h = (int) (640 * rat * siz);
 		g.setColor(FakeGraphics.MAGENTA);
 		double d0 = pos, ra = NYRAN[id];
