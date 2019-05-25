@@ -39,7 +39,7 @@ public class Temp extends StdGLC {
 
 		});
 
-		test = new AnimC("dio");
+		test = new AnimC("dart");
 		test.check();
 		ent = test.getEAnim(2);
 
@@ -50,20 +50,20 @@ public class Temp extends StdGLC {
 		FPSAnimator anim = new FPSAnimator(glcanvas, 30, true);
 		anim.start();
 	}
-	
-	private long time=0;
-	
+
+	private long time = 0;
+
 	@Override
 	public void drawFake(GLGraphics fg) {
-		long tt=System.currentTimeMillis();
-		System.out.println(tt-time);
-		time=tt;
-		FakeTransform ft=fg.getTransform();
-		for(int i=0;i<10;i++)
-			for(int j=0;j<10;j++){
-			ent.draw(fg, new P(600+j*10, 750+i*10), 1);
-			fg.setTransform(ft);
-		}
+		long tt = System.currentTimeMillis();
+		System.out.println(tt - time);
+		time = tt;
+		FakeTransform ft = fg.getTransform();
+		for (int i = 0; i < 10; i++)
+			for (int j = 0; j < 10; j++) {
+				ent.draw(fg, new P(800 + j * 10, 750 + i * 10), 1);
+				fg.setTransform(ft);
+			}
 		fg.flush();
 		ent.update(true);
 	}

@@ -25,7 +25,7 @@ public class TextureManager {
 		MAP.put(gl, tm);
 		return tm;
 	}
-	
+
 	private static String load(String name) throws IOException {
 		String path = "jogl/shader/" + name;
 		List<String> ls = IOUtils.readLines(ClassLoader.getSystemResourceAsStream(path), Charset.defaultCharset());
@@ -35,7 +35,7 @@ public class TextureManager {
 		return source;
 	}
 
-	protected int mode, para,prog;
+	protected int mode, para, prog;
 
 	private final GL2 gl;
 
@@ -96,7 +96,7 @@ public class TextureManager {
 			gl.glAttachShader(prog, fi);
 			gl.glLinkProgram(prog);
 			gl.glUseProgram(prog);
-			mode=gl.glGetUniformLocation(prog, "mode");
+			mode = gl.glGetUniformLocation(prog, "mode");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

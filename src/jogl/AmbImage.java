@@ -37,6 +37,7 @@ public class AmbImage implements FakeImage {
 
 	protected AmbImage(InputStream is) {
 		stream = is;
+		is.mark(2);
 		file = null;
 		par = null;
 		cs = null;
@@ -117,7 +118,7 @@ public class AmbImage implements FakeImage {
 		try {
 			if (force)
 				gl = new GLImage(bimg.bimg());
-			if (stream != null)
+			else if (stream != null)
 				gl = new GLImage(stream);
 			else if (file != null)
 				gl = new GLImage(file);

@@ -15,6 +15,8 @@ public class GLIB extends ImageBuilder {
 	public FakeImage build(Object o) throws IOException {
 		if (o == null)
 			return null;
+		if (o instanceof FakeImage)
+			return (FakeImage) o;
 		if (o instanceof BufferedImage)
 			return new AmbImage((BufferedImage) o);
 		if (o instanceof File)

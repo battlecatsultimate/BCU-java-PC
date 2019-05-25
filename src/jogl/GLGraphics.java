@@ -226,9 +226,9 @@ public class GLGraphics implements GeoAuto {
 
 	@Override
 	public void rotate(double d) {
-		translate(-sw/2,-sh/2);
-		g.glRotated(-d*180/Math.PI, 0, 0, 1);
-		translate(sw/2,sh/2);
+		translate(-sw / 2, -sh / 2);
+		g.glRotated(-d * 180 / Math.PI, 0, 0, 1);
+		translate(sw / 2, sh / 2);
 	}
 
 	@Override
@@ -238,48 +238,42 @@ public class GLGraphics implements GeoAuto {
 
 	@Override
 	public void setComposite(int mode, int... para) {
-		if(mode==DEF) {
+		if (mode == DEF) {
 			// sC *sA + dC *(1-sA)
 			g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			g.glUniform1i(tm.mode,0);
+			g.glUniform1i(tm.mode, 0);
 		}
-		if(mode==TRANS) {
+		if (mode == TRANS) {
 			g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			g.glUniform1i(tm.mode,1);
-			g.glUniform1f(tm.para,para[0]*1.0f/256);
+			g.glUniform1i(tm.mode, 1);
+			g.glUniform1f(tm.para, para[0] * 1.0f / 256);
 		}
-		if(mode==BLEND) {
-			g.glUniform1f(tm.para,para[0]*1.0f/256);
-			if(para[1]==0) {
+		if (mode == BLEND) {
+			g.glUniform1f(tm.para, para[0] * 1.0f / 256);
+			if (para[1] == 0) {
 				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-				g.glUniform1i(tm.mode,1);
-			}
-			else if(para[1]==1) {// d+s*a
+				g.glUniform1i(tm.mode, 1);
+			} else if (para[1] == 1) {// d+s*a
 				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-				g.glUniform1i(tm.mode,1);//sA=sA*p
-			}
-			else if(para[1]==2) {// d*(1-a+s*a)
-				g.glBlendFunc(GL_ZERO,GL_SRC_COLOR);
-				g.glUniform1i(tm.mode,2);//sA=sA*p, sC=1-sA+sC*sA
-			}
-			else if(para[1]==3) {// d+(1-d)*s*a
-				g.glBlendFunc(GL_ONE_MINUS_DST_COLOR,GL_ONE);
-				g.glUniform1i(tm.mode,1);//sA=sA*p
-			}
-			else if(para[1]==-1) {// d-s*a
-				g.glBlendFunc(GL_SRC_ALPHA,GL_ONE);
-				g.glUniform1i(tm.mode,-1);//sA=-sA*p
+				g.glUniform1i(tm.mode, 1);// sA=sA*p
+			} else if (para[1] == 2) {// d*(1-a+s*a)
+				g.glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+				g.glUniform1i(tm.mode, 2);// sA=sA*p, sC=1-sA+sC*sA
+			} else if (para[1] == 3) {// d+(1-d)*s*a
+				g.glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE);
+				g.glUniform1i(tm.mode, 1);// sA=sA*p
+			} else if (para[1] == -1) {// d-s*a
+				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+				g.glUniform1i(tm.mode, -1);// sA=-sA*p
 			}
 		}
-		if(mode==GRAY){// 1-d
+		if (mode == GRAY) {// 1-d
 			g.glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
 			g.glBlendFunc(GL_ZERO, GL_ONE);
-			g.glUniform1i(tm.mode,0);
-		}
-		else 
+			g.glUniform1i(tm.mode, 0);
+		} else
 			g.glBlendEquation(GL_FUNC_ADD);
-		
-		
+
 	}
 
 	@Override
@@ -297,8 +291,8 @@ public class GLGraphics implements GeoAuto {
 
 	@Override
 	public void translate(double x, double y) {
-		g.glTranslated(2*x / sw, -2*y / sh, 0);
-		
+		g.glTranslated(2 * x / sw, -2 * y / sh, 0);
+
 	}
 
 	protected void bind(int id) {

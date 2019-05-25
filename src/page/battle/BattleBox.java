@@ -21,7 +21,7 @@ import util.unit.Form;
 public interface BattleBox {
 
 	static class BBPainter {
-		
+
 		public static final double ratio = 768.0 / 2400.0;// r = p/u
 		private static final double exp = 0.9, sprite = 0.8;
 		private static final int road_h = 156; // in p
@@ -61,14 +61,35 @@ public interface BattleBox {
 		protected double siz, corr, unir; // siz = pix/p;
 
 		private P mouse; // in pix
-		
-		protected BBPainter(BattleInfoPage bip, BattleField bas,BattleBox bb) {
+
+		public BBPainter(BattleInfoPage bip, BattleField bas, BattleBox bb) {
 			page = bip;
 			bf = bas;
-			box=bb;
+			box = bb;
 			maxW = (int) (bas.sb.st.len * ratio + off * 2);
 			maxH = 510 * 3;
 			minH = 510;
+		}
+
+		public void draw(FakeGraphics g) {
+			int w = box.getWidth();
+			int h = box.getHeight();
+			sb = bf.sb;
+			if (prew != w || preh != h) {
+				clear();
+				prew = w;
+				preh = h;
+			}
+			regulate();
+
+			ImgCore.set(g);
+			Point rect = new Point(box.getWidth(), box.getHeight());
+			sb.bg.draw(g, rect, pos, midh, siz);
+			drawCastle(g);
+			drawEntity(g);
+			drawBtm(g);
+			drawTop(g);
+			sb = null;
 		}
 
 		public double getX(double x) {
@@ -97,27 +118,6 @@ public interface BattleBox {
 		public void reset() {
 			pt = bf.sb.time;
 			box.reset();
-		}
-
-		protected void draw(FakeGraphics g) {
-			int w=box.getWidth();
-			int h=box.getHeight();
-			sb = bf.sb;
-			if (prew != w || preh != h) {
-				clear();
-				prew = w;
-				preh = h;
-			}
-			regulate();
-			
-			ImgCore.set(g);
-			Point rect = new Point(box.getWidth(),box.getHeight());
-			sb.bg.draw(g, rect, pos, midh, siz);
-			drawCastle(g);
-			drawEntity(g);
-			drawBtm(g);
-			drawTop(g);
-			sb = null;
 		}
 
 		private void adjust(int w, int s) {
@@ -315,7 +315,7 @@ public interface BattleBox {
 
 			if (sb.s_stop > 0) {
 				gra.setComposite(FakeGraphics.GRAY, 0);
-				gra.fillRect(0, 0,w,h);
+				gra.fillRect(0, 0, w, h);
 				gra.setComposite(FakeGraphics.DEF);
 				for (int i = 0; i < 10; i++) {
 					int dep = i * DEP;
@@ -376,31 +376,32 @@ public interface BattleBox {
 		}
 
 	}
-	
-	public default void click(Point p, int button) {}
-	
+
+	public default void click(Point p, int button) {
+	}
+
 	public default void drag(Point p) {
 		getPainter().drag(p);
 	}
-	
+
 	public int getHeight();
-	
+
 	public BBPainter getPainter();
-	
+
 	public int getWidth();
-	
+
 	public void paint();
-	
+
 	public default void press(Point p) {
 		getPainter().press(p);
 	}
-	
+
 	public default void release(Point p) {
 		getPainter().release(p);
 	}
-	
+
 	public void reset();
-	
+
 	public default void wheeled(Point p, int ind) {
 		getPainter().wheeled(p, ind);
 	}

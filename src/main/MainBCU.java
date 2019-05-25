@@ -10,6 +10,8 @@ import io.Reader;
 import io.Writer;
 import page.MainFrame;
 import page.MainPage;
+import page.battle.AWTBBB;
+import page.battle.BBBuilder;
 import util.Data;
 import util.system.fake.ImageBuilder;
 import util.system.fake.awt.PCIB;
@@ -34,6 +36,7 @@ public class MainBCU {
 			System.exit(0);
 		}
 		ImageBuilder.builder = new PCIB();
+		BBBuilder.def = new AWTBBB();
 		Reader.getData$0();
 		Writer.logSetup();
 		new MainFrame(Data.revVer(MainBCU.ver)).initialize();

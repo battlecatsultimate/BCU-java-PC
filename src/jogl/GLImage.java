@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.imageio.ImageIO;
+
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
@@ -37,7 +39,16 @@ public class GLImage implements FakeImage {
 
 	protected GLImage(InputStream is) throws IOException {
 		par = null;
-		data = TextureIO.newTextureData(GLStatic.GLP, is, GLStatic.MIP, "PNG");
+		TextureData td;
+		try {
+			is.reset();
+			td = TextureIO.newTextureData(GLStatic.GLP, is, GLStatic.MIP, "PNG");
+		} catch (Exception e) {
+			is.reset();
+			BufferedImage b = ImageIO.read(is);
+			td = AWTTextureIO.newTextureData(GLStatic.GLP, b, GLStatic.MIP);
+		}
+		data = td;
 		rect = new int[] { 0, 0, data.getWidth(), data.getHeight() };
 	}
 

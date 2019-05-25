@@ -16,11 +16,11 @@ public class BattleBoxDef extends Canvas implements BattleBox {
 	private static final long serialVersionUID = 1L;
 
 	public final BBPainter bbp;
-	
+
 	protected BufferedImage prev;
 
 	protected BattleBoxDef(BattleInfoPage bip, BattleField bas) {
-		bbp=new BBPainter(bip,bas,this);
+		bbp = new BBPainter(bip, bas, this);
 		setIgnoreRepaint(true);
 	}
 
@@ -28,7 +28,7 @@ public class BattleBoxDef extends Canvas implements BattleBox {
 	public BBPainter getPainter() {
 		return bbp;
 	}
-	
+
 	@Override
 	public void paint() {
 		paint(getGraphics());
@@ -36,21 +36,21 @@ public class BattleBoxDef extends Canvas implements BattleBox {
 
 	@Override
 	public void paint(Graphics g) {
-		synchronized(bbp) {
-		int w = getWidth();
-		int h = getHeight();
-		if (w * h == 0)
-			return;
-		if (bbp.pt < bbp.bf.sb.time || prev == null) {
-			bbp.pt = bbp.bf.sb.time;
-			prev = getImage();
-		}
-		if (prev == null)
-			return;
-		g.drawImage(prev, 0, 0, null);
-		g.setColor(Color.ORANGE);
-		g.drawString("Time cost: " + Timer.inter + "%, " + bbp.pt, 20, 20);
-		g.dispose();
+		synchronized (bbp) {
+			int w = getWidth();
+			int h = getHeight();
+			if (w * h == 0)
+				return;
+			if (bbp.pt < bbp.bf.sb.time || prev == null) {
+				bbp.pt = bbp.bf.sb.time;
+				prev = getImage();
+			}
+			if (prev == null)
+				return;
+			g.drawImage(prev, 0, 0, null);
+			g.setColor(Color.ORANGE);
+			g.drawString("Time cost: " + Timer.inter + "%, " + bbp.pt, 20, 20);
+			g.dispose();
 		}
 	}
 
