@@ -19,7 +19,7 @@ public class GLIB extends ImageBuilder {
 			return new AmbImage((BufferedImage) o);
 		if (o instanceof File)
 			return new AmbImage((File) o);
-		else if (o instanceof InputStream)
+		if (o instanceof InputStream)
 			return new AmbImage((InputStream) o);
 		return null;
 	}

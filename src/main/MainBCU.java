@@ -1,5 +1,6 @@
 package main;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -18,7 +19,8 @@ public class MainBCU {
 	public static final int ver = 40613;
 
 	public static int FILTER_TYPE = 0;
-	public static boolean write = true, preload = false, trueRun = false, loaded = false;
+	public static final boolean write = !new File("./.project").exists();
+	public static boolean preload = false, trueRun = false, loaded = false;
 
 	public static String getTime() {
 		return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());

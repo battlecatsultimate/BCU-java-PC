@@ -49,10 +49,10 @@ public class Temp extends StdGLC {
 		FPSAnimator anim = new FPSAnimator(glcanvas, 30, true);
 		anim.start();
 	}
-
+	
 	@Override
 	public void drawFake(GLGraphics fg) {
-		ent.draw(fg, new P(800, 1000), 1);
+		ent.draw(fg, new P(400, 500), 1);
 		fg.flush();
 		ent.update(true);
 	}

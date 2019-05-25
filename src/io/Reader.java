@@ -439,7 +439,6 @@ public class Reader extends DataIO {
 			if (f.exists()) {
 				try {
 					Queue<String> qs = readLines(f);
-					MainBCU.write = !new File("./.project").exists();
 					MainLocale.lang = parseInt(qs.poll());
 					int[] r = parseInts(4, qs.poll());
 					MainFrame.crect = new Rectangle(r[0], r[1], r[2], r[3]);
