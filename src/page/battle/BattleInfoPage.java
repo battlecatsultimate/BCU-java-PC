@@ -1,5 +1,6 @@
 package page.battle;
 
+import java.awt.Canvas;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -72,7 +73,7 @@ public class BattleInfoPage extends KeyHandler {
 		recd = rec;
 		basis = new SBRply(rec);
 		if ((conf & 1) == 0)
-			bb = new BattleBox(this, basis);
+			bb = new BattleBoxDef(this, basis);
 		else
 			bb = new BBRecd(this, basis, rec.name, (conf & 4) != 0);
 		jtb.setSelected((conf & 2) != 0);
@@ -179,7 +180,7 @@ public class BattleInfoPage extends KeyHandler {
 			set(next, x, y, 1300, 0, 200, 50);
 			set(ebase, x, y, 240, 0, 600, 50);
 			set(ubase, x, y, 1540, 0, 200, 50);
-			set(bb, x, y, 50, 50, 1920, 1200);
+			set((Canvas)bb, x, y, 50, 50, 1920, 1200);
 			set(ctp, x, y, 0, 0, 0, 0);
 			set(eep, x, y, 50, 100, 0, 0);
 			set(eup, x, y, 50, 400, 0, 0);
@@ -191,7 +192,7 @@ public class BattleInfoPage extends KeyHandler {
 			set(jtb, x, y, 2100, 0, 200, 50);
 			set(ctp, x, y, 50, 850, 1200, 400);
 			set(eep, x, y, 50, 100, 600, 700);
-			set(bb, x, y, 700, 300, 800, 500);
+			set((Canvas)bb, x, y, 700, 300, 800, 500);
 			set(paus, x, y, 700, 200, 200, 50);
 			set(rply, x, y, 1000, 200, 200, 50);
 			set(stream, x, y, 900, 200, 400, 50);
@@ -231,7 +232,7 @@ public class BattleInfoPage extends KeyHandler {
 		}
 		if (basis instanceof SBRply && recd.name.length() > 0)
 			change((SBRply) basis, b -> jsl.setValue(b.prog()));
-		bb.paint(bb.getGraphics());
+		bb.paint();
 		AbEntity eba = sb.ebase;
 		long h = eba.health;
 		long mh = eba.maxH;
@@ -310,7 +311,7 @@ public class BattleInfoPage extends KeyHandler {
 		add(eup);
 		add(eep);
 		add(ctp);
-		add(bb);
+		add((Canvas)bb);
 		add(paus);
 		add(next);
 		add(ebase);

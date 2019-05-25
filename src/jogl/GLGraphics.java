@@ -322,11 +322,13 @@ public class GLGraphics implements GeoAuto {
 		if (mode == IMG) {
 			g.glDisable(GL_TEXTURE_2D);
 			g.glDisable(GL_BLEND);
+			g.glUseProgram(0);
 		}
 		mode = i;
 		if (mode == IMG) {
 			g.glEnable(GL_TEXTURE_2D);
 			g.glEnable(GL_BLEND);
+			g.glUseProgram(tm.prog);
 		}
 	}
 

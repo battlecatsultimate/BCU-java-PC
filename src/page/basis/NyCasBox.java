@@ -30,7 +30,7 @@ class NyCasBox extends Canvas {
 		BufferedImage img = (BufferedImage) createImage(w, h);
 		if (img == null)
 			return;
-		BattleBox.drawNyCast(new FG2D(img.getGraphics()), h, 0, r, ints);
+		BattleBox.BBPainter.drawNyCast(new FG2D(img.getGraphics()), h, 0, r, ints);
 		g.drawImage(img, 0, 0, null);
 		g.dispose();
 	}

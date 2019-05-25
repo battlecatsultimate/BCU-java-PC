@@ -432,7 +432,7 @@ public abstract class Entity extends AbEntity {
 	protected void drawAxis(FakeGraphics gra, P p, double siz) {
 		// after this is the drawing of hit boxes
 		siz *= 1.25;
-		double rat = BattleBox.ratio;
+		double rat = BattleBox.BBPainter.ratio;
 		double poa = p.x - pos * rat * siz;
 		int py = (int) p.y;
 		int h = (int) (640 * rat * siz);

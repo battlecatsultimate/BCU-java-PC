@@ -14,7 +14,7 @@ import io.Writer;
 import page.Page;
 import util.basis.BattleField;
 
-public class BBRecd extends BattleBox {
+public class BBRecd extends BattleBoxDef {
 
 	private static final long serialVersionUID = 1L;
 
@@ -38,10 +38,10 @@ public class BBRecd extends BattleBox {
 	@Override
 	protected BufferedImage getImage() {
 		BufferedImage bimg = super.getImage();
-		if (bf.sb.time > time)
+		if (bbp.bf.sb.time > time)
 			synchronized (qb) {
 				qb.add(bimg);
-				time = bf.sb.time;
+				time = bbp.bf.sb.time;
 			}
 		return bimg;
 	}

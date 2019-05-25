@@ -8,7 +8,7 @@ import util.system.P;
 import util.system.fake.FakeImage;
 import util.unit.Form;
 
-public class BBCtrl extends BattleBox {
+public class BBCtrl extends BattleBoxDef {
 
 	private static final long serialVersionUID = 1L;
 
@@ -20,10 +20,11 @@ public class BBCtrl extends BattleBox {
 	}
 
 	@Override
-	protected synchronized void click(Point p, int button) {
+	public void click(Point p, int button) {
+		synchronized(bbp) {
 		int w = getWidth();
 		int h = getHeight();
-		double hr = unir;
+		double hr = bbp.unir;
 		for (int i = 0; i < 10; i++) {
 			Form f = sbc.sb.b.lu.fs[i / 5][i % 5];
 			FakeImage img = f == null ? Res.slot[0].getImg() : f.anim.uni.getImg();
@@ -36,7 +37,7 @@ public class BBCtrl extends BattleBox {
 			if (button != MouseEvent.BUTTON1)
 				sbc.action.add(10);
 		}
-		hr = corr;
+		hr = bbp.corr;
 		FakeImage left = Res.battle[0][0].getImg();
 		FakeImage right = Res.battle[1][0].getImg();
 		int ih = (int) (hr * left.getHeight());
@@ -56,7 +57,8 @@ public class BBCtrl extends BattleBox {
 			if (!new P(p).out(new P(w - cw, mh), new P(w, mh + ch), 0))
 				sbc.action.add(-3);
 		}
-		reset();
+		bbp.reset();
+		}
 	}
 
 }

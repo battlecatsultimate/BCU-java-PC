@@ -12,6 +12,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 import util.anim.AnimC;
 import util.anim.EAnimU;
 import util.system.P;
+import util.system.fake.FakeTransform;
 import util.system.fake.ImageBuilder;
 
 public class Temp extends StdGLC {
@@ -24,7 +25,7 @@ public class Temp extends StdGLC {
 		final GLCanvas glcanvas = new GLCanvas(GLStatic.GLC);
 		Temp b = new Temp();
 		glcanvas.addGLEventListener(b);
-		glcanvas.setSize(400, 400);
+		glcanvas.setSize(800, 800);
 
 		// creating frame
 		final JFrame frame = new JFrame(" Basic Frame");
@@ -50,9 +51,19 @@ public class Temp extends StdGLC {
 		anim.start();
 	}
 	
+	private long time=0;
+	
 	@Override
 	public void drawFake(GLGraphics fg) {
-		ent.draw(fg, new P(400, 500), 1);
+		long tt=System.currentTimeMillis();
+		System.out.println(tt-time);
+		time=tt;
+		FakeTransform ft=fg.getTransform();
+		for(int i=0;i<10;i++)
+			for(int j=0;j<10;j++){
+			ent.draw(fg, new P(600+j*10, 750+i*10), 1);
+			fg.setTransform(ft);
+		}
 		fg.flush();
 		ent.update(true);
 	}

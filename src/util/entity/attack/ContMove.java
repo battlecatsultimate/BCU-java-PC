@@ -32,7 +32,7 @@ public class ContMove extends ContAb {
 
 		// after this is the drawing of hit boxes
 		siz *= 1.25;
-		double rat = BattleBox.ratio;
+		double rat = BattleBox.BBPainter.ratio;
 		int h = (int) (640 * rat * siz);
 		gra.setColor(FakeGraphics.MAGENTA);
 		double d0 = -ran / 2;
