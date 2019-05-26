@@ -64,10 +64,11 @@ public class GLImage implements FakeImage {
 		float[] ans = new float[4];
 		int[] br = root().rect;
 		ans[0] = 1.0f * rect[0] / br[2];
-		ans[1] = 1.0f * rect[1] / br[3];
+		ans[1] = 1 - 1.0f * rect[1] / br[3];
 		ans[2] = 1.0f * rect[2] / br[2];
-		ans[3] = -1.0f * rect[3] / br[3];
-		ans[1] = 1 - ans[1];
+		ans[3] = 1.0f * rect[3] / br[3];
+		if (!data.getMustFlipVertically())
+			ans[3] *= -1;
 		return ans;
 	}
 
