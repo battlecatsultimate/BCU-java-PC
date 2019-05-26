@@ -124,6 +124,8 @@ public class FG2D implements FakeGraphics {
 			g.setColor(Color.BLUE);
 		if (c == CYAN)
 			g.setColor(Color.CYAN);
+		if (c == WHITE)
+			g.setColor(Color.WHITE);
 	}
 
 	@Override

@@ -130,6 +130,8 @@ public class GLGraphics implements GeoAuto {
 				color = Color.BLUE.getRGB();
 			if (c == CYAN)
 				color = Color.CYAN.getRGB();
+			if (c == WHITE)
+				color = Color.WHITE.getRGB();
 		}
 
 		private void addP(int x, int y) {
@@ -282,12 +284,8 @@ public class GLGraphics implements GeoAuto {
 				g.glUniform1i(tm.mode, -1);// sA=-sA*p
 			}
 		}
-		if (mode == GRAY) {// 1-d
-			g.glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
-			g.glBlendFunc(GL_ZERO, GL_ONE);
-			g.glUniform1i(tm.mode, 0);
-		} else
-			g.glBlendEquation(GL_FUNC_ADD);
+		if (mode == GRAY) // 1-d
+			g.glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
 
 	}
 
@@ -324,7 +322,7 @@ public class GLGraphics implements GeoAuto {
 			return;
 		if (mode == IMG) {
 			g.glDisable(GL_TEXTURE_2D);
-			g.glDisable(GL_BLEND);
+			g.glEnable(GL_BLEND);
 			g.glUseProgram(0);
 		}
 		mode = i;

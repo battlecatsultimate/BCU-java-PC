@@ -295,6 +295,7 @@ public interface BattleBox {
 
 			if (sb.s_stop > 0) {
 				gra.setComposite(FakeGraphics.GRAY, 0);
+				gra.setColor(FakeGraphics.WHITE);
 				gra.fillRect(0, 0, w, h);
 				gra.setComposite(FakeGraphics.DEF);
 				for (int i = 0; i < 10; i++) {

@@ -92,6 +92,8 @@ public class AmbImage implements FakeImage {
 	}
 
 	private void check() {
+		if (gl != null || bimg != null)
+			return;
 		if (GLStatic.ALWAYS_GLIMG || GLGraphics.count > 0)
 			checkGL();
 		else
