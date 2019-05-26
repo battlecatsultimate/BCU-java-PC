@@ -9,6 +9,7 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2ES3;
 
 import jogl.util.GLGraphics.GeomG;
+import util.system.P;
 import util.system.fake.FakeGraphics;
 import util.system.fake.FakeImage;
 import util.system.fake.FakeTransform;
@@ -41,7 +42,7 @@ public class GLGraphics implements GeoAuto {
 			addP(x + w, y + h);
 			addP(x, y + h);
 			g.glEnd();
-
+			// TODO half transparent
 		}
 
 		protected void drawLine(int i, int j, int x, int y) {
@@ -57,7 +58,7 @@ public class GLGraphics implements GeoAuto {
 		protected void drawOval(int i, int j, int k, int l) {
 			checkMode();
 			setColor();
-			// TODO
+			// TODO circular
 
 		}
 
@@ -75,7 +76,7 @@ public class GLGraphics implements GeoAuto {
 		protected void fillOval(int i, int j, int k, int l) {
 			checkMode();
 			setColor();
-			// TODO
+			// TODO circular
 
 		}
 
@@ -92,15 +93,26 @@ public class GLGraphics implements GeoAuto {
 
 		protected void gradRect(int x, int y, int w, int h, int a, int b, int[] c, int d, int e, int[] f) {
 			checkMode();
+			P vec = new P(d - a, e - b);
 			g.glBegin(GL2ES3.GL_QUADS);
-			setColor(c[0], c[1], c[2]);
-			addP(x, y);
-			setColor(c[0], c[1], c[2]);
-			addP(x, y + h);
-			setColor(f[0], f[1], f[2]);
-			addP(x + w, y + h);
-			setColor(c[0], c[1], c[2]);
-			addP(x + w, y);
+
+			for (int i = 0; i < 4; i++) {
+				int px = x, py = y;
+				if (i == 2 || i == 3)
+					px += w;
+				if (i == 1 || i == 2)
+					py += h;
+				float cx = (float) (vec.dotP(new P(px - a, py - b)) / vec.abs());
+				if (cx > 1)
+					cx = 1;
+				if (cx < 0)
+					cx = 0;
+				float[] cs = new float[3];
+				for (int j = 0; j < 3; j++)
+					cs[j] = c[j] + cx * (f[j] - c[j]);
+				setColor(cs[0], cs[1], cs[2]);
+				addP(px, py);
+			}
 			g.glEnd();
 			color = -1;
 		}
@@ -131,12 +143,11 @@ public class GLGraphics implements GeoAuto {
 		private void setColor() {
 			if (color == -1)
 				return;
-			setColor(color >> 16 & 8, color >> 8 & 8, color & 8);
+			setColor(color >> 16 & 255, color >> 8 & 255, color & 255);
 		}
 
-		private void setColor(int r, int gr, int b) {
-			// TODO
-			// g.glColor3f(r / 256f, gr / 256f, b / 256f);
+		private void setColor(float c0, float c1, float c2) {
+			g.glColor3f(c0 / 256f, c1 / 256f, c2 / 256f);
 		}
 
 	}
@@ -179,28 +190,13 @@ public class GLGraphics implements GeoAuto {
 	}
 
 	public void dispose() {
+		checkMode(PURE);
 		count--;
 	}
 
 	@Override
 	public void drawImage(FakeImage bimg, double x, double y) {
-		checkMode(IMG);
-		GLImage gl = (GLImage) bimg.gl();
-		bind(tm.load(this, gl));
-		g.glBegin(GL2ES3.GL_QUADS);
-		int w = gl.getWidth();
-		int h = gl.getHeight();
-		float[] r = gl.getRect();
-		g.glTexCoord2f(r[0], r[1]);
-		addP(x, y);
-		g.glTexCoord2f(r[0] + r[2], r[1]);
-		addP(x + w, y);
-		g.glTexCoord2f(r[0] + r[2], r[1] + r[3]);
-		addP(x + w, y + h);
-		g.glTexCoord2f(r[0], r[1] + r[3]);
-		addP(x, y + h);
-		g.glEnd();
-
+		drawImage(bimg, x, y, bimg.getWidth(), bimg.getHeight());
 	}
 
 	@Override
@@ -317,10 +313,6 @@ public class GLGraphics implements GeoAuto {
 		bind = id;
 	}
 
-	protected void flush() {
-		checkMode(PURE);
-	}
-
 	private void addP(double x, double y) {
 		double fx = trans[0] * x + trans[1] * y + trans[2];
 		double fy = trans[3] * x + trans[4] * y + trans[5];
@@ -340,6 +332,7 @@ public class GLGraphics implements GeoAuto {
 			g.glEnable(GL_TEXTURE_2D);
 			g.glEnable(GL_BLEND);
 			g.glUseProgram(tm.prog);
+			setComposite(DEF);
 		}
 	}
 

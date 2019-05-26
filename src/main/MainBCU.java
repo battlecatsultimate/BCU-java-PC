@@ -23,7 +23,7 @@ public class MainBCU {
 	public static final int ver = 40613;
 
 	public static int FILTER_TYPE = 0;
-	public static final boolean WRITE = !new File("./.project").exists(), USE_JOGL = false;
+	public static final boolean WRITE = !new File("./.project").exists(), USE_JOGL = true;
 	public static boolean preload = false, trueRun = false, loaded = false;
 
 	public static String getTime() {

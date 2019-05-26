@@ -3,8 +3,6 @@ package jogl.util;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-
 import util.system.fake.FakeImage;
 import util.system.fake.ImageBuilder;
 import util.system.fake.awt.FIBI;
@@ -23,8 +21,8 @@ public class GLIB extends ImageBuilder {
 			return new AmbImage((BufferedImage) o);
 		if (o instanceof File)
 			return new AmbImage((File) o);
-		if (o instanceof InputStream)
-			return new AmbImage((InputStream) o);
+		if (o instanceof byte[])
+			return new AmbImage((byte[]) o);
 		return null;
 	}
 

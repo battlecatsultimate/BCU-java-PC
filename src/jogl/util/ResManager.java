@@ -91,7 +91,6 @@ public class ResManager {
 			gl.glDeleteShader(vi);
 			gl.glDeleteShader(fi);
 			gl.glLinkProgram(prog);
-			gl.glUseProgram(prog);
 			mode = gl.glGetUniformLocation(prog, "mode");
 		} catch (Exception e) {
 			e.printStackTrace();

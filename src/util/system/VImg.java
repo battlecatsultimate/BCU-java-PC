@@ -45,7 +45,7 @@ public class VImg extends ImgCore {
 
 	public ImageIcon getIcon() {
 		check();
-		if (bimg == null)
+		if (bimg == null || bimg.bimg() == null)
 			return null;
 		return new ImageIcon((Image) bimg.bimg());
 	}

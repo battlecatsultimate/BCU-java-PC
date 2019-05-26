@@ -3,19 +3,17 @@ package jogl.util;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-
 import jogl.GLStatic;
 import util.system.fake.FakeImage;
 import util.system.fake.awt.FIBI;
 
 public class AmbImage implements FakeImage {
 
-	private final InputStream stream;
+	private final byte[] stream;
 	private final File file;
 	private final AmbImage par;
 	private final int[] cs;
-	private boolean force;
+	private boolean force, failed;
 
 	private FIBI bimg;
 	private GLImage gl;
@@ -29,17 +27,16 @@ public class AmbImage implements FakeImage {
 		force = true;
 	}
 
-	protected AmbImage(File f) {
-		stream = null;
-		file = f;
+	protected AmbImage(byte[] is) {
+		stream = is;
+		file = null;
 		par = null;
 		cs = null;
 	}
 
-	protected AmbImage(InputStream is) {
-		stream = is;
-		is.mark(2);
-		file = null;
+	protected AmbImage(File f) {
+		stream = null;
+		file = f;
 		par = null;
 		cs = null;
 	}
@@ -54,6 +51,8 @@ public class AmbImage implements FakeImage {
 	@Override
 	public BufferedImage bimg() {
 		checkBI();
+		if (bimg == null)
+			return null;
 		return bimg.bimg();
 	}
 
@@ -100,18 +99,19 @@ public class AmbImage implements FakeImage {
 	}
 
 	private void checkBI() {
-		if (bimg != null)
+		if (bimg != null || failed)
 			return;
 		try {
-			if (stream != null) {
-				stream.reset();
+			if (stream != null)
 				bimg = (FIBI) FIBI.builder.build(stream);
-			} else if (file != null)
+			else if (file != null)
 				bimg = (FIBI) FIBI.builder.build(file);
 			else {
 				par.checkBI();
 				bimg = par.bimg.getSubimage(cs[0], cs[1], cs[2], cs[3]);
 			}
+			if (bimg == null)
+				failed = true;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

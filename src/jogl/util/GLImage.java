@@ -1,10 +1,9 @@
 package jogl.util;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-
 import javax.imageio.ImageIO;
 
 import com.jogamp.opengl.util.texture.TextureData;
@@ -26,6 +25,19 @@ public class GLImage implements FakeImage {
 		rect = new int[] { 0, 0, data.getWidth(), data.getHeight() };
 	}
 
+	protected GLImage(byte[] is) throws IOException {
+		par = null;
+		TextureData td;
+		try {
+			td = TextureIO.newTextureData(GLStatic.GLP, new ByteArrayInputStream(is), GLStatic.MIP, "PNG");
+		} catch (Exception e) {
+			BufferedImage b = ImageIO.read(new ByteArrayInputStream(is));
+			td = AWTTextureIO.newTextureData(GLStatic.GLP, b, GLStatic.MIP);
+		}
+		data = td;
+		rect = new int[] { 0, 0, data.getWidth(), data.getHeight() };
+	}
+
 	protected GLImage(File is) throws IOException {
 		par = null;
 		data = TextureIO.newTextureData(GLStatic.GLP, is, GLStatic.MIP, "PNG");
@@ -36,21 +48,6 @@ public class GLImage implements FakeImage {
 		par = p;
 		data = p.data;
 		rect = r;
-	}
-
-	protected GLImage(InputStream is) throws IOException {
-		par = null;
-		TextureData td;
-		try {
-			is.reset();
-			td = TextureIO.newTextureData(GLStatic.GLP, is, GLStatic.MIP, "PNG");
-		} catch (Exception e) {
-			is.reset();
-			BufferedImage b = ImageIO.read(is);
-			td = AWTTextureIO.newTextureData(GLStatic.GLP, b, GLStatic.MIP);
-		}
-		data = td;
-		rect = new int[] { 0, 0, data.getWidth(), data.getHeight() };
 	}
 
 	@Override
