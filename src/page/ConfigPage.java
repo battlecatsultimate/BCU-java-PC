@@ -134,7 +134,7 @@ public class ConfigPage extends Page {
 		whit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				ViewBox.white = whit.isSelected();
+				ViewBox.Conf.white = whit.isSelected();
 			}
 		});
 
@@ -273,7 +273,7 @@ public class ConfigPage extends Page {
 		exla.setSelected(MainLocale.exLang);
 		extt.setSelected(MainLocale.exTTT);
 		prel.setSelected(MainBCU.preload);
-		whit.setSelected(ViewBox.white);
+		whit.setSelected(ViewBox.Conf.white);
 		refe.setSelected(ImgCore.ref);
 		musc.setSelected(BCMusic.play);
 		addListeners();

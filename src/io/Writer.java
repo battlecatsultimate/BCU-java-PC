@@ -309,7 +309,7 @@ public class Writer extends DataIO {
 		out.println("preload= " + (MainBCU.preload ? 1 : 0));
 		int[] is = ImgCore.ints;
 		out.println("render= {" + is[0] + "," + is[1] + "," + is[2] + "," + is[3] + "}");
-		out.println("white bg= " + (ViewBox.white ? 1 : 0));
+		out.println("white bg= " + (ViewBox.Conf.white ? 1 : 0));
 		out.println("show axis= " + (ImgCore.ref ? 1 : 0));
 		out.println("--- place holder ---");
 		out.println("min opacity= " + ImgCore.deadOpa);

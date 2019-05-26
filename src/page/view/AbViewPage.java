@@ -1,5 +1,6 @@
 package page.view;
 
+import java.awt.Canvas;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -22,6 +23,7 @@ import page.JBTN;
 import page.JTG;
 import page.Page;
 import page.anim.ImgCutEditPage;
+import page.view.ViewBox.Loader;
 import util.Animable;
 import util.anim.AnimC;
 import util.anim.AnimD;
@@ -53,7 +55,7 @@ public abstract class AbViewPage extends Page {
 	private boolean changingtl;
 
 	protected AbViewPage(Page p) {
-		this(p, new ViewBox());
+		this(p, new ViewBoxDef());
 	}
 
 	protected AbViewPage(Page p, ViewBox box) {
@@ -102,13 +104,13 @@ public abstract class AbViewPage extends Page {
 			return;
 		MouseWheelEvent mwe = (MouseWheelEvent) e;
 		double d = mwe.getPreciseWheelRotation();
-		vb.siz *= Math.pow(res, d);
+		vb.resize(Math.pow(res, d));
 	}
 
 	protected void preini() {
 		add(back);
 		add(copy);
-		add(vb);
+		add((Canvas) vb);
 		add(jspt);
 		add(jst);
 		add(jtb);
@@ -133,7 +135,7 @@ public abstract class AbViewPage extends Page {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);
 		set(copy, x, y, 250, 0, 200, 50);
-		set(vb, x, y, 1000, 100, 1000, 600);
+		set((Canvas) vb, x, y, 1000, 100, 1000, 600);
 		set(jspt, x, y, 400, 550, 300, 400);
 		set(jst, x, y, 1000, 750, 1000, 100);
 		set(jtl, x, y, 1000, 900, 1000, 100);
@@ -159,18 +161,18 @@ public abstract class AbViewPage extends Page {
 			return;
 		vb.setEntity(a.getEAnim(jlt.getSelectedIndex()));
 		jtl.setMinimum(0);
-		jtl.setMaximum(vb.ent.len());
+		jtl.setMaximum(vb.getEnt().len());
 		jtl.setLabelTable(null);
-		if (vb.ent.len() <= 50) {
+		if (vb.getEnt().len() <= 50) {
 			jtl.setMajorTickSpacing(5);
 			jtl.setMinorTickSpacing(1);
-		} else if (vb.ent.len() <= 200) {
+		} else if (vb.getEnt().len() <= 200) {
 			jtl.setMajorTickSpacing(10);
 			jtl.setMinorTickSpacing(2);
-		} else if (vb.ent.len() <= 1000) {
+		} else if (vb.getEnt().len() <= 1000) {
 			jtl.setMajorTickSpacing(50);
 			jtl.setMinorTickSpacing(10);
-		} else if (vb.ent.len() <= 5000) {
+		} else if (vb.getEnt().len() <= 5000) {
 			jtl.setMajorTickSpacing(250);
 			jtl.setMinorTickSpacing(50);
 		} else {
@@ -183,7 +185,7 @@ public abstract class AbViewPage extends Page {
 	protected void timer(int t) {
 		if (!pause)
 			eupdate();
-		vb.paint(vb.getGraphics());
+		vb.paint();
 		if (loader == null)
 			gif.setText(0, "gif");
 		else
@@ -205,7 +207,7 @@ public abstract class AbViewPage extends Page {
 		copy.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				EAnimI ei = vb.ent;
+				EAnimI ei = vb.getEnt();
 				if (ei == null || !(ei.anim() instanceof AnimD))
 					return;
 				AnimD eau = (AnimD) ei.anim();
@@ -244,8 +246,8 @@ public abstract class AbViewPage extends Page {
 			public void stateChanged(ChangeEvent arg0) {
 				if (changingtl || !pause)
 					return;
-				if (vb.ent != null)
-					vb.ent.setTime(jtl.getValue());
+				if (vb.getEnt() != null)
+					vb.getEnt().setTime(jtl.getValue());
 			}
 		});
 
@@ -269,7 +271,7 @@ public abstract class AbViewPage extends Page {
 			public void actionPerformed(ActionEvent arg0) {
 				String str = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 				File f = new File("./img/" + str + ".png");
-				Writer.writeImage(vb.prev, f);
+				Writer.writeImage(vb.getPrev(), f);
 			}
 		});
 
@@ -288,8 +290,8 @@ public abstract class AbViewPage extends Page {
 	private void eupdate() {
 		vb.update();
 		changingtl = true;
-		if (vb.ent != null)
-			jtl.setValue(vb.ent.ind());
+		if (vb.getEnt() != null)
+			jtl.setValue(vb.getEnt().ind());
 		changingtl = false;
 	}
 
