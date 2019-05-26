@@ -20,7 +20,7 @@ import util.system.fake.awt.PCIB;
 
 public class MainBCU {
 
-	public static final int ver = 40616;
+	public static final int ver = 40618;
 
 	public static int FILTER_TYPE = 0;
 	public static final boolean WRITE = !new File("./.project").exists(), USE_JOGL = true;

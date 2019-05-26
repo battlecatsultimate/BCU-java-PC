@@ -58,6 +58,8 @@ class StageEditTable extends AbJTable implements Reorderable {
 	private final Page page;
 	private final Pack pack;
 
+	private boolean changing = false;
+
 	protected StageEditTable(Page p, Pack pac) {
 		page = p;
 		pack = pac;
@@ -240,8 +242,10 @@ class StageEditTable extends AbJTable implements Reorderable {
 	}
 
 	protected synchronized void setData(Stage st) {
+		changing = true;
 		if (cellEditor != null)
 			cellEditor.stopCellEditing();
+		changing = false;
 		stage = st == null ? null : (SCDef) st.data;
 		clearSelection();
 	}
@@ -279,6 +283,8 @@ class StageEditTable extends AbJTable implements Reorderable {
 	}
 
 	private void set(int r, int c, int v, int para) {
+		if (changing)
+			return;
 		if (r < 0 || r >= stage.datas.length)
 			return;
 		if (c == 1 && v < 0)

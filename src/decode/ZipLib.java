@@ -43,6 +43,8 @@ public class ZipLib {
 		} catch (IOException e) {
 			e.printStackTrace();
 			Opts.loadErr("cannot access ./assets/assets.zip");
+			if (Opts.conf("do you want to re-download assets?"))
+				new File("./assets/assets.zip").deleteOnExit();
 			Writer.logClose(false);
 			System.exit(0);
 		}

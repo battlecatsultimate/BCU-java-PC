@@ -96,6 +96,6 @@ public class Sniper extends AtkModelAb {
 		atka.ent[5].alter(11, angle);
 
 		// Get distance which bullet will fly
-		//path = new P(-(getPos()-pos+300),height);
+		// path = new P(-(getPos()-pos+300),height);
 	}
 }

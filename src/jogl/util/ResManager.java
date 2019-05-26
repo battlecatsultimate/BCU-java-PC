@@ -13,6 +13,8 @@ import org.apache.commons.io.IOUtils;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.TextureData;
 
+import main.MainBCU;
+
 public class ResManager {
 
 	public static final Map<GL2, ResManager> MAP = new HashMap<>();
@@ -26,7 +28,7 @@ public class ResManager {
 	}
 
 	private static String load(String name) throws IOException {
-		String path = "jogl/shader/" + name;
+		String path = (MainBCU.WRITE ? "src/" : "") + "jogl/shader/" + name;
 		List<String> ls = IOUtils.readLines(ClassLoader.getSystemResourceAsStream(path), Charset.defaultCharset());
 		String source = "";
 		for (String str : ls)

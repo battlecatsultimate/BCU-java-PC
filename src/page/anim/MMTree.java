@@ -97,7 +97,7 @@ class MMTree implements TreeExpansionListener {
 	}
 
 	protected void select(int i) {
-		if (adj)
+		if (adj || i >= data.length || i < 0)
 			return;
 		TreePath tp = new TreePath(data[i].getPath());
 		jtr.setSelectionPath(tp);

@@ -211,6 +211,7 @@ public class RecdManagePage extends Page {
 	private void setRecd(Recd r) {
 		rply.setEnabled(r != null && r.avail);
 		recd.setEnabled(r != null && r.avail);
+		imgs.setEnabled(r != null && r.avail);
 		dele.setEnabled(r != null);
 		rena.setEditable(r != null);
 		seed.setEditable(r != null);
