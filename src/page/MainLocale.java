@@ -1,6 +1,7 @@
 package page;
 
 import java.io.PrintStream;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.MissingResourceException;
@@ -8,6 +9,7 @@ import java.util.ResourceBundle;
 import java.util.TreeMap;
 
 import io.Writer;
+import main.MainBCU;
 import page.basis.ComboListTable;
 import page.battle.BattleInfoPage;
 import page.info.HeadTable;
@@ -31,7 +33,7 @@ public strictfp class MainLocale {
 
 	static {
 		for (int i = 0; i < 4; i++)
-			RENS[i] = ResourceBundle.getBundle("page." + RENN[i]);
+			RENS[i] = ResourceBundle.getBundle((MainBCU.WRITE ? "src/" : "") + "page/" + RENN[i], Locale.ENGLISH);
 	}
 
 	public static int lang = 0;

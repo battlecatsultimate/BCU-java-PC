@@ -156,6 +156,7 @@ public class Background extends AnimI {
 
 	@Override
 	public void load() {
+		img.getImg().bimg();
 		parts = iclist.get(ic).cut(img.getImg());
 	}
 

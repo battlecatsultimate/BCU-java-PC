@@ -11,10 +11,20 @@ import javax.imageio.ImageIO;
 import org.jcodec.api.awt.AWTSequenceEncoder;
 
 import io.Writer;
-import page.Page;
+import page.battle.BattleBox.OuterBox;
 import util.basis.BattleField;
 
-public class BBRecd extends BattleBox {
+public interface BBRecd extends BattleBox {
+
+	public void end();
+
+	public String info();
+
+	public void quit();
+
+}
+
+class BBRecdAWT extends BattleBoxDef implements BBRecd {
 
 	private static final long serialVersionUID = 1L;
 
@@ -23,30 +33,21 @@ public class BBRecd extends BattleBox {
 
 	private int time = -1;
 
-	protected BBRecd(BattleInfoPage bip, BattleField bas, String out, boolean img) {
-		super(bip, bas);
+	public BBRecdAWT(OuterBox bip, BattleField bas, String out, boolean img) {
+		super(bip, bas, 0);
 		th = img ? new PNGThread(qb, out, bip) : new MP4Thread(qb, out, bip);
 		th.start();
 	}
 
-	protected void end() {
+	@Override
+	public void end() {
 		synchronized (th) {
 			th.end = true;
 		}
 	}
 
 	@Override
-	protected BufferedImage getImage() {
-		BufferedImage bimg = super.getImage();
-		if (bf.sb.time > time)
-			synchronized (qb) {
-				qb.add(bimg);
-				time = bf.sb.time;
-			}
-		return bimg;
-	}
-
-	protected String info() {
+	public String info() {
 		int size;
 		synchronized (qb) {
 			size = qb.size();
@@ -54,10 +55,22 @@ public class BBRecd extends BattleBox {
 		return "" + size;
 	}
 
-	protected void quit() {
+	@Override
+	public void quit() {
 		synchronized (th) {
 			th.quit = true;
 		}
+	}
+
+	@Override
+	protected BufferedImage getImage() {
+		BufferedImage bimg = super.getImage();
+		if (bbp.bf.sb.time > time)
+			synchronized (qb) {
+				qb.add(bimg);
+				time = bbp.bf.sb.time;
+			}
+		return bimg;
 	}
 
 }
@@ -68,7 +81,7 @@ class MP4Thread extends RecdThread {
 
 	private AWTSequenceEncoder encoder;
 
-	MP4Thread(Queue<BufferedImage> list, String str, Page page) {
+	MP4Thread(Queue<BufferedImage> list, String str, OuterBox page) {
 		super(list, page);
 		file = new File("./img/" + str + ".mp4");
 		try {
@@ -112,8 +125,8 @@ class PNGThread extends RecdThread {
 
 	private int count = 0;
 
-	PNGThread(Queue<BufferedImage> list, String out, Page page) {
-		super(list, page);
+	PNGThread(Queue<BufferedImage> list, String out, OuterBox bip) {
+		super(list, bip);
 		path = "./img/" + out + "/";
 		File f = new File(path);
 		if (f.exists())
@@ -158,14 +171,14 @@ class PNGThread extends RecdThread {
 abstract class RecdThread extends Thread {
 
 	final Queue<BufferedImage> bimgs;
-	final Page p;
+	final OuterBox p;
 
 	int fw, fh;
 
 	boolean end, quit, finish;
 
-	RecdThread(Queue<BufferedImage> list, Page page) {
-		p = page;
+	RecdThread(Queue<BufferedImage> list, OuterBox bip) {
+		p = bip;
 		bimgs = list;
 	}
 

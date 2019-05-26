@@ -411,7 +411,7 @@ public class BCJSON extends WebFileIO {
 		InputStream in = conn.getInputStream();
 		InputStreamReader isr = new InputStreamReader(in, "UTF-8");
 		String result = readAll(new BufferedReader(isr));
-		if (!MainBCU.write)
+		if (!MainBCU.WRITE)
 			System.out.println("result: " + result);
 		if (!result.startsWith("{"))
 			throw new IOException(result);

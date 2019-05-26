@@ -1,5 +1,6 @@
 package page.battle;
 
+import java.awt.Canvas;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -21,6 +22,7 @@ import page.JBTN;
 import page.JTG;
 import page.KeyHandler;
 import page.Page;
+import page.battle.BattleBox.OuterBox;
 import util.basis.BasisLU;
 import util.basis.BattleField;
 import util.basis.SBCtrl;
@@ -31,7 +33,7 @@ import util.entity.Entity;
 import util.stage.Recd;
 import util.stage.Stage;
 
-public class BattleInfoPage extends KeyHandler {
+public class BattleInfoPage extends KeyHandler implements OuterBox {
 
 	private static final long serialVersionUID = 1L;
 
@@ -65,16 +67,16 @@ public class BattleInfoPage extends KeyHandler {
 	private boolean pause = false;
 	private Recd recd;
 
-	public int spe = 0, upd = 0;
+	private int spe = 0, upd = 0;
 
 	public BattleInfoPage(Page p, Recd rec, int conf) {
 		super(p);
 		recd = rec;
 		basis = new SBRply(rec);
 		if ((conf & 1) == 0)
-			bb = new BattleBox(this, basis);
+			bb = BBBuilder.def.getDef(this, basis);
 		else
-			bb = new BBRecd(this, basis, rec.name, (conf & 4) != 0);
+			bb = BBBuilder.def.getRply(this, basis, rec.name, (conf & 4) != 0);
 		jtb.setSelected((conf & 2) != 0);
 		jtb.setEnabled((conf & 1) == 0);
 		ct.setData(basis.sb.st);
@@ -88,7 +90,7 @@ public class BattleInfoPage extends KeyHandler {
 
 	protected BattleInfoPage(Page p, SBCtrl ctrl) {
 		super(p);
-		bb = new BBCtrl(this, ctrl);
+		bb = BBBuilder.def.getCtrl(this, ctrl);
 		pause = true;
 		basis = ctrl;
 		ct.setData(basis.sb.st);
@@ -102,7 +104,7 @@ public class BattleInfoPage extends KeyHandler {
 		super(p);
 		long seed = new Random().nextLong();
 		SBCtrl sb = new SBCtrl(this, st, star, bl.copy(), ints, seed);
-		bb = new BBCtrl(this, sb);
+		bb = BBBuilder.def.getCtrl(this, sb);
 		basis = sb;
 		ct.setData(basis.sb.st);
 
@@ -115,6 +117,11 @@ public class BattleInfoPage extends KeyHandler {
 	@Override
 	public void callBack(Object o) {
 		changePanel(getFront());
+	}
+
+	@Override
+	public int getSpeed() {
+		return spe;
 	}
 
 	@Override
@@ -179,7 +186,7 @@ public class BattleInfoPage extends KeyHandler {
 			set(next, x, y, 1300, 0, 200, 50);
 			set(ebase, x, y, 240, 0, 600, 50);
 			set(ubase, x, y, 1540, 0, 200, 50);
-			set(bb, x, y, 50, 50, 1920, 1200);
+			set((Canvas) bb, x, y, 50, 50, 1920, 1200);
 			set(ctp, x, y, 0, 0, 0, 0);
 			set(eep, x, y, 50, 100, 0, 0);
 			set(eup, x, y, 50, 400, 0, 0);
@@ -191,7 +198,7 @@ public class BattleInfoPage extends KeyHandler {
 			set(jtb, x, y, 2100, 0, 200, 50);
 			set(ctp, x, y, 50, 850, 1200, 400);
 			set(eep, x, y, 50, 100, 600, 700);
-			set(bb, x, y, 700, 300, 800, 500);
+			set((Canvas) bb, x, y, 700, 300, 800, 500);
 			set(paus, x, y, 700, 200, 200, 50);
 			set(rply, x, y, 1000, 200, 200, 50);
 			set(stream, x, y, 900, 200, 400, 50);
@@ -231,7 +238,7 @@ public class BattleInfoPage extends KeyHandler {
 		}
 		if (basis instanceof SBRply && recd.name.length() > 0)
 			change((SBRply) basis, b -> jsl.setValue(b.prog()));
-		bb.paint(bb.getGraphics());
+		bb.paint();
 		AbEntity eba = sb.ebase;
 		long h = eba.health;
 		long mh = eba.maxH;
@@ -310,7 +317,7 @@ public class BattleInfoPage extends KeyHandler {
 		add(eup);
 		add(eep);
 		add(ctp);
-		add(bb);
+		add((Canvas) bb);
 		add(paus);
 		add(next);
 		add(ebase);

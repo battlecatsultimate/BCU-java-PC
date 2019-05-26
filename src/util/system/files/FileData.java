@@ -24,7 +24,7 @@ interface ByteData extends FileData {
 	@Override
 	public default FakeImage getImg() {
 		try {
-			return FakeImage.read(new ByteArrayInputStream(getBytes()));
+			return FakeImage.read(getBytes());
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;

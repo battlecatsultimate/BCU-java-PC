@@ -83,6 +83,7 @@ public class Writer extends DataIO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		delete(new File("./lib/"));
 		if (ps.writed) {
 			ps.println("version: " + Data.revVer(MainBCU.ver));
 			ps.println("user: " + BCJSON.USERNAME);
@@ -108,7 +109,7 @@ public class Writer extends DataIO {
 			Opts.pop(Opts.SECTY);
 			System.exit(0);
 		}
-		if (MainBCU.write) {
+		if (MainBCU.WRITE) {
 			System.setErr(ps);
 			System.setOut(ps);
 		}

@@ -319,7 +319,7 @@ public class ZipAccess {
 			wname.write("0\r\n");
 			wname.close();
 		} catch (Exception e) {
-			if (!MainBCU.write)
+			if (!MainBCU.WRITE)
 				e.printStackTrace();
 		}
 		fs.close();

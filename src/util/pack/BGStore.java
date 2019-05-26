@@ -1,7 +1,6 @@
 package util.pack;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -139,18 +138,8 @@ public class BGStore extends FixIndexList<Background> {
 		int n = is.nextInt();
 		for (int i = 0; i < n; i++) {
 			int ind = is.nextInt();
-			VImg vimg;
-			ByteArrayInputStream bais = new ByteArrayInputStream(is.nextBytesI());
-			try {
-				BufferedImage bimg = ImageIO.read(bais);
-				vimg = new VImg(bimg);
-				vimg.name = Data.trio(ind);
-			} catch (IOException e) {
-				e.printStackTrace();
-				for (int j = 0; j < 6; j++)
-					is.nextInt();
-				continue;
-			}
+			VImg vimg = new VImg(is.nextBytesI());
+			vimg.name = Data.trio(ind);
 			Background bg = new Background(pack, vimg, ind);
 			set(ind, bg);
 			bg.top = is.nextInt() > 0;

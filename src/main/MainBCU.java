@@ -1,5 +1,6 @@
 package main;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -7,18 +8,23 @@ import decode.ZipLib;
 import io.BCJSON;
 import io.Reader;
 import io.Writer;
+import jogl.GLBBB;
+import jogl.util.GLIB;
 import page.MainFrame;
 import page.MainPage;
+import page.battle.AWTBBB;
+import page.battle.BBBuilder;
 import util.Data;
 import util.system.fake.ImageBuilder;
 import util.system.fake.awt.PCIB;
 
 public class MainBCU {
 
-	public static final int ver = 406011;
+	public static final int ver = 40616;
 
 	public static int FILTER_TYPE = 0;
-	public static boolean write = true, preload = false, trueRun = false, loaded = false;
+	public static final boolean WRITE = !new File("./.project").exists(), USE_JOGL = true;
+	public static boolean preload = false, trueRun = false, loaded = false;
 
 	public static String getTime() {
 		return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
@@ -31,7 +37,10 @@ public class MainBCU {
 			Opts.pop(Opts.MEMORY, "" + (mem >> 20));
 			System.exit(0);
 		}
-		ImageBuilder.builder = new PCIB();
+
+		ImageBuilder.builder = USE_JOGL ? new GLIB() : new PCIB();
+		BBBuilder.def = USE_JOGL ? new GLBBB() : AWTBBB.INS;
+
 		Reader.getData$0();
 		Writer.logSetup();
 		new MainFrame(Data.revVer(MainBCU.ver)).initialize();

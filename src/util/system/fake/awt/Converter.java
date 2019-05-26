@@ -37,10 +37,8 @@ public class Converter implements Composite, CompositeContext {
 			for (int j = 0; j < h; j++) {
 				int ind = i * h + j;
 				if (mode == 0) {
-					int v = (dsts[ind * 3 + 2] * 77) + (dsts[ind * 3 + 1] * 151) + (dsts[ind * 3] * 28);
-					v >>= 8;
 					for (int k = 0; k < 3; k++)
-						dsts[ind * 3 + k] = v;
+						dsts[ind * 3 + k] = 255 - dsts[ind * 3 + k];
 				}
 			}
 		out.setPixels(0, 0, w, h, dsts);
