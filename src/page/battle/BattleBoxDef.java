@@ -20,7 +20,7 @@ class BattleBoxDef extends Canvas implements BattleBox {
 
 	protected BufferedImage prev;
 
-	protected BattleBoxDef(BattleInfoPage bip, BattleField bas, int p) {
+	protected BattleBoxDef(OuterBox bip, BattleField bas, int p) {
 		bbp = p == 0 ? new BBPainter(bip, bas, this) : new BBCtrl(bip, (SBCtrl) bas, this);
 		setIgnoreRepaint(true);
 	}

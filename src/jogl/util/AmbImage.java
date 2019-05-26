@@ -1,10 +1,11 @@
-package jogl;
+package jogl.util;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import jogl.GLStatic;
 import util.system.fake.FakeImage;
 import util.system.fake.awt.FIBI;
 
@@ -92,16 +93,20 @@ public class AmbImage implements FakeImage {
 	}
 
 	private void check() {
-		checkBI();
+		if (GLStatic.ALWAYS_GLIMG || GLGraphics.count > 0)
+			checkGL();
+		else
+			checkBI();
 	}
 
 	private void checkBI() {
 		if (bimg != null)
 			return;
 		try {
-			if (stream != null)
+			if (stream != null) {
+				stream.reset();
 				bimg = (FIBI) FIBI.builder.build(stream);
-			else if (file != null)
+			} else if (file != null)
 				bimg = (FIBI) FIBI.builder.build(file);
 			else {
 				par.checkBI();

@@ -10,7 +10,7 @@ public strictfp class Printer {
 	}
 
 	public static void p(String source, int line, String description) {
-		if (MainBCU.write)
+		if (MainBCU.WRITE)
 			return;
 		print(source, line, description);
 	}

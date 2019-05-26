@@ -1,4 +1,4 @@
-package jogl;
+package jogl.util;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -17,6 +17,8 @@ public class GLIB extends ImageBuilder {
 			return null;
 		if (o instanceof FakeImage)
 			return (FakeImage) o;
+		if (icon)
+			return FIBI.builder.build(o);
 		if (o instanceof BufferedImage)
 			return new AmbImage((BufferedImage) o);
 		if (o instanceof File)

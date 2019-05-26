@@ -8,6 +8,8 @@ import decode.ZipLib;
 import io.BCJSON;
 import io.Reader;
 import io.Writer;
+import jogl.GLBBB;
+import jogl.util.GLIB;
 import page.MainFrame;
 import page.MainPage;
 import page.battle.AWTBBB;
@@ -21,7 +23,7 @@ public class MainBCU {
 	public static final int ver = 40613;
 
 	public static int FILTER_TYPE = 0;
-	public static final boolean write = !new File("./.project").exists();
+	public static final boolean WRITE = !new File("./.project").exists(), USE_JOGL = false;
 	public static boolean preload = false, trueRun = false, loaded = false;
 
 	public static String getTime() {
@@ -35,8 +37,10 @@ public class MainBCU {
 			Opts.pop(Opts.MEMORY, "" + (mem >> 20));
 			System.exit(0);
 		}
-		ImageBuilder.builder = new PCIB();
-		BBBuilder.def = AWTBBB.INS;
+
+		ImageBuilder.builder = USE_JOGL ? new GLIB() : new PCIB();
+		BBBuilder.def = USE_JOGL ? new GLBBB() : AWTBBB.INS;
+
 		Reader.getData$0();
 		Writer.logSetup();
 		new MainFrame(Data.revVer(MainBCU.ver)).initialize();

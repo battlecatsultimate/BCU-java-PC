@@ -109,7 +109,7 @@ public class Writer extends DataIO {
 			Opts.pop(Opts.SECTY);
 			System.exit(0);
 		}
-		if (MainBCU.write) {
+		if (MainBCU.WRITE) {
 			System.setErr(ps);
 			System.setOut(ps);
 		}

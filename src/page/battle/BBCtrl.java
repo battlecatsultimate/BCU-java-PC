@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import page.battle.BattleBox.BBPainter;
+import page.battle.BattleBox.OuterBox;
 import util.Res;
 import util.basis.SBCtrl;
 import util.system.P;
@@ -14,7 +15,7 @@ public class BBCtrl extends BBPainter {
 
 	private final SBCtrl sbc;
 
-	public BBCtrl(BattleInfoPage bip, SBCtrl bas, BattleBox bb) {
+	public BBCtrl(OuterBox bip, SBCtrl bas, BattleBox bb) {
 		super(bip, bas, bb);
 		sbc = bas;
 	}

@@ -51,7 +51,7 @@ public interface BattleBox {
 			gra.drawImage(bimg, x, cy, (int) (bw * siz), (int) (bh * siz));
 		}
 
-		protected final BattleInfoPage page;
+		protected final OuterBox page;
 		protected final BattleField bf;
 		protected final BattleBox box;
 		private StageBasis sb;
@@ -62,7 +62,7 @@ public interface BattleBox {
 
 		private P mouse; // in pix
 
-		public BBPainter(BattleInfoPage bip, BattleField bas, BattleBox bb) {
+		public BBPainter(OuterBox bip, BattleField bas, BattleBox bb) {
 			page = bip;
 			bf = bas;
 			box = bb;
@@ -330,8 +330,8 @@ public interface BattleBox {
 				g.drawImage(bimg, w - cw * (n + 1), ih);
 				n++;
 			}
-			bimg = Res.battle[2][page.spe > 0 ? 0 : 3].getImg();
-			for (int i = 0; i < Math.abs(page.spe); i++)
+			bimg = Res.battle[2][page.getSpeed() > 0 ? 0 : 3].getImg();
+			for (int i = 0; i < Math.abs(page.getSpeed()); i++)
 				g.drawImage(bimg, w - cw * (i + 1 + n), ih);
 		}
 
@@ -353,6 +353,14 @@ public interface BattleBox {
 			adjust(dif, ind);
 			reset();
 		}
+
+	}
+
+	static interface OuterBox {
+
+		public void callBack(Object o);
+
+		public int getSpeed();
 
 	}
 

@@ -11,7 +11,7 @@ import javax.imageio.ImageIO;
 import org.jcodec.api.awt.AWTSequenceEncoder;
 
 import io.Writer;
-import page.Page;
+import page.battle.BattleBox.OuterBox;
 import util.basis.BattleField;
 
 public interface BBRecd extends BattleBox {
@@ -33,7 +33,7 @@ class BBRecdAWT extends BattleBoxDef implements BBRecd {
 
 	private int time = -1;
 
-	public BBRecdAWT(BattleInfoPage bip, BattleField bas, String out, boolean img) {
+	public BBRecdAWT(OuterBox bip, BattleField bas, String out, boolean img) {
 		super(bip, bas, 0);
 		th = img ? new PNGThread(qb, out, bip) : new MP4Thread(qb, out, bip);
 		th.start();
@@ -81,7 +81,7 @@ class MP4Thread extends RecdThread {
 
 	private AWTSequenceEncoder encoder;
 
-	MP4Thread(Queue<BufferedImage> list, String str, Page page) {
+	MP4Thread(Queue<BufferedImage> list, String str, OuterBox page) {
 		super(list, page);
 		file = new File("./img/" + str + ".mp4");
 		try {
@@ -125,8 +125,8 @@ class PNGThread extends RecdThread {
 
 	private int count = 0;
 
-	PNGThread(Queue<BufferedImage> list, String out, Page page) {
-		super(list, page);
+	PNGThread(Queue<BufferedImage> list, String out, OuterBox bip) {
+		super(list, bip);
 		path = "./img/" + out + "/";
 		File f = new File(path);
 		if (f.exists())
@@ -171,14 +171,14 @@ class PNGThread extends RecdThread {
 abstract class RecdThread extends Thread {
 
 	final Queue<BufferedImage> bimgs;
-	final Page p;
+	final OuterBox p;
 
 	int fw, fh;
 
 	boolean end, quit, finish;
 
-	RecdThread(Queue<BufferedImage> list, Page page) {
-		p = page;
+	RecdThread(Queue<BufferedImage> list, OuterBox bip) {
+		p = bip;
 		bimgs = list;
 	}
 

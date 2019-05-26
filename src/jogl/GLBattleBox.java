@@ -5,9 +5,10 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLCanvas;
 
+import jogl.util.GLGraphics;
+import jogl.util.ResManager;
 import page.battle.BBCtrl;
 import page.battle.BattleBox;
-import page.battle.BattleInfoPage;
 import util.basis.BattleField;
 import util.basis.SBCtrl;
 
@@ -17,7 +18,8 @@ public class GLBattleBox extends GLCanvas implements BattleBox, GLEventListener 
 
 	private final BBPainter bbp;
 
-	public GLBattleBox(BattleInfoPage bip, BattleField bf, int type) {
+	public GLBattleBox(OuterBox bip, BattleField bf, int type) {
+		super(GLStatic.GLC);
 		bbp = type == 0 ? new BBPainter(bip, bf, this) : new BBCtrl(bip, (SBCtrl) bf, this);
 		addGLEventListener(this);
 	}
@@ -25,12 +27,15 @@ public class GLBattleBox extends GLCanvas implements BattleBox, GLEventListener 
 	@Override
 	public void display(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
-		bbp.draw(new GLGraphics(drawable.getGL().getGL2(), getWidth(), getHeight()));
+		GLGraphics g = new GLGraphics(drawable.getGL().getGL2(), getWidth(), getHeight());
+		bbp.draw(g);
+		g.dispose();
 		gl.glFlush();
 	}
 
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
+		ResManager.get(drawable.getGL().getGL2()).dispose();
 	}
 
 	@Override

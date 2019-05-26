@@ -1,4 +1,4 @@
-package jogl;
+package jogl.util;
 
 import static com.jogamp.opengl.GL.*;
 
@@ -7,9 +7,8 @@ import java.awt.Color;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2ES3;
-import com.jogamp.opengl.fixedfunc.GLMatrixFunc;
 
-import jogl.GLGraphics.GeomG;
+import jogl.util.GLGraphics.GeomG;
 import util.system.fake.FakeGraphics;
 import util.system.fake.FakeImage;
 import util.system.fake.FakeTransform;
@@ -139,11 +138,12 @@ public class GLGraphics implements GeoAuto {
 			// TODO
 			// g.glColor3f(r / 256f, gr / 256f, b / 256f);
 		}
+
 	}
 
 	private static class GLT implements FakeTransform {
 
-		private float[] data = new float[16];
+		private float[] data = new float[6];
 
 		@Override
 		public Object getAT() {
@@ -154,11 +154,15 @@ public class GLGraphics implements GeoAuto {
 
 	private static final int PURE = 0, IMG = 1;
 
+	protected static int count = 0;
 	private final GL2 g;
-	private final TextureManager tm;
 
+	private final ResManager tm;
 	private final GeomG geo;
 	private final int sw, sh;
+
+	private float[] trans = new float[] { 1, 0, 0, 0, 1, 0 };
+
 	private int mode = PURE;
 
 	private int bind = 0;
@@ -166,11 +170,16 @@ public class GLGraphics implements GeoAuto {
 	public GLGraphics(GL2 gl2, int wid, int hei) {
 		g = gl2;
 		geo = new GeomG(this, gl2);
-		tm = TextureManager.get(g);
+		tm = ResManager.get(g);
 		sw = wid;
 		sh = hei;
+		count++;
 		g.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		g.glLoadIdentity();
+	}
+
+	public void dispose() {
+		count--;
 	}
 
 	@Override
@@ -220,20 +229,30 @@ public class GLGraphics implements GeoAuto {
 	@Override
 	public FakeTransform getTransform() {
 		GLT glt = new GLT();
-		g.glGetFloatv(GLMatrixFunc.GL_MODELVIEW_MATRIX, glt.data, 0);
+		glt.data = trans.clone();
 		return glt;
 	}
 
 	@Override
 	public void rotate(double d) {
-		translate(-sw / 2, -sh / 2);
-		g.glRotated(-d * 180 / Math.PI, 0, 0, 1);
-		translate(sw / 2, sh / 2);
+		float c = (float) Math.cos(d);
+		float s = (float) Math.sin(d);
+		float f0 = trans[0] * c + trans[1] * s;
+		float f1 = trans[0] * -s + trans[1] * c;
+		float f3 = trans[3] * c + trans[4] * s;
+		float f4 = trans[3] * -s + trans[4] * c;
+		trans[0] = f0;
+		trans[1] = f1;
+		trans[3] = f3;
+		trans[4] = f4;
 	}
 
 	@Override
 	public void scale(int hf, int vf) {
-		g.glScalef(hf, vf, 0);
+		trans[0] *= hf;
+		trans[1] *= hf;
+		trans[3] *= vf;
+		trans[4] *= vf;
 	}
 
 	@Override
@@ -278,21 +297,17 @@ public class GLGraphics implements GeoAuto {
 
 	@Override
 	public void setRenderingHint(int key, int object) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void setTransform(FakeTransform at) {
-		GLT glt = (GLT) at;
-		g.glMatrixMode(GLMatrixFunc.GL_MODELVIEW_MATRIX);
-		g.glLoadMatrixf(glt.data, 0);
+		trans = ((GLT) at).data.clone();
 	}
 
 	@Override
 	public void translate(double x, double y) {
-		g.glTranslated(2 * x / sw, -2 * y / sh, 0);
-
+		trans[2] += trans[0] * x + trans[1] * y;
+		trans[5] += trans[3] * x + trans[4] * y;
 	}
 
 	protected void bind(int id) {
@@ -307,7 +322,9 @@ public class GLGraphics implements GeoAuto {
 	}
 
 	private void addP(double x, double y) {
-		g.glVertex2f((float) (2 * x / sw - 1), (float) (1 - 2 * y / sh));
+		double fx = trans[0] * x + trans[1] * y + trans[2];
+		double fy = trans[3] * x + trans[4] * y + trans[5];
+		g.glVertex2f((float) (2 * fx / sw - 1), (float) (1 - 2 * fy / sh));
 	}
 
 	private void checkMode(int i) {

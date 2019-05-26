@@ -1,10 +1,9 @@
-package jogl;
+package jogl.util;
 
 import static com.jogamp.opengl.GL2.*;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,14 +13,14 @@ import org.apache.commons.io.IOUtils;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.util.texture.TextureData;
 
-public class TextureManager {
+public class ResManager {
 
-	public static final Map<GL2, TextureManager> MAP = new HashMap<>();
+	public static final Map<GL2, ResManager> MAP = new HashMap<>();
 
-	public static TextureManager get(GL2 gl) {
+	public static ResManager get(GL2 gl) {
 		if (MAP.containsKey(gl))
 			return MAP.get(gl);
-		TextureManager tm = new TextureManager(gl);
+		ResManager tm = new ResManager(gl);
 		MAP.put(gl, tm);
 		return tm;
 	}
@@ -41,9 +40,19 @@ public class TextureManager {
 
 	private final Map<GLImage, Integer> mem = new HashMap<>();
 
-	private TextureManager(GL2 gl2) {
+	private ResManager(GL2 gl2) {
 		gl = gl2;
 		setupShader(gl);
+	}
+
+	public void dispose() {
+		int n = mem.size();
+		int[] tex = new int[n];
+		int i = 0;
+		for (int x : mem.values())
+			tex[i++] = x;
+		gl.glDeleteTextures(n, tex, 0);
+		gl.glDeleteProgram(prog);
 	}
 
 	public int load(GLGraphics g, GLImage img) {
@@ -68,32 +77,19 @@ public class TextureManager {
 
 	private void setupShader(GL2 gl) {
 		try {
-			int[] suc = new int[1];
 			int vi = gl.glCreateShader(GL_VERTEX_SHADER);
 			String vc = load("blender.vs");
 			gl.glShaderSource(vi, 1, new String[] { vc }, new int[] { vc.length() }, 0);
 			gl.glCompileShader(vi);
-			gl.glGetShaderiv(vi, GL_COMPILE_STATUS, suc, 0);
-			if (suc[0] == 0) {
-				int[] a = new int[1];
-				byte[] b = new byte[512];
-				gl.glGetShaderInfoLog(vi, 512, a, 0, b, 0);
-				System.out.println("VS: " + new String(Arrays.copyOf(b, a[0])));
-			}
 			int fi = gl.glCreateShader(GL_FRAGMENT_SHADER);
 			String fc = load("blender.fs");
 			gl.glShaderSource(fi, 1, new String[] { fc }, new int[] { fc.length() }, 0);
 			gl.glCompileShader(fi);
-			gl.glGetShaderiv(fi, GL_COMPILE_STATUS, suc, 0);
-			if (suc[0] == 0) {
-				int[] a = new int[1];
-				byte[] b = new byte[512];
-				gl.glGetShaderInfoLog(fi, 512, a, 0, b, 0);
-				System.out.println("FS: " + new String(Arrays.copyOf(b, a[0])));
-			}
 			prog = gl.glCreateProgram();
 			gl.glAttachShader(prog, vi);
 			gl.glAttachShader(prog, fi);
+			gl.glDeleteShader(vi);
+			gl.glDeleteShader(fi);
 			gl.glLinkProgram(prog);
 			gl.glUseProgram(prog);
 			mode = gl.glGetUniformLocation(prog, "mode");

@@ -13,7 +13,7 @@ import util.system.fake.ImageBuilder;
 
 public class FIBI implements FakeImage {
 
-	public static ImageBuilder builder = new BIBuilder();
+	public static final ImageBuilder builder = new BIBuilder();
 
 	public static FakeImage build(BufferedImage bimg2) {
 		try {

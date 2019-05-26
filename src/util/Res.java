@@ -8,6 +8,7 @@ import util.system.P;
 import util.system.SymCoord;
 import util.system.VImg;
 import util.system.fake.FakeImage;
+import util.system.fake.ImageBuilder;
 import util.unit.Form;
 
 public class Res extends ImgCore {
@@ -112,6 +113,7 @@ public class Res extends ImgCore {
 	}
 
 	private static void readAbiIcon() {
+		ImageBuilder.icon = true;
 		ImgCut ic015 = ImgCut.newIns("./org/page/img015.imgcut");
 		VImg img015 = new VImg("./org/page/img015.png");
 		FakeImage[] parts = ic015.cut(img015.getImg());
@@ -182,7 +184,7 @@ public class Res extends ImgCore {
 		icon[0][ABI_GLASS] = new VImg("./org/page/icons/Suicide.png");
 		icon[1][P_BURROW] = new VImg("./org/page/icons/Burrow.png");
 		icon[1][P_REVIVE] = new VImg("./org/page/icons/Revive.png");
-
+		ImageBuilder.icon = false;
 	}
 
 	private static void readBattle() {

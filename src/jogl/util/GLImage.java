@@ -1,4 +1,4 @@
-package jogl;
+package jogl.util;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -11,6 +11,7 @@ import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 
+import jogl.GLStatic;
 import util.system.fake.FakeImage;
 
 public class GLImage implements FakeImage {
