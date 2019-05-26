@@ -16,6 +16,7 @@ import main.Opts;
 import page.JBTN;
 import page.JTG;
 import page.Page;
+import page.awt.BBBuilder;
 import page.support.AnimLCR;
 import page.view.AbViewPage;
 import util.anim.AnimC;
@@ -39,7 +40,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 	private final IconBox ib;
 
 	public DIYViewPage(Page p) {
-		super(p, new IconBoxDef());
+		super(p, BBBuilder.def.getIconBox());
 		ib = (IconBox) vb;
 		aep = new EditHead(this, 0);
 		ini();
@@ -47,8 +48,8 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 	}
 
 	public DIYViewPage(Page p, DIYAnim ac) {
-		super(p, new IconBoxDef());
-		ib = (IconBoxDef) vb;
+		super(p, BBBuilder.def.getIconBox());
+		ib = (IconBox) vb;
 		aep = new EditHead(this, 0);
 		if (!DIYAnim.map.containsValue(ac))
 			aep.focus = ac;
@@ -57,8 +58,8 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 	}
 
 	public DIYViewPage(Page p, EditHead bar) {
-		super(p, new IconBoxDef());
-		ib = (IconBoxDef) vb;
+		super(p, BBBuilder.def.getIconBox());
+		ib = (IconBox) vb;
 
 		aep = bar;
 		ini();

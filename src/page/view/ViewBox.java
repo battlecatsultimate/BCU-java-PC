@@ -4,11 +4,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.List;
-
-import io.Writer;
 import page.JTG;
-import res.AnimatedGifEncoder;
 import util.anim.EAnimI;
 import util.system.P;
 import util.system.fake.FakeGraphics;
@@ -23,9 +19,9 @@ public interface ViewBox {
 
 	static class Controller {
 
-		protected final P ori = new P(0, 0);
+		public final P ori = new P(0, 0);
+		public double siz = 0.5;
 		protected Point p = null;
-		protected double siz = 0.5;
 		protected ViewBox cont;
 
 		public synchronized void mouseDragged(MouseEvent e) {
@@ -48,7 +44,7 @@ public interface ViewBox {
 			siz *= pow;
 		}
 
-		protected void setCont(ViewBox vb) {
+		public void setCont(ViewBox vb) {
 			cont = vb;
 		}
 
@@ -126,63 +122,4 @@ public interface ViewBox {
 	}
 
 	public void update();
-}
-
-class LoaderDef extends Thread implements ViewBox.Loader {
-
-	private static final int SLE = 33;
-
-	private final AnimatedGifEncoder gif;
-	private final List<BufferedImage> lbimg;
-
-	private int index = 0;
-	private boolean finish;
-	private JTG jtb;
-
-	protected LoaderDef(List<BufferedImage> list) {
-		lbimg = list;
-		gif = new AnimatedGifEncoder();
-		gif.setDelay(33);
-		Writer.writeGIF(gif);
-	}
-
-	@Override
-	public void finish(JTG btn) {
-		finish = true;
-		jtb = btn;
-		jtb.setEnabled(false);
-	}
-
-	@Override
-	public String getProg() {
-		return index + "/" + lbimg.size();
-	}
-
-	@Override
-	public void run() {
-		while (!finish) {
-			write();
-			sleeper();
-		}
-		write();
-		gif.finish();
-		jtb.setEnabled(true);
-	}
-
-	private void sleeper() {
-		try {
-			sleep(SLE);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void write() {
-		while (index < lbimg.size()) {
-			gif.addFrame(lbimg.get(index));
-			index++;
-			sleeper();
-		}
-	}
-
 }

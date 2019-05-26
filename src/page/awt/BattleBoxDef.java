@@ -1,4 +1,4 @@
-package page.battle;
+package page.awt;
 
 import java.awt.Canvas;
 import java.awt.Color;
@@ -7,6 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import main.Timer;
+import page.battle.BBCtrl;
+import page.battle.BattleBox;
 import util.basis.BattleField;
 import util.basis.SBCtrl;
 import util.system.fake.FakeGraphics;

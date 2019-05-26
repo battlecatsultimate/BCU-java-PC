@@ -1,6 +1,9 @@
-package page.battle;
+package page.awt;
 
+import page.anim.IconBox;
+import page.battle.BattleBox;
 import page.battle.BattleBox.OuterBox;
+import page.view.ViewBox;
 import util.basis.BattleField;
 import util.basis.SBCtrl;
 
@@ -22,8 +25,18 @@ public class AWTBBB extends BBBuilder {
 	}
 
 	@Override
+	public IconBox getIconBox() {
+		return new IconBoxDef();
+	}
+
+	@Override
 	public BattleBox getRply(OuterBox bip, BattleField bf, String str, boolean t) {
 		return new BBRecdAWT(bip, bf, str, t);
+	}
+
+	@Override
+	public ViewBox getViewBox() {
+		return new ViewBoxDef();
 	}
 
 }

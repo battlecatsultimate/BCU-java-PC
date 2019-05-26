@@ -51,14 +51,18 @@ public interface BattleBox {
 			gra.drawImage(bimg, x, cy, (int) (bw * siz), (int) (bh * siz));
 		}
 
+		public final BattleField bf;
+
+		public int pt = -1;
+
 		protected final OuterBox page;
-		protected final BattleField bf;
 		protected final BattleBox box;
+
+		protected double siz, corr, unir; // siz = pix/p;
+
 		private StageBasis sb;
-		protected int pt = -1;
 		private int maxW, maxH, minH; // in p
 		private int pos, midh, prew, preh; // in pix
-		protected double siz, corr, unir; // siz = pix/p;
 
 		private P mouse; // in pix
 

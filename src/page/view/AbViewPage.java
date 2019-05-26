@@ -23,6 +23,7 @@ import page.JBTN;
 import page.JTG;
 import page.Page;
 import page.anim.ImgCutEditPage;
+import page.awt.BBBuilder;
 import page.view.ViewBox.Loader;
 import util.Animable;
 import util.anim.AnimC;
@@ -55,7 +56,7 @@ public abstract class AbViewPage extends Page {
 	private boolean changingtl;
 
 	protected AbViewPage(Page p) {
-		this(p, new ViewBoxDef());
+		this(p, BBBuilder.def.getViewBox());
 	}
 
 	protected AbViewPage(Page p, ViewBox box) {

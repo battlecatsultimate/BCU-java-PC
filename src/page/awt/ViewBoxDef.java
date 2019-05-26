@@ -1,4 +1,4 @@
-package page.view;
+package page.awt;
 
 import java.awt.Canvas;
 import java.awt.Color;
@@ -10,14 +10,76 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.Writer;
 import main.Timer;
 import page.JTG;
+import page.view.ViewBox;
+import res.AnimatedGifEncoder;
 import util.ImgCore;
 import util.anim.EAnimI;
 import util.system.fake.FakeGraphics;
 import util.system.fake.awt.FG2D;
 
-public class ViewBoxDef extends Canvas implements ViewBox, ViewBox.VBExporter {
+class LoaderDef extends Thread implements ViewBox.Loader {
+
+	private static final int SLE = 33;
+
+	private final AnimatedGifEncoder gif;
+	private final List<BufferedImage> lbimg;
+
+	private int index = 0;
+	private boolean finish;
+	private JTG jtb;
+
+	protected LoaderDef(List<BufferedImage> list) {
+		lbimg = list;
+		gif = new AnimatedGifEncoder();
+		gif.setDelay(33);
+		Writer.writeGIF(gif);
+	}
+
+	@Override
+	public void finish(JTG btn) {
+		finish = true;
+		jtb = btn;
+		jtb.setEnabled(false);
+	}
+
+	@Override
+	public String getProg() {
+		return index + "/" + lbimg.size();
+	}
+
+	@Override
+	public void run() {
+		while (!finish) {
+			write();
+			sleeper();
+		}
+		write();
+		gif.finish();
+		jtb.setEnabled(true);
+	}
+
+	private void sleeper() {
+		try {
+			sleep(SLE);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void write() {
+		while (index < lbimg.size()) {
+			gif.addFrame(lbimg.get(index));
+			index++;
+			sleeper();
+		}
+	}
+
+}
+
+class ViewBoxDef extends Canvas implements ViewBox, ViewBox.VBExporter {
 
 	private static final long serialVersionUID = 1L;
 

@@ -22,6 +22,7 @@ import page.JBTN;
 import page.JTG;
 import page.KeyHandler;
 import page.Page;
+import page.awt.BBBuilder;
 import page.battle.BattleBox.OuterBox;
 import util.basis.BasisLU;
 import util.basis.BattleField;
