@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 
 public class EPart extends ImgCore implements Comparable<EPart> {
 
-	public int par;// temp
 	protected EAnimU ea;
 	private final AnimU a;
 	private final int[] args;
@@ -27,12 +26,17 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		setValue();
 	}
 
-	public void alter(int m, int v) {
+	@Override
+	public int compareTo(EPart o) {
+		return z > o.z ? 1 : (z == o.z ? 0 : -1);
+	}
+
+	protected void alter(int m, int v) {
 		if (m == 0)
 			if (v < ent.length)
-				fa = ent[par = v];
+				fa = ent[v];
 			else
-				fa = ent[par = 0];
+				fa = ent[0];
 		else if (m == 1)
 			id = v;
 		else if (m == 2)
@@ -65,46 +69,6 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		else if (m == 50)
 			extend = v;
 
-	}
-
-	@Override
-	public int compareTo(EPart o) {
-		return z > o.z ? 1 : (z == o.z ? 0 : -1);
-	}
-
-	public int getVal(int m) {
-		if (m == 0)
-			return par;
-		else if (m == 1)
-			return id;
-		else if (m == 2)
-			return img;
-		else if (m == 3)
-			return z;
-		else if (m == 4)
-			return (int) pos.x;
-		else if (m == 5)
-			return (int) pos.y;
-		else if (m == 6)
-			return (int) piv.x;
-		else if (m == 7)
-			return (int) piv.y;
-		else if (m == 8)
-			return gsca;
-		else if (m == 9)
-			return (int) sca.x;
-		else if (m == 10)
-			return (int) sca.y;
-		else if (m == 11)
-			return angle;
-		else if (m == 12)
-			return opacity;
-		else if (m == 13)
-			return hf;
-		else if (m == 14)
-			return vf;
-
-		return -1;
 	}
 
 	protected void drawPart(Graphics2D g, P base) {

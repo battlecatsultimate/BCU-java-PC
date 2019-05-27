@@ -3,11 +3,9 @@ package util;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayDeque;
 import java.util.Queue;
-
-import com.google.common.io.Files;
 
 public class ImgCut {
 
@@ -18,7 +16,7 @@ public class ImgCut {
 	protected ImgCut(String str) {
 		Queue<String> qs = null;
 		try {
-			qs = new ArrayDeque<>(Files.readLines(new File(str), Charset.defaultCharset()));
+			qs = new ArrayDeque<>(Files.readAllLines(new File(str).toPath()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

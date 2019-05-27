@@ -7,12 +7,11 @@ import javax.imageio.ImageIO;
 
 public class AnimU {
 
-	public MaAnim[] anims;
-	public ImgCut imgcut;
-	public MaModel mamodel;
-	public BufferedImage num;
-
-	public BufferedImage[] parts;
+	protected MaAnim[] anims;
+	protected ImgCut imgcut;
+	protected MaModel mamodel;
+	private BufferedImage num;
+	private BufferedImage[] parts;
 
 	protected boolean partial = false;
 
