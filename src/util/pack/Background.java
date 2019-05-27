@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
+import main.Printer;
 import util.anim.AnimI;
 import util.anim.EAnimD;
 import util.anim.ImgCut;
@@ -43,10 +44,14 @@ public class Background extends AnimI {
 		Queue<String> qs = VFile.readLine("./org/battle/bg/bg.csv");
 		qs.poll();
 		for (VFile<AssetData> vf : VFile.get("./org/img/bg/").list()) {
-			String[] strs = qs.poll().split(",");
 			int[] ints = new int[15];
-			for (int i = 0; i < 15; i++)
-				ints[i] = Integer.parseInt(strs[i]);
+			try {
+				String[] strs = qs.poll().split(",");
+				for (int i = 0; i < 15; i++)
+					ints[i] = Integer.parseInt(strs[i]);
+			} catch (Exception e) {
+				Printer.p("BG", 53, e + "");
+			}
 			new Background(new VImg(vf), ints);
 		}
 	}

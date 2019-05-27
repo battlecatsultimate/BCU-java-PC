@@ -21,6 +21,9 @@ public class ZipLib {
 	public static FileSystem lib;
 	public static LibInfo info;
 
+	private static FileSystem customFS;
+	private static LibInfo customInfo;
+
 	public static void check() {
 		for (String req : LIBREQS)
 			if (info == null || !info.merge.set.contains(req)) {
@@ -48,6 +51,15 @@ public class ZipLib {
 			Writer.logClose(false);
 			System.exit(0);
 		}
+		f = new File("./assets/custom.zip");
+		if (f.exists())
+			try {
+				customFS = FileSystems.newFileSystem(f.toPath(), null);
+				customInfo = new LibInfo(customFS);
+			} catch (Exception e) {
+				customFS = null;
+				customInfo = null;
+			}
 	}
 
 	public static void merge(File f) {
@@ -75,6 +87,16 @@ public class ZipLib {
 				VFile.root.build(pi.path, AssetData.getAsset(data));
 				LoadPage.prog("reading assets " + i++ + "/" + tot);
 			}
+
+			if (customInfo != null)
+				for (PathInfo pi : customInfo.merge.paths.values()) {
+					if (pi.type != 0)
+						continue;
+					byte[] data = Files.readAllBytes(customFS.getPath(pi.path));
+					VFile.root.build(pi.path, AssetData.getAsset(data));
+					LoadPage.prog("reading assets " + i++ + "/" + tot);
+				}
+
 			VFile.root.sort();
 			VFile.root.getIf(p -> {
 				if (p.list() == null)
@@ -89,6 +111,11 @@ public class ZipLib {
 			e.printStackTrace();
 		} catch (ClosedFileSystemException e) {
 		}
+		if (customFS != null)
+			try {
+				customFS.close();
+			} catch (IOException e) {
+			}
 	}
 
 }

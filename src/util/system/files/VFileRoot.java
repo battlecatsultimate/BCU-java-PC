@@ -1,7 +1,5 @@
 package util.system.files;
 
-import main.Printer;
-
 public class VFileRoot<T extends FileData> extends VFile<T> {
 
 	public VFileRoot(String str) {
@@ -27,8 +25,8 @@ public class VFileRoot<T extends FileData> extends VFile<T> {
 			if (i == strs.length - 1) {
 				if (fd == null)
 					return next;
-				Printer.e("VFileRoot", 45, "overload");
-				return null;
+				next.setData(fd);
+				return next;
 			}
 			par = next;
 		}
