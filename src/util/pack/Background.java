@@ -77,7 +77,7 @@ public class Background extends AnimI {
 		ewav = BGStore.getBG(0).ewav;
 	}
 
-	protected Background(VImg vimg, int[] ints) {
+	private Background(VImg vimg, int[] ints) {
 		pack = Pack.def;
 		id = pack.bg.size();
 		img = vimg;
@@ -86,8 +86,13 @@ public class Background extends AnimI {
 		for (int i = 0; i < 4; i++)
 			cs[i] = new int[] { ints[i * 3 + 1], ints[i * 3 + 2], ints[i * 3 + 3] };
 		Pack.def.bg.add(this);
-		uwav = new WaveAnim(this, uwavm, uwava);
-		ewav = new WaveAnim(this, ewavm, ewava);
+		if (id <= 107) {
+			uwav = new WaveAnim(this, uwavm, uwava);
+			ewav = new WaveAnim(this, ewavm, ewava);
+		} else {
+			uwav = BGStore.getBG(0).uwav;
+			ewav = BGStore.getBG(0).ewav;
+		}
 	}
 
 	@Override

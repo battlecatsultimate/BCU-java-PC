@@ -55,8 +55,8 @@ public class ZipAdmin {
 		try {
 			ZipLib.lib = FileSystems.newFileSystem(new File("./assets/libworkspace/assets.zip").toPath(), null);
 			ZipLib.info = new LibInfo(ZipLib.lib);
-			ZipLib.merge(new File("./assets/libworkspace/080504.zip"));
-			// ZipLib.merge(new File("./assets/000003.zip"));
+			// ZipLib.merge(new File("./assets/libworkspace/080504.zip"));
+			ZipLib.merge(new File("./assets/libworkspace/080602.zip"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

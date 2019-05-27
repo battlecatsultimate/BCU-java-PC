@@ -80,6 +80,8 @@ public class MapColc extends Data {
 			String[] strs = str.trim().split(",");
 			int id = Integer.parseInt(strs[0]);
 			StageMap sm = getMap(id);
+			if (sm == null)
+				continue;
 			int len = Integer.parseInt(strs[1]);
 			sm.stars = new int[len];
 			for (int i = 0; i < len; i++)
