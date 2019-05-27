@@ -17,9 +17,8 @@ import util.system.fake.awt.FG2D;
 
 class AnimBox extends Canvas {
 
-	public static boolean white = false;
-
 	private static final long serialVersionUID = 1L;
+
 	private static final Color c0 = new Color(70, 140, 160), c1 = new Color(85, 185, 205);
 
 	public BufferedImage prev = null;

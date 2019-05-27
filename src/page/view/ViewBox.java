@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 import page.JTG;
 import util.anim.EAnimI;
 import util.system.P;
-import util.system.fake.FakeGraphics;
 
 public interface ViewBox {
 
@@ -72,8 +71,6 @@ public interface ViewBox {
 
 	public static final Color c0 = new Color(70, 140, 160), c1 = new Color(85, 185, 205);
 
-	public void draw(FakeGraphics gra);
-
 	public default void end(JTG btn) {
 		if (getExp() != null)
 			getExp().end(btn);
@@ -110,8 +107,6 @@ public interface ViewBox {
 	public default void resize(double pow) {
 		getCtrl().resize(pow);
 	}
-
-	public void setEnt(EAnimI ent);
 
 	public void setEntity(EAnimI ieAnim);
 

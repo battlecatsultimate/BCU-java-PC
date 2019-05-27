@@ -10,6 +10,7 @@ public class GLStatic {
 	public static final GLCapabilities GLC;
 
 	public static boolean ALWAYS_GLIMG = true;
+	public static boolean GLBOX = false;
 
 	static {
 		GLP = GLProfile.get(GLProfile.GL2);
