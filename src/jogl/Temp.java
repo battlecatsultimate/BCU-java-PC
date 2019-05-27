@@ -29,7 +29,7 @@ public class Temp extends StdGLC {
 	public static void main(String[] args) throws IOException {
 		ImageBuilder.builder = new GLIB();
 		Reader.getData$0();
-		Writer.logSetup();
+		Writer.logPrepare();
 		ZipLib.init();
 		ZipLib.read();
 		Reader.getData$1();

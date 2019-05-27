@@ -20,11 +20,11 @@ import util.system.fake.awt.PCIB;
 
 public class MainBCU {
 
-	public static final int ver = 40618;
+	public static final int ver = 40701;
 
 	public static int FILTER_TYPE = 0;
-	public static final boolean WRITE = !new File("./.project").exists(), USE_JOGL = true;
-	public static boolean preload = false, trueRun = false, loaded = false;
+	public static final boolean WRITE = !new File("./.project").exists();
+	public static boolean preload = false, trueRun = false, loaded = false, USE_JOGL = false;
 
 	public static String getTime() {
 		return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
@@ -38,11 +38,13 @@ public class MainBCU {
 			System.exit(0);
 		}
 
+		Writer.logPrepare();
+		Reader.getData$0();
+		Writer.logSetup();
+
 		ImageBuilder.builder = USE_JOGL ? new GLIB() : new PCIB();
 		BBBuilder.def = USE_JOGL ? new GLBBB() : AWTBBB.INS;
 
-		Reader.getData$0();
-		Writer.logSetup();
 		new MainFrame(Data.revVer(MainBCU.ver)).initialize();
 		new Timer().start();
 		ZipLib.init();

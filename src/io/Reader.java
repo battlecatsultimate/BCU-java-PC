@@ -446,7 +446,7 @@ public class Reader extends DataIO {
 					ImgCore.ints = parseInts(4, qs.poll());
 					ViewBox.Conf.white = parseInt(qs.poll()) == 1;
 					ImgCore.ref = parseInt(qs.poll()) == 1;
-					qs.poll();
+					MainBCU.USE_JOGL = parseInt(qs.poll()) == 1;
 					ImgCore.deadOpa = parseInt(qs.poll());
 					ImgCore.fullOpa = parseInt(qs.poll());
 					MainBCU.FILTER_TYPE = parseInt(qs.poll());

@@ -268,8 +268,10 @@ public class StageBasis extends BattleObj {
 			lea.forEach(e -> e.update());
 			lw.addAll(tlw);
 			tlw.clear();
-			la.forEach(a -> a.excuse());
-			la.clear();
+		}
+		la.forEach(a -> a.excuse());
+		la.clear();
+		if (s_stop == 0) {
 			ebase.postUpdate();
 			if (!lethal && ebase.health <= 0 && est.hasBoss()) {
 				lethal = true;
