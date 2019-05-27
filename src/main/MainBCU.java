@@ -1,65 +1,44 @@
 package main;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-import decode.ZipLib;
-import io.BCJSON;
-import io.Reader;
-import io.Writer;
-import jogl.GLBBB;
-import jogl.util.GLIB;
-import page.MainFrame;
-import page.MainPage;
-import page.awt.AWTBBB;
-import page.awt.BBBuilder;
-import util.Data;
-import util.system.fake.ImageBuilder;
-import util.system.fake.awt.PCIB;
+import javax.swing.JFrame;
+
+import util.AnimU;
 
 public class MainBCU {
 
-	public static final int ver = 40704;
+	// 0: move, 1: wait, 2: attack, 3:kb, 4: burrow down, 5: underground, 6: burrow
+	// up
+	private static final int ANIM = 2;
 
-	public static int FILTER_TYPE = 0;
-	public static final boolean WRITE = !new File("./.project").exists();
-	public static boolean preload = false, trueRun = false, loaded = false, USE_JOGL = false;
+	// path of the animation data and its prefix
+	private static final String PATH = "./res/anim/dio/dio";
 
-	public static String getTime() {
-		return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-	}
+	private static ViewBoxDef view;
 
 	public static void main(String[] args) {
-		trueRun = true;
-		long mem = Runtime.getRuntime().maxMemory();
-		if (mem >> 28 == 0) {
-			Opts.pop(Opts.MEMORY, "" + (mem >> 20));
-			System.exit(0);
-		}
+		JFrame jf = new JFrame("animation");
+		jf.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				System.exit(0);
+			}
+		});
 
-		Writer.logPrepare();
-		Reader.getData$0();
-		Writer.logSetup();
-
-		ImageBuilder.builder = USE_JOGL ? new GLIB() : new PCIB();
-		BBBuilder.def = USE_JOGL ? new GLBBB() : AWTBBB.INS;
-
-		new MainFrame(Data.revVer(MainBCU.ver)).initialize();
+		view = new ViewBoxDef();
+		jf.add(view);
+		view.setSize(800, 600);
+		jf.setSize(jf.getContentPane().getPreferredSize());
+		jf.setVisible(true);
+		view.setEnt(new AnimU(PATH).getEAnim(ANIM));
 		new Timer().start();
-		ZipLib.init();
-		BCJSON.checkDownload();
-		ZipLib.read();
-		Reader.getData$1();
-		loaded = true;
-		MainFrame.changePanel(new MainPage());
 	}
 
-	public static String validate(String str) {
-		char[] chs = new char[] { '.', '/', '\\', ':', '*', '?', '"', '<', '>', '|' };
-		for (char c : chs)
-			str = str.replace(c, '#');
-		return str;
+	protected static void timer(int i) {
+		if (view != null)
+			view.timer(-1);
 	}
 
 }

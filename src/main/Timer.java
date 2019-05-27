@@ -2,16 +2,18 @@ package main;
 
 import javax.swing.SwingUtilities;
 
-import page.MainFrame;
-
 public strictfp class Timer extends Thread {
 
-	public static int p = 33;
+	// time consumed by each frame
 	public static int inter = 0;
+
+	// time per frame, in ms
+	public static final int TPF = 33;
 
 	protected static int state;
 
 	private static int delay = 0;
+
 	private Inv thr = null;
 
 	@Override
@@ -31,8 +33,8 @@ public strictfp class Timer extends Thread {
 				}
 				thr.join();
 				delay = (int) (System.currentTimeMillis() - m);
-				inter = (inter * 9 + 100 * delay / p) / 10;
-				int sle = delay >= p ? 1 : p - delay;
+				inter = (inter * 9 + 100 * delay / TPF) / 10;
+				int sle = delay >= TPF ? 1 : TPF - delay;
 				sleep(sle);
 			} catch (InterruptedException e) {
 				return;
@@ -46,7 +48,7 @@ strictfp class Inv extends Thread {
 
 	@Override
 	public void run() {
-		MainFrame.timer(-1);
+		MainBCU.timer(-1);
 		synchronized (this) {
 			Timer.state = 1;
 		}
