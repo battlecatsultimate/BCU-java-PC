@@ -10,17 +10,11 @@ import com.google.common.io.Files;
 
 public class MaAnim {
 
-	public int max = 1, len = 1;
-	public int n;
+	protected Part[] parts;
 
-	public Part[] parts;
+	private int max = 1, n;
 
-	public MaAnim() {
-		n = 0;
-		parts = new Part[0];
-	}
-
-	public MaAnim(String str) {
+	protected MaAnim(String str) {
 		Queue<String> qs = null;
 		try {
 			qs = new ArrayDeque<>(Files.readLines(new File(str), Charset.defaultCharset()));
@@ -34,37 +28,6 @@ public class MaAnim {
 		for (int i = 0; i < n; i++)
 			parts[i] = new Part(qs);
 		validate();
-	}
-
-	private MaAnim(MaAnim ma) {
-		n = ma.n;
-		parts = new Part[n];
-		for (int i = 0; i < n; i++)
-			parts[i] = ma.parts[i].clone();
-		validate();
-	}
-
-	@Override
-	public MaAnim clone() {
-		return new MaAnim(this);
-	}
-
-	public void revert() {
-		for (Part p : parts)
-			if (p.ints[1] == 11)
-				for (int[] move : p.moves)
-					move[1] *= -1;
-	}
-
-	public void validate() {
-		max = 1;
-		for (int i = 0; i < n; i++)
-			if (parts[i].getMax() > max)
-				max = parts[i].getMax();
-		len = 1;
-		for (int i = 0; i < n; i++)
-			if (parts[i].getMax() - parts[i].off > len)
-				len = parts[i].getMax() - parts[i].off;
 	}
 
 	protected void update(int f, EAnimU eAnim, boolean rotate) {
@@ -112,6 +75,13 @@ public class MaAnim {
 			}
 			parts[i].update(frame, eAnim.ent);
 		}
+	}
+
+	private void validate() {
+		max = 1;
+		for (int i = 0; i < n; i++)
+			if (parts[i].getMax() > max)
+				max = parts[i].getMax();
 	}
 
 }

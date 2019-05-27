@@ -11,10 +11,9 @@ import com.google.common.io.Files;
 
 public class ImgCut {
 
-	public int[][] cuts;
-	public int n;
-	public String name;
-	public String[] strs;
+	private int[][] cuts;
+	private int n;
+	private String[] strs;
 
 	protected ImgCut(String str) {
 		Queue<String> qs = null;
@@ -25,7 +24,7 @@ public class ImgCut {
 		}
 		qs.poll();
 		qs.poll();
-		name = qs.poll();
+		qs.poll();
 		n = Integer.parseInt(qs.poll().trim());
 		cuts = new int[n][4];
 		strs = new String[n];

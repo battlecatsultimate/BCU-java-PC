@@ -2,29 +2,16 @@ package util;
 
 import java.util.Queue;
 
-public class Part implements Cloneable, Comparable<Part> {
+public class Part {
 
-	public int frame, vd;// for editor only
-	public int[] ints = new int[5];
-	public int[][] moves;
-	public int n, max, off, fir;
-	public String name;
-
-	public Part() {
-		ints = new int[] { 0, 5, -1, 0, 0 };
-		name = "";
-		n = 0;
-		moves = new int[0][];
-	}
+	protected int[] ints = new int[5];
+	private int[][] moves;
+	protected int n, max, off, fir;
 
 	protected Part(Queue<String> qs) {
 		String[] ss = qs.poll().trim().split(",");
 		for (int i = 0; i < 5; i++)
 			ints[i] = Integer.parseInt(ss[i].trim());
-		if (ss.length == 6)
-			name = ss[5];
-		else
-			name = "";
 		n = Integer.parseInt(qs.poll().trim());
 		moves = new int[n][4];
 		for (int i = 0; i < n; i++) {
@@ -35,67 +22,20 @@ public class Part implements Cloneable, Comparable<Part> {
 		validate();
 	}
 
-	private Part(Part p) {
-		ints = p.ints.clone();
-		name = p.name;
-		n = p.n;
-		moves = new int[n][];
-		for (int i = 0; i < n; i++)
-			moves[i] = p.moves[i].clone();
-		off = p.off;
-		validate();
-	}
-
-	public void check(AnimU anim) {
-		int mms = anim.mamodel.n;
-		int ics = anim.imgcut.n;
-		if (ints[0] >= mms)
-			ints[0] = 0;
-		if (ints[0] < 0)
-			ints[0] = 0;
-		if (ints[1] == 2)
-			for (int[] move : moves)
-				if (move[1] >= ics)
-					move[1] = 0;
-	}
-
-	@Override
-	public Part clone() {
-		return new Part(this);
-	}
-
-	@Override
-	public int compareTo(Part o) {
-		return Integer.compare(ints[0], o.ints[0]);
-	}
-
-	public void validate() {
-		int doff = 0;
-		if (n != 0 && moves[0][0] - off < 0)
-			doff -= moves[0][0];
-		for (int i = 0; i < n; i++)
-			moves[i][0] += doff;
-		off += doff;
-		fir = moves.length == 0 ? 0 : moves[0][0];
-		max = n > 0 ? moves[n - 1][0] : 0;
-	}
-
 	protected void ensureLast(EPart[] es) {
 		if (n == 0)
 			return;
-		frame = moves[n - 1][0];
-		es[ints[0]].alter(ints[1], vd = moves[n - 1][1]);
+		es[ints[0]].alter(ints[1], moves[n - 1][1]);
 	}
 
 	protected int getMax() {
 		return ints[2] > 1 ? fir + (max - fir) * ints[2] : max;
 	}
 
-	protected void update(int f, EPart[] es) {
-		frame = f;
+	protected void update(int frame, EPart[] es) {
 		for (int i = 0; i < n; i++)
 			if (frame == moves[i][0])
-				es[ints[0]].alter(ints[1], vd = moves[i][1]);
+				es[ints[0]].alter(ints[1], moves[i][1]);
 			else if (i < n - 1 && frame > moves[i][0] && frame < moves[i + 1][0]) {
 				if (ints[1] > 1) {
 					int f0 = moves[i][0];
@@ -113,8 +53,7 @@ public class Part implements Cloneable, Comparable<Part> {
 						else
 							ti = Math.sqrt(1 - Math.pow(1 - ti, -moves[i][3]));
 					else if (moves[i][2] == 3) {
-						vd = ease3(i, frame);
-						es[ints[0]].alter(ints[1], vd);
+						es[ints[0]].alter(ints[1], ease3(i, frame));
 						break;
 					} else if (moves[i][2] == 4)
 						if (moves[i][3] > 0)
@@ -123,13 +62,23 @@ public class Part implements Cloneable, Comparable<Part> {
 							ti = Math.sin(ti * Math.PI / 2);
 						else
 							ti = (1 - Math.cos(ti * Math.PI)) / 2;
-					vd = (int) ((v1 - v0) * ti + v0);
-					es[ints[0]].alter(ints[1], vd);
+					es[ints[0]].alter(ints[1], (int) ((v1 - v0) * ti + v0));
 					break;
 				}
 			}
 		if (n > 0 && frame > moves[n - 1][0])
 			ensureLast(es);
+	}
+
+	protected void validate() {
+		int doff = 0;
+		if (n != 0 && moves[0][0] - off < 0)
+			doff -= moves[0][0];
+		for (int i = 0; i < n; i++)
+			moves[i][0] += doff;
+		off += doff;
+		fir = moves.length == 0 ? 0 : moves[0][0];
+		max = n > 0 ? moves[n - 1][0] : 0;
 	}
 
 	private int ease3(int i, int frame) {

@@ -2,7 +2,7 @@ package main;
 
 import javax.swing.SwingUtilities;
 
-public strictfp class Timer extends Thread {
+public class Timer extends Thread {
 
 	// time consumed by each frame
 	public static int inter = 0;
@@ -44,7 +44,7 @@ public strictfp class Timer extends Thread {
 
 }
 
-strictfp class Inv extends Thread {
+class Inv extends Thread {
 
 	@Override
 	public void run() {

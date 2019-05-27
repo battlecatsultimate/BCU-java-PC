@@ -11,21 +11,19 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 	private final AnimU a;
 	private final int[] args;
 	private final EPart[] ent;
-	private EPart fa, para;
+	private EPart fa;
 	private int hf, vf;
 	private int id, img, gsca;
 	private final MaModel model;
-	private final String name;
 	private P pos, piv, sca;
 
 	private int z, angle, opacity, glow, extend;
 
-	protected EPart(MaModel mm, AnimU aa, int[] part, String str, EPart[] ents) {
+	protected EPart(MaModel mm, AnimU aa, int[] part, EPart[] ents) {
 		model = mm;
 		a = aa;
 		args = part;
 		ent = ents;
-		name = str;
 		setValue();
 	}
 
@@ -109,11 +107,6 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		return -1;
 	}
 
-	@Override
-	public String toString() {
-		return name;
-	}
-
 	protected void drawPart(Graphics2D g, P base) {
 		if (img < 0 || id < 0 || opa() < deadOpa * 0.01 + 1e-5 || a.parts(img) == null)
 			return;
@@ -126,16 +119,6 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		P sc = new P(w, h).times(getSize()).times(base);
 		drawImg(g, bimg, tpiv, sc, opa(), glow == 1, 1.0 * extend / model.ints[0]);
 		g.setTransform(at);
-	}
-
-	protected void setPara(EPart p) {
-		if (p == null) {
-			fa = para;
-			para = null;
-		} else {
-			para = fa;
-			fa = p;
-		}
 	}
 
 	protected void setValue() {

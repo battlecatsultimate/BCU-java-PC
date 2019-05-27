@@ -11,7 +11,7 @@ public class Blender implements Composite, CompositeContext {
 
 	private final int opa, glow;
 
-	public Blender(int opa2, int gl) {
+	protected Blender(int opa2, int gl) {
 		opa = opa2;
 		glow = gl;
 	}

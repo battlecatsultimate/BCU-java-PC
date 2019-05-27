@@ -29,7 +29,7 @@ public class ImgCore {
 	private static final Key[] KEYS = new Key[] { KA, KC, KF, KI };
 	private static final Object[][] VALS = new Object[][] { { KAS, KAD, KAQ }, { KCS, KCD, KCQ }, { KFS, KFD, KFQ },
 			{ KIS, KID, KIQ } };
-			
+
 	public static int deadOpa = 10, fullOpa = 90;
 	public static int[] ints = { 1, 1, 1, 1 };
 
