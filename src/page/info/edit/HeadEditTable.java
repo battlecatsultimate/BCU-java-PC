@@ -385,6 +385,8 @@ class HeadEditTable extends Page {
 				int[] vals = Reader.parseIntsN(strs[strs.length - 1]);
 				val = vals.length == 0 ? -1 : vals[vals.length - 1];
 				int[] sr = sta.map.stars;
+				if (i == 0 && val <= 0)
+					val = 100;
 				if (i < sr.length)
 					if (val > 0)
 						sr[i] = val;

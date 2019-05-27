@@ -22,6 +22,8 @@ import page.JBTN;
 import page.JTG;
 import page.KeyHandler;
 import page.Page;
+import page.awt.BBBuilder;
+import page.battle.BattleBox.OuterBox;
 import util.basis.BasisLU;
 import util.basis.BattleField;
 import util.basis.SBCtrl;
@@ -32,7 +34,7 @@ import util.entity.Entity;
 import util.stage.Recd;
 import util.stage.Stage;
 
-public class BattleInfoPage extends KeyHandler {
+public class BattleInfoPage extends KeyHandler implements OuterBox {
 
 	private static final long serialVersionUID = 1L;
 
@@ -66,7 +68,7 @@ public class BattleInfoPage extends KeyHandler {
 	private boolean pause = false;
 	private Recd recd;
 
-	public int spe = 0, upd = 0;
+	private int spe = 0, upd = 0;
 
 	public BattleInfoPage(Page p, Recd rec, int conf) {
 		super(p);
@@ -116,6 +118,11 @@ public class BattleInfoPage extends KeyHandler {
 	@Override
 	public void callBack(Object o) {
 		changePanel(getFront());
+	}
+
+	@Override
+	public int getSpeed() {
+		return spe;
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package util.pack;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -85,16 +84,9 @@ public class CasStore extends FixIndexList<VImg> implements AbCastle {
 		int n = cas.nextInt();
 		for (int i = 0; i < n; i++) {
 			int val = cas.nextInt();
-			BufferedImage bimg;
-			ByteArrayInputStream bais = new ByteArrayInputStream(cas.nextBytesI());
-			try {
-				bimg = ImageIO.read(bais);
-				VImg vimg = new VImg(bimg);
-				vimg.name = Data.trio(val);
-				set(val, vimg);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			VImg vimg = new VImg(cas.nextBytesI());
+			vimg.name = Data.trio(val);
+			set(val, vimg);
 		}
 	}
 

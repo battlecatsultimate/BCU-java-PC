@@ -246,6 +246,8 @@ public class UnitManagePage extends Page {
 
 			@Override
 			public void focusLost(FocusEvent fe) {
+				if (changing || uni == null)
+					return;
 				int lv = Reader.parseIntN(maxl.getText());
 				if (lv > 0)
 					uni.max = lv;

@@ -17,7 +17,9 @@ import event.EventBase;
 import event.EventReader;
 import io.BCMusic;
 import io.Reader;
+import io.Writer;
 import main.MainBCU;
+import main.Opts;
 import page.view.ViewBox;
 import util.ImgCore;
 
@@ -31,6 +33,7 @@ public class ConfigPage extends Page {
 	private final JTG prel = new JTG(0, "preload");
 	private final JTG whit = new JTG(0, "white");
 	private final JTG refe = new JTG(0, "axis");
+	private final JTG jogl = new JTG(0, "JOGL");
 	private final JTG musc = new JTG(0, "musc");
 	private final JTG exla = new JTG(0, "exlang");
 	private final JTG extt = new JTG(0, "extip");
@@ -70,6 +73,7 @@ public class ConfigPage extends Page {
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);
+		set(jogl, x, y, 50, 100, 200, 50);
 		set(prel, x, y, 50, 200, 200, 50);
 		set(whit, x, y, 50, 300, 200, 50);
 		set(refe, x, y, 50, 400, 200, 50);
@@ -134,7 +138,7 @@ public class ConfigPage extends Page {
 		whit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				ViewBox.white = whit.isSelected();
+				ViewBox.Conf.white = whit.isSelected();
 			}
 		});
 
@@ -142,6 +146,17 @@ public class ConfigPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				ImgCore.ref = refe.isSelected();
+			}
+		});
+
+		jogl.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				MainBCU.USE_JOGL = jogl.isSelected();
+				if (Opts.conf("This requires restart to apply. Do you want to restart?")) {
+					Writer.logClose(true);
+					System.exit(0);
+				}
 			}
 		});
 
@@ -228,6 +243,7 @@ public class ConfigPage extends Page {
 
 	private void ini() {
 		add(back);
+		add(jogl);
 		add(prel);
 		add(refe);
 		add(whit);
@@ -273,9 +289,10 @@ public class ConfigPage extends Page {
 		exla.setSelected(MainLocale.exLang);
 		extt.setSelected(MainLocale.exTTT);
 		prel.setSelected(MainBCU.preload);
-		whit.setSelected(ViewBox.white);
+		whit.setSelected(ViewBox.Conf.white);
 		refe.setSelected(ImgCore.ref);
 		musc.setSelected(BCMusic.play);
+		jogl.setSelected(MainBCU.USE_JOGL);
 		addListeners();
 	}
 

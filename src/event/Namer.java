@@ -18,7 +18,7 @@ public strictfp class Namer {
 	private static final ResourceBundle RGEN;
 
 	static {
-		String s0 = (MainBCU.write ? "src/" : "") + "event/";
+		String s0 = (MainBCU.WRITE ? "src/" : "") + "event/";
 		RGEN = ResourceBundle.getBundle(s0 + "gacha_en");
 		String[] s1 = new String[] { "event", "group", "item", "lang" };
 		String[] s2 = new String[] { "_en", "_zh", "_en", "_en" };

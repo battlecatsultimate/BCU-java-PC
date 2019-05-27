@@ -4,6 +4,8 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 
+import jogl.util.GLGraphics;
+
 public abstract class StdGLC implements GLEventListener {
 
 	protected int x, y, w, h;

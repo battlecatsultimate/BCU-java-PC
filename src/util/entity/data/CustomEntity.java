@@ -139,7 +139,6 @@ public abstract class CustomEntity extends DataEntity {
 		int m = de.getAtkCount();
 		atks = new AtkDataModel[m];
 		int[][] dat = de.rawAtkData();
-		int pre = 0;
 		for (int i = 0; i < m; i++) {
 			atks[i] = new AtkDataModel(this);
 			MaskAtk am = de.getAtkModel(i);
@@ -149,7 +148,7 @@ public abstract class CustomEntity extends DataEntity {
 					atks[i].proc[j] = am.getProc(j);
 			atks[i].ld0 = am.getShortPoint();
 			atks[i].ld1 = am.getLongPoint();
-			pre = atks[i].pre = dat[i][1] - pre;
+			atks[i].pre = dat[i][1];
 			atks[i].atk = dat[i][0];
 		}
 	}

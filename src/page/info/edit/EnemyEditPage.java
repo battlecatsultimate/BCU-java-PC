@@ -86,7 +86,8 @@ public class EnemyEditPage extends EntityEditPage {
 
 	}
 
-	private void setData(CustomEnemy data) {
+	@Override
+	protected void setData(CustomEntity data) {
 		super.setData(data);
 		fsr.setText("star: " + ce.star);
 		fdr.setText("" + (int) (ce.getDrop() * bas.t().getDropMulti()));

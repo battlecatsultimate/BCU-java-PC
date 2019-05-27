@@ -12,6 +12,7 @@ import util.entity.attack.ContAb;
 import util.pack.NyCastle;
 import util.stage.Castles;
 import util.system.P;
+import util.system.SymCoord;
 import util.system.VImg;
 import util.system.fake.FakeGraphics;
 import util.system.fake.FakeImage;
@@ -50,18 +51,22 @@ public interface BattleBox {
 			gra.drawImage(bimg, x, cy, (int) (bw * siz), (int) (bh * siz));
 		}
 
-		protected final BattleInfoPage page;
-		protected final BattleField bf;
+		public final BattleField bf;
+
+		public int pt = -1;
+
+		protected final OuterBox page;
 		protected final BattleBox box;
+
+		protected double siz, corr, unir; // siz = pix/p;
+
 		private StageBasis sb;
-		protected int pt = -1;
 		private int maxW, maxH, minH; // in p
 		private int pos, midh, prew, preh; // in pix
-		protected double siz, corr, unir; // siz = pix/p;
 
 		private P mouse; // in pix
 
-		public BBPainter(BattleInfoPage bip, BattleField bas, BattleBox bb) {
+		public BBPainter(OuterBox bip, BattleField bas, BattleBox bb) {
 			page = bip;
 			bf = bas;
 			box = bb;
@@ -164,21 +169,11 @@ public interface BattleBox {
 			int ih = (int) (hr * left.getHeight());
 			int iw = (int) (hr * left.getWidth());
 			g.drawImage(left, 0, h - ih, iw, ih);
-			left = Res.getCost(sb.next_lv, mtype > 0);
-			iw = (int) (hr * left.getWidth());
-			ih = (int) (hr * left.getHeight());
-			int dw = (int) (hr * 5);
-			int dh = (int) (hr * 5);
-			g.drawImage(left, dw, h - ih - dh, iw, ih);
-			left = Res.getWorkerLv(sb.work_lv, mtype > 0);
-			iw = (int) (hr * left.getWidth());
-			ih = (int) (hr * left.getHeight());
-			dw = (int) (hr * 5);
-			dh = (int) (hr * 130);
-			g.drawImage(left, dw, h - dh, iw, ih);
 			iw = (int) (hr * right.getWidth());
 			ih = (int) (hr * right.getHeight());
 			g.drawImage(right, w - iw, h - ih, iw, ih);
+			Res.getCost(sb.next_lv, mtype > 0, new SymCoord(g, hr, hr * 5, h - hr * 5, 2));
+			Res.getWorkerLv(sb.work_lv, mtype > 0, new SymCoord(g, hr, hr * 5, h - hr * 130, 0));
 			int hi = h;
 			double marg = 0;
 			if (ctype == 0)
@@ -216,20 +211,14 @@ public interface BattleBox {
 				if (sb.locks[i / 5][i % 5])
 					g.colRect(x, y, iw, ih, 0, 255, 0, 100);
 				if (cool > 0) {
-					dw = (int) (hr * 10);
-					dh = (int) (hr * 12);
+					int dw = (int) (hr * 10);
+					int dh = (int) (hr * 12);
 					double cd = 1.0 * cool / sb.elu.maxC[i / 5][i % 5];
 					int xw = (int) (cd * (iw - dw * 2));
 					g.colRect(x + iw - dw - xw, y + ih - dh * 2, xw, dh, 0, 0, 0);
 					g.colRect(x + dw, y + ih - dh * 2, iw - dw * 2 - xw, dh, 100, 212, 255);
-				} else {
-					img = Res.getCost(pri, !b);
-					x += iw;
-					y += ih;
-					iw = (int) (hr * img.getWidth());
-					ih = (int) (hr * img.getHeight());
-					g.drawImage(img, x - iw, y - ih, iw, ih);
-				}
+				} else
+					Res.getCost(pri, !b, new SymCoord(g, hr, x += iw, y += ih, 3));
 			}
 			unir = hr;
 		}
@@ -253,18 +242,11 @@ public interface BattleBox {
 			gra.setTransform(at);
 			posx -= castw * siz / 2;
 			posy -= casth * siz;
-			FakeImage bimg = Res.getBase(sb.ebase);
-			int bw = (int) (bimg.getWidth() * siz);
-			int bh = (int) (bimg.getHeight() * siz);
-			gra.drawImage(bimg, posx, posy, bw, bh);
+			Res.getBase(sb.ebase, new SymCoord(gra, siz, posx, posy, 0));
 			posx = (int) (((sb.st.len - 800) * ratio + off) * siz + pos);
 			drawNyCast(gra, (int) (midh - road_h * siz), posx, siz, sb.nyc);
 			posx += castw * siz / 2;
-			bimg = Res.getBase(sb.ubase);
-			bw = (int) (bimg.getWidth() * siz);
-			bh = (int) (bimg.getHeight() * siz);
-			posx -= bw;
-			gra.drawImage(bimg, posx, posy, bw, bh);
+			Res.getBase(sb.ubase, new SymCoord(gra, siz, posx, posy, 1));
 		}
 
 		private void drawEntity(FakeGraphics gra) {
@@ -317,6 +299,7 @@ public interface BattleBox {
 
 			if (sb.s_stop > 0) {
 				gra.setComposite(FakeGraphics.GRAY, 0);
+				gra.setColor(FakeGraphics.WHITE);
 				gra.fillRect(0, 0, w, h);
 				gra.setComposite(FakeGraphics.DEF);
 				for (int i = 0; i < 10; i++) {
@@ -337,11 +320,10 @@ public interface BattleBox {
 
 		private void drawTop(FakeGraphics g) {
 			int w = box.getWidth();
-			FakeImage bimg = Res.getMoney((int) sb.mon, sb.max_mon);
-			int ih = bimg.getHeight();
-			g.drawImage(bimg, w - bimg.getWidth(), 0);
+			P p = Res.getMoney((int) sb.mon, sb.max_mon, new SymCoord(g, 1, w, 0, 1));
+			int ih = (int) p.y;
 			int n = 0;
-			bimg = Res.battle[2][1].getImg();
+			FakeImage bimg = Res.battle[2][1].getImg();
 			int cw = bimg.getWidth();
 			if ((sb.conf[0] & 2) > 0) {
 				bimg = Res.battle[2][sb.sniper.enabled ? 2 : 4].getImg();
@@ -353,8 +335,8 @@ public interface BattleBox {
 				g.drawImage(bimg, w - cw * (n + 1), ih);
 				n++;
 			}
-			bimg = Res.battle[2][page.spe > 0 ? 0 : 3].getImg();
-			for (int i = 0; i < Math.abs(page.spe); i++)
+			bimg = Res.battle[2][page.getSpeed() > 0 ? 0 : 3].getImg();
+			for (int i = 0; i < Math.abs(page.getSpeed()); i++)
 				g.drawImage(bimg, w - cw * (i + 1 + n), ih);
 		}
 
@@ -376,6 +358,14 @@ public interface BattleBox {
 			adjust(dif, ind);
 			reset();
 		}
+
+	}
+
+	static interface OuterBox {
+
+		public void callBack(Object o);
+
+		public int getSpeed();
 
 	}
 

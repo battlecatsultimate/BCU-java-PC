@@ -16,6 +16,7 @@ import main.Opts;
 import page.JBTN;
 import page.JTG;
 import page.Page;
+import page.awt.BBBuilder;
 import page.support.AnimLCR;
 import page.view.AbViewPage;
 import util.anim.AnimC;
@@ -39,7 +40,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 	private final IconBox ib;
 
 	public DIYViewPage(Page p) {
-		super(p, new IconBox());
+		super(p, BBBuilder.def.getIconBox());
 		ib = (IconBox) vb;
 		aep = new EditHead(this, 0);
 		ini();
@@ -47,7 +48,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 	}
 
 	public DIYViewPage(Page p, DIYAnim ac) {
-		super(p, new IconBox());
+		super(p, BBBuilder.def.getIconBox());
 		ib = (IconBox) vb;
 		aep = new EditHead(this, 0);
 		if (!DIYAnim.map.containsValue(ac))
@@ -57,7 +58,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 	}
 
 	public DIYViewPage(Page p, EditHead bar) {
-		super(p, new IconBox());
+		super(p, BBBuilder.def.getIconBox());
 		ib = (IconBox) vb;
 
 		aep = bar;
@@ -140,7 +141,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				enabler(!ics.isSelected());
-				ib.blank = ics.isSelected();
+				ib.setBlank(ics.isSelected());
 			}
 
 		});
@@ -150,22 +151,24 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				int t = jcb.getSelectedIndex();
-				IconBox.mode = t / 4;
-				IconBox.type = t % 4;
-				IconBox.glow = IconBox.type + IconBox.mode > 1 ? 1 : 0;
+				IconBox.IBConf.mode = t / 4;
+				IconBox.IBConf.type = t % 4;
+				IconBox.IBConf.glow = IconBox.IBConf.type + IconBox.IBConf.mode > 1 ? 1 : 0;
 				ib.changeType();
 			}
 
 		});
 
 		icc.setLnr(x -> {
-			if (IconBox.mode == 0 && Opts.conf("are you sure to replace display icon? This action cannot be undone")) {
+			if (IconBox.IBConf.mode == 0
+					&& Opts.conf("are you sure to replace display icon? This action cannot be undone")) {
 				AnimC ac = aep.anim.anim;
 				ac.edi = new VImg(ib.getClip());
 				ac.saveIcon();
 				jlu.repaint();
 			}
-			if (IconBox.mode == 1 && Opts.conf("are you sure to replace battle icon? This action cannot be undone")) {
+			if (IconBox.IBConf.mode == 1
+					&& Opts.conf("are you sure to replace battle icon? This action cannot be undone")) {
 				AnimC ac = aep.anim.anim;
 				ac.uni = new VImg(ib.getClip());
 				ac.saveUni();
@@ -183,7 +186,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		add(icc);
 		add(jcb);
 		add(uni);
-		jcb.setSelectedIndex(IconBox.type);
+		jcb.setSelectedIndex(IconBox.IBConf.type);
 		ics.setEnabled(false);
 		icc.setEnabled(false);
 		jlu.setCellRenderer(new AnimLCR());

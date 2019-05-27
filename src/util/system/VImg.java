@@ -1,8 +1,6 @@
 package util.system;
 
-import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.swing.ImageIcon;
@@ -14,28 +12,6 @@ import util.system.files.FileData;
 import util.system.files.VFile;
 
 public class VImg extends ImgCore {
-
-	public static FakeImage combine(VImg... imgs) {
-		FakeImage[] parts = new FakeImage[imgs.length];
-		int[] pos = new int[imgs.length + 1];
-		int h = 0;
-		for (int i = 0; i < imgs.length; i++) {
-			parts[i] = imgs[i].getImg();
-			pos[i + 1] = pos[i] + parts[i].getWidth();
-			h = Math.max(h, parts[i].getHeight());
-		}
-		BufferedImage ans = new BufferedImage(pos[imgs.length], h, BufferedImage.TYPE_4BYTE_ABGR);
-		Graphics g = ans.getGraphics();
-		for (int i = 0; i < imgs.length; i++)
-			g.drawImage((Image) parts[i].bimg(), pos[i], 0, null);
-		g.dispose();
-		try {
-			return FakeImage.read(ans);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
 
 	private final VFile<? extends FileData> file;
 
@@ -69,7 +45,7 @@ public class VImg extends ImgCore {
 
 	public ImageIcon getIcon() {
 		check();
-		if (bimg == null)
+		if (bimg == null || bimg.bimg() == null)
 			return null;
 		return new ImageIcon((Image) bimg.bimg());
 	}

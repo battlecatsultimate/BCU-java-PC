@@ -37,7 +37,7 @@ import util.unit.DIYAnim;
 
 public class Writer extends DataIO {
 
-	private static File log;
+	private static File log, ph;
 	private static WriteStream ps;
 
 	public static boolean check(File f) {
@@ -89,15 +89,18 @@ public class Writer extends DataIO {
 			ps.println("user: " + BCJSON.USERNAME);
 		}
 		ps.close();
+		ph.deleteOnExit();
 		if (log.length() == 0)
 			log.deleteOnExit();
 		else
 			BCJSON.report(log);
 	}
 
-	public static void logSetup() {
+	public static void logPrepare() {
 		String str = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 		log = new File("./logs/" + str + ".log");
+		ph = new File("./logs/placeholder");
+
 		if (!log.getParentFile().exists())
 			log.getParentFile().mkdirs();
 		try {
@@ -109,7 +112,21 @@ public class Writer extends DataIO {
 			Opts.pop(Opts.SECTY);
 			System.exit(0);
 		}
-		if (MainBCU.write) {
+		try {
+			if (ph.exists()) {
+				if (!Opts.conf("<html>" + "Another BCU is running in this folder or last BCU doesn't close properly. "
+						+ "<br> Are you sure to run? It might damage your save.</html>")) {
+					logClose(false);
+					System.exit(0);
+				}
+			}
+			ph.createNewFile();
+		} catch (IOException e) {
+		}
+	}
+
+	public static void logSetup() {
+		if (MainBCU.WRITE) {
 			System.setErr(ps);
 			System.setOut(ps);
 		}
@@ -309,9 +326,9 @@ public class Writer extends DataIO {
 		out.println("preload= " + (MainBCU.preload ? 1 : 0));
 		int[] is = ImgCore.ints;
 		out.println("render= {" + is[0] + "," + is[1] + "," + is[2] + "," + is[3] + "}");
-		out.println("white bg= " + (ViewBox.white ? 1 : 0));
+		out.println("white bg= " + (ViewBox.Conf.white ? 1 : 0));
 		out.println("show axis= " + (ImgCore.ref ? 1 : 0));
-		out.println("--- place holder ---");
+		out.println("use OpenGL: " + (MainBCU.USE_JOGL ? 1 : 0));
 		out.println("min opacity= " + ImgCore.deadOpa);
 		out.println("max opacity= " + ImgCore.fullOpa);
 		out.println("filter= " + MainBCU.FILTER_TYPE);

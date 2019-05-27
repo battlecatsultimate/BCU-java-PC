@@ -4,8 +4,11 @@ import java.awt.image.BufferedImage;
 
 import util.anim.ImgCut;
 import util.entity.AbEntity;
+import util.system.P;
+import util.system.SymCoord;
 import util.system.VImg;
 import util.system.fake.FakeImage;
+import util.system.fake.ImageBuilder;
 import util.unit.Form;
 
 public class Res extends ImgCore {
@@ -17,29 +20,29 @@ public class Res extends ImgCore {
 
 	private static VImg[][] icon = new VImg[4][];
 
-	public static FakeImage getBase(AbEntity ae) {
+	public static P getBase(AbEntity ae, SymCoord coor) {
 		long h = ae.health;
 		if (h < 0)
 			h = 0;
 		int[] val0 = getLab(h);
 		int[] val1 = getLab(ae.maxH);
-		VImg[] input = new VImg[val0.length + val1.length + 1];
+		FakeImage[] input = new FakeImage[val0.length + val1.length + 1];
 		for (int i = 0; i < val0.length; i++)
-			input[i] = num[5][val0[i]];
-		input[val0.length] = num[5][10];
+			input[i] = num[5][val0[i]].getImg();
+		input[val0.length] = num[5][10].getImg();
 		for (int i = 0; i < val1.length; i++)
-			input[val0.length + i + 1] = num[5][val1[i]];
-		return VImg.combine(input);
+			input[val0.length + i + 1] = num[5][val1[i]].getImg();
+		return coor.draw(input);
 	}
 
-	public static FakeImage getCost(int cost, boolean enable) {
+	public static P getCost(int cost, boolean enable, SymCoord coor) {
 		if (cost == -1)
-			return battle[0][3].getImg();
+			return coor.draw(battle[0][3].getImg());
 		int[] val = getLab(cost);
-		VImg[] input = new VImg[val.length];
+		FakeImage[] input = new FakeImage[val.length];
 		for (int i = 0; i < val.length; i++)
-			input[i] = num[enable ? 3 : 4][val[i]];
-		return VImg.combine(input);
+			input[i] = num[enable ? 3 : 4][val[i]].getImg();
+		return coor.draw(input);
 	}
 
 	public static BufferedImage getIcon(int type, int id) {
@@ -50,20 +53,20 @@ public class Res extends ImgCore {
 		return (BufferedImage) icon[type][id].getImg().bimg();
 	}
 
-	public static FakeImage getMoney(int mon, int max) {
+	public static P getMoney(int mon, int max, SymCoord coor) {
 		int[] val0 = getLab(mon);
 		int[] val1 = getLab(max);
-		VImg[] input = new VImg[val0.length + val1.length + 1];
+		FakeImage[] input = new FakeImage[val0.length + val1.length + 1];
 		for (int i = 0; i < val0.length; i++)
-			input[i] = num[0][val0[i]];
-		input[val0.length] = num[0][10];
+			input[i] = num[0][val0[i]].getImg();
+		input[val0.length] = num[0][10].getImg();
 		for (int i = 0; i < val1.length; i++)
-			input[val0.length + i + 1] = num[0][val1[i]];
-		return VImg.combine(input);
+			input[val0.length + i + 1] = num[0][val1[i]].getImg();
+		return coor.draw(input);
 	}
 
-	public static FakeImage getWorkerLv(int lv, boolean enable) {
-		return VImg.combine(num[enable ? 1 : 2][10], num[enable ? 1 : 2][lv]);
+	public static P getWorkerLv(int lv, boolean enable, SymCoord coor) {
+		return coor.draw(num[enable ? 1 : 2][10].getImg(), num[enable ? 1 : 2][lv].getImg());
 	}
 
 	public static void readData() {
@@ -110,6 +113,7 @@ public class Res extends ImgCore {
 	}
 
 	private static void readAbiIcon() {
+		ImageBuilder.icon = true;
 		ImgCut ic015 = ImgCut.newIns("./org/page/img015.imgcut");
 		VImg img015 = new VImg("./org/page/img015.png");
 		FakeImage[] parts = ic015.cut(img015.getImg());
@@ -180,7 +184,7 @@ public class Res extends ImgCore {
 		icon[0][ABI_GLASS] = new VImg("./org/page/icons/Suicide.png");
 		icon[1][P_BURROW] = new VImg("./org/page/icons/Burrow.png");
 		icon[1][P_REVIVE] = new VImg("./org/page/icons/Revive.png");
-
+		ImageBuilder.icon = false;
 	}
 
 	private static void readBattle() {

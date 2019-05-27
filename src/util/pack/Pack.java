@@ -262,6 +262,9 @@ public class Pack extends Data {
 				rely.add(head.nextInt());
 			try {
 				bcuver = head.nextInt();
+				// mistake handling
+				if (bcuver == 406010)
+					bcuver = 40610;
 				time = head.nextString();
 				version = head.nextInt();
 				author = head.nextString();

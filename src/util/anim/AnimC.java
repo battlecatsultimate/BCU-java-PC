@@ -1,6 +1,5 @@
 package util.anim;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -9,8 +8,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
-
-import javax.imageio.ImageIO;
 
 import io.InStream;
 import io.OutStream;
@@ -53,9 +50,8 @@ public class AnimC extends AnimU {
 		loaded = true;
 		partial = true;
 		saved = true;
-		ByteArrayInputStream bais = new ByteArrayInputStream(is.nextBytesI());
 		try {
-			num = FakeImage.read(bais);
+			num = FakeImage.read(is.nextBytesI());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -67,24 +63,17 @@ public class AnimC extends AnimU {
 			anims[i] = MaAnim.newIns(new FDByte(is.nextBytesI()));
 		parts = imgcut.cut(num);
 		if (!is.end()) {
-			bais = new ByteArrayInputStream(is.nextBytesI());
-			try {
-				VImg vimg = new VImg(ImageIO.read(bais));
-				if (vimg.getImg().getHeight() == 32)
-					edi = vimg;
-				else
-					uni = vimg;
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+
+			VImg vimg = new VImg(is.nextBytesI());
+			if (vimg.getImg().getHeight() == 32)
+				edi = vimg;
+			else
+				uni = vimg;
 		}
 		if (!is.end()) {
-			bais = new ByteArrayInputStream(is.nextBytesI());
-			try {
-				uni = new VImg(ImageIO.read(bais));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+
+			uni = new VImg(is.nextBytesI());
+
 		}
 	}
 

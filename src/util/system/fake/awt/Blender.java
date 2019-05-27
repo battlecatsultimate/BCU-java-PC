@@ -20,7 +20,7 @@ public class Blender implements Composite, CompositeContext {
 
 	@Override
 	public void compose(Raster src, Raster dst, WritableRaster out) {
-		if (ViewBox.white)
+		if (ViewBox.Conf.white)
 			comp4(src, dst, out);
 		else
 			comp3(src, dst, out);

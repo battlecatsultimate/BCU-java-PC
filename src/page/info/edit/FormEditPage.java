@@ -117,7 +117,8 @@ public class FormEditPage extends EntityEditPage {
 
 	}
 
-	private void setData(CustomUnit data) {
+	@Override
+	protected void setData(CustomEntity data) {
 		super.setData(data);
 		flv.setText("" + lv);
 		frs.setText("" + bas.t().getFinRes(cu.getRespawn()));

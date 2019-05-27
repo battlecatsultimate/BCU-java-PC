@@ -220,7 +220,7 @@ public class BackupTreePage extends Page {
 		sntr.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (sel.getData() == null)
+				if (sel == null || sel.getData() == null)
 					return;
 				String s0 = sel.getName();
 				String s1 = sel.getParent().getName();
@@ -353,6 +353,7 @@ public class BackupTreePage extends Page {
 		dele.setEnabled(b);
 		rest.setEnabled(b);
 		diff.setEnabled(jlm.getSelectedValuesList().size() > 1);
+		setSele();
 	}
 
 	private void setList() {

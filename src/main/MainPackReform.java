@@ -13,7 +13,7 @@ public class MainPackReform {
 		System.out.println("start");
 		Reader.getData$0();
 		ZipLib.init();
-		Writer.logSetup();
+		Writer.logPrepare();
 		Reader.getData$1();
 		System.out.println("loaded");
 		Pack p = new Pack(asg);

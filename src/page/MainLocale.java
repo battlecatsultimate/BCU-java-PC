@@ -33,7 +33,7 @@ public strictfp class MainLocale {
 
 	static {
 		for (int i = 0; i < 4; i++)
-			RENS[i] = ResourceBundle.getBundle((MainBCU.write ? "src/" : "") + "page/" + RENN[i], Locale.ENGLISH);
+			RENS[i] = ResourceBundle.getBundle((MainBCU.WRITE ? "src/" : "") + "page/" + RENN[i], Locale.ENGLISH);
 	}
 
 	public static int lang = 0;
