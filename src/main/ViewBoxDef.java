@@ -13,16 +13,17 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
-
 import util.EAnimU;
 import util.ImgCore;
 import util.P;
 
-class ViewBoxDef extends Canvas implements MouseListener, MouseWheelListener, MouseMotionListener {
-
-	private static final Color c0 = new Color(70, 140, 160), c1 = new Color(85, 185, 205);
-	private static final double res = 0.95;
+class ViewBoxDef extends Canvas implements MouseListener, MouseWheelListener, MouseMotionListener
+{
 	private static final long serialVersionUID = 1L;
+
+	private static final Color c0 = new Color(70, 140, 160);
+	private static final Color c1 = new Color(85, 185, 205);
+	private static final double res = 0.95;
 
 	private EAnimU ent;
 	private final P ori = new P(0, 0);
@@ -32,7 +33,8 @@ class ViewBoxDef extends Canvas implements MouseListener, MouseWheelListener, Mo
 
 	private double siz = 0.5;
 
-	protected ViewBoxDef() {
+	protected ViewBoxDef()
+	{
 		this.addMouseListener(this);
 		this.addMouseMotionListener(this);
 		this.addMouseWheelListener(this);
@@ -41,11 +43,13 @@ class ViewBoxDef extends Canvas implements MouseListener, MouseWheelListener, Mo
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
+	public void mouseClicked(MouseEvent e)
+	{
 	}
 
 	@Override
-	public synchronized void mouseDragged(MouseEvent e) {
+	public synchronized void mouseDragged(MouseEvent e)
+	{
 		if (p == null)
 			return;
 		ori.x += p.x - e.getX();
@@ -54,38 +58,47 @@ class ViewBoxDef extends Canvas implements MouseListener, MouseWheelListener, Mo
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
+	public void mouseEntered(MouseEvent e)
+	{
 	}
 
 	@Override
-	public void mouseExited(MouseEvent e) {
+	public void mouseExited(MouseEvent e)
+	{
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent e) {
+	public void mouseMoved(MouseEvent e)
+	{
 	}
 
 	@Override
-	public synchronized void mousePressed(MouseEvent e) {
+	public synchronized void mousePressed(MouseEvent e)
+	{
 		p = e.getPoint();
 	}
 
 	@Override
-	public synchronized void mouseReleased(MouseEvent e) {
+	public synchronized void mouseReleased(MouseEvent e)
+	{
 		p = null;
 	}
 
 	@Override
-	public void mouseWheelMoved(MouseWheelEvent e) {
+	public void mouseWheelMoved(MouseWheelEvent e)
+	{
 		if (!(e.getSource() instanceof ViewBoxDef))
+		{
 			return;
+		}
+			
 		double d = e.getPreciseWheelRotation();
-
 		siz *= Math.pow(res, d);
 	}
 
 	@Override
-	public synchronized void paint(Graphics g) {
+	public synchronized void paint(Graphics g)
+	{
 		prev = getImage();
 		if (prev == null)
 			return;
@@ -95,21 +108,27 @@ class ViewBoxDef extends Canvas implements MouseListener, MouseWheelListener, Mo
 		g.dispose();
 	}
 
-	protected void setEnt(EAnimU ent) {
+	protected void setEnt(EAnimU ent)
+	{
 		this.ent = ent;
 	}
 
-	protected void timer(int t) {
+	protected void timer(int t)
+	{
 		if (ent != null)
 			ent.update(true);
 		paint(getGraphics());
 	}
 
-	private synchronized BufferedImage getImage() {
+	private synchronized BufferedImage getImage()
+	{
 		int w = getWidth();
 		int h = getHeight();
 		if (w <= 0 || h <= 0)
+		{
 			return null;
+		}
+			
 		BufferedImage img = (BufferedImage) createImage(w, h);
 		Graphics2D gra = (Graphics2D) img.getGraphics();
 		ImgCore.setRenderingHints(gra);

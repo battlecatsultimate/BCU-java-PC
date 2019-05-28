@@ -2,7 +2,8 @@ package main;
 
 import javax.swing.SwingUtilities;
 
-public class Timer extends Thread {
+public class Timer extends Thread
+{
 
 	// time consumed by each frame
 	public static int inter = 0;
@@ -17,15 +18,20 @@ public class Timer extends Thread {
 	private Inv thr = null;
 
 	@Override
-	public void run() {
-		while (true) {
+	public void run()
+	{
+		while (true)
+		{
 			long m = System.currentTimeMillis();
 			state = 0;
 			SwingUtilities.invokeLater(thr = new Inv());
-			try {
+			try
+			{
 				boolean end = false;
-				while (!end) {
-					synchronized (thr) {
+				while (!end)
+				{
+					synchronized (thr)
+					{
 						end = state == 1;
 					}
 					if (!end)
@@ -36,7 +42,9 @@ public class Timer extends Thread {
 				inter = (inter * 9 + 100 * delay / TPF) / 10;
 				int sle = delay >= TPF ? 1 : TPF - delay;
 				sleep(sle);
-			} catch (InterruptedException e) {
+			}
+			catch (InterruptedException e)
+			{
 				return;
 			}
 		}
@@ -44,15 +52,15 @@ public class Timer extends Thread {
 
 }
 
-class Inv extends Thread {
-
+class Inv extends Thread
+{
 	@Override
-	public void run() {
+	public void run()
+	{
 		MainBCU.timer(-1);
-		synchronized (this) {
+		synchronized (this)
+		{
 			Timer.state = 1;
 		}
-
 	}
-
 }

@@ -4,8 +4,8 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
-public class EPart extends ImgCore implements Comparable<EPart> {
-
+public class EPart extends ImgCore implements Comparable<EPart>
+{
 	protected EAnimU ea;
 	private final AnimU a;
 	private final int[] args;
@@ -18,7 +18,8 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 
 	private int z, angle, opacity, glow, extend;
 
-	protected EPart(MaModel mm, AnimU aa, int[] part, EPart[] ents) {
+	protected EPart(MaModel mm, AnimU aa, int[] part, EPart[] ents)
+	{
 		model = mm;
 		a = aa;
 		args = part;
@@ -27,24 +28,34 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 	}
 
 	@Override
-	public int compareTo(EPart o) {
+	public int compareTo(EPart o)
+	{
 		return z > o.z ? 1 : (z == o.z ? 0 : -1);
 	}
 
-	protected void alter(int m, int v) {
+	protected void alter(int m, int v)
+	{
 		if (m == 0)
+		{
 			if (v < ent.length)
 				fa = ent[v];
 			else
 				fa = ent[0];
+		}
 		else if (m == 1)
+		{
 			id = v;
+		}
 		else if (m == 2)
+		{
 			img = v;
-		else if (m == 3) {
+		}
+		else if (m == 3)
+		{
 			z = v;
 			ea.order.sort(null);
-		} else if (m == 4)
+		}
+		else if (m == 4)
 			pos.x = args[4] + v;
 		else if (m == 5)
 			pos.y = args[5] + v;
@@ -68,10 +79,10 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 			vf = v == 0 ? 1 : -1;
 		else if (m == 50)
 			extend = v;
-
 	}
 
-	protected void drawPart(Graphics2D g, P base) {
+	protected void drawPart(Graphics2D g, P base)
+	{
 		if (img < 0 || id < 0 || opa() < deadOpa * 0.01 + 1e-5 || a.parts(img) == null)
 			return;
 		AffineTransform at = g.getTransform();
@@ -85,7 +96,8 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		g.setTransform(at);
 	}
 
-	protected void setValue() {
+	protected void setValue()
+	{
 		if (args[0] >= ent.length)
 			args[0] = 0;
 		fa = args[0] <= -1 ? null : ent[args[0]];
@@ -103,14 +115,16 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		hf = vf = 1;
 	}
 
-	private P getSize() {
+	private P getSize()
+	{
 		double mi = 1.0 / model.ints[0];
 		if (fa == null)
 			return sca.copy().times(gsca * mi * mi);
 		return fa.getSize().times(sca).times(gsca * mi * mi);
 	}
 
-	private double opa() {
+	private double opa()
+	{
 		if (opacity == 0)
 			return 0;
 		if (fa != null)
@@ -118,18 +132,25 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 		return 1.0 * opacity / model.ints[2];
 	}
 
-	private void transform(Graphics2D g, P sizer) {
+	private void transform(Graphics2D g, P sizer)
+	{
 		P siz = sizer;
-		if (fa != null) {
+		if (fa != null)
+		{
 			fa.transform(g, sizer);
 			siz = fa.getSize().times(sizer);
 		}
+		
 		P tpos = pos.copy().times(siz);
-		if (ent[0] != this) {
+		if (ent[0] != this)
+		{
 			g.translate(tpos.x, tpos.y);
 			g.scale(hf, vf);
-		} else {
-			if (model.confs.length > 0) {
+		}
+		else
+		{
+			if (model.confs.length > 0)
+			{
 				int[] data = model.confs[0];
 				P shi = new P(data[2], data[3]).times(getSize());
 				P p3 = shi.times(sizer);
@@ -138,8 +159,11 @@ public class EPart extends ImgCore implements Comparable<EPart> {
 			P p = piv.copy().times(getSize()).times(sizer);
 			g.translate(p.x, p.y);
 		}
+		
 		if (angle != 0)
+		{
 			g.rotate(Math.PI * 2 * angle / model.ints[1]);
+		}
 	}
 
 }
