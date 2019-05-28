@@ -14,6 +14,7 @@ import io.Reader;
 import io.Writer;
 import jogl.util.GLGraphics;
 import jogl.util.GLIB;
+import util.anim.AnimC;
 import util.anim.AnimU;
 import util.anim.EAnimU;
 import util.system.P;
@@ -28,8 +29,9 @@ public class Temp extends StdGLC {
 
 	public static void main(String[] args) throws IOException {
 		ImageBuilder.builder = new GLIB();
-		Reader.getData$0();
 		Writer.logPrepare();
+		Reader.getData$0();
+		Writer.logSetup();
 		ZipLib.init();
 		ZipLib.read();
 		Reader.getData$1();
@@ -39,7 +41,7 @@ public class Temp extends StdGLC {
 		final GLCanvas glcanvas = new GLCanvas(GLStatic.GLC);
 		Temp b = new Temp();
 		glcanvas.addGLEventListener(b);
-		glcanvas.setSize(800, 800);
+		glcanvas.setSize(1600, 1000);
 
 		// creating frame
 		final JFrame frame = new JFrame(" Basic Frame");
@@ -47,14 +49,14 @@ public class Temp extends StdGLC {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-				// Writer.logClose(false);
+				Writer.logClose(false);
 				System.exit(0);
 
 			}
 
 		});
 		// 91, 377
-		test = UnitStore.get(377, 2, false).anim;
+		test = new AnimC("dio");
 		test.check();
 		ent = test.getEAnim(2);
 
