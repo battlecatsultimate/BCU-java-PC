@@ -166,6 +166,20 @@ public class GLGraphics implements GeoAuto {
 
 	}
 
+	private static class GLC {
+
+		public GLC(int mod, int... par) {
+			mode = mod;
+			para = par;
+		}
+
+		int mode;
+
+		int[] para;
+
+		boolean done;
+	}
+
 	private static final int PURE = 0, IMG = 1;
 
 	protected static int count = 0;
@@ -178,8 +192,8 @@ public class GLGraphics implements GeoAuto {
 	private float[] trans = new float[] { 1, 0, 0, 0, 1, 0 };
 
 	private int mode = PURE;
-
 	private int bind = 0;
+	private GLC comp = new GLC(DEF);
 
 	public GLGraphics(GL2 gl2, int wid, int hei) {
 		g = gl2;
@@ -205,6 +219,7 @@ public class GLGraphics implements GeoAuto {
 	@Override
 	public void drawImage(FakeImage bimg, double x, double y, double w, double h) {
 		checkMode(IMG);
+		compImpl();
 		GLImage gl = (GLImage) bimg.gl();
 		bind(tm.load(this, gl));
 		g.glBegin(GL2ES3.GL_QUADS);
@@ -256,6 +271,20 @@ public class GLGraphics implements GeoAuto {
 
 	@Override
 	public void setComposite(int mode, int... para) {
+		if (mode == GRAY) { // 1-d
+			checkMode(PURE);
+			g.glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
+			setColor(WHITE);
+		} else
+			comp = new GLC(mode, para);
+	}
+
+	private void compImpl() {
+		if (comp.done)
+			return;
+		int mode = comp.mode;
+		int[] para = comp.para;
+		comp.done = true;
 		if (mode == DEF) {
 			// sC *sA + dC *(1-sA)
 			g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -282,15 +311,9 @@ public class GLGraphics implements GeoAuto {
 				g.glUniform1i(tm.mode, 1);// sA=sA*p
 			} else if (para[1] == -1) {// d-s*a
 				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-				g.glUniform1i(tm.mode, -1);// sA=-sA*p
+				g.glUniform1i(tm.mode, 3);// sA=-sA*p
 			}
 		}
-		if (mode == GRAY) { // 1-d
-			checkMode(PURE);
-			g.glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
-			setColor(WHITE);
-		}
-
 	}
 
 	@Override
@@ -336,7 +359,6 @@ public class GLGraphics implements GeoAuto {
 			g.glEnable(GL_TEXTURE_2D);
 			g.glEnable(GL_BLEND);
 			g.glUseProgram(tm.prog);
-			setComposite(DEF);
 		}
 	}
 

@@ -29,6 +29,8 @@ public class ImgCore extends Data {
 				g.setComposite(FakeGraphics.BLEND, (int) (opa * 256), glow ? 1 : 0);
 		else if (glow)
 			g.setComposite(FakeGraphics.BLEND, 256, 1);
+		else
+			g.setComposite(FakeGraphics.DEF);
 		if (extend == 0)
 			drawImage(g, bimg, -piv.x, -piv.y, sc.x, sc.y);
 		else {

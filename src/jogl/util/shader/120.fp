@@ -21,7 +21,7 @@ void main() {
 		c.a*=para;
 		c.xyz=1.0-c.a+c.xyz*c.a;
 	}
-	else if(mode == -1)
+	else if(mode == 3)
 		c.a*=-para;
 	mgl_FragColor=c;
 }
