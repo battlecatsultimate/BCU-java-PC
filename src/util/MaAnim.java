@@ -3,34 +3,42 @@ package util;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayDeque;
+import java.util.List;
 import java.util.Queue;
 
 public class MaAnim
 {
-
 	protected Part[] parts;
-
-	private int max = 1, n;
-
-	protected MaAnim(String str)
+	private int max = 1;
+	private int numOfParts;
+	
+	// dio_00.maanim
+	protected MaAnim(String filename)
 	{
-		Queue<String> qs = null;
+		Queue<String> lineQueue = null;
 		try
 		{
-			qs = new ArrayDeque<>(Files.readAllLines(new File(str).toPath()));
+			File file = new File(filename);
+			Path path = file.toPath();
+			List<String> lines = Files.readAllLines(path);
+			lineQueue = new ArrayDeque<>(lines);
 		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
-		qs.poll();
-		qs.poll();
-		n = Integer.parseInt(qs.poll().trim());
-		parts = new Part[n];
-		for (int i = 0; i < n; i++)
+		
+		lineQueue.poll();	// line 1: [maanim]
+		lineQueue.poll();	// line 2: 1 (unused)
+		String line3 = lineQueue.poll().trim();	// line 3
+		numOfParts = Integer.parseInt(line3);	// line 3: num of parts
+		
+		parts = new Part[numOfParts];
+		for (int i = 0; i < numOfParts; i++)
 		{
-			parts[i] = new Part(qs);
+			parts[i] = new Part(lineQueue);
 		}
 		validate();
 	}
@@ -44,7 +52,7 @@ public class MaAnim
 			eAnim.order.sort(null);
 		}
 		
-		for (int i = 0; i < n; i++)
+		for (int i = 0; i < numOfParts; i++)
 		{
 			int loop = parts[i].ints[2];
 			int smax = parts[i].max;
@@ -103,7 +111,7 @@ public class MaAnim
 	private void validate()
 	{
 		max = 1;
-		for (int i = 0; i < n; i++)
+		for (int i = 0; i < numOfParts; i++)
 		{
 			if (parts[i].getMax() > max)
 			{

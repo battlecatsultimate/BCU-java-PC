@@ -2,29 +2,39 @@ package util;
 
 import java.util.Queue;
 
+// 此class代表單1個零件的設定
 public class Part
 {
 	protected int[] ints = new int[5];
 	private int[][] moves;
-	protected int n, max, off, fir;
+	protected int numOfLines;
+	protected int max;
+	protected int off;
+	protected int fir;
 
 	protected Part(Queue<String> lineQueue)
 	{
-		String[] ss = lineQueue.poll().trim().split(",");
+		// 零件的第1行設定 (3,5,-1,0,0,)
+		// 頭3個數是 part ID (即 3, 5, -1)
+		// 第4個數是 modification
+		// 第5個數是 repeatition
+		String partLine1 = lineQueue.poll().trim();
+		String[] lineValues = partLine1.split(",");
 		for (int i = 0; i < 5; i++)
 		{
-			ints[i] = Integer.parseInt(ss[i].trim());
+			ints[i] = Integer.parseInt(lineValues[i].trim());
 		}
 		
-		n = Integer.parseInt(lineQueue.poll().trim());
+		numOfLines = Integer.parseInt(lineQueue.poll().trim());
 		
-		moves = new int[n][4];
-		for (int i = 0; i < n; i++)
+		// 接下來, 每行4個value (frame, change, ease, ease-parameter)
+		moves = new int[numOfLines][4];
+		for (int i = 0; i < numOfLines; i++)
 		{
-			ss = lineQueue.poll().trim().split(",");
+			lineValues = lineQueue.poll().trim().split(",");
 			for (int j = 0; j < 4; j++)
 			{
-				moves[i][j] = Integer.parseInt(ss[j].trim());
+				moves[i][j] = Integer.parseInt(lineValues[j].trim());
 			}
 		}
 		validate();
@@ -32,9 +42,9 @@ public class Part
 
 	protected void ensureLast(EPart[] es)
 	{
-		if (n == 0)
+		if (numOfLines == 0)
 			return;
-		es[ints[0]].alter(ints[1], moves[n - 1][1]);
+		es[ints[0]].alter(ints[1], moves[numOfLines - 1][1]);
 	}
 
 	protected int getMax()
@@ -44,13 +54,13 @@ public class Part
 
 	protected void update(int frame, EPart[] es)
 	{
-		for (int i = 0; i < n; i++)
+		for (int i = 0; i < numOfLines; i++)
 		{
 			if (frame == moves[i][0])
 			{
 				es[ints[0]].alter(ints[1], moves[i][1]);
 			}
-			else if (i < n - 1 && frame > moves[i][0] && frame < moves[i + 1][0])
+			else if (i < numOfLines - 1 && frame > moves[i][0] && frame < moves[i + 1][0])
 			{
 				if (ints[1] > 1)
 				{
@@ -86,23 +96,23 @@ public class Part
 			}
 		}
 		
-		if (n > 0 && frame > moves[n - 1][0])
+		if (numOfLines > 0 && frame > moves[numOfLines - 1][0])
 			ensureLast(es);
 	}
 
 	protected void validate()
 	{
 		int doff = 0;
-		if (n != 0 && moves[0][0] - off < 0)
+		if (numOfLines != 0 && moves[0][0] - off < 0)
 			doff -= moves[0][0];
 		
-		for (int i = 0; i < n; i++)
+		for (int i = 0; i < numOfLines; i++)
 		{
 			moves[i][0] += doff;
 		}
 		off += doff;
 		fir = moves.length == 0 ? 0 : moves[0][0];
-		max = n > 0 ? moves[n - 1][0] : 0;
+		max = numOfLines > 0 ? moves[numOfLines - 1][0] : 0;
 	}
 
 	private int ease3(int i, int frame)

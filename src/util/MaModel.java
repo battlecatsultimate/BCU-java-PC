@@ -32,9 +32,10 @@ public class MaModel implements Cloneable
 		}
 		
 		lineQueue.poll();	// 1st line: [mamodel]
-		lineQueue.poll();	// 2nd line: 3
+		lineQueue.poll();	// 2nd line: 3 (num of blocks, usually 3)
 		
-		String line3 = lineQueue.poll().trim();
+		// block 1
+		String line3 = lineQueue.poll().trim();	 // number of lines in block 1
 		numOfLine1 = Integer.parseInt(line3);
 		parts = new int[numOfLine1][14];
 		for (int i = 0; i < numOfLine1; i++)
@@ -42,7 +43,7 @@ public class MaModel implements Cloneable
 			String line = lineQueue.poll().trim();
 			String[] lineParts = line.split(",");
 			
-			// only column 1 - 13 are numbers 
+			// only column 1 - 13 are numbers -> parent, (unused), img ID, z-layer, pos-x, pos-y, piv-x, piv-y, sca-x, sca-y, angle, opacity, glow
 			for (int j = 0; j < 13; j++)
 			{
 				parts[i][j] = Integer.parseInt(lineParts[j].trim());
@@ -53,14 +54,14 @@ public class MaModel implements Cloneable
 		// 開始處理最後3行
 		/////////////////////////////////////////////////////////
 		
-		// 倒數第3行
+		// 倒數第3行 (block 2 has one row with 3 numbers -> the unit for scale, angle, opacity)
 		String[] ss = lineQueue.poll().trim().split(",");
 		for (int i = 0; i < 3; i++)
 		{
 			ints[i] = Integer.parseInt(ss[i].trim());
 		}
 		
-		// 倒數第2行
+		// 倒數第2行 (number of lines in block 3)
 		numOfLine2 = Integer.parseInt(lineQueue.poll().trim());
 		
 		// 最後1行
