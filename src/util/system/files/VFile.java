@@ -36,7 +36,7 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 
 	private final List<VFile<T>> subs;
 
-	private final T data;
+	private T data;
 
 	public int mark;
 
@@ -118,6 +118,10 @@ public class VFile<T extends FileData> implements Comparable<VFile<T>> {
 	public void replace(T t) {
 		delete();
 		new VFile<T>(parent, name, t);
+	}
+
+	public void setData(T fd) {
+		data = fd;
 	}
 
 	public void sort() {

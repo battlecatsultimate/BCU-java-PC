@@ -1,6 +1,8 @@
 package util.system.files;
 
+import java.io.File;
 import java.util.Map;
+import java.util.Queue;
 import java.util.TreeMap;
 
 import page.MainLocale;
@@ -8,15 +10,21 @@ import util.system.MultiLangCont;
 import util.system.MultiLangFile;
 import util.system.fake.FakeImage;
 
-public interface AssetData extends ByteData {
+public interface AssetData extends FileData {
 
 	public static AssetData getAsset(byte[] bs) {
 		return new DefAsset(bs);
 	}
 
+	public static AssetData getAsset(File f) {
+		return new FileAsset(f);
+	}
+
 	public static AssetData getAsset(VFile<AssetData> vf) {
 		return new MultiLangAsset(vf);
 	}
+
+	public byte[] getBytes();
 
 	public FakeImage getImg(MultiLangFile mlf);
 
@@ -24,8 +32,21 @@ public interface AssetData extends ByteData {
 
 class DefAsset extends FileByte implements AssetData {
 
-	public DefAsset(byte[] bs) {
+	protected DefAsset(byte[] bs) {
 		super(bs);
+	}
+
+	@Override
+	public FakeImage getImg(MultiLangFile mlf) {
+		return getImg();
+	}
+
+}
+
+class FileAsset extends FDFile implements AssetData {
+
+	protected FileAsset(File f) {
+		super(f);
 	}
 
 	@Override
@@ -46,11 +67,12 @@ class MultiLangAsset implements AssetData {
 
 	@Override
 	public byte[] getBytes() {
-		String loc = MainLocale.LOC_CODE[MainLocale.lang];
-		AssetData ad = map.get(loc);
-		if (ad == null)
-			ad = map.values().iterator().next();
-		return ad.getBytes();
+		return getData().getBytes();
+	}
+
+	@Override
+	public FakeImage getImg() {
+		return getData().getImg();
 	}
 
 	@Override
@@ -58,6 +80,19 @@ class MultiLangAsset implements AssetData {
 		if (!MultiLangCont.VFILE.containsKey(mlf))
 			MultiLangCont.VFILE.put(mlf, this);
 		return getImg();
+	}
+
+	@Override
+	public Queue<String> readLine() {
+		return getData().readLine();
+	}
+
+	private AssetData getData() {
+		String loc = MainLocale.LOC_CODE[MainLocale.lang];
+		AssetData ad = map.get(loc);
+		if (ad == null)
+			ad = map.values().iterator().next();
+		return ad;
 	}
 
 }

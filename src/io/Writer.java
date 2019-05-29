@@ -116,7 +116,6 @@ public class Writer extends DataIO {
 			if (ph.exists()) {
 				if (!Opts.conf("<html>" + "Another BCU is running in this folder or last BCU doesn't close properly. "
 						+ "<br> Are you sure to run? It might damage your save.</html>")) {
-					logClose(false);
 					System.exit(0);
 				}
 			}

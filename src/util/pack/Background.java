@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
 
+import main.Printer;
 import util.anim.AnimI;
 import util.anim.EAnimD;
 import util.anim.ImgCut;
@@ -43,10 +44,14 @@ public class Background extends AnimI {
 		Queue<String> qs = VFile.readLine("./org/battle/bg/bg.csv");
 		qs.poll();
 		for (VFile<AssetData> vf : VFile.get("./org/img/bg/").list()) {
-			String[] strs = qs.poll().split(",");
 			int[] ints = new int[15];
-			for (int i = 0; i < 15; i++)
-				ints[i] = Integer.parseInt(strs[i]);
+			try {
+				String[] strs = qs.poll().split(",");
+				for (int i = 0; i < 15; i++)
+					ints[i] = Integer.parseInt(strs[i]);
+			} catch (Exception e) {
+				Printer.p("BG", 53, e + "");
+			}
 			new Background(new VImg(vf), ints);
 		}
 	}
@@ -72,7 +77,7 @@ public class Background extends AnimI {
 		ewav = BGStore.getBG(0).ewav;
 	}
 
-	protected Background(VImg vimg, int[] ints) {
+	private Background(VImg vimg, int[] ints) {
 		pack = Pack.def;
 		id = pack.bg.size();
 		img = vimg;
@@ -81,8 +86,13 @@ public class Background extends AnimI {
 		for (int i = 0; i < 4; i++)
 			cs[i] = new int[] { ints[i * 3 + 1], ints[i * 3 + 2], ints[i * 3 + 3] };
 		Pack.def.bg.add(this);
-		uwav = new WaveAnim(this, uwavm, uwava);
-		ewav = new WaveAnim(this, ewavm, ewava);
+		if (id <= 107) {
+			uwav = new WaveAnim(this, uwavm, uwava);
+			ewav = new WaveAnim(this, ewavm, ewava);
+		} else {
+			uwav = BGStore.getBG(0).uwav;
+			ewav = BGStore.getBG(0).ewav;
+		}
 	}
 
 	@Override
@@ -102,11 +112,14 @@ public class Background extends AnimI {
 		return bg;
 	}
 
-	public void draw(FakeGraphics g, Point rect, int pos, int h, double siz) {
+	public void draw(FakeGraphics g, Point rect, final int pos, final int h, final double siz) {
 		check();
-		int off = (int) (pos - shift * siz);
-		int fw = (int) (768 * siz);
-		int fh = (int) (510 * siz);
+		final int off = (int) (pos - shift * siz);
+		final int fw = (int) (768 * siz);
+		final int fh = (int) (510 * siz);
+
+		g.gradRect(0, h, rect.x, rect.y - h, 0, h, cs[2], 0, h + fh, cs[3]);
+
 		if (h > fh) {
 			int y = h - fh * 2;
 			if (top && parts.length > TOP) {
@@ -120,7 +133,6 @@ public class Background extends AnimI {
 		for (int x = off; x < rect.x; x += fw)
 			if (x + fw > 0)
 				g.drawImage(parts[BG], x, h - fh, fw, fh);
-		g.gradRect(0, h, rect.x, rect.y - h, 0, h, cs[2], 0, h + fh, cs[3]);
 	}
 
 	public BufferedImage getBg(int w, int h) {

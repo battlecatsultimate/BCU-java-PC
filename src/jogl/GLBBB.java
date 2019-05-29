@@ -23,8 +23,7 @@ public class GLBBB extends BBBuilder {
 
 	@Override
 	public IconBox getIconBox() {
-		// TODO Auto-generated method stub
-		return AWTBBB.INS.getIconBox();
+		return GLStatic.GLBOX ? new GLIconBox() : AWTBBB.INS.getIconBox();
 	}
 
 	@Override
@@ -35,7 +34,6 @@ public class GLBBB extends BBBuilder {
 
 	@Override
 	public ViewBox getViewBox() {
-		// TODO Auto-generated method stub
-		return AWTBBB.INS.getViewBox();
+		return GLStatic.GLBOX ? new GLViewBox(new ViewBox.Controller()) : AWTBBB.INS.getViewBox();
 	}
 }

@@ -9,17 +9,14 @@ import javax.swing.JFrame;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
 
-import decode.ZipLib;
-import io.Reader;
-import io.Writer;
 import jogl.util.GLGraphics;
 import jogl.util.GLIB;
+import util.anim.AnimC;
 import util.anim.AnimU;
 import util.anim.EAnimU;
 import util.system.P;
 import util.system.fake.FakeGraphics;
 import util.system.fake.ImageBuilder;
-import util.unit.UnitStore;
 
 public class Temp extends StdGLC {
 
@@ -28,18 +25,17 @@ public class Temp extends StdGLC {
 
 	public static void main(String[] args) throws IOException {
 		ImageBuilder.builder = new GLIB();
-		Reader.getData$0();
-		Writer.logPrepare();
-		ZipLib.init();
-		ZipLib.read();
-		Reader.getData$1();
+		/*
+		 * Writer.logPrepare(); Reader.getData$0(); Writer.logSetup(); ZipLib.init();
+		 * ZipLib.read(); Reader.getData$1();
+		 */
 
 		System.out.println("finish reading");
 
 		final GLCanvas glcanvas = new GLCanvas(GLStatic.GLC);
 		Temp b = new Temp();
 		glcanvas.addGLEventListener(b);
-		glcanvas.setSize(800, 800);
+		glcanvas.setSize(1600, 1000);
 
 		// creating frame
 		final JFrame frame = new JFrame(" Basic Frame");
@@ -54,7 +50,7 @@ public class Temp extends StdGLC {
 
 		});
 		// 91, 377
-		test = UnitStore.get(377, 2, false).anim;
+		test = new AnimC("dio");
 		test.check();
 		ent = test.getEAnim(2);
 
@@ -66,13 +62,8 @@ public class Temp extends StdGLC {
 		anim.start();
 	}
 
-	private long time = 0;
-
 	@Override
 	public void drawFake(GLGraphics fg) {
-		long tt = System.currentTimeMillis();
-		System.out.println(tt - time);
-		time = tt;
 		fg.setColor(FakeGraphics.RED);
 		fg.fillRect(100, 100, 200, 200);
 		fg.colRect(300, 100, 200, 200, 255, 0, 255);

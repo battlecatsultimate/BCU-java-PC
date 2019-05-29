@@ -16,6 +16,15 @@ public class FDFile implements FileData {
 		file = f;
 	}
 
+	public byte[] getBytes() {
+		try {
+			return Files.readAllBytes(file.toPath());
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	@Override
 	public FakeImage getImg() {
 		try {

@@ -101,7 +101,6 @@ class ViewBoxDef extends Canvas implements ViewBox, ViewBox.VBExporter {
 		setIgnoreRepaint(true);
 	}
 
-	@Override
 	public void draw(FakeGraphics gra) {
 		int w = getWidth();
 		int h = getHeight();
@@ -173,11 +172,6 @@ class ViewBoxDef extends Canvas implements ViewBox, ViewBox.VBExporter {
 		g.dispose();
 		if (lbimg != null)
 			lbimg.add(prev);
-	}
-
-	@Override
-	public void setEnt(EAnimI ent) {
-		this.ent = ent;
 	}
 
 	@Override
