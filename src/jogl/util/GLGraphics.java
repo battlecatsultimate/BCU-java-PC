@@ -155,6 +155,20 @@ public class GLGraphics implements GeoAuto {
 
 	}
 
+	private static class GLC {
+
+		int mode;
+
+		int[] para;
+
+		boolean done;
+
+		public GLC(int mod, int... par) {
+			mode = mod;
+			para = par;
+		}
+	}
+
 	private static class GLT implements FakeTransform {
 
 		private float[] data = new float[6];
@@ -164,20 +178,6 @@ public class GLGraphics implements GeoAuto {
 			return null;
 		}
 
-	}
-
-	private static class GLC {
-
-		public GLC(int mod, int... par) {
-			mode = mod;
-			para = par;
-		}
-
-		int mode;
-
-		int[] para;
-
-		boolean done;
 	}
 
 	private static final int PURE = 0, IMG = 1;
@@ -279,43 +279,6 @@ public class GLGraphics implements GeoAuto {
 			comp = new GLC(mode, para);
 	}
 
-	private void compImpl() {
-		if (comp.done)
-			return;
-		int mode = comp.mode;
-		int[] para = comp.para;
-		comp.done = true;
-		if (mode == DEF) {
-			// sC *sA + dC *(1-sA)
-			g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			g.glUniform1i(tm.mode, 0);
-		}
-		if (mode == TRANS) {
-			g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			g.glUniform1i(tm.mode, 1);
-			g.glUniform1f(tm.para, para[0] * 1.0f / 256);
-		}
-		if (mode == BLEND) {
-			g.glUniform1f(tm.para, para[0] * 1.0f / 256);
-			if (para[1] == 0) {
-				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-				g.glUniform1i(tm.mode, 1);
-			} else if (para[1] == 1) {// d+s*a
-				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-				g.glUniform1i(tm.mode, 1);// sA=sA*p
-			} else if (para[1] == 2) {// d*(1-a+s*a)
-				g.glBlendFunc(GL_ZERO, GL_SRC_COLOR);
-				g.glUniform1i(tm.mode, 2);// sA=sA*p, sC=1-sA+sC*sA
-			} else if (para[1] == 3) {// d+(1-d)*s*a
-				g.glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE);
-				g.glUniform1i(tm.mode, 1);// sA=sA*p
-			} else if (para[1] == -1) {// d-s*a
-				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-				g.glUniform1i(tm.mode, 3);// sA=-sA*p
-			}
-		}
-	}
-
 	@Override
 	public void setRenderingHint(int key, int object) {
 	}
@@ -359,6 +322,43 @@ public class GLGraphics implements GeoAuto {
 			g.glEnable(GL_TEXTURE_2D);
 			g.glEnable(GL_BLEND);
 			g.glUseProgram(tm.prog);
+		}
+	}
+
+	private void compImpl() {
+		if (comp.done)
+			return;
+		int mode = comp.mode;
+		int[] para = comp.para;
+		comp.done = true;
+		if (mode == DEF) {
+			// sC *sA + dC *(1-sA)
+			g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			g.glUniform1i(tm.mode, 0);
+		}
+		if (mode == TRANS) {
+			g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			g.glUniform1i(tm.mode, 1);
+			g.glUniform1f(tm.para, para[0] * 1.0f / 256);
+		}
+		if (mode == BLEND) {
+			g.glUniform1f(tm.para, para[0] * 1.0f / 256);
+			if (para[1] == 0) {
+				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				g.glUniform1i(tm.mode, 1);
+			} else if (para[1] == 1) {// d+s*a
+				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+				g.glUniform1i(tm.mode, 1);// sA=sA*p
+			} else if (para[1] == 2) {// d*(1-a+s*a)
+				g.glBlendFunc(GL_ZERO, GL_SRC_COLOR);
+				g.glUniform1i(tm.mode, 2);// sA=sA*p, sC=1-sA+sC*sA
+			} else if (para[1] == 3) {// d+(1-d)*s*a
+				g.glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE);
+				g.glUniform1i(tm.mode, 1);// sA=sA*p
+			} else if (para[1] == -1) {// d-s*a
+				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+				g.glUniform1i(tm.mode, 3);// sA=-sA*p
+			}
 		}
 	}
 

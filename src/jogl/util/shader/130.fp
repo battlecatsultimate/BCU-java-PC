@@ -1,4 +1,12 @@
 
+#if __VERSION__ >= 130
+   #define varying in
+   out vec4 mgl_FragColor;
+   #define texture2D texture
+ #else
+   #define mgl_FragColor gl_FragColor  
+#endif
+
 varying vec2 texp;
 
 uniform sampler2D tex;
@@ -15,5 +23,5 @@ void main() {
 	}
 	else if(mode == 3)
 		c.a*=-para;
-	gl_FragColor=c;
+	mgl_FragColor=c;
 }

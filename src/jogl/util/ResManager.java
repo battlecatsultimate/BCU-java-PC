@@ -13,8 +13,10 @@ import org.apache.commons.io.IOUtils;
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2ES2;
+import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
+import com.jogamp.opengl.util.glsl.ShaderUtil;
 import com.jogamp.opengl.util.texture.TextureData;
 
 import jogl.GLStatic;
@@ -122,9 +124,9 @@ public class ResManager {
 
 	private void readShader$1() {
 		final ShaderCode vp0 = ShaderCode.create(gl, GL2ES2.GL_VERTEX_SHADER, this.getClass(), "shader", "shader/bin",
-				"120", true);
+				"130", true);
 		final ShaderCode fp0 = ShaderCode.create(gl, GL2ES2.GL_FRAGMENT_SHADER, this.getClass(), "shader", "shader/bin",
-				"120", true);
+				"130", true);
 		vp0.defaultShaderCustomization(gl, true, true);
 		fp0.defaultShaderCustomization(gl, true, true);
 		final ShaderProgram sp0 = new ShaderProgram();
@@ -140,7 +142,13 @@ public class ResManager {
 	private void setupShader(GL2 gl) {
 		try {
 			if (GLStatic.JOGL_SHADER)
-				readShader$1();
+				try {
+					readShader$1();
+				} catch (GLException e) {
+					System.out.println("shader availability: " + ShaderUtil.isShaderCompilerAvailable(gl));
+					e.printStackTrace();
+					readShader$0();
+				}
 			else
 				readShader$0();
 		} catch (Exception e) {

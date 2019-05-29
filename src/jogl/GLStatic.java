@@ -10,7 +10,7 @@ public class GLStatic {
 	public static final GLCapabilities GLC;
 
 	public static boolean ALWAYS_GLIMG = true;
-	public static boolean GLBOX = true;
+	public static boolean GLBOX = false;
 	public static boolean JOGL_SHADER = true;
 
 	static {
