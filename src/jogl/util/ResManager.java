@@ -4,6 +4,7 @@ import static com.jogamp.opengl.GL2.*;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,14 +80,33 @@ public class ResManager {
 
 	private void setupShader(GL2 gl) {
 		try {
+			int[] suc = new int[1];
 			int vi = gl.glCreateShader(GL_VERTEX_SHADER);
 			String vc = load("blender.vs");
 			gl.glShaderSource(vi, 1, new String[] { vc }, new int[] { vc.length() }, 0);
 			gl.glCompileShader(vi);
+
+			gl.glGetShaderiv(vi, GL_COMPILE_STATUS, suc, 0);
+			if (suc[0] == 0) {
+				int[] a = new int[1];
+				byte[] b = new byte[512];
+				gl.glGetShaderInfoLog(vi, 512, a, 0, b, 0);
+				System.out.println("VS: " + new String(Arrays.copyOf(b, a[0])));
+			}
+
 			int fi = gl.glCreateShader(GL_FRAGMENT_SHADER);
 			String fc = load("blender.fs");
 			gl.glShaderSource(fi, 1, new String[] { fc }, new int[] { fc.length() }, 0);
 			gl.glCompileShader(fi);
+
+			gl.glGetShaderiv(fi, GL_COMPILE_STATUS, suc, 0);
+			if (suc[0] == 0) {
+				int[] a = new int[1];
+				byte[] b = new byte[512];
+				gl.glGetShaderInfoLog(fi, 512, a, 0, b, 0);
+				System.out.println("FS: " + new String(Arrays.copyOf(b, a[0])));
+			}
+
 			prog = gl.glCreateProgram();
 			gl.glAttachShader(prog, vi);
 			gl.glAttachShader(prog, fi);
@@ -94,6 +114,7 @@ public class ResManager {
 			gl.glDeleteShader(fi);
 			gl.glLinkProgram(prog);
 			mode = gl.glGetUniformLocation(prog, "mode");
+			para = gl.glGetUniformLocation(prog, "para");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

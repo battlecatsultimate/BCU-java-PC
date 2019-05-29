@@ -22,7 +22,7 @@ public class GLGraphics implements GeoAuto {
 
 		private final GL2 g;
 
-		private int color = -1;
+		private Integer color = null;
 
 		private GeomG(GLGraphics glg, GL2 gl2) {
 			gra = glg;
@@ -35,14 +35,13 @@ public class GLGraphics implements GeoAuto {
 				setColor(r, gr, b);
 			else
 				g.glColor4f(r / 256f, gr / 256f, b / 256f, a[0] / 256f);
-			color = -1;
+			color = null;
 			g.glBegin(GL2ES3.GL_QUADS);
 			addP(x, y);
 			addP(x + w, y);
 			addP(x + w, y + h);
 			addP(x, y + h);
 			g.glEnd();
-			// TODO half transparent
 		}
 
 		protected void drawLine(int i, int j, int x, int y) {
@@ -94,6 +93,8 @@ public class GLGraphics implements GeoAuto {
 		protected void gradRect(int x, int y, int w, int h, int a, int b, int[] c, int d, int e, int[] f) {
 			checkMode();
 			P vec = new P(d - a, e - b);
+			double l = vec.abs();
+			l *= l;
 			g.glBegin(GL2ES3.GL_QUADS);
 
 			for (int i = 0; i < 4; i++) {
@@ -102,7 +103,7 @@ public class GLGraphics implements GeoAuto {
 					px += w;
 				if (i == 1 || i == 2)
 					py += h;
-				float cx = (float) (vec.dotP(new P(px - a, py - b)) / vec.abs());
+				float cx = (float) (vec.dotP(new P(px - a, py - b)) / l);
 				if (cx > 1)
 					cx = 1;
 				if (cx < 0)
@@ -114,7 +115,7 @@ public class GLGraphics implements GeoAuto {
 				addP(px, py);
 			}
 			g.glEnd();
-			color = -1;
+			color = null;
 		}
 
 		protected void setColor(int c) {
@@ -143,7 +144,7 @@ public class GLGraphics implements GeoAuto {
 		}
 
 		private void setColor() {
-			if (color == -1)
+			if (color == null)
 				return;
 			setColor(color >> 16 & 255, color >> 8 & 255, color & 255);
 		}
@@ -284,8 +285,11 @@ public class GLGraphics implements GeoAuto {
 				g.glUniform1i(tm.mode, -1);// sA=-sA*p
 			}
 		}
-		if (mode == GRAY) // 1-d
+		if (mode == GRAY) { // 1-d
+			checkMode(PURE);
 			g.glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
+			setColor(WHITE);
+		}
 
 	}
 
@@ -320,12 +324,14 @@ public class GLGraphics implements GeoAuto {
 	private void checkMode(int i) {
 		if (mode == i)
 			return;
-		if (mode == IMG) {
-			g.glDisable(GL_TEXTURE_2D);
-			g.glEnable(GL_BLEND);
-			g.glUseProgram(0);
-		}
+		int premode = mode;
 		mode = i;
+		if (premode == IMG) {
+			g.glDisable(GL_TEXTURE_2D);
+			g.glUseProgram(0);
+			g.glEnable(GL_BLEND);
+			g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		}
 		if (mode == IMG) {
 			g.glEnable(GL_TEXTURE_2D);
 			g.glEnable(GL_BLEND);
