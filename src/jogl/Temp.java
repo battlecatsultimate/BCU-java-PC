@@ -9,9 +9,6 @@ import javax.swing.JFrame;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
 
-import decode.ZipLib;
-import io.Reader;
-import io.Writer;
 import jogl.util.GLGraphics;
 import jogl.util.GLIB;
 import util.anim.AnimC;
@@ -28,12 +25,10 @@ public class Temp extends StdGLC {
 
 	public static void main(String[] args) throws IOException {
 		ImageBuilder.builder = new GLIB();
-		Writer.logPrepare();
-		Reader.getData$0();
-		Writer.logSetup();
-		ZipLib.init();
-		ZipLib.read();
-		Reader.getData$1();
+		/*
+		 * Writer.logPrepare(); Reader.getData$0(); Writer.logSetup(); ZipLib.init();
+		 * ZipLib.read(); Reader.getData$1();
+		 */
 
 		System.out.println("finish reading");
 
@@ -48,7 +43,7 @@ public class Temp extends StdGLC {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-				Writer.logClose(false);
+				// Writer.logClose(false);
 				System.exit(0);
 
 			}
@@ -67,13 +62,8 @@ public class Temp extends StdGLC {
 		anim.start();
 	}
 
-	private long time = 0;
-
 	@Override
 	public void drawFake(GLGraphics fg) {
-		long tt = System.currentTimeMillis();
-		System.out.println(tt - time);
-		time = tt;
 		fg.setColor(FakeGraphics.RED);
 		fg.fillRect(100, 100, 200, 200);
 		fg.colRect(300, 100, 200, 200, 255, 0, 255);
