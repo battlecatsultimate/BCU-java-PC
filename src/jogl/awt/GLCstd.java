@@ -13,7 +13,7 @@ import com.jogamp.opengl.awt.GLCanvas;
 import jogl.GLStatic;
 import jogl.util.ResManager;
 
-abstract class GLCstd extends GLCanvas implements GLEventListener {
+public abstract class GLCstd extends GLCanvas implements GLEventListener {
 
 	private static final long serialVersionUID = 1L;
 

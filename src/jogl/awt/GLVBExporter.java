@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
+import jogl.recd.GLRecdBImg;
 import page.JTG;
 import page.view.ViewBox;
 import page.view.ViewBox.Loader;
@@ -13,7 +14,7 @@ class GLVBExporter implements ViewBox.VBExporter {
 	private final GLViewBox vb;
 
 	private Loader loader;
-	private GLBImg glr;
+	private GLRecdBImg glr;
 
 	protected GLVBExporter(GLViewBox box) {
 		vb = box;
@@ -40,7 +41,7 @@ class GLVBExporter implements ViewBox.VBExporter {
 			return loader;
 		Queue<BufferedImage> qb = new ArrayDeque<>();
 		loader = new Loader(qb);
-		glr = new GLBImg(vb, qb, loader.thr);
+		glr = new GLRecdBImg(vb, qb, loader.thr);
 		loader.start();
 		return loader;
 	}
