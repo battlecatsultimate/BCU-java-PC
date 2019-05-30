@@ -4,7 +4,11 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.Queue;
+
 import page.JTG;
+import page.RetFunc;
+import page.awt.RecdThread;
 import util.anim.EAnimI;
 import util.system.P;
 
@@ -49,13 +53,33 @@ public interface ViewBox {
 
 	}
 
-	static interface Loader {
+	static class Loader implements RetFunc {
 
-		public void finish(JTG btn);
+		public final RecdThread thr;
 
-		public String getProg();
+		private JTG jtb;
 
-		public void start();
+		public Loader(Queue<BufferedImage> list) {
+			thr = RecdThread.getIns(this, list, null, RecdThread.GIF);
+		}
+
+		@Override
+		public void callBack(Object o) {
+			jtb.setEnabled(true);
+		}
+
+		public void finish(JTG btn) {
+			jtb = btn;
+			jtb.setEnabled(false);
+		}
+
+		public String getProg() {
+			return "remain: " + thr.remain();
+		}
+
+		public void start() {
+			thr.start();
+		}
 
 	}
 

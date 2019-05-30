@@ -160,10 +160,11 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		});
 
 		icc.setLnr(x -> {
+			VImg clip = new VImg(ib.getClip());
 			if (IconBox.IBConf.mode == 0
 					&& Opts.conf("are you sure to replace display icon? This action cannot be undone")) {
 				AnimC ac = aep.anim.anim;
-				ac.edi = new VImg(ib.getClip());
+				ac.edi = clip;
 				ac.saveIcon();
 				jlu.repaint();
 			}

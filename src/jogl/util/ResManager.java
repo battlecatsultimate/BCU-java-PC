@@ -16,7 +16,6 @@ import com.jogamp.opengl.GL2ES2;
 import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
-import com.jogamp.opengl.util.glsl.ShaderUtil;
 import com.jogamp.opengl.util.texture.TextureData;
 
 import jogl.GLStatic;
@@ -145,8 +144,6 @@ public class ResManager {
 				try {
 					readShader$1();
 				} catch (GLException e) {
-					System.out.println("shader availability: " + ShaderUtil.isShaderCompilerAvailable(gl));
-					e.printStackTrace();
 					readShader$0();
 				}
 			else

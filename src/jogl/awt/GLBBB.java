@@ -1,8 +1,8 @@
-package jogl;
+package jogl.awt;
 
 import page.anim.IconBox;
-import page.awt.AWTBBB;
 import page.awt.BBBuilder;
+import page.awt.RecdThread;
 import page.battle.BattleBox;
 import page.battle.BattleBox.OuterBox;
 import page.view.ViewBox;
@@ -23,17 +23,16 @@ public class GLBBB extends BBBuilder {
 
 	@Override
 	public IconBox getIconBox() {
-		return GLStatic.GLBOX ? new GLIconBox() : AWTBBB.INS.getIconBox();
+		return new GLIconBox();
 	}
 
 	@Override
 	public BattleBox getRply(OuterBox bip, BattleField bf, String str, boolean t) {
-		return AWTBBB.INS.getRply(bip, bf, str, t);
-		// TODO change to GL recorder
+		return new GLBBRecd(bip, bf, str, t ? RecdThread.PNG : RecdThread.MP4);
 	}
 
 	@Override
 	public ViewBox getViewBox() {
-		return GLStatic.GLBOX ? new GLViewBox(new ViewBox.Controller()) : AWTBBB.INS.getViewBox();
+		return new GLViewBox(new ViewBox.Controller());
 	}
 }

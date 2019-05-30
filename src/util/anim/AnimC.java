@@ -195,6 +195,7 @@ public class AnimC extends AnimU {
 
 	public void reloImg() {
 		num = VFile.getFile(prev + name + "/" + name + ".png").getData().getImg();
+		ICedited();
 	}
 
 	public void renameTo(String str) {
@@ -289,6 +290,11 @@ public class AnimC extends AnimU {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void setNum(FakeImage fimg) {
+		num = fimg;
+		ICedited();
 	}
 
 	@Override

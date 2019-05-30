@@ -190,7 +190,7 @@ public abstract class AbViewPage extends Page {
 		if (loader == null)
 			gif.setText(0, "gif");
 		else
-			gif.setText(get(0, "gif") + ": " + loader.getProg());
+			gif.setText(loader.getProg());
 		if (!gif.isSelected() && gif.isEnabled())
 			loader = null;
 	}
@@ -249,6 +249,7 @@ public abstract class AbViewPage extends Page {
 					return;
 				if (vb.getEnt() != null)
 					vb.getEnt().setTime(jtl.getValue());
+
 			}
 		});
 

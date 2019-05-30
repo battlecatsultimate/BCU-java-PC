@@ -8,7 +8,10 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 import page.view.ViewBox;
+import util.Res;
 import util.system.P;
+import util.system.fake.FakeGraphics;
+import util.system.fake.FakeImage;
 
 public interface IconBox extends ViewBox {
 
@@ -46,6 +49,50 @@ public interface IconBox extends ViewBox {
 		public synchronized void mouseReleased(MouseEvent e) {
 			drag = false;
 			super.mouseReleased(e);
+		}
+
+		public void postdraw(FakeGraphics gra) {
+			if (cont.isBlank()) {
+				int t = mode == 0 ? type == 1 ? 1 : 0 : 3;
+				FakeImage bimg = Res.ico[mode][t].getImg();
+				int bw = bimg.getWidth();
+				int bh = bimg.getHeight();
+				double r = Math.min(1.0 * line[2] / bw, 1.0 * line[3] / bh);
+				gra.setColor(FakeGraphics.BLACK);
+				gra.drawRect(line[0] - 1, line[1] - 1, line[2] + 1, line[3] + 1);
+				if (glow == 1) {
+					gra.setComposite(FakeGraphics.BLEND, 256, 1);
+					bimg = Res.ico[0][4].getImg();
+					gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r));
+					gra.setComposite(FakeGraphics.DEF);
+				}
+				if (mode == 0 && type > 1) {
+					bimg = Res.ico[0][5].getImg();
+					gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r));
+				} else {
+					bimg = Res.ico[mode][t].getImg();
+					gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r));
+				}
+
+			}
+		}
+
+		public void predraw(FakeGraphics gra) {
+			if (cont.isBlank()) {
+				if (mode == 0 && type > 1 || mode == 1) {
+					FakeImage bimg = Res.ico[mode][type].getImg();
+					int bw = bimg.getWidth();
+					int bh = bimg.getHeight();
+					double r = Math.min(1.0 * line[2] / bw, 1.0 * line[3] / bh);
+					gra.drawImage(bimg, line[0], line[1], bw * r, bh * r);
+					if (glow == 1) {
+						gra.setComposite(FakeGraphics.BLEND, 256, -1);
+						bimg = Res.ico[0][4].getImg();
+						gra.drawImage(bimg, line[0], line[1], bw * r, bh * r);
+						gra.setComposite(FakeGraphics.DEF);
+					}
+				}
+			}
 		}
 
 		protected synchronized void keyPressed(KeyEvent ke) {

@@ -1,8 +1,9 @@
-package jogl;
+package jogl.awt;
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
+
 import jogl.util.GLGraphics;
 import page.battle.BBCtrl;
 import page.battle.BattleBox;
@@ -13,7 +14,7 @@ public class GLBattleBox extends GLCstd implements BattleBox, GLEventListener {
 
 	private static final long serialVersionUID = 1L;
 
-	private final BBPainter bbp;
+	protected final BBPainter bbp;
 
 	public GLBattleBox(OuterBox bip, BattleField bf, int type) {
 		bbp = type == 0 ? new BBPainter(bip, bf, this) : new BBCtrl(bip, (SBCtrl) bf, this);

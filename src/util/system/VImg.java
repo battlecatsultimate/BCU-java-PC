@@ -82,6 +82,11 @@ public class VImg extends ImgCore {
 		bimg = file.getData().getImg();
 		if (ic != null)
 			bimg = ic.cut(bimg)[0];
+		try {
+			bimg.getWidth();
+		} catch (Exception e) {
+			bimg = null;
+		}
 	}
 
 }

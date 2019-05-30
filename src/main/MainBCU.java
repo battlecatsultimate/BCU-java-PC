@@ -8,7 +8,7 @@ import decode.ZipLib;
 import io.BCJSON;
 import io.Reader;
 import io.Writer;
-import jogl.GLBBB;
+import jogl.awt.GLBBB;
 import jogl.util.GLIB;
 import page.MainFrame;
 import page.MainPage;
@@ -20,7 +20,7 @@ import util.system.fake.awt.PCIB;
 
 public class MainBCU {
 
-	public static final int ver = 40706;
+	public static final int ver = 40708;
 
 	public static int FILTER_TYPE = 0;
 	public static final boolean WRITE = !new File("./.project").exists();
