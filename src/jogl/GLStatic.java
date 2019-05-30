@@ -12,7 +12,7 @@ public class GLStatic {
 	public static final GLCapabilities GLC;
 
 	public static boolean ALWAYS_GLIMG = true;
-	public static boolean GLBOXTEST = !MainBCU.WRITE;
+	public static boolean GLTEST = !MainBCU.WRITE;
 	public static boolean JOGL_SHADER = true;
 
 	static {

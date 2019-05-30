@@ -36,7 +36,7 @@ import util.anim.MaAnim;
 import util.anim.Part;
 import util.pack.Pack;
 import util.system.VImg;
-import util.system.fake.awt.FIBI;
+import util.system.fake.FakeImage;
 import util.unit.DIYAnim;
 import util.unit.Enemy;
 
@@ -200,7 +200,11 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				changing = true;
 				String str = AnimC.getAvailable("new anim");
 				AnimC ac = new AnimC(str);
-				ac.num = FIBI.build(bimg);
+				try {
+					ac.setNum(FakeImage.read(bimg));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				ac.saveImg();
 				ac.createNew();
 				DIYAnim da = new DIYAnim(str, ac);
@@ -221,10 +225,13 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				BufferedImage bimg = new Importer("Update your sprite").getImg();
 				if (bimg != null) {
 					AnimC ac = icet.anim;
-					ac.num = FIBI.build(bimg);
-					ac.saveImg();
-					ac.ICedited();
-
+					try {
+						ac.setNum(FakeImage.read(bimg));
+						ac.saveImg();
+						ac.reloImg();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 
