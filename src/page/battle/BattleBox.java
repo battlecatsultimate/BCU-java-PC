@@ -1,6 +1,8 @@
 package page.battle;
 
 import java.awt.Point;
+
+import page.RetFunc;
 import util.Data;
 import util.ImgCore;
 import util.Res;
@@ -360,9 +362,7 @@ public interface BattleBox {
 
 	}
 
-	static interface OuterBox {
-
-		public void callBack(Object o);
+	static interface OuterBox extends RetFunc {
 
 		public int getSpeed();
 

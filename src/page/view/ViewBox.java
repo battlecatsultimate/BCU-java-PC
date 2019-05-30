@@ -7,8 +7,8 @@ import java.awt.image.BufferedImage;
 import java.util.Queue;
 
 import page.JTG;
+import page.RetFunc;
 import page.awt.RecdThread;
-import page.battle.BattleBox;
 import util.anim.EAnimI;
 import util.system.P;
 
@@ -53,13 +53,14 @@ public interface ViewBox {
 
 	}
 
-	static class Loader implements BattleBox.OuterBox {
+	static class Loader implements RetFunc {
 
-		private RecdThread thr;
+		public final RecdThread thr;
+
 		private JTG jtb;
 
 		public Loader(Queue<BufferedImage> list) {
-			thr = RecdThread.getIns(null, list, null, RecdThread.GIF);
+			thr = RecdThread.getIns(this, list, null, RecdThread.GIF);
 		}
 
 		@Override
@@ -73,12 +74,7 @@ public interface ViewBox {
 		}
 
 		public String getProg() {
-			return "remain " + thr.remain();
-		}
-
-		@Override
-		public int getSpeed() {
-			return 0;
+			return "remain: " + thr.remain();
 		}
 
 		public void start() {

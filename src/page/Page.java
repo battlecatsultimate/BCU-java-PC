@@ -16,7 +16,7 @@ import javax.swing.ToolTipManager;
 
 import util.system.P;
 
-public abstract class Page extends JPanel {
+public abstract class Page extends JPanel implements RetFunc {
 
 	private static final long serialVersionUID = 1L;
 
@@ -78,6 +78,7 @@ public abstract class Page extends JPanel {
 		return super.add(c);
 	}
 
+	@Override
 	public void callBack(Object newParam) {
 	}
 

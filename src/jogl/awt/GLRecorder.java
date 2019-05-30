@@ -4,17 +4,24 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
+import page.RetFunc;
 import page.awt.RecdThread;
-import page.battle.BattleBox;
 
 class GLBImg extends GLRecorder {
 
-	private final Queue<BufferedImage> qb = new ArrayDeque<BufferedImage>();
-	private final RecdThread th;
+	private final Queue<BufferedImage> qb;
+	protected final RecdThread th;
 
-	protected GLBImg(GLCstd scr, String path, int type) {
+	protected GLBImg(GLCstd scr, Queue<BufferedImage> lb, RecdThread rt) {
 		super(scr);
-		th = RecdThread.getIns(null, qb, path, type);
+		qb = lb;
+		th = rt;
+	}
+
+	protected GLBImg(GLCstd scr, String path, int type, RetFunc ob) {
+		super(scr);
+		qb = new ArrayDeque<BufferedImage>();
+		th = RecdThread.getIns(ob, qb, path, type);
 	}
 
 	@Override
@@ -51,8 +58,8 @@ class GLBImg extends GLRecorder {
 
 abstract class GLRecorder {
 
-	protected static GLRecorder getIns(String path, int type, BattleBox.OuterBox ob) {
-		return null;
+	protected static GLRecorder getIns(GLCstd scr, String path, int type, RetFunc ob) {
+		return new GLBImg(scr, path, type, ob);
 	}
 
 	protected final GLCstd screen;

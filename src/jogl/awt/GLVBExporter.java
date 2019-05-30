@@ -1,6 +1,8 @@
 package jogl.awt;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
 import page.JTG;
 import page.view.ViewBox;
@@ -10,15 +12,21 @@ class GLVBExporter implements ViewBox.VBExporter {
 
 	private final GLViewBox vb;
 
+	private Loader loader;
+	private GLBImg glr;
+
 	protected GLVBExporter(GLViewBox box) {
 		vb = box;
 	}
 
 	@Override
 	public void end(JTG btn) {
-		/*
-		 * if (loader == null) return; loader.finish(btn); loader = null;
-		 */
+		if (loader == null)
+			return;
+		loader.finish(btn);
+		glr.end();
+		loader = null;
+		glr = null;
 	}
 
 	@Override
@@ -28,16 +36,18 @@ class GLVBExporter implements ViewBox.VBExporter {
 
 	@Override
 	public Loader start() {
-		/*
-		 * if (loader != null) return loader; return loader = new GLLoader(vb);
-		 */
-		return null;
+		if (loader != null)
+			return loader;
+		Queue<BufferedImage> qb = new ArrayDeque<>();
+		loader = new Loader(qb);
+		glr = new GLBImg(vb, qb, loader.thr);
+		loader.start();
+		return loader;
 	}
 
 	protected void update() {
-		/*
-		 * if (loader != null) loader.update();
-		 */
+		if (glr != null)
+			glr.update();
 	}
 
 }

@@ -11,7 +11,7 @@ class GLBBRecd extends GLBattleBox implements BBRecd {
 
 	protected GLBBRecd(OuterBox bip, BattleField bf, String path, int type) {
 		super(bip, bf, 0);
-		glr = GLRecorder.getIns(path, type, bip);
+		glr = GLRecorder.getIns(this, path, type, bip);
 	}
 
 	@Override

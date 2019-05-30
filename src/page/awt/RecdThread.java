@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 import org.jcodec.api.awt.AWTSequenceEncoder;
 
 import io.Writer;
-import page.battle.BattleBox.OuterBox;
+import page.RetFunc;
 import res.AnimatedGifEncoder;
 
 public abstract class RecdThread extends Thread {
@@ -19,7 +19,7 @@ public abstract class RecdThread extends Thread {
 
 		private final AnimatedGifEncoder gif;
 
-		protected GIFThread(Queue<BufferedImage> list, String path, OuterBox bip) {
+		protected GIFThread(Queue<BufferedImage> list, String path, RetFunc bip) {
 			super(list, bip);
 			gif = new AnimatedGifEncoder();
 			gif.setDelay(33);
@@ -49,8 +49,8 @@ public abstract class RecdThread extends Thread {
 
 		private AWTSequenceEncoder encoder;
 
-		MP4Thread(Queue<BufferedImage> list, String str, OuterBox page) {
-			super(list, page);
+		MP4Thread(Queue<BufferedImage> list, String str, RetFunc bip) {
+			super(list, bip);
 			file = new File("./img/" + str + ".mp4");
 			try {
 				encoder = AWTSequenceEncoder.create30Fps(file);
@@ -94,7 +94,7 @@ public abstract class RecdThread extends Thread {
 
 		private int count = 0;
 
-		PNGThread(Queue<BufferedImage> list, String out, OuterBox bip) {
+		PNGThread(Queue<BufferedImage> list, String out, RetFunc bip) {
 			super(list, bip);
 			path = "./img/" + out + "/";
 			File f = new File(path);
@@ -139,24 +139,25 @@ public abstract class RecdThread extends Thread {
 
 	public static final int PNG = 0, MP4 = 1, GIF = 2;
 
-	public static RecdThread getIns(OuterBox bip, Queue<BufferedImage> qb, String out, int type) {
+	public static RecdThread getIns(RetFunc bip, Queue<BufferedImage> qb, String out, int type) {
 		if (type == PNG)
 			return new PNGThread(qb, out, bip);
-		else if (type == MP4)
-			new MP4Thread(qb, out, bip);
-		else if (type == GIF)
+		if (type == MP4)
+			return new MP4Thread(qb, out, bip);
+		if (type == GIF)
 			return new GIFThread(qb, out, bip);
 		return null;
 	}
 
-	private final Queue<BufferedImage> bimgs;
-	private final OuterBox p;
+	public final Queue<BufferedImage> bimgs;
+
+	private final RetFunc p;
 
 	int fw, fh;
 
 	public boolean end, quit;
 
-	protected RecdThread(Queue<BufferedImage> list, OuterBox bip) {
+	protected RecdThread(Queue<BufferedImage> list, RetFunc bip) {
 		p = bip;
 		bimgs = list;
 	}
