@@ -8,7 +8,7 @@ import decode.ZipLib;
 import io.BCJSON;
 import io.Reader;
 import io.Writer;
-import jogl.GLBBB;
+import jogl.awt.GLBBB;
 import jogl.util.GLIB;
 import page.MainFrame;
 import page.MainPage;

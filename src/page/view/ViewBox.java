@@ -4,7 +4,11 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.Queue;
+
 import page.JTG;
+import page.awt.RecdThread;
+import page.battle.BattleBox;
 import util.anim.EAnimI;
 import util.system.P;
 
@@ -49,13 +53,37 @@ public interface ViewBox {
 
 	}
 
-	static interface Loader {
+	static class Loader implements BattleBox.OuterBox {
 
-		public void finish(JTG btn);
+		private RecdThread thr;
+		private JTG jtb;
 
-		public String getProg();
+		public Loader(Queue<BufferedImage> list) {
+			thr = RecdThread.getIns(null, list, null, RecdThread.GIF);
+		}
 
-		public void start();
+		@Override
+		public void callBack(Object o) {
+			jtb.setEnabled(true);
+		}
+
+		public void finish(JTG btn) {
+			jtb = btn;
+			jtb.setEnabled(false);
+		}
+
+		public String getProg() {
+			return "remain " + thr.remain();
+		}
+
+		@Override
+		public int getSpeed() {
+			return 0;
+		}
+
+		public void start() {
+			thr.start();
+		}
 
 	}
 

@@ -3,6 +3,8 @@ package jogl;
 import com.jogamp.opengl.GLCapabilities;
 import com.jogamp.opengl.GLProfile;
 
+import main.MainBCU;
+
 public class GLStatic {
 
 	public static final boolean MIP = false;
@@ -10,7 +12,7 @@ public class GLStatic {
 	public static final GLCapabilities GLC;
 
 	public static boolean ALWAYS_GLIMG = true;
-	public static boolean GLBOX = false;
+	public static boolean GLBOXTEST = !MainBCU.WRITE;
 	public static boolean JOGL_SHADER = true;
 
 	static {

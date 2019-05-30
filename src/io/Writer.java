@@ -226,12 +226,13 @@ public class Writer extends DataIO {
 		}
 	}
 
-	public static void writeGIF(AnimatedGifEncoder age) {
-		String str = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-		File f = new File("./img/" + str + ".gif");
+	public static void writeGIF(AnimatedGifEncoder age, String path) {
+		if (path == null)
+			path = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+		File f = new File("./img/" + path + ".gif");
 		if (!f.getParentFile().exists())
 			f.getParentFile().mkdirs();
-		age.start("./img/" + str + ".gif");
+		age.start("./img/" + path + ".gif");
 	}
 
 	public static boolean writeImage(BufferedImage bimg, File f) {

@@ -1,8 +1,9 @@
-package jogl;
+package jogl.awt;
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
+
 import jogl.util.GLGraphics;
 import page.battle.BBCtrl;
 import page.battle.BattleBox;

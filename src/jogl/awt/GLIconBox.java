@@ -1,10 +1,14 @@
-package page.awt;
+package jogl.awt;
 
 import static page.anim.IconBox.IBConf.glow;
 import static page.anim.IconBox.IBConf.line;
 import static page.anim.IconBox.IBConf.mode;
 import static page.anim.IconBox.IBConf.type;
 
+import java.awt.AWTException;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Robot;
 import java.awt.image.BufferedImage;
 
 import page.anim.IconBox;
@@ -14,11 +18,11 @@ import util.system.fake.FakeGraphics;
 import util.system.fake.FakeImage;
 import util.system.fake.FakeTransform;
 
-class IconBoxDef extends ViewBoxDef implements IconBox {
+class GLIconBox extends GLViewBox implements IconBox {
 
 	private static final long serialVersionUID = 1L;
 
-	protected IconBoxDef() {
+	protected GLIconBox() {
 		super(new IBCtrl());
 		setFocusable(true);
 		glow = 0;
@@ -33,7 +37,7 @@ class IconBoxDef extends ViewBoxDef implements IconBox {
 	}
 
 	@Override
-	public synchronized void draw(FakeGraphics gra) {
+	public void draw(FakeGraphics gra) {
 		boolean b = ImgCore.ref;
 		ImgCore.ref = false;
 		getCtrl().predraw(gra);
@@ -46,14 +50,18 @@ class IconBoxDef extends ViewBoxDef implements IconBox {
 
 	@Override
 	public BufferedImage getClip() {
-		FakeImage bimg = Res.ico[mode][type].getImg();
-		int bw = bimg.getWidth();
-		int bh = bimg.getHeight();
-		double r = Math.min(1.0 * line[2] / bw, 1.0 * line[3] / bh);
-		BufferedImage clip = prev.getSubimage(line[0], line[1], (int) (bw * r), (int) (bh * r));
-		BufferedImage ans = new BufferedImage(bw, bh, BufferedImage.TYPE_3BYTE_BGR);
-		ans.getGraphics().drawImage(clip, 0, 0, bw, bh, null);
-		return ans;
+		Rectangle r = getBounds();
+		Point p = getLocationOnScreen();
+		r.x = p.x + line[0];
+		r.y = p.y + line[1];
+		r.width = line[2];
+		r.height = line[3];
+		try {
+			return new Robot().createScreenCapture(r);
+		} catch (AWTException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override

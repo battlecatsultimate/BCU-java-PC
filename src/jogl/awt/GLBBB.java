@@ -1,5 +1,6 @@
-package jogl;
+package jogl.awt;
 
+import jogl.GLStatic;
 import page.anim.IconBox;
 import page.awt.AWTBBB;
 import page.awt.BBBuilder;
@@ -23,17 +24,16 @@ public class GLBBB extends BBBuilder {
 
 	@Override
 	public IconBox getIconBox() {
-		return GLStatic.GLBOX ? new GLIconBox() : AWTBBB.INS.getIconBox();
+		return new GLIconBox();
 	}
 
 	@Override
 	public BattleBox getRply(OuterBox bip, BattleField bf, String str, boolean t) {
-		return AWTBBB.INS.getRply(bip, bf, str, t);
-		// TODO change to GL recorder
+		return GLStatic.GLBOXTEST ? new GLBBRecd(bip, bf, str, t ? 1 : 0) : AWTBBB.INS.getRply(bip, bf, str, t);
 	}
 
 	@Override
 	public ViewBox getViewBox() {
-		return GLStatic.GLBOX ? new GLViewBox(new ViewBox.Controller()) : AWTBBB.INS.getViewBox();
+		return GLStatic.GLBOXTEST ? new GLViewBox(new ViewBox.Controller()) : AWTBBB.INS.getViewBox();
 	}
 }
