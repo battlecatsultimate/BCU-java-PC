@@ -9,9 +9,12 @@ class GLBBRecd extends GLBattleBox implements BBRecd {
 
 	private final GLRecorder glr;
 
+	private int time;
+
 	protected GLBBRecd(OuterBox bip, BattleField bf, String path, int type) {
 		super(bip, bf, 0);
 		glr = GLRecorder.getIns(this, path, type, bip);
+		glr.start();
 	}
 
 	@Override
@@ -28,7 +31,10 @@ class GLBBRecd extends GLBattleBox implements BBRecd {
 	@Override
 	public void paint() {
 		super.paint();
-		glr.update();
+		if (bbp.bf.sb.time > time) {
+			glr.update();
+			time = bbp.bf.sb.time;
+		}
 	}
 
 	@Override

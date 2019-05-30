@@ -54,6 +54,11 @@ class GLBImg extends GLRecorder {
 		}
 	}
 
+	@Override
+	protected void start() {
+		th.start();
+	}
+
 }
 
 abstract class GLRecorder {
@@ -75,5 +80,7 @@ abstract class GLRecorder {
 	protected abstract int remain();
 
 	protected abstract void update();
+
+	protected abstract void start();
 
 }

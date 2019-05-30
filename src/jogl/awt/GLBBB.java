@@ -1,9 +1,8 @@
 package jogl.awt;
 
-import jogl.GLStatic;
 import page.anim.IconBox;
-import page.awt.AWTBBB;
 import page.awt.BBBuilder;
+import page.awt.RecdThread;
 import page.battle.BattleBox;
 import page.battle.BattleBox.OuterBox;
 import page.view.ViewBox;
@@ -29,11 +28,11 @@ public class GLBBB extends BBBuilder {
 
 	@Override
 	public BattleBox getRply(OuterBox bip, BattleField bf, String str, boolean t) {
-		return GLStatic.GLBOXTEST ? new GLBBRecd(bip, bf, str, t ? 1 : 0) : AWTBBB.INS.getRply(bip, bf, str, t);
+		return new GLBBRecd(bip, bf, str, t ? RecdThread.PNG : RecdThread.MP4);
 	}
 
 	@Override
 	public ViewBox getViewBox() {
-		return GLStatic.GLBOXTEST ? new GLViewBox(new ViewBox.Controller()) : AWTBBB.INS.getViewBox();
+		return new GLViewBox(new ViewBox.Controller());
 	}
 }
