@@ -39,10 +39,6 @@ public class VImg extends ImgCore {
 		loaded = bimg != null;
 	}
 
-	public void mark(String string) {
-		marker=string;
-	}
-
 	public synchronized void check() {
 		if (!loaded)
 			load();
@@ -58,6 +54,12 @@ public class VImg extends ImgCore {
 	public FakeImage getImg() {
 		check();
 		return bimg;
+	}
+
+	public void mark(String string) {
+		marker = string;
+		if (bimg != null)
+			bimg.mark(string);
 	}
 
 	public void setCut(ImgCut cut) {
@@ -85,7 +87,7 @@ public class VImg extends ImgCore {
 		if (file == null)
 			return;
 		bimg = file.getData().getImg();
-		if(marker!=null)
+		if (marker != null)
 			bimg.mark(marker);
 		if (ic != null)
 			bimg = ic.cut(bimg)[0];

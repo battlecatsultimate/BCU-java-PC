@@ -14,7 +14,7 @@ public class GLStatic {
 	public static boolean ALWAYS_GLIMG = true;
 	public static boolean GLTEST = !MainBCU.WRITE;
 	public static boolean JOGL_SHADER = true;
-	public static boolean ALL_BIMG =true;
+	public static boolean ALL_BIMG = true;
 
 	static {
 		GLP = GLProfile.get(GLProfile.GL2);

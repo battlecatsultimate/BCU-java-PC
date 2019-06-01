@@ -65,6 +65,7 @@ public class AnimC extends AnimU {
 		parts = imgcut.cut(num);
 		if (!is.end()) {
 			VImg vimg = new VImg(is.nextBytesI());
+			vimg.mark("uni or edi");
 			if (vimg.getImg().getHeight() == 32)
 				edi = vimg;
 			else
@@ -72,9 +73,9 @@ public class AnimC extends AnimU {
 		}
 		if (!is.end())
 			uni = new VImg(is.nextBytesI());
-		if(uni!=null&&uni!=Res.slot[0])
+		if (uni != null && uni != Res.slot[0])
 			uni.mark("uni");
-		if(edi!=null)
+		if (edi != null)
 			edi.mark("edi");
 		history("initial");
 	}
@@ -89,9 +90,9 @@ public class AnimC extends AnimU {
 		f = VFile.getFile(prev + name + "/uni.png");
 		if (f != null)
 			uni = new VImg(f);
-		if(uni!=null&&uni!=Res.slot[0])
+		if (uni != null && uni != Res.slot[0])
 			uni.mark("uni");
-		if(edi!=null)
+		if (edi != null)
 			edi.mark("edi");
 	}
 
@@ -262,7 +263,7 @@ public class AnimC extends AnimU {
 	}
 
 	public void saveIcon() {
-		if (edi == null || edi.getImg() == null)
+		if (edi == null || edi.getImg() == null || prev == null)
 			return;
 		try {
 			File f = new File(prev + name + "/edi.png");
