@@ -223,6 +223,11 @@ public class LineUp extends Data {
 		return os;
 	}
 
+	/** set slot using 1 dim index */
+	protected void setFS(Form f, int i) {
+		fs[i / 5][i % 5] = f;
+	}
+
 	/** get Form from 1 dim index */
 	private Form getFS(int i) {
 		return fs[i / 5][i % 5];
@@ -284,11 +289,6 @@ public class LineUp extends Data {
 					efs[i][j] = null;
 				else
 					efs[i][j] = new EForm(fs[i][j], getLv(fs[i][j].unit));
-	}
-
-	/** set slot using 1 dim index */
-	protected void setFS(Form f, int i) {
-		fs[i / 5][i % 5] = f;
 	}
 
 	private void validate() {

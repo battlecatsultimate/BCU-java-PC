@@ -608,9 +608,9 @@ public abstract class EntityEditPage extends Page {
 	private void setA(int ind) {
 		AtkDataModel adm = get(ind);
 		assert adm != null;
-		link.setEnabled(ind < ce.atks.length);
-		copy.setEnabled(ind < ce.atks.length);
-		atkn.setEnabled(ind < ce.atks.length);
+		link.setEnabled(editable && ind < ce.atks.length);
+		copy.setEnabled(editable && ind < ce.atks.length);
+		atkn.setEnabled(editable && ind < ce.atks.length);
 		atkn.setText(adm.str);
 		aet.setData(adm, getAtk());
 		rem.setEnabled(editable && (ce.atks.length > 1 || ind >= ce.atks.length));

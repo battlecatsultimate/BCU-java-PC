@@ -18,6 +18,19 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 		return zread$000307(is);
 	}
 
+	private static int[] getRandom(int n) {
+		int[] ans = new int[n];
+		int a = 0;
+		for (int i = 0; i < n; i++) {
+			int x = (int) (Math.random() * 10);
+			while ((a & (1 << x)) > 0)
+				x = (int) (Math.random() * 10);
+			a |= 1 << x;
+			ans[i] = x;
+		}
+		return ans;
+	}
+
 	private static BasisLU zread$000307(InStream is) {
 		String name = is.nextString();
 		BasisLU ans = new BasisLU(307, is);
@@ -33,9 +46,9 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 		ans.name = name;
 		return ans;
 	}
-
 	private final Treasure t;
 	public final LineUp lu;
+
 	public int[] nyc = new int[3];
 
 	public BasisLU(BasisSet bs, LineUp line, String str) {
@@ -67,6 +80,16 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 		t = new Treasure(this, ver, is);
 	}
 
+	@Override
+	public BasisLU copy() {
+		return new BasisLU(BasisSet.current, this);
+	}
+
+	@Override
+	public int getInc(int type) {
+		return lu.inc[type];
+	}
+
 	public BasisLU randomize(int n) {
 		BasisLU ans = copy();
 		int[] rad = getRandom(n);
@@ -77,29 +100,6 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 		}
 		ans.lu.arrange();
 		return ans;
-	}
-
-	private static int[] getRandom(int n) {
-		int[] ans = new int[n];
-		int a = 0;
-		for (int i = 0; i < n; i++) {
-			int x = (int) (Math.random() * 10);
-			while ((a & (1 << x)) > 0)
-				x = (int) (Math.random() * 10);
-			a |= 1 << x;
-			ans[i] = x;
-		}
-		return ans;
-	}
-
-	@Override
-	public BasisLU copy() {
-		return new BasisLU(BasisSet.current, this);
-	}
-
-	@Override
-	public int getInc(int type) {
-		return lu.inc[type];
 	}
 
 	/**

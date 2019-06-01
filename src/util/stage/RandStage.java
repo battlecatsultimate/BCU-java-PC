@@ -13,10 +13,14 @@ public class RandStage {
 
 	private static final int[][] randRep = new int[5][];
 
-	public static void read() {
-		Queue<String> qs = VFile.readLine("./org/stage/D/RandomDungeon_000.csv");
-		for (int i = 0; i < 5; i++)
-			randRep[i] = Reader.parseIntsN(qs.poll());
+	public static BasisLU getLU(int att) {
+		double r = Math.random() * 100;
+		for (int i = 0; i < 10; i++)
+			if (r < randRep[att][i])
+				return BasisSet.current.sele.randomize(10 - i);
+			else
+				r -= randRep[att][i];
+		return BasisSet.current.sele;
 	}
 
 	public static Stage getStage(int sta) {
@@ -29,14 +33,10 @@ public class RandStage {
 		return l.get((int) (Math.random() * l.size()));
 	}
 
-	public static BasisLU getLU(int att) {
-		double r = Math.random() * 100;
-		for (int i = 0; i < 10; i++)
-			if (r < randRep[att][i])
-				return BasisSet.current.sele.randomize(10 - i);
-			else
-				r -= randRep[att][i];
-		return BasisSet.current.sele;
+	public static void read() {
+		Queue<String> qs = VFile.readLine("./org/stage/D/RandomDungeon_000.csv");
+		for (int i = 0; i < 5; i++)
+			randRep[i] = Reader.parseIntsN(qs.poll());
 	}
 
 }
