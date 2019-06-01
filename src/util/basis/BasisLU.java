@@ -7,6 +7,7 @@ import io.OutStream;
 import util.BattleStatic;
 import util.pack.Pack;
 import util.system.Copable;
+import util.unit.Form;
 import util.unit.Unit;
 
 public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
@@ -46,6 +47,7 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 		ans.name = name;
 		return ans;
 	}
+
 	private final Treasure t;
 	public final LineUp lu;
 
@@ -93,9 +95,13 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 	public BasisLU randomize(int n) {
 		BasisLU ans = copy();
 		int[] rad = getRandom(n);
-		List<Unit> lu = Pack.def.us.ulist.getList();
+		List<Unit> list = Pack.def.us.ulist.getList();
+		for (Form[] fs : ans.lu.fs)
+			for (Form f : fs)
+				if (f != null)
+					list.remove(f.unit);
 		for (int i = 0; i < n; i++) {
-			Unit u = lu.get((int) (Math.random() * lu.size()));
+			Unit u = list.get((int) (Math.random() * list.size()));
 			ans.lu.setFS(u.forms[u.forms.length - 1], rad[i]);
 		}
 		ans.lu.arrange();
