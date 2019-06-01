@@ -59,7 +59,7 @@ public class ResManager {
 		int i = 0;
 		for (int x : mem.values())
 			tex[i++] = x;
-		if(n>0)
+		if (n > 0)
 			gl.glDeleteTextures(n, tex, 0);
 		gl.glDeleteProgram(prog);
 	}

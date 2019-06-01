@@ -87,7 +87,8 @@ public class VImg extends ImgCore {
 		if (file == null)
 			return;
 		bimg = file.getData().getImg();
-		//if(bimg==null)return;
+		if (bimg == null)
+			return;
 		if (marker != null)
 			bimg.mark(marker);
 		if (ic != null)
