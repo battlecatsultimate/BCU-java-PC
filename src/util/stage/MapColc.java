@@ -63,6 +63,8 @@ public class MapColc extends Data {
 		for (VFile<AssetData> fi : f.list()) {
 			if (fi.getName().equals("CH"))
 				continue;
+			if (fi.getName().equals("D"))
+				continue;
 			VFile<AssetData> stage, map;
 			if (fi.list().get(0).getName().startsWith("stage")) {
 				stage = fi.list().get(0);

@@ -14,26 +14,6 @@ import io.Writer;
 
 public class ZipAdmin {
 
-	public static void main(String[] args) throws IOException {
-		// String
-		// url="https://drive.google.com/uc?export=download&confirm=AbsS&id=1lOgCnw7fjbCXw3aL7w0efGpUZAVnlqt7";
-		// BCJSON.download(url,new File("./assets/libworkspace/test.zip"));
-
-		ZipLib.init();
-		System.out.println(Files.readAllLines(ZipLib.lib.getPath("./info/info.ini")));
-		// new LibInfo(ZipLib.lib);//.clean();
-		// new VerInfo("080503").write("./assets/080503.verinfo");
-		// ZipLib.lib.close();
-		// System.out.println("done");
-		// addFile();
-		// newFile();
-		// generate();
-		// merge();
-		// clean("libworkspace/000001");
-		// clean("libworkspace/000002");
-		// clean("libworkspace/000003");
-	}
-
 	protected static void addFile() throws IOException {
 		File f0 = new File("./assets/assets.zip");
 		File f1 = new File("./assets/080503.verinfo");
@@ -55,8 +35,7 @@ public class ZipAdmin {
 		try {
 			ZipLib.lib = FileSystems.newFileSystem(new File("./assets/libworkspace/assets.zip").toPath(), null);
 			ZipLib.info = new LibInfo(ZipLib.lib);
-			// ZipLib.merge(new File("./assets/libworkspace/080504.zip"));
-			ZipLib.merge(new File("./assets/libworkspace/080602.zip"));
+			// ZipLib.merge(new File("./assets/libworkspace/080603.zip"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

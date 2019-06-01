@@ -32,7 +32,6 @@ public class LineUp extends Data {
 	/** read a LineUp object from data */
 	protected LineUp(int ver, InStream is) {
 		zread(ver, is);
-
 		renew();
 	}
 
@@ -288,7 +287,7 @@ public class LineUp extends Data {
 	}
 
 	/** set slot using 1 dim index */
-	private void setFS(Form f, int i) {
+	protected void setFS(Form f, int i) {
 		fs[i / 5][i % 5] = f;
 	}
 

@@ -38,6 +38,7 @@ import util.pack.Soul;
 import util.stage.CharaGroup;
 import util.stage.Limit;
 import util.stage.MapColc;
+import util.stage.RandStage;
 import util.stage.Recd;
 import util.stage.Stage;
 import util.stage.StageMap;
@@ -482,6 +483,7 @@ public class Reader extends DataIO {
 		EffAnim.read();
 		Background.read();
 		MapColc.read();
+		RandStage.read();
 		CharaGroup.read();
 		Limit.read();
 		NyCastle.read();

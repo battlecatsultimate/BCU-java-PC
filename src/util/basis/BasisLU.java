@@ -1,9 +1,13 @@
 package util.basis;
 
+import java.util.List;
+
 import io.InStream;
 import io.OutStream;
 import util.BattleStatic;
+import util.pack.Pack;
 import util.system.Copable;
+import util.unit.Unit;
 
 public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 
@@ -61,6 +65,31 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 	private BasisLU(int ver, InStream is) {
 		lu = new LineUp(ver, ver >= 308 ? is.subStream() : is);
 		t = new Treasure(this, ver, is);
+	}
+
+	public BasisLU randomize(int n) {
+		BasisLU ans = copy();
+		int[] rad = getRandom(n);
+		List<Unit> lu = Pack.def.us.ulist.getList();
+		for (int i = 0; i < n; i++) {
+			Unit u = lu.get((int) (Math.random() * lu.size()));
+			ans.lu.setFS(u.forms[u.forms.length - 1], rad[i]);
+		}
+		ans.lu.arrange();
+		return ans;
+	}
+
+	private static int[] getRandom(int n) {
+		int[] ans = new int[n];
+		int a = 0;
+		for (int i = 0; i < n; i++) {
+			int x = (int) (Math.random() * 10);
+			while ((a & (1 << x)) > 0)
+				x = (int) (Math.random() * 10);
+			a |= 1 << x;
+			ans[i] = x;
+		}
+		return ans;
 	}
 
 	@Override

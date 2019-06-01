@@ -12,6 +12,7 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -354,7 +355,7 @@ public class BCJSON extends WebFileIO {
 				libs = new ArrayList<String>(libmap.keySet());
 			boolean updated = false;
 			for (String str : libs) {
-				if (!str.startsWith("00000"))
+				if (!Arrays.asList(ZipLib.LIBREQS).contains(str))
 					if (!Opts.conf("do you want to download lib update " + str + "? " + libmap.get(str)))
 						continue;
 				LoadPage.prog("downloading asset: " + str + ".zip");
