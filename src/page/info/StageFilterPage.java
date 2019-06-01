@@ -29,6 +29,7 @@ public class StageFilterPage extends StagePage {
 	protected void resized(int x, int y) {
 		super.resized(x, y);
 		set(jspst, x, y, 400, 550, 300, 650);
+		set(strt, x, y, 400, 0, 300, 50);
 	}
 
 	private void addListeners() {

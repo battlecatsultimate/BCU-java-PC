@@ -17,7 +17,7 @@ public class StagePage extends Page {
 	private static final long serialVersionUID = 1L;
 
 	private final JBTN back = new JBTN(0, "back");
-	private final JBTN strt = new JBTN(0, "start");
+	protected final JBTN strt = new JBTN(0, "start");
 	private final StageTable jt = new StageTable(this);
 	private final JScrollPane jspjt = new JScrollPane(jt);
 	private final HeadTable info = new HeadTable(this);
@@ -47,7 +47,6 @@ public class StagePage extends Page {
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);
-		set(strt, x, y, 400, 0, 300, 50);
 		set(jspinfo, x, y, 800, 50, 1400, 250);
 		set(jspjt, x, y, 800, 350, 1400, 850);
 		jt.setRowHeight(size(x, y, 50));

@@ -15,7 +15,9 @@ import page.Page;
 import page.basis.BasisPage;
 import page.basis.LineUpBox;
 import page.basis.LubCont;
+import util.basis.BasisLU;
 import util.basis.BasisSet;
+import util.stage.RandStage;
 import util.stage.Stage;
 
 public class BattleSetupPage extends LubCont {
@@ -35,10 +37,12 @@ public class BattleSetupPage extends LubCont {
 
 	private final Stage st;
 
-	public BattleSetupPage(Page p, Stage s) {
+	private final int[] conf;
+
+	public BattleSetupPage(Page p, Stage s, int... confs) {
 		super(p);
 		st = s;
-
+		conf = confs;
 		ini();
 		resized();
 	}
@@ -107,7 +111,10 @@ public class BattleSetupPage extends LubCont {
 					ints[0] |= 1;
 				if (snip.isSelected())
 					ints[0] |= 2;
-				changePanel(new BattleInfoPage(getThis(), st, star, BasisSet.current.sele, ints));
+				BasisLU b = BasisSet.current.sele;
+				if (conf.length == 1 && conf[0] == 0)
+					b = RandStage.getLU(star);
+				changePanel(new BattleInfoPage(getThis(), st, 0, b, ints));
 			}
 		});
 
@@ -131,11 +138,19 @@ public class BattleSetupPage extends LubCont {
 		add(snip);
 		add(tmax);
 		add(lub);
-		String[] tit = new String[st.map.stars.length];
-		String star = get(1, "star");
-		for (int i = 0; i < st.map.stars.length; i++)
-			tit[i] = (i + 1) + star + ": " + st.map.stars[i] + "%";
-		jls.setListData(tit);
+		if (conf.length == 0) {
+			String[] tit = new String[st.map.stars.length];
+			String star = get(1, "star");
+			for (int i = 0; i < st.map.stars.length; i++)
+				tit[i] = (i + 1) + star + ": " + st.map.stars[i] + "%";
+			jls.setListData(tit);
+		} else if (conf.length == 1 && conf[0] == 0) {
+			String[] tit = new String[5];
+			String star = get(1, "attempt");
+			for (int i = 0; i < 5; i++)
+				tit[i] = star + (i + 1);
+			jls.setListData(tit);
+		}
 		jls.setSelectedIndex(0);
 		addListeners();
 	}
