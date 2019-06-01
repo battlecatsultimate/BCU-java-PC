@@ -22,6 +22,7 @@ import io.Writer;
 public class Temp {
 
 	public static void main(String[] args) throws Exception {
+		System.out.println(85&-4);
 	}
 
 	public static void main$0(String[] args) throws FileNotFoundException {

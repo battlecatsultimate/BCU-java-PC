@@ -16,6 +16,7 @@ import main.MainBCU;
 import main.Opts;
 import main.Printer;
 import page.anim.EditHead;
+import util.Res;
 import util.system.VImg;
 import util.system.fake.FakeImage;
 import util.system.files.FDByte;
@@ -63,18 +64,19 @@ public class AnimC extends AnimU {
 			anims[i] = MaAnim.newIns(new FDByte(is.nextBytesI()));
 		parts = imgcut.cut(num);
 		if (!is.end()) {
-
 			VImg vimg = new VImg(is.nextBytesI());
 			if (vimg.getImg().getHeight() == 32)
 				edi = vimg;
 			else
 				uni = vimg;
 		}
-		if (!is.end()) {
-
+		if (!is.end())
 			uni = new VImg(is.nextBytesI());
-
-		}
+		if(uni!=null&&uni!=Res.slot[0])
+			uni.mark("uni");
+		if(edi!=null)
+			edi.mark("edi");
+		history("initial");
 	}
 
 	public AnimC(String st) {
@@ -87,6 +89,10 @@ public class AnimC extends AnimU {
 		f = VFile.getFile(prev + name + "/uni.png");
 		if (f != null)
 			uni = new VImg(f);
+		if(uni!=null&&uni!=Res.slot[0])
+			uni.mark("uni");
+		if(edi!=null)
+			edi.mark("edi");
 	}
 
 	public AnimC(String str, AnimD ori) {

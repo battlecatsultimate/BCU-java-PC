@@ -240,4 +240,12 @@ public strictfp class P extends BattleObj {
 		return x + "," + y;
 	}
 
+	public static float reg(float cx) {
+		if(cx<0)
+			return 0;
+		if(cx>1)
+			return 1;
+		return cx;
+	}
+
 }
