@@ -442,13 +442,11 @@ public class StageEditPage extends Page {
 	private void checkPtst() {
 		Stage st = lpst.getSelectedValue();
 		StageMap sm = jlsm.getSelectedValue();
-		if (st == null || sm == null) {
+		if (st == null || sm == null)
 			ptst.setEnabled(false);
-			rmst.setEnabled(false);
-		} else {
+		else
 			ptst.setEnabled(st.isSuitable(pack));
-			rmst.setEnabled(true);
-		}
+		rmst.setEnabled(st != null);
 	}
 
 	private void ini() {
@@ -550,6 +548,7 @@ public class StageEditPage extends Page {
 			rmst.setEnabled(false);
 			return;
 		}
+		cpst.setEnabled(false);
 		checkPtst();
 		jlst.clearSelection();
 		setData(st);

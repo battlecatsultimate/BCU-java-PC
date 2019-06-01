@@ -86,6 +86,19 @@ public class AmbImage implements FakeImage {
 	}
 
 	@Override
+	public void mark(Object o) {
+		if (o instanceof String) {
+			String str = (String) o;
+			if (str.equals("uni"))
+				forceBI();
+			if (str.equals("edi"))
+				forceBI();
+			if (str.equals("uni or edi"))
+				forceBI();
+		}
+	}
+
+	@Override
 	public void setRGB(int i, int j, int p) {
 		forceBI();
 		bimg.setRGB(i, j, p);
@@ -96,7 +109,7 @@ public class AmbImage implements FakeImage {
 			return;
 		if (GLStatic.ALWAYS_GLIMG || GLGraphics.count > 0)
 			checkGL();
-		else
+		if (gl == null)
 			checkBI();
 	}
 
@@ -122,19 +135,16 @@ public class AmbImage implements FakeImage {
 	private void checkGL() {
 		if (gl != null)
 			return;
-		try {
-			if (force)
-				gl = new GLImage(bimg.bimg());
-			else if (stream != null)
-				gl = new GLImage(stream);
-			else if (file != null)
-				gl = new GLImage(file);
-			else {
-				par.checkGL();
+		if (force)
+			gl = GLImage.build(bimg.bimg());
+		else if (stream != null)
+			gl = GLImage.build(stream);
+		else if (file != null)
+			gl = GLImage.build(file);
+		else {
+			par.checkGL();
+			if (par.gl != null)
 				gl = par.gl.getSubimage(cs[0], cs[1], cs[2], cs[3]);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 

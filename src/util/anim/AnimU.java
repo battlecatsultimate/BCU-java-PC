@@ -41,6 +41,7 @@ public class AnimU extends AnimD implements MultiLangFile {
 	public AnimU(String st, String ed0, String ed1) {
 		super(st + ed0);
 		edi = new VImg(st + ed1);
+		edi.mark("edi");
 	}
 
 	protected AnimU() {

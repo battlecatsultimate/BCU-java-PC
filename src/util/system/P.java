@@ -26,6 +26,14 @@ public strictfp class P extends BattleObj {
 		return new Polygon(x, y, n);
 	}
 
+	public static float reg(float cx) {
+		if (cx < 0)
+			return 0;
+		if (cx > 1)
+			return 1;
+		return cx;
+	}
+
 	public double x, y;
 
 	public P(Dimension d) {

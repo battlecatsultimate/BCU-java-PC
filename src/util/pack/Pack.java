@@ -34,6 +34,7 @@ import util.stage.Stage;
 import util.stage.StageMap;
 import util.system.VImg;
 import util.system.fake.FakeImage;
+import util.unit.EneRand;
 import util.unit.Enemy;
 import util.unit.EnemyStore;
 import util.unit.Form;
@@ -337,6 +338,13 @@ public class Pack extends Data {
 			int eid = es.nextInd();
 			es.add(new Enemy(eid, ent.getValue(), this));
 			inds[M_ES][ent.getKey()] = eid;
+		}
+
+		Map<Integer, EneRand> ermap = p.es.ers.getMap();
+		for (Entry<Integer, EneRand> ent : ermap.entrySet()) {
+			int eid = es.ers.nextInd() + 500;
+			es.ers.add(new EneRand(eid, inds, ent.getValue(), this, p));
+			inds[M_ES][ent.getKey() + 500] = eid;
 		}
 
 		Map<Integer, UnitLevel> ulmap = p.us.lvlist.getMap();

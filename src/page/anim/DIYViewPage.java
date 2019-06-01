@@ -165,6 +165,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 					&& Opts.conf("are you sure to replace display icon? This action cannot be undone")) {
 				AnimC ac = aep.anim.anim;
 				ac.edi = clip;
+				ac.edi.mark("edi");
 				ac.saveIcon();
 				jlu.repaint();
 			}

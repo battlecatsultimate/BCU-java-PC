@@ -23,6 +23,7 @@ public abstract class RecdThread extends Thread {
 			super(list, bip);
 			gif = new AnimatedGifEncoder();
 			gif.setDelay(33);
+			gif.setRepeat(0);
 			Writer.writeGIF(gif, path);
 		}
 

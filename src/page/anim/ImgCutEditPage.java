@@ -383,6 +383,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				if (bimg == null)
 					return;
 				icet.anim.edi = new VImg(bimg);
+				icet.anim.edi.mark("edi");
 				icet.anim.saveIcon();
 				File f = new File("./res/img/.png");
 				Writer.check(f);

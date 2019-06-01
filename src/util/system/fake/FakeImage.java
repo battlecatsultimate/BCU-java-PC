@@ -24,6 +24,9 @@ public interface FakeImage {
 
 	public Object gl();
 
+	public default void mark(Object o) {
+	}
+
 	public void setRGB(int i, int j, int p);
 
 }

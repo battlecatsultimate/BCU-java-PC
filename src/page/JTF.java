@@ -26,6 +26,7 @@ public class JTF extends JTextField implements CustomComp {
 					transferFocus();
 			}
 		});
+
 	}
 
 	public void setLnr(Consumer<FocusEvent> c) {

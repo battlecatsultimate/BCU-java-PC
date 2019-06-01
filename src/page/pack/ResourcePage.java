@@ -105,7 +105,7 @@ public class ResourcePage extends Page {
 	private void filemove(String dst, VFile<AssetData> src) {
 		if (src.list() != null)
 			for (VFile<AssetData> c : src.list())
-				filemove(dst + src.getName() + "\\", c);
+				filemove(dst + src.getName() + "/", c);
 		else
 			Writer.writeBytes(src.getData().getBytes(), dst + src.getName());
 	}

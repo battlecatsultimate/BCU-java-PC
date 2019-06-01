@@ -3,6 +3,7 @@ package jogl.util;
 import static com.jogamp.opengl.GL2.*;
 
 import java.io.IOException;
+import java.nio.Buffer;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,7 +18,6 @@ import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.util.glsl.ShaderCode;
 import com.jogamp.opengl.util.glsl.ShaderProgram;
 import com.jogamp.opengl.util.texture.TextureData;
-
 import jogl.GLStatic;
 import main.MainBCU;
 
@@ -73,8 +73,12 @@ public class ResManager {
 		mem.put(img, id);
 		g.bind(id);
 		TextureData data = img.data;
-		gl.glTexImage2D(GL_TEXTURE_2D, 0, data.getInternalFormat(), data.getWidth(), data.getHeight(), data.getBorder(),
-				data.getPixelFormat(), data.getPixelType(), data.getBuffer());
+		int w = data.getWidth();
+		int h = data.getHeight();
+		int pf = data.getPixelFormat();
+		int pt = data.getPixelType();
+		Buffer bf = data.getBuffer();
+		gl.glTexImage2D(GL_TEXTURE_2D, 0, data.getInternalFormat(), w, h, data.getBorder(), pf, pt, bf);
 		gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

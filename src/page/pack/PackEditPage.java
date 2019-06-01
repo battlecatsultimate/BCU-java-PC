@@ -454,13 +454,9 @@ public class PackEditPage extends Page {
 
 		};
 
-		jtfs.addFocusListener(new FocusAdapter() {
-
-			@Override
-			public void focusLost(FocusEvent fe) {
+		jtfs.setLnr(x -> {
+			if (sm != null)
 				sm.name = jtfs.getText().trim();
-			}
-
 		});
 
 		adds.addActionListener(new ActionListener() {

@@ -104,10 +104,7 @@ public class GLGraphics implements GeoAuto {
 				if (i == 1 || i == 2)
 					py += h;
 				float cx = (float) (vec.dotP(new P(px - a, py - b)) / l);
-				if (cx > 1)
-					cx = 1;
-				if (cx < 0)
-					cx = 0;
+				cx = P.reg(cx);
 				float[] cs = new float[3];
 				for (int j = 0; j < 3; j++)
 					cs[j] = c[j] + cx * (f[j] - c[j]);
@@ -219,8 +216,10 @@ public class GLGraphics implements GeoAuto {
 	@Override
 	public void drawImage(FakeImage bimg, double x, double y, double w, double h) {
 		checkMode(IMG);
-		compImpl();
 		GLImage gl = (GLImage) bimg.gl();
+		if (gl == null)
+			return;
+		compImpl();
 		bind(tm.load(this, gl));
 		g.glBegin(GL2ES3.GL_QUADS);
 		float[] r = gl.getRect();
