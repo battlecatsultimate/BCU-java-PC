@@ -120,7 +120,7 @@ public class StageViewPage extends StagePage {
 					return;
 				MapColc mc = Stage.clipmc;
 				StageMap copy = sm.copy(mc);
-				mc.maps = Arrays.copyOf(mc.maps, mc.maps.length);
+				mc.maps = Arrays.copyOf(mc.maps, mc.maps.length + 1);
 				mc.maps[mc.maps.length - 1] = copy;
 			}
 		});

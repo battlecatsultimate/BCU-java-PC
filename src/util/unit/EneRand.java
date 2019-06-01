@@ -20,6 +20,17 @@ public class EneRand extends EntRand<Integer> implements AbEnemy {
 
 	public String name = "";
 
+	public EneRand(int eid, int[][] inds, EneRand val, Pack p, Pack p2) {
+		pack = p;
+		id = eid;
+		for (EREnt<Integer> e : val.list) {
+			EREnt<Integer> a = e.copy();
+			if (a.ent / 1000 == p2.id)
+				a.ent = inds[Pack.M_ES][a.ent % 1000];
+			list.add(a);
+		}
+	}
+
 	public EneRand(Pack p, int ID) {
 		pack = p;
 		id = ID;

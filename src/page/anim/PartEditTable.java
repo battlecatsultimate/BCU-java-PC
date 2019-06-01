@@ -133,7 +133,7 @@ class PartEditTable extends AnimTable<int[]> {
 
 	@Override
 	public synchronized void setValueAt(Object val, int r, int c) {
-		if (part == null)
+		if (part == null || r >= part.n)
 			return;
 		c = lnk[c];
 		int v = (int) val;
