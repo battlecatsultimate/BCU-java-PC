@@ -34,8 +34,6 @@ public class GLImage implements FakeImage {
 				Printer.e("GLImage", 52, "failed to load data: " + o);
 				return null;
 			}
-			if (data.getWidth() * data.getHeight() % 4 != 0)
-				new Exception("incorrect format").printStackTrace();
 			return new GLImage(data);
 
 		} catch (Exception e) {

@@ -29,6 +29,7 @@ public class StageViewPage extends StagePage {
 	private final JScrollPane jspst = new JScrollPane(jlst);
 	private final JBTN cpsm = new JBTN(0, "cpsm");
 	private final JBTN cpst = new JBTN(0, "cpst");
+	private final JBTN dgen = new JBTN(0, "dungeon");
 
 	public StageViewPage(Page p, Collection<MapColc> collection) {
 		super(p);
@@ -50,11 +51,13 @@ public class StageViewPage extends StagePage {
 	@Override
 	protected void resized(int x, int y) {
 		super.resized(x, y);
-		set(jspsm, x, y, 50, 100, 300, 1000);
-		set(jspmc, x, y, 400, 100, 300, 400);
-		set(jspst, x, y, 400, 550, 300, 550);
-		set(cpsm, x, y, 50, 1150, 300, 50);
-		set(cpst, x, y, 400, 1150, 300, 50);
+		set(jspsm, x, y, 0, 50, 400, 1150);
+		set(jspmc, x, y, 400, 50, 400, 500);
+		set(jspst, x, y, 400, 550, 400, 650);
+		set(cpsm, x, y, 50, 1200, 300, 50);
+		set(cpst, x, y, 450, 1200, 300, 50);
+		set(dgen, x, y, 600, 0, 200, 50);
+		set(strt, x, y, 400, 0, 200, 50);
 	}
 
 	@Override
@@ -135,6 +138,8 @@ public class StageViewPage extends StagePage {
 			}
 		});
 
+		dgen.setLnr(x -> changePanel(new StageRandPage(getThis())));
+
 	}
 
 	private void ini() {
@@ -143,6 +148,7 @@ public class StageViewPage extends StagePage {
 		add(jspst);
 		add(cpsm);
 		add(cpst);
+		add(dgen);
 		cpsm.setEnabled(false);
 		cpst.setEnabled(false);
 		addListeners();

@@ -301,7 +301,8 @@ public class AnimC extends AnimU {
 
 	public void setNum(FakeImage fimg) {
 		num = fimg;
-		ICedited();
+		if (loaded)
+			ICedited();
 	}
 
 	@Override

@@ -55,8 +55,8 @@ public class GLGraphics implements GeoAuto {
 		}
 
 		protected void drawOval(int i, int j, int k, int l) {
-			checkMode();
-			setColor();
+			// checkMode();
+			// setColor();
 			// TODO circular
 
 		}
@@ -73,8 +73,8 @@ public class GLGraphics implements GeoAuto {
 		}
 
 		protected void fillOval(int i, int j, int k, int l) {
-			checkMode();
-			setColor();
+			// checkMode();
+			// setColor();
 			// TODO circular
 
 		}
@@ -263,8 +263,8 @@ public class GLGraphics implements GeoAuto {
 	@Override
 	public void scale(int hf, int vf) {
 		trans[0] *= hf;
-		trans[1] *= hf;
-		trans[3] *= vf;
+		trans[3] *= hf;
+		trans[1] *= vf;
 		trans[4] *= vf;
 	}
 

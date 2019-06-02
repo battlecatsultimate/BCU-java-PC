@@ -1,9 +1,14 @@
 package util.basis;
 
+import java.util.List;
+
 import io.InStream;
 import io.OutStream;
 import util.BattleStatic;
+import util.pack.Pack;
 import util.system.Copable;
+import util.unit.Form;
+import util.unit.Unit;
 
 public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 
@@ -12,6 +17,19 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 		if (ver >= 308)
 			return zread$000308(is);
 		return zread$000307(is);
+	}
+
+	private static int[] getRandom(int n) {
+		int[] ans = new int[n];
+		int a = 0;
+		for (int i = 0; i < n; i++) {
+			int x = (int) (Math.random() * 10);
+			while ((a & (1 << x)) > 0)
+				x = (int) (Math.random() * 10);
+			a |= 1 << x;
+			ans[i] = x;
+		}
+		return ans;
 	}
 
 	private static BasisLU zread$000307(InStream is) {
@@ -32,6 +50,7 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 
 	private final Treasure t;
 	public final LineUp lu;
+
 	public int[] nyc = new int[3];
 
 	public BasisLU(BasisSet bs, LineUp line, String str) {
@@ -71,6 +90,22 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 	@Override
 	public int getInc(int type) {
 		return lu.inc[type];
+	}
+
+	public BasisLU randomize(int n) {
+		BasisLU ans = copy();
+		int[] rad = getRandom(n);
+		List<Unit> list = Pack.def.us.ulist.getList();
+		for (Form[] fs : ans.lu.fs)
+			for (Form f : fs)
+				if (f != null)
+					list.remove(f.unit);
+		for (int i = 0; i < n; i++) {
+			Unit u = list.get((int) (Math.random() * list.size()));
+			ans.lu.setFS(u.forms[u.forms.length - 1], rad[i]);
+		}
+		ans.lu.arrange();
+		return ans;
 	}
 
 	/**
