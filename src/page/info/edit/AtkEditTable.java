@@ -77,7 +77,7 @@ class AtkEditTable extends Page {
 		set(ftp, x, y, 200, 200, 200, 50);
 		set(fdr, x, y, 200, 250, 200, 50);
 		set(fct, x, y, 200, 300, 200, 50);
-		set(isr, x, y, 200, 300, 200, 50);// FIXME change it to 350
+		set(isr, x, y, 200, 350, 200, 50);
 		apt.setPreferredSize(size(x, y, 750, 2000).toDimension());
 		apt.resized(x, y);
 		set(jsp, x, y, 450, 0, 800, 950);
@@ -93,7 +93,7 @@ class AtkEditTable extends Page {
 		fp1.setText("" + adm.ld1);
 		ftp.setText("" + adm.targ);
 		apt.setData(adm.ce.common ? adm.ce.rep.proc : adm.proc);
-		fdr.setText("" + (adm.rev ? -1 : 1));
+		fdr.setText("" + adm.dire);
 		fct.setText("" + adm.count);
 		isr.setSelected(adm.range);
 	}
@@ -104,13 +104,13 @@ class AtkEditTable extends Page {
 		set(lp0);
 		set(lp1);
 		set(ltp);
-		// FIXME set(lct);
+		set(lct);
 		set(fatk);
 		set(fpre);
 		set(fp0);
 		set(fp1);
 		set(ftp);
-		// FIXME set(fct);
+		set(fct);
 		add(isr);
 		ftp.setToolTipText(
 				"<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
@@ -165,11 +165,18 @@ class AtkEditTable extends Page {
 					v = 1;
 				adm.targ = v;
 			}
-			if (jtf == fdr)
-				adm.rev = v == -1;
-			if (jtf == fct)
-				if (v >= 0)
-					adm.count = v;
+			if (jtf == fdr) {
+				if (v < -1)
+					v = -1;
+				if (v > 1)
+					v = 1;
+				adm.dire = v;
+			}
+			if (jtf == fct) {
+				if (v < 0)
+					v = -1;
+				adm.count = v;
+			}
 		}
 		callBack(null);
 	}

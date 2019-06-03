@@ -124,6 +124,8 @@ public class StageBasis extends BattleObj {
 
 	/** receive attacks and excuse together, capture targets first */
 	public void getAttack(AttackAb a) {
+		if (a == null)
+			return;
 		a.capture();
 		la.add(a);
 	}
@@ -143,6 +145,8 @@ public class StageBasis extends BattleObj {
 	 */
 	public List<AbEntity> inRange(int touch, int dire, double d0, double d1) {
 		List<AbEntity> ans = new ArrayList<>();
+		if (dire == 0)
+			return ans;
 		for (Entity ee : le)
 			if (ee.dire * dire == -1 && (ee.touchable() & touch) > 0 && (ee.pos - d0) * (ee.pos - d1) <= 0)
 				ans.add(ee);

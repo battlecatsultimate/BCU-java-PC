@@ -9,8 +9,8 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 
 	public final CustomEntity ce;
 	public String str = "";
-	public int atk, pre = 1, ld0, ld1, targ = TCH_N, count = -1;
-	public boolean rev, range = true;
+	public int atk, pre = 1, ld0, ld1, targ = TCH_N, count = -1, dire = 1;
+	public boolean range = true;
 	public int[][] proc = new int[PROC_TOT][PROC_WIDTH];
 
 	public AtkDataModel(CustomEntity ent) {
@@ -26,7 +26,7 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		ld0 = adm.ld0;
 		ld1 = adm.ld1;
 		range = adm.range;
-		rev = adm.rev;
+		dire = adm.dire;
 		count = adm.count;
 		targ = adm.targ;
 		for (int i = 0; i < PROC_TOT; i++)
@@ -63,13 +63,6 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 	}
 
 	@Override
-	public int abiAlt() {
-		if (count > 0)
-			return count;
-		return 0;
-	}
-
-	@Override
 	public AtkDataModel clone() {
 		return new AtkDataModel(ce, this);
 	}
@@ -81,7 +74,7 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 
 	@Override
 	public int getDire() {
-		return rev ? -1 : 1;
+		return dire;
 	}
 
 	@Override
@@ -112,6 +105,11 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 	}
 
 	@Override
+	public int loopCount() {
+		return count;
+	}
+
+	@Override
 	public String toString() {
 		return str;
 	}
@@ -129,7 +127,7 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 	}
 
 	protected void write(OutStream os) {
-		os.writeString("0.4.2");
+		os.writeString("0.4.3");
 		os.writeString(str);
 		os.writeInt(atk);
 		os.writeInt(pre);
@@ -137,7 +135,8 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		os.writeInt(ld1);
 		os.writeInt(targ);
 		os.writeInt(count);
-		os.writeInt((rev ? 1 : 0) + (range ? 2 : 0));
+		os.writeInt(dire);
+		os.writeInt(range ? 1 : 0);
 		os.writeIntBB(proc);
 	}
 
@@ -161,7 +160,7 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		ld0 = is.nextInt();
 		ld1 = is.nextInt();
 		targ = is.nextInt();
-		rev = is.nextInt() == 1;
+		dire = is.nextInt() == 1 ? -1 : 1;
 		int[][] temp = is.nextIntsBB();
 		proc = new int[PROC_TOT][PROC_WIDTH];
 		for (int i = 0; i < temp.length; i++)
@@ -173,7 +172,9 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		int val = getVer(ver);
 		if (val >= 307)
 			val = getVer(is.nextString());
-		if (val >= 402)
+		if (val >= 403)
+			zread$000403(is);
+		else if (val >= 402)
 			zread$000402(is);
 		else if (val >= 401)
 			zread$000401(is);
@@ -191,7 +192,7 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		ld1 = is.nextInt();
 		targ = is.nextInt();
 		int bm = is.nextInt();
-		rev = (bm & 1) > 0;
+		dire = (bm & 1) > 0 ? -1 : 1;
 		range = (bm & 2) > 0;
 		int[][] temp = is.nextIntsBB();
 		proc = new int[PROC_TOT][PROC_WIDTH];
@@ -209,8 +210,26 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		targ = is.nextInt();
 		count = is.nextInt();
 		int bm = is.nextInt();
-		rev = (bm & 1) > 0;
+		dire = (bm & 1) > 0 ? -1 : 1;
 		range = (bm & 2) > 0;
+		int[][] temp = is.nextIntsBB();
+		proc = new int[PROC_TOT][PROC_WIDTH];
+		for (int i = 0; i < temp.length; i++)
+			for (int j = 0; j < temp[i].length; j++)
+				proc[i][j] = temp[i][j];
+	}
+
+	private void zread$000403(InStream is) {
+		str = is.nextString();
+		atk = is.nextInt();
+		pre = is.nextInt();
+		ld0 = is.nextInt();
+		ld1 = is.nextInt();
+		targ = is.nextInt();
+		count = is.nextInt();
+		dire = is.nextInt();
+		int bm = is.nextInt();
+		range = (bm & 1) > 0;
 		int[][] temp = is.nextIntsBB();
 		proc = new int[PROC_TOT][PROC_WIDTH];
 		for (int i = 0; i < temp.length; i++)

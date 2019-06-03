@@ -4,10 +4,6 @@ import util.Data;
 
 public interface MaskAtk {
 
-	public default int abiAlt() {
-		return 0;
-	}
-
 	public default int getDire() {
 		return 1;
 	}
@@ -23,5 +19,9 @@ public interface MaskAtk {
 	}
 
 	public boolean isRange();
+
+	public default int loopCount() {
+		return -1;
+	}
 
 }
