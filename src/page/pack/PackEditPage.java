@@ -15,6 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import io.BCJSON;
 import io.Writer;
 import main.MainBCU;
 import main.Opts;
@@ -77,6 +78,7 @@ public class PackEditPage extends Page {
 	private final JBTN cunt = new JBTN(0, "cunt");
 	private final JBTN ener = new JBTN(0, "ener");
 	private final JBTN vmsc = new JBTN(0, "vmsc");
+	private final JBTN unpk = new JBTN(0, "unpack");
 	private final JTF jtfp = new JTF();
 	private final JTF jtfe = new JTF();
 	private final JTF jtfs = new JTF();
@@ -116,7 +118,8 @@ public class PackEditPage extends Page {
 		set(addp, x, y, w, 800, 200, 50);
 		set(remp, x, y, w + 200, 800, 200, 50);
 		set(jtfp, x, y, w, 850, 400, 50);
-		set(extr, x, y, w, 950, 400, 50);
+		set(extr, x, y, w, 950, 200, 50);
+		set(unpk, x, y, w + 200, 950, 200, 50);
 
 		w += 450;
 
@@ -167,12 +170,7 @@ public class PackEditPage extends Page {
 
 	private void addListeners() {
 
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
-		});
+		back.setLnr(x -> changePanel(getFront()));
 
 		vcas.addActionListener(new ActionListener() {
 			@Override
@@ -293,14 +291,13 @@ public class PackEditPage extends Page {
 
 		});
 
-		extr.addActionListener(new ActionListener() {
+		extr.setLnr(x -> pac.packUp());
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				pac.packUp();
-			}
-
+		unpk.setLnr(x -> {
+			pac.unpack();
+			unpk.setEnabled(false);
 		});
+
 	}
 
 	private void addListeners$2() {
@@ -619,6 +616,7 @@ public class PackEditPage extends Page {
 		add(vbgr);
 		add(ener);
 		add(vmsc);
+		add(unpk);
 		jle.setCellRenderer(new AnimLCR());
 		jld.setCellRenderer(new AnimLCR());
 		setPack(null);
@@ -660,7 +658,8 @@ public class PackEditPage extends Page {
 		vcas.setEnabled(pac != null);
 		vbgr.setEnabled(pac != null);
 		vene.setEnabled(pac != null);
-		vmsc.setEnabled(pack != null);
+		vmsc.setEnabled(pac != null);
+		unpk.setEnabled(pac != null && !pac.editable && pac.author.equals(BCJSON.USERNAME));
 		if (b)
 			jtfp.setText(pack.name);
 		if (pac == null) {

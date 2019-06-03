@@ -455,8 +455,7 @@ public class Pack extends Data {
 						proc[Data.P_THEME][2] = inds[M_BG][bgid] + id * 1000;
 				}
 
-		// music TODO
-		// random enemy TODO
+		// TODO music
 	}
 
 	public void packUp() {
@@ -529,6 +528,27 @@ public class Pack extends Data {
 	@Override
 	public String toString() {
 		return hex(id) + " - " + name;
+	}
+
+	public void unpack() {
+		editable = true;
+		cs.forEach((i, c) -> {
+			String path = "./res/img/" + hex(id) + "/cas/" + trio(i) + ".png";
+			try {
+				FakeImage.write(c.getImg(), "PNG", new File(path));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+		bg.forEach((i, c) -> {
+			String path = "./res/img/" + hex(id) + "/bg/" + trio(i) + ".png";
+			try {
+				FakeImage.write(c.img.getImg(), "PNG", new File(path));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+		// TODO music
 	}
 
 	public boolean usable(int p) {

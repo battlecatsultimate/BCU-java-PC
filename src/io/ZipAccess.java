@@ -206,21 +206,34 @@ public class ZipAccess {
 		return ans;
 	}
 
-	public static boolean extractPartial(String md5, VFile<BackupData> vf) throws IOException {
+	public static boolean extractPartial(VFile<BackupData> vf) throws IOException {
 		File f = new File("./user/backup.zip");
 		if (!f.exists())
 			return false;
 		FileSystem fs = FileSystems.newFileSystem(f.toPath(), null);
-		Path file = fs.getPath("/MD5/" + md5);
-		if (!Files.exists(file)) {
-			fs.close();
-			return false;
+		boolean suc = true;
+		if (vf.getData() != null) {
+			Path file = fs.getPath("/MD5/" + vf.getData().toString());
+			if (suc &= Files.exists(file)) {
+				String loc = vf.getParent().mark == 1 ? vf.getParent().getPath() : vf.getPath();
+				suc &= Writer.check(new File(loc));
+				Files.copy(file, Paths.get(loc), StandardCopyOption.REPLACE_EXISTING);
+			}
+		} else {
+			List<VFile<BackupData>> list = vf.getIf(x -> x.getData() != null);
+			for (VFile<BackupData> vb : list) {
+				Path file = fs.getPath("/MD5/" + vb.getData().toString());
+				if (suc &= Files.exists(file)) {
+					String loc = vb.getParent().mark == 1 ? vb.getParent().getPath() : vb.getPath();
+					if (!loc.startsWith("."))
+						loc = "./" + loc.split("/", 2)[1];
+					suc &= Writer.check(new File(loc));
+					Files.copy(file, Paths.get(loc), StandardCopyOption.REPLACE_EXISTING);
+				}
+			}
 		}
-		String loc = vf.getParent().mark == 1 ? vf.getParent().getPath() : vf.getPath();
-		Writer.check(new File(loc));
-		Files.copy(file, Paths.get(loc), StandardCopyOption.REPLACE_EXISTING);
 		fs.close();
-		return true;
+		return suc;
 	}
 
 	public static List<Backup> getList() throws IOException {

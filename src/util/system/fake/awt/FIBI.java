@@ -8,6 +8,7 @@ import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
 
+import io.Writer;
 import util.system.fake.FakeImage;
 import util.system.fake.ImageBuilder;
 
@@ -94,9 +95,10 @@ class BIBuilder extends ImageBuilder {
 		BufferedImage bimg = (BufferedImage) img.bimg();
 		if (bimg == null)
 			return false;
-		if (o instanceof File)
+		if (o instanceof File) {
+			Writer.check((File) o);
 			return ImageIO.write(bimg, fmt, (File) o);
-		else if (o instanceof OutputStream)
+		} else if (o instanceof OutputStream)
 			return ImageIO.write(bimg, fmt, (OutputStream) o);
 		return false;
 	}
