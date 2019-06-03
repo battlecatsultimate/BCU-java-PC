@@ -138,19 +138,8 @@ public abstract class CustomEntity extends DataEntity {
 			rep.proc[i] = de.getRepAtk().getProc(i).clone();
 		int m = de.getAtkCount();
 		atks = new AtkDataModel[m];
-		int[][] dat = de.rawAtkData();
-		for (int i = 0; i < m; i++) {
-			atks[i] = new AtkDataModel(this);
-			MaskAtk am = de.getAtkModel(i);
-			atks[i].proc = new int[PROC_TOT][PROC_WIDTH];
-			if (dat[i][2] == 1)
-				for (int j = 0; j < PROC_TOT; j++)
-					atks[i].proc[j] = am.getProc(j);
-			atks[i].ld0 = am.getShortPoint();
-			atks[i].ld1 = am.getLongPoint();
-			atks[i].pre = dat[i][1];
-			atks[i].atk = dat[i][0];
-		}
+		for (int i = 0; i < m; i++)
+			atks[i] = new AtkDataModel(this, de, i);
 	}
 
 	@Override
@@ -191,7 +180,7 @@ public abstract class CustomEntity extends DataEntity {
 	}
 
 	protected void write(OutStream os) {
-		os.writeString("0.4.2");
+		os.writeString("0.4.3");
 		os.writeInt(hp);
 		os.writeInt(hb);
 		os.writeInt(speed);
@@ -203,7 +192,7 @@ public abstract class CustomEntity extends DataEntity {
 		os.writeInt(tba);
 		os.writeInt(base);
 		os.writeInt(touch);
-		os.writeInt(0);// TODO
+		os.writeInt(loop);
 		os.writeInt(common ? 1 : 0);
 		rep.write(os);
 		List<AtkDataModel> temp = new ArrayList<>();
@@ -228,7 +217,9 @@ public abstract class CustomEntity extends DataEntity {
 
 	protected void zreada(InStream is) {
 		int ver = getVer(is.nextString());
-		if (ver >= 402)
+		if (ver >= 403)
+			zreada$000403(is);
+		else if (ver >= 402)
 			zreada$000402(is);
 		else if (ver >= 401)
 			zreada$000401(is);
@@ -346,7 +337,37 @@ public abstract class CustomEntity extends DataEntity {
 		tba = is.nextInt();
 		base = is.nextInt();
 		touch = is.nextInt();
-		is.nextInt();// TODO
+		is.nextInt();
+		common = is.nextInt() > 0;
+		rep = new AtkDataModel(this, is);
+		int m = is.nextInt();
+		AtkDataModel[] set = new AtkDataModel[m];
+		for (int i = 0; i < m; i++)
+			set[i] = new AtkDataModel(this, is);
+		int n = is.nextInt();
+		atks = new AtkDataModel[n];
+		for (int i = 0; i < n; i++)
+			atks[i] = set[is.nextInt()];
+		int adi = is.nextInt();
+		if ((adi & 1) > 0)
+			rev = new AtkDataModel(this, is);
+		if ((adi & 2) > 0)
+			res = new AtkDataModel(this, is);
+	}
+
+	private void zreada$000403(InStream is) {
+		hp = is.nextInt();
+		hb = is.nextInt();
+		speed = is.nextInt();
+		range = is.nextInt();
+		abi = is.nextInt();
+		type = is.nextInt();
+		width = is.nextInt();
+		shield = is.nextInt();
+		tba = is.nextInt();
+		base = is.nextInt();
+		touch = is.nextInt();
+		loop = is.nextInt();
 		common = is.nextInt() > 0;
 		rep = new AtkDataModel(this, is);
 		int m = is.nextInt();

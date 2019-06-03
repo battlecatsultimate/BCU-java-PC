@@ -14,6 +14,7 @@ import page.JTF;
 import page.JTG;
 import page.Page;
 import page.support.ListJtfPolicy;
+import util.Interpret;
 import util.entity.data.AtkDataModel;
 
 class AtkEditTable extends Page {
@@ -26,12 +27,14 @@ class AtkEditTable extends Page {
 	private final JL lp1 = new JL(1, "p1");
 	private final JL ltp = new JL(1, "type");
 	private final JL ldr = new JL(1, "dire");
+	private final JL lct = new JL(1, "count");
 	private final JTF fatk = new JTF();
 	private final JTF fpre = new JTF();
 	private final JTF fp0 = new JTF();
 	private final JTF fp1 = new JTF();
 	private final JTF ftp = new JTF();
 	private final JTF fdr = new JTF();
+	private final JTF fct = new JTF();
 	private final JTG isr = new JTG(1, "isr");
 
 	private final ListJtfPolicy ljp = new ListJtfPolicy();
@@ -66,13 +69,15 @@ class AtkEditTable extends Page {
 		set(lp1, x, y, 0, 150, 200, 50);
 		set(ltp, x, y, 0, 200, 200, 50);
 		set(ldr, x, y, 0, 250, 200, 50);
+		set(lct, x, y, 0, 300, 200, 50);
 		set(fatk, x, y, 200, 0, 200, 50);
 		set(fpre, x, y, 200, 50, 200, 50);
 		set(fp0, x, y, 200, 100, 200, 50);
 		set(fp1, x, y, 200, 150, 200, 50);
 		set(ftp, x, y, 200, 200, 200, 50);
 		set(fdr, x, y, 200, 250, 200, 50);
-		set(isr, x, y, 200, 300, 200, 50);
+		set(fct, x, y, 200, 300, 200, 50);
+		set(isr, x, y, 200, 300, 200, 50);// FIXME change it to 350
 		apt.setPreferredSize(size(x, y, 750, 2000).toDimension());
 		apt.resized(x, y);
 		set(jsp, x, y, 450, 0, 800, 950);
@@ -81,6 +86,7 @@ class AtkEditTable extends Page {
 	protected void setData(AtkDataModel data, double multi) {
 		adm = data;
 		mul = multi;
+
 		fatk.setText("" + (int) (adm.atk * mul));
 		fpre.setText("" + adm.pre);
 		fp0.setText("" + adm.ld0);
@@ -88,6 +94,7 @@ class AtkEditTable extends Page {
 		ftp.setText("" + adm.targ);
 		apt.setData(adm.ce.common ? adm.ce.rep.proc : adm.proc);
 		fdr.setText("" + (adm.rev ? -1 : 1));
+		fct.setText("" + adm.count);
 		isr.setSelected(adm.range);
 	}
 
@@ -97,20 +104,31 @@ class AtkEditTable extends Page {
 		set(lp0);
 		set(lp1);
 		set(ltp);
+		// FIXME set(lct);
 		set(fatk);
 		set(fpre);
 		set(fp0);
 		set(fp1);
 		set(ftp);
+		// FIXME set(fct);
 		add(isr);
 		ftp.setToolTipText(
 				"<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
 						+ "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost</html>");
 		fpre.setToolTipText(
 				"<html>use 0 for random attack attaching to previous one.<br>pre=0 for first attack will invalidate it</html>");
+		String ttt = "<html>enter ID of abilities separated by comma or space.<br>" + "it changes the ability state"
+				+ "(has to hot has, not has to has)<br>"
+				+ "it won't change back until you make another attack to change it ";
+
+		for (int i = 0; i < Interpret.SABIS.length; i++)
+			ttt += i + ": " + Interpret.SABIS[i] + "<br>";
+		fct.setToolTipText(ttt + "</html>");
 		set(ldr);
 		set(fdr);
 		add(jsp);
+
+		isr.setEnabled(editable);
 		jsp.getVerticalScrollBar().setUnitIncrement(10);
 		setFocusTraversalPolicy(ljp);
 		setFocusCycleRoot(true);
@@ -147,9 +165,11 @@ class AtkEditTable extends Page {
 					v = 1;
 				adm.targ = v;
 			}
-			if (jtf == fdr) {
+			if (jtf == fdr)
 				adm.rev = v == -1;
-			}
+			if (jtf == fct)
+				if (v >= 0)
+					adm.count = v;
 		}
 		callBack(null);
 	}

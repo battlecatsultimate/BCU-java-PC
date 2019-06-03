@@ -4,6 +4,10 @@ import util.Data;
 
 public interface MaskAtk {
 
+	public default int abiAlt() {
+		return 0;
+	}
+
 	public default int getDire() {
 		return 1;
 	}

@@ -63,6 +63,7 @@ public abstract class EntityEditPage extends Page {
 	private final JL ltb = new JL(1, "TBA");
 	private final JL lbs = new JL(1, "tbase");
 	private final JL ltp = new JL(1, "type");
+	private final JL lct = new JL(1, "count");
 	private final JTF fhp = new JTF();
 	private final JTF fhb = new JTF();
 	private final JTF fsp = new JTF();
@@ -72,6 +73,7 @@ public abstract class EntityEditPage extends Page {
 	private final JTF ftb = new JTF();
 	private final JTF fbs = new JTF();
 	private final JTF ftp = new JTF();
+	private final JTF fct = new JTF();
 	private final ReorderList<String> jli = new ReorderList<>();
 	private final JScrollPane jspi = new JScrollPane(jli);
 	private final JBTN add = new JBTN(0, "add");
@@ -153,7 +155,7 @@ public abstract class EntityEditPage extends Page {
 		set(ltb);
 		set(lbs);
 		set(ltp);
-
+		set(lct);
 		set(fhp);
 		set(fhb);
 		set(fsp);
@@ -163,6 +165,7 @@ public abstract class EntityEditPage extends Page {
 		set(ftb);
 		set(fbs);
 		set(ftp);
+		set(fct);
 		ljp.end();
 		add(jspi);
 		add(aet);
@@ -211,6 +214,7 @@ public abstract class EntityEditPage extends Page {
 		link.setEnabled(editable);
 		atkn.setEnabled(editable);
 		comm.setEnabled(editable);
+		fct.setEnabled(editable);
 	}
 
 	@Override
@@ -264,6 +268,8 @@ public abstract class EntityEditPage extends Page {
 		set(fbs, x, y, 650, 750, 200, 50);
 		set(ltp, x, y, 550, 800, 100, 50);
 		set(ftp, x, y, 650, 800, 200, 50);
+		set(lct, x, y, 550, 850, 100, 50);
+		set(fct, x, y, 650, 850, 200, 50);
 
 		set(aet, x, y, 900, 50, 1400, 1000);
 
@@ -311,6 +317,7 @@ public abstract class EntityEditPage extends Page {
 		vpst.setText("" + ce.getPost());
 		vitv.setText("" + ce.getItv());
 		ftp.setText("" + ce.touch);
+		fct.setText("" + ce.loop);
 		comm.setSelected(data.common);
 		mpt.setData(ce.rep.proc);
 		int[][] raw = ce.rawAtkData();
@@ -565,6 +572,11 @@ public abstract class EntityEditPage extends Page {
 				if (v < 1)
 					v = 1;
 				ce.touch = v;
+			}
+			if (jtf == fct) {
+				if (v < -1)
+					v = -1;
+				ce.loop = v;
 			}
 			getInput(jtf, v);
 		}

@@ -110,19 +110,21 @@ public class EffAnim extends AnimD {
 		effas[A_POI7].name = "poison_pink";
 	}
 
-	private static void excColor(FakeImage fakeImage, Function<int[], Integer> f) {
-		int w = fakeImage.getWidth();
-		int h = fakeImage.getHeight();
+	private static void excColor(FakeImage fimg, Function<int[], Integer> f) {
+		fimg.mark("recolor");
+		int w = fimg.getWidth();
+		int h = fimg.getHeight();
 		for (int i = 0; i < w; i++)
 			for (int j = 0; j < h; j++) {
-				int p = fakeImage.getRGB(i, j);
+				int p = fimg.getRGB(i, j);
 				int b = p & 255;
 				int g = p >> 8 & 255;
 				int r = p >> 16 & 255;
 				int a = p >> 24;
 				p = f.apply(new int[] { a, r, g, b });
-				fakeImage.setRGB(i, j, p);
+				fimg.setRGB(i, j, p);
 			}
+		fimg.mark("recolor-finished");
 	}
 
 	private VImg vimg;
