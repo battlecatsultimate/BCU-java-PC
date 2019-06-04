@@ -89,8 +89,9 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		resized();
 	}
 
-	protected BattleInfoPage(Page p, SBCtrl ctrl) {
+	protected BattleInfoPage(Page p, SBRply rpl) {
 		super(p);
+		SBCtrl ctrl = rpl.transform(this);
 		bb = BBBuilder.def.getCtrl(this, ctrl);
 		pause = true;
 		basis = ctrl;
@@ -279,7 +280,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 				if (recd.name.length() == 0)
 					changePanel(new RecdSavePage(getThis(), recd));
 				else
-					changePanel(new BattleInfoPage(this, ((SBRply) basis).transform(this)));
+					changePanel(new BattleInfoPage(this, (SBRply) basis));
 		});
 
 		paus.addActionListener(new ActionListener() {

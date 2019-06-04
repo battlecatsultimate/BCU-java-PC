@@ -103,7 +103,9 @@ public class BCJSON extends WebFileIO {
 			LoadPage.prog("check jar update...");
 			if (MainBCU.ver < data.getInt("jar")) {
 				if (Opts.updateCheck("JAR", data.getString("jar-desc"))) {
-					String name = "BCU " + Data.revVer(data.getInt("jar")) + ".jar";
+					int ver = data.getInt("jar");
+					String name = "BCU" + (ver >= 40800 ? "-" : " ");
+					name += Data.revVer(ver) + ".jar";
 					if (download(ast + "jar/" + name, new File("./" + name), LoadPage.lp)) {
 						Writer.logClose(false);
 						System.exit(0);
