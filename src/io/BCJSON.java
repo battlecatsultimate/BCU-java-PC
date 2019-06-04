@@ -46,6 +46,7 @@ public class BCJSON extends WebFileIO {
 	private static final String fileio = "fileio.php";
 	private static final String logio = "logio.php";
 	private static final String retrieve = "acquire.php";
+	private static final String changePassword = "changePassword.php";
 
 	private static final String[] cals;
 
@@ -70,6 +71,20 @@ public class BCJSON extends WebFileIO {
 			// TODO tutorial
 		}
 
+	}
+
+	public static boolean changePassword(long pass) {
+		JSONObject inp = new JSONObject();
+		inp.put("uid", ID);
+		inp.put("password", PASSWORD);
+		inp.put("newpass", pass);
+		try {
+			JSONObject ans = read(inp.toString(), changePassword);
+			return ans.getInt("ret") == 0;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	public static void checkDownload() {

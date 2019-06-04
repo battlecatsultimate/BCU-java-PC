@@ -36,6 +36,7 @@ public class WebMainPage extends Page {
 	private final JBTN edit = new JBTN(2, "manage");
 	private final JBTN main = new JBTN(2, "full");
 	private final JBTN rfsh = new JBTN(2, "refresh");
+	private final JBTN user = new JBTN(2, "user");
 	private final JComboBox<String> sort = new JComboBox<>(get(2, "sort", 4));
 	private final JPanel cont = new JPanel();
 	private final JScrollPane jsp = new JScrollPane(cont);
@@ -66,9 +67,10 @@ public class WebMainPage extends Page {
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);
-		set(edit, x, y, 400, 0, 200, 50);
-		set(main, x, y, 800, 0, 200, 50);
-		set(rfsh, x, y, 1200, 0, 200, 50);
+		set(user, x, y, 250, 0, 200, 50);
+		set(edit, x, y, 500, 0, 200, 50);
+		set(main, x, y, 900, 0, 200, 50);
+		set(rfsh, x, y, 1150, 0, 200, 50);
 		set(jsp, x, y, 50, 200, 2200, 1050);
 		set(sort, x, y, 1400, 0, 400, 50);
 
@@ -97,26 +99,13 @@ public class WebMainPage extends Page {
 	}
 
 	private void addListeners() {
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
-		});
+		back.setLnr(x -> changePanel(getFront()));
 
-		main.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				load(-1);
-			}
-		});
+		main.setLnr(x -> load(-1));
 
-		edit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new WebUserPage(getThis()));
-			}
-		});
+		edit.setLnr(x -> changePanel(new WebUserPage(getThis())));
+
+		user.setLnr(x -> changePanel(new UserSettingsPage(getThis())));
 
 		rfsh.addActionListener(new ActionListener() {
 			@Override
@@ -149,6 +138,7 @@ public class WebMainPage extends Page {
 		add(main);
 		add(edit);
 		add(rfsh);
+		add(user);
 		sort.setSelectedIndex(WebPack.SORT_POP);
 		jsp.getVerticalScrollBar().setUnitIncrement(8);
 		title = new JLabel[7];

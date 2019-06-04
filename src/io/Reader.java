@@ -3,11 +3,8 @@ package io;
 import static java.lang.Character.isDigit;
 
 import java.awt.Rectangle;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -65,7 +62,9 @@ public class Reader extends DataIO {
 		try {
 			LoadPage.prog("reading basic images");
 			Res.readData();
+			LoadPage.prog("reading units");
 			Unit.readData();
+			LoadPage.prog("reading enemies");
 			Enemy.readData();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -74,8 +73,8 @@ public class Reader extends DataIO {
 		}
 
 		try {
-			LoadPage.prog("reading extra data");
 			readOthers();
+			LoadPage.prog("reading calendar infomation");
 			readID();
 			readGroup();
 			readLang();
@@ -282,21 +281,14 @@ public class Reader extends DataIO {
 	}
 
 	public static Queue<String> readLines(File file) {
-		Queue<String> ans = new ArrayDeque<>();
-		BufferedReader reader = null;
 		try {
-			FileInputStream fis = new FileInputStream(file);
-			InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
-			reader = new BufferedReader(isr);
-			String temp = null;
-			while ((temp = reader.readLine()) != null)
-				ans.add(temp);
-			reader.close();
-		} catch (Exception e) {
+			return new ArrayDeque<>(Files.readAllLines(file.toPath()));
+		} catch (IOException e) {
 			Opts.ioErr("failed to read file " + file);
 			e.printStackTrace();
+			return null;
 		}
-		return ans;
+
 	}
 
 	private static int parseInt(String str) {
@@ -461,7 +453,6 @@ public class Reader extends DataIO {
 					MainLocale.exTTT = parseInt(qs.poll()) == 1;
 					Exporter.read(qs);
 					Importer.read(qs);
-
 				} catch (Exception e) {
 				}
 			} else {
@@ -478,16 +469,20 @@ public class Reader extends DataIO {
 	}
 
 	private static void readOthers() {
+		LoadPage.prog("reading extra unit data");
 		Combo.readFile();
 		PCoin.read();
+		LoadPage.prog("reading extra graphics data");
 		EffAnim.read();
 		Background.read();
+		NyCastle.read();
+		Soul.read();
+		LoadPage.prog("reading stage data");
 		MapColc.read();
 		RandStage.read();
 		CharaGroup.read();
 		Limit.read();
-		NyCastle.read();
-		Soul.read();
+
 	}
 
 }

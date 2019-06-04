@@ -102,6 +102,7 @@ public class BasisLU extends Basis implements Copable<BasisLU>, BattleStatic {
 					list.remove(f.unit);
 		for (int i = 0; i < n; i++) {
 			Unit u = list.get((int) (Math.random() * list.size()));
+			list.remove(u);
 			ans.lu.setFS(u.forms[u.forms.length - 1], rad[i]);
 		}
 		ans.lu.arrange();

@@ -20,7 +20,7 @@ import util.system.fake.awt.PCIB;
 
 public class MainBCU {
 
-	public static final int ver = 40721;
+	public static final int ver = 40723;
 
 	public static int FILTER_TYPE = 0;
 	public static final boolean WRITE = !new File("./.project").exists();
@@ -39,8 +39,8 @@ public class MainBCU {
 		}
 
 		Writer.logPrepare();
-		Reader.getData$0();
 		Writer.logSetup();
+		Reader.getData$0();
 
 		ImageBuilder.builder = USE_JOGL ? new GLIB() : new PCIB();
 		BBBuilder.def = USE_JOGL ? new GLBBB() : AWTBBB.INS;

@@ -344,6 +344,10 @@ public abstract class Entity extends AbEntity {
 		// conf 2
 		if (conf == 2 && data.getPack().anim.anims.length >= 7)
 			kbTime = -3;
+		if (conf == 3 && data.getPack().anim.anims.length >= 7) {
+			kbTime = -3;
+			status[P_BURROW] = new int[PROC_WIDTH];
+		}
 	}
 
 	/** can be targeted by the cat with Targer ability of trait t */
