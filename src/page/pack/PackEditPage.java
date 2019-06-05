@@ -659,7 +659,8 @@ public class PackEditPage extends Page {
 		vbgr.setEnabled(pac != null);
 		vene.setEnabled(pac != null);
 		vmsc.setEnabled(pac != null);
-		unpk.setEnabled(pac != null && !pac.editable && pac.author.equals(BCJSON.USERNAME));
+		boolean canUnpack = pac != null && pac != Pack.def && !pac.editable && pac.author.equals(BCJSON.USERNAME);
+		unpk.setEnabled(canUnpack);
 		if (b)
 			jtfp.setText(pack.name);
 		if (pac == null) {

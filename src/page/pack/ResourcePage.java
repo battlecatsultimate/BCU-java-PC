@@ -115,6 +115,7 @@ public class ResourcePage extends Page {
 		add(jsps);
 		add(rept);
 		add(jln);
+		setSele();
 		setTree(VFile.root);
 		addListeners();
 	}

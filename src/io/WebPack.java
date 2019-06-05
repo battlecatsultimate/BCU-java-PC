@@ -143,7 +143,7 @@ public class WebPack {
 	public int[][] rate;
 
 	public WebImg icon;
-	public List<WebImg> thumbs = new ArrayList<WebImg>();
+	public List<WebImg> thumbs = null;
 
 	protected String desp = "";
 
@@ -210,8 +210,17 @@ public class WebPack {
 		return loaded;
 	}
 
-	public void loadImg(JSONArray jsonArray) {
-		// TODO Auto-generated method stub
+	public void loadImg(JSONArray arr) {
+		String[] strs = new String[arr.length()];
+		for (int i = 0; i < arr.length(); i++)
+			strs[i] = arr.getString(i);
+		thumbs = new ArrayList<WebImg>();
+		for (String str : strs)
+			if (str.length() == 7 && str.endsWith(".png")) {
+				if (Reader.parseIntN(str) < 0)
+					continue;
+				thumbs.add(new WebImg("/img/" + str));
+			}
 	}
 
 	@Override
