@@ -18,7 +18,9 @@ import page.JBTN;
 import page.JTF;
 import page.JTG;
 import page.Page;
+import page.basis.BasisPage;
 import page.info.StageViewPage;
+import util.basis.BasisSet;
 import util.stage.MapColc;
 import util.stage.Recd;
 
@@ -31,6 +33,7 @@ public class RecdManagePage extends Page {
 	private final JBTN recd = new JBTN(-1, "mp4");
 	private final JBTN dele = new JBTN(0, "rem");
 	private final JBTN vsta = new JBTN(0, "vsta");
+	private final JBTN jlu = new JBTN(0, "line");
 	private final JTF rena = new JTF();
 	private final JTF seed = new JTF();
 	private final JTG larg = new JTG(0, "larges");
@@ -41,6 +44,7 @@ public class RecdManagePage extends Page {
 
 	private boolean changing;
 	private StageViewPage svp;
+	private BasisPage bp;
 
 	public RecdManagePage(Page p) {
 		super(p);
@@ -60,6 +64,14 @@ public class RecdManagePage extends Page {
 				r.marked = true;
 			}
 		}
+		if (bp != null) {
+			Recd r = jlr.getSelectedValue();
+			if (r != null && Opts.conf("are you sure to change lineup?")) {
+				r.lu = BasisSet.current.sele.copy();
+				r.marked = true;
+			}
+		}
+		bp = null;
 		svp = null;
 	}
 
@@ -76,32 +88,19 @@ public class RecdManagePage extends Page {
 		set(dele, x, y, 400, 400, 300, 50);
 		set(rena, x, y, 400, 500, 300, 50);
 		set(vsta, x, y, 400, 600, 300, 50);
+		set(jlu, x, y, 750, 600, 300, 50);
 		set(seed, x, y, 750, 300, 500, 50);
 	}
 
 	private void addListeners() {
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
-		});
+		back.setLnr(x -> changePanel(getFront()));
 
-		vsta.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Recd r = jlr.getSelectedValue();
-				changePanel(svp = new StageViewPage(getThis(), MapColc.MAPS.values(), r.st));
-			}
-		});
+		vsta.setLnr(
+				x -> changePanel(svp = new StageViewPage(getThis(), MapColc.MAPS.values(), jlr.getSelectedValue().st)));
 
-		rply.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Recd r = jlr.getSelectedValue();
-				changePanel(new BattleInfoPage(getThis(), r, 0));
-			}
-		});
+		jlu.setLnr(x -> changePanel(bp = new BasisPage(getThis())));
+
+		rply.setLnr(x -> changePanel(new BattleInfoPage(getThis(), jlr.getSelectedValue(), 0)));
 
 		recd.addActionListener(new ActionListener() {
 			@Override
@@ -194,6 +193,7 @@ public class RecdManagePage extends Page {
 		add(rena);
 		add(vsta);
 		add(seed);
+		add(jlu);
 		len.setBorder(BorderFactory.createEtchedBorder());
 		addListeners();
 	}
@@ -216,6 +216,7 @@ public class RecdManagePage extends Page {
 		rena.setEditable(r != null);
 		seed.setEditable(r != null);
 		vsta.setEnabled(r != null);
+		jlu.setEnabled(r != null);
 		if (r == null) {
 			rena.setText("");
 			len.setText("");

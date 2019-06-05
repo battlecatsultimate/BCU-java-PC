@@ -397,6 +397,10 @@ public class Data {
 		return ans;
 	}
 
+	public static String hex(int id) {
+		return trio(id / 1000) + trio(id % 1000);
+	}
+
 	public static Queue<String> readLine(File f) {
 		try {
 			return new ArrayDeque<String>(Files.readAllLines(f.toPath()));
@@ -418,10 +422,6 @@ public class Data {
 		if (i < 10)
 			str += "0";
 		return str + i;
-	}
-
-	protected static String hex(int id) {
-		return trio(id / 1000) + trio(id % 1000);
 	}
 
 	protected static <T> T readSave(String path, Function<Queue<String>, T> func) {

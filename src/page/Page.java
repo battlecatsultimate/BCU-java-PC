@@ -194,6 +194,8 @@ public abstract class Page extends JPanel implements RetFunc {
 	}
 
 	private void fontSetter(Component c) {
+		if (c == null)
+			return;
 		c.setFont(MainFrame.font);
 		if (c instanceof JScrollPane) {
 			JScrollPane jsp = (JScrollPane) c;

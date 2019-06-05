@@ -1,7 +1,11 @@
 package page.internet;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
@@ -30,7 +34,268 @@ import util.pack.Pack;
 
 public class WebMainPage extends Page {
 
+	private class WebItem {
+
+		private class ItemDetl extends JPanel {
+
+			private static final long serialVersionUID = 1L;
+
+			private final JLabel icon = new JLabel();
+			private final JL name = new JL(obj.name);
+			private final JL pkid = new JL(obj.pid + "-" + obj.version);
+			private final JL rate0 = new JL("point: " + obj.getRate_0());
+			private final JL rate1 = new JL("star: " + obj.getRate_1() * 0.01);
+			private final JBTN down = new JBTN();
+			private final JBTN auth = new JBTN(obj.author);
+
+			private final JLabel thumb = new JLabel();
+			private final JTextPane desp = new JTextPane();
+			private final JScrollPane jsps = new JScrollPane(desp);
+			private final JSlider vote = new JSlider();
+
+			private ItemDetl() {
+				init();
+				addListeners();
+			}
+
+			private void addListeners() {
+
+				down.setLnr(x -> {
+					File f = new File("./pack/" + obj.pid + ".bcupack");
+					String url = "http://battlecatsultimate.cf/downloadpack.php?packid=" + obj.pid;
+					if (WebFileIO.download(url, f, null)) {
+						Pack pac = Pack.read(f);
+						down.setText(2, "downloaded");
+						down.setEnabled(false);
+						obj.version = pac.version;
+						Opts.success("download success");
+					} else
+						Opts.dloadErr("");
+					prev.down.setText(down.getText());
+				});
+
+				auth.setLnr(x -> load(obj.uid));
+
+				vote.addChangeListener(new ChangeListener() {
+
+					@Override
+					public void stateChanged(ChangeEvent arg0) {
+						if (changing || vote.getValueIsAdjusting())
+							return;
+						int vot = vote.getValue();
+						int[][] ret = BCJSON.rate(obj.pid, vot);
+						if (ret == null) {
+							changing = true;
+							vote.setValue(obj.vote);
+							changing = false;
+						} else {
+							obj.rate = ret;
+							obj.vote = vot;
+							rate0.setText("point: " + obj.getRate_0());
+							rate1.setText("star: " + obj.getRate_1() * 0.01);
+							prev.rate0.setText("point: " + obj.getRate_0());
+							prev.rate1.setText("star: " + obj.getRate_1() * 0.01);
+						}
+					}
+
+				});
+			}
+
+			private void init() {
+				setBackground(Color.WHITE);
+				setLayout(null);
+				add(thumb);
+				add(jsps);
+				add(vote);
+				add(icon);
+				add(name);
+				add(auth);
+				add(pkid);
+				add(rate0);
+				add(rate1);
+				add(down);
+
+				icon.setBorder(BorderFactory.createEtchedBorder());
+				thumb.setBorder(BorderFactory.createEtchedBorder());
+
+				name.setHorizontalAlignment(SwingConstants.CENTER);
+				pkid.setHorizontalAlignment(SwingConstants.CENTER);
+				rate0.setHorizontalAlignment(SwingConstants.CENTER);
+				rate1.setHorizontalAlignment(SwingConstants.CENTER);
+
+				jsps.getVerticalScrollBar().setUnitIncrement(8);
+
+				auth.setEnabled(uid == -1);
+
+				Pack p = Pack.map.get(obj.pid);
+				if (p == null)
+					down.setText(2, "download");
+				else if (p.editable)
+					down.setEnabled(false);
+				else if (p.version < obj.version)
+					down.setText(p.version + " > " + obj.version);
+				else {
+					down.setText(2, "downloaded");
+					down.setEnabled(false);
+				}
+
+				desp.setEditable(false);
+				desp.setText(obj.getDesp());
+
+				vote.setMinimum(0);
+				vote.setMaximum(5);
+				vote.setMajorTickSpacing(1);
+				vote.setLabelTable(dict);
+				vote.setPaintTicks(true);
+				vote.setPaintLabels(true);
+				vote.setValue(obj.vote);
+			}
+
+			private int resize$detl(int x, int y) {
+				set(icon, x, y, 50, 50, 300, 300);
+				obj.icon.load(icon);
+				set(name, x, y, 400, 50, 600, 100);
+				set(auth, x, y, 400, 150, 200, 50);
+				set(pkid, x, y, 600, 150, 200, 50);
+				set(down, x, y, 800, 150, 200, 50);
+				set(rate0, x, y, 400, 250, 200, 50);
+				set(rate1, x, y, 400, 300, 200, 50);
+				set(vote, x, y, 600, 250, 400, 100);
+
+				set(thumb, x, y, 150, 400, 800, 400);
+				set(jsps, x, y, 50, 850, 1000, 800);
+				return 1700;
+			}
+
+		}
+
+		private class ItemPrev extends JPanel {
+
+			private static final long serialVersionUID = 1L;
+
+			private final JLabel icon = new JLabel();
+			private final JL name = new JL(obj.name);
+			private final JL pkid = new JL(obj.pid + "-" + obj.version);
+			private final JL rate0 = new JL("point: " + obj.getRate_0());
+			private final JL rate1 = new JL("star: " + obj.getRate_1() * 0.01);
+			private final JBTN down = new JBTN();
+			private final JBTN auth = new JBTN(obj.author);
+
+			private ItemPrev() {
+				init();
+				addListeners();
+			}
+
+			private void addListeners() {
+				down.setLnr(x -> {
+					File f = new File("./pack/" + obj.pid + ".bcupack");
+					String url = "http://battlecatsultimate.cf/downloadpack.php?packid=" + obj.pid;
+					if (WebFileIO.download(url, f, null)) {
+						Pack pac = Pack.read(f);
+						down.setText(2, "downloaded");
+						down.setEnabled(false);
+						obj.version = pac.version;
+						Opts.success("download success");
+					} else
+						Opts.dloadErr("");
+					if (detail != null)
+						detail.down.setText(down.getText());
+				});
+
+				auth.setLnr(x -> load(obj.uid));
+
+				icon.addMouseListener(new MouseAdapter() {
+
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						obj.icon.load(icon);
+					}
+				});
+			}
+
+			private void clicked() {
+				loadDetail();
+				jdt.setViewportView(detail);
+				detl = detail;
+			}
+
+			private void init() {
+				setBackground(Color.WHITE);
+				setLayout(null);
+
+				add(icon);
+				add(name);
+				add(auth);
+				add(pkid);
+				add(rate0);
+				add(rate1);
+				add(down);
+
+				icon.setBorder(BorderFactory.createEtchedBorder());
+				name.setHorizontalAlignment(SwingConstants.CENTER);
+				pkid.setHorizontalAlignment(SwingConstants.CENTER);
+				rate0.setHorizontalAlignment(SwingConstants.CENTER);
+				rate1.setHorizontalAlignment(SwingConstants.CENTER);
+
+				auth.setEnabled(uid == -1);
+
+				Pack p = Pack.map.get(obj.pid);
+				if (p == null)
+					down.setText(2, "download");
+				else if (p.editable)
+					down.setEnabled(false);
+				else if (p.version < obj.version)
+					down.setText(p.version + " > " + obj.version);
+				else {
+					down.setText(2, "downloaded");
+					down.setEnabled(false);
+				}
+
+			}
+
+			private void resize$prev(int x, int y, int xh) {
+				set(this, x, y, 0, xh, 600, 150);
+				set(icon, x, y, 0, 0, 150, 150);
+				obj.icon.load(icon);
+				set(name, x, y, 150, 0, 450, 50);
+				set(auth, x, y, 150, 50, 300, 50);
+				set(pkid, x, y, 450, 50, 150, 50);
+				set(rate0, x, y, 150, 100, 150, 50);
+				set(rate1, x, y, 300, 100, 150, 50);
+				set(down, x, y, 450, 100, 150, 50);
+
+			}
+
+		}
+
+		private final WebPack obj;
+		private final ItemPrev prev;
+		private ItemDetl detail;
+
+		private WebItem(WebPack wp) {
+			obj = wp;
+			cont.add(prev = new ItemPrev());
+
+		}
+
+		private void loadDetail() {
+			detail = new ItemDetl();
+		}
+
+	}
+
 	private static final long serialVersionUID = 1L;
+
+	private static final Hashtable<Integer, JLabel> dict = new Hashtable<>();
+
+	static {
+		dict.put(0, new JLabel("X"));
+		dict.put(1, new JLabel("-2"));
+		dict.put(2, new JLabel("-1"));
+		dict.put(3, new JLabel("0"));
+		dict.put(4, new JLabel("1"));
+		dict.put(5, new JLabel("2"));
+	}
 
 	private final JBTN back = new JBTN(0, "back");
 	private final JBTN edit = new JBTN(2, "manage");
@@ -40,12 +305,11 @@ public class WebMainPage extends Page {
 	private final JComboBox<String> sort = new JComboBox<>(get(2, "sort", 4));
 	private final JPanel cont = new JPanel();
 	private final JScrollPane jsp = new JScrollPane(cont);
+	private final JScrollPane jdt = new JScrollPane();
 
-	private JTextPane[] desp;
-	private JScrollPane[] jsps;
-	private JLabel[] name, pkid, title, rate0, rate1;
-	private JBTN[] down, auth;
-	private JSlider[] vote;
+	private WebItem.ItemDetl detl = null;
+
+	private WebItem[] items;
 
 	private int uid, n;
 	private boolean changing = false;
@@ -56,6 +320,19 @@ public class WebMainPage extends Page {
 		ini();
 		load(-1);
 		resized();
+	}
+
+	@Override
+	protected void leave() {
+		WebPack.clear();
+	}
+
+	@Override
+	protected void mousePressed(MouseEvent me) {
+		Component c = (Component) me.getSource();
+		for (WebItem wi : items)
+			if (c.getParent() == wi.prev)
+				wi.prev.clicked();
 	}
 
 	@Override
@@ -71,31 +348,23 @@ public class WebMainPage extends Page {
 		set(edit, x, y, 500, 0, 200, 50);
 		set(main, x, y, 900, 0, 200, 50);
 		set(rfsh, x, y, 1150, 0, 200, 50);
-		set(jsp, x, y, 50, 200, 2200, 1050);
+		set(jsp, x, y, 50, 100, 650, 1150);
+		set(jdt, x, y, 750, 100, 1500, 1150);
 		set(sort, x, y, 1400, 0, 400, 50);
 
-		set(title[0], x, y, 50, 100, 600, 50);
-		set(title[1], x, y, 50, 150, 300, 50);
-		set(title[2], x, y, 350, 150, 150, 50);
-		set(title[3], x, y, 500, 150, 150, 50);
-		set(title[4], x, y, 650, 100, 1200, 100);
-		set(title[5], x, y, 1850, 100, 100, 100);
-		set(title[6], x, y, 1950, 100, 250, 100);
-
-		int h = 100, hh = 50, dh = 50, xh = 0;
+		int dh = 50, xh = 0;
 
 		for (int i = 0; i < n; i++) {
-			set(name[i], x, y, 0, xh, 600, hh);
-			set(auth[i], x, y, 0, xh + hh, 300, hh);
-			set(pkid[i], x, y, 300, xh + hh, 150, hh);
-			set(down[i], x, y, 450, xh + hh, 150, hh);
-			set(jsps[i], x, y, 600, xh, 1150, h);
-			set(rate0[i], x, y, 1750, xh, 150, hh);
-			set(rate1[i], x, y, 1750, xh + hh, 150, hh);
-			set(vote[i], x, y, 1900, xh, 250, h);
-			xh += h + dh;
+			items[i].prev.resize$prev(x, y, xh);
+			xh += 150 + dh;
 		}
-		cont.setPreferredSize(size(x, y, 2150, xh).toDimension());
+
+		if (detl != null) {
+			int h = detl.resize$detl(x, y);
+			detl.setPreferredSize(size(x, y, 1450, h).toDimension());
+		}
+
+		cont.setPreferredSize(size(x, y, 600, xh).toDimension());
 	}
 
 	private void addListeners() {
@@ -139,14 +408,10 @@ public class WebMainPage extends Page {
 		add(edit);
 		add(rfsh);
 		add(user);
+		add(jdt);
 		sort.setSelectedIndex(WebPack.SORT_POP);
 		jsp.getVerticalScrollBar().setUnitIncrement(8);
-		title = new JLabel[7];
-		for (int i = 0; i < 7; i++) {
-			add(title[i] = new JL(2, "t" + i));
-			title[i].setHorizontalAlignment(SwingConstants.CENTER);
-			title[i].setBorder(BorderFactory.createEtchedBorder());
-		}
+		jdt.getVerticalScrollBar().setUnitIncrement(8);
 		cont.setLayout(null);
 		addListeners();
 	}
@@ -161,113 +426,10 @@ public class WebMainPage extends Page {
 			SimpleAttributeSet attr = new SimpleAttributeSet();
 			StyleConstants.setAlignment(attr, StyleConstants.ALIGN_CENTER);
 			n = obj.length;
+			items = new WebItem[n];
 
-			jsps = new JScrollPane[n];
-			name = new JLabel[n];
-			desp = new JTextPane[n];
-			auth = new JBTN[n];
-			pkid = new JLabel[n];
-			rate0 = new JLabel[n];
-			rate1 = new JLabel[n];
-			down = new JBTN[n];
-			vote = new JSlider[n];
-
-			Hashtable<Integer, JLabel> dict = new Hashtable<>();
-			dict.put(0, new JLabel("X"));
-			dict.put(1, new JLabel("-2"));
-			dict.put(2, new JLabel("-1"));
-			dict.put(3, new JLabel("0"));
-			dict.put(4, new JLabel("1"));
-			dict.put(5, new JLabel("2"));
-
-			for (int i = 0; i < obj.length; i++) {
-
-				cont.add(name[i] = new JLabel(obj[i].name));
-				name[i].setHorizontalAlignment(SwingConstants.CENTER);
-				name[i].setBorder(BorderFactory.createEtchedBorder());
-
-				cont.add(jsps[i] = new JScrollPane(desp[i] = new JTextPane()));
-				desp[i].setEditable(false);
-				desp[i].setText(obj[i].desp);
-
-				cont.add(auth[i] = new JBTN(obj[i].author));
-				auth[i].setEnabled(uid == -1);
-
-				cont.add(pkid[i] = new JLabel(obj[i].pid + "-" + obj[i].version));
-				pkid[i].setHorizontalAlignment(SwingConstants.CENTER);
-				pkid[i].setBorder(BorderFactory.createEtchedBorder());
-
-				cont.add(rate0[i] = new JLabel("point: " + obj[i].getRate_0()));
-				rate0[i].setHorizontalAlignment(SwingConstants.CENTER);
-				rate0[i].setBorder(BorderFactory.createEtchedBorder());
-
-				cont.add(rate1[i] = new JLabel("star: " + obj[i].getRate_1() * 0.01));
-				rate1[i].setHorizontalAlignment(SwingConstants.CENTER);
-				rate1[i].setBorder(BorderFactory.createEtchedBorder());
-
-				cont.add(down[i] = new JBTN());
-
-				Pack p = Pack.map.get(obj[i].pid);
-				if (p == null)
-					down[i].setText(2, "download");
-				else if (p.editable)
-					down[i].setEnabled(false);
-				else if (p.version < obj[i].version)
-					down[i].setText(p.version + " > " + obj[i].version);
-				else {
-					down[i].setText(2, "downloaded");
-					down[i].setEnabled(false);
-				}
-
-				cont.add(vote[i] = new JSlider());
-				vote[i].setMinimum(0);
-				vote[i].setMaximum(5);
-				vote[i].setMajorTickSpacing(1);
-				vote[i].setLabelTable(dict);
-				vote[i].setPaintTicks(true);
-				vote[i].setPaintLabels(true);
-				vote[i].setValue(obj[i].vote);
-
-				String url = obj[i].url;
-				int I = i;
-
-				down[i].setLnr(x -> {
-					File f = new File("./pack/" + obj[I].pid + ".bcupack");
-					if (WebFileIO.download(url, f, null)) {
-						Pack pac = Pack.read(f);
-						down[I].setText(2, "downloaded");
-						down[I].setEnabled(false);
-						obj[I].version = pac.version;
-						Opts.success("download success");
-					} else
-						Opts.dloadErr("");
-				});
-
-				auth[i].setLnr(x -> load(obj[I].uid));
-
-				vote[i].addChangeListener(new ChangeListener() {
-
-					@Override
-					public void stateChanged(ChangeEvent arg0) {
-						if (changing || vote[I].getValueIsAdjusting())
-							return;
-						int vot = vote[I].getValue();
-						int[][] ret = BCJSON.rate(obj[I].pid, vot);
-						if (ret == null) {
-							changing = true;
-							vote[I].setValue(obj[I].vote);
-							changing = false;
-						} else {
-							obj[I].rate = ret;
-							obj[I].vote = vot;
-							rate0[I].setText("point: " + obj[I].getRate_0());
-							rate1[I].setText("star: " + obj[I].getRate_1() * 0.01);
-						}
-					}
-
-				});
-
-			}
+			for (int i = 0; i < n; i++)
+				items[i] = new WebItem(obj[i]);
 		} catch (IOException e) {
 			e.printStackTrace();
 			changePanel(new LoginPage(getFront()));
