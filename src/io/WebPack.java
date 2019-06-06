@@ -6,8 +6,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Consumer;
 
@@ -18,7 +21,38 @@ import javax.swing.JLabel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import util.Data;
+
 public class WebPack {
+
+	public static class JLCont {
+
+		private static final Map<JLabel, JLCont> map = new HashMap<>();
+
+		public static JLCont getIns(JLabel jl, WebImg wi) {
+			JLCont jc;
+			if (map.containsKey(jl))
+				jc = map.get(jl);
+			else {
+				jc = new JLCont(jl, wi);
+				map.put(jl, jc);
+			}
+			jc.img = wi;
+			return jc;
+		}
+
+		private final JLabel label;
+
+		private WebImg img;
+
+		private boolean dirty = true;
+
+		private JLCont(JLabel jl, WebImg wi) {
+			label = jl;
+			img = wi;
+		}
+
+	}
 
 	public static class WebImg implements Runnable, Consumer<Progress> {
 
@@ -37,12 +71,12 @@ public class WebPack {
 			return res;
 		}
 
-		private String url, temp;
+		private String url, temp, name;
 		private BufferedImage bimg;
 
 		private int state = PRELOAD;
 
-		private List<JLabel> wait = new ArrayList<>();
+		private Set<JLCont> wait = new HashSet<>();
 
 		private TreeMap<Integer, BufferedImage> map = new TreeMap<>();
 
@@ -51,6 +85,9 @@ public class WebPack {
 			temp = "" + Math.abs(url.hashCode());
 			if (str.length() > 0) {
 				url = "http://battlecatsultimate.cf/packs/res/" + str;
+				String[] strs = str.split("/");
+				name = strs[strs.length - 1];
+				name = name.substring(0, name.length() - 4);
 				new Thread(this).start();
 			} else
 				state = NOIMG;
@@ -72,7 +109,11 @@ public class WebPack {
 
 		public synchronized void load(JLabel icon) {
 			synchronized (wait) {
-				wait.add(icon);
+				synchronized (icon) {
+					JLCont jc = JLCont.getIns(icon, this);
+					jc.dirty = true;
+					wait.add(jc);
+				}
 			}
 			if (bimg != null)
 				load();
@@ -88,12 +129,17 @@ public class WebPack {
 			synchronized (wait) {
 				if (bimg == null || wait.size() == 0 || state == NOIMG)
 					return;
-				for (JLabel target : wait) {
+				for (JLCont cont : wait) {
+					if (!cont.dirty || cont.img != this)
+						return;
+					JLabel target = cont.label;
 					int tw, th;
 					synchronized (target) {
 						tw = target.getWidth();
 						th = target.getHeight();
 					}
+					if (tw * th == 0)
+						return;
 					int bw = bimg.getWidth();
 					int bh = bimg.getHeight();
 					double r = Math.min(1.0 * tw / bw, 1.0 * th / bh);
@@ -111,14 +157,18 @@ public class WebPack {
 					}
 					synchronized (target) {
 						target.setIcon(new ImageIcon(res));
+						cont.dirty = false;
 					}
 				}
+				wait.clear();
 			}
 		}
 
 	}
 
 	public static final int SORT_ID = 0, SORT_RATE = 1, SORT_POP = 2, SORT_NEW = 3;
+
+	public static final int MAX_IMG = 1;
 
 	protected static Map<Integer, WebPack> packlist = new TreeMap<>();
 
@@ -127,10 +177,11 @@ public class WebPack {
 			synchronized (wp.icon.wait) {
 				wp.icon.wait.clear();
 			}
-			for (WebImg wi : wp.thumbs)
-				synchronized (wi.wait) {
-					wi.wait.clear();
-				}
+			if (wp.thumbs != null)
+				for (WebImg wi : wp.thumbs)
+					synchronized (wi.wait) {
+						wi.wait.clear();
+					}
 		}
 	}
 
@@ -186,6 +237,20 @@ public class WebPack {
 		return desp;
 	}
 
+	public int getNextThumbID() {
+		if (thumbs == null)
+			return -1;
+		for (int i = 0; i <= Math.min(thumbs.size(), MAX_IMG); i++) {
+			String name = Data.trio(i);
+			boolean b = false;
+			for (WebImg wi : thumbs)
+				b |= name == wi.name;
+			if (!b)
+				return i;
+		}
+		return 0;
+	}
+
 	public int getRate_0() {
 		int ans = 0;
 		for (int i = 1; i <= 5; i++)
@@ -219,8 +284,13 @@ public class WebPack {
 			if (str.length() == 7 && str.endsWith(".png")) {
 				if (Reader.parseIntN(str) < 0)
 					continue;
-				thumbs.add(new WebImg("/img/" + str));
+				thumbs.add(new WebImg(pid + "/img/" + str));
 			}
+	}
+
+	public void loadThumb(JLabel thumb, int i) {
+		if (thumbs != null && thumbs.size() > i)
+			thumbs.get(i).load(thumb);
 	}
 
 	@Override

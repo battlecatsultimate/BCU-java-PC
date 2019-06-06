@@ -4,13 +4,13 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -24,13 +24,13 @@ import javax.swing.text.StyleConstants;
 
 import io.BCJSON;
 import io.WebPack;
-import io.Writer;
 import main.Opts;
 import page.JBTN;
 import page.JL;
 import page.JTF;
 import page.Page;
 import page.support.Importer;
+import util.Data;
 import util.pack.Pack;
 
 public class WebUserPage extends Page {
@@ -63,28 +63,23 @@ public class WebUserPage extends Page {
 			private void addListeners() {
 
 				uicn.setLnr(x -> {
-					Importer ipt = new Importer("add pack icon");
-					BufferedImage bimg = ipt.getImg();
-					if (bimg == null) {
-						Opts.loadErr("It's not an valid image");
+					if (!upload("add pack icon", "icon", 300, 300))
 						return;
-					}
-					if (bimg.getWidth() * bimg.getHeight() > 900)
-						bimg = WebPack.WebImg.contain(bimg, 300, 300);
-					File f = new File("./img/tmp/" + bimg.hashCode() + ".png");
-					Writer.check(f);
-					try {
-						ImageIO.write(bimg, "PNG", f);
-					} catch (IOException e) {
-						e.printStackTrace();
-						return;
-					}
-					if (!BCJSON.uploadImg(obj.pid, "icon", f))
+					obj.icon = new WebPack.WebImg(obj.pid + "/img/icon.png");
+					obj.icon.load(icon);
+				});
+
+				uthm.setLnr(x -> {
+					int id = obj.getNextThumbID();
+					if (id == -1) {
 						Opts.servErr("failed to upload");
-					else {
-						obj.icon = new WebPack.WebImg(obj.pid + "/img/icon.png");
-						obj.icon.load(icon);
+						return;
 					}
+					if (!upload("add pack thumbnail", Data.trio(id), 400, 800))
+						return;
+					WebPack.WebImg wi = new WebPack.WebImg(obj.pid + "/img/" + Data.trio(id) + ".png");
+					obj.thumbs.add(wi);
+					wi.load(thumb);
 				});
 
 				subm.addActionListener(new ActionListener() {
@@ -105,6 +100,22 @@ public class WebUserPage extends Page {
 						prev.name.setText(name.getText());
 					}
 
+				});
+
+				icon.addMouseListener(new MouseAdapter() {
+
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						obj.icon.load(icon);
+					}
+				});
+
+				thumb.addMouseListener(new MouseAdapter() {
+
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						obj.loadThumb(thumb, 0);// TODO
+					}
 				});
 
 				dele.addActionListener(new ActionListener() {
@@ -155,11 +166,11 @@ public class WebUserPage extends Page {
 				icon.setBorder(BorderFactory.createEtchedBorder());
 				thumb.setBorder(BorderFactory.createEtchedBorder());
 
-				obj.icon.load(icon);
-
 				desp.setText(obj.getDesp());
 
 				pkid.setHorizontalAlignment(SwingConstants.CENTER);
+				icon.setHorizontalAlignment(SwingConstants.CENTER);
+				thumb.setHorizontalAlignment(SwingConstants.CENTER);
 
 				Pack p = Pack.map.get(obj.pid);
 				reup.setEnabled(p != null && p.editable);
@@ -177,8 +188,28 @@ public class WebUserPage extends Page {
 				set(uthm, x, y, 650, 300, 200, 50);
 				set(udel, x, y, 400, 300, 200, 50);
 				set(thumb, x, y, 50, 400, 800, 400);
+				obj.loadThumb(thumb, 0);// TODO
 				set(jsps, x, y, 900, 50, 750, 750);
 				return 850;
+			}
+
+			private boolean upload(String title, String name, int x, int y) {
+				Importer ipt = new Importer(title);
+				File f = ipt.file;
+				BufferedImage bimg = ipt.getImg();
+				if (bimg == null) {
+					Opts.loadErr("It's not an valid image");
+					return false;
+				}
+				if (f.length() > (1 << 20)) {
+					Opts.loadErr("File should be within 1MB");
+					return false;
+				}
+				if (!BCJSON.uploadImg(obj.pid, name, f)) {
+					Opts.servErr("failed to upload");
+					return false;
+				}
+				return true;
 			}
 
 		}

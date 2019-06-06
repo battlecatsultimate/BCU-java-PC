@@ -26,10 +26,12 @@ import javax.swing.text.StyleConstants;
 import io.BCJSON;
 import io.WebFileIO;
 import io.WebPack;
+import main.MainBCU;
 import main.Opts;
 import page.JBTN;
 import page.JL;
 import page.Page;
+import util.Data;
 import util.pack.Pack;
 
 public class WebMainPage extends Page {
@@ -42,6 +44,7 @@ public class WebMainPage extends Page {
 
 			private final JLabel icon = new JLabel();
 			private final JL name = new JL(obj.name);
+			private final JL bver = new JL("BCU " + Data.revVer(obj.bcuver));
 			private final JL pkid = new JL(obj.pid + "-" + obj.version);
 			private final JL rate0 = new JL("point: " + obj.getRate_0());
 			private final JL rate1 = new JL("star: " + obj.getRate_1() * 0.01);
@@ -99,6 +102,22 @@ public class WebMainPage extends Page {
 					}
 
 				});
+
+				icon.addMouseListener(new MouseAdapter() {
+
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						obj.icon.load(icon);
+					}
+				});
+
+				thumb.addMouseListener(new MouseAdapter() {
+
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						obj.loadThumb(thumb, 0);// TODO
+					}
+				});
 			}
 
 			private void init() {
@@ -114,10 +133,13 @@ public class WebMainPage extends Page {
 				add(rate0);
 				add(rate1);
 				add(down);
+				add(bver);
 
 				icon.setBorder(BorderFactory.createEtchedBorder());
 				thumb.setBorder(BorderFactory.createEtchedBorder());
-
+				icon.setHorizontalAlignment(SwingConstants.CENTER);
+				thumb.setHorizontalAlignment(SwingConstants.CENTER);
+				bver.setHorizontalAlignment(SwingConstants.CENTER);
 				name.setHorizontalAlignment(SwingConstants.CENTER);
 				pkid.setHorizontalAlignment(SwingConstants.CENTER);
 				rate0.setHorizontalAlignment(SwingConstants.CENTER);
@@ -128,7 +150,9 @@ public class WebMainPage extends Page {
 				auth.setEnabled(uid == -1);
 
 				Pack p = Pack.map.get(obj.pid);
-				if (p == null)
+				if (obj.bcuver > MainBCU.ver) {
+					down.setText("BCU too old");
+				} else if (p == null)
 					down.setText(2, "download");
 				else if (p.editable)
 					down.setEnabled(false);
@@ -155,14 +179,16 @@ public class WebMainPage extends Page {
 				set(icon, x, y, 50, 50, 300, 300);
 				obj.icon.load(icon);
 				set(name, x, y, 400, 50, 600, 100);
-				set(auth, x, y, 400, 150, 200, 50);
-				set(pkid, x, y, 600, 150, 200, 50);
-				set(down, x, y, 800, 150, 200, 50);
+				set(auth, x, y, 600, 150, 400, 50);
+				set(pkid, x, y, 400, 150, 200, 50);
+				set(down, x, y, 600, 200, 400, 50);
+				set(bver, x, y, 400, 200, 200, 50);
 				set(rate0, x, y, 400, 250, 200, 50);
 				set(rate1, x, y, 400, 300, 200, 50);
 				set(vote, x, y, 600, 250, 400, 100);
 
 				set(thumb, x, y, 150, 400, 800, 400);
+				obj.loadThumb(thumb, 0);// TODO
 				set(jsps, x, y, 50, 850, 1000, 800);
 				return 1700;
 			}
@@ -232,6 +258,7 @@ public class WebMainPage extends Page {
 				add(down);
 
 				icon.setBorder(BorderFactory.createEtchedBorder());
+				icon.setHorizontalAlignment(SwingConstants.CENTER);
 				name.setHorizontalAlignment(SwingConstants.CENTER);
 				pkid.setHorizontalAlignment(SwingConstants.CENTER);
 				rate0.setHorizontalAlignment(SwingConstants.CENTER);
@@ -240,6 +267,9 @@ public class WebMainPage extends Page {
 				auth.setEnabled(uid == -1);
 
 				Pack p = Pack.map.get(obj.pid);
+				if (obj.bcuver > MainBCU.ver) {
+					down.setText("BCU too old");
+				}
 				if (p == null)
 					down.setText(2, "download");
 				else if (p.editable)
