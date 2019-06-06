@@ -204,18 +204,6 @@ public class BCJSON extends WebFileIO {
 		}
 	}
 
-	public static List<WebPack> getPacks(int uid, int sort) throws IOException {
-		if (packlist.size() == 0)
-			refreshPacks();
-		List<WebPack> l = new ArrayList<>();
-		for (WebPack wp : packlist.values())
-			if ((uid == -1 || wp.uid == uid) && wp.state == 0 || wp.uid == uid && uid == ID)
-				l.add(wp);
-		l.sort(WebPack.getComp(sort));
-
-		return l;
-	}
-
 	public static int getPassword(String str) throws IOException {
 		JSONObject inp = new JSONObject();
 		inp.put("name", str);

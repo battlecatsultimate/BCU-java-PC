@@ -22,6 +22,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import util.Data;
+import util.pack.Pack;
 
 public class WebPack {
 
@@ -37,19 +38,26 @@ public class WebPack {
 				jc = new JLCont(jl, wi);
 				map.put(jl, jc);
 			}
-			jc.img = wi;
+			jc.check(wi);
 			return jc;
 		}
 
 		private final JLabel label;
 
+		private int w, h;
 		private WebImg img;
-
-		private boolean dirty = true;
 
 		private JLCont(JLabel jl, WebImg wi) {
 			label = jl;
+			check(wi);
+		}
+
+		private synchronized void check(WebImg wi) {
+			if (wi == img && w == label.getWidth() && h == label.getHeight() && label.getIcon() != null)
+				return;
 			img = wi;
+			w = label.getWidth();
+			h = label.getHeight();
 		}
 
 	}
@@ -58,21 +66,9 @@ public class WebPack {
 
 		private static final int PRELOAD = 0, LOADING = 1, LOADED = 2, NOIMG = 3, FAILED = 4;
 
-		public static BufferedImage contain(BufferedImage bimg, int tw, int th) {
-			int bw = bimg.getWidth();
-			int bh = bimg.getHeight();
-			double r = Math.min(1.0 * tw / bw, 1.0 * th / bh);
-			int mw = (int) (r * bw);
-			int mh = (int) (r * bh);
-			BufferedImage res = new BufferedImage(mw, mh, bimg.getType());
-			Graphics2D g = res.createGraphics();
-			g.drawImage(bimg, 0, 0, mw, mh, null);
-			g.dispose();
-			return res;
-		}
-
-		private String url, temp, name;
+		private String url, name;
 		private BufferedImage bimg;
+		private File tmp;
 
 		private int state = PRELOAD;
 
@@ -82,9 +78,19 @@ public class WebPack {
 
 		public WebImg(String str) {
 			url = str;
-			temp = "" + Math.abs(url.hashCode());
 			if (str.length() > 0) {
 				url = "http://battlecatsultimate.cf/packs/res/" + str;
+				tmp = new File("./pack/img/" + str);
+				if (tmp.exists()) {
+					try {
+						bimg = ImageIO.read(tmp);
+						state = LOADED;
+						load();
+						return;
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 				String[] strs = str.split("/");
 				name = strs[strs.length - 1];
 				name = name.substring(0, name.length() - 4);
@@ -97,7 +103,7 @@ public class WebPack {
 		public synchronized void accept(Progress t) {
 			if (t.state == Progress.DONE)
 				try {
-					bimg = ImageIO.read(new File("./img/tmp/" + temp + ".png"));
+					bimg = ImageIO.read(tmp);
 					map.put(bimg.getWidth(), bimg);
 					state = LOADED;
 					load();
@@ -110,9 +116,7 @@ public class WebPack {
 		public synchronized void load(JLabel icon) {
 			synchronized (wait) {
 				synchronized (icon) {
-					JLCont jc = JLCont.getIns(icon, this);
-					jc.dirty = true;
-					wait.add(jc);
+					wait.add(JLCont.getIns(icon, this));
 				}
 			}
 			if (bimg != null)
@@ -122,7 +126,7 @@ public class WebPack {
 		@Override
 		public void run() {
 			state = LOADING;
-			WebFileIO.download(url, new File("./img/tmp/" + temp + ".png"), this);
+			WebFileIO.download(url, tmp, this);
 		}
 
 		private void load() {
@@ -130,7 +134,7 @@ public class WebPack {
 				if (bimg == null || wait.size() == 0 || state == NOIMG)
 					return;
 				for (JLCont cont : wait) {
-					if (!cont.dirty || cont.img != this)
+					if (cont.img != this)
 						return;
 					JLabel target = cont.label;
 					int tw, th;
@@ -157,7 +161,6 @@ public class WebPack {
 					}
 					synchronized (target) {
 						target.setIcon(new ImageIcon(res));
-						cont.dirty = false;
 					}
 				}
 				wait.clear();
@@ -166,11 +169,11 @@ public class WebPack {
 
 	}
 
-	public static final int SORT_ID = 0, SORT_RATE = 1, SORT_POP = 2, SORT_NEW = 3;
+	public static final int SORT_ID = 0, SORT_RATE = 1, SORT_POP = 2, SORT_NEW = 3, SORT_UPDATE = 4;
 
 	public static final int MAX_IMG = 1;
 
-	protected static Map<Integer, WebPack> packlist = new TreeMap<>();
+	public static Map<Integer, WebPack> packlist = new TreeMap<>();
 
 	public static void clear() {
 		for (WebPack wp : packlist.values()) {
@@ -317,6 +320,16 @@ class WebPackComp implements Comparator<WebPack> {
 		}
 		if (t == WebPack.SORT_NEW)
 			return -o1.time.compareTo(o2.time);
+		if (t == WebPack.SORT_UPDATE) {
+			Pack p1 = Pack.map.get(o1.pid);
+			Pack p2 = Pack.map.get(o2.pid);
+			int a1 = p1 == null ? 0 : (p1.version == o1.version ? 1 : 2);
+			int a2 = p2 == null ? 0 : (p2.version == o2.version ? 1 : 2);
+			if (a1 == a2)
+				return comp(WebPack.SORT_NEW, o1, o2, true);
+
+			return Integer.compare(a1, a2);
+		}
 		return Integer.compare(o1.pid, o2.pid);
 	}
 

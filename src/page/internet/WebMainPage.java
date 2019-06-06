@@ -1,5 +1,7 @@
 package page.internet;
 
+import static io.WebPack.packlist;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -8,7 +10,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -35,6 +39,65 @@ import util.Data;
 import util.pack.Pack;
 
 public class WebMainPage extends Page {
+
+	private class Selector {
+
+		/**
+		 * >0: user mode =-1: main page =-2: installed
+		 */
+		private int uid;
+
+		private boolean canLoadMain() {
+			return uid != -1;
+		}
+
+		private boolean canLoadUpdate() {
+			return uid != -2;
+		}
+
+		private boolean canLoadUser() {
+			return uid < 0;
+		}
+
+		private List<WebPack> getList() throws IOException {
+			if (WebPack.packlist.size() == 0)
+				BCJSON.refreshPacks();
+			List<WebPack> l = new ArrayList<>();
+			for (WebPack wp : packlist.values())
+				if (uid == -1)
+					l.add(wp);
+				else if (uid == -2) {
+					if (Pack.map.containsKey(wp.pid) && wp.uid != BCJSON.ID)
+						l.add(wp);
+				} else if (uid > 0) {
+					if (wp.uid == uid && wp.state == 0 || wp.uid == uid && uid == BCJSON.ID)
+						l.add(wp);
+				}
+			if (uid == -1)
+				l.sort(WebPack.getComp(sort.getSelectedIndex()));
+			else if (uid == -2)
+				l.sort(WebPack.getComp(WebPack.SORT_UPDATE));
+			else if (uid > 0)
+				l.sort(WebPack.getComp(sort.getSelectedIndex()));
+			return l;
+		}
+
+		private void loadMain() {
+			uid = -1;
+			load();
+		}
+
+		private void loadUpdate() {
+			uid = -2;
+			load();
+		}
+
+		private void loadUser(int u) {
+			uid = u;
+			load();
+		}
+
+	}
 
 	private class WebItem {
 
@@ -77,7 +140,7 @@ public class WebMainPage extends Page {
 					prev.down.setText(down.getText());
 				});
 
-				auth.setLnr(x -> load(obj.uid));
+				auth.setLnr(x -> sele.loadUser(obj.uid));
 
 				vote.addChangeListener(new ChangeListener() {
 
@@ -147,7 +210,7 @@ public class WebMainPage extends Page {
 
 				jsps.getVerticalScrollBar().setUnitIncrement(8);
 
-				auth.setEnabled(uid == -1);
+				auth.setEnabled(sele.canLoadUser());
 
 				Pack p = Pack.map.get(obj.pid);
 				if (obj.bcuver > MainBCU.ver) {
@@ -228,7 +291,7 @@ public class WebMainPage extends Page {
 						detail.down.setText(down.getText());
 				});
 
-				auth.setLnr(x -> load(obj.uid));
+				auth.setLnr(x -> sele.loadUser(obj.uid));
 
 				icon.addMouseListener(new MouseAdapter() {
 
@@ -264,7 +327,7 @@ public class WebMainPage extends Page {
 				rate0.setHorizontalAlignment(SwingConstants.CENTER);
 				rate1.setHorizontalAlignment(SwingConstants.CENTER);
 
-				auth.setEnabled(uid == -1);
+				auth.setEnabled(sele.canLoadUser());
 
 				Pack p = Pack.map.get(obj.pid);
 				if (obj.bcuver > MainBCU.ver) {
@@ -330,6 +393,7 @@ public class WebMainPage extends Page {
 	private final JBTN back = new JBTN(0, "back");
 	private final JBTN edit = new JBTN(2, "manage");
 	private final JBTN main = new JBTN(2, "full");
+	private final JBTN updt = new JBTN(2, "update");
 	private final JBTN rfsh = new JBTN(2, "refresh");
 	private final JBTN user = new JBTN(2, "user");
 	private final JComboBox<String> sort = new JComboBox<>(get(2, "sort", 4));
@@ -337,18 +401,18 @@ public class WebMainPage extends Page {
 	private final JScrollPane jsp = new JScrollPane(cont);
 	private final JScrollPane jdt = new JScrollPane();
 
+	private final Selector sele = new Selector();
+
 	private WebItem.ItemDetl detl = null;
-
 	private WebItem[] items;
-
-	private int uid, n;
+	private int n;
 	private boolean changing = false;
 
 	public WebMainPage(Page p) {
 		super(p);
 
 		ini();
-		load(-1);
+		sele.loadMain();
 		resized();
 	}
 
@@ -367,16 +431,17 @@ public class WebMainPage extends Page {
 
 	@Override
 	protected void renew() {
-		load(uid);
+		load();
 	}
 
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);
-		set(user, x, y, 250, 0, 200, 50);
-		set(edit, x, y, 500, 0, 200, 50);
-		set(main, x, y, 900, 0, 200, 50);
+		set(user, x, y, 200, 0, 200, 50);
+		set(edit, x, y, 400, 0, 200, 50);
+		set(updt, x, y, 600, 0, 200, 50);
+		set(main, x, y, 800, 0, 200, 50);
 		set(rfsh, x, y, 1150, 0, 200, 50);
 		set(jsp, x, y, 50, 100, 650, 1150);
 		set(jdt, x, y, 750, 100, 1500, 1150);
@@ -400,7 +465,9 @@ public class WebMainPage extends Page {
 	private void addListeners() {
 		back.setLnr(x -> changePanel(getFront()));
 
-		main.setLnr(x -> load(-1));
+		main.setLnr(x -> sele.loadMain());
+
+		updt.setLnr(x -> sele.loadUpdate());
 
 		edit.setLnr(x -> changePanel(new WebUserPage(getThis())));
 
@@ -415,7 +482,7 @@ public class WebMainPage extends Page {
 					changePanel(new LoginPage(getFront()));
 					e.printStackTrace();
 				}
-				load(uid);
+				load();
 			}
 		});
 
@@ -423,7 +490,7 @@ public class WebMainPage extends Page {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				load(uid);
+				load();
 			}
 
 		});
@@ -439,6 +506,7 @@ public class WebMainPage extends Page {
 		add(rfsh);
 		add(user);
 		add(jdt);
+		add(updt);
 		sort.setSelectedIndex(WebPack.SORT_POP);
 		jsp.getVerticalScrollBar().setUnitIncrement(8);
 		jdt.getVerticalScrollBar().setUnitIncrement(8);
@@ -446,13 +514,13 @@ public class WebMainPage extends Page {
 		addListeners();
 	}
 
-	private void load(int author) {
+	private void load() {
 		changing = true;
-		uid = author;
-		main.setEnabled(uid != -1);
+		main.setEnabled(sele.canLoadMain());
+		updt.setEnabled(sele.canLoadUpdate());
 		cont.removeAll();
 		try {
-			WebPack[] obj = BCJSON.getPacks(author, sort.getSelectedIndex()).toArray(new WebPack[0]);
+			WebPack[] obj = sele.getList().toArray(new WebPack[0]);
 			SimpleAttributeSet attr = new SimpleAttributeSet();
 			StyleConstants.setAlignment(attr, StyleConstants.ALIGN_CENTER);
 			n = obj.length;

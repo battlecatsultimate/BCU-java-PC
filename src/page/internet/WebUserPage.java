@@ -1,5 +1,7 @@
 package page.internet;
 
+import static io.WebPack.packlist;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -9,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -383,7 +386,17 @@ public class WebUserPage extends Page {
 	private void load() {
 		cont.removeAll();
 		try {
-			WebPack[] obj = BCJSON.getPacks(BCJSON.ID, WebPack.SORT_NEW).toArray(new WebPack[0]);
+
+			if (WebPack.packlist.size() == 0)
+				BCJSON.refreshPacks();
+			List<WebPack> l = new ArrayList<>();
+			for (WebPack wp : packlist.values())
+				if (wp.uid == BCJSON.ID)
+					l.add(wp);
+
+			l.sort(WebPack.getComp(WebPack.SORT_NEW));
+
+			WebPack[] obj = l.toArray(new WebPack[0]);
 			SimpleAttributeSet attr = new SimpleAttributeSet();
 			StyleConstants.setAlignment(attr, StyleConstants.ALIGN_CENTER);
 			n = obj.length;
