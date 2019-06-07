@@ -9,6 +9,8 @@ import page.battle.BBCtrl;
 import page.battle.BattleBox;
 import util.basis.BattleField;
 import util.basis.SBCtrl;
+import util.unit.Enemy;
+import util.unit.Form;
 
 public class GLBattleBox extends GLCstd implements BattleBox, GLEventListener {
 
@@ -18,6 +20,12 @@ public class GLBattleBox extends GLCstd implements BattleBox, GLEventListener {
 
 	public GLBattleBox(OuterBox bip, BattleField bf, int type) {
 		bbp = type == 0 ? new BBPainter(bip, bf, this) : new BBCtrl(bip, (SBCtrl) bf, this);
+		for (Form[] fs : bbp.bf.sb.b.lu.fs)
+			for (Form f : fs)
+				if (f != null)
+					f.anim.check();
+		for (Enemy e : bbp.bf.sb.st.data.getAllEnemy())
+			e.anim.check();
 	}
 
 	@Override

@@ -95,12 +95,14 @@ public class AmbImage implements FakeImage {
 			String str = (String) o;
 			if (str.equals("uni"))
 				forceBI();
+			if (str.equals("BG"))
+				checkBI();
 			if (str.equals("edi"))
 				forceBI();
 			if (str.equals("uni or edi"))
 				forceBI();
 			if (str.equals("recolor"))
-				forceBI();
+				checkBI();
 			if (str.equals("recolor-finished")) {
 				// TODO if graphics is faster?
 				ByteArrayOutputStream abos = new ByteArrayOutputStream();

@@ -158,7 +158,7 @@ public class Background extends AnimI {
 
 	@Override
 	public EAnimD getEAnim(int t) {
-		if (t == 1)
+		if (t == 1 || t == 0)
 			return ewav.getEAnim(0);
 		else if (t == 2)
 			return uwav.getEAnim(0);
@@ -168,7 +168,7 @@ public class Background extends AnimI {
 
 	@Override
 	public void load() {
-		img.getImg().bimg();
+		img.mark("BG");
 		parts = iclist.get(ic).cut(img.getImg());
 	}
 

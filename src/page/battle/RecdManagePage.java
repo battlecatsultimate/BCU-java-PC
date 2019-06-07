@@ -161,6 +161,7 @@ public class RecdManagePage extends Page {
 			if (r == null)
 				return;
 			r.seed = Reader.parseLongN(seed.getText());
+			r.marked = true;
 			setRecd(r);
 		});
 

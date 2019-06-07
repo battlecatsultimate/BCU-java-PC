@@ -297,15 +297,19 @@ public class ZipAccess {
 		}
 		FileSystem fs = FileSystems.newFileSystem(f.toPath(), null);
 		File res = new File("./res/");
+		File rep = new File("./replay/");
 		MessageDigest md5 = MessageDigest.getInstance("MD5");
 		checkDict(fs, "/MD5");
 		checkDict(fs, "/backups");
 		Path target = fs.getPath("/backups/" + time);
 		BufferedWriter writer = Files.newBufferedWriter(target);
-		int size = Files.walk(res.toPath()).mapToInt(path -> Files.isDirectory(path) ? 0 : 1).sum() + 1;
+		int size = 1;
+		size += Files.walk(res.toPath()).mapToInt(path -> Files.isDirectory(path) ? 0 : 1).sum();
+		size += Files.walk(rep.toPath()).mapToInt(path -> Files.isDirectory(path) ? 0 : 1).sum();
 		writer.write(size + "\r\n");
 		write(writer, md5, fs, Paths.get("./user/basis.v"));
 		Files.walk(res.toPath()).forEach(elem -> write(writer, md5, fs, elem));
+		Files.walk(rep.toPath()).forEach(elem -> write(writer, md5, fs, elem));
 		writer.close();
 
 		Iterator<Path> itr = Files.list(fs.getPath("/backups")).iterator();
