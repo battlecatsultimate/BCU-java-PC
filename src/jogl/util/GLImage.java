@@ -93,9 +93,11 @@ public class GLImage implements FakeImage {
 		ans[1] = P.reg(1.0f * rect[1] / br[3]);
 		ans[2] = P.reg(1.0f * rect[2] / br[2]);
 		ans[3] = P.reg(1.0f * rect[3] / br[3]);
-		ans[1] = 1 - ans[1];
-		if (!data.getMustFlipVertically())
+
+		if (!data.getMustFlipVertically()) {
+			ans[1] = 1 - ans[1];
 			ans[3] *= -1;
+		}
 		return ans;
 	}
 

@@ -1075,6 +1075,8 @@ public abstract class Entity extends AbEntity {
 			health = maxH * data.getRepAtk().getProc(P_REVIVE)[2] / 100;
 
 			// clear state
+			status[P_BURROW][2] = 0;
+			bdist = 0;
 			status[P_STOP] = new int[PROC_WIDTH];
 			status[P_SLOW] = new int[PROC_WIDTH];
 			status[P_WEAK] = new int[PROC_WIDTH];
@@ -1090,7 +1092,7 @@ public abstract class Entity extends AbEntity {
 
 	/** update burrow state */
 	private void updateBurrow() {
-		if (kbTime == 0 && touch && status[P_BURROW][0] != 0) {
+		if (!acted && kbTime == 0 && touch && status[P_BURROW][0] != 0) {
 			double bpos = basis.getBase(dire).pos;
 			boolean ntbs = (bpos - pos) * dire > data.touchBase();
 			if (ntbs) {
@@ -1100,7 +1102,7 @@ public abstract class Entity extends AbEntity {
 				kbTime = -2;
 			}
 		}
-		if (kbTime == -2) {
+		if (!acted && kbTime == -2) {
 			acted = true;
 			// burrow down
 			status[P_BURROW][2]--;
