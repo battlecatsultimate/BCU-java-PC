@@ -1,4 +1,4 @@
-package jogl.awt;
+package jogl;
 
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;

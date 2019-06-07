@@ -1,14 +1,37 @@
-package jogl.recd;
+package jogl;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-import jogl.awt.GLCstd;
 import page.RetFunc;
 import page.awt.RecdThread;
 
-public class GLRecdBImg extends GLRecorder {
+public abstract class GLRecorder {
+
+	public static GLRecorder getIns(GLCstd scr, String path, int type, RetFunc ob) {
+		return new GLRecdBImg(scr, path, type, ob);
+	}
+
+	protected final GLCstd screen;
+
+	protected GLRecorder(GLCstd scr) {
+		screen = scr;
+	}
+
+	public abstract void end();
+
+	public abstract void quit();
+
+	public abstract int remain();
+
+	public abstract void start();
+
+	public abstract void update();
+
+}
+
+class GLRecdBImg extends GLRecorder {
 
 	private final Queue<BufferedImage> qb;
 	private final RecdThread th;
