@@ -237,6 +237,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 				(e.dire == 1 ? le : lu).add(e);
 			et.setList(le);
 			ut.setList(lu);
+			BCMusic.flush(spe < 3);
 		}
 		if (basis instanceof SBRply && recd.name.length() > 0)
 			change((SBRply) basis, b -> jsl.setValue(b.prog()));

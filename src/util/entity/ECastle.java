@@ -1,5 +1,6 @@
 package util.entity;
 
+import io.BCMusic;
 import util.basis.BasisLU;
 import util.basis.StageBasis;
 import util.entity.attack.AttackAb;
@@ -27,7 +28,9 @@ public class ECastle extends AbEntity {
 		if (atk.getProc(P_CRIT)[0] > 0) {
 			ans *= 0.01 * atk.getProc(P_CRIT)[0];
 			sb.lea.add(new EAnimCont(pos, 9, EffAnim.effas[A_CRIT].getEAnim(0)));
-		}
+			BCMusic.setSE(SE_CRIT);
+		} else
+			BCMusic.setSE(SE_HIT_BASE);
 		health -= ans;
 		if (health > maxH)
 			health = maxH;

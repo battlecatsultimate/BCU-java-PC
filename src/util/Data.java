@@ -15,6 +15,31 @@ import util.system.files.VFile;
 
 public class Data {
 
+	protected static final int SE_HIT_0 = 20;
+	protected static final int SE_HIT_1 = 21;
+	protected static final int SE_DEATH_0 = 23;
+	protected static final int SE_DEATH_1 = 24;
+	protected static final int SE_HIT_BASE = 22;
+	protected static final int SE_ZKILL = 59;
+	protected static final int SE_CRIT = 44;
+	protected static final int SE_WAVE = 26;
+	protected static final int SE_LETHAL = 50;
+	protected static final int SE_WARP_ENTER = 73;
+	protected static final int SE_WARP_EXIT = 74;
+	protected static final int SE_BOSS = 45;
+	protected static final int SE_SPEND_FAIL = 15;// TODO
+	protected static final int SE_SPEND_SUC = 19;// TODO
+	protected static final int SE_SPEND_REF = 27;// TODO
+	protected static final int SE_BARRIER_ABI = 70;
+	protected static final int SE_BARRIER_NON = 71;
+	protected static final int SE_BARRIER_ATK = 72;
+
+	protected static final int[][] SE_CANNON = { { 25, 26 }, { 60 }, { 61 }, { 36, 37 }, { 65, 83 }, { 84, 85 },
+			{ 86 } };
+
+	protected static final int[] SE_ALL = { 15, 19, 20, 21, 22, 23, 24, 25, 26, 27, 36, 37, 44, 45, 50, 59, 60, 61, 65,
+			73, 74, 83, 84, 85, 86 };
+
 	public static final int RARITY_TOT = 6;
 
 	// trait bit filter

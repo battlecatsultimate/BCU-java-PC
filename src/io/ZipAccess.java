@@ -298,6 +298,8 @@ public class ZipAccess {
 		FileSystem fs = FileSystems.newFileSystem(f.toPath(), null);
 		File res = new File("./res/");
 		File rep = new File("./replay/");
+		res.mkdir();
+		rep.mkdir();
 		MessageDigest md5 = MessageDigest.getInstance("MD5");
 		checkDict(fs, "/MD5");
 		checkDict(fs, "/backups");

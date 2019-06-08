@@ -1,5 +1,6 @@
 package util.entity;
 
+import io.BCMusic;
 import page.battle.BattleBox;
 import util.ImgCore;
 import util.anim.EAnimD;
@@ -34,6 +35,7 @@ public class Cannon extends AtkModelAb {
 	public void activate() {
 		anim = NyCastle.atks[id].getEAnim(0);
 		preTime = NYPRE[id];
+		BCMusic.setSE(SE_CANNON[id][0]);
 	}
 
 	/** attack part of animation */
@@ -94,8 +96,10 @@ public class Cannon extends AtkModelAb {
 		tempAtk = false;
 		if (anim != null && anim.done()) {
 			anim = null;
-			if (id > 2 && id < 5)
+			if (id > 2 && id < 5) {
 				atka = NyCastle.atks[id].getEAnim(1);
+				BCMusic.setSE(SE_CANNON[id][1]);
+			}
 		}
 		if (atka != null && atka.done())
 			atka = null;
