@@ -446,9 +446,14 @@ public class Reader extends DataIO {
 					EventReader.loc = parseInt(qs.poll());
 					BCJSON.USERNAME = qs.poll().trim();
 					BCJSON.PASSWORD = Long.parseLong(qs.poll());
-					qs.poll();
+					qs.poll();// place holder
 					BCJSON.cal_ver = parseInt(qs.poll());
-					BCMusic.play = parseInt(qs.poll()) == 1;
+					int[] ints = parseIntsN(qs.poll());
+					BCMusic.play = ints[0] == 1;
+					if (ints.length == 3) {
+						BCMusic.VOL_BG = ints[1];
+						BCMusic.VOL_SE = ints[2];
+					}
 					MainLocale.exLang = parseInt(qs.poll()) == 1;
 					MainLocale.exTTT = parseInt(qs.poll()) == 1;
 					Exporter.read(qs);

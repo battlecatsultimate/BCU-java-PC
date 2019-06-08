@@ -29,6 +29,108 @@ import util.system.fake.FakeGraphics;
 import util.system.fake.FakeImage;
 import util.system.fake.FakeTransform;
 
+class GLIconBox extends GLViewBox implements IconBox {
+
+	private static final long serialVersionUID = 1L;
+
+	protected GLIconBox() {
+		super(new IBCtrl());
+		setFocusable(true);
+		glow = 0;
+		changeType();
+	}
+
+	@Override
+	public void changeType() {
+		FakeImage bimg = Res.ico[mode][type].getImg();
+		line[2] = bimg.getWidth();
+		line[3] = bimg.getHeight();
+	}
+
+	@Override
+	public void draw(FakeGraphics gra) {
+		boolean b = ImgCore.ref;
+		ImgCore.ref = false;
+		getCtrl().predraw(gra);
+		FakeTransform at = gra.getTransform();
+		super.draw(gra);
+		gra.setTransform(at);
+		ImgCore.ref = b;
+		getCtrl().postdraw(gra);
+	}
+
+	@Override
+	public BufferedImage getClip() {
+		Rectangle r = getBounds();
+		Point p = getLocationOnScreen();
+		r.x = p.x + line[0];
+		r.y = p.y + line[1];
+		r.width = line[2];
+		r.height = line[3];
+		try {
+			return new Robot().createScreenCapture(r);
+		} catch (AWTException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public IBCtrl getCtrl() {
+		return (IBCtrl) ctrl;
+	}
+
+	@Override
+	public void setBlank(boolean selected) {
+		blank = selected;
+	}
+
+}
+
+class GLVBExporter implements ViewBox.VBExporter {
+
+	private final GLViewBox vb;
+
+	private Loader loader;
+	private GLRecdBImg glr;
+
+	protected GLVBExporter(GLViewBox box) {
+		vb = box;
+	}
+
+	@Override
+	public void end(JTG btn) {
+		if (loader == null)
+			return;
+		loader.finish(btn);
+		glr.end();
+		loader = null;
+		glr = null;
+	}
+
+	@Override
+	public BufferedImage getPrev() {
+		return vb.getScreen();
+	}
+
+	@Override
+	public Loader start() {
+		if (loader != null)
+			return loader;
+		Queue<BufferedImage> qb = new ArrayDeque<>();
+		loader = new Loader(qb);
+		glr = new GLRecdBImg(vb, qb, loader.thr);
+		loader.start();
+		return loader;
+	}
+
+	protected void update() {
+		if (glr != null)
+			glr.update();
+	}
+
+}
+
 class GLViewBox extends GLCstd implements ViewBox, GLEventListener {
 
 	private static final long serialVersionUID = 1L;
@@ -112,108 +214,6 @@ class GLViewBox extends GLCstd implements ViewBox, GLEventListener {
 		g.setColor(FakeGraphics.BLACK);
 		if (ent != null)
 			ent.draw(g, ctrl.ori.copy().times(-1), ctrl.siz);
-	}
-
-}
-
-class GLVBExporter implements ViewBox.VBExporter {
-
-	private final GLViewBox vb;
-
-	private Loader loader;
-	private GLRecdBImg glr;
-
-	protected GLVBExporter(GLViewBox box) {
-		vb = box;
-	}
-
-	@Override
-	public void end(JTG btn) {
-		if (loader == null)
-			return;
-		loader.finish(btn);
-		glr.end();
-		loader = null;
-		glr = null;
-	}
-
-	@Override
-	public BufferedImage getPrev() {
-		return vb.getScreen();
-	}
-
-	@Override
-	public Loader start() {
-		if (loader != null)
-			return loader;
-		Queue<BufferedImage> qb = new ArrayDeque<>();
-		loader = new Loader(qb);
-		glr = new GLRecdBImg(vb, qb, loader.thr);
-		loader.start();
-		return loader;
-	}
-
-	protected void update() {
-		if (glr != null)
-			glr.update();
-	}
-
-}
-
-class GLIconBox extends GLViewBox implements IconBox {
-
-	private static final long serialVersionUID = 1L;
-
-	protected GLIconBox() {
-		super(new IBCtrl());
-		setFocusable(true);
-		glow = 0;
-		changeType();
-	}
-
-	@Override
-	public void changeType() {
-		FakeImage bimg = Res.ico[mode][type].getImg();
-		line[2] = bimg.getWidth();
-		line[3] = bimg.getHeight();
-	}
-
-	@Override
-	public void draw(FakeGraphics gra) {
-		boolean b = ImgCore.ref;
-		ImgCore.ref = false;
-		getCtrl().predraw(gra);
-		FakeTransform at = gra.getTransform();
-		super.draw(gra);
-		gra.setTransform(at);
-		ImgCore.ref = b;
-		getCtrl().postdraw(gra);
-	}
-
-	@Override
-	public BufferedImage getClip() {
-		Rectangle r = getBounds();
-		Point p = getLocationOnScreen();
-		r.x = p.x + line[0];
-		r.y = p.y + line[1];
-		r.width = line[2];
-		r.height = line[3];
-		try {
-			return new Robot().createScreenCapture(r);
-		} catch (AWTException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	@Override
-	public IBCtrl getCtrl() {
-		return (IBCtrl) ctrl;
-	}
-
-	@Override
-	public void setBlank(boolean selected) {
-		blank = selected;
 	}
 
 }

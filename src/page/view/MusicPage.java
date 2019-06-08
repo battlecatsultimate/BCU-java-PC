@@ -1,7 +1,5 @@
 package page.view;
 
-import static io.BCMusic.DEF;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -10,6 +8,7 @@ import java.util.Collection;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
+import io.BCMusic;
 import page.JBTN;
 import page.Page;
 import util.pack.MusicStore;
@@ -52,7 +51,7 @@ public class MusicPage extends Page {
 
 	@Override
 	protected void exit() {
-		DEF.stop();
+		BCMusic.stop();
 	}
 
 	@Override
@@ -76,7 +75,7 @@ public class MusicPage extends Page {
 			public void actionPerformed(ActionEvent arg0) {
 				if (jlf.getSelectedValue() == null)
 					return;
-				DEF.set(jlf.getSelectedValue());
+				BCMusic.setBG(jlf.getSelectedValue());
 			}
 		});
 

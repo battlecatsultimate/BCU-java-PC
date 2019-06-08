@@ -1,7 +1,5 @@
 package page.pack;
 
-import static io.BCMusic.DEF;
-
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +16,7 @@ import page.JBTN;
 import page.Page;
 import util.pack.MusicStore;
 import util.pack.Pack;
+import io.BCMusic;
 
 public class MusicEditPage extends Page {
 
@@ -88,7 +87,7 @@ public class MusicEditPage extends Page {
 			public void actionPerformed(ActionEvent arg0) {
 				if (sele == null)
 					return;
-				DEF.set(sele);
+				BCMusic.setBG(sele);
 			}
 		});
 

@@ -43,8 +43,12 @@ public class ConfigPage extends Page {
 	private final JL[] vals = new JL[4];
 	private final JL jlmin = new JL(0, "opamin");
 	private final JL jlmax = new JL(0, "opamax");
+	private final JL jlbg = new JL(0, "BGvol");
+	private final JL jlse = new JL(0, "SEvol");
 	private final JSlider jsmin = new JSlider(0, 100);
 	private final JSlider jsmax = new JSlider(0, 100);
+	private final JSlider jsbg = new JSlider(0, 100);
+	private final JSlider jsse = new JSlider(0, 100);
 	private final JList<String> jls = new JList<>(MainLocale.LOC_NAME);
 	private final JScrollPane jsps = new JScrollPane(jls);
 	private final JList<String> jll = new JList<>(EventReader.LOC_NAME);
@@ -84,10 +88,14 @@ public class ConfigPage extends Page {
 			set(right[i], x, y, 850, 100 + i * 100, 100, 50);
 		}
 		set(jsps, x, y, 1100, 100, 200, 400);
-		set(jsmin, x, y, 50, 550, 1000, 50);
-		set(jsmax, x, y, 50, 650, 1000, 50);
 		set(jlmin, x, y, 50, 500, 400, 50);
-		set(jlmax, x, y, 50, 600, 400, 50);
+		set(jsmin, x, y, 50, 550, 1000, 100);
+		set(jlmax, x, y, 50, 650, 400, 50);
+		set(jsmax, x, y, 50, 700, 1000, 100);
+		set(jlbg, x, y, 50, 800, 400, 50);
+		set(jsbg, x, y, 50, 850, 1000, 100);
+		set(jlse, x, y, 50, 950, 400, 50);
+		set(jsse, x, y, 50, 1000, 1000, 100);
 		set(filt, x, y, 1100, 550, 200, 50);
 		set(jspl, x, y, 1350, 100, 200, 400);
 		set(musc, x, y, 1350, 550, 200, 50);
@@ -185,21 +193,35 @@ public class ConfigPage extends Page {
 
 			});
 
-			jsmin.addChangeListener(new ChangeListener() {
-				@Override
-				public void stateChanged(ChangeEvent arg0) {
-					ImgCore.deadOpa = jsmin.getValue();
-				}
-			});
-
-			jsmax.addChangeListener(new ChangeListener() {
-				@Override
-				public void stateChanged(ChangeEvent arg0) {
-					ImgCore.fullOpa = jsmax.getValue();
-				}
-			});
-
 		}
+
+		jsmin.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				ImgCore.deadOpa = jsmin.getValue();
+			}
+		});
+
+		jsmax.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				ImgCore.fullOpa = jsmax.getValue();
+			}
+		});
+
+		jsbg.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				BCMusic.setBGVol(jsbg.getValue());
+			}
+		});
+
+		jsse.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				BCMusic.setSEVol(jsse.getValue());
+			}
+		});
 
 		jls.addListSelectionListener(new ListSelectionListener() {
 			@Override
@@ -248,8 +270,8 @@ public class ConfigPage extends Page {
 		add(refe);
 		add(whit);
 		add(jsps);
-		add(jsmin);
-		add(jsmax);
+		set(jsmin);
+		set(jsmax);
 		add(jlmin);
 		add(jlmax);
 		add(filt);
@@ -258,18 +280,16 @@ public class ConfigPage extends Page {
 		add(rlla);
 		add(exla);
 		add(extt);
+		add(jlbg);
+		add(jlse);
+		set(jsbg);
+		set(jsse);
 		jls.setSelectedIndex(MainLocale.lang);
 		jll.setSelectedIndex(EventReader.loc);
-		jsmin.setMajorTickSpacing(10);
-		jsmin.setMinorTickSpacing(5);
-		jsmin.setPaintTicks(true);
-		jsmin.setPaintLabels(true);
-		jsmax.setMajorTickSpacing(10);
-		jsmax.setMinorTickSpacing(5);
-		jsmax.setPaintTicks(true);
-		jsmax.setPaintLabels(true);
 		jsmin.setValue(ImgCore.deadOpa);
 		jsmax.setValue(ImgCore.fullOpa);
+		jsbg.setValue(BCMusic.VOL_BG);
+		jsse.setValue(BCMusic.VOL_SE);
 		for (int i = 0; i < 4; i++) {
 			left[i] = new JBTN("<");
 			right[i] = new JBTN(">");
@@ -294,6 +314,14 @@ public class ConfigPage extends Page {
 		musc.setSelected(BCMusic.play);
 		jogl.setSelected(MainBCU.USE_JOGL);
 		addListeners();
+	}
+
+	private void set(JSlider sl) {
+		add(sl);
+		sl.setMajorTickSpacing(10);
+		sl.setMinorTickSpacing(5);
+		sl.setPaintTicks(true);
+		sl.setPaintLabels(true);
 	}
 
 }
