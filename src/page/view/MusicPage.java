@@ -51,7 +51,7 @@ public class MusicPage extends Page {
 
 	@Override
 	protected void exit() {
-		BCMusic.stop();
+		BCMusic.stopAll();
 	}
 
 	@Override

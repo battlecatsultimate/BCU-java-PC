@@ -85,11 +85,11 @@ public class BCMusic implements LineListener {
 			ms.master.setValue(getVol(vol));
 	}
 
-	public static void stop() {
+	public static void stopAll() {
 		if (BG != null)
-			BG.clip.stop();
+			BG.stop();
 		for (BCMusic ms : SES)
-			ms.clip.stop();
+			ms.stop();
 		BG = null;
 		SES.clear();
 	}
@@ -123,7 +123,7 @@ public class BCMusic implements LineListener {
 		if (loop) {
 			clip.loop(Clip.LOOP_CONTINUOUSLY);
 			if (BG != null)
-				BG.clip.stop();
+				BG.stop();
 			BG = this;
 		} else {
 			clip.addLineListener(this);
@@ -134,8 +134,16 @@ public class BCMusic implements LineListener {
 
 	@Override
 	public void update(LineEvent event) {
-		if (event.getType() == Type.STOP)
+		if (event.getType() == Type.STOP) {
+			stop();
 			SES.remove(this);
+		}
+	}
+
+	private void stop() {
+		clip.stop();
+		clip.flush();
+		clip.close();
 	}
 
 }

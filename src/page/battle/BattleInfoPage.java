@@ -260,7 +260,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	private void addListeners() {
 
 		back.setLnr(x -> {
-			BCMusic.stop();
+			BCMusic.stopAll();
 			if (bb instanceof BBRecd) {
 				BBRecd bbr = (BBRecd) bb;
 				if (Opts.conf("Do you want to save this video?")) {
