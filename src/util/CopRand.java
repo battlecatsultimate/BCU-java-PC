@@ -10,6 +10,10 @@ public class CopRand extends BattleObj {
 		seed = s;
 	}
 
+	public double irDouble() {
+		return Math.random();
+	}
+
 	public double nextDouble() {
 		Random r = new Random(seed);
 		seed = r.nextLong();

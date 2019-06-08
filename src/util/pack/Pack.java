@@ -11,6 +11,8 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.TreeMap;
 
+import com.google.common.io.Files;
+
 import io.BCJSON;
 import io.InStream;
 import io.OutStream;
@@ -290,8 +292,8 @@ public class Pack extends Data {
 	}
 
 	public void delete() {
-		File f = new File("./res/enemy/" + id + ".bcuenemy");
-		Writer.delete(f);
+		Writer.delete(new File("./res/enemy/" + id + ".bcuenemy"));
+		Writer.delete(new File("./res/img/" + id + "/"));
 		map.remove(id);
 		Castles.map.remove(id);
 	}
@@ -455,13 +457,12 @@ public class Pack extends Data {
 						proc[Data.P_THEME][2] = inds[M_BG][bgid] + id * 1000;
 				}
 
-		// music TODO
-		// random enemy TODO
+		// FIXME music
 	}
 
 	public void packUp() {
 		OutStream os = OutStream.getIns();
-		os.writeString("0.4.1");
+		os.writeString("0.4.2");
 		OutStream head = OutStream.getIns();
 		head.writeInt(id);
 		head.writeByte((byte) rely.size());
@@ -478,7 +479,7 @@ public class Pack extends Data {
 		os.accept(us.packup());
 		os.accept(cs.packup());
 		os.accept(bg.packup());
-
+		os.accept(ms.packup());
 		mc.write(os);
 		os.terminate();
 		Writer.writeBytes(os, "./pack/" + hex(id) + ".bcupack");
@@ -529,6 +530,39 @@ public class Pack extends Data {
 	@Override
 	public String toString() {
 		return hex(id) + " - " + name;
+	}
+
+	public void unpack() {
+		editable = true;
+		cs.forEach((i, c) -> {
+			String path = "./res/img/" + hex(id) + "/cas/" + trio(i) + ".png";
+			try {
+				FakeImage.write(c.getImg(), "PNG", new File(path));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+		bg.forEach((i, c) -> {
+			String path = "./res/img/" + hex(id) + "/bg/" + trio(i) + ".png";
+			try {
+				FakeImage.write(c.img.getImg(), "PNG", new File(path));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+		File mf = new File("./res/img/" + hex(id) + "/music/");
+		if (!mf.exists())
+			mf.mkdirs();
+		ms.forEach((i, c) -> {
+			String src = "./pack/music/" + hex(id) + "/" + trio(i) + ".ogg";
+			String dst = "./res/img/" + hex(id) + "/music/" + trio(i) + ".ogg";
+
+			try {
+				Files.move(new File(src), new File(dst));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
 	}
 
 	public boolean usable(int p) {
@@ -583,7 +617,9 @@ public class Pack extends Data {
 	}
 
 	private void zreadp() {
-		if (ver >= 401)
+		if (ver == 402)
+			zreadp$000402(res);
+		else if (ver == 401)
 			zreadp$000401(res);
 		else if (ver >= 306)
 			zreadp$000306(res);
@@ -620,6 +656,15 @@ public class Pack extends Data {
 		err("units", () -> us.zreadp(is.subStream()));
 		err("castles", () -> cs.zreadp(ver, is.subStream()));
 		err("backgrounds", () -> bg.zreadp(ver, is.subStream()));
+	}
+
+	private void zreadp$000402(InStream is) {
+		name = is.nextString();
+		err("enemies", () -> es.zreadp(is.subStream()));
+		err("units", () -> us.zreadp(is.subStream()));
+		err("castles", () -> cs.zreadp(ver, is.subStream()));
+		err("backgrounds", () -> bg.zreadp(ver, is.subStream()));
+		err("music", () -> ms.zreadp(is.subStream()));
 	}
 
 	private void zreadt$000306(InStream is) {

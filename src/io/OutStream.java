@@ -72,6 +72,7 @@ strictfp class OutStreamDef extends DataIO implements OutStream {
 
 	protected OutStreamDef(byte[] data) {
 		bs = data;
+		index = bs.length;
 	}
 
 	@Override
@@ -80,6 +81,8 @@ strictfp class OutStreamDef extends DataIO implements OutStream {
 			throw new BCUException("OutStream type mismatch");
 		os.terminate();
 		byte[] obs = ((OutStreamDef) os).bs;
+		if (obs.length == 0)
+			throw new BCUException("zero stream");
 		writeInt(obs.length);
 		check(obs.length);
 		for (int i = 0; i < obs.length; i++)
@@ -124,6 +127,11 @@ strictfp class OutStreamDef extends DataIO implements OutStream {
 		if (index == bs.length)
 			return;
 		bs = Arrays.copyOf(bs, index);
+	}
+
+	@Override
+	public String toString() {
+		return "OutStreamDef " + size();
 	}
 
 	@Override

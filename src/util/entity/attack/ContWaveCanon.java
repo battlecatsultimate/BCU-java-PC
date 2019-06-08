@@ -1,5 +1,6 @@
 package util.entity.attack;
 
+import io.BCMusic;
 import util.pack.NyCastle;
 import util.system.P;
 import util.system.fake.FakeGraphics;
@@ -32,6 +33,7 @@ public class ContWaveCanon extends ContWaveAb {
 	protected void nextWave() {
 		double np = pos - 405;
 		new ContWaveCanon(new AttackWave(atk, np, NYRAN[canid]), np, canid);
+		BCMusic.setSE(SE_CANNON[canid][1]);
 	}
 
 }

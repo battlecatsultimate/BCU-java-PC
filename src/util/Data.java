@@ -15,6 +15,31 @@ import util.system.files.VFile;
 
 public class Data {
 
+	protected static final int SE_HIT_0 = 20;
+	protected static final int SE_HIT_1 = 21;
+	protected static final int SE_DEATH_0 = 23;
+	protected static final int SE_DEATH_1 = 24;
+	protected static final int SE_HIT_BASE = 22;
+	protected static final int SE_ZKILL = 59;
+	protected static final int SE_CRIT = 44;
+	protected static final int SE_WAVE = 26;
+	protected static final int SE_LETHAL = 50;
+	protected static final int SE_WARP_ENTER = 73;
+	protected static final int SE_WARP_EXIT = 74;
+	protected static final int SE_BOSS = 45;
+	protected static final int SE_SPEND_FAIL = 15;// TODO
+	protected static final int SE_SPEND_SUC = 19;// TODO
+	protected static final int SE_SPEND_REF = 27;// TODO
+	protected static final int SE_BARRIER_ABI = 70;
+	protected static final int SE_BARRIER_NON = 71;
+	protected static final int SE_BARRIER_ATK = 72;
+
+	protected static final int[][] SE_CANNON = { { 25, 26 }, { 60 }, { 61 }, { 36, 37 }, { 65, 83 }, { 84, 85 },
+			{ 86 } };
+
+	protected static final int[] SE_ALL = { 15, 19, 20, 21, 22, 23, 24, 25, 26, 27, 36, 37, 44, 45, 50, 59, 60, 61, 65,
+			73, 74, 83, 84, 85, 86 };
+
 	public static final int RARITY_TOT = 6;
 
 	// trait bit filter
@@ -202,19 +227,19 @@ public class Data {
 	protected static final int PC2_CD = 4;
 
 	protected static final int[][] PC_CORRES = new int[][] { // NP value table
-			{ -1, 0 }, // 0: TODO
+			{ -1, 0 }, // 0:
 			{ 0, P_WEAK }, // 1: weak, reversed health
 			{ 0, P_STOP }, // 2: stop
 			{ 0, P_SLOW }, // 3: slow
-			{ -1, 0 }, // 4: TODO
-			{ -1, 0 }, // 5: TODO
-			{ -1, 0 }, // 6: TODO
-			{ -1, 0 }, // 7: TODO
+			{ -1, 0 }, // 4:
+			{ -1, 0 }, // 5:
+			{ -1, 0 }, // 6:
+			{ -1, 0 }, // 7:
 			{ 0, P_KB }, // 8: kb
-			{ -1, 0 }, // 9: TODO
+			{ -1, 0 }, // 9:
 			{ 0, P_STRONG }, // 10: berserker, reversed health
 			{ 0, P_LETHAL }, // 11: lethal
-			{ -1, 0 }, // 12: TODO
+			{ -1, 0 }, // 12:
 			{ 0, P_CRIT }, // 13: crit
 			{ 1, AB_ZKILL }, // 14: zkill
 			{ 0, P_BREAK }, // 15: break
@@ -225,20 +250,20 @@ public class Data {
 			{ 0, P_IMUSLOW }, // 20: res slow
 			{ 0, P_IMUKB }, // 21: res kb
 			{ 0, P_IMUWAVE }, // 22: res wave
-			{ -1, 0 }, // 23: TODO
-			{ -1, 0 }, // 24: TODO
+			{ -1, 0 }, // 23:
+			{ -1, 0 }, // 24:
 			{ 2, PC2_COST }, // 25: reduce cost
 			{ 2, PC2_CD }, // 26: reduce cooldown
 			{ 2, PC2_SPEED }, // 27: inc speed
-			{ -1, 0 }, // 28: TODO
+			{ -1, 0 }, // 28:
 			{ 3, P_IMUCURSE }, // 29: imu curse
 			{ 0, P_IMUCURSE }, // 30: res curse
 			{ 2, PC2_ATK }, // 31: inc ATK
 			{ 2, PC2_HP }, // 32: inc HP
-			{ -1, 0 }, // 33: TODO
-			{ -1, 0 }, // 34: TODO
-			{ -1, 0 }, // 35: TODO
-			{ -1, 0 }, // 36: TODO
+			{ -1, 0 }, // 33:
+			{ -1, 0 }, // 34:
+			{ -1, 0 }, // 35:
+			{ -1, 0 }, // 36:
 			{ 4, TB_ANGEL }, // 37: targeting angle
 			{ 4, TB_ALIEN }, // 38: targeting alien
 			{ 4, TB_ZOMBIE }, // 39: targeting zombie
@@ -276,7 +301,7 @@ public class Data {
 	public static final int C_M_MAX = 9;
 	public static final int C_RESP = 11;
 	public static final int C_MEAR = 12;
-	public static final int C_XP = 13;// TODO abandoned
+	public static final int C_XP = 13;// abandoned
 
 	protected static final int C_TOT = 25;
 
@@ -286,7 +311,7 @@ public class Data {
 	protected static final int A_SHOCKWAVE = 27;
 	protected static final int A_ZOMBIE = 26;
 	protected static final int A_EFF_INV = 18;
-	protected static final int A_EFF_DEF = 19;// TODO unused
+	protected static final int A_EFF_DEF = 19;// unused
 	protected static final int A_Z_STRONG = 20;
 	protected static final int A_B = 21;
 	protected static final int A_E_B = 22;
@@ -301,7 +326,7 @@ public class Data {
 	protected static final int A_FARATTACK = 10;
 	protected static final int A_WAVE_INVALID = 12;
 	protected static final int A_WAVE_STOP = 14;
-	protected static final int A_WAVEGUARD = 16;// TODO unused
+	protected static final int A_WAVEGUARD = 16;// unused
 	protected static final int A_E_DOWN = 1;
 	protected static final int A_E_UP = 3;
 	protected static final int A_E_SLOW = 5;
@@ -310,7 +335,7 @@ public class Data {
 	protected static final int A_E_FARATTACK = 11;
 	protected static final int A_E_WAVE_INVALID = 13;
 	protected static final int A_E_WAVE_STOP = 15;
-	protected static final int A_E_WAVEGUARD = 17;// TODO unused
+	protected static final int A_E_WAVEGUARD = 17;// unused
 	protected static final int A_SNIPER = 30;
 	protected static final int A_U_ZOMBIE = 31;
 	protected static final int A_U_B = 32;
@@ -376,12 +401,12 @@ public class Data {
 	protected static final int E_IWAVE = -2;
 	protected static final int E_SWAVE = -3;
 
-	protected static final int[] NYPRE = new int[] { 18, 2, -1, 28, 37, 18, 10 };// TODO
-	protected static final int[] NYRAN = new int[] { 710, 600, -1, 500, 500, 710, 100 };// TODO
+	protected static final int[] NYPRE = new int[] { 18, 2, -1, 28, 37, 18, 10 };// not sure
+	protected static final int[] NYRAN = new int[] { 710, 600, -1, 500, 500, 710, 100 };// not sure
 
-	protected static final int SNIPER_CD = 300;// TODO
-	protected static final int SNIPER_PRE = 5;// TODO
-	protected static final int SNIPER_POS = -500;// TODO
+	protected static final int SNIPER_CD = 300;// not sure
+	protected static final int SNIPER_PRE = 5;// not sure
+	protected static final int SNIPER_POS = -500;// not sure
 
 	protected static final int REVIVE_SHOW_TIME = 16;
 
@@ -395,6 +420,10 @@ public class Data {
 			ans += Integer.parseInt(str);
 		}
 		return ans;
+	}
+
+	public static String hex(int id) {
+		return trio(id / 1000) + trio(id % 1000);
 	}
 
 	public static Queue<String> readLine(File f) {
@@ -418,10 +447,6 @@ public class Data {
 		if (i < 10)
 			str += "0";
 		return str + i;
-	}
-
-	protected static String hex(int id) {
-		return trio(id / 1000) + trio(id % 1000);
 	}
 
 	protected static <T> T readSave(String path, Function<Queue<String>, T> func) {

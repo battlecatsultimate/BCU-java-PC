@@ -1,31 +1,63 @@
 package io;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
-import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineEvent.Type;
+import javax.sound.sampled.LineListener;
 
+import util.Data;
 import util.pack.MusicStore;
 import util.pack.Pack;
 
-public class BCMusic {
+public class BCMusic extends Data implements LineListener {
 
-	public static final BCMusic DEF = new BCMusic();
+	private static final List<BCMusic> SES = new ArrayList<BCMusic>();
+	private static final int FACTOR = 20, CD = 5;
+	private static final byte[][] CACHE = new byte[100][];
 
-	public static boolean play = false;
+	public static boolean play = true;
 	public static int music = -1;
+	public static int VOL_BG = 20, VOL_SE = 20;
+	private static boolean[] secall = new boolean[100];
+	private static int[] secd = new int[100];
 
-	private static boolean allow = false;
+	private static BCMusic BG;
 
-	public static void play(int ind) {
+	public static synchronized void flush(boolean allow) {
+		for (int i = 0; i < 100; i++) {
+			if (secd[i] == 0 && secall[i] && allow)
+				try {
+					secd[i] = CD;
+					if (CACHE[i] == null)
+						new BCMusic(openFile(MusicStore.getMusic(i)), getVol(VOL_SE), false);
+					else
+						new BCMusic(openFile(CACHE[i]), getVol(VOL_SE), false);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			if (secd[i] > 0)
+				secd[i]--;
+		}
+		secall = new boolean[100];
+	}
+
+	public static synchronized void play(int ind) {
 		music = ind;
 		File f = MusicStore.getMusic(ind);
 		if (f != null)
-			DEF.set(f);
+			setBG(f);
 	}
 
 	public static void read() {
@@ -43,76 +75,123 @@ public class BCMusic {
 			if (id == -1)
 				continue;
 			Pack.def.ms.set(id, f);
+			for (int i : SE_ALL)
+				if (i == id) {
+					try {
+						CACHE[id] = Files.readAllBytes(f.toPath());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					break;
+				}
 		}
 	}
 
-	private SourceDataLine line;
-	private AudioInputStream ais;
-	private Thread player;
-
-	public void set(File file) {
-		stop();
+	public static synchronized void setBG(File f) {
 		if (!play)
 			return;
-		Thread prev = player;
-		allow = true;
-		player = new Thread() {
-
-			@Override
-			public void run() {
-				try {
-					if (prev != null)
-						prev.join();
-					if (!allow || player != this)
-						return;
-
-					AudioInputStream raw = AudioSystem.getAudioInputStream(file);
-					AudioFormat out = getOutFormat(raw.getFormat());
-					DataLine.Info info = new DataLine.Info(SourceDataLine.class, out);
-					line = (SourceDataLine) AudioSystem.getLine(info);
-					if (line != null) {
-						line.open(out);
-						line.start();
-						ais = AudioSystem.getAudioInputStream(out, raw);
-						stream();
-						line.drain();
-						line.stop();
-						line.close();
-						line = null;
-					}
-					if (allow && player == this)
-						set(file);
-				} catch (Exception e) {
-					throw new IllegalStateException(e);
-				}
-			}
-
-		};
-
-		player.start();
-
-	}
-
-	public void stop() {
-		if (line != null)
-			line.stop();
-		allow = false;
-	}
-
-	private AudioFormat getOutFormat(AudioFormat inFormat) {
-		final int ch = inFormat.getChannels();
-		final float rate = inFormat.getSampleRate();
-		AudioFormat audioFormat = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, rate, 16, ch, ch * 2, rate, false);
-		return audioFormat;
-	}
-
-	private void stream() throws IOException {
-		final byte[] buffer = new byte[65536];
-		int num = ais.read(buffer, 0, buffer.length);
-		while (num != -1) {
-			line.write(buffer, 0, num);
-			num = ais.read(buffer, 0, buffer.length);
+		try {
+			new BCMusic(openFile(f), getVol(VOL_BG), true);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+	}
+
+	public static synchronized void setBGVol(int vol) {
+		VOL_BG = vol;
+		if (BG != null)
+			BG.master.setValue(getVol(vol));
+	}
+
+	public static synchronized void setSE(int ind) {
+		if (!play || VOL_SE == 0)
+			return;
+		secall[ind] = true;
+	}
+
+	public static synchronized void setSEVol(int vol) {
+		VOL_SE = vol;
+		for (BCMusic ms : SES)
+			ms.master.setValue(getVol(vol));
+	}
+
+	public static synchronized void stopAll() {
+		if (BG != null)
+			BG.stop();
+		BG = null;
+		for (BCMusic ms : SES)
+			ms.stop();
+		SES.clear();
+		secd = new int[100];
+	}
+
+	private static float getVol(int vol) {
+		return FACTOR * ((float) Math.log10(vol) - 2);
+	}
+
+	private static Clip openFile(byte[] data) throws Exception {
+		ByteArrayInputStream is = new ByteArrayInputStream(data);
+		AudioInputStream raw = AudioSystem.getAudioInputStream(is);
+		AudioFormat rf = raw.getFormat();
+		int ch = rf.getChannels();
+		float rate = rf.getSampleRate();
+		AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, rate, 16, ch, ch * 2, rate, false);
+		AudioInputStream stream = AudioSystem.getAudioInputStream(format, raw);
+		DataLine.Info info = new DataLine.Info(Clip.class, format);
+		Clip line = (Clip) AudioSystem.getLine(info);
+		line.open(stream);
+		return line;
+	}
+
+	private static Clip openFile(File file) throws Exception {
+		AudioInputStream raw = AudioSystem.getAudioInputStream(file);
+		AudioFormat rf = raw.getFormat();
+		int ch = rf.getChannels();
+		float rate = rf.getSampleRate();
+		AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, rate, 16, ch, ch * 2, rate, false);
+		AudioInputStream stream = AudioSystem.getAudioInputStream(format, raw);
+		DataLine.Info info = new DataLine.Info(Clip.class, format);
+		Clip line = (Clip) AudioSystem.getLine(info);
+		line.open(stream);
+		return line;
+	}
+
+	private final Clip clip;
+	private final FloatControl master;
+	private final boolean loop;
+
+	private BCMusic(Clip c, float vol, boolean b) throws Exception {
+		clip = c;
+		loop = b;
+		master = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+		master.setValue(vol);
+		if (loop) {
+			clip.loop(Clip.LOOP_CONTINUOUSLY);
+			if (BG != null)
+				BG.stop();
+			BG = this;
+		} else {
+			clip.addLineListener(this);
+			synchronized (BCMusic.class) {
+				SES.add(this);
+			}
+		}
+		clip.start();
+	}
+
+	@Override
+	public void update(LineEvent event) {
+		if (event.getType() == Type.STOP) {
+			stop();
+			synchronized (BCMusic.class) {
+				SES.remove(this);
+			}
+		}
+	}
+
+	private void stop() {
+		clip.stop();
+		clip.close();
 	}
 
 }

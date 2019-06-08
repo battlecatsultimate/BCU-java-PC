@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import io.InStream;
 import io.OutStream;
+import io.Writer;
 import util.system.FixIndexList;
 
 public class MusicStore extends FixIndexList<File> {
@@ -32,6 +34,8 @@ public class MusicStore extends FixIndexList<File> {
 	}
 
 	public static File getMusic(int ind) {
+		if (ind == -1)
+			return null;
 		int pid = ind / 1000;
 		Pack pack = Pack.map.get(pid);
 		if (pack == null)
@@ -80,7 +84,6 @@ public class MusicStore extends FixIndexList<File> {
 	}
 
 	protected OutStream packup() {
-		// TODO not used
 		OutStream mus = OutStream.getIns();
 		mus.writeString("0.3.7");
 		Map<Integer, File> mcas = getMap();
@@ -108,6 +111,29 @@ public class MusicStore extends FixIndexList<File> {
 		os.writeInt(0);
 		os.terminate();
 		return os;
+	}
+
+	protected void zreadp(InStream is) {
+		int ver = getVer(is.nextString());
+		if (ver == 307) {
+			int n = is.nextInt();
+			String prev = "./pack/music/" + hex(pack.id) + "/";
+			for (int i = 0; i < n; i++) {
+				int id = is.nextInt();
+				InStream data = is.subStream();
+				byte[] bs = data.nextBytesI();
+				File f = new File(prev + trio(id) + ".ogg");
+				set(id, f);
+				if (f.exists())
+					continue;
+				Writer.check(f);
+				try {
+					Files.write(f.toPath(), bs);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 }

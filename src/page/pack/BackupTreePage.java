@@ -256,7 +256,7 @@ public class BackupTreePage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					if (ZipAccess.extractPartial(sel.getData().toString(), sel)) {
+					if (ZipAccess.extractPartial(sel)) {
 						Opts.success("restoration succeed, please restart program");
 					} else
 						Opts.backupErr("restore");

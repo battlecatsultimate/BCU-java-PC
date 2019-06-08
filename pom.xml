@@ -95,12 +95,6 @@
 			<artifactId>google-http-client</artifactId>
 			<version>1.24.1</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.jcraft/jorbis -->
-		<dependency>
-			<groupId>org.jcraft</groupId>
-			<artifactId>jorbis</artifactId>
-			<version>0.0.17</version>
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.json/json -->
 		<dependency>
 			<groupId>org.json</groupId>

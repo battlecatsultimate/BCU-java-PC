@@ -214,6 +214,11 @@ strictfp class InStreamDef extends DataIO implements InStream {
 	}
 
 	@Override
+	public String toString() {
+		return "InStreamDef " + size();
+	}
+
+	@Override
 	public OutStreamDef translate() {
 		byte[] data = new byte[max - index];
 		for (int i = 0; i < max - index; i++)

@@ -1,18 +1,22 @@
 package jogl.util;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import jogl.GLStatic;
 import util.system.fake.FakeImage;
 import util.system.fake.awt.FIBI;
 
 public class AmbImage implements FakeImage {
 
-	private final byte[] stream;
-	private final File file;
-	private final AmbImage par;
-	private final int[] cs;
+	private byte[] stream;
+	private File file;
+	private AmbImage par;
+	private int[] cs;
 	private boolean force, failed;
 
 	private FIBI bimg;
@@ -91,10 +95,25 @@ public class AmbImage implements FakeImage {
 			String str = (String) o;
 			if (str.equals("uni"))
 				forceBI();
+			if (str.equals("BG"))
+				checkBI();
 			if (str.equals("edi"))
 				forceBI();
 			if (str.equals("uni or edi"))
 				forceBI();
+			if (str.equals("recolor"))
+				checkBI();
+			if (str.equals("recolor-finished")) {
+				// TODO if graphics is faster?
+				ByteArrayOutputStream abos = new ByteArrayOutputStream();
+				try {
+					ImageIO.write(bimg(), "PNG", abos);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				force = false;
+				stream = abos.toByteArray();
+			}
 		}
 	}
 

@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import io.BCMusic;
 import util.BattleObj;
 import util.CopRand;
 import util.entity.AbEntity;
@@ -124,6 +125,8 @@ public class StageBasis extends BattleObj {
 
 	/** receive attacks and excuse together, capture targets first */
 	public void getAttack(AttackAb a) {
+		if (a == null)
+			return;
 		a.capture();
 		la.add(a);
 	}
@@ -143,6 +146,8 @@ public class StageBasis extends BattleObj {
 	 */
 	public List<AbEntity> inRange(int touch, int dire, double d0, double d1) {
 		List<AbEntity> ans = new ArrayList<>();
+		if (dire == 0)
+			return ans;
 		for (Entity ee : le)
 			if (ee.dire * dire == -1 && (ee.touchable() & touch) > 0 && (ee.pos - d0) * (ee.pos - d1) <= 0)
 				ans.add(ee);
@@ -249,6 +254,7 @@ public class StageBasis extends BattleObj {
 					if (e.dire == -1 && (e.touchable() & TCH_N) > 0)
 						e.interrupt(INT_SW, KB_DIS[INT_SW]);
 				lea.add(new EAnimCont(700, 9, EffAnim.effas[A_SHOCKWAVE].getEAnim(0)));
+				BCMusic.setSE(SE_BOSS);
 				shock = false;
 			}
 

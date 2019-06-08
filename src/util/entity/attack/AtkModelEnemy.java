@@ -14,6 +14,9 @@ public class AtkModelEnemy extends AtkModelEntity {
 
 	@Override
 	public AttackAb getAttack(int ind) {
+		if (act[ind] == 0)
+			return null;
+		act[ind]--;
 		int[][] proc = new int[PROC_TOT][PROC_WIDTH];
 		if (abis[ind] == 1) {
 			extraAtk(ind);

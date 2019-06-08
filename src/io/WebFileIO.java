@@ -28,6 +28,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.ExponentialBackOff;
 
 import main.Opts;
+import main.Printer;
 
 public class WebFileIO {
 
@@ -50,6 +51,8 @@ public class WebFileIO {
 			downloader.download(gurl, out);
 
 			out.close();
+
+			Printer.p("WebFileIO", 55, "download success: " + url);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -112,9 +112,9 @@ public class UnitStore extends Data {
 			}
 		}
 
-		// TODO unit reserved 2
+		// unit reserved 2
 		os.writeInt(0);
-		// TODO unit reserved 3
+		// unit reserved 3
 		os.writeInt(0);
 		os.terminate();
 		return os;
@@ -146,9 +146,9 @@ public class UnitStore extends Data {
 			}
 		}
 
-		// TODO unit reserved 2
+		// unit reserved 2
 		os.writeInt(0);
-		// TODO unit reserved 3
+		// unit reserved 3
 		os.writeInt(0);
 
 		os.terminate();

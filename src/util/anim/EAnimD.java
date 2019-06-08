@@ -28,8 +28,6 @@ public class EAnimD extends EAnimI {
 		g.translate(ori.x, ori.y);
 		for (EPart e : order)
 			e.drawPart(g, new P(siz, siz));
-		if (sele >= 0 && sele < ent.length)
-			ent[sele].drawScale(g, new P(siz, siz));
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package jogl.awt;
+package jogl;
 
 import page.anim.IconBox;
 import page.awt.BBBuilder;

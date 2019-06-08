@@ -1,4 +1,4 @@
-package jogl.awt;
+package jogl;
 
 import java.awt.AWTException;
 import java.awt.Point;
@@ -10,7 +10,6 @@ import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLCanvas;
 
-import jogl.GLStatic;
 import jogl.util.ResManager;
 
 public abstract class GLCstd extends GLCanvas implements GLEventListener {

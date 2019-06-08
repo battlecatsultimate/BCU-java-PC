@@ -33,6 +33,7 @@ public class SBCtrl extends BattleField {
 	public Recd getData() {
 		re.name = "";
 		re.action = sb.rx.write();
+		re.len = sb.time;
 		return re;
 	}
 

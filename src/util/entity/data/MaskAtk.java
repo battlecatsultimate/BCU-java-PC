@@ -20,4 +20,8 @@ public interface MaskAtk {
 
 	public boolean isRange();
 
+	public default int loopCount() {
+		return -1;
+	}
+
 }

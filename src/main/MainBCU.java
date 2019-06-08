@@ -8,7 +8,7 @@ import decode.ZipLib;
 import io.BCJSON;
 import io.Reader;
 import io.Writer;
-import jogl.awt.GLBBB;
+import jogl.GLBBB;
 import jogl.util.GLIB;
 import page.MainFrame;
 import page.MainPage;
@@ -20,7 +20,7 @@ import util.system.fake.awt.PCIB;
 
 public class MainBCU {
 
-	public static final int ver = 40717;
+	public static final int ver = 40806;
 
 	public static int FILTER_TYPE = 0;
 	public static final boolean WRITE = !new File("./.project").exists();
@@ -39,8 +39,8 @@ public class MainBCU {
 		}
 
 		Writer.logPrepare();
-		Reader.getData$0();
 		Writer.logSetup();
+		Reader.getData$0();
 
 		ImageBuilder.builder = USE_JOGL ? new GLIB() : new PCIB();
 		BBBuilder.def = USE_JOGL ? new GLBBB() : AWTBBB.INS;

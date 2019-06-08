@@ -105,7 +105,7 @@ public class SCDef implements Copable<SCDef> {
 
 	public boolean contains(Enemy e) {
 		for (int[] dat : datas)
-			if (dat[0] == e.id)
+			if (dat[E] == e.id)
 				return true;
 		return false;
 	}
@@ -119,6 +119,15 @@ public class SCDef implements Copable<SCDef> {
 		smap.forEach((e, i) -> ans.smap.put(e, i));
 		sub.forEach((i, e) -> ans.sub.set(i, e.copy(i)));
 		return ans;
+	}
+
+	public Set<Enemy> getAllEnemy() {
+		Set<Enemy> l = new TreeSet<>();
+		for (int[] dat : datas)
+			l.addAll(EnemyStore.getAbEnemy(dat[E], false).getPossible());
+		for (AbEnemy e : getSummon())
+			l.addAll(e.getPossible());
+		return l;
 	}
 
 	public int[][] getSimple() {
@@ -165,9 +174,9 @@ public class SCDef implements Copable<SCDef> {
 
 	public boolean isSuitable(Pack p) {
 		for (int[] ints : datas) {
-			if (ints[0] < 1000)
+			if (ints[E] < 1000)
 				continue;
-			int pac = ints[0] / 1000;
+			int pac = ints[E] / 1000;
 			boolean b = pac == p.id;
 			for (int rel : p.rely)
 				b |= pac == rel;
@@ -179,28 +188,28 @@ public class SCDef implements Copable<SCDef> {
 
 	public boolean isTrail() {
 		for (int[] data : datas)
-			if (data[5] > 100)
+			if (data[C0] > 100)
 				return true;
 		return false;
 	}
 
 	public void merge(int id, int pid, int[] esind) {
 		for (int[] dat : datas)
-			if (dat[0] / 1000 == pid)
-				dat[0] = esind[dat[0] % 1000] + id * 1000;
+			if (dat[E] / 1000 == pid)
+				dat[E] = esind[dat[E] % 1000] + id * 1000;
 	}
 
 	public int relyOn(int p) {
 		for (int[] data : datas)
-			if (data[0] / 1000 == p)
+			if (data[E] / 1000 == p)
 				return Pack.RELY_ENE;
 		return -1;
 	}
 
 	public void removePack(int p) {
 		for (int[] data : datas)
-			if (data[0] / 1000 == p)
-				data[0] = 0;
+			if (data[E] / 1000 == p)
+				data[E] = 0;
 	}
 
 	public OutStream write() {

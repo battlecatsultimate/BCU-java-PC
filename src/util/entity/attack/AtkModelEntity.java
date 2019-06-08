@@ -25,7 +25,7 @@ public abstract class AtkModelEntity extends AtkModelAb {
 
 	protected final MaskEntity data;
 	protected final Entity e;
-	protected final int[] atks, abis;
+	protected final int[] atks, abis, act;
 	protected final BattleObj[] acs;
 	private final double ratk;
 
@@ -37,21 +37,25 @@ public abstract class AtkModelEntity extends AtkModelAb {
 		int[][] raw = data.rawAtkData();
 		atks = new int[raw.length + 2];
 		abis = new int[raw.length + 2];
+		act = new int[raw.length + 2];
 		acs = new BattleObj[raw.length + 2];
 		for (int i = 0; i < raw.length; i++) {
 			atks[i] = (int) (raw[i][0] * d0);
 			abis[i] = raw[i][2];
+			act[i] = data.getAtkModel(i).loopCount();
 			acs[i] = new BattleObj();
 		}
 		if (data.getRevenge() != null) {
 			atks[raw.length] = (int) (data.getRevenge().atk * d0);
 			abis[raw.length] = 1;
 			acs[raw.length] = new BattleObj();
+			act[raw.length] = data.getRevenge().loopCount();
 		}
 		if (data.getResurrection() != null) {
 			atks[raw.length + 1] = (int) (data.getResurrection().atk * d0);
 			abis[raw.length + 1] = 1;
 			acs[raw.length + 1] = new BattleObj();
+			act[raw.length + 1] = data.getResurrection().loopCount();
 		}
 	}
 

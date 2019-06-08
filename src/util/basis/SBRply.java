@@ -23,6 +23,8 @@ public class SBRply extends Mirror {
 	}
 
 	public int prog() {
+		if (r.len == 0)
+			return 0;
 		return Math.min(mir.size - 1, sb.time * mir.size / r.len);
 	}
 

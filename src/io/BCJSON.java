@@ -38,14 +38,8 @@ public class BCJSON extends WebFileIO {
 	private static final String req = "http://battlecatsultimate.cf/api/java/";
 	private static final String ast = "http://battlecatsultimate.cf/api/resources/";
 	private static final String path = "./assets/";
-	private static final String login = "login.php";
-	private static final String upload = "upload.php";
-	private static final String rate = "rate.php";
-	private static final String getinfo = "getinfo.php";
-	private static final String delete = "delete.php";
-	private static final String fileio = "fileio.php";
-	private static final String logio = "logio.php";
 	private static final String retrieve = "acquire.php";
+	private static final String changePassword = "changePassword.php";
 
 	private static final String[] cals;
 
@@ -72,6 +66,20 @@ public class BCJSON extends WebFileIO {
 
 	}
 
+	public static boolean changePassword(long pass) {
+		JSONObject inp = new JSONObject();
+		inp.put("uid", ID);
+		inp.put("password", PASSWORD);
+		inp.put("newpass", pass);
+		try {
+			JSONObject ans = read(inp.toString(), changePassword);
+			return ans.getInt("ret") == 0;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 	public static void checkDownload() {
 		LoadPage.prog("check download");
 		File f;
@@ -88,7 +96,9 @@ public class BCJSON extends WebFileIO {
 			LoadPage.prog("check jar update...");
 			if (MainBCU.ver < data.getInt("jar")) {
 				if (Opts.updateCheck("JAR", data.getString("jar-desc"))) {
-					String name = "BCU " + Data.revVer(data.getInt("jar")) + ".jar";
+					int ver = data.getInt("jar");
+					String name = "BCU" + (ver >= 40800 ? "-" : " ");
+					name += Data.revVer(ver) + ".jar";
 					if (download(ast + "jar/" + name, new File("./" + name), LoadPage.lp)) {
 						Writer.logClose(false);
 						System.exit(0);
@@ -145,7 +155,7 @@ public class BCJSON extends WebFileIO {
 		inp.put("password", PASSWORD);
 		inp.put("pid", pid);
 		try {
-			JSONObject ans = read(inp.toString(), delete);
+			JSONObject ans = read(inp.toString(), "delete.php");
 			int ret = ans.getInt("ret");
 			if (ret == 0) {
 				WebPack wp = packlist.get(pid);
@@ -165,7 +175,7 @@ public class BCJSON extends WebFileIO {
 			PASSWORD = new Random().nextLong();
 		inp.put("password", PASSWORD);
 		inp.put("bcuver", MainBCU.ver);
-		JSONObject ans = read(inp.toString(), login);
+		JSONObject ans = read(inp.toString(), "login.php");
 		int ret = ans.getInt("ret");
 		if (ret == 0)
 			return ans.getInt("id");
@@ -176,16 +186,22 @@ public class BCJSON extends WebFileIO {
 		throw new IOException(ans.getString("message"));
 	}
 
-	public static List<WebPack> getPacks(int uid, int sort) throws IOException {
-		if (packlist.size() == 0)
-			refreshPacks();
-		List<WebPack> l = new ArrayList<>();
-		for (WebPack wp : packlist.values())
-			if ((uid == -1 || wp.uid == uid) && wp.state == 0 || wp.uid == uid && uid == ID)
-				l.add(wp);
-		l.sort(WebPack.getComp(sort));
+	public static boolean getPackInfo(WebPack wp, int pid) {
+		JSONObject inp = new JSONObject();
+		inp.put("user", ID);
+		inp.put("pid", Data.hex(pid));
+		inp.put("bcuver", MainBCU.ver);
 
-		return l;
+		try {
+			JSONObject res = read(inp.toString(), "getPackInfo.php");
+			JSONObject packs = res.getJSONObject("pack");
+			wp.desp = packs.getString("desp");
+			wp.loadImg(packs.getJSONArray("img"));
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	public static int getPassword(String str) throws IOException {
@@ -226,7 +242,7 @@ public class BCJSON extends WebFileIO {
 		inp.put("bcuver", MainBCU.ver);
 
 		try {
-			JSONObject ans = read(inp.toString(), upload);
+			JSONObject ans = read(inp.toString(), "upload.php");
 			int ret = ans.getInt("ret");
 			if (ret == 0) {
 				WebPack wp = new WebPack(pid);
@@ -234,7 +250,6 @@ public class BCJSON extends WebFileIO {
 				wp.desp = desc;
 				wp.name = name;
 				wp.uid = ID;
-				wp.url = req + "downloadpack.php?packid=" + pid;
 				boolean b = reversion(pid);
 				return b ? 0 : 5;
 			} else if (ret == 2)
@@ -254,7 +269,7 @@ public class BCJSON extends WebFileIO {
 		inp.put("rate", val + 1);
 
 		try {
-			JSONObject ans = read(inp.toString(), rate);
+			JSONObject ans = read(inp.toString(), "rate.php");
 			int ret = ans.getInt("ret");
 			return ret == 0 ? getRate(ans.getJSONObject("rate")) : null;
 		} catch (IOException e) {
@@ -266,7 +281,8 @@ public class BCJSON extends WebFileIO {
 	public static void refreshPacks() throws IOException {
 		JSONObject inp = new JSONObject();
 		inp.put("user", ID);
-		JSONObject res = read(inp.toString(), getinfo);
+		inp.put("bcuver", MainBCU.ver);
+		JSONObject res = read(inp.toString(), "getinfo.php");
 		JSONArray packs = res.getJSONArray("pack");
 		int len = packs.length();
 		packlist.clear();
@@ -277,7 +293,7 @@ public class BCJSON extends WebFileIO {
 
 	public static boolean report(File f) {
 		try {
-			return upload(f, req + logio);
+			return upload(f, req + "logio.php");
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
@@ -294,7 +310,7 @@ public class BCJSON extends WebFileIO {
 		File f = new File("./pack/" + pid + ".bcupack");
 		if (f.exists())
 			try {
-				boolean b = upload(f, req + fileio);
+				boolean b = upload(f, req + "fileio.php");
 				if (b) {
 					JSONObject inp = new JSONObject();
 					inp.put("uid", ID);
@@ -302,7 +318,7 @@ public class BCJSON extends WebFileIO {
 					inp.put("pid", pid);
 					inp.put("rev", 1);
 					inp.put("bcuver", MainBCU.ver);
-					JSONObject ans = read(inp.toString(), upload);
+					JSONObject ans = read(inp.toString(), "upload.php");
 					if (ans.getInt("ret") == 0)
 						return true;
 				}
@@ -324,7 +340,7 @@ public class BCJSON extends WebFileIO {
 		inp.put("desc", process(desc));
 
 		try {
-			JSONObject ans = read(inp.toString(), upload);
+			JSONObject ans = read(inp.toString(), "upload.php");
 			int ret = ans.getInt("ret");
 			if (ret == 0) {
 				WebPack wp = packlist.get(pid);
@@ -333,6 +349,15 @@ public class BCJSON extends WebFileIO {
 				wp.version++;
 			}
 			return ret == 0;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public static boolean uploadImg(int pid, String iid, File f) {
+		try {
+			return upload(f, req + "uploadImage.php?packid=" + pid + "&imgid=" + iid);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;

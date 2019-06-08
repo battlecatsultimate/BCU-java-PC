@@ -337,11 +337,12 @@ public class Writer extends DataIO {
 		out.println(BCJSON.PASSWORD);
 		out.println("--- place holder ---");
 		out.println("calendar version= " + BCJSON.cal_ver);
-		out.println("play music= " + (BCMusic.play ? 1 : 0));
+		out.println("BG and SE volume= " + (BCMusic.play ? 1 : 0) + ", " + BCMusic.VOL_BG + ", " + BCMusic.VOL_SE);
 		out.println("edit name= " + (MainLocale.exLang ? 1 : 0));
 		out.println("edit tip= " + (MainLocale.exTTT ? 1 : 0));
 		Exporter.write(out);
 		Importer.write(out);
+		out.println("--- place holder ---");
 		out.close();
 	}
 

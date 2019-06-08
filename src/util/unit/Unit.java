@@ -20,6 +20,29 @@ import util.system.files.VFile;
 
 public class Unit extends Data implements Comparable<Unit> {
 
+	static class UnitInfo {
+
+		public int[][] evo;
+		public int[] price = new int[10];
+		public int type;
+
+		protected void fillBuy(String[] strs) {
+			for (int i = 0; i < 10; i++)
+				price[i] = Integer.parseInt(strs[2 + i]);
+			type = Integer.parseInt(strs[12]);
+			int et = Integer.parseInt(strs[23]);
+			if (et >= 15000 && et < 17000) {
+				evo = new int[6][2];
+				evo[0][0] = Integer.parseInt(strs[27]);
+				for (int i = 0; i < 5; i++) {
+					evo[i][0] = Integer.parseInt(strs[28 + i * 2]);
+					evo[i][1] = Integer.parseInt(strs[29 + i * 2]);
+				}
+			}
+		}
+
+	}
+
 	public static void readData() throws IOException {
 		VFile.get("./org/unit").list().forEach(p -> new Unit(p));
 		Queue<String> qs = VFile.readLine("./org/data/unitlevel.csv");
@@ -161,29 +184,6 @@ public class Unit extends Data implements Comparable<Unit> {
 		if (forms[0].name.length() > 0)
 			return trio(id) + " " + forms[0].name;
 		return trio(id);
-	}
-
-}
-
-class UnitInfo {
-
-	public int[][] evo;
-	public int[] price = new int[10];
-	public int type;
-
-	protected void fillBuy(String[] strs) {
-		for (int i = 0; i < 10; i++)
-			price[i] = Integer.parseInt(strs[2 + i]);
-		type = Integer.parseInt(strs[12]);
-		int et = Integer.parseInt(strs[23]);
-		if (et >= 15000 && et < 17000) {
-			evo = new int[6][2];
-			evo[0][0] = Integer.parseInt(strs[27]);
-			for (int i = 0; i < 5; i++) {
-				evo[i][0] = Integer.parseInt(strs[28 + i * 2]);
-				evo[i][1] = Integer.parseInt(strs[29 + i * 2]);
-			}
-		}
 	}
 
 }

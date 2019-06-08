@@ -9,6 +9,7 @@ import javax.swing.event.ListSelectionListener;
 
 import page.Page;
 import util.anim.AnimI;
+import util.pack.BGStore;
 import util.pack.EffAnim;
 import util.pack.NyCastle;
 import util.pack.SoulStore;
@@ -29,6 +30,7 @@ public class EffectViewPage extends AbViewPage {
 		for (AnimI a : NyCastle.atks)
 			va.add(a);
 		va.addAll(SoulStore.getAll(null));
+		va.add(BGStore.getBG(0).anim);
 		jlu.setListData(va);
 		ini();
 		resized();

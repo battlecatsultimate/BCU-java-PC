@@ -1,6 +1,5 @@
-package jogl.awt;
+package jogl;
 
-import jogl.recd.GLRecorder;
 import page.battle.BBRecd;
 import util.basis.BattleField;
 

@@ -89,8 +89,9 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		resized();
 	}
 
-	protected BattleInfoPage(Page p, SBCtrl ctrl) {
+	protected BattleInfoPage(Page p, SBRply rpl) {
 		super(p);
+		SBCtrl ctrl = rpl.transform(this);
 		bb = BBBuilder.def.getCtrl(this, ctrl);
 		pause = true;
 		basis = ctrl;
@@ -236,6 +237,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 				(e.dire == 1 ? le : lu).add(e);
 			et.setList(le);
 			ut.setList(lu);
+			BCMusic.flush(spe < 3);
 		}
 		if (basis instanceof SBRply && recd.name.length() > 0)
 			change((SBRply) basis, b -> jsl.setValue(b.prog()));
@@ -259,7 +261,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	private void addListeners() {
 
 		back.setLnr(x -> {
-			BCMusic.DEF.stop();
+			BCMusic.stopAll();
 			if (bb instanceof BBRecd) {
 				BBRecd bbr = (BBRecd) bb;
 				if (Opts.conf("Do you want to save this video?")) {
@@ -279,7 +281,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 				if (recd.name.length() == 0)
 					changePanel(new RecdSavePage(getThis(), recd));
 				else
-					changePanel(new BattleInfoPage(this, ((SBRply) basis).transform(this)));
+					changePanel(new BattleInfoPage(this, (SBRply) basis));
 		});
 
 		paus.addActionListener(new ActionListener() {
