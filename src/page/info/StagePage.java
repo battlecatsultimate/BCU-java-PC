@@ -23,7 +23,7 @@ public class StagePage extends Page {
 	private final HeadTable info = new HeadTable(this);
 	private final JScrollPane jspinfo = new JScrollPane(info);
 
-	private Stage stage;
+	protected Stage stage;
 
 	public StagePage(Page p) {
 		super(p);

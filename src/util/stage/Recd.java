@@ -1,6 +1,8 @@
 package util.stage;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -15,12 +17,32 @@ import util.pack.Pack;
 
 public class Recd extends Data {
 
-	public static Map<String, Recd> map = new TreeMap<>();
+	private static class Wait {
+
+		private final Stage st;
+		private final InStream is;
+		private final String str;
+
+		private Wait(Stage stage, InStream input, String name) {
+			st = stage;
+			is = input;
+			str = name;
+		}
+
+	}
+
+	public static final Map<String, Recd> map = new TreeMap<>();
+
+	private static final List<Wait> WAIT = new ArrayList<>();
 
 	public static String getAvailable(String str) {
 		while (map.containsKey(str))
 			str += "'";
 		return str;
+	}
+
+	public static void getRecd(Stage stage, InStream is, String str) {
+		WAIT.add(new Wait(stage, is, str));
 	}
 
 	public static void read() {
@@ -38,10 +60,12 @@ public class Recd extends Data {
 					map.put(name, rec);
 			}
 		}
-
+		for (Wait w : WAIT)
+			w.st.recd.add(getRecd(w.is, w.str));
+		WAIT.clear();
 	}
 
-	protected static Recd getRecd(InStream is, String name) {
+	private static Recd getRecd(InStream is, String name) {
 		int val = getVer(is.nextString());
 		if (val >= 401)
 			return zread$000401(is, name);
@@ -159,13 +183,13 @@ public class Recd extends Data {
 		}
 		return st;
 	}
-
 	public String name = "new record";
 	public long seed;
 	public int[] conf;
 	public int star, len;
 	public BasisLU lu;
 	public boolean avail;
+
 	public boolean marked;
 
 	public OutStream action;

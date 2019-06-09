@@ -335,7 +335,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		int t = is.nextInt();
 		for (int i = 0; i < t; i++) {
 			String name = is.nextString();
-			recd.add(Recd.getRecd(is.subStream(), name));
+			Recd.getRecd(this, is.subStream(), name);
 		}
 	}
 

@@ -18,6 +18,7 @@ import main.Opts;
 import page.JBTN;
 import page.Page;
 import page.battle.BattleSetupPage;
+import page.battle.StRecdPage;
 import page.info.filter.EnemyFindPage;
 import page.support.AnimLCR;
 import page.support.ReorderList;
@@ -48,6 +49,7 @@ public class StageEditPage extends Page {
 	private final JBTN ptst = new JBTN(0, "ptst");
 	private final JBTN rmsm = new JBTN(0, "rmsm");
 	private final JBTN rmst = new JBTN(0, "rmst");
+	private final JBTN recd = new JBTN(0, "replay");
 	private final StageEditTable jt;
 	private final JScrollPane jspjt;
 	private final ReorderList<StageMap> jlsm = new ReorderList<>();
@@ -71,7 +73,7 @@ public class StageEditPage extends Page {
 	private final MapColc mc;
 	private final Pack pack;
 
-	private EnemyFindPage efp;
+	private final EnemyFindPage efp;
 
 	private boolean changing = false;
 	private Stage stage;
@@ -85,6 +87,7 @@ public class StageEditPage extends Page {
 		info = new HeadEditTable(this, pac);
 		jlsm.setListData(mc.maps);
 		jle.setListData(EnemyStore.getAll(pack, true).toArray(new Enemy[0]));
+		efp = new EnemyFindPage(getThis(), pack);
 		ini();
 	}
 
@@ -108,6 +111,7 @@ public class StageEditPage extends Page {
 		set(info, x, y, 900, 50, 1400, 250);
 		set(addl, x, y, 900, 350, 200, 50);
 		set(reml, x, y, 1100, 350, 200, 50);
+		set(recd, x, y, 1850, 350, 200, 50);
 		set(advs, x, y, 2100, 350, 200, 50);
 		set(jspjt, x, y, 900, 400, 1400, 900);
 
@@ -133,30 +137,13 @@ public class StageEditPage extends Page {
 
 	private void addListeners$0() {
 
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
-		});
+		back.setLnr(x -> changePanel(getFront()));
 
-		strt.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (stage == null)
-					return;
-				changePanel(new BattleSetupPage(getThis(), stage));
-			}
-		});
+		strt.setLnr(x -> changePanel(new BattleSetupPage(getThis(), stage)));
 
-		advs.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (stage == null)
-					return;
-				changePanel(new AdvStEditPage(getThis(), stage));
-			}
-		});
+		advs.setLnr(x -> changePanel(new AdvStEditPage(getThis(), stage)));
+
+		recd.setLnr(x -> changePanel(new StRecdPage(getThis(), stage, true)));
 
 		addl.addActionListener(new ActionListener() {
 
@@ -184,15 +171,7 @@ public class StageEditPage extends Page {
 			}
 		});
 
-		veif.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (efp == null)
-					efp = new EnemyFindPage(getThis(), pack);
-				changePanel(efp);
-			}
-		});
+		veif.setLnr(x -> changePanel(efp));
 
 	}
 
@@ -470,6 +449,7 @@ public class StageEditPage extends Page {
 		add(rmst);
 		add(jlpsm);
 		add(jlpst);
+		add(recd);
 		add(advs);
 		setAA(null);
 		setBA(null);
@@ -559,6 +539,7 @@ public class StageEditPage extends Page {
 		info.setData(st);
 		jt.setData(st);
 		strt.setEnabled(st != null);
+		recd.setEnabled(st != null);
 		advs.setEnabled(st != null);
 		jspjt.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
 		resized();
