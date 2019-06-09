@@ -30,6 +30,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 	public int castle;
 	public SCDef data;
 	public Limit lim;
+	public List<Recd> recd = new ArrayList<>();
 
 	public Stage(StageMap sm) {
 		map = sm;
@@ -227,7 +228,7 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 
 	public OutStream write() {
 		OutStream os = OutStream.getIns();
-		os.writeString("0.4.0");
+		os.writeString("0.4.7");
 		os.writeString(toString());
 		os.writeInt(bg);
 		os.writeInt(castle);
@@ -240,6 +241,11 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		os.writeByte((byte) (non_con ? 1 : 0));
 		os.accept(data.write());
 		lim.write(os);
+		os.writeInt(recd.size());
+		for (Recd r : recd) {
+			os.writeString(r.name);
+			os.accept(r.toOS());
+		}
 		os.terminate();
 		return os;
 	}
@@ -257,7 +263,9 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 
 	private void zread(String ver, InStream is) {
 		int val = getVer(ver);
-		if (val >= 400)
+		if (val >= 407)
+			zread$000407(val, is);
+		else if (val >= 400)
 			zread$000400(val, is);
 		else if (val >= 308)
 			zread$000308(val, is);
@@ -320,6 +328,15 @@ public class Stage extends Data implements BasedCopable<Stage, StageMap>, Battle
 		non_con = is.nextByte() == 1;
 		data = SCDef.zread(is.subStream());
 		lim = new Limit(map.mc, val, is);
+	}
+
+	private void zread$000407(int val, InStream is) {
+		zread$000400(val, is);
+		int t = is.nextInt();
+		for (int i = 0; i < t; i++) {
+			String name = is.nextString();
+			recd.add(Recd.getRecd(is.subStream(), name));
+		}
 	}
 
 }

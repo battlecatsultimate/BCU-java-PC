@@ -4,6 +4,9 @@ import static util.stage.SCDef.B;
 import static util.stage.SCDef.C0;
 import static util.stage.SCDef.C1;
 import static util.stage.SCDef.E;
+import static util.stage.SCDef.G;
+import static util.stage.SCDef.L0;
+import static util.stage.SCDef.L1;
 import static util.stage.SCDef.M;
 import static util.stage.SCDef.N;
 import static util.stage.SCDef.R0;
@@ -17,6 +20,8 @@ import page.MainFrame;
 import page.Page;
 import page.support.AbJTable;
 import page.support.EnemyTCR;
+import util.Data;
+import util.stage.SCGroup;
 import util.stage.Stage;
 import util.unit.Enemy;
 import util.unit.EnemyStore;
@@ -32,7 +37,7 @@ public class StageTable extends AbJTable {
 	}
 
 	public static void redefine() {
-		title = Page.get(1, "t", 7);
+		title = Page.get(1, "t", 9);
 	}
 
 	protected Object[][] data;
@@ -93,7 +98,7 @@ public class StageTable extends AbJTable {
 
 	protected void setData(Stage st) {
 		int[][] info = st.data.getSimple();
-		data = new Object[info.length][7];
+		data = new Object[info.length][9];
 		for (int i = 0; i < info.length; i++) {
 			int ind = info.length - i - 1;
 			data[ind][1] = EnemyStore.getEnemy(info[i][E]);
@@ -113,6 +118,12 @@ public class StageTable extends AbJTable {
 				data[ind][6] = info[i][R0];
 			else
 				data[ind][6] = info[i][R0] + "~" + info[i][R1];
+
+			data[ind][7] = info[i][L0] == info[i][L1] ? info[i][L0] : info[i][L0] + "~" + info[i][L1];
+			int g = info[i][G];
+			SCGroup scg = st.data.sub.get(g);
+			data[ind][8] = scg == null ? g != 0 ? Data.trio(g) + " - invalid" : "" : scg.toString();
+
 		}
 	}
 

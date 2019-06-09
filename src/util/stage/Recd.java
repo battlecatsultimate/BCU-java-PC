@@ -33,17 +33,21 @@ public class Recd extends Data {
 			if (str.endsWith(".replay")) {
 				String name = str.substring(0, str.length() - 7);
 				InStream is = Reader.readBytes(fi);
-				int val = getVer(is.nextString());
-				Recd rec = null;
-				if (val >= 401)
-					rec = zread$000401(is, name);
-				else if (val >= 400)
-					rec = zread$000400(is, name);
+				Recd rec = getRecd(is, name);
 				if (rec != null)
 					map.put(name, rec);
 			}
 		}
 
+	}
+
+	protected static Recd getRecd(InStream is, String name) {
+		int val = getVer(is.nextString());
+		if (val >= 401)
+			return zread$000401(is, name);
+		else if (val >= 400)
+			return zread$000400(is, name);
+		return null;
 	}
 
 	private static Recd zread$000400(InStream is, String name) {
@@ -200,6 +204,10 @@ public class Recd extends Data {
 	}
 
 	public void write() {
+		marked = !Writer.writeBytes(toOS(), "./replay/" + name + ".replay");
+	}
+
+	protected OutStream toOS() {
 		OutStream os = OutStream.getIns();
 		os.writeString("0.4.1");
 		os.writeLong(seed);
@@ -219,7 +227,7 @@ public class Recd extends Data {
 			os.writeInt(id);
 		}
 		os.terminate();
-		marked = !Writer.writeBytes(os, "./replay/" + name + ".replay");
+		return os;
 	}
 
 }
