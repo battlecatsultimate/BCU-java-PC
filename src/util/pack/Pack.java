@@ -282,6 +282,13 @@ public class Pack extends Data {
 		cs = new CasStore(this, true);
 	}
 
+	public boolean canDelete() {
+		for (Pack p : map.values())
+			if (p.rely.contains(id))
+				return false;
+		return true;
+	}
+
 	public Collection<AbCastle> casList() {
 		List<AbCastle> ans = new ArrayList<>();
 		ans.addAll(Castles.defcas);
@@ -292,6 +299,8 @@ public class Pack extends Data {
 	}
 
 	public void delete() {
+		if (!canDelete())
+			return;
 		Writer.delete(new File("./res/enemy/" + id + ".bcuenemy"));
 		Writer.delete(new File("./res/img/" + id + "/"));
 		map.remove(id);

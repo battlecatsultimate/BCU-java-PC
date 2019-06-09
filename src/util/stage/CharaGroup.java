@@ -140,7 +140,8 @@ public class CharaGroup extends Data implements Comparable<CharaGroup> {
 		int m = is.nextInt();
 		for (int j = 0; j < m; j++) {
 			Unit u = UnitStore.get(is.nextInt(), true);
-			set.add(u);
+			if (u != null)
+				set.add(u);
 		}
 	}
 

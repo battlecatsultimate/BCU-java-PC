@@ -650,7 +650,7 @@ public class PackEditPage extends Page {
 	private void setPack(Pack pack) {
 		pac = pack;
 		boolean b = pac != null && pac.editable;
-		remp.setEnabled(pac != null && pac != Pack.def);
+		remp.setEnabled(pac != null && pac != Pack.def && pac.canDelete());
 		jtfp.setEnabled(b);
 		adde.setEnabled(b && jld.getSelectedValue() != null);
 		adds.setEnabled(b);
