@@ -112,7 +112,8 @@ public abstract class EntityEditPage extends Page {
 		aet = new AtkEditTable(this, edit, false);
 		mpt = new MainProcTable(this, edit);
 		editable = edit;
-
+		if (!editable)
+			jli.setDragEnabled(false);
 	}
 
 	@Override

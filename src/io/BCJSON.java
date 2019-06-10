@@ -38,8 +38,6 @@ public class BCJSON extends WebFileIO {
 	private static final String req = "http://battlecatsultimate.cf/api/java/";
 	private static final String ast = "http://battlecatsultimate.cf/api/resources/";
 	private static final String path = "./assets/";
-	private static final String retrieve = "acquire.php";
-	private static final String changePassword = "changePassword.php";
 
 	private static final String[] cals;
 
@@ -72,7 +70,7 @@ public class BCJSON extends WebFileIO {
 		inp.put("password", PASSWORD);
 		inp.put("newpass", pass);
 		try {
-			JSONObject ans = read(inp.toString(), changePassword);
+			JSONObject ans = read(inp.toString(), "changePassword.php");
 			return ans.getInt("ret") == 0;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -207,7 +205,7 @@ public class BCJSON extends WebFileIO {
 	public static int getPassword(String str) throws IOException {
 		JSONObject inp = new JSONObject();
 		inp.put("name", str);
-		JSONObject ans = read(inp.toString(), retrieve);
+		JSONObject ans = read(inp.toString(), "acquire.php");
 		int ret = ans.getInt("ret");
 		if (ret == 0) {
 			PASSWORD = ans.getLong("password");

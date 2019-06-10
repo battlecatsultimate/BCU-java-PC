@@ -183,6 +183,7 @@ public class Recd extends Data {
 		}
 		return st;
 	}
+
 	public String name = "new record";
 	public long seed;
 	public int[] conf;

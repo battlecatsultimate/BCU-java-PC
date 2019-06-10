@@ -169,6 +169,48 @@ public class WebPack {
 
 	}
 
+	private static class WebPackComp implements Comparator<WebPack> {
+
+		private static int comp(int t, WebPack o1, WebPack o2, boolean rep) {
+			if (t == WebPack.SORT_POP) {
+				int val = -Integer.compare(o1.getRate_0(), o2.getRate_0());
+				if (val == 0 && rep)
+					val = comp(WebPack.SORT_RATE, o1, o2, false);
+				return val;
+			}
+			if (t == WebPack.SORT_RATE) {
+				int val = -Integer.compare(o1.getRate_1(), o2.getRate_1());
+				if (val == 0 && rep)
+					val = comp(WebPack.SORT_POP, o1, o2, false);
+				return val;
+			}
+			if (t == WebPack.SORT_NEW)
+				return -o1.time.compareTo(o2.time);
+			if (t == WebPack.SORT_UPDATE) {
+				Pack p1 = Pack.map.get(o1.pid);
+				Pack p2 = Pack.map.get(o2.pid);
+				int a1 = p1 == null ? 0 : (p1.version >= o1.version ? 1 : 2);
+				int a2 = p2 == null ? 0 : (p2.version >= o2.version ? 1 : 2);
+				if (a1 == a2)
+					return comp(WebPack.SORT_NEW, o1, o2, true);
+				return -Integer.compare(a1, a2);
+			}
+			return Integer.compare(o1.pid, o2.pid);
+		}
+
+		private final int type;
+
+		private WebPackComp(int typ) {
+			type = typ;
+		}
+
+		@Override
+		public int compare(WebPack o1, WebPack o2) {
+			return comp(type, o1, o2, true);
+		}
+
+	}
+
 	public static final int SORT_ID = 0, SORT_RATE = 1, SORT_POP = 2, SORT_NEW = 3, SORT_UPDATE = 4;
 
 	public static final int MAX_IMG = 1;
@@ -299,49 +341,6 @@ public class WebPack {
 	@Override
 	public String toString() {
 		return pid + "-" + version + ": " + name;
-	}
-
-}
-
-class WebPackComp implements Comparator<WebPack> {
-
-	private static int comp(int t, WebPack o1, WebPack o2, boolean rep) {
-		if (t == WebPack.SORT_POP) {
-			int val = -Integer.compare(o1.getRate_0(), o2.getRate_0());
-			if (val == 0 && rep)
-				val = comp(WebPack.SORT_RATE, o1, o2, false);
-			return val;
-		}
-		if (t == WebPack.SORT_RATE) {
-			int val = -Integer.compare(o1.getRate_1(), o2.getRate_1());
-			if (val == 0 && rep)
-				val = comp(WebPack.SORT_POP, o1, o2, false);
-			return val;
-		}
-		if (t == WebPack.SORT_NEW)
-			return -o1.time.compareTo(o2.time);
-		if (t == WebPack.SORT_UPDATE) {
-			Pack p1 = Pack.map.get(o1.pid);
-			Pack p2 = Pack.map.get(o2.pid);
-			int a1 = p1 == null ? 0 : (p1.version == o1.version ? 1 : 2);
-			int a2 = p2 == null ? 0 : (p2.version == o2.version ? 1 : 2);
-			if (a1 == a2)
-				return comp(WebPack.SORT_NEW, o1, o2, true);
-
-			return Integer.compare(a1, a2);
-		}
-		return Integer.compare(o1.pid, o2.pid);
-	}
-
-	private final int type;
-
-	WebPackComp(int typ) {
-		type = typ;
-	}
-
-	@Override
-	public int compare(WebPack o1, WebPack o2) {
-		return comp(type, o1, o2, true);
 	}
 
 }
