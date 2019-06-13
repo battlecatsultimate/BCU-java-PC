@@ -12,8 +12,11 @@ public class PCoin extends Data {
 	public static void read() {
 		Queue<String> qs = VFile.readLine("./org/data/SkillAcquisition.csv");
 		qs.poll();
-		for (String str : qs)
-			new PCoin(str.trim().split(","));
+		for (String str : qs) {
+			String[] strs = str.trim().split(",");
+			if (strs.length == 62)
+				new PCoin(strs);
+		}
 	}
 
 	private final int id;

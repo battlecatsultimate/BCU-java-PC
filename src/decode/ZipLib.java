@@ -16,7 +16,7 @@ import util.system.files.VFile;
 public class ZipLib {
 
 	public static final String[] LIBREQS = { "000001", "000002", "000003", "080602", "080603" };
-	public static final String[] OPTREQS = { "080504" };
+	public static final String[] OPTREQS = { "080504", "080604" };
 
 	public static FileSystem lib;
 	public static LibInfo info;

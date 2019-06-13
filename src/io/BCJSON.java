@@ -344,7 +344,6 @@ public class BCJSON extends WebFileIO {
 				WebPack wp = packlist.get(pid);
 				wp.desp = desc;
 				wp.name = name;
-				wp.version++;
 			}
 			return ret == 0;
 		} catch (IOException e) {

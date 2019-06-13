@@ -711,8 +711,8 @@ public abstract class Entity extends AbEntity {
 				anim.getEff(BREAK_NON);
 				return;
 			}
-		} else if (atk.getProc(P_CRIT)[0] == 0)
-			BCMusic.setSE(isBase ? SE_HIT_BASE : (basis.r.irDouble() < 0.5 ? SE_HIT_0 : SE_HIT_1));
+		}
+		BCMusic.setSE(isBase ? SE_HIT_BASE : (basis.r.irDouble() < 0.5 ? SE_HIT_0 : SE_HIT_1));
 
 		damage += dmg;
 		tempZK |= (atk.abi & AB_ZKILL) > 0;
