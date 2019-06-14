@@ -47,13 +47,8 @@ public class EUnit extends Entity {
 			ans *= basis.b.t().getEKDef();
 		if (isBase && (atk.abi & AB_BASE) > 0)
 			ans *= 4;
-		if ((getAbi() & AB_METALIC) != 0)
-			if (atk.getProc(P_CRIT)[0] > 0)
-				ans *= 0.01 * atk.getProc(P_CRIT)[0];
-			else
-				ans = 1;
-		else if (atk.getProc(P_CRIT)[0] > 0)
-			ans *= 0.01 * atk.getProc(P_CRIT)[0];
+		ans = critCalc((getAbi() & AB_METALIC) != 0, ans, atk);
+
 		return ans;
 	}
 

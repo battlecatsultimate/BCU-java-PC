@@ -1,7 +1,9 @@
 package util.entity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import io.BCMusic;
 import page.battle.BattleBox;
@@ -15,7 +17,6 @@ import util.basis.StageBasis;
 import util.entity.attack.AtkModelEntity;
 import util.entity.attack.AttackAb;
 import util.entity.data.AtkDataModel;
-import util.entity.data.MaskAtk;
 import util.entity.data.MaskEntity;
 import util.pack.EffAnim;
 import util.pack.Soul;
@@ -288,7 +289,7 @@ public abstract class Entity extends AbEntity {
 				back = EffAnim.effas[A_KB].getEAnim(2);
 
 			// Z-kill icon
-			if (e.health <= 0 && e.tempZK && status[P_REVIVE][0] > 0) {
+			if (e.health <= 0 && e.zx.tempZK && e.zx.canRevive() > 0) {
 				EAnimD eae = EffAnim.effas[A_Z_STRONG].getEAnim(0);
 				e.basis.lea.add(new EAnimCont(e.pos, e.layer, eae));
 				BCMusic.setSE(SE_ZKILL);
@@ -589,9 +590,169 @@ public abstract class Entity extends AbEntity {
 
 	}
 
+	private static class ZombX extends BattleObj {
+
+		private final Entity e;
+
+		private final Set<Entity> list = new HashSet<>();
+
+		/** temp field: marker for zombie killer */
+		private boolean tempZK;
+
+		private int extraRev = 0;
+
+		private ZombX(Entity ent) {
+			e = ent;
+		}
+
+		private int canRevive() {
+			if (e.status[P_REVIVE][0] != 0)
+				return 1;
+			int tot = totExRev();
+			if (tot == -1 || tot > extraRev)
+				return 2;
+			return 0;
+		}
+
+		private boolean canZK() {
+			if ((e.getProc(P_REVIVE, 5) & 4) > 0)
+				return false;
+			for (Entity zx : list)
+				if ((zx.getProc(P_REVIVE, 5) & 4) > 0)
+					return false;
+			return true;
+		}
+
+		private void damaged(AttackAb atk) {
+			tempZK |= (atk.abi & AB_ZKILL) > 0 && canZK();
+		}
+
+		private void doRevive(int c) {
+			if (c == 1)
+				e.status[P_REVIVE][0]--;
+			else if (c == 2)
+				extraRev++;
+			int deadAnim = minRevTime();
+			EffAnim ea = EffAnim.effas[A_ZOMBIE];
+			deadAnim += ea.getEAnim(0).len();
+			e.status[P_REVIVE][1] = deadAnim;
+			e.health = e.maxH * maxRevHealth() / 100;
+		}
+
+		private int maxRevHealth() {
+			int max = e.getProc(P_REVIVE, 2);
+			if (e.getProc(P_REVIVE, 0) == 0)
+				max = 0;
+			for (Entity zx : list) {
+				int val = zx.getProc(P_REVIVE, 2);
+				max = Math.max(max, val);
+			}
+			return max;
+		}
+
+		private int minRevTime() {
+			int min = e.getProc(P_REVIVE, 1);
+			if (e.getProc(P_REVIVE, 0) == 0)
+				min = Integer.MAX_VALUE;
+			for (Entity zx : list) {
+				int val = zx.getProc(P_REVIVE, 1);
+				min = Math.min(min, val);
+			}
+			return min;
+		}
+
+		private void postUpdate() {
+			if (e.health > 0)
+				tempZK = false;
+		}
+
+		private boolean prekill() {
+			int c = canRevive();
+			if (!tempZK && c > 0) {
+				int[][] status = e.status;
+				doRevive(c);
+				// clear state
+				e.waitTime = 0;
+				e.bdist = 0;
+				status[P_BURROW][2] = 0;
+				status[P_STOP] = new int[PROC_WIDTH];
+				status[P_SLOW] = new int[PROC_WIDTH];
+				status[P_WEAK] = new int[PROC_WIDTH];
+				status[P_CURSE] = new int[PROC_WIDTH];
+				status[P_SEAL] = new int[PROC_WIDTH];
+				status[P_STRONG] = new int[PROC_WIDTH];
+				status[P_LETHAL] = new int[PROC_WIDTH];
+				status[P_POISON] = new int[PROC_WIDTH];
+				return true;
+			}
+			return false;
+		}
+
+		private int totExRev() {
+			int sum = 0;
+			for (Entity zx : list) {
+				int val = zx.getProc(P_REVIVE, 0);
+				if (val == -1)
+					return -1;
+				sum += val;
+			}
+			return sum;
+		}
+
+		/** update revive status */
+		private void updateRevive() {
+			int[][] status = e.status;
+			AnimManager anim = e.anim;
+
+			list.removeIf(em -> {
+				int conf = em.getProc(P_REVIVE, 5) & 3;
+				if (conf == 3)
+					return false;
+				if (conf == 2 || em.kbTime == -1)
+					return em.kbTime == -1;
+				return true;
+			});
+			List<AbEntity> lm = e.basis.inRange(TCH_ZOMBX, -e.dire, 0, e.basis.st.len);
+			for (AbEntity m : lm) {
+				if (m == e)
+					continue;
+				Entity em = ((Entity) m);
+				double d0 = em.pos + em.getProc(P_REVIVE, 3);
+				double d1 = em.pos + em.getProc(P_REVIVE, 4);
+				if ((d0 - e.pos) * (d1 - e.pos) > 0)
+					continue;
+				int conf = em.getProc(P_REVIVE, 5);
+				if ((conf & 8) == 0 && (e.type & TB_ZOMBIE) == 0)
+					continue;
+				conf &= 3;
+				if (conf == 0 && (em.touchable() & (TCH_N | TCH_EX)) == 0)
+					continue;
+				list.add(em);
+			}
+
+			if (status[P_REVIVE][1] > 0) {
+				e.acted = true;
+				int id = e.dire == -1 ? A_U_ZOMBIE : A_ZOMBIE;
+				EffAnim ea = EffAnim.effas[id];
+				if (anim.corpse == null)
+					anim.corpse = ea.getEAnim(1);
+				if (status[P_REVIVE][1] == ea.getEAnim(0).len())
+					anim.corpse = ea.getEAnim(0);
+				status[P_REVIVE][1]--;
+				if (anim.corpse != null)
+					anim.corpse.update(false);
+				if (status[P_REVIVE][1] == 0)
+					anim.corpse = null;
+			}
+		}
+
+	}
+
 	public final AnimManager anim;
 
 	private final AtkManager atkm;
+
+	private final ZombX zx = new ZombX(this);
 
 	/** game engine, contains environment configuration */
 	public final StageBasis basis;
@@ -633,9 +794,6 @@ public abstract class Entity extends AbEntity {
 
 	/** temp field: marker for double income */
 	protected boolean tempearn;
-
-	/** temp field: marker for zombie killer */
-	protected boolean tempZK;
 
 	/** wait FSM time */
 	private int waitTime;
@@ -715,7 +873,7 @@ public abstract class Entity extends AbEntity {
 		BCMusic.setSE(isBase ? SE_HIT_BASE : (basis.r.irDouble() < 0.5 ? SE_HIT_0 : SE_HIT_1));
 
 		damage += dmg;
-		tempZK |= (atk.abi & AB_ZKILL) > 0;
+		zx.damaged(atk);
 		tempearn |= (atk.abi & AB_EARN) > 0;
 		if (atk.getProc(P_CRIT)[0] > 0) {
 			basis.lea.add(new EAnimCont(pos, layer, EffAnim.effas[A_CRIT].getEAnim(0)));
@@ -833,8 +991,12 @@ public abstract class Entity extends AbEntity {
 
 	/** get the current proc array */
 	public int getProc(int ind, int ety) {
-		if (status[P_SEAL][0] > 0)
-			return 0;
+		if (status[P_SEAL][0] > 0) {
+			if (ind != P_BURROW && ind != P_REVIVE)
+				return 0;
+			if (ind == P_REVIVE && ety > 2)
+				return 0;
+		}
 		return data.getProc(ind)[ety];
 	}
 
@@ -860,7 +1022,6 @@ public abstract class Entity extends AbEntity {
 	/** update the entity after receiving attacks */
 	@Override
 	public void postUpdate() {
-		MaskAtk ma = data.getRepAtk();
 		int hb = data.getHb();
 		long ext = health * hb % maxH;
 		if (ext == 0)
@@ -873,14 +1034,14 @@ public abstract class Entity extends AbEntity {
 		damage = 0;
 
 		// increase damage
-		int strong = ma.getProc(P_STRONG)[0];
+		int strong = getProc(P_STRONG, 0);
 		if (status[P_STRONG][0] == 0 && strong > 0 && health * 100 <= maxH * strong) {
-			status[P_STRONG][0] = ma.getProc(P_STRONG)[1];
+			status[P_STRONG][0] = getProc(P_STRONG, 1);
 			anim.getEff(P_STRONG);
 		}
 		// lethal strike
-		if (ma.getProc(P_LETHAL)[0] > 0 && health <= 0) {
-			boolean b = basis.r.nextDouble() * 100 < ma.getProc(P_LETHAL)[0];
+		if (getProc(P_LETHAL, 0) > 0 && health <= 0) {
+			boolean b = basis.r.nextDouble() * 100 < getProc(P_LETHAL, 0);
 			if (status[P_LETHAL][0] == 0 && b) {
 				health = 1;
 				anim.getEff(P_LETHAL);
@@ -899,11 +1060,10 @@ public abstract class Entity extends AbEntity {
 
 		// update animations
 		anim.update();
+		zx.postUpdate();
 
-		if (health > 0) {
+		if (health > 0)
 			tempearn = false;
-			tempZK = false;
-		}
 		acted = false;
 	}
 
@@ -933,15 +1093,16 @@ public abstract class Entity extends AbEntity {
 	@Override
 	public int touchable() {
 		int n = (getAbi() & AB_GHOST) > 0 ? TCH_EX : TCH_N;
+		int ex = (getProc(P_REVIVE, 5) & 16) > 0 ? TCH_ZOMBX : 0;
 		if (kbTime == -1)
-			return TCH_SOUL;
+			return TCH_SOUL | ex;
 		if (status[P_REVIVE][1] > 0)
-			return TCH_CORPSE;
+			return TCH_CORPSE | ex;
 		if (status[P_BURROW][2] > 0)
-			return n | TCH_UG;
+			return n | TCH_UG | ex;
 		if (kbTime < -1)
-			return TCH_UG;
-		return kbTime == 0 ? n : TCH_KB;
+			return TCH_UG | ex;
+		return (kbTime == 0 ? n : TCH_KB) | ex;
 	}
 
 	/**
@@ -956,7 +1117,7 @@ public abstract class Entity extends AbEntity {
 			kb.updateKB();
 
 		// update revive status, mark acted
-		updateRevive();
+		zx.updateRevive();
 
 		// do move check if available, move if possible
 		if (kbTime == 0 && !acted && atkm.atkTime == 0)
@@ -990,6 +1151,24 @@ public abstract class Entity extends AbEntity {
 
 		// update proc effects
 		updateProc();
+	}
+
+	protected int critCalc(boolean isMetal, int ans, AttackAb atk) {
+		int crit = atk.getProc(P_CRIT)[0];
+		if (getProc(P_CRITI, 0) == 1)
+			crit = 0;
+		if (isMetal)
+			if (crit > 0)
+				ans *= 0.01 * crit;
+			else if (crit < 0)
+				ans = (int) Math.ceil(health * crit / -100.0);
+			else
+				ans = ans > 0 ? 1 : 0;
+		else if (crit > 0)
+			ans *= 0.01 * crit;
+		else if (crit < 0)
+			ans = (int) Math.ceil(maxH * 0.0001);
+		return ans;
 	}
 
 	/** determine the amount of damage received from this attack */
@@ -1074,29 +1253,8 @@ public abstract class Entity extends AbEntity {
 
 	/** called when last KB reached */
 	private void preKill() {
-		if (!tempZK && status[P_REVIVE][0] != 0) {
-			// revive
-			waitTime = 0;
-			status[P_REVIVE][0]--;
-			int deadAnim = data.getRepAtk().getProc(P_REVIVE)[1];
-			EffAnim ea = EffAnim.effas[A_ZOMBIE];
-			deadAnim += ea.getEAnim(0).len();
-			status[P_REVIVE][1] = deadAnim;
-			health = maxH * data.getRepAtk().getProc(P_REVIVE)[2] / 100;
-
-			// clear state
-			status[P_BURROW][2] = 0;
-			bdist = 0;
-			status[P_STOP] = new int[PROC_WIDTH];
-			status[P_SLOW] = new int[PROC_WIDTH];
-			status[P_WEAK] = new int[PROC_WIDTH];
-			status[P_CURSE] = new int[PROC_WIDTH];
-			status[P_SEAL] = new int[PROC_WIDTH];
-			status[P_STRONG] = new int[PROC_WIDTH];
-			status[P_LETHAL] = new int[PROC_WIDTH];
-			status[P_POISON] = new int[PROC_WIDTH];
+		if (zx.prekill())
 			return;
-		}
 		kill();
 	}
 
@@ -1156,24 +1314,6 @@ public abstract class Entity extends AbEntity {
 		// update tokens
 		weaks.update();
 		pois.update();
-	}
-
-	/** update revive status */
-	private void updateRevive() {
-		if (status[P_REVIVE][1] > 0) {
-			acted = true;
-			int id = dire == -1 ? A_U_ZOMBIE : A_ZOMBIE;
-			EffAnim ea = EffAnim.effas[id];
-			if (anim.corpse == null)
-				anim.corpse = ea.getEAnim(1);
-			if (status[P_REVIVE][1] == ea.getEAnim(0).len())
-				anim.corpse = ea.getEAnim(0);
-			status[P_REVIVE][1]--;
-			if (anim.corpse != null)
-				anim.corpse.update(false);
-			if (status[P_REVIVE][1] == 0)
-				anim.corpse = null;
-		}
 	}
 
 	/** update touch state, move if possible */

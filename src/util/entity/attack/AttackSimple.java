@@ -55,6 +55,7 @@ public class AttackSimple extends AttackAb {
 
 	@Override
 	public void excuse() {
+		process();
 		int layer = model.getLayer();
 		if (proc[P_MOVEWAVE][0] > 0) {
 			int[] conf = proc[P_MOVEWAVE];

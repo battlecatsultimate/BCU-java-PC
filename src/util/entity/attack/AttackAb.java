@@ -5,6 +5,7 @@ import java.util.List;
 
 import util.BattleObj;
 import util.entity.AbEntity;
+import util.entity.Entity;
 
 public abstract class AttackAb extends BattleObj {
 
@@ -52,6 +53,16 @@ public abstract class AttackAb extends BattleObj {
 
 	public int[] getProc(int type) {
 		return proc[type];
+	}
+
+	protected void process() {
+		for (AbEntity ae : capt) {
+			if (ae instanceof Entity) {
+				Entity e = (Entity) ae;
+				if (e.getProc(P_CRITI, 0) == 2)
+					proc[P_CRIT][0] = 0;
+			}
+		}
 	}
 
 }

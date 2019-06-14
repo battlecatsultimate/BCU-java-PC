@@ -21,26 +21,19 @@ class MainProcTable extends Page {
 
 	private static final long serialVersionUID = 1L;
 
-	private final JL lst = new JL(SPROC[9]);
-	private final JL lle = new JL(SPROC[10]);
-	private final JL lbr = new JL(SPROC[11]);
-	private final JL lre = new JL(SPROC[12]);
-	private final JL lstp = new JL("HP");
-	private final JL lsta = new JL(1, "inc");
-	private final JL llep = new JL(1, "prob");
-	private final JL lbrt = new JL(1, "times");
-	private final JL lbrd = new JL(1, "dist");
-	private final JL lret = new JL(1, "times");
-	private final JL lrei = new JL(1, "time");
-	private final JL lrea = new JL("HP");
-	private final JTF fstp = new JTF();
-	private final JTF fsta = new JTF();
-	private final JTF flep = new JTF();
-	private final JTF fbrt = new JTF();
-	private final JTF fbrd = new JTF();
-	private final JTF fret = new JTF();
-	private final JTF frei = new JTF();
-	private final JTF frea = new JTF();
+	private static final int F_A = 0, F_P = 1, F_PC = 2, F_N = 3;
+	private static final int U_N = 0, U_T = 1, U_PC = 2;
+
+	private static final int[] INDS = { 9, 10, 11, 12 };
+	private static final int[][] LENS = { { F_PC, F_P }, { F_PC }, { F_P, F_N }, { F_N, F_P, F_PC, F_A, F_A, F_P } };
+	private static final int[][] UNIT = { { U_PC, U_PC }, { U_PC }, { U_N, U_N }, { U_N, U_T, U_PC, U_N, U_N, U_N } };
+	private static final String[][] STRS = { { "HP", "inc" }, { "prob" }, { "times", "dist" },
+			{ "times", "time", "HP", "p0", "p1", "type" } };
+
+	private final JL[] tits = new JL[INDS.length];
+	private final JL[][] jls = new JL[INDS.length][];
+	private final JTF[][] jtfs = new JTF[INDS.length][];
+
 	private final ListJtfPolicy ljp = new ListJtfPolicy();
 
 	private int[][] proc;
@@ -56,123 +49,80 @@ class MainProcTable extends Page {
 
 	@Override
 	protected void resized(int x, int y) {
-		set(lst, x, y, 0, 0, 300, 50);
-		set(lstp, x, y, 0, 50, 100, 50);
-		set(lsta, x, y, 0, 100, 100, 50);
-		set(fstp, x, y, 100, 50, 200, 50);
-		set(fsta, x, y, 100, 100, 200, 50);
-		set(lle, x, y, 0, 150, 300, 50);
-		set(llep, x, y, 0, 200, 100, 50);
-		set(flep, x, y, 100, 200, 200, 50);
-		set(lbr, x, y, 0, 250, 300, 50);
-		set(lbrt, x, y, 0, 300, 100, 50);
-		set(lbrd, x, y, 0, 350, 100, 50);
-		set(fbrt, x, y, 100, 300, 200, 50);
-		set(fbrd, x, y, 100, 350, 200, 50);
-		set(lre, x, y, 0, 400, 300, 50);
-		set(lret, x, y, 0, 450, 100, 50);
-		set(lrei, x, y, 0, 500, 100, 50);
-		set(lrea, x, y, 0, 550, 100, 50);
-		set(fret, x, y, 100, 450, 200, 50);
-		set(frei, x, y, 100, 500, 200, 50);
-		set(frea, x, y, 100, 550, 200, 50);
+		setPreferredSize(size(x, y, 300, 550).toDimension());
+		int h = 0;
+		for (int i = 0; i < INDS.length; i++) {
+			set(tits[i], x, y, 0, h, 300, 50);
+			h += 50;
+			for (int j = 0; j < LENS[i].length; j++) {
+				set(jls[i][j], x, y, 0, h, 100, 50);
+				set(jtfs[i][j], x, y, 100, h, 200, 50);
+				h += 50;
+			}
+		}
 
 	}
 
 	protected void setData(int[][] ints) {
 		proc = ints;
-		fstp.setText(ints[9][0] + "%");
-		fsta.setText("+" + ints[9][1] + "%");
-		flep.setText(ints[10][0] + "%");
-		fbrt.setText("" + ints[11][0]);
-		fbrd.setText("" + ints[11][1]);
-		fret.setText("" + ints[12][0]);
-		frei.setText(ints[12][1] + "f");
-		frea.setText(ints[12][2] + "%");
+		for (int i = 0; i < INDS.length; i++)
+			for (int j = 0; j < UNIT[i].length; j++)
+				if (UNIT[i][j] == U_N)
+					jtfs[i][j].setText(ints[INDS[i]][j] + "");
+				else if (UNIT[i][j] == U_T)
+					jtfs[i][j].setText(ints[INDS[i]][j] + "f");
+				else if (UNIT[i][j] == U_PC)
+					jtfs[i][j].setText(ints[INDS[i]][j] + "%");
 	}
 
 	private void ini() {
-		set(lst);
-		set(lle);
-		set(lbr);
-		set(lre);
-		set(lstp);
-		set(lsta);
-		set(llep);
-		set(lbrt);
-		set(lbrd);
-		set(lret);
-		set(lrei);
-		set(lrea);
 
-		set(fstp);
-		set(fsta);
-		set(flep);
-		set(fbrt);
-		set(fbrd);
-		set(fret);
-		set(frei);
-		set(frea);
+		for (int i = 0; i < INDS.length; i++) {
+			set(tits[i] = new JL(SPROC[INDS[i]]));
+			tits[i].setIcon(new ImageIcon(Res.getIcon(1, INDS[i])));
+			jls[i] = new JL[LENS[i].length];
+			jtfs[i] = new JTF[LENS[i].length];
+			for (int j = 0; j < LENS[i].length; j++) {
+				set(jls[i][j] = new JL(STRS[i][j]));
+				set(jtfs[i][j] = new JTF());
+			}
+		}
+		jtfs[3][5].setToolTipText(
+				"<html>" + "+16: apply to surrounding allies as well<br>" + "allow more revive times as this has<br>"
+						+ "use shorter revive time and higher revive health if this has<br>"
+						+ "+4: immune to z-kill<br>" + "+8: apply effects to allies without revive ability as well<br>"
+						+ "0: effective to others when in range and is in normal phase<br>"
+						+ "1: effective to others when in range and alive<br>"
+						+ "2: effective to everything once passed the range when alive<br>"
+						+ "3: effective to everything once passed the range</html>");
 
 		setFocusTraversalPolicy(ljp);
 		setFocusCycleRoot(true);
-
-		lst.setIcon(new ImageIcon(Res.getIcon(1, 9)));
-		lle.setIcon(new ImageIcon(Res.getIcon(1, 10)));
-		lbr.setIcon(new ImageIcon(Res.getIcon(1, 11)));
-		lre.setIcon(new ImageIcon(Res.getIcon(1, 12)));
 
 	}
 
 	private void input(JTF jtf, String input) {
 		if (input.length() > 0) {
 			int val = Reader.parseIntN(input);
-			if (jtf == fstp) {
-				if (val < 0)
-					val = 0;
-				if (val > 100)
-					val = 100;
-				proc[9][0] = val;
-			}
-			if (jtf == fsta) {
-				if (val < 0)
-					val = 0;
-				proc[9][1] = val;
-			}
-			if (jtf == flep) {
-				if (val < 0)
-					val = 0;
-				if (val > 100)
-					val = 100;
-				proc[10][0] = val;
-			}
-			if (jtf == fbrt) {
-				if (val < -1)
-					val = -1;
-				proc[11][0] = val;
-			}
-			if (jtf == fbrd) {
-				if (val < 0)
-					val = 0;
-				proc[11][1] = val;
-			}
-			if (jtf == fret) {
-				if (val < -1)
-					val = -1;
-				proc[12][0] = val;
-			}
-			if (jtf == frei) {
-				if (val < 0)
-					val = 0;
-				proc[12][1] = val;
-			}
-			if (jtf == frea) {
-				if (val < 0)
-					val = 0;
-				if (val > 100)
-					val = 100;
-				proc[12][2] = val;
-			}
+			for (int i = 0; i < INDS.length; i++)
+				for (int j = 0; j < LENS[i].length; j++)
+					if (jtf == jtfs[i][j]) {
+						if (LENS[i][j] == F_PC) {
+							if (val < 0)
+								val = 0;
+							if (val > 100)
+								val = 100;
+						}
+						if (LENS[i][j] == F_P) {
+							if (val < 0)
+								val = 0;
+						}
+						if (LENS[i][j] == F_N) {
+							if (val < -1)
+								val = -1;
+						}
+						proc[INDS[i]][j] = val;
+					}
 		}
 		getFront().callBack(null);
 	}

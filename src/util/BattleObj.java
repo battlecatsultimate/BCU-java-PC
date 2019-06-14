@@ -166,7 +166,7 @@ public strictfp class BattleObj extends ImgCore implements Cloneable {
 	 * <br>
 	 * this method is called recursively to flush all resources used
 	 */
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void terminate() {
 		if (copy == null)
 			return;
@@ -215,11 +215,28 @@ public strictfp class BattleObj extends ImgCore implements Cloneable {
 						if (c != null && c instanceof BattleObj)
 							((BattleObj) c).terminate();
 			}
+			if (Map.class.isAssignableFrom(tc)) {
+				if (f.getName().equals(NONC))
+					continue;
+				Map f2 = null;
+				try {
+					f2 = (Map) f.get(this);
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+				if (f2 != null)
+					f2.forEach((a, b) -> {
+						if (a != null && a instanceof BattleObj)
+							((BattleObj) a).terminate();
+						if (b != null && b instanceof BattleObj)
+							((BattleObj) b).terminate();
+					});
+			}
 		}
 	}
 
 	/** this method is called to check that there isn't any unintended class */
-	@SuppressWarnings({ "rawtypes" })
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void check(List<Field> lf) {
 		for (Field f : lf) {
 			Object obj = null;
@@ -238,6 +255,16 @@ public strictfp class BattleObj extends ImgCore implements Cloneable {
 				for (Object o : f2)
 					if (!checkField(o.getClass()))
 						UNCHECKED.add(o.getClass());
+				continue;
+			}
+			if (Map.class.isAssignableFrom(tc)) {
+				Map f2 = (Map) obj;
+				f2.forEach((a, b) -> {
+					if (!checkField(a.getClass()))
+						UNCHECKED.add(a.getClass());
+					if (!checkField(b.getClass()))
+						UNCHECKED.add(b.getClass());
+				});
 				continue;
 			}
 			UNCHECKED.add(tc);

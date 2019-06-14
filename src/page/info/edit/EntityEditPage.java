@@ -95,6 +95,7 @@ public abstract class EntityEditPage extends Page {
 	private final ListJtfPolicy ljp = new ListJtfPolicy();
 	private final AtkEditTable aet;
 	private final MainProcTable mpt;
+	private final JScrollPane jspm;
 	private final boolean editable;
 	private final CustomEntity ce;
 	private final Pack pack;
@@ -111,6 +112,7 @@ public abstract class EntityEditPage extends Page {
 		ce = e;
 		aet = new AtkEditTable(this, edit, false);
 		mpt = new MainProcTable(this, edit);
+		jspm = new JScrollPane(mpt);
 		editable = edit;
 		if (!editable)
 			jli.setDragEnabled(false);
@@ -170,7 +172,7 @@ public abstract class EntityEditPage extends Page {
 		ljp.end();
 		add(jspi);
 		add(aet);
-		add(mpt);
+		add(jspm);
 		add(add);
 		add(rem);
 		add(copy);
@@ -251,7 +253,8 @@ public abstract class EntityEditPage extends Page {
 		set(lwd, x, y, 50, 300, 100, 50);
 		set(fwd, x, y, 150, 300, 200, 50);
 
-		set(mpt, x, y, 50, 650, 300, 600);
+		set(jspm, x, y, 0, 450, 350, 800);
+		mpt.componentResized(x, y);
 
 		set(jspi, x, y, 550, 50, 300, 350);
 		set(add, x, y, 550, 400, 150, 50);

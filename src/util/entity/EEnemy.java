@@ -63,17 +63,7 @@ public class EEnemy extends Entity {
 				ans = (int) (maxH * basis.b.t().getCanonMulti(-5) / 1000);
 			else
 				ans = (int) (maxH * basis.b.t().getCanonMulti(5) / 1000);
-		if ((data.getType() & TB_METAL) != 0)
-			if (atk.getProc(P_CRIT)[0] > 0)
-				ans *= 0.01 * atk.getProc(P_CRIT)[0];
-			else if (atk.getProc(P_CRIT)[0] < 0)
-				ans = (int) Math.ceil(health * atk.getProc(P_CRIT)[0] / -100.0);
-			else
-				ans = ans > 0 ? 1 : 0;
-		else if (atk.getProc(P_CRIT)[0] > 0)
-			ans *= 0.01 * atk.getProc(P_CRIT)[0];
-		else if (atk.getProc(P_CRIT)[0] < 0)
-			ans = (int) Math.ceil(maxH * 0.0001);
+		ans = critCalc((data.getType() & TB_METAL) != 0, ans, atk);
 		return ans;
 	}
 

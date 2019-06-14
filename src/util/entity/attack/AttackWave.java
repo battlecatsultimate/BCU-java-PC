@@ -41,6 +41,7 @@ public class AttackWave extends AttackAb {
 
 	@Override
 	public void excuse() {
+		process();
 		for (AbEntity e : capt) {
 			if (e.isBase())
 				continue;

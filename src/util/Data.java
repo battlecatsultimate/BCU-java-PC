@@ -179,6 +179,13 @@ public class Data {
 	protected static final int P_STRONG = 9;
 	protected static final int P_LETHAL = 10;
 	protected static final int P_BURROW = 11;
+	/**
+	 * body proc: 0: add revive time for zombies, -1 to make it infinite, revivable
+	 * zombies only 1: revive time 2: revive health 3: point 1 4: point 2 5: type:
+	 * 0/1/2/3: duration: in range and normal/in range/ master lifetime/permanent
+	 * +4: make Z-kill unusable +8: revive non-zombie also +16: applicapable to
+	 * others
+	 */
 	protected static final int P_REVIVE = 12;
 
 	protected static final int P_IMUKB = 13;
@@ -211,7 +218,12 @@ public class Data {
 	protected static final int P_POISON = 26;
 	protected static final int P_BOSS = 27;
 
-	protected static final int PROC_TOT = 30;// 27
+	/**
+	 * body proc: 1: type: protect itself only (0) or effect the attack also (1)
+	 */
+	protected static final int P_CRITI = 28;
+
+	protected static final int PROC_TOT = 40;// 30
 	protected static final int PROC_WIDTH = 6;
 
 	protected static final int WT_WAVE = 1;
@@ -379,6 +391,7 @@ public class Data {
 	public static final int TCH_CORPSE = 8;
 	public static final int TCH_SOUL = 16;
 	public static final int TCH_EX = 32;
+	public static final int TCH_ZOMBX = 64;
 
 	// After this line all number is game data
 
