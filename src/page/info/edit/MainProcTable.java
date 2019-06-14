@@ -4,6 +4,7 @@ import static util.Interpret.SPROC;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.image.BufferedImage;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -24,11 +25,13 @@ class MainProcTable extends Page {
 	private static final int F_A = 0, F_P = 1, F_PC = 2, F_N = 3;
 	private static final int U_N = 0, U_T = 1, U_PC = 2;
 
-	private static final int[] INDS = { 9, 10, 11, 12 };
-	private static final int[][] LENS = { { F_PC, F_P }, { F_PC }, { F_P, F_N }, { F_N, F_P, F_PC, F_A, F_A, F_P } };
-	private static final int[][] UNIT = { { U_PC, U_PC }, { U_PC }, { U_N, U_N }, { U_N, U_T, U_PC, U_N, U_N, U_N } };
+	private static final int[] INDS = { 9, 10, 11, 12, 28 };
+	private static final int[][] LENS = { { F_PC, F_P }, { F_PC }, { F_P, F_N }, { F_N, F_P, F_PC, F_A, F_A, F_P },
+			{ F_P } };
+	private static final int[][] UNIT = { { U_PC, U_PC }, { U_PC }, { U_N, U_N }, { U_N, U_T, U_PC, U_N, U_N, U_N },
+			{ U_N } };
 	private static final String[][] STRS = { { "HP", "inc" }, { "prob" }, { "times", "dist" },
-			{ "times", "time", "HP", "p0", "p1", "type" } };
+			{ "times", "time", "HP", "p0", "p1", "type" }, { "type" } };
 
 	private final JL[] tits = new JL[INDS.length];
 	private final JL[][] jls = new JL[INDS.length][];
@@ -49,7 +52,7 @@ class MainProcTable extends Page {
 
 	@Override
 	protected void resized(int x, int y) {
-		setPreferredSize(size(x, y, 300, 550).toDimension());
+		setPreferredSize(size(x, y, 300, 850).toDimension());
 		int h = 0;
 		for (int i = 0; i < INDS.length; i++) {
 			set(tits[i], x, y, 0, h, 300, 50);
@@ -79,7 +82,9 @@ class MainProcTable extends Page {
 
 		for (int i = 0; i < INDS.length; i++) {
 			set(tits[i] = new JL(SPROC[INDS[i]]));
-			tits[i].setIcon(new ImageIcon(Res.getIcon(1, INDS[i])));
+			BufferedImage v = Res.getIcon(1, INDS[i]);
+			if (v != null)
+				tits[i].setIcon(new ImageIcon(v));
 			jls[i] = new JL[LENS[i].length];
 			jtfs[i] = new JTF[LENS[i].length];
 			for (int j = 0; j < LENS[i].length; j++) {
@@ -95,7 +100,7 @@ class MainProcTable extends Page {
 						+ "1: effective to others when in range and alive<br>"
 						+ "2: effective to everything once passed the range when alive<br>"
 						+ "3: effective to everything once passed the range</html>");
-
+		jtfs[4][0].setToolTipText("<html>1: immune to crit<br>2: crit blocker</html>");
 		setFocusTraversalPolicy(ljp);
 		setFocusCycleRoot(true);
 
