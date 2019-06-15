@@ -4,11 +4,19 @@ import util.Data;
 
 public interface MaskAtk {
 
+	public default int getAltAbi() {
+		return 0;
+	}
+
 	public default int getDire() {
 		return 1;
 	}
 
 	public int getLongPoint();
+
+	public default int getMove() {
+		return 0;
+	}
 
 	public int[] getProc(int ind);
 

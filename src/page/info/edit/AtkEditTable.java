@@ -28,6 +28,8 @@ class AtkEditTable extends Page {
 	private final JL ltp = new JL(1, "type");
 	private final JL ldr = new JL(1, "dire");
 	private final JL lct = new JL(1, "count");
+	private final JL lab = new JL(1, "ability");
+	private final JL lmv = new JL(1, "move");
 	private final JTF fatk = new JTF();
 	private final JTF fpre = new JTF();
 	private final JTF fp0 = new JTF();
@@ -35,6 +37,8 @@ class AtkEditTable extends Page {
 	private final JTF ftp = new JTF();
 	private final JTF fdr = new JTF();
 	private final JTF fct = new JTF();
+	private final JTF fab = new JTF();
+	private final JTF fmv = new JTF();
 	private final JTG isr = new JTG(1, "isr");
 
 	private final ListJtfPolicy ljp = new ListJtfPolicy();
@@ -70,6 +74,8 @@ class AtkEditTable extends Page {
 		set(ltp, x, y, 0, 200, 200, 50);
 		set(ldr, x, y, 0, 250, 200, 50);
 		set(lct, x, y, 0, 300, 200, 50);
+		set(lab, x, y, 0, 350, 200, 50);
+		set(lmv, x, y, 0, 400, 200, 50);
 		set(fatk, x, y, 200, 0, 200, 50);
 		set(fpre, x, y, 200, 50, 200, 50);
 		set(fp0, x, y, 200, 100, 200, 50);
@@ -77,7 +83,9 @@ class AtkEditTable extends Page {
 		set(ftp, x, y, 200, 200, 200, 50);
 		set(fdr, x, y, 200, 250, 200, 50);
 		set(fct, x, y, 200, 300, 200, 50);
-		set(isr, x, y, 200, 350, 200, 50);
+		set(fab, x, y, 200, 350, 200, 50);
+		set(fmv, x, y, 200, 400, 200, 50);
+		set(isr, x, y, 200, 450, 200, 50);
 		apt.setPreferredSize(size(x, y, 750, 2000).toDimension());
 		apt.resized(x, y);
 		set(jsp, x, y, 450, 0, 800, 950);
@@ -95,6 +103,20 @@ class AtkEditTable extends Page {
 		apt.setData(adm.ce.common ? adm.ce.rep.proc : adm.proc);
 		fdr.setText("" + adm.dire);
 		fct.setText("" + adm.count);
+		fmv.setText("" + adm.move);
+		int alt = adm.getAltAbi();
+		int i = 0;
+		String str = "{";
+		while (alt > 0) {
+			if ((alt & 1) == 1) {
+				if (str.length() > 1)
+					str += ",";
+				str += i;
+			}
+			alt >>= 1;
+			i++;
+		}
+		fab.setText(str + "}");
 		isr.setSelected(adm.range);
 	}
 
@@ -104,28 +126,35 @@ class AtkEditTable extends Page {
 		set(lp0);
 		set(lp1);
 		set(ltp);
+		set(ldr);
 		set(lct);
+		set(lab);
+		set(lmv);
 		set(fatk);
 		set(fpre);
 		set(fp0);
 		set(fp1);
 		set(ftp);
+		set(fdr);
 		set(fct);
+		set(fab);
+		set(fmv);
 		add(isr);
 		ftp.setToolTipText(
 				"<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
 						+ "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost</html>");
+		fdr.setToolTipText("direction, 1 means attack enemies, 0 means not an attack, -1 means assist allies");
+
 		fpre.setToolTipText(
 				"<html>use 0 for random attack attaching to previous one.<br>pre=0 for first attack will invalidate it</html>");
 		String ttt = "<html>enter ID of abilities separated by comma or space.<br>" + "it changes the ability state"
 				+ "(has to hot has, not has to has)<br>"
-				+ "it won't change back until you make another attack to change it ";
+				+ "it won't change back until you make another attack to change it<br>";
 
 		for (int i = 0; i < Interpret.SABIS.length; i++)
 			ttt += i + ": " + Interpret.SABIS[i] + "<br>";
-		fct.setToolTipText(ttt + "</html>");
-		set(ldr);
-		set(fdr);
+		fab.setToolTipText(ttt + "</html>");
+
 		add(jsp);
 
 		isr.setEnabled(editable);
@@ -138,6 +167,17 @@ class AtkEditTable extends Page {
 
 	private void input(JTF jtf, String text) {
 		if (text.length() > 0) {
+			if (jtf == fab) {
+				int[] ent = Reader.parseIntsN(text);
+				int ans = 0;
+				for (int i : ent)
+					if (i >= 0 && i < Interpret.ABIS.length)
+						if (ans == -1)
+							ans = 1 << i;
+						else
+							ans |= 1 << i;
+				adm.alt = ans;
+			}
 			int v = Reader.parseIntN(text);
 			if (jtf == fatk) {
 				v /= mul;
@@ -177,6 +217,8 @@ class AtkEditTable extends Page {
 					v = -1;
 				adm.count = v;
 			}
+			if (jtf == fmv)
+				adm.move = v;
 		}
 		callBack(null);
 	}

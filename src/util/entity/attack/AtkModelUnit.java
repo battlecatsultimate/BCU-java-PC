@@ -18,26 +18,6 @@ public class AtkModelUnit extends AtkModelEntity {
 	}
 
 	@Override
-	public AttackAb getAttack(int ind) {
-		if (act[ind] == 0)
-			return null;
-		act[ind]--;
-		int[][] proc = new int[PROC_TOT][PROC_WIDTH];
-		if (abis[ind] == 1) {
-			setProc(ind, proc);
-			proc[P_KB][0] = proc[P_KB][0] * (100 + bas.getInc(C_KB)) / 100;
-			extraAtk(ind);
-		}
-		int atk = atks[ind];
-		if (e.status[P_WEAK][1] != 0)
-			atk = atk * e.status[P_WEAK][1] / 100;
-		if (e.status[P_STRONG][0] != 0)
-			atk += atk * (e.status[P_STRONG][0] + bas.getInc(C_STRONG)) / 100;
-		double[] ints = inRange(ind);
-		return new AttackSimple(this, atk, e.type, getAbi(), proc, ints[0], ints[1], e.data.getAtkModel(ind));
-	}
-
-	@Override
 	public void summon(int[] proc, Entity ent, Object acs) {
 
 		Unit u = UnitStore.get(proc[1], true);
@@ -61,6 +41,22 @@ public class AtkModelUnit extends AtkModelEntity {
 			eu.setSummon(conf & 3);
 		}
 
+	}
+
+	@Override
+	protected int getAttack(int ind, int[][] proc) {
+
+		int atk = atks[ind];
+		if (abis[ind] == 1) {
+			proc[P_KB][0] = proc[P_KB][0] * (100 + bas.getInc(C_KB)) / 100;
+			setProc(ind, proc);
+		}
+
+		if (e.status[P_WEAK][1] != 0)
+			atk = atk * e.status[P_WEAK][1] / 100;
+		if (e.status[P_STRONG][0] != 0)
+			atk += atk * (e.status[P_STRONG][0] + bas.getInc(C_STRONG)) / 100;
+		return atk;
 	}
 
 	@Override

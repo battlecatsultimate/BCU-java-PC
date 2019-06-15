@@ -82,7 +82,16 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	}
 
 	/** generate attack entity */
-	public abstract AttackAb getAttack(int ind);
+	public final AttackAb getAttack(int ind) {
+		if (act[ind] == 0)
+			return null;
+		act[ind]--;
+		int[][] proc = new int[PROC_TOT][PROC_WIDTH];
+		extraAtk(ind);
+		int atk = getAttack(ind, proc);
+		double[] ints = inRange(ind);
+		return new AttackSimple(this, atk, e.type, getAbi(), proc, ints[0], ints[1], e.data.getAtkModel(ind));
+	}
 
 	@Override
 	public int getDire() {
@@ -130,11 +139,19 @@ public abstract class AtkModelEntity extends AtkModelAb {
 	}
 
 	protected void extraAtk(int ind) {
-		if (b.r.nextDouble() * 100 < getProc(ind, P_TIME, 0))
-			b.temp_s_stop = Math.max(b.temp_s_stop, getProc(ind, P_TIME, 1));
-		if (b.r.nextDouble() * 100 < getProc(ind, P_THEME, 0))
-			b.changeTheme(getProc(ind, P_THEME, 2), getProc(ind, P_THEME, 1));
+		if (data.getAtkModel(ind).getMove() != 0)
+			e.pos += data.getAtkModel(ind).getMove() * e.dire;
+		if (data.getAtkModel(ind).getAltAbi() != 0)
+			e.altAbi(data.getAtkModel(ind).getAltAbi());
+		if (abis[ind] == 1) {
+			if (b.r.nextDouble() * 100 < getProc(ind, P_TIME, 0))
+				b.temp_s_stop = Math.max(b.temp_s_stop, getProc(ind, P_TIME, 1));
+			if (b.r.nextDouble() * 100 < getProc(ind, P_THEME, 0))
+				b.changeTheme(getProc(ind, P_THEME, 2), getProc(ind, P_THEME, 1));
+		}
 	}
+
+	protected abstract int getAttack(int ind, int[][] proc);
 
 	@Override
 	protected int getLayer() {

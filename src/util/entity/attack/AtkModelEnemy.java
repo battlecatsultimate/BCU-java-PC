@@ -13,25 +13,6 @@ public class AtkModelEnemy extends AtkModelEntity {
 	}
 
 	@Override
-	public AttackAb getAttack(int ind) {
-		if (act[ind] == 0)
-			return null;
-		act[ind]--;
-		int[][] proc = new int[PROC_TOT][PROC_WIDTH];
-		if (abis[ind] == 1) {
-			extraAtk(ind);
-			setProc(ind, proc);
-		}
-		int atk = atks[ind];
-		if (e.status[P_WEAK][1] != 0)
-			atk = atk * e.status[P_WEAK][1] / 100;
-		if (e.status[P_STRONG][0] != 0)
-			atk += atk * e.status[P_STRONG][0] / 100;
-		double[] ints = inRange(ind);
-		return new AttackSimple(this, atk, e.type, getAbi(), proc, ints[0], ints[1], e.data.getAtkModel(ind));
-	}
-
-	@Override
 	public void summon(int[] proc, Entity ent, Object acs) {
 		AbEnemy ene = EnemyStore.getAbEnemy(proc[1], false);
 		int conf = proc[4];
@@ -62,6 +43,18 @@ public class AtkModelEnemy extends AtkModelEntity {
 			ee.setSummon(conf & 3);
 		}
 
+	}
+
+	@Override
+	protected int getAttack(int ind, int[][] proc) {
+		int atk = atks[ind];
+		if (abis[ind] == 1)
+			setProc(ind, proc);
+		if (e.status[P_WEAK][1] != 0)
+			atk = atk * e.status[P_WEAK][1] / 100;
+		if (e.status[P_STRONG][0] != 0)
+			atk += atk * e.status[P_STRONG][0] / 100;
+		return atk;
 	}
 
 	@Override

@@ -9,7 +9,7 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 
 	public final CustomEntity ce;
 	public String str = "";
-	public int atk, pre = 1, ld0, ld1, targ = TCH_N, count = -1, dire = 1;
+	public int atk, pre = 1, ld0, ld1, targ = TCH_N, count = -1, dire = 1, alt = 0, move = 0;
 	public boolean range = true;
 	public int[][] proc = new int[PROC_TOT][PROC_WIDTH];
 
@@ -29,6 +29,8 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		dire = adm.dire;
 		count = adm.count;
 		targ = adm.targ;
+		alt = adm.alt;
+		move = adm.move;
 		for (int i = 0; i < PROC_TOT; i++)
 			proc[i] = adm.proc[i].clone();
 	}
@@ -57,9 +59,12 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		ld1 = am.getLongPoint();
 		pre = dat[i][1];
 		atk = dat[i][0];
-
 		range = am.isRange();
-
+		dire = am.getDire();
+		count = am.loopCount();
+		targ = am.getTarget();
+		alt = am.getAltAbi();
+		move = am.getMove();
 	}
 
 	@Override
@@ -73,6 +78,11 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 	}
 
 	@Override
+	public int getAltAbi() {
+		return alt;
+	}
+
+	@Override
 	public int getDire() {
 		return dire;
 	}
@@ -80,6 +90,11 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 	@Override
 	public int getLongPoint() {
 		return isLD() ? ld1 : ce.range;
+	}
+
+	@Override
+	public int getMove() {
+		return move;
 	}
 
 	@Override
@@ -127,7 +142,7 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 	}
 
 	protected void write(OutStream os) {
-		os.writeString("0.4.3");
+		os.writeString("0.4.4");
 		os.writeString(str);
 		os.writeInt(atk);
 		os.writeInt(pre);
@@ -136,6 +151,8 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		os.writeInt(targ);
 		os.writeInt(count);
 		os.writeInt(dire);
+		os.writeInt(alt);
+		os.writeInt(move);
 		os.writeInt(range ? 1 : 0);
 		os.writeIntBB(proc);
 	}
@@ -172,7 +189,9 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		int val = getVer(ver);
 		if (val >= 307)
 			val = getVer(is.nextString());
-		if (val >= 403)
+		if (val >= 404)
+			zread$000404(is);
+		else if (val >= 403)
 			zread$000403(is);
 		else if (val >= 402)
 			zread$000402(is);
@@ -228,6 +247,26 @@ public class AtkDataModel extends Data implements MaskAtk, BasedCopable<AtkDataM
 		targ = is.nextInt();
 		count = is.nextInt();
 		dire = is.nextInt();
+		int bm = is.nextInt();
+		range = (bm & 1) > 0;
+		int[][] temp = is.nextIntsBB();
+		proc = new int[PROC_TOT][PROC_WIDTH];
+		for (int i = 0; i < temp.length; i++)
+			for (int j = 0; j < temp[i].length; j++)
+				proc[i][j] = temp[i][j];
+	}
+
+	private void zread$000404(InStream is) {
+		str = is.nextString();
+		atk = is.nextInt();
+		pre = is.nextInt();
+		ld0 = is.nextInt();
+		ld1 = is.nextInt();
+		targ = is.nextInt();
+		count = is.nextInt();
+		dire = is.nextInt();
+		alt = is.nextInt();
+		move = is.nextInt();
 		int bm = is.nextInt();
 		range = (bm & 1) > 0;
 		int[][] temp = is.nextIntsBB();

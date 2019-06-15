@@ -825,6 +825,8 @@ public abstract class Entity extends AbEntity {
 	/** weak proc processor */
 	private final WeakToken weaks = new WeakToken(this);
 
+	private int altAbi = 0;
+
 	protected Entity(StageBasis b, MaskEntity de, EAnimU ea, double d0, double d1) {
 		super(d1 < 0 ? b.st.health : (int) (de.getHp() * d1));
 		basis = b;
@@ -835,6 +837,11 @@ public abstract class Entity extends AbEntity {
 		barrier = de.getShield();
 		status[P_BURROW][0] = getProc(P_BURROW, 0);
 		status[P_REVIVE][0] = getProc(P_REVIVE, 0);
+	}
+
+	public void altAbi(int alt) {
+		altAbi ^= alt;
+
 	}
 
 	/** accept attack */
@@ -980,8 +987,8 @@ public abstract class Entity extends AbEntity {
 	@Override
 	public int getAbi() {
 		if (status[P_SEAL][0] > 0)
-			return data.getAbi() & (AB_ONLY | AB_METALIC | AB_GLASS);
-		return data.getAbi();
+			return (data.getAbi() ^ altAbi) & (AB_ONLY | AB_METALIC | AB_GLASS);
+		return data.getAbi() ^ altAbi;
 	}
 
 	/** get the currently attack, only used in display */

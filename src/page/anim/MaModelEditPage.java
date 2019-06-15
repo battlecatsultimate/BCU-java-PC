@@ -387,7 +387,8 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			int ind = rows[0];
 			if (ind >= mm.n)
 				ind = mm.n - 1;
-			mmet.setRowSelectionInterval(ind, ind);
+			if (ind >= 0)
+				mmet.setRowSelectionInterval(ind, ind);
 			setB(ind);
 		});
 	}
