@@ -24,7 +24,7 @@ import common.util.unit.DIYAnim;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import common.util.unit.UnitLevel;
-import io.Reader;
+import common.CommonStatic;
 import main.Opts;
 import page.JBTN;
 import page.JL;
@@ -248,7 +248,7 @@ public class UnitManagePage extends Page {
 			public void focusLost(FocusEvent fe) {
 				if (changing || uni == null)
 					return;
-				int lv = Reader.parseIntN(maxl.getText());
+				int lv = CommonStatic.parseIntN(maxl.getText());
 				if (lv > 0)
 					uni.max = lv;
 				maxl.setText("" + uni.max);
@@ -262,7 +262,7 @@ public class UnitManagePage extends Page {
 			public void focusLost(FocusEvent fe) {
 				if (changing || uni == null)
 					return;
-				int lv = Reader.parseIntN(maxp.getText());
+				int lv = CommonStatic.parseIntN(maxp.getText());
 				if (lv >= 0)
 					uni.maxp = lv;
 				maxp.setText("" + uni.maxp);
@@ -419,7 +419,7 @@ public class UnitManagePage extends Page {
 
 			@Override
 			public void focusLost(FocusEvent fe) {
-				int[] lvs = Reader.parseIntsN(jtfl.getText());
+				int[] lvs = CommonStatic.parseIntsN(jtfl.getText());
 				for (int i = 0; i < lvs.length; i++)
 					if (lvs[i] > 0 && (i == 0 || lvs[i] >= ul.lvs[i - 1]))
 						ul.lvs[i] = lvs[i];

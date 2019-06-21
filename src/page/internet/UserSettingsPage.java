@@ -2,6 +2,7 @@ package page.internet;
 
 import java.util.Random;
 
+import common.CommonStatic.Account;
 import io.BCJSON;
 import main.Opts;
 import page.JBTN;
@@ -42,7 +43,7 @@ public class UserSettingsPage extends Page {
 			String str = fps.getText();
 			long pass = new Random(str.hashCode()).nextLong();
 			if (BCJSON.changePassword(pass)) {
-				BCJSON.PASSWORD = pass;
+				Account.PASSWORD = pass;
 				Opts.success("password reset success");
 			} else {
 				fps.setText("");

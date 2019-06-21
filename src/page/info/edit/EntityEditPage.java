@@ -32,7 +32,7 @@ import common.util.unit.DIYAnim;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
-import io.Reader;
+import common.CommonStatic;
 import main.Opts;
 import page.JBTN;
 import page.JL;
@@ -526,7 +526,7 @@ public abstract class EntityEditPage extends Page {
 			return;
 		}
 		if (text.length() > 0) {
-			int v = Reader.parseIntN(text);
+			int v = CommonStatic.parseIntN(text);
 			if (jtf == fhp) {
 				v /= getDef();
 				if (v <= 0)

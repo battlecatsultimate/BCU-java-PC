@@ -11,7 +11,7 @@ import javax.swing.SwingConstants;
 
 import common.util.Data;
 import common.util.Interpret;
-import io.Reader;
+import common.CommonStatic;
 import page.JL;
 import page.JTF;
 import page.Page;
@@ -147,7 +147,7 @@ class AtkProcTable extends Page {
 
 	private void input(JTF jtf, String input) {
 		if (input.length() > 0) {
-			int val = Reader.parseIntN(input);
+			int val = CommonStatic.parseIntN(input);
 			for (int i = 0; i < LEN; i++)
 				for (int j = 0; j < STRS[i].length; j++)
 					if (jtf == jtfs[i][j]) {

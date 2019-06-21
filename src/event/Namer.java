@@ -37,7 +37,7 @@ public strictfp class Namer {
 
 	public static String get(String key) {
 		try {
-			return LRES[CommonStatic.lang].getString(key);
+			return LRES[CommonStatic.Lang.lang].getString(key);
 		} catch (MissingResourceException e) {
 			return "!" + key + "!";
 		}
@@ -48,7 +48,7 @@ public strictfp class Namer {
 			if (id / 1000 == 1)
 				return MapColc.getMap(id).toString();
 			else
-				return ERES[CommonStatic.lang].getString("" + id);
+				return ERES[CommonStatic.Lang.lang].getString("" + id);
 		} catch (MissingResourceException e) {
 			if (!EMAP.containsKey(id))
 				if (id / 1000 == 2)
@@ -65,7 +65,7 @@ public strictfp class Namer {
 
 	public static String getEG(String name) {
 		try {
-			return GRES[CommonStatic.lang].getString(name);
+			return GRES[CommonStatic.Lang.lang].getString(name);
 		} catch (MissingResourceException e) {
 			return "!" + name + "!";
 		}
@@ -77,7 +77,7 @@ public strictfp class Namer {
 			if (id / 1000 == 1)
 				return MapColc.getMap(id).toString();
 			else if (id / 1000 != 0 && id / 1000 != 3)
-				return ERES[CommonStatic.lang].getString("" + id);
+				return ERES[CommonStatic.Lang.lang].getString("" + id);
 			return "";
 		} catch (MissingResourceException e) {
 			if (!EMAP.containsKey(id))
@@ -104,7 +104,7 @@ public strictfp class Namer {
 
 	public static String getI(int id) {
 		try {
-			return IRES[CommonStatic.lang].getString("" + id);
+			return IRES[CommonStatic.Lang.lang].getString("" + id);
 		} catch (MissingResourceException e) {
 			if (IMAP.containsKey(id))
 				return IMAP.get(id);

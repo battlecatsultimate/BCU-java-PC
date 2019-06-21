@@ -11,7 +11,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-import io.Reader;
+import common.CommonStatic;
 import page.JL;
 import page.JTF;
 import page.Page;
@@ -108,7 +108,7 @@ class MainProcTable extends Page {
 
 	private void input(JTF jtf, String input) {
 		if (input.length() > 0) {
-			int val = Reader.parseIntN(input);
+			int val = CommonStatic.parseIntN(input);
 			for (int i = 0; i < INDS.length; i++)
 				for (int j = 0; j < LENS[i].length; j++)
 					if (jtf == jtfs[i][j]) {

@@ -5,14 +5,24 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Queue;
+import java.util.function.Function;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 import common.CommonStatic.Itf;
+import common.io.InStream;
+import common.io.OutStream;
 import common.util.Res;
 import common.util.pack.Background;
 import common.util.system.VImg;
+import common.util.system.files.FileData;
+import common.util.system.files.VFile;
+import io.BCMusic;
+import io.Reader;
+import io.Writer;
+import main.Opts;
 import page.LoadPage;
 import page.MainLocale;
 import page.Page;
@@ -20,7 +30,23 @@ import utilpc.awt.FG2D;
 
 public class UtilPC {
 
-	public static class PCItr extends Itf {
+	public static class PCItr implements Itf {
+
+		@Override
+		public void check(File f) {
+			Writer.check(f);
+		}
+
+		@Override
+		public void delete(File file) {
+			Writer.delete(file);
+		}
+
+		@Override
+		public void exit(boolean save) {
+			Writer.logClose(save);
+			System.exit(0);
+		}
 
 		@Override
 		public String get(int i, String s) {
@@ -44,6 +70,11 @@ public class UtilPC {
 		}
 
 		@Override
+		public InStream readBytes(File fi) {
+			return Reader.readBytes(fi);
+		}
+
+		@Override
 		public VImg readReal(File fi) {
 			try {
 				return new VImg(ImageIO.read(fi));
@@ -51,6 +82,21 @@ public class UtilPC {
 				e.printStackTrace();
 				return null;
 			}
+		}
+
+		@Override
+		public <T> T readSave(String path, Function<Queue<String>, T> func) {
+			return UtilPC.readSave(path, func);
+		}
+
+		@Override
+		public void setSE(int ind) {
+			BCMusic.setSE(ind);
+		}
+
+		@Override
+		public boolean writeBytes(OutStream os, String path) {
+			return Writer.writeBytes(os, path);
 		}
 
 	}
@@ -89,6 +135,41 @@ public class UtilPC {
 		if (v.bimg == null || v.bimg.bimg() == null)
 			return null;
 		return new ImageIcon((Image) v.bimg.bimg());
+	}
+
+	public static <T> T readSave(String path, Function<Queue<String>, T> func) {
+		VFile<? extends FileData> f = VFile.getFile(path);
+		VFile<BackupData> b = Reader.alt == null ? null : Reader.alt.find(path);
+		int ind = 0;
+		while (true) {
+			if (f != null && f.getData() != null) {
+				T ic = null;
+				Queue<String> qs = f.getData().readLine();
+				if (qs != null)
+					try {
+						ic = func.apply(qs);
+					} catch (Exception e) {
+						e.printStackTrace();
+						ic = null;
+					}
+				if (ic != null)
+					return ic;
+			}
+			if (b == null)
+				break;
+			if (b.list() == null)
+				if (b != f)
+					f = b;
+				else
+					break;
+			else if (ind < b.list().size())
+				f = b.list().get(ind++);
+			else
+				break;
+		}
+		if (f != null)
+			Opts.animErr(path);
+		return func.apply(null);
 	}
 
 }

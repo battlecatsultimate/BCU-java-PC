@@ -22,7 +22,7 @@ import common.util.pack.Background;
 import common.util.pack.Pack;
 import common.util.system.VImg;
 import common.util.system.fake.FakeImage;
-import io.Reader;
+import common.CommonStatic;
 import io.Writer;
 import page.JBTN;
 import page.JTF;
@@ -188,7 +188,7 @@ public class BGEditPage extends Page {
 
 				@Override
 				public void focusLost(FocusEvent arg0) {
-					int[] inp = Reader.parseIntsN(cs[I].getText());
+					int[] inp = CommonStatic.parseIntsN(cs[I].getText());
 					if (inp.length == 3)
 						bgr.cs[I] = new int[] { inp[0] & 255, inp[1] & 255, inp[2] & 255 };
 					setCSText(I);

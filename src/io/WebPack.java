@@ -21,6 +21,7 @@ import javax.swing.JLabel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import common.CommonStatic;
 import common.util.Data;
 import common.util.pack.Pack;
 
@@ -327,7 +328,7 @@ public class WebPack {
 		thumbs = new ArrayList<WebImg>();
 		for (String str : strs)
 			if (str.length() == 7 && str.endsWith(".png")) {
-				if (Reader.parseIntN(str) < 0)
+				if (CommonStatic.parseIntN(str) < 0)
 					continue;
 				thumbs.add(new WebImg(pid + "/img/" + str));
 			}

@@ -10,7 +10,7 @@ import javax.swing.SwingConstants;
 
 import common.util.Interpret;
 import common.util.entity.data.AtkDataModel;
-import io.Reader;
+import common.CommonStatic;
 import page.JL;
 import page.JTF;
 import page.JTG;
@@ -168,7 +168,7 @@ class AtkEditTable extends Page {
 	private void input(JTF jtf, String text) {
 		if (text.length() > 0) {
 			if (jtf == fab) {
-				int[] ent = Reader.parseIntsN(text);
+				int[] ent = CommonStatic.parseIntsN(text);
 				int ans = 0;
 				for (int i : ent)
 					if (i >= 0 && i < Interpret.ABIS.length)
@@ -178,7 +178,7 @@ class AtkEditTable extends Page {
 							ans |= 1 << i;
 				adm.alt = ans;
 			}
-			int v = Reader.parseIntN(text);
+			int v = CommonStatic.parseIntN(text);
 			if (jtf == fatk) {
 				v /= mul;
 				adm.atk = v;

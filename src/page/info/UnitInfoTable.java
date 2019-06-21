@@ -14,7 +14,7 @@ import common.util.basis.BasisSet;
 import common.util.entity.data.MaskUnit;
 import common.util.unit.EForm;
 import common.util.unit.Form;
-import io.Reader;
+import common.CommonStatic;
 import page.JL;
 import page.JTF;
 import page.Page;
@@ -117,7 +117,7 @@ public class UnitInfoTable extends Page {
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				multi = f.regulateLv(Reader.parseIntsN(jtf.getText()), multi);
+				multi = f.regulateLv(CommonStatic.parseIntsN(jtf.getText()), multi);
 				String[] strs = f.lvText(multi);
 				jtf.setText(strs[0]);
 				if (pcoin != null)

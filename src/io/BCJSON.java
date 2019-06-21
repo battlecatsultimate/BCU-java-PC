@@ -21,6 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import common.CommonStatic;
+import common.CommonStatic.Account;
 import common.util.Data;
 import common.util.pack.Pack;
 import decode.ZipLib;
@@ -30,8 +31,6 @@ import page.LoadPage;
 
 public class BCJSON extends WebFileIO {
 
-	public static String USERNAME = "";
-	public static long PASSWORD = 0;
 	public static int ID = 0;
 	public static int cal_ver = 0;
 
@@ -51,7 +50,7 @@ public class BCJSON extends WebFileIO {
 		cals[4] = cal + "group hour.txt";
 
 		for (int i = 0; i < 4; i++) {
-			String lang = "lang/" + CommonStatic.LOC_CODE[i] + "/";
+			String lang = "lang/" + CommonStatic.Lang.LOC_CODE[i] + "/";
 			cals[i * 7 + 5] = lang + "util.properties";
 			cals[i * 7 + 6] = lang + "page.properties";
 			cals[i * 7 + 7] = lang + "info.properties";
@@ -67,7 +66,7 @@ public class BCJSON extends WebFileIO {
 	public static boolean changePassword(long pass) {
 		JSONObject inp = new JSONObject();
 		inp.put("uid", ID);
-		inp.put("password", PASSWORD);
+		inp.put("password", Account.PASSWORD);
 		inp.put("newpass", pass);
 		try {
 			JSONObject ans = read(inp.toString(), "changePassword.php");
@@ -150,7 +149,7 @@ public class BCJSON extends WebFileIO {
 	public static boolean delete(int pid) {
 		JSONObject inp = new JSONObject();
 		inp.put("uid", ID);
-		inp.put("password", PASSWORD);
+		inp.put("password", Account.PASSWORD);
 		inp.put("pid", pid);
 		try {
 			JSONObject ans = read(inp.toString(), "delete.php");
@@ -169,9 +168,9 @@ public class BCJSON extends WebFileIO {
 	public static int getID(String str) throws IOException {
 		JSONObject inp = new JSONObject();
 		inp.put("name", str);
-		if (PASSWORD == 0)
-			PASSWORD = new Random().nextLong();
-		inp.put("password", PASSWORD);
+		if (Account.PASSWORD == 0)
+			Account.PASSWORD = new Random().nextLong();
+		inp.put("password", Account.PASSWORD);
 		inp.put("bcuver", MainBCU.ver);
 		JSONObject ans = read(inp.toString(), "login.php");
 		int ret = ans.getInt("ret");
@@ -208,7 +207,7 @@ public class BCJSON extends WebFileIO {
 		JSONObject ans = read(inp.toString(), "acquire.php");
 		int ret = ans.getInt("ret");
 		if (ret == 0) {
-			PASSWORD = ans.getLong("password");
+			Account.PASSWORD = ans.getLong("password");
 			return ans.getInt("id");
 		}
 		if (ret == 1)
@@ -233,7 +232,7 @@ public class BCJSON extends WebFileIO {
 	public static int initUpload(int pid, String name, String desc) {
 		JSONObject inp = new JSONObject();
 		inp.put("uid", ID);
-		inp.put("password", PASSWORD);
+		inp.put("password", Account.PASSWORD);
 		inp.put("pid", pid);
 		inp.put("name", process(name));
 		inp.put("desc", process(desc));
@@ -244,7 +243,7 @@ public class BCJSON extends WebFileIO {
 			int ret = ans.getInt("ret");
 			if (ret == 0) {
 				WebPack wp = new WebPack(pid);
-				wp.author = USERNAME;
+				wp.author = Account.USERNAME;
 				wp.desp = desc;
 				wp.name = name;
 				wp.uid = ID;
@@ -262,7 +261,7 @@ public class BCJSON extends WebFileIO {
 	public static int[][] rate(int pid, int val) {
 		JSONObject inp = new JSONObject();
 		inp.put("uid", ID);
-		inp.put("password", PASSWORD);
+		inp.put("password", Account.PASSWORD);
 		inp.put("pid", pid);
 		inp.put("rate", val + 1);
 
@@ -312,7 +311,7 @@ public class BCJSON extends WebFileIO {
 				if (b) {
 					JSONObject inp = new JSONObject();
 					inp.put("uid", ID);
-					inp.put("password", PASSWORD);
+					inp.put("password", Account.PASSWORD);
 					inp.put("pid", pid);
 					inp.put("rev", 1);
 					inp.put("bcuver", MainBCU.ver);
@@ -332,7 +331,7 @@ public class BCJSON extends WebFileIO {
 	public static boolean update(int pid, String name, String desc) {
 		JSONObject inp = new JSONObject();
 		inp.put("uid", ID);
-		inp.put("password", PASSWORD);
+		inp.put("password", Account.PASSWORD);
 		inp.put("pid", pid);
 		inp.put("name", process(name));
 		inp.put("desc", process(desc));

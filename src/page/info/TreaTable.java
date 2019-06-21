@@ -22,7 +22,7 @@ import javax.swing.JLabel;
 
 import common.util.basis.BasisSet;
 import common.util.system.Node;
-import io.Reader;
+import common.CommonStatic;
 import page.JTF;
 import page.JTG;
 import page.Page;
@@ -151,7 +151,7 @@ public class TreaTable extends Page {
 					@Override
 					public void focusLost(FocusEvent e) {
 						int ans = getComp(J, b.t());
-						int val = Math.abs(Reader.parseIntN(jcf[J].getText()));
+						int val = Math.abs(CommonStatic.parseIntN(jcf[J].getText()));
 						setComp(J, val == -1 ? ans : val, b);
 						reset();
 						getFront().callBack(null);
@@ -184,7 +184,7 @@ public class TreaTable extends Page {
 				@Override
 				public void focusLost(FocusEvent e) {
 					int ans = getValue(ind, b.t());
-					int val = Math.abs(Reader.parseIntN(jtf[I].getText()));
+					int val = Math.abs(CommonStatic.parseIntN(jtf[I].getText()));
 					setValue(ind, val == -1 ? ans : val, b);
 					reset();
 					getFront().callBack(null);

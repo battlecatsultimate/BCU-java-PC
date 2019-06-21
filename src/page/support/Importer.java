@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import io.Reader;
+import common.CommonStatic;
 
 public class Importer extends JFileChooser {
 
@@ -21,7 +21,7 @@ public class Importer extends JFileChooser {
 	public static final File[] curs = new File[2];
 
 	public static void read(Queue<String> qs) {
-		int n = Reader.parseIntN(qs.poll());
+		int n = CommonStatic.parseIntN(qs.poll());
 		for (int i = 0; i < n; i++) {
 			String str = qs.poll().trim();
 			if (str.length() > 0)

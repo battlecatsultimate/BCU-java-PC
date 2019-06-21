@@ -24,6 +24,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.CommonStatic;
 import common.util.anim.AnimC;
 import common.util.anim.EPart;
 import common.util.anim.ImgCut;
@@ -31,7 +32,6 @@ import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
 import common.util.anim.Part;
 import common.util.unit.DIYAnim;
-import io.Reader;
 import main.Opts;
 import page.JBTN;
 import page.JTF;
@@ -392,7 +392,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				double d = Reader.parseIntN(tmul.getText()) * 0.01;
+				double d = CommonStatic.parseIntN(tmul.getText()) * 0.01;
 				if (!Opts.conf("times animation length by " + d))
 					return;
 				for (Part p : maet.ma.parts) {

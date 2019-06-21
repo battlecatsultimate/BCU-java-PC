@@ -20,6 +20,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
 
+import common.CommonStatic;
 import common.util.anim.AnimC;
 import common.util.anim.EAnimS;
 import common.util.anim.ImgCut;
@@ -27,7 +28,6 @@ import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
 import common.util.anim.Part;
 import common.util.unit.DIYAnim;
-import io.Reader;
 import page.JBTN;
 import page.Page;
 import page.support.AnimLCR;
@@ -263,7 +263,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 				if (o == null)
 					return;
 				String str = o.toString();
-				int ind = Reader.parseIntN(str.split(" - ")[0]);
+				int ind = CommonStatic.parseIntN(str.split(" - ")[0]);
 				if (ind == -1)
 					return;
 				setB(ind);

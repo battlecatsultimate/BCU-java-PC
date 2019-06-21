@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.Queue;
 
 import common.CommonStatic;
+import common.CommonStatic.Account;
+import common.io.DataIO;
+import common.io.InStream;
 import common.util.ImgCore;
 import common.util.Res;
 import common.util.basis.BasisSet;
@@ -29,7 +32,6 @@ import common.util.stage.Recd;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
 import common.util.system.MultiLangCont;
-import common.util.system.files.BackupData;
 import common.util.system.files.VFileRoot;
 import common.util.unit.DIYAnim;
 import common.util.unit.Enemy;
@@ -46,6 +48,7 @@ import page.MainLocale;
 import page.support.Exporter;
 import page.support.Importer;
 import page.view.ViewBox;
+import utilpc.BackupData;
 
 public class Reader extends DataIO {
 
@@ -93,78 +96,6 @@ public class Reader extends DataIO {
 			Opts.loadErr("error in reading: reading custom data");
 			System.exit(0);
 		}
-	}
-
-	public static int parseIntN(String str) {
-		int ans;
-		try {
-			ans = parseIntsN(str)[0];
-		} catch (Exception e) {
-			ans = -1;
-		}
-		return ans;
-	}
-
-	public static int[] parseIntsN(String str) {
-		ArrayList<String> lstr = new ArrayList<>();
-		int t = -1;
-		for (int i = 0; i < str.length(); i++)
-			if (t == -1) {
-				if (isDigit(str.charAt(i)) || str.charAt(i) == '-' || str.charAt(i) == '+')
-					t = i;
-			} else if (!isDigit(str.charAt(i))) {
-				lstr.add(str.substring(t, i));
-				t = -1;
-			}
-		if (t != -1)
-			lstr.add(str.substring(t));
-		int ind = 0;
-		while (ind < lstr.size()) {
-			if (isDigit(lstr.get(ind).charAt(0)) || lstr.get(ind).length() > 1)
-				ind++;
-			else
-				lstr.remove(ind);
-		}
-		int[] ans = new int[lstr.size()];
-		for (int i = 0; i < lstr.size(); i++)
-			ans[i] = Integer.parseInt(lstr.get(i));
-		return ans;
-	}
-
-	public static long parseLongN(String str) {
-		long ans;
-		try {
-			ans = parseLongsN(str)[0];
-		} catch (Exception e) {
-			ans = -1;
-		}
-		return ans;
-	}
-
-	public static long[] parseLongsN(String str) {
-		ArrayList<String> lstr = new ArrayList<>();
-		int t = -1;
-		for (int i = 0; i < str.length(); i++)
-			if (t == -1) {
-				if (isDigit(str.charAt(i)) || str.charAt(i) == '-' || str.charAt(i) == '+')
-					t = i;
-			} else if (!isDigit(str.charAt(i))) {
-				lstr.add(str.substring(t, i));
-				t = -1;
-			}
-		if (t != -1)
-			lstr.add(str.substring(t));
-		int ind = 0;
-		while (ind < lstr.size()) {
-			if (isDigit(lstr.get(ind).charAt(0)) || lstr.get(ind).length() > 1)
-				ind++;
-			else
-				lstr.remove(ind);
-		}
-		long[] ans = new long[lstr.size()];
-		for (int i = 0; i < lstr.size(); i++)
-			ans[i] = Long.parseLong(lstr.get(i));
-		return ans;
 	}
 
 	public static InStream readBytes(File file) {
@@ -215,7 +146,7 @@ public class Reader extends DataIO {
 								if (idstr.length() == 0 || name.length() == 0)
 									continue;
 								String[] ids = idstr.split("-");
-								int id0 = Reader.parseIntN(ids[0]);
+								int id0 = CommonStatic.parseIntN(ids[0]);
 								MapColc mc = MapColc.MAPS.get(id0);
 								if (mc == null)
 									continue;
@@ -223,7 +154,7 @@ public class Reader extends DataIO {
 									MultiLangCont.MCNAME.put(ni, mc, name);
 									continue;
 								}
-								int id1 = Reader.parseIntN(ids[1]);
+								int id1 = CommonStatic.parseIntN(ids[1]);
 								if (id1 >= mc.maps.length || id1 < 0)
 									continue;
 								StageMap sm = mc.maps[id1];
@@ -233,7 +164,7 @@ public class Reader extends DataIO {
 									MultiLangCont.SMNAME.put(ni, sm, name);
 									continue;
 								}
-								int id2 = Reader.parseIntN(ids[2]);
+								int id2 = CommonStatic.parseIntN(ids[2]);
 								if (id2 >= sm.list.size() || id2 < 0)
 									continue;
 								Stage st = sm.list.get(id2);
@@ -245,7 +176,7 @@ public class Reader extends DataIO {
 						Queue<String> qs = readLines(fl);
 						for (String str : qs) {
 							String[] strs = str.trim().split("\t");
-							Unit u = Pack.def.us.ulist.get(Reader.parseIntN(strs[0]));
+							Unit u = Pack.def.us.ulist.get(CommonStatic.parseIntN(strs[0]));
 							if (u == null)
 								continue;
 							for (int i = 0; i < Math.min(u.forms.length, strs.length - 1); i++)
@@ -257,7 +188,7 @@ public class Reader extends DataIO {
 						Queue<String> qs = readLines(fl);
 						for (String str : qs) {
 							String[] strs = str.trim().split("\t");
-							Enemy e = Pack.def.es.get(Reader.parseIntN(strs[0]));
+							Enemy e = Pack.def.es.get(CommonStatic.parseIntN(strs[0]));
 							if (e == null || strs.length < 2)
 								continue;
 							MultiLangCont.ENAME.put(ni, e, strs[1].trim());
@@ -433,7 +364,7 @@ public class Reader extends DataIO {
 			if (f.exists()) {
 				try {
 					Queue<String> qs = readLines(f);
-					CommonStatic.lang = parseInt(qs.poll());
+					CommonStatic.Lang.lang = parseInt(qs.poll());
 					int[] r = parseInts(4, qs.poll());
 					MainFrame.crect = new Rectangle(r[0], r[1], r[2], r[3]);
 					MainBCU.preload = parseInt(qs.poll()) == 1;
@@ -445,11 +376,11 @@ public class Reader extends DataIO {
 					ImgCore.fullOpa = parseInt(qs.poll());
 					MainBCU.FILTER_TYPE = parseInt(qs.poll());
 					EventReader.loc = parseInt(qs.poll());
-					BCJSON.USERNAME = qs.poll().trim();
-					BCJSON.PASSWORD = Long.parseLong(qs.poll());
+					Account.USERNAME = qs.poll().trim();
+					Account.PASSWORD = Long.parseLong(qs.poll());
 					qs.poll();// place holder
 					BCJSON.cal_ver = parseInt(qs.poll());
-					int[] ints = parseIntsN(qs.poll());
+					int[] ints = CommonStatic.parseIntsN(qs.poll());
 					BCMusic.play = ints[0] == 1;
 					if (ints.length == 3) {
 						BCMusic.VOL_BG = ints[1];

@@ -22,6 +22,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.CommonStatic;
 import common.util.Interpret;
 import common.util.basis.BasisLU;
 import common.util.basis.BasisSet;
@@ -31,7 +32,6 @@ import common.util.pack.NyCastle;
 import common.util.system.Node;
 import common.util.unit.Form;
 import common.util.unit.Unit;
-import io.Reader;
 import page.JBTN;
 import page.JTF;
 import page.Page;
@@ -222,7 +222,7 @@ public class BasisPage extends LubCont {
 		lvjtf.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
-				int[] lv = Reader.parseIntsN(lvjtf.getText());
+				int[] lv = CommonStatic.parseIntsN(lvjtf.getText());
 				lub.setLv(lv);
 				if (lub.sf != null)
 					setLvs(lub.sf);

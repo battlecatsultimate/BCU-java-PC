@@ -21,7 +21,7 @@ import common.util.stage.LvRestrict;
 import common.util.system.FixIndexList;
 import common.util.unit.Form;
 import common.util.unit.Unit;
-import io.Reader;
+import common.CommonStatic;
 import page.JBTN;
 import page.JTF;
 import page.Page;
@@ -395,7 +395,7 @@ public class CGLREditPage extends Page {
 
 			@Override
 			public void focusLost(FocusEvent fe) {
-				int[] inp = Reader.parseIntsN(jtf.getText());
+				int[] inp = CommonStatic.parseIntsN(jtf.getText());
 				for (int i = 0; i < inp.length; i++)
 					if (inp[i] < 0)
 						inp[i] = 0;

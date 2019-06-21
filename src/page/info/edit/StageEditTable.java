@@ -30,7 +30,7 @@ import common.util.unit.AbEnemy;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
 import common.util.unit.EnemyStore;
-import io.Reader;
+import common.CommonStatic;
 import page.MainFrame;
 import page.Page;
 import page.info.EnemyInfoPage;
@@ -142,7 +142,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 			return;
 		c = lnk[c];
 		if (c > 3) {
-			int[] is = Reader.parseIntsN((String) arg0);
+			int[] is = CommonStatic.parseIntsN((String) arg0);
 			if (is.length == 0)
 				return;
 			if (is.length == 1)
@@ -154,7 +154,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 			set(r, c, i > 0 ? 1 : 0, 0);
 
 		} else {
-			int i = arg0 instanceof Integer ? (Integer) arg0 : Reader.parseIntN((String) arg0);
+			int i = arg0 instanceof Integer ? (Integer) arg0 : CommonStatic.parseIntN((String) arg0);
 			set(r, c, i, 0);
 		}
 	}

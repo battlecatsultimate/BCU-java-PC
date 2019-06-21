@@ -11,7 +11,7 @@ import common.util.stage.SCDef;
 import common.util.stage.SCGroup;
 import common.util.stage.Stage;
 import common.util.unit.AbEnemy;
-import io.Reader;
+import common.CommonStatic;
 import page.JBTN;
 import page.JTF;
 import page.Page;
@@ -96,7 +96,7 @@ public class AdvStEditPage extends Page {
 		});
 
 		smax.setLnr(e -> {
-			int val = Reader.parseIntN(smax.getText());
+			int val = CommonStatic.parseIntN(smax.getText());
 			SCGroup scg = jls.getSelectedValue();
 			if (val > 0)
 				scg.max = val;
@@ -104,7 +104,7 @@ public class AdvStEditPage extends Page {
 		});
 
 		sdef.setLnr(e -> {
-			int i = Reader.parseIntN(sdef.getText());
+			int i = CommonStatic.parseIntN(sdef.getText());
 			if (i >= 0)
 				data.sdef = i;
 			setList();

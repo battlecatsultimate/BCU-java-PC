@@ -5,10 +5,10 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 
+import common.CommonStatic;
 import common.util.basis.BasisSet;
 import common.util.stage.MapColc;
 import common.util.stage.Recd;
-import io.Reader;
 import main.Opts;
 import page.JBTN;
 import page.JTF;
@@ -148,7 +148,7 @@ public abstract class AbRecdPage extends Page {
 			Recd r = getSelection();
 			if (r == null)
 				return;
-			r.seed = Reader.parseLongN(seed.getText());
+			r.seed = CommonStatic.parseLongN(seed.getText());
 			r.marked = true;
 			setRecd(r);
 		});

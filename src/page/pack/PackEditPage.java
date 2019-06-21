@@ -15,13 +15,13 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.CommonStatic.Account;
 import common.util.entity.data.CustomEnemy;
 import common.util.pack.Pack;
 import common.util.stage.MapColc;
 import common.util.stage.StageMap;
 import common.util.unit.DIYAnim;
 import common.util.unit.Enemy;
-import io.BCJSON;
 import io.Writer;
 import main.MainBCU;
 import main.Opts;
@@ -659,7 +659,7 @@ public class PackEditPage extends Page {
 		vbgr.setEnabled(pac != null);
 		vene.setEnabled(pac != null);
 		vmsc.setEnabled(pac != null);
-		boolean canUnpack = pac != null && pac != Pack.def && !pac.editable && pac.author.equals(BCJSON.USERNAME);
+		boolean canUnpack = pac != null && pac != Pack.def && !pac.editable && pac.author.equals(Account.USERNAME);
 		unpk.setEnabled(canUnpack);
 		if (b)
 			jtfp.setText(pack.name);

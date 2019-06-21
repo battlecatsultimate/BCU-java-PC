@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.swing.JLabel;
 
+import common.CommonStatic.Account;
 import common.util.pack.Pack;
 import common.util.stage.MapColc;
 import io.BCJSON;
@@ -315,9 +316,9 @@ public class MainPage extends Page {
 					changePanel(new WebMainPage(getThis()));
 					return;
 				}
-				if (BCJSON.USERNAME.length() > 0 && BCJSON.PASSWORD != 0) {
+				if (Account.USERNAME.length() > 0 && Account.PASSWORD != 0) {
 					try {
-						int id = BCJSON.getID(BCJSON.USERNAME);
+						int id = BCJSON.getID(Account.USERNAME);
 						if (id > 0) {
 							BCJSON.ID = id;
 							changePanel(new WebMainPage(getThis()));

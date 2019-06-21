@@ -11,7 +11,7 @@ import javax.swing.SwingConstants;
 import common.util.Interpret;
 import common.util.basis.BasisSet;
 import common.util.unit.Enemy;
-import io.Reader;
+import common.CommonStatic;
 import page.JL;
 import page.JTF;
 import page.Page;
@@ -88,7 +88,7 @@ public class EnemyInfoTable extends Page {
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				int val = Reader.parseIntN(jtf.getText());
+				int val = CommonStatic.parseIntN(jtf.getText());
 				if (val != -1)
 					multi = val;
 				jtf.setText(multi + "%");

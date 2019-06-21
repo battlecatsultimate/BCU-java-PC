@@ -23,7 +23,7 @@ import page.info.filter.EnemyListTable;
 import page.info.filter.UnitListTable;
 import page.pack.EREditPage;
 
-public strictfp class MainLocale extends CommonStatic {
+public strictfp class MainLocale extends CommonStatic.Lang {
 
 	public static final Map<String, MainLocale> NAMP = new TreeMap<>();
 	public static final Map<String, TTT> TMAP = new TreeMap<>();
@@ -58,9 +58,9 @@ public strictfp class MainLocale extends CommonStatic {
 	public static String getLoc(int loc, String key) {
 		if (loc >= 0 && loc < 4) {
 			String loci = RENN[loc] + "_";
-			String locl = loci + LOC_CODE[CommonStatic.lang];
+			String locl = loci + LOC_CODE[lang];
 			if (NAMP.containsKey(locl) && NAMP.get(locl).contains(key)) {
-				String str = NAMP.get(loci + LOC_CODE[CommonStatic.lang]).get(key);
+				String str = NAMP.get(loci + LOC_CODE[lang]).get(key);
 				if (str.equals("(null)"))
 					str = RENS[loc].getString(key);
 				String[] strs = str.split("#");
@@ -110,7 +110,7 @@ public strictfp class MainLocale extends CommonStatic {
 	}
 
 	protected static String getTTT(String page, String text) {
-		String loc = LOC_CODE[CommonStatic.lang];
+		String loc = LOC_CODE[lang];
 		String ans = null;
 		if (TMAP.containsKey(loc))
 			ans = TMAP.get(loc).getTTT(page, text);

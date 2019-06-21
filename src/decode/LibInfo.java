@@ -18,7 +18,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import io.Reader;
+import common.CommonStatic;
 import io.Writer;
 
 public class LibInfo {
@@ -37,8 +37,8 @@ public class LibInfo {
 		fs = sys;
 		List<String> ls = Files.readAllLines(fs.getPath("/info/info.ini"));
 		Queue<String> qs = new ArrayDeque<>(ls);
-		ver = Reader.parseIntN(qs.poll());
-		int n = Reader.parseIntN(qs.poll());
+		ver = CommonStatic.parseIntN(qs.poll());
+		int n = CommonStatic.parseIntN(qs.poll());
 		for (int i = 0; i < n; i++) {
 			String v = qs.poll().trim();
 			VerInfo vi = new VerInfo(fs, v);
@@ -165,7 +165,7 @@ final class PathInfo implements Comparable<PathInfo> {
 
 	protected boolean update(PathInfo p) {
 		assert path.equals(p.path);
-		return Reader.parseIntN(ver) < Reader.parseIntN(p.ver);
+		return CommonStatic.parseIntN(ver) < CommonStatic.parseIntN(p.ver);
 	}
 
 }
@@ -182,7 +182,7 @@ class VerInfo implements Comparable<VerInfo> {
 		Queue<String> qs = new ArrayDeque<>(ls);
 		qs.poll();// file ver
 		qs.poll();// lib ver
-		int n = Reader.parseIntN(qs.poll());
+		int n = CommonStatic.parseIntN(qs.poll());
 		for (int i = 0; i < n; i++)
 			paths.add(new PathInfo(qs.poll(), v));
 	}

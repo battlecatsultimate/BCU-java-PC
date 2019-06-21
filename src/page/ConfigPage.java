@@ -231,9 +231,9 @@ public class ConfigPage extends Page {
 					return;
 				changing = true;
 				if (jls.getSelectedIndex() == -1) {
-					jls.setSelectedIndex(CommonStatic.lang);
+					jls.setSelectedIndex(CommonStatic.Lang.lang);
 				}
-				CommonStatic.lang = jls.getSelectedIndex();
+				CommonStatic.Lang.lang = jls.getSelectedIndex();
 				Page.renewLoc(getThis());
 				changing = false;
 			}
@@ -285,7 +285,7 @@ public class ConfigPage extends Page {
 		add(jlse);
 		set(jsbg);
 		set(jsse);
-		jls.setSelectedIndex(CommonStatic.lang);
+		jls.setSelectedIndex(CommonStatic.Lang.lang);
 		jll.setSelectedIndex(EventReader.loc);
 		jsmin.setValue(ImgCore.deadOpa);
 		jsmax.setValue(ImgCore.fullOpa);
