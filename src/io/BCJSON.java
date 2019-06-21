@@ -22,11 +22,11 @@ import org.json.JSONObject;
 
 import common.util.Data;
 import common.util.pack.Pack;
+import common.util.system.fake.CommonStatic;
 import decode.ZipLib;
 import main.MainBCU;
 import main.Opts;
 import page.LoadPage;
-import page.MainLocale;
 
 public class BCJSON extends WebFileIO {
 
@@ -51,7 +51,7 @@ public class BCJSON extends WebFileIO {
 		cals[4] = cal + "group hour.txt";
 
 		for (int i = 0; i < 4; i++) {
-			String lang = "lang/" + MainLocale.LOC_CODE[i] + "/";
+			String lang = "lang/" + CommonStatic.LOC_CODE[i] + "/";
 			cals[i * 7 + 5] = lang + "util.properties";
 			cals[i * 7 + 6] = lang + "page.properties";
 			cals[i * 7 + 7] = lang + "info.properties";

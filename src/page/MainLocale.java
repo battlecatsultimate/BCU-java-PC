@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import common.util.Interpret;
 import common.util.anim.AnimU;
+import common.util.system.fake.CommonStatic;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -23,13 +24,12 @@ import page.info.filter.EnemyListTable;
 import page.info.filter.UnitListTable;
 import page.pack.EREditPage;
 
-public strictfp class MainLocale {
+public strictfp class MainLocale extends CommonStatic {
 
 	public static final Map<String, MainLocale> NAMP = new TreeMap<>();
 	public static final Map<String, TTT> TMAP = new TreeMap<>();
 	public static final String[] LOC_NAME = { "English", "\u4E2D\u6587", "\uD55C\uAD6D\uC5B4", "Japanese", "Russian",
 			"German", "French", "Dutch", "Spainsh" };
-	public static final String[] LOC_CODE = { "en", "zh", "kr", "jp", "ru", "de", "fr", "nl", "es" };
 	public static final String[] RENN = { "page", "info", "internet", "util" };
 	private static final ResourceBundle[] RENS = new ResourceBundle[4];
 
@@ -38,7 +38,6 @@ public strictfp class MainLocale {
 			RENS[i] = ResourceBundle.getBundle((MainBCU.WRITE ? "src/" : "") + "page/" + RENN[i], Locale.ENGLISH);
 	}
 
-	public static int lang = 0;
 	public static boolean exLang, exTTT;
 
 	public static TTT addTTT(String loc, String page, String text, String cont) {
@@ -60,9 +59,9 @@ public strictfp class MainLocale {
 	public static String getLoc(int loc, String key) {
 		if (loc >= 0 && loc < 4) {
 			String loci = RENN[loc] + "_";
-			String locl = loci + LOC_CODE[MainLocale.lang];
+			String locl = loci + LOC_CODE[CommonStatic.lang];
 			if (NAMP.containsKey(locl) && NAMP.get(locl).contains(key)) {
-				String str = NAMP.get(loci + LOC_CODE[MainLocale.lang]).get(key);
+				String str = NAMP.get(loci + LOC_CODE[CommonStatic.lang]).get(key);
 				if (str.equals("(null)"))
 					str = RENS[loc].getString(key);
 				String[] strs = str.split("#");
@@ -112,7 +111,7 @@ public strictfp class MainLocale {
 	}
 
 	protected static String getTTT(String page, String text) {
-		String loc = LOC_CODE[MainLocale.lang];
+		String loc = LOC_CODE[CommonStatic.lang];
 		String ans = null;
 		if (TMAP.containsKey(loc))
 			ans = TMAP.get(loc).getTTT(page, text);

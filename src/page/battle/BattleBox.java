@@ -15,6 +15,7 @@ import common.util.stage.Castles;
 import common.util.system.P;
 import common.util.system.SymCoord;
 import common.util.system.VImg;
+import common.util.system.fake.CommonStatic.BattleConst;
 import common.util.system.fake.FakeGraphics;
 import common.util.system.fake.FakeImage;
 import common.util.system.fake.FakeTransform;
@@ -23,9 +24,8 @@ import page.RetFunc;
 
 public interface BattleBox {
 
-	static class BBPainter {
+	static class BBPainter implements BattleConst {
 
-		public static final double ratio = 768.0 / 2400.0;// r = p/u
 		private static final double exp = 0.9, sprite = 0.8;
 		private static final int road_h = 156; // in p
 		private static final int off = 200;

@@ -28,6 +28,7 @@ import common.util.stage.Recd;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
 import common.util.system.MultiLangCont;
+import common.util.system.fake.CommonStatic;
 import common.util.system.files.BackupData;
 import common.util.system.files.VFileRoot;
 import common.util.unit.DIYAnim;
@@ -432,7 +433,7 @@ public class Reader extends DataIO {
 			if (f.exists()) {
 				try {
 					Queue<String> qs = readLines(f);
-					MainLocale.lang = parseInt(qs.poll());
+					CommonStatic.lang = parseInt(qs.poll());
 					int[] r = parseInts(4, qs.poll());
 					MainFrame.crect = new Rectangle(r[0], r[1], r[2], r[3]);
 					MainBCU.preload = parseInt(qs.poll()) == 1;

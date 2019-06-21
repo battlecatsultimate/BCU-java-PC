@@ -14,6 +14,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import common.util.ImgCore;
+import common.util.system.fake.CommonStatic;
 import event.EventBase;
 import event.EventReader;
 import io.BCMusic;
@@ -230,9 +231,9 @@ public class ConfigPage extends Page {
 					return;
 				changing = true;
 				if (jls.getSelectedIndex() == -1) {
-					jls.setSelectedIndex(MainLocale.lang);
+					jls.setSelectedIndex(CommonStatic.lang);
 				}
-				MainLocale.lang = jls.getSelectedIndex();
+				CommonStatic.lang = jls.getSelectedIndex();
 				Page.renewLoc(getThis());
 				changing = false;
 			}
@@ -284,7 +285,7 @@ public class ConfigPage extends Page {
 		add(jlse);
 		set(jsbg);
 		set(jsse);
-		jls.setSelectedIndex(MainLocale.lang);
+		jls.setSelectedIndex(CommonStatic.lang);
 		jll.setSelectedIndex(EventReader.loc);
 		jsmin.setValue(ImgCore.deadOpa);
 		jsmax.setValue(ImgCore.fullOpa);

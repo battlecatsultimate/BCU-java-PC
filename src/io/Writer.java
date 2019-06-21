@@ -22,6 +22,7 @@ import common.util.ImgCore;
 import common.util.basis.BasisSet;
 import common.util.pack.Pack;
 import common.util.stage.Recd;
+import common.util.system.fake.CommonStatic;
 import common.util.unit.DIYAnim;
 import decode.ZipLib;
 import event.EventReader;
@@ -320,7 +321,7 @@ public class Writer extends DataIO {
 
 	private static void writeOptions() {
 		PrintStream out = newFile("./user/data.ini");
-		out.println("lang= " + MainLocale.lang);
+		out.println("lang= " + CommonStatic.lang);
 		Rectangle r = MainFrame.crect;
 		out.println("rect= {" + r.x + ',' + r.y + ',' + r.width + ',' + r.height + '}');
 		out.println("preload= " + (MainBCU.preload ? 1 : 0));
