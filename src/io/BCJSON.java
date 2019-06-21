@@ -20,9 +20,9 @@ import java.util.TreeMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import common.CommonStatic;
 import common.util.Data;
 import common.util.pack.Pack;
-import common.util.system.fake.CommonStatic;
 import decode.ZipLib;
 import main.MainBCU;
 import main.Opts;

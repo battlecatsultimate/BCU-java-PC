@@ -5,10 +5,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import common.CommonStatic;
 import common.util.Interpret;
 import common.util.anim.AnimU;
-import common.util.system.fake.CommonStatic;
-
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.TreeMap;

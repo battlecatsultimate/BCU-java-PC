@@ -10,6 +10,7 @@ import javax.swing.SwingConstants;
 import common.util.system.VImg;
 import common.util.unit.Form;
 import common.util.unit.Unit;
+import utilpc.UtilPC;
 
 public class UnitLCR extends DefaultListCellRenderer {
 
@@ -29,7 +30,7 @@ public class UnitLCR extends DefaultListCellRenderer {
 		VImg v = form.anim.edi;
 		if (v == null)
 			return jl;
-		jl.setIcon(v.getIcon());
+		jl.setIcon(UtilPC.getIcon(v));
 		return jl;
 	}
 }

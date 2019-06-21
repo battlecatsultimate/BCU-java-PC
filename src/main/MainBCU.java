@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import common.CommonStatic;
 import common.util.Data;
 import common.util.system.fake.ImageBuilder;
 import decode.ZipLib;
@@ -16,6 +17,7 @@ import page.MainFrame;
 import page.MainPage;
 import page.awt.AWTBBB;
 import page.awt.BBBuilder;
+import utilpc.UtilPC;
 import utilpc.awt.PCIB;
 
 public class MainBCU {
@@ -44,6 +46,7 @@ public class MainBCU {
 
 		ImageBuilder.builder = USE_JOGL ? new GLIB() : new PCIB();
 		BBBuilder.def = USE_JOGL ? new GLBBB() : AWTBBB.INS;
+		CommonStatic.def = new UtilPC.PCItr();
 
 		new MainFrame(Data.revVer(MainBCU.ver)).initialize();
 		new Timer().start();

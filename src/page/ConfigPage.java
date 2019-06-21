@@ -13,8 +13,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.CommonStatic;
 import common.util.ImgCore;
-import common.util.system.fake.CommonStatic;
 import event.EventBase;
 import event.EventReader;
 import io.BCMusic;

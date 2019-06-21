@@ -2,6 +2,7 @@ package page.battle;
 
 import java.awt.Point;
 
+import common.CommonStatic.BattleConst;
 import common.util.Data;
 import common.util.ImgCore;
 import common.util.Res;
@@ -15,7 +16,6 @@ import common.util.stage.Castles;
 import common.util.system.P;
 import common.util.system.SymCoord;
 import common.util.system.VImg;
-import common.util.system.fake.CommonStatic.BattleConst;
 import common.util.system.fake.FakeGraphics;
 import common.util.system.fake.FakeImage;
 import common.util.system.fake.FakeTransform;

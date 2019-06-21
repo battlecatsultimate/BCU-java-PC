@@ -22,7 +22,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import common.util.Res;
 import common.util.entity.data.MaskUnit;
 import common.util.pack.Pack;
 import common.util.unit.Form;
@@ -31,6 +30,7 @@ import common.util.unit.UnitStore;
 import main.MainBCU;
 import page.JTG;
 import page.Page;
+import utilpc.UtilPC;
 
 public abstract class UnitFilterBox extends Page {
 
@@ -138,28 +138,28 @@ class UFBButton extends UnitFilterBox {
 			set(rare[i] = new JTG(RARITY[i]));
 		for (int i = 0; i < trait.length; i++) {
 			set(trait[i] = new JTG(TRAIT[i]));
-			BufferedImage v = Res.getIcon(3, i);
+			BufferedImage v = UtilPC.getIcon(3, i);
 			if (v == null)
 				continue;
 			trait[i].setIcon(new ImageIcon(v));
 		}
 		for (int i = 0; i < abis.length; i++) {
 			set(abis[i] = new JTG(SABIS[i]));
-			BufferedImage v = Res.getIcon(0, i);
+			BufferedImage v = UtilPC.getIcon(0, i);
 			if (v == null)
 				continue;
 			abis[i].setIcon(new ImageIcon(v));
 		}
 		for (int i = 0; i < proc.length; i++) {
 			set(proc[i] = new JTG(SPROC[i]));
-			BufferedImage v = Res.getIcon(1, i);
+			BufferedImage v = UtilPC.getIcon(1, i);
 			if (v == null)
 				continue;
 			proc[i].setIcon(new ImageIcon(v));
 		}
 		for (int i = 0; i < atkt.length; i++) {
 			set(atkt[i] = new JTG(ATKCONF[i]));
-			BufferedImage v = Res.getIcon(2, i);
+			BufferedImage v = UtilPC.getIcon(2, i);
 			if (v == null)
 				continue;
 			atkt[i].setIcon(new ImageIcon(v));

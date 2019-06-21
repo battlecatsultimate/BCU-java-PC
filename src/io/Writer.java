@@ -17,12 +17,12 @@ import java.util.Queue;
 
 import javax.imageio.ImageIO;
 
+import common.CommonStatic;
 import common.util.Data;
 import common.util.ImgCore;
 import common.util.basis.BasisSet;
 import common.util.pack.Pack;
 import common.util.stage.Recd;
-import common.util.system.fake.CommonStatic;
 import common.util.unit.DIYAnim;
 import decode.ZipLib;
 import event.EventReader;

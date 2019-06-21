@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import common.util.system.VImg;
 import common.util.unit.Form;
+import utilpc.UtilPC;
 
 public class UnitTCR extends DefaultTableCellRenderer {
 
@@ -37,7 +38,7 @@ public class UnitTCR extends DefaultTableCellRenderer {
 		VImg vimg = e.anim.edi;
 		if (vimg == null)
 			return jl;
-		jl.setIcon(vimg.getIcon());
+		jl.setIcon(UtilPC.getIcon(vimg));
 		return jl;
 	}
 

@@ -10,6 +10,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Queue;
 
+import common.CommonStatic;
 import common.util.ImgCore;
 import common.util.Res;
 import common.util.basis.BasisSet;
@@ -28,7 +29,6 @@ import common.util.stage.Recd;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
 import common.util.system.MultiLangCont;
-import common.util.system.fake.CommonStatic;
 import common.util.system.files.BackupData;
 import common.util.system.files.VFileRoot;
 import common.util.unit.DIYAnim;

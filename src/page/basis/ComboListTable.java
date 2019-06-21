@@ -15,6 +15,7 @@ import common.util.unit.UnitStore;
 import page.MainLocale;
 import page.Page;
 import page.support.SortTable;
+import utilpc.UtilPC;
 
 public class ComboListTable extends SortTable<Combo> {
 
@@ -66,7 +67,7 @@ public class ComboListTable extends SortTable<Combo> {
 					jl.setIcon(null);
 					return jl;
 				}
-				jl.setIcon(form.anim.uni.getIcon());
+				jl.setIcon(UtilPC.getIcon(form.anim.uni));
 				return jl;
 			}
 

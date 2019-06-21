@@ -16,6 +16,7 @@ import common.util.stage.Castles;
 import common.util.system.VImg;
 import page.JBTN;
 import page.Page;
+import utilpc.UtilPC;
 
 public class CastleViewPage extends Page {
 
@@ -102,7 +103,7 @@ public class CastleViewPage extends Page {
 				if (s == null)
 					jl.setIcon(null);
 				else
-					jl.setIcon(s.getIcon());
+					jl.setIcon(UtilPC.getIcon(s));
 			}
 
 		});

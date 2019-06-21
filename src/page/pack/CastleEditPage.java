@@ -23,6 +23,7 @@ import page.JBTN;
 import page.Page;
 import page.support.Exporter;
 import page.support.Importer;
+import utilpc.UtilPC;
 
 public class CastleEditPage extends Page {
 
@@ -85,7 +86,7 @@ public class CastleEditPage extends Page {
 				if (ind >= 0) {
 					VImg s = list.get(ind);
 					if (s != null)
-						ic = s.getIcon();
+						ic = UtilPC.getIcon(s);
 				}
 				jl.setIcon(ic);
 
@@ -198,7 +199,7 @@ public class CastleEditPage extends Page {
 		if (ind >= 0) {
 			VImg s = list.get(ind);
 			if (s != null)
-				ic = s.getIcon();
+				ic = UtilPC.getIcon(s);
 		}
 		jl.setIcon(ic);
 

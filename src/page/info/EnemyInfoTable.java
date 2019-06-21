@@ -15,6 +15,7 @@ import io.Reader;
 import page.JL;
 import page.JTF;
 import page.Page;
+import utilpc.UtilPC;
 
 public class EnemyInfoTable extends Page {
 
@@ -119,7 +120,7 @@ public class EnemyInfoTable extends Page {
 		main[0][0].setText("ID");
 		main[0][1].setText("" + e.id);
 		if (e.anim.edi != null && e.anim.edi.getImg() != null)
-			main[0][2].setIcon(e.anim.edi.getIcon());
+			main[0][2].setIcon(UtilPC.getIcon(e.anim.edi));
 		main[0][3].setText(1, "trait");
 		main[0][4].setText(Interpret.getTrait(e.de.getType(), e.de.getStar()));
 		main[1][0].setText(1, "mult");

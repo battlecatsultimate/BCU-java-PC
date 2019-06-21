@@ -11,12 +11,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-import common.util.Res;
 import io.Reader;
 import page.JL;
 import page.JTF;
 import page.Page;
 import page.support.ListJtfPolicy;
+import utilpc.UtilPC;
 
 class MainProcTable extends Page {
 
@@ -82,7 +82,7 @@ class MainProcTable extends Page {
 
 		for (int i = 0; i < INDS.length; i++) {
 			set(tits[i] = new JL(SPROC[INDS[i]]));
-			BufferedImage v = Res.getIcon(1, INDS[i]);
+			BufferedImage v = UtilPC.getIcon(1, INDS[i]);
 			if (v != null)
 				tits[i].setIcon(new ImageIcon(v));
 			jls[i] = new JL[LENS[i].length];

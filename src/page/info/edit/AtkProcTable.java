@@ -11,12 +11,12 @@ import javax.swing.SwingConstants;
 
 import common.util.Data;
 import common.util.Interpret;
-import common.util.Res;
 import io.Reader;
 import page.JL;
 import page.JTF;
 import page.Page;
 import page.support.ListJtfPolicy;
+import utilpc.UtilPC;
 
 class AtkProcTable extends Page {
 
@@ -122,7 +122,7 @@ class AtkProcTable extends Page {
 	private void ini() {
 		for (int i = 0; i < LEN; i++) {
 			jlm[i] = new JLabel(Interpret.SPROC[INDS[i]]);
-			BufferedImage v = Res.getIcon(1, INDS[i]);
+			BufferedImage v = UtilPC.getIcon(1, INDS[i]);
 			if (v != null)
 				jlm[i].setIcon(new ImageIcon(v));
 			set(jlm[i]);

@@ -24,7 +24,7 @@ import java.awt.event.KeyEvent;
 import java.util.Map;
 import java.util.TreeMap;
 
-import common.util.system.fake.FakeKey;
+import common.CommonStatic.FakeKey;
 
 public abstract class KeyHandler extends Page implements FakeKey {
 
