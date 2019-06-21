@@ -89,10 +89,10 @@ public class GLImage implements FakeImage {
 	public float[] getRect() {
 		float[] ans = new float[4];
 		int[] br = root().rect;
-		ans[0] = P.reg(1.0f * rect[0] / br[2]);
-		ans[1] = P.reg(1.0f * rect[1] / br[3]);
-		ans[2] = P.reg(1.0f * rect[2] / br[2]);
-		ans[3] = P.reg(1.0f * rect[3] / br[3]);
+		ans[0] = P.reg((rect[0] + 0.5f) / br[2]);
+		ans[1] = P.reg((rect[1] + 0.5f) / br[3]);
+		ans[2] = P.reg((rect[2] - 1f) / br[2]);
+		ans[3] = P.reg((rect[3] - 1f) / br[3]);
 
 		if (!data.getMustFlipVertically()) {
 			ans[1] = 1 - ans[1];
