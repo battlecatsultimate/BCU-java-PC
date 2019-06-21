@@ -1,9 +1,9 @@
 package page.info.filter;
 
-import static util.Interpret.EABI;
-import static util.Interpret.EABIIND;
-import static util.Interpret.IMUSFT;
-import static util.Interpret.TRAIT;
+import static common.util.Interpret.EABI;
+import static common.util.Interpret.EABIIND;
+import static common.util.Interpret.IMUSFT;
+import static common.util.Interpret.TRAIT;
 
 import java.util.Vector;
 

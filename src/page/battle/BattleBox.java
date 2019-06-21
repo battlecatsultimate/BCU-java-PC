@@ -2,24 +2,24 @@ package page.battle;
 
 import java.awt.Point;
 
+import common.util.Data;
+import common.util.ImgCore;
+import common.util.Res;
+import common.util.basis.BattleField;
+import common.util.basis.StageBasis;
+import common.util.entity.EAnimCont;
+import common.util.entity.Entity;
+import common.util.entity.attack.ContAb;
+import common.util.pack.NyCastle;
+import common.util.stage.Castles;
+import common.util.system.P;
+import common.util.system.SymCoord;
+import common.util.system.VImg;
+import common.util.system.fake.FakeGraphics;
+import common.util.system.fake.FakeImage;
+import common.util.system.fake.FakeTransform;
+import common.util.unit.Form;
 import page.RetFunc;
-import util.Data;
-import util.ImgCore;
-import util.Res;
-import util.basis.BattleField;
-import util.basis.StageBasis;
-import util.entity.EAnimCont;
-import util.entity.Entity;
-import util.entity.attack.ContAb;
-import util.pack.NyCastle;
-import util.stage.Castles;
-import util.system.P;
-import util.system.SymCoord;
-import util.system.VImg;
-import util.system.fake.FakeGraphics;
-import util.system.fake.FakeImage;
-import util.system.fake.FakeTransform;
-import util.unit.Form;
 
 public interface BattleBox {
 

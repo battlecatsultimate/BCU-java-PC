@@ -3,9 +3,10 @@ package jogl.util;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import util.system.fake.FakeImage;
-import util.system.fake.ImageBuilder;
-import util.system.fake.awt.FIBI;
+
+import common.util.system.fake.FakeImage;
+import common.util.system.fake.ImageBuilder;
+import common.util.system.fake.awt.FIBI;
 
 public class GLIB extends ImageBuilder {
 

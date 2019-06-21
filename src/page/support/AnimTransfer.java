@@ -5,7 +5,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 
-import util.anim.Part;
+import common.util.anim.Part;
 
 public class AnimTransfer<T> implements Transferable {
 

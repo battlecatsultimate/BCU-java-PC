@@ -7,10 +7,10 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.SwingConstants;
 
-import util.Animable;
-import util.anim.AnimU;
-import util.system.VImg;
-import util.unit.AbEnemy;
+import common.util.Animable;
+import common.util.anim.AnimU;
+import common.util.system.VImg;
+import common.util.unit.AbEnemy;
 
 public class AnimLCR extends DefaultListCellRenderer {
 

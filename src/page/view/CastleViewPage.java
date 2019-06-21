@@ -11,11 +11,11 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.stage.AbCastle;
+import common.util.stage.Castles;
+import common.util.system.VImg;
 import page.JBTN;
 import page.Page;
-import util.stage.AbCastle;
-import util.stage.Castles;
-import util.system.VImg;
 
 public class CastleViewPage extends Page {
 

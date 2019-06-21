@@ -15,11 +15,12 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineEvent.Type;
-import javax.sound.sampled.LineListener;
 
-import util.Data;
-import util.pack.MusicStore;
-import util.pack.Pack;
+import common.util.Data;
+import common.util.pack.MusicStore;
+import common.util.pack.Pack;
+
+import javax.sound.sampled.LineListener;
 
 public class BCMusic extends Data implements LineListener {
 

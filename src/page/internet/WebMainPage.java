@@ -27,6 +27,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
+import common.util.Data;
+import common.util.pack.Pack;
 import io.BCJSON;
 import io.WebFileIO;
 import io.WebPack;
@@ -35,8 +37,6 @@ import main.Opts;
 import page.JBTN;
 import page.JL;
 import page.Page;
-import util.Data;
-import util.pack.Pack;
 
 public class WebMainPage extends Page {
 

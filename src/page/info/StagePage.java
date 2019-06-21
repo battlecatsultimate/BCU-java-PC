@@ -7,10 +7,10 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JScrollPane;
 
+import common.util.stage.Stage;
 import page.JBTN;
 import page.Page;
 import page.battle.BattleSetupPage;
-import util.stage.Stage;
 
 public class StagePage extends Page {
 

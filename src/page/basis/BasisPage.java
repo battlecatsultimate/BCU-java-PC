@@ -1,6 +1,6 @@
 package page.basis;
 
-import static util.basis.BasisSet.current;
+import static common.util.basis.BasisSet.current;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -22,6 +22,15 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.Interpret;
+import common.util.basis.BasisLU;
+import common.util.basis.BasisSet;
+import common.util.basis.Combo;
+import common.util.basis.LineUp;
+import common.util.pack.NyCastle;
+import common.util.system.Node;
+import common.util.unit.Form;
+import common.util.unit.Unit;
 import io.Reader;
 import page.JBTN;
 import page.JTF;
@@ -29,16 +38,7 @@ import page.Page;
 import page.info.TreaTable;
 import page.support.ReorderList;
 import page.support.ReorderListener;
-import page.support.UnitLCR;
-import util.Interpret;
-import util.basis.BasisLU;
-import util.basis.BasisSet;
-import util.basis.Combo;
-import util.basis.LineUp;
-import util.pack.NyCastle;
-import util.system.Node;
-import util.unit.Form;
-import util.unit.Unit;;
+import page.support.UnitLCR;;
 
 public class BasisPage extends LubCont {
 

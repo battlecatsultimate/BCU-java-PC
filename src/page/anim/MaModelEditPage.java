@@ -20,17 +20,17 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
 
+import common.util.anim.AnimC;
+import common.util.anim.EAnimS;
+import common.util.anim.ImgCut;
+import common.util.anim.MaAnim;
+import common.util.anim.MaModel;
+import common.util.anim.Part;
+import common.util.unit.DIYAnim;
 import io.Reader;
 import page.JBTN;
 import page.Page;
 import page.support.AnimLCR;
-import util.anim.AnimC;
-import util.anim.EAnimS;
-import util.anim.ImgCut;
-import util.anim.MaAnim;
-import util.anim.MaModel;
-import util.anim.Part;
-import util.unit.DIYAnim;
 
 public class MaModelEditPage extends Page implements AbEditPage {
 

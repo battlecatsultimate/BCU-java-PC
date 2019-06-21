@@ -8,10 +8,10 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
+import common.util.anim.AnimC;
+import common.util.anim.ImgCut;
+import common.util.system.P;
 import page.Page;
-import util.anim.AnimC;
-import util.anim.ImgCut;
-import util.system.P;
 
 class SpriteBox extends Canvas {
 

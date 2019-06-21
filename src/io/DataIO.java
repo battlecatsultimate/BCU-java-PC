@@ -1,6 +1,6 @@
 package io;
 
-import util.system.P;
+import common.util.system.P;
 
 public strictfp abstract class DataIO {
 

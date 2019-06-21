@@ -7,12 +7,12 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.anim.AnimI;
+import common.util.pack.BGStore;
+import common.util.pack.EffAnim;
+import common.util.pack.NyCastle;
+import common.util.pack.SoulStore;
 import page.Page;
-import util.anim.AnimI;
-import util.pack.BGStore;
-import util.pack.EffAnim;
-import util.pack.NyCastle;
-import util.pack.SoulStore;
 
 public class EffectViewPage extends AbViewPage {
 

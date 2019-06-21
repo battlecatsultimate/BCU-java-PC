@@ -7,9 +7,9 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.SwingConstants;
 
-import util.system.VImg;
-import util.unit.Form;
-import util.unit.Unit;
+import common.util.system.VImg;
+import common.util.unit.Form;
+import common.util.unit.Unit;
 
 public class UnitLCR extends DefaultListCellRenderer {
 

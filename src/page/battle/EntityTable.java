@@ -1,14 +1,14 @@
 package page.battle;
 
+import common.util.entity.Entity;
+import common.util.entity.data.MaskEnemy;
+import common.util.entity.data.MaskUnit;
+import common.util.unit.Enemy;
+import common.util.unit.Form;
 import page.MainLocale;
 import page.support.EnemyTCR;
 import page.support.SortTable;
 import page.support.UnitTCR;
-import util.entity.Entity;
-import util.entity.data.MaskEnemy;
-import util.entity.data.MaskUnit;
-import util.unit.Enemy;
-import util.unit.Form;
 
 class EntityTable extends SortTable<Entity> {
 

@@ -13,6 +13,11 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.pack.Pack;
+import common.util.unit.AbEnemy;
+import common.util.unit.EneRand;
+import common.util.unit.Enemy;
+import common.util.unit.EnemyStore;
 import main.Opts;
 import page.JBTN;
 import page.JTF;
@@ -20,11 +25,6 @@ import page.JTG;
 import page.Page;
 import page.info.filter.EnemyFindPage;
 import page.support.AnimLCR;
-import util.pack.Pack;
-import util.unit.AbEnemy;
-import util.unit.EneRand;
-import util.unit.Enemy;
-import util.unit.EnemyStore;
 
 public class EREditPage extends Page {
 

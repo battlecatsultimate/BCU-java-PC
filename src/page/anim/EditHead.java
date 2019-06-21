@@ -3,10 +3,10 @@ package page.anim;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import common.util.unit.DIYAnim;
 import io.Writer;
 import page.JBTN;
 import page.Page;
-import util.unit.DIYAnim;
 
 public class EditHead extends Page {
 

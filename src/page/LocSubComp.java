@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
-import util.system.P;
+import common.util.system.P;
 
 class LocSubComp {
 

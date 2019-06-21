@@ -22,9 +22,9 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.plaf.FontUIResource;
 
+import common.util.system.P;
 import io.Writer;
 import main.Printer;
-import util.system.P;
 
 public class MainFrame extends JFrame {
 

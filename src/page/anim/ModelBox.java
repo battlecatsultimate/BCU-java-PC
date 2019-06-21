@@ -8,9 +8,9 @@ import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.image.BufferedImage;
 
-import util.anim.EAnimS;
-import util.system.P;
-import util.system.fake.awt.FG2D;
+import common.util.anim.EAnimS;
+import common.util.system.P;
+import common.util.system.fake.awt.FG2D;
 
 class ModelBox extends Canvas {
 

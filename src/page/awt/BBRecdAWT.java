@@ -4,8 +4,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
+import common.util.basis.BattleField;
 import page.battle.BBRecd;
-import util.basis.BattleField;
 
 class BBRecdAWT extends BattleBoxDef implements BBRecd {
 

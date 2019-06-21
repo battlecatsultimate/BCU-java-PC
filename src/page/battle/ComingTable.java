@@ -1,19 +1,19 @@
 package page.battle;
 
-import static util.stage.SCDef.C0;
-import static util.stage.SCDef.C1;
+import static common.util.stage.SCDef.C0;
+import static common.util.stage.SCDef.C1;
 
 import java.awt.Point;
 
+import common.util.stage.EStage;
+import common.util.stage.Stage;
+import common.util.unit.Enemy;
+import common.util.unit.EnemyStore;
 import page.MainFrame;
 import page.Page;
 import page.info.EnemyInfoPage;
 import page.support.AbJTable;
 import page.support.EnemyTCR;
-import util.stage.EStage;
-import util.stage.Stage;
-import util.unit.Enemy;
-import util.unit.EnemyStore;
 
 class ComingTable extends AbJTable {
 

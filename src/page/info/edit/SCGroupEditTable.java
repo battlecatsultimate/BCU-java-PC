@@ -6,15 +6,15 @@ import java.util.EventObject;
 
 import javax.swing.text.JTextComponent;
 
+import common.util.Data;
+import common.util.stage.SCDef;
+import common.util.stage.SCGroup;
+import common.util.unit.AbEnemy;
+import common.util.unit.EnemyStore;
 import io.Reader;
 import page.MainLocale;
 import page.support.AbJTable;
 import page.support.EnemyTCR;
-import util.Data;
-import util.stage.SCDef;
-import util.stage.SCGroup;
-import util.unit.AbEnemy;
-import util.unit.EnemyStore;
 
 class SCGroupEditTable extends AbJTable {
 

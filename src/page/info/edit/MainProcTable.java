@@ -1,6 +1,6 @@
 package page.info.edit;
 
-import static util.Interpret.SPROC;
+import static common.util.Interpret.SPROC;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -11,12 +11,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import common.util.Res;
 import io.Reader;
 import page.JL;
 import page.JTF;
 import page.Page;
 import page.support.ListJtfPolicy;
-import util.Res;
 
 class MainProcTable extends Page {
 

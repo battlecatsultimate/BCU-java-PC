@@ -10,6 +10,12 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import common.util.pack.BGStore;
+import common.util.pack.Pack;
+import common.util.stage.Castles;
+import common.util.stage.Limit;
+import common.util.stage.Recd;
+import common.util.stage.Stage;
 import io.Reader;
 import page.JBTN;
 import page.JL;
@@ -21,12 +27,6 @@ import page.pack.LvRestrictPage;
 import page.view.BGViewPage;
 import page.view.CastleViewPage;
 import page.view.MusicPage;
-import util.pack.BGStore;
-import util.pack.Pack;
-import util.stage.Castles;
-import util.stage.Limit;
-import util.stage.Recd;
-import util.stage.Stage;
 
 class HeadEditTable extends Page {
 

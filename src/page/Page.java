@@ -14,7 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ToolTipManager;
 
-import util.system.P;
+import common.util.system.P;
 
 public abstract class Page extends JPanel implements RetFunc {
 

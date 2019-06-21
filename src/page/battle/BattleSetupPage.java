@@ -9,16 +9,16 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.basis.BasisLU;
+import common.util.basis.BasisSet;
+import common.util.stage.RandStage;
+import common.util.stage.Stage;
 import page.JBTN;
 import page.JTG;
 import page.Page;
 import page.basis.BasisPage;
 import page.basis.LineUpBox;
 import page.basis.LubCont;
-import util.basis.BasisLU;
-import util.basis.BasisSet;
-import util.stage.RandStage;
-import util.stage.Stage;
 
 public class BattleSetupPage extends LubCont {
 

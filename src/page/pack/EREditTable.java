@@ -7,6 +7,11 @@ import java.util.EventObject;
 
 import javax.swing.text.JTextComponent;
 
+import common.util.EREnt;
+import common.util.unit.AbEnemy;
+import common.util.unit.EneRand;
+import common.util.unit.Enemy;
+import common.util.unit.EnemyStore;
 import io.Reader;
 import page.MainFrame;
 import page.Page;
@@ -15,11 +20,6 @@ import page.support.AbJTable;
 import page.support.EnemyTCR;
 import page.support.InTableTH;
 import page.support.Reorderable;
-import util.EREnt;
-import util.unit.AbEnemy;
-import util.unit.EneRand;
-import util.unit.Enemy;
-import util.unit.EnemyStore;
 
 class EREditTable extends AbJTable implements Reorderable {
 

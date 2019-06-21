@@ -24,6 +24,13 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.anim.AnimC;
+import common.util.anim.EPart;
+import common.util.anim.ImgCut;
+import common.util.anim.MaAnim;
+import common.util.anim.MaModel;
+import common.util.anim.Part;
+import common.util.unit.DIYAnim;
 import io.Reader;
 import main.Opts;
 import page.JBTN;
@@ -31,13 +38,6 @@ import page.JTF;
 import page.JTG;
 import page.Page;
 import page.support.AnimLCR;
-import util.anim.AnimC;
-import util.anim.EPart;
-import util.anim.ImgCut;
-import util.anim.MaAnim;
-import util.anim.MaModel;
-import util.anim.Part;
-import util.unit.DIYAnim;
 
 public class MaAnimEditPage extends Page implements AbEditPage {
 

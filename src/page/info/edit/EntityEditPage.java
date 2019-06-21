@@ -1,8 +1,8 @@
 package page.info.edit;
 
-import static util.Data.*;
-import static util.Interpret.ABIIND;
-import static util.Interpret.IMUSFT;
+import static common.util.Data.*;
+import static common.util.Interpret.ABIIND;
+import static common.util.Interpret.IMUSFT;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +18,20 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.Animable;
+import common.util.anim.AnimC;
+import common.util.anim.AnimU;
+import common.util.basis.Basis;
+import common.util.basis.BasisSet;
+import common.util.entity.data.AtkDataModel;
+import common.util.entity.data.CustomEntity;
+import common.util.pack.Pack;
+import common.util.pack.Soul;
+import common.util.pack.SoulStore;
+import common.util.unit.DIYAnim;
+import common.util.unit.Enemy;
+import common.util.unit.Form;
+import common.util.unit.Unit;
 import io.Reader;
 import main.Opts;
 import page.JBTN;
@@ -33,20 +47,6 @@ import page.support.ReorderList;
 import page.support.ReorderListener;
 import page.view.EnemyViewPage;
 import page.view.UnitViewPage;
-import util.Animable;
-import util.anim.AnimC;
-import util.anim.AnimU;
-import util.basis.Basis;
-import util.basis.BasisSet;
-import util.entity.data.AtkDataModel;
-import util.entity.data.CustomEntity;
-import util.pack.Pack;
-import util.pack.Soul;
-import util.pack.SoulStore;
-import util.unit.DIYAnim;
-import util.unit.Enemy;
-import util.unit.Form;
-import util.unit.Unit;
 
 public abstract class EntityEditPage extends Page {
 

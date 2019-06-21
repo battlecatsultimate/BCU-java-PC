@@ -4,6 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+
+import common.util.basis.BasisSet;
+import common.util.stage.MapColc;
+import common.util.stage.Recd;
 import io.Reader;
 import main.Opts;
 import page.JBTN;
@@ -12,9 +16,6 @@ import page.JTG;
 import page.Page;
 import page.basis.BasisPage;
 import page.info.StageViewPage;
-import util.basis.BasisSet;
-import util.stage.MapColc;
-import util.stage.Recd;
 
 public abstract class AbRecdPage extends Page {
 

@@ -16,6 +16,14 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.Interpret;
+import common.util.anim.AnimC;
+import common.util.entity.data.CustomUnit;
+import common.util.pack.Pack;
+import common.util.unit.DIYAnim;
+import common.util.unit.Form;
+import common.util.unit.Unit;
+import common.util.unit.UnitLevel;
 import io.Reader;
 import main.Opts;
 import page.JBTN;
@@ -27,14 +35,6 @@ import page.support.AnimLCR;
 import page.support.ReorderList;
 import page.support.ReorderListener;
 import page.support.UnitLCR;
-import util.Interpret;
-import util.anim.AnimC;
-import util.entity.data.CustomUnit;
-import util.pack.Pack;
-import util.unit.DIYAnim;
-import util.unit.Form;
-import util.unit.Unit;
-import util.unit.UnitLevel;
 
 public class UnitManagePage extends Page {
 

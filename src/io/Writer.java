@@ -17,6 +17,12 @@ import java.util.Queue;
 
 import javax.imageio.ImageIO;
 
+import common.util.Data;
+import common.util.ImgCore;
+import common.util.basis.BasisSet;
+import common.util.pack.Pack;
+import common.util.stage.Recd;
+import common.util.unit.DIYAnim;
 import decode.ZipLib;
 import event.EventReader;
 import main.MainBCU;
@@ -28,12 +34,6 @@ import page.support.Exporter;
 import page.support.Importer;
 import page.view.ViewBox;
 import res.AnimatedGifEncoder;
-import util.Data;
-import util.ImgCore;
-import util.basis.BasisSet;
-import util.pack.Pack;
-import util.stage.Recd;
-import util.unit.DIYAnim;
 
 public class Writer extends DataIO {
 

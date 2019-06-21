@@ -20,6 +20,16 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.ReColor;
+import common.util.anim.AnimC;
+import common.util.anim.ImgCut;
+import common.util.anim.MaAnim;
+import common.util.anim.Part;
+import common.util.pack.Pack;
+import common.util.system.VImg;
+import common.util.system.fake.FakeImage;
+import common.util.unit.DIYAnim;
+import common.util.unit.Enemy;
 import io.Writer;
 import main.MainBCU;
 import main.Opts;
@@ -29,16 +39,6 @@ import page.Page;
 import page.support.AnimLCR;
 import page.support.Exporter;
 import page.support.Importer;
-import util.ReColor;
-import util.anim.AnimC;
-import util.anim.ImgCut;
-import util.anim.MaAnim;
-import util.anim.Part;
-import util.pack.Pack;
-import util.system.VImg;
-import util.system.fake.FakeImage;
-import util.unit.DIYAnim;
-import util.unit.Enemy;
 
 public class ImgCutEditPage extends Page implements AbEditPage {
 

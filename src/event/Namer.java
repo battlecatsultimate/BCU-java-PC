@@ -5,9 +5,9 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 
+import common.util.stage.MapColc;
 import main.MainBCU;
 import page.MainLocale;
-import util.stage.MapColc;
 
 public strictfp class Namer {
 

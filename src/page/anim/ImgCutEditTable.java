@@ -6,9 +6,9 @@ import java.util.EventObject;
 
 import javax.swing.text.JTextComponent;
 
+import common.util.anim.AnimC;
+import common.util.anim.ImgCut;
 import page.support.AbJTable;
-import util.anim.AnimC;
-import util.anim.ImgCut;
 
 class ImgCutEditTable extends AbJTable {
 

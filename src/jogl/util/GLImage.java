@@ -10,10 +10,12 @@ import java.io.IOException;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
+
+import common.util.system.P;
+import common.util.system.fake.FakeImage;
 import jogl.GLStatic;
 import main.Printer;
-import util.system.P;
-import util.system.fake.FakeImage;
+
 import static jogl.GLStatic.*;
 
 public class GLImage implements FakeImage {

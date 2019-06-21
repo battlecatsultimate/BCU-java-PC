@@ -1,17 +1,17 @@
 package page.info.edit;
 
-import static util.Interpret.ABIIND;
-import static util.Interpret.IMUSFT;
+import static common.util.Interpret.ABIIND;
+import static common.util.Interpret.IMUSFT;
 
+import common.util.entity.data.CustomEntity;
+import common.util.entity.data.CustomUnit;
+import common.util.pack.Pack;
+import common.util.unit.Form;
 import page.JBTN;
 import page.JL;
 import page.JTF;
 import page.Page;
 import page.info.filter.UnitEditBox;
-import util.entity.data.CustomEntity;
-import util.entity.data.CustomUnit;
-import util.pack.Pack;
-import util.unit.Form;
 
 public class FormEditPage extends EntityEditPage {
 

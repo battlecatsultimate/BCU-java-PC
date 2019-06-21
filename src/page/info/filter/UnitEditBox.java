@@ -1,10 +1,10 @@
 package page.info.filter;
 
-import static util.Interpret.ABIIND;
-import static util.Interpret.IMUSFT;
-import static util.Interpret.SABIS;
-import static util.Interpret.SPROC;
-import static util.Interpret.TRAIT;
+import static common.util.Interpret.ABIIND;
+import static common.util.Interpret.IMUSFT;
+import static common.util.Interpret.SABIS;
+import static common.util.Interpret.SPROC;
+import static common.util.Interpret.TRAIT;
 
 import java.util.Vector;
 

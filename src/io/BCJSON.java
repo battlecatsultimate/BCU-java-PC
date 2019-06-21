@@ -20,13 +20,13 @@ import java.util.TreeMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import common.util.Data;
+import common.util.pack.Pack;
 import decode.ZipLib;
 import main.MainBCU;
 import main.Opts;
 import page.LoadPage;
 import page.MainLocale;
-import util.Data;
-import util.pack.Pack;
 
 public class BCJSON extends WebFileIO {
 

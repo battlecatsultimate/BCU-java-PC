@@ -6,6 +6,8 @@ import java.io.IOException;
 
 import javax.swing.JLabel;
 
+import common.util.pack.Pack;
+import common.util.stage.MapColc;
 import io.BCJSON;
 import io.Writer;
 import page.anim.DIYViewPage;
@@ -30,8 +32,6 @@ import page.view.EffectViewPage;
 import page.view.EnemyViewPage;
 import page.view.MusicPage;
 import page.view.UnitViewPage;
-import util.pack.Pack;
-import util.stage.MapColc;
 
 public class MainPage extends Page {
 

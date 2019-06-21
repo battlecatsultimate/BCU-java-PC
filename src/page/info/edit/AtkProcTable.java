@@ -9,14 +9,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import common.util.Data;
+import common.util.Interpret;
+import common.util.Res;
 import io.Reader;
 import page.JL;
 import page.JTF;
 import page.Page;
 import page.support.ListJtfPolicy;
-import util.Data;
-import util.Interpret;
-import util.Res;
 
 class AtkProcTable extends Page {
 

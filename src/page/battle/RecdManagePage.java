@@ -9,11 +9,11 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.stage.Recd;
 import main.MainBCU;
 import page.JBTN;
 import page.JTF;
 import page.Page;
-import util.stage.Recd;
 
 public class RecdManagePage extends AbRecdPage {
 

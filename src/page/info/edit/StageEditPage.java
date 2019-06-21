@@ -14,6 +14,12 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.pack.Pack;
+import common.util.stage.MapColc;
+import common.util.stage.Stage;
+import common.util.stage.StageMap;
+import common.util.unit.Enemy;
+import common.util.unit.EnemyStore;
 import main.Opts;
 import page.JBTN;
 import page.Page;
@@ -23,12 +29,6 @@ import page.info.filter.EnemyFindPage;
 import page.support.AnimLCR;
 import page.support.ReorderList;
 import page.support.ReorderListener;
-import util.pack.Pack;
-import util.stage.MapColc;
-import util.stage.Stage;
-import util.stage.StageMap;
-import util.unit.Enemy;
-import util.unit.EnemyStore;
 
 public class StageEditPage extends Page {
 

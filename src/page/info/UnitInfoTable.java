@@ -8,16 +8,16 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import common.util.Data;
+import common.util.Interpret;
+import common.util.basis.BasisSet;
+import common.util.entity.data.MaskUnit;
+import common.util.unit.EForm;
+import common.util.unit.Form;
 import io.Reader;
 import page.JL;
 import page.JTF;
 import page.Page;
-import util.Data;
-import util.Interpret;
-import util.basis.BasisSet;
-import util.entity.data.MaskUnit;
-import util.unit.EForm;
-import util.unit.Form;
 
 public class UnitInfoTable extends Page {
 

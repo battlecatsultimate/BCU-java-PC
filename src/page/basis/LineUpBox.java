@@ -7,18 +7,18 @@ import java.awt.Point;
 import java.util.Set;
 import java.util.TreeSet;
 
+import common.util.Res;
+import common.util.basis.Combo;
+import common.util.basis.LineUp;
+import common.util.system.P;
+import common.util.system.SymCoord;
+import common.util.system.VImg;
+import common.util.system.fake.FakeGraphics;
+import common.util.system.fake.FakeImage;
+import common.util.system.fake.awt.FG2D;
+import common.util.unit.Form;
+import common.util.unit.Unit;
 import page.Page;
-import util.Res;
-import util.basis.Combo;
-import util.basis.LineUp;
-import util.system.P;
-import util.system.SymCoord;
-import util.system.VImg;
-import util.system.fake.FakeGraphics;
-import util.system.fake.FakeImage;
-import util.system.fake.awt.FG2D;
-import util.unit.Form;
-import util.unit.Unit;
 
 public class LineUpBox extends Canvas {
 

@@ -15,6 +15,12 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.entity.data.CustomEnemy;
+import common.util.pack.Pack;
+import common.util.stage.MapColc;
+import common.util.stage.StageMap;
+import common.util.unit.DIYAnim;
+import common.util.unit.Enemy;
 import io.BCJSON;
 import io.Writer;
 import main.MainBCU;
@@ -33,12 +39,6 @@ import page.view.BGViewPage;
 import page.view.CastleViewPage;
 import page.view.EnemyViewPage;
 import page.view.MusicPage;
-import util.entity.data.CustomEnemy;
-import util.pack.Pack;
-import util.stage.MapColc;
-import util.stage.StageMap;
-import util.unit.DIYAnim;
-import util.unit.Enemy;
 
 public class PackEditPage extends Page {
 

@@ -1,13 +1,13 @@
 package page.info;
 
-import static util.Interpret.TCOLP;
-import static util.Interpret.TCTX;
-import static util.Interpret.TIND;
-import static util.Interpret.TREA;
-import static util.Interpret.getComp;
-import static util.Interpret.getValue;
-import static util.Interpret.setComp;
-import static util.Interpret.setValue;
+import static common.util.Interpret.TCOLP;
+import static common.util.Interpret.TCTX;
+import static common.util.Interpret.TIND;
+import static common.util.Interpret.TREA;
+import static common.util.Interpret.getComp;
+import static common.util.Interpret.getValue;
+import static common.util.Interpret.setComp;
+import static common.util.Interpret.setValue;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -20,12 +20,12 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 
+import common.util.basis.BasisSet;
+import common.util.system.Node;
 import io.Reader;
 import page.JTF;
 import page.JTG;
 import page.Page;
-import util.basis.BasisSet;
-import util.system.Node;
 
 public class TreaTable extends Page {
 

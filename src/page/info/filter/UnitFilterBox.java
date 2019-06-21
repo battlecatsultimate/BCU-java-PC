@@ -1,11 +1,11 @@
 package page.info.filter;
 
-import static util.Interpret.ATKCONF;
-import static util.Interpret.RARITY;
-import static util.Interpret.SABIS;
-import static util.Interpret.SPROC;
-import static util.Interpret.TRAIT;
-import static util.Interpret.isType;
+import static common.util.Interpret.ATKCONF;
+import static common.util.Interpret.RARITY;
+import static common.util.Interpret.SABIS;
+import static common.util.Interpret.SPROC;
+import static common.util.Interpret.TRAIT;
+import static common.util.Interpret.isType;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,15 +22,15 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.Res;
+import common.util.entity.data.MaskUnit;
+import common.util.pack.Pack;
+import common.util.unit.Form;
+import common.util.unit.Unit;
+import common.util.unit.UnitStore;
 import main.MainBCU;
 import page.JTG;
 import page.Page;
-import util.Res;
-import util.entity.data.MaskUnit;
-import util.pack.Pack;
-import util.unit.Form;
-import util.unit.Unit;
-import util.unit.UnitStore;
 
 public abstract class UnitFilterBox extends Page {
 

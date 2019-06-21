@@ -1,6 +1,6 @@
 package page.anim;
 
-import util.unit.DIYAnim;
+import common.util.unit.DIYAnim;
 
 public interface AbEditPage {
 

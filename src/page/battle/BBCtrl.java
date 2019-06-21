@@ -3,13 +3,13 @@ package page.battle;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
+import common.util.Res;
+import common.util.basis.SBCtrl;
+import common.util.system.P;
+import common.util.system.fake.FakeImage;
+import common.util.unit.Form;
 import page.battle.BattleBox.BBPainter;
 import page.battle.BattleBox.OuterBox;
-import util.Res;
-import util.basis.SBCtrl;
-import util.system.P;
-import util.system.fake.FakeImage;
-import util.unit.Form;
 
 public class BBCtrl extends BBPainter {
 

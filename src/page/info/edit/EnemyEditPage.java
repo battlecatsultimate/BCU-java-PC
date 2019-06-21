@@ -1,18 +1,18 @@
 package page.info.edit;
 
-import static util.Interpret.EABIIND;
-import static util.Interpret.IMUSFT;
+import static common.util.Interpret.EABIIND;
+import static common.util.Interpret.IMUSFT;
 
+import common.util.entity.data.CustomEnemy;
+import common.util.entity.data.CustomEntity;
+import common.util.pack.Pack;
+import common.util.unit.Enemy;
 import page.JBTN;
 import page.JL;
 import page.JTF;
 import page.Page;
 import page.info.StageFilterPage;
 import page.info.filter.EnemyEditBox;
-import util.entity.data.CustomEnemy;
-import util.entity.data.CustomEntity;
-import util.pack.Pack;
-import util.unit.Enemy;
 
 public class EnemyEditPage extends EntityEditPage {
 

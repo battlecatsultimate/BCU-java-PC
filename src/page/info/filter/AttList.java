@@ -1,8 +1,8 @@
 package page.info.filter;
 
-import static util.Interpret.ABIIND;
-import static util.Interpret.EABIIND;
-import static util.Interpret.SABIS;
+import static common.util.Interpret.ABIIND;
+import static common.util.Interpret.EABIIND;
+import static common.util.Interpret.SABIS;
 
 import java.awt.Component;
 import java.awt.image.BufferedImage;
@@ -12,9 +12,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 
+import common.util.Res;
 import page.JTG;
 import page.Page;
-import util.Res;
 
 class AttList extends JList<String> {
 

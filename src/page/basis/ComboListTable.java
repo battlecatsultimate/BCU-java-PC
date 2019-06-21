@@ -7,14 +7,14 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import common.util.Interpret;
+import common.util.basis.Combo;
+import common.util.basis.LineUp;
+import common.util.unit.Form;
+import common.util.unit.UnitStore;
 import page.MainLocale;
 import page.Page;
 import page.support.SortTable;
-import util.Interpret;
-import util.basis.Combo;
-import util.basis.LineUp;
-import util.unit.Form;
-import util.unit.UnitStore;
 
 public class ComboListTable extends SortTable<Combo> {
 

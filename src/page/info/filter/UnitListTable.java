@@ -2,18 +2,18 @@ package page.info.filter;
 
 import java.awt.Point;
 
+import common.util.basis.Basis;
+import common.util.basis.BasisSet;
+import common.util.entity.data.MaskUnit;
+import common.util.system.Node;
+import common.util.unit.Enemy;
+import common.util.unit.Form;
+import common.util.unit.Unit;
 import page.MainFrame;
 import page.Page;
 import page.info.UnitInfoPage;
 import page.support.SortTable;
 import page.support.UnitTCR;
-import util.basis.Basis;
-import util.basis.BasisSet;
-import util.entity.data.MaskUnit;
-import util.system.Node;
-import util.unit.Enemy;
-import util.unit.Form;
-import util.unit.Unit;
 
 public class UnitListTable extends SortTable<Form> {
 

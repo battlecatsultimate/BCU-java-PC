@@ -10,13 +10,13 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
+import common.util.ImgCore;
+import common.util.anim.EAnimI;
+import common.util.system.fake.FakeGraphics;
+import common.util.system.fake.awt.FG2D;
 import main.Timer;
 import page.JTG;
 import page.view.ViewBox;
-import util.ImgCore;
-import util.anim.EAnimI;
-import util.system.fake.FakeGraphics;
-import util.system.fake.awt.FG2D;
 
 class ViewBoxDef extends Canvas implements ViewBox, ViewBox.VBExporter {
 

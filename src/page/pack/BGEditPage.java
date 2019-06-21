@@ -17,6 +17,12 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.Data;
+import common.util.pack.BGStore;
+import common.util.pack.Background;
+import common.util.pack.Pack;
+import common.util.system.VImg;
+import common.util.system.fake.FakeImage;
 import io.Reader;
 import io.Writer;
 import page.JBTN;
@@ -26,12 +32,6 @@ import page.Page;
 import page.support.Exporter;
 import page.support.Importer;
 import page.view.BGViewPage;
-import util.Data;
-import util.pack.BGStore;
-import util.pack.Background;
-import util.pack.Pack;
-import util.system.VImg;
-import util.system.fake.FakeImage;
 
 public class BGEditPage extends Page {
 

@@ -12,14 +12,14 @@ import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
 
+import common.util.anim.AnimC;
+import common.util.anim.AnimU;
+import common.util.anim.EAnimU;
+import common.util.system.P;
+import common.util.system.fake.FakeGraphics;
+import common.util.system.fake.ImageBuilder;
 import jogl.util.GLGraphics;
 import jogl.util.GLIB;
-import util.anim.AnimC;
-import util.anim.AnimU;
-import util.anim.EAnimU;
-import util.system.P;
-import util.system.fake.FakeGraphics;
-import util.system.fake.ImageBuilder;
 
 public class Temp extends StdGLC {
 

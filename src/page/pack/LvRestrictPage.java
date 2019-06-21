@@ -1,6 +1,6 @@
 package page.pack;
 
-import static util.Interpret.RARITY;
+import static common.util.Interpret.RARITY;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,14 +14,14 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.Data;
+import common.util.pack.Pack;
+import common.util.stage.CharaGroup;
+import common.util.stage.LvRestrict;
+import common.util.unit.Unit;
 import page.JBTN;
 import page.Page;
 import page.support.UnitLCR;
-import util.Data;
-import util.pack.Pack;
-import util.stage.CharaGroup;
-import util.stage.LvRestrict;
-import util.unit.Unit;
 
 public class LvRestrictPage extends Page {
 

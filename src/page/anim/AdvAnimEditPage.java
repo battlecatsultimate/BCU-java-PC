@@ -22,6 +22,10 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
+import common.util.anim.AnimC;
+import common.util.anim.EPart;
+import common.util.anim.MaAnim;
+import common.util.anim.Part;
 import io.Reader;
 import main.Opts;
 import page.JBTN;
@@ -29,10 +33,6 @@ import page.JL;
 import page.JTF;
 import page.JTG;
 import page.Page;
-import util.anim.AnimC;
-import util.anim.EPart;
-import util.anim.MaAnim;
-import util.anim.Part;
 
 public class AdvAnimEditPage extends Page implements TreeCont {
 

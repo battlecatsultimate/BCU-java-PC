@@ -6,14 +6,14 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.stage.Recd;
+import common.util.stage.Stage;
 import main.Opts;
 import page.JBTN;
 import page.JTF;
 import page.Page;
 import page.support.ReorderList;
 import page.support.ReorderListener;
-import util.stage.Recd;
-import util.stage.Stage;
 
 public class StRecdPage extends AbRecdPage {
 

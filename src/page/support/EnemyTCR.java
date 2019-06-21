@@ -7,8 +7,8 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import util.system.VImg;
-import util.unit.AbEnemy;
+import common.util.system.VImg;
+import common.util.unit.AbEnemy;
 
 public class EnemyTCR extends DefaultTableCellRenderer {
 

@@ -11,12 +11,12 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.stage.MapColc;
+import common.util.stage.Stage;
+import common.util.stage.StageMap;
 import page.JBTN;
 import page.Page;
 import page.battle.StRecdPage;
-import util.stage.MapColc;
-import util.stage.Stage;
-import util.stage.StageMap;
 
 public class StageViewPage extends StagePage {
 

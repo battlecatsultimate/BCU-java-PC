@@ -12,10 +12,10 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.pack.MusicStore;
+import common.util.pack.Pack;
 import page.JBTN;
 import page.Page;
-import util.pack.MusicStore;
-import util.pack.Pack;
 import io.BCMusic;
 
 public class MusicEditPage extends Page {

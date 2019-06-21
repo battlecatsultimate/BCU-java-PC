@@ -2,14 +2,14 @@ package page.info.filter;
 
 import java.awt.Point;
 
+import common.util.basis.Basis;
+import common.util.basis.BasisSet;
+import common.util.unit.Enemy;
 import page.MainFrame;
 import page.Page;
 import page.info.EnemyInfoPage;
 import page.support.EnemyTCR;
 import page.support.SortTable;
-import util.basis.Basis;
-import util.basis.BasisSet;
-import util.unit.Enemy;
 
 public class EnemyListTable extends SortTable<Enemy> {
 

@@ -21,8 +21,8 @@ import javax.swing.JLabel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import util.Data;
-import util.pack.Pack;
+import common.util.Data;
+import common.util.pack.Pack;
 
 public class WebPack {
 

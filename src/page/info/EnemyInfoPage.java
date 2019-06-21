@@ -5,11 +5,11 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JLabel;
 
+import common.util.basis.BasisSet;
+import common.util.unit.Enemy;
 import page.JBTN;
 import page.Page;
 import page.view.EnemyViewPage;
-import util.basis.BasisSet;
-import util.unit.Enemy;
 
 public class EnemyInfoPage extends Page {
 

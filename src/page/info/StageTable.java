@@ -1,30 +1,30 @@
 package page.info;
 
-import static util.stage.SCDef.B;
-import static util.stage.SCDef.C0;
-import static util.stage.SCDef.C1;
-import static util.stage.SCDef.E;
-import static util.stage.SCDef.G;
-import static util.stage.SCDef.L0;
-import static util.stage.SCDef.L1;
-import static util.stage.SCDef.M;
-import static util.stage.SCDef.N;
-import static util.stage.SCDef.R0;
-import static util.stage.SCDef.R1;
-import static util.stage.SCDef.S0;
-import static util.stage.SCDef.S1;
+import static common.util.stage.SCDef.B;
+import static common.util.stage.SCDef.C0;
+import static common.util.stage.SCDef.C1;
+import static common.util.stage.SCDef.E;
+import static common.util.stage.SCDef.G;
+import static common.util.stage.SCDef.L0;
+import static common.util.stage.SCDef.L1;
+import static common.util.stage.SCDef.M;
+import static common.util.stage.SCDef.N;
+import static common.util.stage.SCDef.R0;
+import static common.util.stage.SCDef.R1;
+import static common.util.stage.SCDef.S0;
+import static common.util.stage.SCDef.S1;
 
 import java.awt.Point;
 
+import common.util.Data;
+import common.util.stage.SCGroup;
+import common.util.stage.Stage;
+import common.util.unit.Enemy;
+import common.util.unit.EnemyStore;
 import page.MainFrame;
 import page.Page;
 import page.support.AbJTable;
 import page.support.EnemyTCR;
-import util.Data;
-import util.stage.SCGroup;
-import util.stage.Stage;
-import util.unit.Enemy;
-import util.unit.EnemyStore;
 
 public class StageTable extends AbJTable {
 

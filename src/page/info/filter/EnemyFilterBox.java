@@ -1,14 +1,14 @@
 package page.info.filter;
 
-import static util.Interpret.ATKCONF;
-import static util.Interpret.EABI;
-import static util.Interpret.EABIIND;
-import static util.Interpret.EFILTER;
-import static util.Interpret.ERARE;
-import static util.Interpret.SPROC;
-import static util.Interpret.TRAIT;
-import static util.Interpret.isER;
-import static util.Interpret.isType;
+import static common.util.Interpret.ATKCONF;
+import static common.util.Interpret.EABI;
+import static common.util.Interpret.EABIIND;
+import static common.util.Interpret.EFILTER;
+import static common.util.Interpret.ERARE;
+import static common.util.Interpret.SPROC;
+import static common.util.Interpret.TRAIT;
+import static common.util.Interpret.isER;
+import static common.util.Interpret.isType;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,13 +25,13 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.Res;
+import common.util.pack.Pack;
+import common.util.unit.Enemy;
+import common.util.unit.EnemyStore;
 import main.MainBCU;
 import page.JTG;
 import page.Page;
-import util.Res;
-import util.pack.Pack;
-import util.unit.Enemy;
-import util.unit.EnemyStore;
 
 public abstract class EnemyFilterBox extends Page {
 

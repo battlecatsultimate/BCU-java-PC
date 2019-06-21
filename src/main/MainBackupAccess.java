@@ -1,9 +1,9 @@
 package main;
 
+import common.util.Data;
 import io.Writer;
 import page.MainFrame;
 import page.pack.BackupTreePage;
-import util.Data;
 
 public class MainBackupAccess {
 

@@ -7,11 +7,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
+import common.util.Res;
+import common.util.system.P;
+import common.util.system.fake.FakeGraphics;
+import common.util.system.fake.FakeImage;
 import page.view.ViewBox;
-import util.Res;
-import util.system.P;
-import util.system.fake.FakeGraphics;
-import util.system.fake.FakeImage;
 
 public interface IconBox extends ViewBox {
 

@@ -8,12 +8,12 @@ import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.image.BufferedImage;
 
+import common.util.ImgCore;
+import common.util.anim.EAnimD;
+import common.util.anim.EAnimU;
+import common.util.system.P;
+import common.util.system.fake.awt.FG2D;
 import main.Timer;
-import util.ImgCore;
-import util.anim.EAnimD;
-import util.anim.EAnimU;
-import util.system.P;
-import util.system.fake.awt.FG2D;
 
 class AnimBox extends Canvas {
 

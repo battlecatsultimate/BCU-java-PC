@@ -13,6 +13,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.ImgCore;
 import event.EventBase;
 import event.EventReader;
 import io.BCMusic;
@@ -21,7 +22,6 @@ import io.Writer;
 import main.MainBCU;
 import main.Opts;
 import page.view.ViewBox;
-import util.ImgCore;
 
 public class ConfigPage extends Page {
 
