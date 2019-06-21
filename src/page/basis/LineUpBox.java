@@ -15,10 +15,10 @@ import common.util.system.SymCoord;
 import common.util.system.VImg;
 import common.util.system.fake.FakeGraphics;
 import common.util.system.fake.FakeImage;
-import common.util.system.fake.awt.FG2D;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import page.Page;
+import utilpc.awt.FG2D;
 
 public class LineUpBox extends Canvas {
 

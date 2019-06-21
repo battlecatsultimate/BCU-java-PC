@@ -12,8 +12,8 @@ import common.util.ImgCore;
 import common.util.anim.EAnimD;
 import common.util.anim.EAnimU;
 import common.util.system.P;
-import common.util.system.fake.awt.FG2D;
 import main.Timer;
+import utilpc.awt.FG2D;
 
 class AnimBox extends Canvas {
 

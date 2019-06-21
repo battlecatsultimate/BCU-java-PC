@@ -6,7 +6,6 @@ import java.util.Date;
 
 import common.util.Data;
 import common.util.system.fake.ImageBuilder;
-import common.util.system.fake.awt.PCIB;
 import decode.ZipLib;
 import io.BCJSON;
 import io.Reader;
@@ -17,6 +16,7 @@ import page.MainFrame;
 import page.MainPage;
 import page.awt.AWTBBB;
 import page.awt.BBBuilder;
+import utilpc.awt.PCIB;
 
 public class MainBCU {
 

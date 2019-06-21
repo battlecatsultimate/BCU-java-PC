@@ -24,7 +24,9 @@ import java.awt.event.KeyEvent;
 import java.util.Map;
 import java.util.TreeMap;
 
-public abstract class KeyHandler extends Page {
+import common.util.system.fake.FakeKey;
+
+public abstract class KeyHandler extends Page implements FakeKey{
 
 	private static final long serialVersionUID = 1L;
 

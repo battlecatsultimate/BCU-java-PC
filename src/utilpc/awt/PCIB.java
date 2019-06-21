@@ -1,14 +1,11 @@
-package jogl.util;
+package utilpc.awt;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 import common.util.system.fake.FakeImage;
 import common.util.system.fake.ImageBuilder;
-import utilpc.awt.FIBI;
 
-public class GLIB extends ImageBuilder {
+public class PCIB extends ImageBuilder {
 
 	@Override
 	public FakeImage build(Object o) throws IOException {
@@ -16,15 +13,7 @@ public class GLIB extends ImageBuilder {
 			return null;
 		if (o instanceof FakeImage)
 			return (FakeImage) o;
-		if (icon)
-			return FIBI.builder.build(o);
-		if (o instanceof BufferedImage)
-			return new AmbImage((BufferedImage) o);
-		if (o instanceof File)
-			return new AmbImage((File) o);
-		if (o instanceof byte[])
-			return new AmbImage((byte[]) o);
-		return null;
+		return FIBI.builder.build(o);
 	}
 
 	@Override

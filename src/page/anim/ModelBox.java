@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 
 import common.util.anim.EAnimS;
 import common.util.system.P;
-import common.util.system.fake.awt.FG2D;
+import utilpc.awt.FG2D;
 
 class ModelBox extends Canvas {
 

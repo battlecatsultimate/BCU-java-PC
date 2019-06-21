@@ -8,8 +8,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import common.util.system.fake.FakeImage;
-import common.util.system.fake.awt.FIBI;
 import jogl.GLStatic;
+import utilpc.awt.FIBI;
 
 public class AmbImage implements FakeImage {
 

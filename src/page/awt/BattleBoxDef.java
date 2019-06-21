@@ -9,10 +9,10 @@ import java.awt.image.BufferedImage;
 import common.util.basis.BattleField;
 import common.util.basis.SBCtrl;
 import common.util.system.fake.FakeGraphics;
-import common.util.system.fake.awt.FG2D;
 import main.Timer;
 import page.battle.BBCtrl;
 import page.battle.BattleBox;
+import utilpc.awt.FG2D;
 
 class BattleBoxDef extends Canvas implements BattleBox {
 
