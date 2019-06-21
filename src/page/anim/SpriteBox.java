@@ -10,8 +10,8 @@ import java.awt.image.BufferedImage;
 
 import common.util.anim.AnimC;
 import common.util.anim.ImgCut;
-import common.util.system.P;
 import page.Page;
+import utilpc.PP;
 
 class SpriteBox extends Canvas {
 
@@ -151,7 +151,7 @@ class SpriteBox extends Canvas {
 		int fir = -1;
 		int sel = -1;
 		for (int i = 0; i < ic.n; i++)
-			if (!new P(p).out(ic.cuts[i], r, -5)) {
+			if (!new PP(p).out(ic.cuts[i], r, -5)) {
 				if (fir == -1)
 					fir = i;
 				if (ski == 0)

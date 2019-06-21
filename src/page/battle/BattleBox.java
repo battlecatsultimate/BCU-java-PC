@@ -21,6 +21,7 @@ import common.util.system.fake.FakeImage;
 import common.util.system.fake.FakeTransform;
 import common.util.unit.Form;
 import page.RetFunc;
+import utilpc.PP;
 
 public interface BattleBox {
 
@@ -92,7 +93,7 @@ public interface BattleBox {
 			regulate();
 
 			ImgCore.set(g);
-			Point rect = new Point(box.getWidth(), box.getHeight());
+			P rect = new P(box.getWidth(), box.getHeight());
 			sb.bg.draw(g, rect, pos, midh, siz);
 			drawCastle(g);
 			drawEntity(g);
@@ -143,7 +144,7 @@ public interface BattleBox {
 
 		private synchronized void drag(Point p) {
 			if (mouse != null) {
-				P temp = new P(p);
+				P temp = new PP(p);
 				adjust((int) (temp.x - mouse.x), 0);
 				mouse.setTo(temp);
 				reset();
@@ -342,7 +343,7 @@ public interface BattleBox {
 		}
 
 		private synchronized void press(Point p) {
-			mouse = new P(p);
+			mouse = new PP(p);
 		}
 
 		private synchronized void release(Point p) {

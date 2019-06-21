@@ -14,7 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ToolTipManager;
 
-import common.util.system.P;
+import utilpc.PP;
 
 public abstract class Page extends JPanel implements RetFunc {
 
@@ -53,8 +53,8 @@ public abstract class Page extends JPanel implements RetFunc {
 		return Math.min(a * x / 2300, a * y / 1300);
 	}
 
-	protected static P size(int x, int y, int a, int v) {
-		return new P(a * x / 2300, v * y / 1300);
+	protected static PP size(int x, int y, int a, int v) {
+		return new PP(a * x / 2300, v * y / 1300);
 	}
 
 	private final Page front;
@@ -103,9 +103,9 @@ public abstract class Page extends JPanel implements RetFunc {
 		return front;
 	}
 
-	public final P getXY() {
+	public final PP getXY() {
 		JRootPane jrp = MainFrame.F.getRootPane();
-		return new P(jrp.getWidth(), jrp.getHeight());
+		return new PP(jrp.getWidth(), jrp.getHeight());
 	}
 
 	public final void resized() {

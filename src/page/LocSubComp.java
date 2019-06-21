@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
-import common.util.system.P;
+import utilpc.PP;
 
 class LocSubComp {
 
@@ -75,7 +75,7 @@ class LSCPop extends MouseAdapter {
 		if (arg0.getButton() == MouseEvent.BUTTON3) {
 			String cls = lsc.page.getClass().getSimpleName();
 			JPanel panel = new JPanel();
-			P size = new P(lsc.page.getRootPage().getSize()).times(0.25);
+			PP size = new PP(lsc.page.getRootPage().getSize()).times(0.25);
 			panel.setPreferredSize(size.toDimension());
 			panel.setLayout(new BorderLayout());
 			JPanel top = new JPanel(new GridLayout(2, 2));

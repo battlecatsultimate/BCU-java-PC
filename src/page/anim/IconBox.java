@@ -8,10 +8,10 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 import common.util.Res;
-import common.util.system.P;
 import common.util.system.fake.FakeGraphics;
 import common.util.system.fake.FakeImage;
 import page.view.ViewBox;
+import utilpc.PP;
 
 public interface IconBox extends ViewBox {
 
@@ -41,7 +41,7 @@ public interface IconBox extends ViewBox {
 		@Override
 		public synchronized void mousePressed(MouseEvent e) {
 			super.mousePressed(e);
-			if (cont.isBlank() && !new P(p).out(line, 1, -5))
+			if (cont.isBlank() && !new PP(p).out(line, 1, -5))
 				drag = true;
 		}
 

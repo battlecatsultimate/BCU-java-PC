@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
@@ -32,6 +31,7 @@ import page.Page;
 import page.support.Exporter;
 import page.support.Importer;
 import page.view.BGViewPage;
+import utilpc.UtilPC;
 
 public class BGEditPage extends Page {
 
@@ -104,7 +104,7 @@ public class BGEditPage extends Page {
 			set(cs[i], x, y, 900 + 250 * i, 50, 200, 50);
 		set(jl, x, y, 650, 150, 1600, 1000);
 		if (bgr != null)
-			jl.setIcon(new ImageIcon(bgr.getBg(jl.getWidth(), jl.getHeight())));
+			jl.setIcon(UtilPC.getBg(bgr, jl.getWidth(), jl.getHeight()));
 
 	}
 

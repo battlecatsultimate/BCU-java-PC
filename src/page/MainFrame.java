@@ -25,6 +25,7 @@ import javax.swing.plaf.FontUIResource;
 import common.util.system.P;
 import io.Writer;
 import main.Printer;
+import utilpc.PP;
 
 public class MainFrame extends JFrame {
 
@@ -92,8 +93,8 @@ public class MainFrame extends JFrame {
 
 	public void sizer() {
 		if (crect == null) {
-			P screen = new P(Toolkit.getDefaultToolkit().getScreenSize());
-			rect = new P(0, 0).toRectangle(new P(screen.x, screen.y));
+			PP screen = new PP(Toolkit.getDefaultToolkit().getScreenSize());
+			rect = new PP(0, 0).toRectangle(new P(screen.x, screen.y));
 			setBounds(rect);
 			setVisible(true);
 			int nx = rect.width - getRootPane().getWidth();

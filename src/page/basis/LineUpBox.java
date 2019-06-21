@@ -18,6 +18,7 @@ import common.util.system.fake.FakeImage;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import page.Page;
+import utilpc.PP;
 import utilpc.awt.FG2D;
 
 public class LineUpBox extends Canvas {
@@ -29,7 +30,7 @@ public class LineUpBox extends Canvas {
 	private LineUp lu;
 	private int pt = 0, time = 0;
 	private Combo sc;
-	private P relative, mouse;
+	private PP relative, mouse;
 
 	protected Form sf;
 
@@ -106,7 +107,7 @@ public class LineUpBox extends Canvas {
 	protected void drag(Point p) {
 		if (relative == null || sf == null)
 			return;
-		mouse = new P(p).divide(getScale());
+		mouse = new PP(p).divide(getScale());
 		int ori = getPos(sf);
 		Point pf = getPos(mouse);
 		int fin = pf.x + pf.y * 5;
@@ -116,8 +117,8 @@ public class LineUpBox extends Canvas {
 
 	protected void press(Point p) {
 		click(p);
-		P ul = new P(getPos(p)).times(new P(120, 100));
-		relative = ul.sf(mouse = new P(p).divide(getScale()));
+		PP ul = new PP(getPos(p)).times(new P(120, 100));
+		relative = ul.sf(mouse = new PP(p).divide(getScale()));
 
 	}
 
@@ -192,21 +193,21 @@ public class LineUpBox extends Canvas {
 		return -1;
 	}
 
-	private Point getPos(P p) {
-		P ans = p.copy().times(new P(5, 3)).divide(new P(600, 300));
-		ans.limit(new P(4, 2));
+	private Point getPos(Point p) {
+		PP siz = new PP(getSize());
+		PP ans = new PP(p).times(new P(5, 3)).divide(siz);
+		ans.limit(new PP(4, 2));
 		return ans.toPoint();
 	}
 
-	private Point getPos(Point p) {
-		P siz = new P(getSize());
-		P ans = new P(p).times(new P(5, 3)).divide(siz);
+	private Point getPos(PP p) {
+		PP ans = p.copy().times(new P(5, 3)).divide(new P(600, 300));
 		ans.limit(new P(4, 2));
 		return ans.toPoint();
 	}
 
 	private P getScale() {
-		return new P(getSize()).divide(new P(600, 300));
+		return new PP(getSize()).divide(new P(600, 300));
 	}
 
 	private void jump(int ior, int ifi) {

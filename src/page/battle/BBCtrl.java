@@ -10,6 +10,7 @@ import common.util.system.fake.FakeImage;
 import common.util.unit.Form;
 import page.battle.BattleBox.BBPainter;
 import page.battle.BattleBox.OuterBox;
+import utilpc.PP;
 
 public class BBCtrl extends BBPainter {
 
@@ -32,7 +33,7 @@ public class BBCtrl extends BBPainter {
 			int ih = (int) (hr * img.getHeight());
 			int x = (w - iw * 5) / 2 + iw * (i % 5);
 			int y = h - ih * (2 - i / 5);
-			if (!new P(p).out(new P(x, y), new P(x + iw, y + ih), 0))
+			if (!new PP(p).out(new P(x, y), new P(x + iw, y + ih), 0))
 				sbc.action.add(i);
 			if (button != MouseEvent.BUTTON1)
 				sbc.action.add(10);
@@ -42,11 +43,11 @@ public class BBCtrl extends BBPainter {
 		FakeImage right = Res.battle[1][0].getImg();
 		int ih = (int) (hr * left.getHeight());
 		int iw = (int) (hr * left.getWidth());
-		if (!new P(p).out(new P(0, h - ih), new P(iw, h), 0))
+		if (!new PP(p).out(new P(0, h - ih), new P(iw, h), 0))
 			sbc.action.add(-1);
 		iw = (int) (hr * right.getWidth());
 		ih = (int) (hr * right.getHeight());
-		if (!new P(p).out(new P(w - iw, h - ih), new P(w, h), 0))
+		if (!new PP(p).out(new P(w - iw, h - ih), new P(w, h), 0))
 			sbc.action.add(-2);
 
 		if ((sbc.sb.conf[0] & 2) > 0) {
@@ -54,7 +55,7 @@ public class BBCtrl extends BBPainter {
 			int cw = bimg.getWidth();
 			int ch = bimg.getHeight();
 			int mh = Res.num[0][0].getImg().getHeight();
-			if (!new P(p).out(new P(w - cw, mh), new P(w, mh + ch), 0))
+			if (!new PP(p).out(new P(w - cw, mh), new P(w, mh + ch), 0))
 				sbc.action.add(-3);
 		}
 		reset();
