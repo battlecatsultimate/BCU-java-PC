@@ -181,9 +181,16 @@ public class Interpret extends Data {
 			if (ma.getProc(i)[0] == 0)
 				continue;
 			String ans = "";
+			String proc = PROC[i];
+			if (PROC[i].startsWith("IMU"))
+				if (ma.getProc(i)[0] == 100) {
+					l.add(Page.get(3, "imu") + PROC[i].substring(3));
+					continue;
+				} else
+					proc = Page.get(3, "res") + proc.substring(3);
 			for (int j = 0; j < CMP[i].length; j++)
 				if (CMP[i][j] == -1)
-					ans += PROC[i] + " ";
+					ans += proc + " ";
 				else {
 					int pro = ma.getProc(i)[LOC[i][j]];
 					String rep = pro == -1 ? Page.get(3, "inf") : "" + pro;
