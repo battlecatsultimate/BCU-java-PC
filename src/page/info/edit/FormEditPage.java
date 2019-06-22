@@ -1,7 +1,7 @@
 package page.info.edit;
 
-import static common.util.Interpret.ABIIND;
-import static common.util.Interpret.IMUSFT;
+import static utilpc.Interpret.ABIIND;
+import static utilpc.Interpret.IMUSFT;
 
 import common.util.entity.data.CustomEntity;
 import common.util.entity.data.CustomUnit;

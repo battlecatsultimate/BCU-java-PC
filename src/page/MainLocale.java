@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import common.CommonStatic;
-import common.util.Interpret;
 import common.util.anim.AnimU;
+
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
@@ -22,6 +22,7 @@ import page.info.edit.StageEditPage;
 import page.info.filter.EnemyListTable;
 import page.info.filter.UnitListTable;
 import page.pack.EREditPage;
+import utilpc.Interpret;
 
 public strictfp class MainLocale extends CommonStatic.Lang {
 

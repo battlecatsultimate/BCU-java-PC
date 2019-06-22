@@ -20,7 +20,6 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import common.io.InStream;
-import common.util.Interpret;
 import common.util.anim.MaAnim;
 import common.util.anim.Part;
 import common.util.basis.BasisLU;
@@ -47,6 +46,7 @@ import page.info.TreaTable;
 import page.support.Exporter;
 import utilpc.Backup;
 import utilpc.BackupData;
+import utilpc.Interpret;
 
 public class BackupTreePage extends Page {
 

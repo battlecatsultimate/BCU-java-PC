@@ -15,6 +15,7 @@ import common.CommonStatic.Itf;
 import common.io.InStream;
 import common.io.OutStream;
 import common.util.Res;
+import common.util.anim.AnimU;
 import common.util.pack.Background;
 import common.util.system.VImg;
 import common.util.system.files.FileData;
@@ -25,7 +26,6 @@ import io.Writer;
 import main.Opts;
 import page.LoadPage;
 import page.MainLocale;
-import page.Page;
 import utilpc.awt.FG2D;
 
 public class UtilPC {
@@ -46,21 +46,6 @@ public class UtilPC {
 		public void exit(boolean save) {
 			Writer.logClose(save);
 			System.exit(0);
-		}
-
-		@Override
-		public String get(int i, String s) {
-			return Page.get(i, s);
-		}
-
-		@Override
-		public String[] get(int i, String s, int n) {
-			return Page.get(i, s, n);
-		}
-
-		@Override
-		public String[] getLoc(int i, String... s) {
-			return MainLocale.getLoc(i, s);
 		}
 
 		@Override
@@ -97,6 +82,26 @@ public class UtilPC {
 		@Override
 		public boolean writeBytes(OutStream os, String path) {
 			return Writer.writeBytes(os, path);
+		}
+
+		@Override
+		public void redefine(Class<?> cls) {
+			if (cls == AnimU.class)
+				red$AnimU();
+		}
+
+		private void red$AnimU() {
+			String s0 = "move";
+			String s1 = "wait";
+			String s2 = "atk";
+			String s3 = "kb";
+			String s4 = "down";
+			String s5 = "under";
+			String s6 = "up";
+			String s7 = "entry";
+			AnimU.strs0 = MainLocale.getLoc(0, s0, s1, s2, s3);
+			AnimU.strs1 = MainLocale.getLoc(0, s0, s1, s2, s3, s4, s5, s6);
+			AnimU.strs2 = MainLocale.getLoc(0, s0, s1, s2, s3, s7);
 		}
 
 	}

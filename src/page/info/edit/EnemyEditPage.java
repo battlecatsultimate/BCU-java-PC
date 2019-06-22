@@ -1,7 +1,7 @@
 package page.info.edit;
 
-import static common.util.Interpret.EABIIND;
-import static common.util.Interpret.IMUSFT;
+import static utilpc.Interpret.EABIIND;
+import static utilpc.Interpret.IMUSFT;
 
 import common.util.entity.data.CustomEnemy;
 import common.util.entity.data.CustomEntity;

@@ -1,8 +1,8 @@
 package page.info.filter;
 
-import static common.util.Interpret.ABIIND;
-import static common.util.Interpret.EABIIND;
-import static common.util.Interpret.SABIS;
+import static utilpc.Interpret.ABIIND;
+import static utilpc.Interpret.EABIIND;
+import static utilpc.Interpret.SABIS;
 
 import java.awt.Component;
 import java.awt.image.BufferedImage;

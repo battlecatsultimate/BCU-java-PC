@@ -10,12 +10,12 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import common.util.Data;
-import common.util.Interpret;
 import common.CommonStatic;
 import page.JL;
 import page.JTF;
 import page.Page;
 import page.support.ListJtfPolicy;
+import utilpc.Interpret;
 import utilpc.UtilPC;
 
 class AtkProcTable extends Page {

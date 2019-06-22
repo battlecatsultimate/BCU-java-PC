@@ -1,6 +1,6 @@
 package page.info.edit;
 
-import static common.util.Interpret.SPROC;
+import static utilpc.Interpret.SPROC;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;

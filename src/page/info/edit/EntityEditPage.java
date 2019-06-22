@@ -1,8 +1,8 @@
 package page.info.edit;
 
 import static common.util.Data.*;
-import static common.util.Interpret.ABIIND;
-import static common.util.Interpret.IMUSFT;
+import static utilpc.Interpret.ABIIND;
+import static utilpc.Interpret.IMUSFT;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

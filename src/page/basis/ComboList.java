@@ -7,8 +7,8 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
 import javax.swing.JList;
 
-import common.util.Interpret;
 import common.util.basis.Combo;
+import utilpc.Interpret;
 
 class ComboList extends JList<Combo> {
 

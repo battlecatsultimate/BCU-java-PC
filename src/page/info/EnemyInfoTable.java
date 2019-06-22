@@ -8,13 +8,13 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-import common.util.Interpret;
 import common.util.basis.BasisSet;
 import common.util.unit.Enemy;
 import common.CommonStatic;
 import page.JL;
 import page.JTF;
 import page.Page;
+import utilpc.Interpret;
 import utilpc.UtilPC;
 
 public class EnemyInfoTable extends Page {

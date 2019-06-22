@@ -1,11 +1,11 @@
 package page.info.filter;
 
-import static common.util.Interpret.ATKCONF;
-import static common.util.Interpret.RARITY;
-import static common.util.Interpret.SABIS;
-import static common.util.Interpret.SPROC;
-import static common.util.Interpret.TRAIT;
-import static common.util.Interpret.isType;
+import static utilpc.Interpret.ATKCONF;
+import static utilpc.Interpret.RARITY;
+import static utilpc.Interpret.SABIS;
+import static utilpc.Interpret.SPROC;
+import static utilpc.Interpret.TRAIT;
+import static utilpc.Interpret.isType;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

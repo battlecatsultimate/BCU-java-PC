@@ -8,7 +8,6 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 
-import common.util.Interpret;
 import common.util.entity.data.AtkDataModel;
 import common.CommonStatic;
 import page.JL;
@@ -16,6 +15,7 @@ import page.JTF;
 import page.JTG;
 import page.Page;
 import page.support.ListJtfPolicy;
+import utilpc.Interpret;
 
 class AtkEditTable extends Page {
 

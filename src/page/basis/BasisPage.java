@@ -23,7 +23,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import common.CommonStatic;
-import common.util.Interpret;
 import common.util.basis.BasisLU;
 import common.util.basis.BasisSet;
 import common.util.basis.Combo;
@@ -38,7 +37,8 @@ import page.Page;
 import page.info.TreaTable;
 import page.support.ReorderList;
 import page.support.ReorderListener;
-import page.support.UnitLCR;;
+import page.support.UnitLCR;
+import utilpc.Interpret;;
 
 public class BasisPage extends LubCont {
 

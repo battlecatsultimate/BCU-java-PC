@@ -1,13 +1,13 @@
 package page.info;
 
-import static common.util.Interpret.TCOLP;
-import static common.util.Interpret.TCTX;
-import static common.util.Interpret.TIND;
-import static common.util.Interpret.TREA;
-import static common.util.Interpret.getComp;
-import static common.util.Interpret.getValue;
-import static common.util.Interpret.setComp;
-import static common.util.Interpret.setValue;
+import static utilpc.Interpret.TCOLP;
+import static utilpc.Interpret.TCTX;
+import static utilpc.Interpret.TIND;
+import static utilpc.Interpret.TREA;
+import static utilpc.Interpret.getComp;
+import static utilpc.Interpret.getValue;
+import static utilpc.Interpret.setComp;
+import static utilpc.Interpret.setValue;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;

@@ -1,6 +1,6 @@
 package page.pack;
 
-import static common.util.Interpret.RARITY;
+import static utilpc.Interpret.RARITY;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

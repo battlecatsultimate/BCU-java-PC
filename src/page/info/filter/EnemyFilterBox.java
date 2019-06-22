@@ -1,14 +1,14 @@
 package page.info.filter;
 
-import static common.util.Interpret.ATKCONF;
-import static common.util.Interpret.EABI;
-import static common.util.Interpret.EABIIND;
-import static common.util.Interpret.EFILTER;
-import static common.util.Interpret.ERARE;
-import static common.util.Interpret.SPROC;
-import static common.util.Interpret.TRAIT;
-import static common.util.Interpret.isER;
-import static common.util.Interpret.isType;
+import static utilpc.Interpret.ATKCONF;
+import static utilpc.Interpret.EABI;
+import static utilpc.Interpret.EABIIND;
+import static utilpc.Interpret.EFILTER;
+import static utilpc.Interpret.ERARE;
+import static utilpc.Interpret.SPROC;
+import static utilpc.Interpret.TRAIT;
+import static utilpc.Interpret.isER;
+import static utilpc.Interpret.isType;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

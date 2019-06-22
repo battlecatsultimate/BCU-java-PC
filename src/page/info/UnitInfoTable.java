@@ -9,7 +9,6 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import common.util.Data;
-import common.util.Interpret;
 import common.util.basis.BasisSet;
 import common.util.entity.data.MaskUnit;
 import common.util.unit.EForm;
@@ -18,6 +17,7 @@ import common.CommonStatic;
 import page.JL;
 import page.JTF;
 import page.Page;
+import utilpc.Interpret;
 import utilpc.UtilPC;
 
 public class UnitInfoTable extends Page {
@@ -85,8 +85,8 @@ public class UnitInfoTable extends Page {
 
 		List<String> ls = Interpret.getAbi(ef.du);
 		ls.addAll(Interpret.getProc(ef.du, b.t(), ef.du.getType()));
-		for(JLabel l:proc)
-			if(l!=pcoin)
+		for (JLabel l : proc)
+			if (l != pcoin)
 				l.setText("");
 		for (int i = 0; i < ls.size(); i++)
 			proc[i].setText(ls.get(i));
