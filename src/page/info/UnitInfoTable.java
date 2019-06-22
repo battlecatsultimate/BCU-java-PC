@@ -85,6 +85,9 @@ public class UnitInfoTable extends Page {
 
 		List<String> ls = Interpret.getAbi(ef.du);
 		ls.addAll(Interpret.getProc(ef.du, b.t(), ef.du.getType()));
+		for(JLabel l:proc)
+			if(l!=pcoin)
+				l.setText("");
 		for (int i = 0; i < ls.size(); i++)
 			proc[i].setText(ls.get(i));
 
