@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 import common.CommonStatic.Itf;
+import common.battle.data.PCoin;
 import common.io.InStream;
 import common.io.OutStream;
 import common.system.VImg;
@@ -20,6 +21,7 @@ import common.system.files.VFile;
 import common.util.Res;
 import common.util.anim.AnimU;
 import common.util.pack.Background;
+import common.util.unit.Form;
 import io.BCMusic;
 import io.Reader;
 import io.Writer;
@@ -142,7 +144,23 @@ public class UtilPC {
 		return new ImageIcon((Image) v.bimg.bimg());
 	}
 
-	public static <T> T readSave(String path, Function<Queue<String>, T> func) {
+	public static String[] lvText(Form f, int[] lvs) {
+		PCoin pc = f.getPCoin();
+		if (pc == null)
+			return new String[] { "Lv." + lvs[0], "" };
+		else {
+			String lab = Interpret.PCTX[pc.info[0][0]];
+			String str = "Lv." + lvs[0] + ", {";
+			for (int i = 1; i < 5; i++) {
+				str += lvs[i] + ",";
+				lab += ", " + Interpret.PCTX[pc.info[i][0]];
+			}
+			str += lvs[5] + "}";
+			return new String[] { str, lab };
+		}
+	}
+
+	private static <T> T readSave(String path, Function<Queue<String>, T> func) {
 		VFile<? extends FileData> f = VFile.getFile(path);
 		VFile<BackupData> b = Reader.alt == null ? null : Reader.alt.find(path);
 		int ind = 0;

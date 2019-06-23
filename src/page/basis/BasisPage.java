@@ -38,7 +38,8 @@ import page.info.TreaTable;
 import page.support.ReorderList;
 import page.support.ReorderListener;
 import page.support.UnitLCR;
-import utilpc.Interpret;;
+import utilpc.Interpret;
+import utilpc.UtilPC;;
 
 public class BasisPage extends LubCont {
 
@@ -603,7 +604,7 @@ public class BasisPage extends LubCont {
 			pcoin.setText("");
 			return;
 		}
-		String[] strs = f.lvText(lu().getLv(f.unit));
+		String[] strs = UtilPC.lvText(f, lu().getLv(f.unit));
 		lvjtf.setText(strs[0]);
 		pcoin.setText(strs[1]);
 	}

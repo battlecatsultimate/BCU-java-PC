@@ -121,7 +121,7 @@ public class UnitInfoTable extends Page {
 			@Override
 			public void focusLost(FocusEvent e) {
 				multi = f.regulateLv(CommonStatic.parseIntsN(jtf.getText()), multi);
-				String[] strs = f.lvText(multi);
+				String[] strs = UtilPC.lvText(f, multi);
 				jtf.setText(strs[0]);
 				if (pcoin != null)
 					pcoin.setText(strs[1]);
@@ -148,7 +148,7 @@ public class UnitInfoTable extends Page {
 				atks[i].setHorizontalAlignment(SwingConstants.CENTER);
 		}
 		add(jtf);
-		String[] strs = f.lvText(multi);
+		String[] strs = UtilPC.lvText(f, multi);
 		jtf.setText(strs[0]);
 		if (pcoin != null) {
 			add(pcoin);
