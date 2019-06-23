@@ -665,7 +665,7 @@ public class PackEditPage extends Page {
 		vbgr.setEnabled(pac != null);
 		vene.setEnabled(pac != null);
 		vmsc.setEnabled(pac != null);
-		recd.setEnabled(pac != null);
+		recd.setEnabled(pac != null && pac != Pack.def);
 		boolean canUnpack = pac != null && pac != Pack.def && !pac.editable && pac.author.equals(Account.USERNAME);
 		unpk.setEnabled(canUnpack);
 		if (b)
