@@ -15,9 +15,9 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.system.VImg;
 import common.util.pack.CasStore;
 import common.util.pack.Pack;
-import common.util.system.VImg;
 import io.Writer;
 import page.JBTN;
 import page.Page;

@@ -3,16 +3,16 @@ package utilpc;
 import java.util.ArrayList;
 import java.util.List;
 
+import common.battle.BasisLU;
+import common.battle.BasisSet;
+import common.battle.Treasure;
+import common.battle.data.MaskAtk;
+import common.battle.data.MaskEnemy;
+import common.battle.data.MaskEntity;
 import common.util.Data;
-import common.util.basis.BasisLU;
-import common.util.basis.BasisSet;
-import common.util.basis.Combo;
-import common.util.basis.Treasure;
-import common.util.entity.data.MaskAtk;
-import common.util.entity.data.MaskEnemy;
-import common.util.entity.data.MaskEntity;
 import common.util.pack.Pack;
 import common.util.stage.MapColc;
+import common.util.unit.Combo;
 import common.util.unit.Enemy;
 import page.Page;
 

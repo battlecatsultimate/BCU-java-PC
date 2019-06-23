@@ -10,9 +10,9 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
+import common.system.fake.FakeGraphics;
 import common.util.ImgCore;
 import common.util.anim.EAnimI;
-import common.util.system.fake.FakeGraphics;
 import main.Timer;
 import page.JTG;
 import page.view.ViewBox;

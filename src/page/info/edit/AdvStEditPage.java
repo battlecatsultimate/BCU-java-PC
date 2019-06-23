@@ -7,11 +7,11 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.CommonStatic;
 import common.util.stage.SCDef;
 import common.util.stage.SCGroup;
 import common.util.stage.Stage;
 import common.util.unit.AbEnemy;
-import common.CommonStatic;
 import page.JBTN;
 import page.JTF;
 import page.Page;

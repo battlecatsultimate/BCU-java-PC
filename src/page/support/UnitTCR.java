@@ -7,7 +7,7 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import common.util.system.VImg;
+import common.system.VImg;
 import common.util.unit.Form;
 import utilpc.UtilPC;
 

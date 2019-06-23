@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import common.util.system.fake.FakeImage;
+import common.system.fake.FakeImage;
 import jogl.GLStatic;
 import utilpc.awt.FIBI;
 

@@ -21,6 +21,7 @@ import java.util.EventObject;
 
 import javax.swing.text.JTextComponent;
 
+import common.CommonStatic;
 import common.util.Data;
 import common.util.pack.Pack;
 import common.util.stage.SCDef;
@@ -30,7 +31,6 @@ import common.util.unit.AbEnemy;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
 import common.util.unit.EnemyStore;
-import common.CommonStatic;
 import page.MainFrame;
 import page.Page;
 import page.info.EnemyInfoPage;

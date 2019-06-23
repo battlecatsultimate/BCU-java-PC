@@ -7,9 +7,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
+import common.system.fake.FakeGraphics;
+import common.system.fake.FakeImage;
 import common.util.Res;
-import common.util.system.fake.FakeGraphics;
-import common.util.system.fake.FakeImage;
 import page.view.ViewBox;
 import utilpc.PP;
 

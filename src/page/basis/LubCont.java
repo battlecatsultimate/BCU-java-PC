@@ -3,7 +3,7 @@ package page.basis;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-import common.util.system.Node;
+import common.system.Node;
 import common.util.unit.Unit;
 import page.Page;
 import page.info.UnitInfoPage;

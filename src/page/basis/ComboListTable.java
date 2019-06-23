@@ -7,8 +7,8 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import common.util.basis.Combo;
-import common.util.basis.LineUp;
+import common.battle.LineUp;
+import common.util.unit.Combo;
 import common.util.unit.Form;
 import common.util.unit.UnitStore;
 import page.MainLocale;

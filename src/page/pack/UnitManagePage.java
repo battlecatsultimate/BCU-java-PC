@@ -16,14 +16,14 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.CommonStatic;
+import common.battle.data.CustomUnit;
 import common.util.anim.AnimC;
-import common.util.entity.data.CustomUnit;
 import common.util.pack.Pack;
 import common.util.unit.DIYAnim;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import common.util.unit.UnitLevel;
-import common.CommonStatic;
 import main.Opts;
 import page.JBTN;
 import page.JL;

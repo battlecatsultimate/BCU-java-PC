@@ -1,6 +1,6 @@
 package jogl;
 
-import common.util.basis.BattleField;
+import common.battle.BattleField;
 import page.battle.BBRecd;
 
 class GLBBRecd extends GLBattleBox implements BBRecd {

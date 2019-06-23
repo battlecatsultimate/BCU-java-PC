@@ -9,8 +9,8 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import common.util.basis.BasisLU;
-import common.util.basis.BasisSet;
+import common.battle.BasisLU;
+import common.battle.BasisSet;
 import common.util.stage.RandStage;
 import common.util.stage.Stage;
 import page.JBTN;

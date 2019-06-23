@@ -8,12 +8,12 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import common.CommonStatic;
+import common.battle.BasisSet;
+import common.battle.data.MaskUnit;
 import common.util.Data;
-import common.util.basis.BasisSet;
-import common.util.entity.data.MaskUnit;
 import common.util.unit.EForm;
 import common.util.unit.Form;
-import common.CommonStatic;
 import page.JL;
 import page.JTF;
 import page.Page;

@@ -12,9 +12,9 @@ import java.awt.RenderingHints;
 import java.awt.RenderingHints.Key;
 import java.awt.geom.AffineTransform;
 
-import common.util.system.fake.FakeGraphics;
-import common.util.system.fake.FakeImage;
-import common.util.system.fake.FakeTransform;
+import common.system.fake.FakeGraphics;
+import common.system.fake.FakeImage;
+import common.system.fake.FakeTransform;
 
 public class FG2D implements FakeGraphics {
 

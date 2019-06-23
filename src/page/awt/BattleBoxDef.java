@@ -6,9 +6,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-import common.util.basis.BattleField;
-import common.util.basis.SBCtrl;
-import common.util.system.fake.FakeGraphics;
+import common.battle.BattleField;
+import common.battle.SBCtrl;
+import common.system.fake.FakeGraphics;
 import main.Timer;
 import page.battle.BBCtrl;
 import page.battle.BattleBox;

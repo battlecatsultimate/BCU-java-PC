@@ -2,8 +2,8 @@ package page.info.filter;
 
 import java.awt.Point;
 
-import common.util.basis.Basis;
-import common.util.basis.BasisSet;
+import common.battle.Basis;
+import common.battle.BasisSet;
 import common.util.unit.Enemy;
 import page.MainFrame;
 import page.Page;

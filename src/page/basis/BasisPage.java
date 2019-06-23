@@ -1,6 +1,6 @@
 package page.basis;
 
-import static common.util.basis.BasisSet.current;
+import static common.battle.BasisSet.current;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -23,12 +23,12 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import common.CommonStatic;
-import common.util.basis.BasisLU;
-import common.util.basis.BasisSet;
-import common.util.basis.Combo;
-import common.util.basis.LineUp;
+import common.battle.BasisLU;
+import common.battle.BasisSet;
+import common.battle.LineUp;
+import common.system.Node;
 import common.util.pack.NyCastle;
-import common.util.system.Node;
+import common.util.unit.Combo;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import page.JBTN;

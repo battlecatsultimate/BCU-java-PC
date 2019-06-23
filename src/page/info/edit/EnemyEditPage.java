@@ -3,8 +3,8 @@ package page.info.edit;
 import static utilpc.Interpret.EABIIND;
 import static utilpc.Interpret.IMUSFT;
 
-import common.util.entity.data.CustomEnemy;
-import common.util.entity.data.CustomEntity;
+import common.battle.data.CustomEnemy;
+import common.battle.data.CustomEntity;
 import common.util.pack.Pack;
 import common.util.unit.Enemy;
 import page.JBTN;

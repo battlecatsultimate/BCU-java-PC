@@ -12,7 +12,7 @@ import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.TransferHandler;
 
-import common.util.system.Copable;
+import common.system.Copable;
 
 public class InListTH<T> extends TransferHandler implements Transferable {
 

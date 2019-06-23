@@ -8,10 +8,10 @@ import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2ES3;
 
-import common.util.system.P;
-import common.util.system.fake.FakeGraphics;
-import common.util.system.fake.FakeImage;
-import common.util.system.fake.FakeTransform;
+import common.system.P;
+import common.system.fake.FakeGraphics;
+import common.system.fake.FakeImage;
+import common.system.fake.FakeTransform;
 import jogl.util.GLGraphics.GeomG;
 
 public class GLGraphics implements GeoAuto {

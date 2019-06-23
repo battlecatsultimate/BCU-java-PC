@@ -2,8 +2,8 @@ package utilpc.awt;
 
 import java.io.IOException;
 
-import common.util.system.fake.FakeImage;
-import common.util.system.fake.ImageBuilder;
+import common.system.fake.FakeImage;
+import common.system.fake.ImageBuilder;
 
 public class PCIB extends ImageBuilder {
 

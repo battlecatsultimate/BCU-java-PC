@@ -22,7 +22,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import common.util.entity.data.MaskUnit;
+import common.battle.data.MaskUnit;
 import common.util.pack.Pack;
 import common.util.unit.Form;
 import common.util.unit.Unit;

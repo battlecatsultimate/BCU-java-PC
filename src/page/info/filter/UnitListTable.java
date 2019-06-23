@@ -2,10 +2,10 @@ package page.info.filter;
 
 import java.awt.Point;
 
-import common.util.basis.Basis;
-import common.util.basis.BasisSet;
-import common.util.entity.data.MaskUnit;
-import common.util.system.Node;
+import common.battle.Basis;
+import common.battle.BasisSet;
+import common.battle.data.MaskUnit;
+import common.system.Node;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;

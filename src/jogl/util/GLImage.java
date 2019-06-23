@@ -11,8 +11,8 @@ import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 
-import common.util.system.P;
-import common.util.system.fake.FakeImage;
+import common.system.P;
+import common.system.fake.FakeImage;
 import jogl.GLStatic;
 import main.Printer;
 

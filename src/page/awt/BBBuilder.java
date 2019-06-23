@@ -1,7 +1,7 @@
 package page.awt;
 
-import common.util.basis.BattleField;
-import common.util.basis.SBCtrl;
+import common.battle.BattleField;
+import common.battle.SBCtrl;
 import page.anim.IconBox;
 import page.battle.BattleBox;
 import page.battle.BattleBox.OuterBox;

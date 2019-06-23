@@ -3,10 +3,10 @@ package page.battle;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
+import common.battle.SBCtrl;
+import common.system.P;
+import common.system.fake.FakeImage;
 import common.util.Res;
-import common.util.basis.SBCtrl;
-import common.util.system.P;
-import common.util.system.fake.FakeImage;
 import common.util.unit.Form;
 import page.battle.BattleBox.BBPainter;
 import page.battle.BattleBox.OuterBox;

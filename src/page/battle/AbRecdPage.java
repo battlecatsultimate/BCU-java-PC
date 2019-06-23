@@ -6,7 +6,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 
 import common.CommonStatic;
-import common.util.basis.BasisSet;
+import common.battle.BasisSet;
 import common.util.stage.MapColc;
 import common.util.stage.Recd;
 import common.util.stage.Stage;

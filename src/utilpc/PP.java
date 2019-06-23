@@ -6,7 +6,7 @@ import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-import common.util.system.P;
+import common.system.P;
 
 public strictfp class PP extends P {
 

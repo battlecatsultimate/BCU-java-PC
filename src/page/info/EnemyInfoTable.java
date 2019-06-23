@@ -8,9 +8,9 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-import common.util.basis.BasisSet;
-import common.util.unit.Enemy;
 import common.CommonStatic;
+import common.battle.BasisSet;
+import common.util.unit.Enemy;
 import page.JL;
 import page.JTF;
 import page.Page;

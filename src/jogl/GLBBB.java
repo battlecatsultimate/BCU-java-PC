@@ -1,7 +1,7 @@
 package jogl;
 
-import common.util.basis.BattleField;
-import common.util.basis.SBCtrl;
+import common.battle.BattleField;
+import common.battle.SBCtrl;
 import page.anim.IconBox;
 import page.awt.BBBuilder;
 import page.awt.RecdThread;

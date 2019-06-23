@@ -8,8 +8,8 @@ import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
 
-import common.util.system.fake.FakeImage;
-import common.util.system.fake.ImageBuilder;
+import common.system.fake.FakeImage;
+import common.system.fake.ImageBuilder;
 import io.Writer;
 
 public class FIBI implements FakeImage {

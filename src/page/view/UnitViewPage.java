@@ -9,8 +9,8 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.system.Node;
 import common.util.pack.Pack;
-import common.util.system.Node;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import common.util.unit.UnitStore;

@@ -14,14 +14,14 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.CommonStatic;
+import common.system.FixIndexList;
 import common.util.Data;
 import common.util.pack.Pack;
 import common.util.stage.CharaGroup;
 import common.util.stage.LvRestrict;
-import common.util.system.FixIndexList;
 import common.util.unit.Form;
 import common.util.unit.Unit;
-import common.CommonStatic;
 import page.JBTN;
 import page.JTF;
 import page.Page;

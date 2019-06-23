@@ -4,8 +4,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import common.util.system.fake.FakeImage;
-import common.util.system.fake.ImageBuilder;
+import common.system.fake.FakeImage;
+import common.system.fake.ImageBuilder;
 import utilpc.awt.FIBI;
 
 public class GLIB extends ImageBuilder {

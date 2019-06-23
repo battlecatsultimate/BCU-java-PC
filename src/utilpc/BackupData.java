@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.Queue;
 
 import common.io.InStream;
-import common.util.system.fake.FakeImage;
-import common.util.system.files.FileData;
+import common.system.fake.FakeImage;
+import common.system.files.FileData;
 import io.ZipAccess;
 
 public class BackupData implements FileData {

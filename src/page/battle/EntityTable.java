@@ -1,8 +1,8 @@
 package page.battle;
 
-import common.util.entity.Entity;
-import common.util.entity.data.MaskEnemy;
-import common.util.entity.data.MaskUnit;
+import common.battle.data.MaskEnemy;
+import common.battle.data.MaskUnit;
+import common.battle.entity.Entity;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import page.MainLocale;

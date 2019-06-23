@@ -2,7 +2,7 @@ package utilpc.awt;
 
 import java.awt.geom.AffineTransform;
 
-import common.util.system.fake.FakeTransform;
+import common.system.fake.FakeTransform;
 
 public class FTAT implements FakeTransform {
 

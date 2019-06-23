@@ -7,8 +7,8 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 
-import common.util.system.files.AssetData;
-import common.util.system.files.VFile;
+import common.system.files.AssetData;
+import common.system.files.VFile;
 import io.Writer;
 import main.Opts;
 import page.LoadPage;

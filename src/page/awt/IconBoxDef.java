@@ -7,11 +7,11 @@ import static page.anim.IconBox.IBConf.type;
 
 import java.awt.image.BufferedImage;
 
+import common.system.fake.FakeGraphics;
+import common.system.fake.FakeImage;
+import common.system.fake.FakeTransform;
 import common.util.ImgCore;
 import common.util.Res;
-import common.util.system.fake.FakeGraphics;
-import common.util.system.fake.FakeImage;
-import common.util.system.fake.FakeTransform;
 import page.anim.IconBox;
 
 class IconBoxDef extends ViewBoxDef implements IconBox {

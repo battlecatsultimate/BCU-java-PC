@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.SwingConstants;
 
-import common.util.system.VImg;
+import common.system.VImg;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import utilpc.UtilPC;

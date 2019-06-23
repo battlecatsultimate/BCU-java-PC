@@ -16,13 +16,13 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.CommonStatic;
+import common.system.VImg;
+import common.system.fake.FakeImage;
 import common.util.Data;
 import common.util.pack.BGStore;
 import common.util.pack.Background;
 import common.util.pack.Pack;
-import common.util.system.VImg;
-import common.util.system.fake.FakeImage;
-import common.CommonStatic;
 import io.Writer;
 import page.JBTN;
 import page.JTF;

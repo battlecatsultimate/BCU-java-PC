@@ -4,8 +4,8 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 
-import common.util.basis.BattleField;
-import common.util.basis.SBCtrl;
+import common.battle.BattleField;
+import common.battle.SBCtrl;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import jogl.util.GLGraphics;

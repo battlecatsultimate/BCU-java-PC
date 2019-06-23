@@ -20,13 +20,13 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.system.VImg;
+import common.system.fake.FakeImage;
 import common.util.anim.AnimC;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.Part;
 import common.util.pack.Pack;
-import common.util.system.VImg;
-import common.util.system.fake.FakeImage;
 import common.util.unit.DIYAnim;
 import common.util.unit.Enemy;
 import io.Writer;

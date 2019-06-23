@@ -10,13 +10,13 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import common.CommonStatic;
 import common.util.pack.BGStore;
 import common.util.pack.Pack;
 import common.util.stage.Castles;
 import common.util.stage.Limit;
 import common.util.stage.Recd;
 import common.util.stage.Stage;
-import common.CommonStatic;
 import page.JBTN;
 import page.JL;
 import page.JTF;

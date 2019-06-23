@@ -9,8 +9,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-import common.util.Data;
 import common.CommonStatic;
+import common.util.Data;
 import page.JL;
 import page.JTF;
 import page.Page;

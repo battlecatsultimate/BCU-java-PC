@@ -6,8 +6,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import common.util.basis.BasisSet;
-import common.util.system.Node;
+import common.battle.BasisSet;
+import common.system.Node;
 import common.util.unit.Unit;
 import page.JBTN;
 import page.Page;

@@ -16,7 +16,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import common.CommonStatic.Account;
-import common.util.entity.data.CustomEnemy;
+import common.battle.data.CustomEnemy;
 import common.util.pack.Pack;
 import common.util.stage.MapColc;
 import common.util.stage.StageMap;

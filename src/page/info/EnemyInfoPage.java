@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JLabel;
 
-import common.util.basis.BasisSet;
+import common.battle.BasisSet;
 import common.util.unit.Enemy;
 import page.JBTN;
 import page.Page;

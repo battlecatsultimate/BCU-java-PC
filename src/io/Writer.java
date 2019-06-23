@@ -19,11 +19,11 @@ import javax.imageio.ImageIO;
 
 import common.CommonStatic;
 import common.CommonStatic.Account;
+import common.battle.BasisSet;
 import common.io.DataIO;
 import common.io.OutStream;
 import common.util.Data;
 import common.util.ImgCore;
-import common.util.basis.BasisSet;
 import common.util.pack.Pack;
 import common.util.stage.Recd;
 import common.util.unit.DIYAnim;

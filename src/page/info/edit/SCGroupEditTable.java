@@ -6,12 +6,12 @@ import java.util.EventObject;
 
 import javax.swing.text.JTextComponent;
 
+import common.CommonStatic;
 import common.util.Data;
 import common.util.stage.SCDef;
 import common.util.stage.SCGroup;
 import common.util.unit.AbEnemy;
 import common.util.unit.EnemyStore;
-import common.CommonStatic;
 import page.MainLocale;
 import page.support.AbJTable;
 import page.support.EnemyTCR;

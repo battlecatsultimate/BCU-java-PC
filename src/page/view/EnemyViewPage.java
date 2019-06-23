@@ -10,7 +10,7 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import common.util.entity.data.CustomEnemy;
+import common.battle.data.CustomEnemy;
 import common.util.pack.Pack;
 import common.util.unit.Enemy;
 import common.util.unit.EnemyStore;

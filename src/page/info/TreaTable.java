@@ -20,9 +20,9 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 
-import common.util.basis.BasisSet;
-import common.util.system.Node;
 import common.CommonStatic;
+import common.battle.BasisSet;
+import common.system.Node;
 import page.JTF;
 import page.JTG;
 import page.Page;
