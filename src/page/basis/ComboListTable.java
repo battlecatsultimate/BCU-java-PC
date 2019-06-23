@@ -7,14 +7,15 @@ import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import common.battle.LineUp;
+import common.util.unit.Combo;
+import common.util.unit.Form;
+import common.util.unit.UnitStore;
 import page.MainLocale;
 import page.Page;
 import page.support.SortTable;
-import util.Interpret;
-import util.basis.Combo;
-import util.basis.LineUp;
-import util.unit.Form;
-import util.unit.UnitStore;
+import utilpc.Interpret;
+import utilpc.UtilPC;
 
 public class ComboListTable extends SortTable<Combo> {
 
@@ -66,7 +67,7 @@ public class ComboListTable extends SortTable<Combo> {
 					jl.setIcon(null);
 					return jl;
 				}
-				jl.setIcon(form.anim.uni.getIcon());
+				jl.setIcon(UtilPC.getIcon(form.anim.uni));
 				return jl;
 			}
 

@@ -16,6 +16,15 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import common.battle.BasisLU;
+import common.battle.BattleField;
+import common.battle.SBCtrl;
+import common.battle.SBRply;
+import common.battle.StageBasis;
+import common.battle.entity.AbEntity;
+import common.battle.entity.Entity;
+import common.util.stage.Recd;
+import common.util.stage.Stage;
 import io.BCMusic;
 import main.Opts;
 import page.JBTN;
@@ -24,15 +33,6 @@ import page.KeyHandler;
 import page.Page;
 import page.awt.BBBuilder;
 import page.battle.BattleBox.OuterBox;
-import util.basis.BasisLU;
-import util.basis.BattleField;
-import util.basis.SBCtrl;
-import util.basis.SBRply;
-import util.basis.StageBasis;
-import util.entity.AbEntity;
-import util.entity.Entity;
-import util.stage.Recd;
-import util.stage.Stage;
 
 public class BattleInfoPage extends KeyHandler implements OuterBox {
 

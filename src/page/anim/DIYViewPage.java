@@ -12,6 +12,9 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.system.VImg;
+import common.util.anim.AnimC;
+import common.util.unit.DIYAnim;
 import main.Opts;
 import page.JBTN;
 import page.JTG;
@@ -19,9 +22,7 @@ import page.Page;
 import page.awt.BBBuilder;
 import page.support.AnimLCR;
 import page.view.AbViewPage;
-import util.anim.AnimC;
-import util.system.VImg;
-import util.unit.DIYAnim;
+import utilpc.UtilPC;
 
 public class DIYViewPage extends AbViewPage implements AbEditPage {
 
@@ -117,7 +118,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		if (e != null && e.getAnimC().mismatch)
 			e = null;
 		aep.setAnim(e);
-		uni.setIcon(e == null ? null : e.anim.uni.getIcon());
+		uni.setIcon(e == null ? null : UtilPC.getIcon(e.anim.uni));
 		if (e == null)
 			return;
 		setAnim(e);
@@ -174,7 +175,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 				AnimC ac = aep.anim.anim;
 				ac.uni = new VImg(ib.getClip());
 				ac.saveUni();
-				uni.setIcon(ac.uni.getIcon());
+				uni.setIcon(UtilPC.getIcon(ac.uni));
 			}
 		});
 

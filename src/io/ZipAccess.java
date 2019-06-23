@@ -23,13 +23,15 @@ import java.util.TreeSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import common.CommonStatic;
+import common.io.InStream;
+import common.system.files.VFile;
+import common.system.files.VFileRoot;
+import common.util.Data;
 import main.MainBCU;
 import main.Printer;
-import util.Data;
-import util.system.Backup;
-import util.system.files.BackupData;
-import util.system.files.VFile;
-import util.system.files.VFileRoot;
+import utilpc.Backup;
+import utilpc.BackupData;
 
 public class ZipAccess {
 
@@ -51,7 +53,7 @@ public class ZipAccess {
 		Files.list(fs.getPath("/backups")).forEach(elem -> {
 			try {
 				Queue<String> qs = new ArrayDeque<>(Files.readAllLines(elem));
-				int size = Reader.parseIntN(qs.poll());
+				int size = CommonStatic.parseIntN(qs.poll());
 				for (int i = 0; i < size && !qs.isEmpty(); i++) {
 					qs.poll();
 					String md5 = qs.poll().trim();
@@ -82,11 +84,11 @@ public class ZipAccess {
 		}
 		VFileRoot<BackupData> ans = new VFileRoot<>(t0 + "-" + t1);
 		Queue<String> qs = new ArrayDeque<>(Files.readAllLines(ind0));
-		int size = Reader.parseIntN(qs.poll());
+		int size = CommonStatic.parseIntN(qs.poll());
 		for (int i = 0; i < size; i++)
 			ans.build(qs.poll(), new BackupData(qs.poll()));
 		qs = new ArrayDeque<>(Files.readAllLines(ind1));
-		size = Reader.parseIntN(qs.poll());
+		size = CommonStatic.parseIntN(qs.poll());
 		for (int i = 0; i < size && !qs.isEmpty(); i++) {
 			VFile<BackupData> vf = ans.find(qs.poll());
 			String str1 = qs.poll();
@@ -108,7 +110,7 @@ public class ZipAccess {
 			return false;
 		}
 		Queue<String> qs = new ArrayDeque<>(Files.readAllLines(index));
-		int size = Reader.parseIntN(qs.poll());
+		int size = CommonStatic.parseIntN(qs.poll());
 		for (int i = 0; i < size && !qs.isEmpty(); i++) {
 			String loc = qs.poll().trim();
 			String md5 = qs.poll().trim();
@@ -132,7 +134,7 @@ public class ZipAccess {
 			return false;
 		}
 		Queue<String> qs = new ArrayDeque<>(Files.readAllLines(index));
-		int size = Reader.parseIntN(qs.poll());
+		int size = CommonStatic.parseIntN(qs.poll());
 		for (int i = 0; i < size && !qs.isEmpty(); i++) {
 			String loc = qs.poll().trim();
 			String md5 = qs.poll().trim();
@@ -153,7 +155,7 @@ public class ZipAccess {
 			try {
 				String fn = elem.getFileName().toString();
 				Queue<String> qs = new ArrayDeque<>(Files.readAllLines(elem));
-				int size = Reader.parseIntN(qs.poll());
+				int size = CommonStatic.parseIntN(qs.poll());
 				for (int i = 0; i < size && !qs.isEmpty(); i++) {
 					String pat = qs.poll().trim();
 					String md5 = qs.poll().trim();
@@ -193,7 +195,7 @@ public class ZipAccess {
 		}
 		VFileRoot<BackupData> ans = new VFileRoot<BackupData>(bac.name);
 		Queue<String> qs = new ArrayDeque<>(Files.readAllLines(index));
-		int size = Reader.parseIntN(qs.poll());
+		int size = CommonStatic.parseIntN(qs.poll());
 		for (int i = 0; i < size && !qs.isEmpty(); i++) {
 			String p = qs.poll();
 			String md5 = qs.poll();
@@ -381,13 +383,13 @@ public class ZipAccess {
 		try {
 			int ver = Data.getVer(qs.poll().trim());
 			if (ver == 400) {
-				int n = Reader.parseIntN(qs.poll());
+				int n = CommonStatic.parseIntN(qs.poll());
 				for (int i = 0; i < n; i++) {
 					String[] strs = qs.poll().trim().split("\t");
 					if (bacmap.containsKey(strs[0]))
 						bacmap.get(strs[0]).name = strs[1];
 				}
-				int m = Reader.parseIntN(qs.poll());
+				int m = CommonStatic.parseIntN(qs.poll());
 				for (int i = 0; i < m; i++) {
 					// TODO
 				}

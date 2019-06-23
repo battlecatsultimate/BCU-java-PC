@@ -2,6 +2,11 @@ package page.info;
 
 import java.awt.Point;
 
+import common.util.stage.Castles;
+import common.util.stage.CharaGroup;
+import common.util.stage.Limit;
+import common.util.stage.LvRestrict;
+import common.util.stage.Stage;
 import page.MainFrame;
 import page.Page;
 import page.pack.CharaGroupPage;
@@ -10,11 +15,6 @@ import page.support.AbJTable;
 import page.view.BGViewPage;
 import page.view.CastleViewPage;
 import page.view.MusicPage;
-import util.stage.Castles;
-import util.stage.CharaGroup;
-import util.stage.Limit;
-import util.stage.LvRestrict;
-import util.stage.Stage;
 
 public class HeadTable extends AbJTable {
 

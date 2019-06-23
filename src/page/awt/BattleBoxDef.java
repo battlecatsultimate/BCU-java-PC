@@ -6,13 +6,13 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import common.battle.BattleField;
+import common.battle.SBCtrl;
+import common.system.fake.FakeGraphics;
 import main.Timer;
 import page.battle.BBCtrl;
 import page.battle.BattleBox;
-import util.basis.BattleField;
-import util.basis.SBCtrl;
-import util.system.fake.FakeGraphics;
-import util.system.fake.awt.FG2D;
+import utilpc.awt.FG2D;
 
 class BattleBoxDef extends Canvas implements BattleBox {
 

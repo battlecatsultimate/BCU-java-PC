@@ -1,6 +1,6 @@
 package page.basis;
 
-import static util.basis.BasisSet.current;
+import static common.battle.BasisSet.current;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -22,7 +22,15 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import io.Reader;
+import common.CommonStatic;
+import common.battle.BasisLU;
+import common.battle.BasisSet;
+import common.battle.LineUp;
+import common.system.Node;
+import common.util.pack.NyCastle;
+import common.util.unit.Combo;
+import common.util.unit.Form;
+import common.util.unit.Unit;
 import page.JBTN;
 import page.JTF;
 import page.Page;
@@ -30,15 +38,7 @@ import page.info.TreaTable;
 import page.support.ReorderList;
 import page.support.ReorderListener;
 import page.support.UnitLCR;
-import util.Interpret;
-import util.basis.BasisLU;
-import util.basis.BasisSet;
-import util.basis.Combo;
-import util.basis.LineUp;
-import util.pack.NyCastle;
-import util.system.Node;
-import util.unit.Form;
-import util.unit.Unit;;
+import utilpc.Interpret;;
 
 public class BasisPage extends LubCont {
 
@@ -222,7 +222,7 @@ public class BasisPage extends LubCont {
 		lvjtf.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
-				int[] lv = Reader.parseIntsN(lvjtf.getText());
+				int[] lv = CommonStatic.parseIntsN(lvjtf.getText());
 				lub.setLv(lv);
 				if (lub.sf != null)
 					setLvs(lub.sf);

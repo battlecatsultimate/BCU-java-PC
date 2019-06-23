@@ -9,14 +9,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-import io.Reader;
+import common.CommonStatic;
+import common.util.Data;
 import page.JL;
 import page.JTF;
 import page.Page;
 import page.support.ListJtfPolicy;
-import util.Data;
-import util.Interpret;
-import util.Res;
+import utilpc.Interpret;
+import utilpc.UtilPC;
 
 class AtkProcTable extends Page {
 
@@ -122,7 +122,7 @@ class AtkProcTable extends Page {
 	private void ini() {
 		for (int i = 0; i < LEN; i++) {
 			jlm[i] = new JLabel(Interpret.SPROC[INDS[i]]);
-			BufferedImage v = Res.getIcon(1, INDS[i]);
+			BufferedImage v = UtilPC.getIcon(1, INDS[i]);
 			if (v != null)
 				jlm[i].setIcon(new ImageIcon(v));
 			set(jlm[i]);
@@ -147,7 +147,7 @@ class AtkProcTable extends Page {
 
 	private void input(JTF jtf, String input) {
 		if (input.length() > 0) {
-			int val = Reader.parseIntN(input);
+			int val = CommonStatic.parseIntN(input);
 			for (int i = 0; i < LEN; i++)
 				for (int j = 0; j < STRS[i].length; j++)
 					if (jtf == jtfs[i][j]) {

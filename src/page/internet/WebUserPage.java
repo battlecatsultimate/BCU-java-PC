@@ -25,6 +25,8 @@ import javax.swing.SwingConstants;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 
+import common.util.Data;
+import common.util.pack.Pack;
 import io.BCJSON;
 import io.WebPack;
 import main.Opts;
@@ -33,8 +35,6 @@ import page.JL;
 import page.JTF;
 import page.Page;
 import page.support.Importer;
-import util.Data;
-import util.pack.Pack;
 
 public class WebUserPage extends Page {
 

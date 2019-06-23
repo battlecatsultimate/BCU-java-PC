@@ -13,13 +13,13 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
+import common.system.files.AssetData;
+import common.system.files.VFile;
+import common.system.files.VFileRoot;
 import io.Writer;
 import page.JBTN;
 import page.Page;
 import page.support.Exporter;
-import util.system.files.AssetData;
-import util.system.files.VFile;
-import util.system.files.VFileRoot;
 
 public class ResourcePage extends Page {
 

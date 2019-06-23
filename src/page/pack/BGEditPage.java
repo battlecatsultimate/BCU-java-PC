@@ -10,14 +10,19 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import io.Reader;
+import common.CommonStatic;
+import common.system.VImg;
+import common.system.fake.FakeImage;
+import common.util.Data;
+import common.util.pack.BGStore;
+import common.util.pack.Background;
+import common.util.pack.Pack;
 import io.Writer;
 import page.JBTN;
 import page.JTF;
@@ -26,12 +31,7 @@ import page.Page;
 import page.support.Exporter;
 import page.support.Importer;
 import page.view.BGViewPage;
-import util.Data;
-import util.pack.BGStore;
-import util.pack.Background;
-import util.pack.Pack;
-import util.system.VImg;
-import util.system.fake.FakeImage;
+import utilpc.UtilPC;
 
 public class BGEditPage extends Page {
 
@@ -104,7 +104,7 @@ public class BGEditPage extends Page {
 			set(cs[i], x, y, 900 + 250 * i, 50, 200, 50);
 		set(jl, x, y, 650, 150, 1600, 1000);
 		if (bgr != null)
-			jl.setIcon(new ImageIcon(bgr.getBg(jl.getWidth(), jl.getHeight())));
+			jl.setIcon(UtilPC.getBg(bgr, jl.getWidth(), jl.getHeight()));
 
 	}
 
@@ -188,7 +188,7 @@ public class BGEditPage extends Page {
 
 				@Override
 				public void focusLost(FocusEvent arg0) {
-					int[] inp = Reader.parseIntsN(cs[I].getText());
+					int[] inp = CommonStatic.parseIntsN(cs[I].getText());
 					if (inp.length == 3)
 						bgr.cs[I] = new int[] { inp[0] & 255, inp[1] & 255, inp[2] & 255 };
 					setCSText(I);

@@ -8,11 +8,11 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
+import common.util.pack.Pack;
+import common.util.unit.Enemy;
 import page.JBTN;
 import page.JTG;
 import page.Page;
-import util.pack.Pack;
-import util.unit.Enemy;
 
 public class EnemyFindPage extends Page {
 

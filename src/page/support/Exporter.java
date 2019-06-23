@@ -9,8 +9,8 @@ import java.util.Queue;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import io.OutStream;
-import io.Reader;
+import common.io.OutStream;
+import common.CommonStatic;
 import io.Writer;
 import io.ZipAccess;
 
@@ -23,7 +23,7 @@ public class Exporter extends JFileChooser {
 	public static final File[] curs = new File[5];
 
 	public static void read(Queue<String> qs) {
-		int n = Reader.parseIntN(qs.poll());
+		int n = CommonStatic.parseIntN(qs.poll());
 		for (int i = 0; i < n; i++) {
 			String str = qs.poll().trim();
 			if (str.length() > 0)

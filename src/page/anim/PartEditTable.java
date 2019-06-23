@@ -9,12 +9,12 @@ import java.util.List;
 import javax.swing.ListSelectionModel;
 import javax.swing.text.JTextComponent;
 
+import common.util.anim.AnimC;
+import common.util.anim.MaAnim;
+import common.util.anim.Part;
 import page.Page;
 import page.support.AnimTable;
 import page.support.AnimTableTH;
-import util.anim.AnimC;
-import util.anim.MaAnim;
-import util.anim.Part;
 
 class PartEditTable extends AnimTable<int[]> {
 

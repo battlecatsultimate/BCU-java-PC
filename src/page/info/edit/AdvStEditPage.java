@@ -7,15 +7,15 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import io.Reader;
+import common.CommonStatic;
+import common.util.stage.SCDef;
+import common.util.stage.SCGroup;
+import common.util.stage.Stage;
+import common.util.unit.AbEnemy;
 import page.JBTN;
 import page.JTF;
 import page.Page;
 import page.support.AnimLCR;
-import util.stage.SCDef;
-import util.stage.SCGroup;
-import util.stage.Stage;
-import util.unit.AbEnemy;
 
 public class AdvStEditPage extends Page {
 
@@ -96,7 +96,7 @@ public class AdvStEditPage extends Page {
 		});
 
 		smax.setLnr(e -> {
-			int val = Reader.parseIntN(smax.getText());
+			int val = CommonStatic.parseIntN(smax.getText());
 			SCGroup scg = jls.getSelectedValue();
 			if (val > 0)
 				scg.max = val;
@@ -104,7 +104,7 @@ public class AdvStEditPage extends Page {
 		});
 
 		sdef.setLnr(e -> {
-			int i = Reader.parseIntN(sdef.getText());
+			int i = CommonStatic.parseIntN(sdef.getText());
 			if (i >= 0)
 				data.sdef = i;
 			setList();

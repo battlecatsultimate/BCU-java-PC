@@ -20,17 +20,17 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
 
-import io.Reader;
+import common.CommonStatic;
+import common.util.anim.AnimC;
+import common.util.anim.EAnimS;
+import common.util.anim.ImgCut;
+import common.util.anim.MaAnim;
+import common.util.anim.MaModel;
+import common.util.anim.Part;
+import common.util.unit.DIYAnim;
 import page.JBTN;
 import page.Page;
 import page.support.AnimLCR;
-import util.anim.AnimC;
-import util.anim.EAnimS;
-import util.anim.ImgCut;
-import util.anim.MaAnim;
-import util.anim.MaModel;
-import util.anim.Part;
-import util.unit.DIYAnim;
 
 public class MaModelEditPage extends Page implements AbEditPage {
 
@@ -263,7 +263,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 				if (o == null)
 					return;
 				String str = o.toString();
-				int ind = Reader.parseIntN(str.split(" - ")[0]);
+				int ind = CommonStatic.parseIntN(str.split(" - ")[0]);
 				if (ind == -1)
 					return;
 				setB(ind);
@@ -387,7 +387,8 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			int ind = rows[0];
 			if (ind >= mm.n)
 				ind = mm.n - 1;
-			mmet.setRowSelectionInterval(ind, ind);
+			if (ind >= 0)
+				mmet.setRowSelectionInterval(ind, ind);
 			setB(ind);
 		});
 	}

@@ -24,7 +24,9 @@ import java.awt.event.KeyEvent;
 import java.util.Map;
 import java.util.TreeMap;
 
-public abstract class KeyHandler extends Page {
+import common.CommonStatic.FakeKey;
+
+public abstract class KeyHandler extends Page implements FakeKey {
 
 	private static final long serialVersionUID = 1L;
 
@@ -40,11 +42,13 @@ public abstract class KeyHandler extends Page {
 		super(p);
 	}
 
+	@Override
 	public synchronized boolean pressed(int type, int slot) {
 		int key = (type == -2 ? lock : type == -1 ? act : slots[type])[slot];
 		return press.containsKey(key) && press.get(key) != 2;
 	}
 
+	@Override
 	public synchronized void remove(int type, int slot) {
 		int key = (type == -2 ? lock : type == -1 ? act : slots[type])[slot];
 		press.put(key, 2);

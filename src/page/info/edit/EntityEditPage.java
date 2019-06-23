@@ -1,8 +1,8 @@
 package page.info.edit;
 
-import static util.Data.*;
-import static util.Interpret.ABIIND;
-import static util.Interpret.IMUSFT;
+import static common.util.Data.*;
+import static utilpc.Interpret.ABIIND;
+import static utilpc.Interpret.IMUSFT;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +18,21 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import io.Reader;
+import common.CommonStatic;
+import common.battle.Basis;
+import common.battle.BasisSet;
+import common.battle.data.AtkDataModel;
+import common.battle.data.CustomEntity;
+import common.util.Animable;
+import common.util.anim.AnimC;
+import common.util.anim.AnimU;
+import common.util.pack.Pack;
+import common.util.pack.Soul;
+import common.util.pack.SoulStore;
+import common.util.unit.DIYAnim;
+import common.util.unit.Enemy;
+import common.util.unit.Form;
+import common.util.unit.Unit;
 import main.Opts;
 import page.JBTN;
 import page.JL;
@@ -33,20 +47,6 @@ import page.support.ReorderList;
 import page.support.ReorderListener;
 import page.view.EnemyViewPage;
 import page.view.UnitViewPage;
-import util.Animable;
-import util.anim.AnimC;
-import util.anim.AnimU;
-import util.basis.Basis;
-import util.basis.BasisSet;
-import util.entity.data.AtkDataModel;
-import util.entity.data.CustomEntity;
-import util.pack.Pack;
-import util.pack.Soul;
-import util.pack.SoulStore;
-import util.unit.DIYAnim;
-import util.unit.Enemy;
-import util.unit.Form;
-import util.unit.Unit;
 
 public abstract class EntityEditPage extends Page {
 
@@ -95,6 +95,7 @@ public abstract class EntityEditPage extends Page {
 	private final ListJtfPolicy ljp = new ListJtfPolicy();
 	private final AtkEditTable aet;
 	private final MainProcTable mpt;
+	private final JScrollPane jspm;
 	private final boolean editable;
 	private final CustomEntity ce;
 	private final Pack pack;
@@ -111,8 +112,10 @@ public abstract class EntityEditPage extends Page {
 		ce = e;
 		aet = new AtkEditTable(this, edit, false);
 		mpt = new MainProcTable(this, edit);
+		jspm = new JScrollPane(mpt);
 		editable = edit;
-
+		if (!editable)
+			jli.setDragEnabled(false);
 	}
 
 	@Override
@@ -169,7 +172,7 @@ public abstract class EntityEditPage extends Page {
 		ljp.end();
 		add(jspi);
 		add(aet);
-		add(mpt);
+		add(jspm);
 		add(add);
 		add(rem);
 		add(copy);
@@ -250,7 +253,8 @@ public abstract class EntityEditPage extends Page {
 		set(lwd, x, y, 50, 300, 100, 50);
 		set(fwd, x, y, 150, 300, 200, 50);
 
-		set(mpt, x, y, 50, 650, 300, 600);
+		set(jspm, x, y, 0, 450, 350, 800);
+		mpt.componentResized(x, y);
 
 		set(jspi, x, y, 550, 50, 300, 350);
 		set(add, x, y, 550, 400, 150, 50);
@@ -522,7 +526,7 @@ public abstract class EntityEditPage extends Page {
 			return;
 		}
 		if (text.length() > 0) {
-			int v = Reader.parseIntN(text);
+			int v = CommonStatic.parseIntN(text);
 			if (jtf == fhp) {
 				v /= getDef();
 				if (v <= 0)

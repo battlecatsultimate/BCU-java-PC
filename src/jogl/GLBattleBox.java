@@ -4,13 +4,13 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 
+import common.battle.BattleField;
+import common.battle.SBCtrl;
+import common.util.unit.Enemy;
+import common.util.unit.Form;
 import jogl.util.GLGraphics;
 import page.battle.BBCtrl;
 import page.battle.BattleBox;
-import util.basis.BattleField;
-import util.basis.SBCtrl;
-import util.unit.Enemy;
-import util.unit.Form;
 
 public class GLBattleBox extends GLCstd implements BattleBox, GLEventListener {
 

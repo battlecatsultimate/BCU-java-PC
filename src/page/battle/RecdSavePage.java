@@ -5,11 +5,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
+import common.util.stage.Recd;
 import main.MainBCU;
 import page.JBTN;
 import page.JTF;
 import page.Page;
-import util.stage.Recd;
 
 public class RecdSavePage extends Page {
 

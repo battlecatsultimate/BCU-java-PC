@@ -1,6 +1,6 @@
 package page.pack;
 
-import static util.Interpret.RARITY;
+import static utilpc.Interpret.RARITY;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,19 +14,19 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import io.Reader;
+import common.CommonStatic;
+import common.system.FixIndexList;
+import common.util.Data;
+import common.util.pack.Pack;
+import common.util.stage.CharaGroup;
+import common.util.stage.LvRestrict;
+import common.util.unit.Form;
+import common.util.unit.Unit;
 import page.JBTN;
 import page.JTF;
 import page.Page;
 import page.info.filter.UnitFindPage;
 import page.support.UnitLCR;
-import util.Data;
-import util.pack.Pack;
-import util.stage.CharaGroup;
-import util.stage.LvRestrict;
-import util.system.FixIndexList;
-import util.unit.Form;
-import util.unit.Unit;
 
 public class CGLREditPage extends Page {
 
@@ -395,7 +395,7 @@ public class CGLREditPage extends Page {
 
 			@Override
 			public void focusLost(FocusEvent fe) {
-				int[] inp = Reader.parseIntsN(jtf.getText());
+				int[] inp = CommonStatic.parseIntsN(jtf.getText());
 				for (int i = 0; i < inp.length; i++)
 					if (inp[i] < 0)
 						inp[i] = 0;

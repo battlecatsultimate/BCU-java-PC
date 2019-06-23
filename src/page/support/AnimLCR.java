@@ -7,10 +7,11 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.SwingConstants;
 
-import util.Animable;
-import util.anim.AnimU;
-import util.system.VImg;
-import util.unit.AbEnemy;
+import common.system.VImg;
+import common.util.Animable;
+import common.util.anim.AnimU;
+import common.util.unit.AbEnemy;
+import utilpc.UtilPC;
 
 public class AnimLCR extends DefaultListCellRenderer {
 
@@ -33,7 +34,7 @@ public class AnimLCR extends DefaultListCellRenderer {
 
 		if (v == null)
 			return jl;
-		jl.setIcon(v.getIcon());
+		jl.setIcon(UtilPC.getIcon(v));
 		return jl;
 	}
 

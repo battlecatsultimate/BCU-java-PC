@@ -1,8 +1,8 @@
 package page.info.filter;
 
-import static util.Interpret.ABIIND;
-import static util.Interpret.EABIIND;
-import static util.Interpret.SABIS;
+import static utilpc.Interpret.ABIIND;
+import static utilpc.Interpret.EABIIND;
+import static utilpc.Interpret.SABIS;
 
 import java.awt.Component;
 import java.awt.image.BufferedImage;
@@ -14,7 +14,7 @@ import javax.swing.JList;
 
 import page.JTG;
 import page.Page;
-import util.Res;
+import utilpc.UtilPC;
 
 class AttList extends JList<String> {
 
@@ -49,16 +49,16 @@ class AttList extends JList<String> {
 				JLabel jl = (JLabel) super.getListCellRendererComponent(l, o, ind, s, f);
 				BufferedImage v;
 				if (type == -1) {
-					v = ind < para ? Res.getIcon(0, EABIIND[ind]) : Res.getIcon(1, ind - para);
+					v = ind < para ? UtilPC.getIcon(0, EABIIND[ind]) : UtilPC.getIcon(1, ind - para);
 				} else if (type == 0) {
 					int len = SABIS.length;
 					if (para == 0) {
-						v = ind < len ? Res.getIcon(0, ind) : Res.getIcon(1, ind - len);
+						v = ind < len ? UtilPC.getIcon(0, ind) : UtilPC.getIcon(1, ind - len);
 					} else {
-						v = ind < len ? Res.getIcon(0, ind) : Res.getIcon(0, ABIIND[ind - len]);
+						v = ind < len ? UtilPC.getIcon(0, ind) : UtilPC.getIcon(0, ABIIND[ind - len]);
 					}
 				} else
-					v = Res.getIcon(type, ind);
+					v = UtilPC.getIcon(type, ind);
 				if (v == null)
 					return jl;
 				jl.setIcon(new ImageIcon(v));

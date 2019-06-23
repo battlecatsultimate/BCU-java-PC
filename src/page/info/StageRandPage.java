@@ -6,11 +6,11 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.stage.RandStage;
+import common.util.stage.Stage;
 import page.JBTN;
 import page.Page;
 import page.battle.BattleSetupPage;
-import util.stage.RandStage;
-import util.stage.Stage;
 
 public class StageRandPage extends Page {
 

@@ -8,11 +8,11 @@ import java.util.EventObject;
 import javax.swing.ListSelectionModel;
 import javax.swing.text.JTextComponent;
 
+import common.util.anim.AnimC;
+import common.util.anim.MaModel;
 import page.Page;
 import page.support.AnimTable;
 import page.support.AnimTableTH;
-import util.anim.AnimC;
-import util.anim.MaModel;
 
 class MaModelEditTable extends AnimTable<int[]> {
 

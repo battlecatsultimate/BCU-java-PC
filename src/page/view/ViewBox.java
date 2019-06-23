@@ -6,11 +6,11 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.Queue;
 
+import common.system.P;
+import common.util.anim.EAnimI;
 import page.JTG;
 import page.RetFunc;
 import page.awt.RecdThread;
-import util.anim.EAnimI;
-import util.system.P;
 
 public interface ViewBox {
 

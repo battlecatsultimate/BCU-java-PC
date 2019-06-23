@@ -10,15 +10,15 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.battle.data.CustomEnemy;
+import common.util.pack.Pack;
+import common.util.unit.Enemy;
+import common.util.unit.EnemyStore;
 import page.JBTN;
 import page.Page;
 import page.info.EnemyInfoPage;
 import page.info.edit.EnemyEditPage;
 import page.support.AnimLCR;
-import util.entity.data.CustomEnemy;
-import util.pack.Pack;
-import util.unit.Enemy;
-import util.unit.EnemyStore;
 
 public class EnemyViewPage extends AbViewPage {
 

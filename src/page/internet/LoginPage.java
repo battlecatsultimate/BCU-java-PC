@@ -7,6 +7,7 @@ import java.util.Random;
 
 import javax.swing.SwingConstants;
 
+import common.CommonStatic.Account;
 import io.BCJSON;
 import page.JBTN;
 import page.JL;
@@ -31,8 +32,8 @@ public class LoginPage extends Page {
 		super(p);
 
 		ini();
-		if (BCJSON.USERNAME.length() > 0) {
-			jtf.setText(BCJSON.USERNAME);
+		if (Account.USERNAME.length() > 0) {
+			jtf.setText(Account.USERNAME);
 			jtf.setEditable(false);
 		}
 		resized();
@@ -58,7 +59,7 @@ public class LoginPage extends Page {
 
 		jps.setLnr(x -> {
 			String str = jps.getText();
-			BCJSON.PASSWORD = new Random(str.hashCode()).nextLong();
+			Account.PASSWORD = new Random(str.hashCode()).nextLong();
 			login();
 		});
 
@@ -78,7 +79,7 @@ public class LoginPage extends Page {
 					jlc.setVisible(id < 0);
 					if (id > 0) {
 						BCJSON.ID = id;
-						BCJSON.USERNAME = str;
+						Account.USERNAME = str;
 						changePanel(new WebMainPage(getFront()));
 					} else if (id == -101) {
 						jle.setText(2, "e4");
@@ -128,7 +129,7 @@ public class LoginPage extends Page {
 			jlc.setVisible(id < 0);
 			if (id > 0) {
 				BCJSON.ID = id;
-				BCJSON.USERNAME = str;
+				Account.USERNAME = str;
 				changePanel(new WebMainPage(getFront()));
 			} else if (id == -100) {
 				jle.setText(2, "e1");

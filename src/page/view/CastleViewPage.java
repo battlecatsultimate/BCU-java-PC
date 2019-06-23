@@ -11,11 +11,12 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.system.VImg;
+import common.util.stage.AbCastle;
+import common.util.stage.Castles;
 import page.JBTN;
 import page.Page;
-import util.stage.AbCastle;
-import util.stage.Castles;
-import util.system.VImg;
+import utilpc.UtilPC;
 
 public class CastleViewPage extends Page {
 
@@ -102,7 +103,7 @@ public class CastleViewPage extends Page {
 				if (s == null)
 					jl.setIcon(null);
 				else
-					jl.setIcon(s.getIcon());
+					jl.setIcon(UtilPC.getIcon(s));
 			}
 
 		});

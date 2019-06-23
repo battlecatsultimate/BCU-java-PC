@@ -7,8 +7,9 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import util.system.VImg;
-import util.unit.AbEnemy;
+import common.system.VImg;
+import common.util.unit.AbEnemy;
+import utilpc.UtilPC;
 
 public class EnemyTCR extends DefaultTableCellRenderer {
 
@@ -34,7 +35,7 @@ public class EnemyTCR extends DefaultTableCellRenderer {
 		VImg vimg = e.getIcon();
 		if (vimg == null)
 			return jl;
-		jl.setIcon(vimg.getIcon());
+		jl.setIcon(UtilPC.getIcon(vimg));
 		return jl;
 	}
 

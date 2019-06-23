@@ -21,10 +21,6 @@ import io.Writer;
 
 public class Temp {
 
-	public static void main(String[] args) throws Exception {
-		System.out.println(85 & -4);
-	}
-
 	public static void main$0(String[] args) throws FileNotFoundException {
 		for (File fi : new File("./lib/lang/zh/").listFiles()) {
 			Queue<String> qs = Reader.readLines(fi);
@@ -114,7 +110,7 @@ public class Temp {
 
 	// create unit icon
 	public static void main$5(String[] args) {
-		File f = new File("./org/unit/");
+		File f = new File("./assets/libworkspace/custom/org/unit/");
 		File[] fs = f.listFiles();
 		for (File file : fs) {
 			for (File fi : file.listFiles())
@@ -165,6 +161,10 @@ public class Temp {
 		LookAndFeelInfo[] lafs = UIManager.getInstalledLookAndFeels();
 		for (LookAndFeelInfo laf : lafs)
 			System.out.println(laf);
+	}
+
+	public static void main$a(String[] args) throws Exception {
+		System.out.println(85 & -4);
 	}
 
 	public static BufferedImage real(BufferedImage bimg, BufferedImage exc) {

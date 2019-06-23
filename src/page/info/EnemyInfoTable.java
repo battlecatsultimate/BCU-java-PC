@@ -8,13 +8,14 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-import io.Reader;
+import common.CommonStatic;
+import common.battle.BasisSet;
+import common.util.unit.Enemy;
 import page.JL;
 import page.JTF;
 import page.Page;
-import util.Interpret;
-import util.basis.BasisSet;
-import util.unit.Enemy;
+import utilpc.Interpret;
+import utilpc.UtilPC;
 
 public class EnemyInfoTable extends Page {
 
@@ -87,7 +88,7 @@ public class EnemyInfoTable extends Page {
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				int val = Reader.parseIntN(jtf.getText());
+				int val = CommonStatic.parseIntN(jtf.getText());
 				if (val != -1)
 					multi = val;
 				jtf.setText(multi + "%");
@@ -119,7 +120,7 @@ public class EnemyInfoTable extends Page {
 		main[0][0].setText("ID");
 		main[0][1].setText("" + e.id);
 		if (e.anim.edi != null && e.anim.edi.getImg() != null)
-			main[0][2].setIcon(e.anim.edi.getIcon());
+			main[0][2].setIcon(UtilPC.getIcon(e.anim.edi));
 		main[0][3].setText(1, "trait");
 		main[0][4].setText(Interpret.getTrait(e.de.getType(), e.de.getStar()));
 		main[1][0].setText(1, "mult");

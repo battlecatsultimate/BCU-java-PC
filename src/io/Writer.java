@@ -17,6 +17,16 @@ import java.util.Queue;
 
 import javax.imageio.ImageIO;
 
+import common.CommonStatic;
+import common.CommonStatic.Account;
+import common.battle.BasisSet;
+import common.io.DataIO;
+import common.io.OutStream;
+import common.util.Data;
+import common.util.ImgCore;
+import common.util.pack.Pack;
+import common.util.stage.Recd;
+import common.util.unit.DIYAnim;
 import decode.ZipLib;
 import event.EventReader;
 import main.MainBCU;
@@ -28,12 +38,6 @@ import page.support.Exporter;
 import page.support.Importer;
 import page.view.ViewBox;
 import res.AnimatedGifEncoder;
-import util.Data;
-import util.ImgCore;
-import util.basis.BasisSet;
-import util.pack.Pack;
-import util.stage.Recd;
-import util.unit.DIYAnim;
 
 public class Writer extends DataIO {
 
@@ -86,7 +90,7 @@ public class Writer extends DataIO {
 		delete(new File("./lib/"));
 		if (ps.writed) {
 			ps.println("version: " + Data.revVer(MainBCU.ver));
-			ps.println("user: " + BCJSON.USERNAME);
+			ps.println("user: " + Account.USERNAME);
 		}
 		ps.close();
 		ph.deleteOnExit();
@@ -320,7 +324,7 @@ public class Writer extends DataIO {
 
 	private static void writeOptions() {
 		PrintStream out = newFile("./user/data.ini");
-		out.println("lang= " + MainLocale.lang);
+		out.println("lang= " + CommonStatic.Lang.lang);
 		Rectangle r = MainFrame.crect;
 		out.println("rect= {" + r.x + ',' + r.y + ',' + r.width + ',' + r.height + '}');
 		out.println("preload= " + (MainBCU.preload ? 1 : 0));
@@ -333,8 +337,8 @@ public class Writer extends DataIO {
 		out.println("max opacity= " + ImgCore.fullOpa);
 		out.println("filter= " + MainBCU.FILTER_TYPE);
 		out.println("location= " + EventReader.loc);
-		out.println(BCJSON.USERNAME);
-		out.println(BCJSON.PASSWORD);
+		out.println(Account.USERNAME);
+		out.println(Account.PASSWORD);
 		out.println("--- place holder ---");
 		out.println("calendar version= " + BCJSON.cal_ver);
 		out.println("BG and SE volume= " + (BCMusic.play ? 1 : 0) + ", " + BCMusic.VOL_BG + ", " + BCMusic.VOL_SE);

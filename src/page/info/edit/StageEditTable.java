@@ -1,18 +1,18 @@
 package page.info.edit;
 
-import static util.stage.SCDef.B;
-import static util.stage.SCDef.C0;
-import static util.stage.SCDef.C1;
-import static util.stage.SCDef.E;
-import static util.stage.SCDef.G;
-import static util.stage.SCDef.L0;
-import static util.stage.SCDef.L1;
-import static util.stage.SCDef.M;
-import static util.stage.SCDef.N;
-import static util.stage.SCDef.R0;
-import static util.stage.SCDef.R1;
-import static util.stage.SCDef.S0;
-import static util.stage.SCDef.S1;
+import static common.util.stage.SCDef.B;
+import static common.util.stage.SCDef.C0;
+import static common.util.stage.SCDef.C1;
+import static common.util.stage.SCDef.E;
+import static common.util.stage.SCDef.G;
+import static common.util.stage.SCDef.L0;
+import static common.util.stage.SCDef.L1;
+import static common.util.stage.SCDef.M;
+import static common.util.stage.SCDef.N;
+import static common.util.stage.SCDef.R0;
+import static common.util.stage.SCDef.R1;
+import static common.util.stage.SCDef.S0;
+import static common.util.stage.SCDef.S1;
 
 import java.awt.Component;
 import java.awt.Point;
@@ -21,7 +21,16 @@ import java.util.EventObject;
 
 import javax.swing.text.JTextComponent;
 
-import io.Reader;
+import common.CommonStatic;
+import common.util.Data;
+import common.util.pack.Pack;
+import common.util.stage.SCDef;
+import common.util.stage.SCGroup;
+import common.util.stage.Stage;
+import common.util.unit.AbEnemy;
+import common.util.unit.EneRand;
+import common.util.unit.Enemy;
+import common.util.unit.EnemyStore;
 import page.MainFrame;
 import page.Page;
 import page.info.EnemyInfoPage;
@@ -30,15 +39,6 @@ import page.support.AbJTable;
 import page.support.EnemyTCR;
 import page.support.InTableTH;
 import page.support.Reorderable;
-import util.Data;
-import util.pack.Pack;
-import util.stage.SCDef;
-import util.stage.SCGroup;
-import util.stage.Stage;
-import util.unit.AbEnemy;
-import util.unit.EneRand;
-import util.unit.Enemy;
-import util.unit.EnemyStore;
 
 class StageEditTable extends AbJTable implements Reorderable {
 
@@ -142,7 +142,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 			return;
 		c = lnk[c];
 		if (c > 3) {
-			int[] is = Reader.parseIntsN((String) arg0);
+			int[] is = CommonStatic.parseIntsN((String) arg0);
 			if (is.length == 0)
 				return;
 			if (is.length == 1)
@@ -154,7 +154,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 			set(r, c, i > 0 ? 1 : 0, 0);
 
 		} else {
-			int i = arg0 instanceof Integer ? (Integer) arg0 : Reader.parseIntN((String) arg0);
+			int i = arg0 instanceof Integer ? (Integer) arg0 : CommonStatic.parseIntN((String) arg0);
 			set(r, c, i, 0);
 		}
 	}

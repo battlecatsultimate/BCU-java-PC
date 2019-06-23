@@ -8,11 +8,11 @@ import java.util.Collection;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
+import common.util.pack.MusicStore;
+import common.util.pack.Pack;
 import io.BCMusic;
 import page.JBTN;
 import page.Page;
-import util.pack.MusicStore;
-import util.pack.Pack;
 
 public class MusicPage extends Page {
 

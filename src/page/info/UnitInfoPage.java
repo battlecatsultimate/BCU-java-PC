@@ -6,13 +6,13 @@ import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import common.battle.BasisSet;
+import common.system.Node;
+import common.util.unit.Unit;
 import page.JBTN;
 import page.Page;
 import page.basis.BasisPage;
 import page.view.UnitViewPage;
-import util.basis.BasisSet;
-import util.system.Node;
-import util.unit.Unit;
 
 public class UnitInfoPage extends Page {
 

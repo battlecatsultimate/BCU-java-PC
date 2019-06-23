@@ -3,10 +3,10 @@ package page.basis;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+import common.system.Node;
+import common.util.unit.Unit;
 import page.Page;
 import page.info.UnitInfoPage;
-import util.system.Node;
-import util.unit.Unit;
 
 public abstract class LubCont extends Page {
 

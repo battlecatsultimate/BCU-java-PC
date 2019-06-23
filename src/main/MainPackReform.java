@@ -1,9 +1,9 @@
 package main;
 
+import common.util.pack.Pack;
 import decode.ZipLib;
 import io.Reader;
 import io.Writer;
-import util.pack.Pack;
 
 public class MainPackReform {
 

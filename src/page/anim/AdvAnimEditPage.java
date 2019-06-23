@@ -22,17 +22,17 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
-import io.Reader;
+import common.CommonStatic;
+import common.util.anim.AnimC;
+import common.util.anim.EPart;
+import common.util.anim.MaAnim;
+import common.util.anim.Part;
 import main.Opts;
 import page.JBTN;
 import page.JL;
 import page.JTF;
 import page.JTG;
 import page.Page;
-import util.anim.AnimC;
-import util.anim.EPart;
-import util.anim.MaAnim;
-import util.anim.Part;
 
 public class AdvAnimEditPage extends Page implements TreeCont {
 
@@ -126,7 +126,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 		if (o == null)
 			return;
 		String str = o.toString();
-		int ind = Reader.parseIntN(str.split(" - ")[0]);
+		int ind = CommonStatic.parseIntN(str.split(" - ")[0]);
 
 		List<Integer> ses = new ArrayList<>();
 		for (int i = 0; i < maet.ma.n; i++) {
@@ -264,7 +264,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 	private void addListeners$4() {
 
 		tmul.setLnr(x -> {
-			double d = Reader.parseIntN(tmul.getText()) * 0.01;
+			double d = CommonStatic.parseIntN(tmul.getText()) * 0.01;
 			if (!Opts.conf("times animation length by " + d))
 				return;
 			for (Part p : maet.ma.parts) {

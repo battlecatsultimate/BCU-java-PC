@@ -1,13 +1,13 @@
 package page.info;
 
-import static util.Interpret.TCOLP;
-import static util.Interpret.TCTX;
-import static util.Interpret.TIND;
-import static util.Interpret.TREA;
-import static util.Interpret.getComp;
-import static util.Interpret.getValue;
-import static util.Interpret.setComp;
-import static util.Interpret.setValue;
+import static utilpc.Interpret.TCOLP;
+import static utilpc.Interpret.TCTX;
+import static utilpc.Interpret.TIND;
+import static utilpc.Interpret.TREA;
+import static utilpc.Interpret.getComp;
+import static utilpc.Interpret.getValue;
+import static utilpc.Interpret.setComp;
+import static utilpc.Interpret.setValue;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -20,12 +20,12 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 
-import io.Reader;
+import common.CommonStatic;
+import common.battle.BasisSet;
+import common.system.Node;
 import page.JTF;
 import page.JTG;
 import page.Page;
-import util.basis.BasisSet;
-import util.system.Node;
 
 public class TreaTable extends Page {
 
@@ -151,7 +151,7 @@ public class TreaTable extends Page {
 					@Override
 					public void focusLost(FocusEvent e) {
 						int ans = getComp(J, b.t());
-						int val = Math.abs(Reader.parseIntN(jcf[J].getText()));
+						int val = Math.abs(CommonStatic.parseIntN(jcf[J].getText()));
 						setComp(J, val == -1 ? ans : val, b);
 						reset();
 						getFront().callBack(null);
@@ -184,7 +184,7 @@ public class TreaTable extends Page {
 				@Override
 				public void focusLost(FocusEvent e) {
 					int ans = getValue(ind, b.t());
-					int val = Math.abs(Reader.parseIntN(jtf[I].getText()));
+					int val = Math.abs(CommonStatic.parseIntN(jtf[I].getText()));
 					setValue(ind, val == -1 ? ans : val, b);
 					reset();
 					getFront().callBack(null);

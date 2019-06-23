@@ -2,30 +2,31 @@ package page.battle;
 
 import java.awt.Point;
 
+import common.CommonStatic.BattleConst;
+import common.battle.BattleField;
+import common.battle.StageBasis;
+import common.battle.attack.ContAb;
+import common.battle.entity.EAnimCont;
+import common.battle.entity.Entity;
+import common.system.P;
+import common.system.SymCoord;
+import common.system.VImg;
+import common.system.fake.FakeGraphics;
+import common.system.fake.FakeImage;
+import common.system.fake.FakeTransform;
+import common.util.Data;
+import common.util.ImgCore;
+import common.util.Res;
+import common.util.pack.NyCastle;
+import common.util.stage.Castles;
+import common.util.unit.Form;
 import page.RetFunc;
-import util.Data;
-import util.ImgCore;
-import util.Res;
-import util.basis.BattleField;
-import util.basis.StageBasis;
-import util.entity.EAnimCont;
-import util.entity.Entity;
-import util.entity.attack.ContAb;
-import util.pack.NyCastle;
-import util.stage.Castles;
-import util.system.P;
-import util.system.SymCoord;
-import util.system.VImg;
-import util.system.fake.FakeGraphics;
-import util.system.fake.FakeImage;
-import util.system.fake.FakeTransform;
-import util.unit.Form;
+import utilpc.PP;
 
 public interface BattleBox {
 
-	static class BBPainter {
+	static class BBPainter implements BattleConst {
 
-		public static final double ratio = 768.0 / 2400.0;// r = p/u
 		private static final double exp = 0.9, sprite = 0.8;
 		private static final int road_h = 156; // in p
 		private static final int off = 200;
@@ -92,7 +93,7 @@ public interface BattleBox {
 			regulate();
 
 			ImgCore.set(g);
-			Point rect = new Point(box.getWidth(), box.getHeight());
+			P rect = new P(box.getWidth(), box.getHeight());
 			sb.bg.draw(g, rect, pos, midh, siz);
 			drawCastle(g);
 			drawEntity(g);
@@ -143,7 +144,7 @@ public interface BattleBox {
 
 		private synchronized void drag(Point p) {
 			if (mouse != null) {
-				P temp = new P(p);
+				P temp = new PP(p);
 				adjust((int) (temp.x - mouse.x), 0);
 				mouse.setTo(temp);
 				reset();
@@ -342,7 +343,7 @@ public interface BattleBox {
 		}
 
 		private synchronized void press(Point p) {
-			mouse = new P(p);
+			mouse = new PP(p);
 		}
 
 		private synchronized void release(Point p) {

@@ -1,11 +1,11 @@
 package page.awt;
 
+import common.battle.BattleField;
+import common.battle.SBCtrl;
 import page.anim.IconBox;
 import page.battle.BattleBox;
 import page.battle.BattleBox.OuterBox;
 import page.view.ViewBox;
-import util.basis.BattleField;
-import util.basis.SBCtrl;
 
 public abstract class BBBuilder {
 

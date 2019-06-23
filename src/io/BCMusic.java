@@ -15,11 +15,13 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineEvent.Type;
-import javax.sound.sampled.LineListener;
 
-import util.Data;
-import util.pack.MusicStore;
-import util.pack.Pack;
+import common.CommonStatic;
+import common.util.Data;
+import common.util.pack.MusicStore;
+import common.util.pack.Pack;
+
+import javax.sound.sampled.LineListener;
 
 public class BCMusic extends Data implements LineListener {
 
@@ -71,7 +73,7 @@ public class BCMusic extends Data implements LineListener {
 				continue;
 			if (!str.endsWith(".ogg"))
 				continue;
-			int id = Reader.parseIntN(str.substring(0, 3));
+			int id = CommonStatic.parseIntN(str.substring(0, 3));
 			if (id == -1)
 				continue;
 			Pack.def.ms.set(id, f);

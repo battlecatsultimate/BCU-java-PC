@@ -7,10 +7,10 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JScrollPane;
 
+import common.util.stage.Stage;
 import page.JBTN;
 import page.Page;
 import page.battle.BattleSetupPage;
-import util.stage.Stage;
 
 public class StagePage extends Page {
 
@@ -23,7 +23,7 @@ public class StagePage extends Page {
 	private final HeadTable info = new HeadTable(this);
 	private final JScrollPane jspinfo = new JScrollPane(info);
 
-	private Stage stage;
+	protected Stage stage;
 
 	public StagePage(Page p) {
 		super(p);

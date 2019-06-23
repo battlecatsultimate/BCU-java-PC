@@ -17,6 +17,12 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.Animable;
+import common.util.anim.AnimC;
+import common.util.anim.AnimD;
+import common.util.anim.AnimI;
+import common.util.anim.EAnimI;
+import common.util.unit.DIYAnim;
 import io.Writer;
 import main.Timer;
 import page.JBTN;
@@ -25,12 +31,6 @@ import page.Page;
 import page.anim.ImgCutEditPage;
 import page.awt.BBBuilder;
 import page.view.ViewBox.Loader;
-import util.Animable;
-import util.anim.AnimC;
-import util.anim.AnimD;
-import util.anim.AnimI;
-import util.anim.EAnimI;
-import util.unit.DIYAnim;
 
 public abstract class AbViewPage extends Page {
 

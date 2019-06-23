@@ -1,14 +1,14 @@
 package page.info.filter;
 
-import static util.Interpret.ATKCONF;
-import static util.Interpret.EABI;
-import static util.Interpret.EABIIND;
-import static util.Interpret.EFILTER;
-import static util.Interpret.ERARE;
-import static util.Interpret.SPROC;
-import static util.Interpret.TRAIT;
-import static util.Interpret.isER;
-import static util.Interpret.isType;
+import static utilpc.Interpret.ATKCONF;
+import static utilpc.Interpret.EABI;
+import static utilpc.Interpret.EABIIND;
+import static utilpc.Interpret.EFILTER;
+import static utilpc.Interpret.ERARE;
+import static utilpc.Interpret.SPROC;
+import static utilpc.Interpret.TRAIT;
+import static utilpc.Interpret.isER;
+import static utilpc.Interpret.isType;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,13 +25,13 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.pack.Pack;
+import common.util.unit.Enemy;
+import common.util.unit.EnemyStore;
 import main.MainBCU;
 import page.JTG;
 import page.Page;
-import util.Res;
-import util.pack.Pack;
-import util.unit.Enemy;
-import util.unit.EnemyStore;
+import utilpc.UtilPC;
 
 public abstract class EnemyFilterBox extends Page {
 
@@ -140,28 +140,28 @@ class EFBButton extends EnemyFilterBox {
 			set(rare[i] = new JTG(ERARE[i]));
 		for (int i = 0; i < trait.length; i++) {
 			set(trait[i] = new JTG(TRAIT[i]));
-			BufferedImage v = Res.getIcon(3, i);
+			BufferedImage v = UtilPC.getIcon(3, i);
 			if (v == null)
 				continue;
 			trait[i].setIcon(new ImageIcon(v));
 		}
 		for (int i = 0; i < abis.length; i++) {
 			set(abis[i] = new JTG(EABI[i]));
-			BufferedImage v = Res.getIcon(0, EABIIND[i]);
+			BufferedImage v = UtilPC.getIcon(0, EABIIND[i]);
 			if (v == null)
 				continue;
 			abis[i].setIcon(new ImageIcon(v));
 		}
 		for (int i = 0; i < proc.length; i++) {
 			set(proc[i] = new JTG(SPROC[i]));
-			BufferedImage v = Res.getIcon(1, i);
+			BufferedImage v = UtilPC.getIcon(1, i);
 			if (v == null)
 				continue;
 			proc[i].setIcon(new ImageIcon(v));
 		}
 		for (int i = 0; i < atkt.length; i++) {
 			set(atkt[i] = new JTG(ATKCONF[i]));
-			BufferedImage v = Res.getIcon(2, i);
+			BufferedImage v = UtilPC.getIcon(2, i);
 			if (v == null)
 				continue;
 			atkt[i].setIcon(new ImageIcon(v));

@@ -8,16 +8,17 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-import io.Reader;
+import common.CommonStatic;
+import common.battle.BasisSet;
+import common.battle.data.MaskUnit;
+import common.util.Data;
+import common.util.unit.EForm;
+import common.util.unit.Form;
 import page.JL;
 import page.JTF;
 import page.Page;
-import util.Data;
-import util.Interpret;
-import util.basis.BasisSet;
-import util.entity.data.MaskUnit;
-import util.unit.EForm;
-import util.unit.Form;
+import utilpc.Interpret;
+import utilpc.UtilPC;
 
 public class UnitInfoTable extends Page {
 
@@ -84,6 +85,9 @@ public class UnitInfoTable extends Page {
 
 		List<String> ls = Interpret.getAbi(ef.du);
 		ls.addAll(Interpret.getProc(ef.du, b.t(), ef.du.getType()));
+		for (JLabel l : proc)
+			if (l != pcoin)
+				l.setText("");
 		for (int i = 0; i < ls.size(); i++)
 			proc[i].setText(ls.get(i));
 
@@ -116,7 +120,7 @@ public class UnitInfoTable extends Page {
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				multi = f.regulateLv(Reader.parseIntsN(jtf.getText()), multi);
+				multi = f.regulateLv(CommonStatic.parseIntsN(jtf.getText()), multi);
 				String[] strs = f.lvText(multi);
 				jtf.setText(strs[0]);
 				if (pcoin != null)
@@ -153,7 +157,7 @@ public class UnitInfoTable extends Page {
 		main[0][0].setText("ID");
 		main[0][1].setText(f.uid + "-" + f.fid);
 		if (f.anim.edi.getImg() != null)
-			main[0][2].setIcon(f.anim.edi.getIcon());
+			main[0][2].setIcon(UtilPC.getIcon(f.anim.edi));
 		main[0][3].setText(1, "trait");
 		main[1][0].setText(Interpret.RARITY[f.unit.rarity]);
 		main[1][2].setText("HP / HB");

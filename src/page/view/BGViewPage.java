@@ -4,18 +4,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.util.pack.BGStore;
+import common.util.pack.Background;
+import common.util.pack.Pack;
 import page.JBTN;
 import page.Page;
-import util.pack.BGStore;
-import util.pack.Background;
-import util.pack.Pack;
+import utilpc.UtilPC;
 
 public class BGViewPage extends Page {
 
@@ -52,7 +52,7 @@ public class BGViewPage extends Page {
 		Background s = jlst.getSelectedValue();
 		if (s == null)
 			return;
-		jl.setIcon(new ImageIcon(s.getBg(jl.getWidth(), jl.getHeight())));
+		jl.setIcon(UtilPC.getBg(s, jl.getWidth(), jl.getHeight()));
 	}
 
 	private void addListeners() {
@@ -72,7 +72,7 @@ public class BGViewPage extends Page {
 				Background s = jlst.getSelectedValue();
 				if (s == null)
 					return;
-				jl.setIcon(new ImageIcon(s.getBg(jl.getWidth(), jl.getHeight())));
+				jl.setIcon(UtilPC.getBg(s, jl.getWidth(), jl.getHeight()));
 			}
 
 		});

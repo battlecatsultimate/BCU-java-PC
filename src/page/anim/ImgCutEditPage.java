@@ -20,6 +20,15 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.system.VImg;
+import common.system.fake.FakeImage;
+import common.util.anim.AnimC;
+import common.util.anim.ImgCut;
+import common.util.anim.MaAnim;
+import common.util.anim.Part;
+import common.util.pack.Pack;
+import common.util.unit.DIYAnim;
+import common.util.unit.Enemy;
 import io.Writer;
 import main.MainBCU;
 import main.Opts;
@@ -29,16 +38,8 @@ import page.Page;
 import page.support.AnimLCR;
 import page.support.Exporter;
 import page.support.Importer;
-import util.ReColor;
-import util.anim.AnimC;
-import util.anim.ImgCut;
-import util.anim.MaAnim;
-import util.anim.Part;
-import util.pack.Pack;
-import util.system.VImg;
-import util.system.fake.FakeImage;
-import util.unit.DIYAnim;
-import util.unit.Enemy;
+import utilpc.ReColor;
+import utilpc.UtilPC;
 
 public class ImgCutEditPage extends Page implements AbEditPage {
 
@@ -393,7 +394,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 					e.printStackTrace();
 				}
 				if (icet.anim.edi != null)
-					icon.setIcon(icet.anim.edi.getIcon());
+					icon.setIcon(UtilPC.getIcon(icet.anim.edi));
 			}
 
 		});
@@ -583,7 +584,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		impt.setEnabled(anim != null);
 		expt.setEnabled(anim != null);
 		if (da != null && da.anim.edi != null)
-			icon.setIcon(da.anim.edi.getIcon());
+			icon.setIcon(UtilPC.getIcon(da.anim.edi));
 		setB(sb.sele);
 		changing = boo;
 	}

@@ -15,7 +15,13 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import io.BCJSON;
+import common.CommonStatic.Account;
+import common.battle.data.CustomEnemy;
+import common.util.pack.Pack;
+import common.util.stage.MapColc;
+import common.util.stage.StageMap;
+import common.util.unit.DIYAnim;
+import common.util.unit.Enemy;
 import io.Writer;
 import main.MainBCU;
 import main.Opts;
@@ -33,12 +39,6 @@ import page.view.BGViewPage;
 import page.view.CastleViewPage;
 import page.view.EnemyViewPage;
 import page.view.MusicPage;
-import util.entity.data.CustomEnemy;
-import util.pack.Pack;
-import util.stage.MapColc;
-import util.stage.StageMap;
-import util.unit.DIYAnim;
-import util.unit.Enemy;
 
 public class PackEditPage extends Page {
 
@@ -79,6 +79,7 @@ public class PackEditPage extends Page {
 	private final JBTN ener = new JBTN(0, "ener");
 	private final JBTN vmsc = new JBTN(0, "vmsc");
 	private final JBTN unpk = new JBTN(0, "unpack");
+	private final JBTN recd = new JBTN(0, "replay");
 	private final JTF jtfp = new JTF();
 	private final JTF jtfe = new JTF();
 	private final JTF jtfs = new JTF();
@@ -162,6 +163,8 @@ public class PackEditPage extends Page {
 		set(addr, x, y, w, 800, 175, 50);
 		set(remr, x, y, w + 175, 800, 175, 50);
 
+		set(recd, x, y, w, 950, 300, 50);
+
 		w += 350;
 
 		set(lbt, x, y, w, 100, 350, 50);
@@ -171,6 +174,8 @@ public class PackEditPage extends Page {
 	private void addListeners() {
 
 		back.setLnr(x -> changePanel(getFront()));
+
+		recd.setLnr(x -> changePanel(new RecdPackPage(this, pac)));
 
 		vcas.addActionListener(new ActionListener() {
 			@Override
@@ -617,6 +622,7 @@ public class PackEditPage extends Page {
 		add(ener);
 		add(vmsc);
 		add(unpk);
+		add(recd);
 		jle.setCellRenderer(new AnimLCR());
 		jld.setCellRenderer(new AnimLCR());
 		setPack(null);
@@ -650,7 +656,7 @@ public class PackEditPage extends Page {
 	private void setPack(Pack pack) {
 		pac = pack;
 		boolean b = pac != null && pac.editable;
-		remp.setEnabled(pac != null && pac != Pack.def);
+		remp.setEnabled(pac != null && pac != Pack.def && pac.canDelete());
 		jtfp.setEnabled(b);
 		adde.setEnabled(b && jld.getSelectedValue() != null);
 		adds.setEnabled(b);
@@ -659,7 +665,8 @@ public class PackEditPage extends Page {
 		vbgr.setEnabled(pac != null);
 		vene.setEnabled(pac != null);
 		vmsc.setEnabled(pac != null);
-		boolean canUnpack = pac != null && pac != Pack.def && !pac.editable && pac.author.equals(BCJSON.USERNAME);
+		recd.setEnabled(pac != null);
+		boolean canUnpack = pac != null && pac != Pack.def && !pac.editable && pac.author.equals(Account.USERNAME);
 		unpk.setEnabled(canUnpack);
 		if (b)
 			jtfp.setText(pack.name);

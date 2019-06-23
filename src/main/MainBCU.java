@@ -4,6 +4,9 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import common.CommonStatic;
+import common.system.fake.ImageBuilder;
+import common.util.Data;
 import decode.ZipLib;
 import io.BCJSON;
 import io.Reader;
@@ -14,13 +17,12 @@ import page.MainFrame;
 import page.MainPage;
 import page.awt.AWTBBB;
 import page.awt.BBBuilder;
-import util.Data;
-import util.system.fake.ImageBuilder;
-import util.system.fake.awt.PCIB;
+import utilpc.UtilPC;
+import utilpc.awt.PCIB;
 
 public class MainBCU {
 
-	public static final int ver = 40806;
+	public static final int ver = 40812;
 
 	public static int FILTER_TYPE = 0;
 	public static final boolean WRITE = !new File("./.project").exists();
@@ -44,6 +46,7 @@ public class MainBCU {
 
 		ImageBuilder.builder = USE_JOGL ? new GLIB() : new PCIB();
 		BBBuilder.def = USE_JOGL ? new GLBBB() : AWTBBB.INS;
+		CommonStatic.def = new UtilPC.PCItr();
 
 		new MainFrame(Data.revVer(MainBCU.ver)).initialize();
 		new Timer().start();

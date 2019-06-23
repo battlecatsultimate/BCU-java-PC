@@ -10,7 +10,13 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
-import io.Reader;
+import common.CommonStatic;
+import common.util.pack.BGStore;
+import common.util.pack.Pack;
+import common.util.stage.Castles;
+import common.util.stage.Limit;
+import common.util.stage.Recd;
+import common.util.stage.Stage;
 import page.JBTN;
 import page.JL;
 import page.JTF;
@@ -21,12 +27,6 @@ import page.pack.LvRestrictPage;
 import page.view.BGViewPage;
 import page.view.CastleViewPage;
 import page.view.MusicPage;
-import util.pack.BGStore;
-import util.pack.Pack;
-import util.stage.Castles;
-import util.stage.Limit;
-import util.stage.Recd;
-import util.stage.Stage;
 
 class HeadEditTable extends Page {
 
@@ -348,7 +348,7 @@ class HeadEditTable extends Page {
 					r.marked = true;
 			return;
 		}
-		int val = Reader.parseIntN(str);
+		int val = CommonStatic.parseIntN(str);
 		if (jtf == jhea) {
 			if (val <= 0)
 				return;
@@ -382,7 +382,7 @@ class HeadEditTable extends Page {
 		for (int i = 0; i < 4; i++)
 			if (jtf == star[i]) {
 				String[] strs = str.split(" ");
-				int[] vals = Reader.parseIntsN(strs[strs.length - 1]);
+				int[] vals = CommonStatic.parseIntsN(strs[strs.length - 1]);
 				val = vals.length == 0 ? -1 : vals[vals.length - 1];
 				int[] sr = sta.map.stars;
 				if (i == 0 && val <= 0)

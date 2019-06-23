@@ -3,12 +3,13 @@ package page.anim;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import common.CommonStatic.EditLink;
+import common.util.unit.DIYAnim;
 import io.Writer;
 import page.JBTN;
 import page.Page;
-import util.unit.DIYAnim;
 
-public class EditHead extends Page {
+public class EditHead extends Page implements EditLink {
 
 	private static final long serialVersionUID = 1L;
 
@@ -47,6 +48,7 @@ public class EditHead extends Page {
 		ini();
 	}
 
+	@Override
 	public void review() {
 		undo.setEnabled(anim != null && anim.getAnimC().history.size() > 1);
 		cur.callBack("review");

@@ -9,8 +9,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import util.anim.AnimC;
-import util.anim.MaModel;
+import common.util.anim.AnimC;
+import common.util.anim.MaModel;
 
 class MMTree implements TreeExpansionListener {
 
