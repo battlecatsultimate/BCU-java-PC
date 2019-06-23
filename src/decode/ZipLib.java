@@ -43,7 +43,7 @@ public class ZipLib {
 		try {
 			lib = FileSystems.newFileSystem(f.toPath(), null);
 			info = new LibInfo(lib);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			Opts.loadErr("cannot access ./assets/assets.zip");
 			if (Opts.conf("do you want to re-download assets?"))

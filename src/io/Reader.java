@@ -258,9 +258,13 @@ public class Reader extends DataIO {
 		try {
 			ZipAccess.getList();
 			alt = ZipAccess.extractAllList();
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			Opts.loadErr("error in reading: reading backup");
+		} catch (Exception e) {
+			e.printStackTrace();
+			Opts.loadErr("cannot access ./user/backup.zip");
+			if (Opts.conf("do you want to delete broken backups?"))
+				new File("./user/backup.zip").deleteOnExit();
+			Writer.logClose(false);
+			System.exit(0);
 		}
 		try {
 			DIYAnim.read();
