@@ -79,6 +79,7 @@ public class PackEditPage extends Page {
 	private final JBTN ener = new JBTN(0, "ener");
 	private final JBTN vmsc = new JBTN(0, "vmsc");
 	private final JBTN unpk = new JBTN(0, "unpack");
+	private final JBTN recd = new JBTN(0, "replay");
 	private final JTF jtfp = new JTF();
 	private final JTF jtfe = new JTF();
 	private final JTF jtfs = new JTF();
@@ -162,6 +163,8 @@ public class PackEditPage extends Page {
 		set(addr, x, y, w, 800, 175, 50);
 		set(remr, x, y, w + 175, 800, 175, 50);
 
+		set(recd, x, y, w, 950, 300, 50);
+
 		w += 350;
 
 		set(lbt, x, y, w, 100, 350, 50);
@@ -171,6 +174,8 @@ public class PackEditPage extends Page {
 	private void addListeners() {
 
 		back.setLnr(x -> changePanel(getFront()));
+
+		recd.setLnr(x -> changePanel(new RecdPackPage(this, pac)));
 
 		vcas.addActionListener(new ActionListener() {
 			@Override
@@ -617,6 +622,7 @@ public class PackEditPage extends Page {
 		add(ener);
 		add(vmsc);
 		add(unpk);
+		add(recd);
 		jle.setCellRenderer(new AnimLCR());
 		jld.setCellRenderer(new AnimLCR());
 		setPack(null);
@@ -659,6 +665,7 @@ public class PackEditPage extends Page {
 		vbgr.setEnabled(pac != null);
 		vene.setEnabled(pac != null);
 		vmsc.setEnabled(pac != null);
+		recd.setEnabled(pac != null);
 		boolean canUnpack = pac != null && pac != Pack.def && !pac.editable && pac.author.equals(Account.USERNAME);
 		unpk.setEnabled(canUnpack);
 		if (b)

@@ -9,8 +9,10 @@ import common.CommonStatic;
 import common.util.basis.BasisSet;
 import common.util.stage.MapColc;
 import common.util.stage.Recd;
+import common.util.stage.Stage;
 import main.Opts;
 import page.JBTN;
+import page.JL;
 import page.JTF;
 import page.JTG;
 import page.Page;
@@ -30,6 +32,9 @@ public abstract class AbRecdPage extends Page {
 	private final JTG larg = new JTG(0, "larges");
 	private final JBTN imgs = new JBTN(-1, "PNG");
 	private final JLabel len = new JLabel();
+
+	private final JL ista = new JL();
+	private final JL imap = new JL();
 
 	private StageViewPage svp;
 	private BasisPage bp;
@@ -53,6 +58,8 @@ public abstract class AbRecdPage extends Page {
 		add(vsta);
 		add(seed);
 		add(jlu);
+		add(imap);
+		add(ista);
 		len.setBorder(BorderFactory.createEtchedBorder());
 		addListeners();
 	}
@@ -62,7 +69,8 @@ public abstract class AbRecdPage extends Page {
 		setList();
 		if (editable && svp != null) {
 			Recd r = getSelection();
-			if (r != null && svp.getStage() != null && Opts.conf("are you sure to change stage?")) {
+			Stage ns = svp.getStage();
+			if (r != null && ns != null && ns != r.st && Opts.conf("are you sure to change stage?")) {
 				r.st = svp.getStage();
 				r.avail = true;
 				r.marked = true;
@@ -83,14 +91,16 @@ public abstract class AbRecdPage extends Page {
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);
-		set(rply, x, y, 400, 100, 300, 50);
-		set(recd, x, y, 400, 200, 300, 50);
-		set(larg, x, y, 750, 200, 300, 50);
-		set(imgs, x, y, 1100, 200, 300, 50);
-		set(len, x, y, 400, 300, 300, 50);
-		set(vsta, x, y, 400, 600, 300, 50);
-		set(jlu, x, y, 750, 600, 300, 50);
-		set(seed, x, y, 750, 300, 500, 50);
+		set(rply, x, y, 600, 100, 300, 50);
+		set(imap, x, y, 950, 100, 300, 50);
+		set(ista, x, y, 1300, 100, 300, 50);
+		set(recd, x, y, 600, 200, 300, 50);
+		set(larg, x, y, 950, 200, 300, 50);
+		set(imgs, x, y, 1300, 200, 300, 50);
+		set(len, x, y, 600, 300, 300, 50);
+		set(vsta, x, y, 600, 600, 300, 50);
+		set(jlu, x, y, 950, 600, 300, 50);
+		set(seed, x, y, 950, 300, 500, 50);
 	}
 
 	protected abstract void setList();
@@ -101,6 +111,8 @@ public abstract class AbRecdPage extends Page {
 		imgs.setEnabled(r != null && r.avail);
 		seed.setEditable(editable && r != null);
 		vsta.setEnabled(r != null);
+		ista.setText(r == null || r.st == null ? "(unavailable)" : r.st.toString());
+		imap.setText(r == null || r.st == null ? "(unavailable)" : r.st.map.toString());
 		jlu.setEnabled(r != null);
 		if (r == null) {
 			len.setText("");

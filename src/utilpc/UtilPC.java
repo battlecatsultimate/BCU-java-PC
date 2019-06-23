@@ -75,6 +75,12 @@ public class UtilPC {
 		}
 
 		@Override
+		public void redefine(Class<?> cls) {
+			if (cls == AnimU.class)
+				red$AnimU();
+		}
+
+		@Override
 		public void setSE(int ind) {
 			BCMusic.setSE(ind);
 		}
@@ -82,12 +88,6 @@ public class UtilPC {
 		@Override
 		public boolean writeBytes(OutStream os, String path) {
 			return Writer.writeBytes(os, path);
-		}
-
-		@Override
-		public void redefine(Class<?> cls) {
-			if (cls == AnimU.class)
-				red$AnimU();
 		}
 
 		private void red$AnimU() {

@@ -60,10 +60,10 @@ public class StRecdPage extends AbRecdPage {
 	@Override
 	protected void resized(int x, int y) {
 		super.resized(x, y);
-		set(jsp, x, y, 50, 100, 300, 600);
-		set(addr, x, y, 400, 400, 300, 50);
-		set(remr, x, y, 750, 400, 300, 50);
-		set(jtf, x, y, 400, 500, 300, 50);
+		set(jsp, x, y, 50, 100, 500, 1100);
+		set(addr, x, y, 600, 400, 300, 50);
+		set(remr, x, y, 950, 400, 300, 50);
+		set(jtf, x, y, 600, 500, 300, 50);
 	}
 
 	@Override
