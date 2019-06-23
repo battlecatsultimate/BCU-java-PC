@@ -95,8 +95,11 @@ public class AmbImage implements FakeImage {
 			String str = (String) o;
 			if (str.equals("uni"))
 				forceBI();
-			if (str.equals("BG"))
+			if (str.equals("BG")) {
 				checkBI();
+				if (bimg.bimg().getWidth() % 4 != 0)
+					force = true;
+			}
 			if (str.equals("edi"))
 				forceBI();
 			if (str.equals("uni or edi"))

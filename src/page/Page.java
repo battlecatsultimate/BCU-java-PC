@@ -108,6 +108,10 @@ public abstract class Page extends JPanel implements RetFunc {
 		return new PP(jrp.getWidth(), jrp.getHeight());
 	}
 
+	public boolean isAdj() {
+		return adjusting > 0;
+	}
+
 	public final void resized() {
 		Point p = getXY().toPoint();
 		componentResized(p.x, p.y);
@@ -142,10 +146,6 @@ public abstract class Page extends JPanel implements RetFunc {
 
 	protected final Page getThis() {
 		return this;
-	}
-
-	protected boolean isAdj() {
-		return adjusting > 0;
 	}
 
 	protected void keyPressed(KeyEvent e) {
