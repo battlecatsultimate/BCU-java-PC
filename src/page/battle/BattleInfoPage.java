@@ -57,6 +57,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	private final JScrollPane ctp = new JScrollPane(ct);
 	private final JLabel ebase = new JLabel();
 	private final JLabel ubase = new JLabel();
+	private final JLabel timer = new JLabel();
 	private final JLabel ecount = new JLabel();
 	private final JLabel ucount = new JLabel();
 	private final JLabel stream = new JLabel();
@@ -179,14 +180,15 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	@Override
 	protected synchronized void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+		set(back, x, y, 0, 0, 200, 50);
+		set(jtb, x, y, 2100, 0, 200, 50);
 		if (jtb.isSelected()) {
-			set(back, x, y, 0, 0, 200, 50);
-			set(jtb, x, y, 2100, 0, 200, 50);
 			set(paus, x, y, 700, 0, 200, 50);
-			set(rply, x, y, 1000, 0, 200, 50);
+			set(rply, x, y, 900, 0, 200, 50);
 			set(stream, x, y, 900, 0, 400, 50);
-			set(next, x, y, 1300, 0, 200, 50);
+			set(next, x, y, 1100, 0, 200, 50);
 			set(ebase, x, y, 240, 0, 600, 50);
+			set(timer, x, y, 1300, 0, 200, 50);
 			set(ubase, x, y, 1540, 0, 200, 50);
 			set((Canvas) bb, x, y, 50, 50, 1920, 1200);
 			set(ctp, x, y, 0, 0, 0, 0);
@@ -196,8 +198,6 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			set(ucount, x, y, 50, 350, 0, 0);
 			set(jsl, x, y, 0, 0, 0, 0);
 		} else {
-			set(back, x, y, 0, 0, 200, 50);
-			set(jtb, x, y, 2100, 0, 200, 50);
 			set(ctp, x, y, 50, 850, 1200, 400);
 			set(eep, x, y, 50, 100, 600, 700);
 			set((Canvas) bb, x, y, 700, 300, 800, 500);
@@ -206,7 +206,8 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			set(stream, x, y, 900, 200, 400, 50);
 			set(next, x, y, 1300, 200, 200, 50);
 			set(eup, x, y, 1650, 100, 600, 1100);
-			set(ebase, x, y, 700, 250, 600, 50);
+			set(ebase, x, y, 700, 250, 400, 50);
+			set(timer, x, y, 1100, 250, 200, 50);
 			set(ubase, x, y, 1300, 250, 200, 50);
 			set(ecount, x, y, 50, 50, 600, 50);
 			set(ucount, x, y, 1650, 50, 600, 50);
@@ -247,6 +248,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		long mh = eba.maxH;
 		ebase.setText("HP: " + h + "/" + mh + ", " + 10000 * h / mh / 100.0 + "%");
 		ubase.setText("HP: " + sb.ubase.health);
+		timer.setText(sb.time + "f");
 		ecount.setText(sb.entityCount(1) + "/" + sb.st.max);
 		ucount.setText(sb.entityCount(-1) + "/" + sb.max_num);
 		resized();
@@ -259,6 +261,12 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	}
 
 	private void addListeners() {
+
+		jtb.setLnr(x -> {
+			remove((Canvas) bb);
+			resized();
+			add((Canvas) bb);
+		});
 
 		back.setLnr(x -> {
 			BCMusic.stopAll();
@@ -325,6 +333,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		add(next);
 		add(ebase);
 		add(ubase);
+		add(timer);
 		add(ecount);
 		add(ucount);
 		add(jtb);

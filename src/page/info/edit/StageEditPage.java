@@ -50,6 +50,7 @@ public class StageEditPage extends Page {
 	private final JBTN rmsm = new JBTN(0, "rmsm");
 	private final JBTN rmst = new JBTN(0, "rmst");
 	private final JBTN recd = new JBTN(0, "replay");
+	private final JBTN elim = new JBTN(0, "limit");
 	private final StageEditTable jt;
 	private final JScrollPane jspjt;
 	private final ReorderList<StageMap> jlsm = new ReorderList<>();
@@ -111,6 +112,7 @@ public class StageEditPage extends Page {
 		set(info, x, y, 900, 50, 1400, 250);
 		set(addl, x, y, 900, 350, 200, 50);
 		set(reml, x, y, 1100, 350, 200, 50);
+		set(elim, x, y, 1600, 350, 200, 50);
 		set(recd, x, y, 1850, 350, 200, 50);
 		set(advs, x, y, 2100, 350, 200, 50);
 		set(jspjt, x, y, 900, 400, 1400, 900);
@@ -144,6 +146,8 @@ public class StageEditPage extends Page {
 		advs.setLnr(x -> changePanel(new AdvStEditPage(getThis(), stage)));
 
 		recd.setLnr(x -> changePanel(new StRecdPage(getThis(), stage, true)));
+
+		elim.setLnr(x -> changePanel(new LimitEditPage(getThis(), stage)));
 
 		addl.addActionListener(new ActionListener() {
 
@@ -451,6 +455,7 @@ public class StageEditPage extends Page {
 		add(jlpst);
 		add(recd);
 		add(advs);
+		add(elim);
 		setAA(null);
 		setBA(null);
 		jle.setCellRenderer(new AnimLCR());
@@ -541,6 +546,7 @@ public class StageEditPage extends Page {
 		strt.setEnabled(st != null);
 		recd.setEnabled(st != null);
 		advs.setEnabled(st != null);
+		elim.setEnabled(st != null);
 		jspjt.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
 		resized();
 	}
