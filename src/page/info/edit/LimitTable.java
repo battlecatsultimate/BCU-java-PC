@@ -108,6 +108,19 @@ public class LimitTable extends Page {
 
 	protected void setLimit(Limit l) {
 		lim = l;
+		if (l == null) {
+			for (int i = 0; i < brars.length; i++)
+				brars[i].setSelected(false);
+			jcmax.setText(limits[4] + ": ");
+			jcmin.setText(limits[3] + ": ");
+			jnum.setText(limits[1] + ": ");
+			jcg.setText("");
+			jlr.setText("");
+			one.setSelected(false);
+			abler(false);
+			return;
+		}
+		abler(true);
 		if (lim.rare > 0) {
 			for (int i = 0; i < brars.length; i++)
 				brars[i].setSelected(((lim.rare >> i) & 1) > 0);
