@@ -7,9 +7,9 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 
+import common.CommonStatic;
 import common.system.files.AssetData;
 import common.system.files.VFile;
-import io.Writer;
 import main.Opts;
 import page.LoadPage;
 
@@ -28,8 +28,7 @@ public class ZipLib {
 		for (String req : LIBREQS)
 			if (info == null || !info.merge.set.contains(req)) {
 				Opts.loadErr("this version requires lib " + req);
-				Writer.logClose(false);
-				System.exit(0);
+				CommonStatic.def.exit(false);
 			}
 	}
 
@@ -48,8 +47,7 @@ public class ZipLib {
 			Opts.loadErr("cannot access ./assets/assets.zip");
 			if (Opts.conf("do you want to re-download assets?"))
 				new File("./assets/assets.zip").deleteOnExit();
-			Writer.logClose(false);
-			System.exit(0);
+			CommonStatic.def.exit(false);
 		}
 		f = new File("./assets/custom.zip");
 		if (f.exists())

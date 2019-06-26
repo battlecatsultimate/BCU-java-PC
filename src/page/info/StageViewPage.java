@@ -158,6 +158,7 @@ public class StageViewPage extends StagePage {
 		add(dgen);
 		cpsm.setEnabled(false);
 		cpst.setEnabled(false);
+		recd.setEnabled(false);
 		addListeners();
 	}
 

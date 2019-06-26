@@ -96,10 +96,9 @@ public class BCJSON extends WebFileIO {
 					int ver = data.getInt("jar");
 					String name = "BCU" + (ver >= 40800 ? "-" : " ");
 					name += Data.revVer(ver) + ".jar";
-					if (download(ast + "jar/" + name, new File("./" + name), LoadPage.lp)) {
-						Writer.logClose(false);
-						System.exit(0);
-					} else
+					if (download(ast + "jar/" + name, new File("./" + name), LoadPage.lp))
+						CommonStatic.def.exit(false);
+					else
 						Opts.dloadErr(name);
 				}
 
@@ -141,8 +140,7 @@ public class BCJSON extends WebFileIO {
 			need |= !new File(path + cals[i]).exists();
 		if (need) {
 			Opts.pop(Opts.REQITN);
-			Writer.logClose(false);
-			System.exit(0);
+			CommonStatic.def.exit(false);
 		}
 	}
 

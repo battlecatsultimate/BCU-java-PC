@@ -22,8 +22,8 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.plaf.FontUIResource;
 
+import common.CommonStatic;
 import common.system.P;
-import io.Writer;
 import main.Printer;
 import utilpc.PP;
 
@@ -126,8 +126,7 @@ public class MainFrame extends JFrame {
 				setVisible(false);
 				if (mainPanel != null)
 					mainPanel.exitAll();
-				Writer.logClose(true);
-				System.exit(0);
+				CommonStatic.def.exit(true);
 			}
 
 			@Override

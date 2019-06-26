@@ -21,6 +21,10 @@ import io.Writer;
 
 public class Temp {
 
+	public static void main(String[] args) {
+
+	}
+
 	public static void main$0(String[] args) throws FileNotFoundException {
 		for (File fi : new File("./lib/lang/zh/").listFiles()) {
 			Queue<String> qs = Reader.readLines(fi);
