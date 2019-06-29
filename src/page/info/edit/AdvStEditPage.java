@@ -98,7 +98,7 @@ public class AdvStEditPage extends Page {
 			int val = CommonStatic.parseIntN(smax.getText());
 			SCGroup scg = jls.getSelectedValue();
 			if (val > 0)
-				scg.max = val;
+				scg.setMax(val, -1);
 			setSCG(scg);
 		});
 
@@ -159,7 +159,7 @@ public class AdvStEditPage extends Page {
 			change(scg, s -> jls.setSelectedValue(s, true));
 		remg.setEnabled(scg != null);
 		smax.setEnabled(scg != null);
-		smax.setText(scg != null ? "max: " + scg.max : "");
+		smax.setText(scg != null ? "max: " + scg.getMax(0) : "");
 	}
 
 }
