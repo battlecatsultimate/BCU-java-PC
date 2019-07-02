@@ -267,8 +267,11 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				changing = true;
 				String str = jtf.getText().trim();
 				str = MainBCU.validate(str);
-				if (icet.anim == null || icet.anim.name.equals(str))
+				if (str.length() == 0 || icet.anim == null || icet.anim.name.equals(str)) {
+					if (icet.anim != null)
+						jtf.setText(icet.anim.name);
 					return;
+				}
 				DIYAnim da = DIYAnim.map.remove(icet.anim.name);
 				DIYAnim rep = DIYAnim.map.get(str);
 				if (rep != null && Opts.conf(
