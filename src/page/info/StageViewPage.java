@@ -14,6 +14,7 @@ import javax.swing.event.ListSelectionListener;
 import common.util.stage.MapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
+import main.Opts;
 import page.JBTN;
 import page.Page;
 import page.battle.StRecdPage;
@@ -32,6 +33,7 @@ public class StageViewPage extends StagePage {
 	private final JBTN cpst = new JBTN(0, "cpst");
 	private final JBTN dgen = new JBTN(0, "dungeon");
 	private final JBTN recd = new JBTN(0, "replay");
+	private final JBTN info = new JBTN(0, "info");
 
 	public StageViewPage(Page p, Collection<MapColc> collection) {
 		super(p);
@@ -61,6 +63,7 @@ public class StageViewPage extends StagePage {
 		set(dgen, x, y, 600, 0, 200, 50);
 		set(strt, x, y, 400, 0, 200, 50);
 		set(recd, x, y, 1850, 300, 200, 50);
+		set(info, x, y, 1600, 300, 200, 50);
 	}
 
 	@Override
@@ -71,6 +74,12 @@ public class StageViewPage extends StagePage {
 	}
 
 	private void addListeners() {
+
+		info.setLnr(x -> {
+			if (stage == null || stage.info == null)
+				return;
+			Opts.pop(stage.info.getHTML(), "stage info");
+		});
 
 		recd.setLnr(x -> changePanel(new StRecdPage(this, stage, false)));
 
@@ -156,6 +165,7 @@ public class StageViewPage extends StagePage {
 		add(cpsm);
 		add(cpst);
 		add(dgen);
+		add(info);
 		cpsm.setEnabled(false);
 		cpst.setEnabled(false);
 		recd.setEnabled(false);

@@ -53,6 +53,11 @@ public class Opts {
 			pop("failed to connect to internet while download is necessary", "download error");
 	}
 
+	public static void pop(String text, String title) {
+		int opt = JOptionPane.PLAIN_MESSAGE;
+		JOptionPane.showMessageDialog(null, text, title, opt);
+	}
+
 	public static void recdErr(String name, String suf) {
 		pop("replay " + name + " uses unavailable " + suf, "replay read error");
 	}
@@ -86,11 +91,6 @@ public class Opts {
 
 	public static boolean writeErr1(String f) {
 		return Opts.warning("failed to write file: " + f + " do you want to save it in another place?", "IO error");
-	}
-
-	private static void pop(String text, String title) {
-		int opt = JOptionPane.PLAIN_MESSAGE;
-		JOptionPane.showMessageDialog(null, text, title, opt);
 	}
 
 	private static boolean warning(String text, String title) {
