@@ -254,6 +254,7 @@ public class Reader extends DataIO {
 	}
 
 	private static void readCustom() {
+		LoadPage.prog("reading custom data");
 		alt = null;
 		try {
 			ZipAccess.getList();
