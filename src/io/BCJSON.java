@@ -31,11 +31,13 @@ import page.LoadPage;
 
 public class BCJSON extends WebFileIO {
 
+	public static final String WEBSITE = "http://battlecatsultimate.epizy.com";
+
 	public static int ID = 0;
 	public static int cal_ver = 0;
 
-	private static final String req = "http://battlecatsultimate.cf/api/java/";
-	private static final String ast = "http://battlecatsultimate.cf/api/resources/";
+	private static final String req = WEBSITE + "/api/java/";
+	private static final String ast = WEBSITE + "/api/resources/";
 	private static final String path = "./assets/";
 
 	private static final String[] cals;

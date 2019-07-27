@@ -80,7 +80,7 @@ public class WebPack {
 		public WebImg(String str) {
 			url = str;
 			if (str.length() > 0) {
-				url = "http://battlecatsultimate.cf/packs/res/" + str;
+				url = BCJSON.WEBSITE + "/packs/res/" + str;
 				tmp = new File("./pack/img/" + str);
 				if (tmp.exists()) {
 					try {

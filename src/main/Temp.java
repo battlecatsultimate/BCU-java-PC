@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import io.BCJSON;
 import io.Reader;
 import io.WebFileIO;
 import io.Writer;
@@ -24,7 +25,8 @@ public class Temp {
 
 	public static void main(String[] args) {
 		File file = new File("./img/temp.zip");
-		String url = "https://www.dropbox.com/s/w6edohrqmr24scf/assets.zip?dl=1";
+		String url = BCJSON.WEBSITE + "/api/resources/assets/080705.zip";
+		// "https://www.dropbox.com/s/w6edohrqmr24scf/assets.zip?dl=1";
 		long time = System.currentTimeMillis();
 		WebFileIO.download(WebFileIO.FAST, url, file, p -> {
 			long dt = System.currentTimeMillis() - time;
