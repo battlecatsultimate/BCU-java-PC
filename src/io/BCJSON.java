@@ -31,13 +31,14 @@ import page.LoadPage;
 
 public class BCJSON extends WebFileIO {
 
-	public static final String WEBSITE = "http://battlecatsultimate.epizy.com";
+	public static final String WEBSITE = "http://battle-cats-ultimate.000webhostapp.com";
+	public static final String RESSITE = "http://bcu-resources.000webhostapp.com";
 
 	public static int ID = 0;
 	public static int cal_ver = 0;
 
 	private static final String req = WEBSITE + "/api/java/";
-	private static final String ast = WEBSITE + "/api/resources/";
+	private static final String ast = RESSITE + "/resources/";
 	private static final String path = "./assets/";
 
 	private static final String[] cals;
@@ -375,17 +376,26 @@ public class BCJSON extends WebFileIO {
 			else
 				libs = new ArrayList<String>(libmap.keySet());
 			boolean updated = false;
-			for (String str : libs) {
+			while (libs.size() > 0) {
+				String str = libs.get(0);
+				libs.remove(str);
 				if (!Arrays.asList(ZipLib.LIBREQS).contains(str))
 					if (!Opts.conf("do you want to download lib update " + str + "? " + libmap.get(str)))
 						continue;
 				LoadPage.prog("downloading asset: " + str + ".zip");
 				File temp = new File(path + (ZipLib.lib == null ? "assets.zip" : "temp.zip"));
-				if (download(ast + "assets/" + str + ".zip", temp, LoadPage.lp))
+				boolean downl;
+				if (str.startsWith("00000"))
+					downl = false;
+				else
+					downl = download(ast + "assets/" + str + ".zip", temp, LoadPage.lp);
+				if (downl) {
 					if (ZipLib.info == null)
 						ZipLib.init();
 					else
 						ZipLib.merge(temp);
+					libs = ZipLib.info.update(libmap.keySet());
+				}
 				updated = true;
 			}
 			if (updated) {
