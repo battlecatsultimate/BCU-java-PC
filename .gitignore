@@ -16,5 +16,6 @@
 **/.DS_Store
 /assets/
 /libs/
+/BCU_lib/
 /libs-sources/
 /target/
