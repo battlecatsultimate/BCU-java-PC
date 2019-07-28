@@ -23,9 +23,6 @@ import io.Writer;
 
 public class Temp {
 
-	public static void main(String[] args) {
-	}
-
 	public static void main$0(String[] args) throws FileNotFoundException {
 		for (File fi : new File("./lib/lang/zh/").listFiles()) {
 			Queue<String> qs = Reader.readLines(fi);
@@ -172,9 +169,9 @@ public class Temp {
 		System.out.println(85 & -4);
 	}
 
-	public static void main$download(String[] args) {
+	public static void main$d(String[] args) {
 		File file = new File("./img/temp.zip");
-		String url = BCJSON.WEBSITE + "/api/resources/assets/080705.zip";
+		String url = BCJSON.GITRES;
 		// "https://www.dropbox.com/s/w6edohrqmr24scf/assets.zip?dl=1";
 		long time = System.currentTimeMillis();
 		WebFileIO.download(WebFileIO.FAST, url, file, p -> {

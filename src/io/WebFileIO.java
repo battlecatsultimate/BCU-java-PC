@@ -66,7 +66,7 @@ public class WebFileIO {
 	}
 
 	public static boolean download(String url, File file, Consumer<Progress> c) {
-		return download(SMOOTH, url, file, c);
+		return download(FAST, url, file, c);
 	}
 
 	public static boolean upload(File file, String url) throws IOException {
