@@ -84,13 +84,12 @@ public class BCJSON extends WebFileIO {
 		LoadPage.prog("check download");
 		File f;
 		JSONObject data = null;
-		JSONObject lib = null;
 		try {
 			data = getJSON("getupdate.php");
-			lib = getJSON("getAssets.php");
 		} catch (IOException e) {
 		}
-		checkLib(lib);
+		checkAssets(data);
+		checkLibs(data);
 
 		if (data != null && data.length() >= 7) {
 			LoadPage.prog("check jar update...");
@@ -361,7 +360,7 @@ public class BCJSON extends WebFileIO {
 		}
 	}
 
-	private static void checkLib(JSONObject lib) {
+	private static void checkAssets(JSONObject lib) {
 		if (lib != null && lib.length() > 1) {
 			Map<String, String> libmap = new TreeMap<>();
 			JSONArray ja = lib.getJSONArray("assets");
@@ -379,8 +378,10 @@ public class BCJSON extends WebFileIO {
 			while (libs.size() > 0) {
 				String str = libs.get(0);
 				libs.remove(str);
+				String desc = libmap.get(str);
+				libmap.remove(str);
 				if (!Arrays.asList(ZipLib.LIBREQS).contains(str))
-					if (!Opts.conf("do you want to download lib update " + str + "? " + libmap.get(str)))
+					if (!Opts.conf("do you want to download lib update " + str + "? " + desc))
 						continue;
 				LoadPage.prog("downloading asset: " + str + ".zip");
 				File temp = new File(path + (ZipLib.lib == null ? "assets.zip" : "temp.zip"));
@@ -410,6 +411,25 @@ public class BCJSON extends WebFileIO {
 		}
 		ZipLib.check();
 
+	}
+
+	private static void checkLibs(JSONObject lib) {
+		if (lib != null && lib.length() > 1) {
+			List<String> list = new ArrayList<>();
+			JSONArray ja = lib.getJSONArray("pc-libs");
+			for (int i = 0; i < ja.length(); i++)
+				list.add(ja.getString(i));
+			File flib = new File("./BCU_lib/");
+			if (!flib.exists())
+				flib.mkdirs();
+			for (File fi : flib.listFiles())
+				list.remove(fi.getName());
+			for (String str : list) {
+				LoadPage.prog("download " + str);
+				File temp = new File("./BCU_lib/" + str);
+				download(ast + "jar/BCU_lib/" + str, temp, LoadPage.lp);
+			}
+		}
 	}
 
 	private static JSONObject getJSON(String url) throws IOException {
