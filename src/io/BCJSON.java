@@ -32,7 +32,7 @@ import page.LoadPage;
 public class BCJSON extends WebFileIO {
 
 	public static final String WEBSITE = "http://battle-cats-ultimate.000webhostapp.com";
-	public static final String GITRES = "https://github.com/battlecatsultimate/bcu-resources/blob/master/resources/";
+	public static final String GITRES = "https://github.com/battlecatsultimate/bcu-resources/raw/master/resources/";
 
 	public static int ID = 0;
 	public static int cal_ver = 0;
@@ -40,7 +40,7 @@ public class BCJSON extends WebFileIO {
 	private static final String req = WEBSITE + "/api/java/";
 	private static final String path = "./assets/";
 
-	private static boolean DOWNLOAD_LIBS = false;
+	private static boolean DOWNLOAD_LIBS = true;
 
 	private static final String[] cals;
 
@@ -100,7 +100,7 @@ public class BCJSON extends WebFileIO {
 					int ver = data.getInt("jar");
 					String name = "BCU" + (ver >= 40800 ? "-" : " ");
 					name += Data.revVer(ver) + ".jar";
-					if (download(getLink("jar/" + name), new File("./" + name), LoadPage.lp))
+					if (download(GITRES + "jar/" + name, new File("./" + name), LoadPage.lp))
 						CommonStatic.def.exit(false);
 					else
 						Opts.dloadErr(name);
@@ -109,12 +109,12 @@ public class BCJSON extends WebFileIO {
 			}
 			LoadPage.prog("check text update...");
 			for (int i = 0; i < cals.length; i++)
-				if (!(f = new File(path + cals[i])).exists() && !download(getLink(cals[i]), f, null))
+				if (!(f = new File(path + cals[i])).exists() && !download(GITRES + cals[i], f, null))
 					Opts.dloadErr(cals[i]);
 			if (cal_ver < data.getInt("cal")) {
 				if (Opts.updateCheck("text", "")) {
 					for (int i = 0; i < cals.length; i++)
-						if (!download(getLink(cals[i]), new File(path + cals[i]), null))
+						if (!download(GITRES + cals[i], new File(path + cals[i]), null))
 							Opts.dloadErr(cals[i]);
 					cal_ver = data.getInt("cal");
 				}
@@ -131,7 +131,7 @@ public class BCJSON extends WebFileIO {
 				for (int i = 0; i < music; i++)
 					if (mus[i]) {
 						LoadPage.prog("download musics: " + i + "/" + mus.length);
-						if (!download(getLink("music/" + Data.trio(i) + ".ogg"), fs[i], LoadPage.lp))
+						if (!download(GITRES + "music/" + Data.trio(i) + ".ogg", fs[i], LoadPage.lp))
 							Opts.dloadErr("music #" + i);
 					}
 		}
@@ -387,7 +387,7 @@ public class BCJSON extends WebFileIO {
 						continue;
 				LoadPage.prog("downloading asset: " + str + ".zip");
 				File temp = new File(path + (ZipLib.lib == null ? "assets.zip" : "temp.zip"));
-				boolean downl = download(getLink("assets/" + str + ".zip"), temp, LoadPage.lp);
+				boolean downl = download(GITRES + "assets/" + str + ".zip", temp, LoadPage.lp);
 				if (downl) {
 					if (ZipLib.info == null)
 						ZipLib.init();
@@ -425,7 +425,7 @@ public class BCJSON extends WebFileIO {
 			for (String str : list) {
 				LoadPage.prog("download " + str);
 				File temp = new File("./BCU_lib/" + str);
-				download(getLink("jar/BCU_lib/" + str), temp, LoadPage.lp);
+				download(GITRES + "jar/BCU_lib/" + str, temp, LoadPage.lp);
 			}
 		}
 	}
@@ -438,10 +438,6 @@ public class BCJSON extends WebFileIO {
 		if (ret == 0)
 			return ans;
 		throw new IOException(ans.getString("message"));
-	}
-
-	private static String getLink(String path) {
-		return GITRES + path + "?raw=true";
 	}
 
 	private static String process(String str) {

@@ -6,6 +6,9 @@ import java.nio.file.ClosedFileSystemException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 import common.CommonStatic;
 import common.system.files.AssetData;
@@ -15,8 +18,9 @@ import page.LoadPage;
 
 public class ZipLib {
 
-	public static final String[] LIBREQS = { "000001", "000002", "000003", "080602", "080603" };
-	public static final String[] OPTREQS = { "080504", "080604" };
+	public static final String[] LIBREQS = { "000001", "000002", "000003", "080602", "080603", "080504", "080604",
+			"080700", "080705", "080706" };
+	public static final String[] OPTREQS = { "080800" };
 
 	public static FileSystem lib;
 	public static LibInfo info;
@@ -94,6 +98,22 @@ public class ZipLib {
 					VFile.root.build(pi.path, AssetData.getAsset(data));
 					LoadPage.prog("reading assets " + i++ + "/" + tot);
 				}
+
+			File f = new File("./assets/custom/org/");
+			if (f.exists()) {
+				List<Path> l = new ArrayList<Path>();
+				Files.walk(f.toPath()).forEach(path -> {
+					if (Files.isDirectory(path))
+						return;
+					l.add(path);
+				});
+				for (Path path : l) {
+					String str = "." + path.toString().substring(15);
+					byte[] data = Files.readAllBytes(path);
+					VFile.root.build(str, AssetData.getAsset(data));
+					LoadPage.prog("reading assets " + i++ + "/" + tot);
+				}
+			}
 
 			VFile.root.sort();
 			VFile.root.getIf(p -> {
