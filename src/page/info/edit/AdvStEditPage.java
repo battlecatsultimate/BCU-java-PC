@@ -32,9 +32,8 @@ public class AdvStEditPage extends Page {
 	private final JScrollPane jspt;
 	private final JBTN addg = new JBTN(0, "add");
 	private final JBTN remg = new JBTN(0, "rem");
-	private final JBTN addl = new JBTN(0, "addl");
-	private final JBTN reml = new JBTN(0, "reml");
-
+	private final JBTN addt = new JBTN(0, "addl");
+	private final JBTN remt = new JBTN(0, "reml");
 	private final Stage st;
 	private final SCDef data;
 
@@ -59,8 +58,8 @@ public class AdvStEditPage extends Page {
 		set(jspe, x, y, 400, 100, 300, 800);
 		set(sdef, x, y, 400, 900, 300, 50);
 		set(jspt, x, y, 750, 150, 400, 800);
-		set(addl, x, y, 750, 100, 200, 50);
-		set(reml, x, y, 950, 100, 200, 50);
+		set(addt, x, y, 750, 100, 200, 50);
+		set(remt, x, y, 950, 100, 200, 50);
 		sget.setRowHeight(size(x, y, 50));
 	}
 
@@ -82,7 +81,7 @@ public class AdvStEditPage extends Page {
 			int ind = data.sub.nextInd();
 			SCGroup scg = new SCGroup(ind, st.max);
 			data.sub.add(scg);
-			setList();
+			setListG();
 			setSCG(scg);
 		});
 
@@ -91,7 +90,7 @@ public class AdvStEditPage extends Page {
 			data.sub.remove(jls.getSelectedValue());
 			if (ind > data.sub.size())
 				ind--;
-			setList();
+			setListG();
 			jls.setSelectedIndex(ind);
 		});
 
@@ -99,7 +98,7 @@ public class AdvStEditPage extends Page {
 			int val = CommonStatic.parseIntN(smax.getText());
 			SCGroup scg = jls.getSelectedValue();
 			if (val > 0)
-				scg.max = val;
+				scg.setMax(val, -1);
 			setSCG(scg);
 		});
 
@@ -107,15 +106,15 @@ public class AdvStEditPage extends Page {
 			int i = CommonStatic.parseIntN(sdef.getText());
 			if (i >= 0)
 				data.sdef = i;
-			setList();
+			setListG();
 		});
 
 	}
 
 	private void addListeners$1() {
-		addl.setLnr(e -> sget.addLine(jle.getSelectedValue()));
+		addt.setLnr(e -> sget.addLine(jle.getSelectedValue()));
 
-		reml.setLnr(e -> sget.remLine());
+		remt.setLnr(e -> sget.remLine());
 
 	}
 
@@ -126,22 +125,23 @@ public class AdvStEditPage extends Page {
 		add(addg);
 		add(remg);
 		add(smax);
+
 		if (aes.length > 0) {
 			add(sdef);
 			add(jspe);
 			add(jspt);
-			add(addl);
-			add(reml);
+			add(addt);
+			add(remt);
 		}
 		jle.setCellRenderer(new AnimLCR());
 		jle.setListData(aes);
 		sdef.setText("default: " + data.sdef);
-		setList();
+		setListG();
 		addListeners$0();
 		addListeners$1();
 	}
 
-	private void setList() {
+	private void setListG() {
 		SCGroup scg = jls.getSelectedValue();
 		List<SCGroup> l = data.sub.getList();
 		change(0, n -> {
@@ -159,7 +159,7 @@ public class AdvStEditPage extends Page {
 			change(scg, s -> jls.setSelectedValue(s, true));
 		remg.setEnabled(scg != null);
 		smax.setEnabled(scg != null);
-		smax.setText(scg != null ? "max: " + scg.max : "");
+		smax.setText(scg != null ? "max: " + scg.getMax(0) : "");
 	}
 
 }

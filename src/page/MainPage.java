@@ -66,7 +66,7 @@ public class MainPage extends Page {
 	private final JBTN save = new JBTN(0, "save");
 	private final JBTN bckp = new JBTN(0, "backup");
 	private final JBTN allf = new JBTN(0, "all file");
-	private final JBTN intn = new JBTN(-1, "battlecatsultimate.cf");
+	private final JBTN intn = new JBTN(-1, "battlecatsultimate");
 
 	public MainPage() {
 		super(null);

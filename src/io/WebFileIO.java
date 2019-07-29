@@ -32,11 +32,11 @@ import main.Printer;
 
 public class WebFileIO {
 
-	private static final int CHUNK_SIZE = 131072;
+	public static final int SMOOTH = 1 << 17, FAST = 1 << 23, MAX = 1 << 25;
 
 	private static HttpTransport transport;
 
-	public static boolean download(String url, File file, Consumer<Progress> c) {
+	public static boolean download(int size, String url, File file, Consumer<Progress> c) {
 		Writer.check(file);
 		try {
 			if (transport == null)
@@ -46,7 +46,7 @@ public class WebFileIO {
 			GenericUrl gurl = new GenericUrl(url);
 
 			MediaHttpDownloader downloader = new MediaHttpDownloader(transport, new Handler());
-			downloader.setChunkSize(CHUNK_SIZE);
+			downloader.setChunkSize(size);
 			downloader.setProgressListener(new Progress(c));
 			downloader.download(gurl, out);
 
@@ -59,6 +59,14 @@ public class WebFileIO {
 			Opts.dloadErr(url);
 			return false;
 		}
+	}
+
+	public static boolean download(String url, File file) {
+		return download(MAX, url, file, null);
+	}
+
+	public static boolean download(String url, File file, Consumer<Progress> c) {
+		return download(FAST, url, file, c);
 	}
 
 	public static boolean upload(File file, String url) throws IOException {

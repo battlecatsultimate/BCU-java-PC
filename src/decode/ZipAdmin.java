@@ -14,6 +14,19 @@ import io.Writer;
 
 public class ZipAdmin {
 
+	public static void main(String[] args) throws IOException {
+		File f = new File("./assets/custom/org/");
+		if (f.exists()) {
+			Files.walk(f.toPath()).forEach(path -> {
+				if (Files.isDirectory(path))
+					return;
+				String str = "." + path.toString().substring(15);
+
+				System.out.println(str);
+			});
+		}
+	}
+
 	protected static void addFile() throws IOException {
 		File f0 = new File("./assets/assets.zip");
 		File f1 = new File("./assets/080503.verinfo");

@@ -98,7 +98,7 @@ public class HeadTable extends AbJTable {
 		rar = lstr[3];
 		reg = lstr[4];
 		tit[0] = "ID:";
-		tit[1] = st.map.mc + "-" + st.map.id + "-" + st.id();
+		tit[1] = st.map.mc.name + "-" + st.map.id + "-" + st.id();
 		String star = Page.get(1, "star");
 		for (int i = 0; i < st.map.stars.length; i++)
 			tit[2 + i] = (i + 1) + star + ": " + st.map.stars[i] + "%";

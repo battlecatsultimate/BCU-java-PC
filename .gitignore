@@ -7,6 +7,7 @@
 /raw/
 /replay/
 /res/
+/res*/
 /url/
 /user/
 /backup/
@@ -15,5 +16,6 @@
 **/.DS_Store
 /assets/
 /libs/
+/BCU_lib/
 /libs-sources/
 /target/

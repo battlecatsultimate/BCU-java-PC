@@ -19,7 +19,6 @@ import event.EventBase;
 import event.EventReader;
 import io.BCMusic;
 import io.Reader;
-import io.Writer;
 import main.MainBCU;
 import main.Opts;
 import page.view.ViewBox;
@@ -162,10 +161,8 @@ public class ConfigPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				MainBCU.USE_JOGL = jogl.isSelected();
-				if (Opts.conf("This requires restart to apply. Do you want to restart?")) {
-					Writer.logClose(true);
-					System.exit(0);
-				}
+				if (Opts.conf("This requires restart to apply. Do you want to restart?"))
+					CommonStatic.def.exit(true);
 			}
 		});
 

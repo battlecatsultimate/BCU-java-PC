@@ -128,7 +128,7 @@ public class WebMainPage extends Page {
 
 				down.setLnr(x -> {
 					File f = new File("./pack/" + obj.pid + ".bcupack");
-					String url = "http://battlecatsultimate.cf/downloadpack.php?packid=" + obj.pid;
+					String url = BCJSON.WEBSITE + "/downloadpack.php?packid=" + obj.pid;
 					if (WebFileIO.download(url, f, null)) {
 						Pack pac = Pack.read(f);
 						down.setText(2, "downloaded");
@@ -278,7 +278,7 @@ public class WebMainPage extends Page {
 			private void addListeners() {
 				down.setLnr(x -> {
 					File f = new File("./pack/" + obj.pid + ".bcupack");
-					String url = "http://battlecatsultimate.cf/downloadpack.php?packid=" + obj.pid;
+					String url = BCJSON.WEBSITE + "/downloadpack.php?packid=" + obj.pid;
 					if (WebFileIO.download(url, f, null)) {
 						Pack pac = Pack.read(f);
 						down.setText(2, "downloaded");

@@ -22,8 +22,6 @@ import page.JL;
 import page.JTF;
 import page.JTG;
 import page.Page;
-import page.pack.CharaGroupPage;
-import page.pack.LvRestrictPage;
 import page.view.BGViewPage;
 import page.view.CastleViewPage;
 import page.view.MusicPage;
@@ -32,22 +30,8 @@ class HeadEditTable extends Page {
 
 	private static final long serialVersionUID = 1L;
 
-	private static String[] limits, rarity;
-
-	static {
-		redefine();
-	}
-
-	protected static void redefine() {
-		limits = Page.get(1, "ht1", 7);
-		rarity = new String[] { "N", "EX", "R", "SR", "UR", "LR" };
-	}
-
 	private final JL hea = new JL(1, "ht00");
 	private final JL len = new JL(1, "ht01");
-	private final JL rar = new JL(1, "ht10");
-	private final JBTN cgb = new JBTN(1, "ht15");
-	private final JBTN lrb = new JBTN(1, "ht16");
 	private final JBTN mus = new JBTN(1, "mus");
 	private final JL max = new JL(1, "ht02");
 	private final JBTN bg = new JBTN(1, "ht04");
@@ -57,27 +41,18 @@ class HeadEditTable extends Page {
 	private final JTF jlen = new JTF();
 	private final JTF jbg = new JTF();
 	private final JTF jcas = new JTF();
-	private final JTF jmax = new JTF();
-	private final JTF jcmin = new JTF();
-	private final JTF jnum = new JTF();
-	private final JTF jcmax = new JTF();
-	private final JTF jcg = new JTF();
-	private final JTF jlr = new JTF();
 	private final JTF jm0 = new JTF();
 	private final JTF jmh = new JTF();
 	private final JTF jm1 = new JTF();
 	private final JTG con = new JTG(1, "ht03");
-	private final JTG one = new JTG(1, "ht12");
-	private final JTG[] brars = new JTG[6];
 	private final JTF[] star = new JTF[4];
+	private final JTF jmax = new JTF();
+	private final LimitTable lt;
 
 	private Stage sta;
 	private final Pack pac;
-	private boolean changing = false;
 	private BGViewPage bvp;
 	private CastleViewPage cvp;
-	private CharaGroupPage cgp;
-	private LvRestrictPage lrp;
 	private MusicPage mp;
 
 	private int musl = 0;
@@ -85,11 +60,18 @@ class HeadEditTable extends Page {
 	protected HeadEditTable(Page p, Pack pack) {
 		super(p);
 		pac = pack;
+		lt = new LimitTable(p, this, pac);
 		ini();
 	}
 
 	@Override
+	public void callBack(Object o) {
+		setData(sta);
+	}
+
+	@Override
 	protected void renew() {
+		lt.renew();
 		if (bvp != null) {
 			int val = bvp.getSelected().id;
 			if (val == -1)
@@ -104,14 +86,7 @@ class HeadEditTable extends Page {
 			jcas.setText("" + val);
 			input(jcas, "" + val);
 		}
-		if (cgp != null) {
-			jcg.setText("" + cgp.cg);
-			input(jcg, cgp.cg == null ? "-1" : cgp.cg.toString());
-		}
-		if (lrp != null) {
-			jlr.setText("" + lrp.lr);
-			input(jlr, lrp.lr == null ? "-1" : lrp.lr.toString());
-		}
+
 		if (mp != null) {
 			JTF jtf = musl == 0 ? jm0 : jm1;
 			jtf.setText("" + mp.getSelected());
@@ -119,8 +94,6 @@ class HeadEditTable extends Page {
 		}
 		bvp = null;
 		cvp = null;
-		cgp = null;
-		lrp = null;
 		mp = null;
 	}
 
@@ -143,19 +116,10 @@ class HeadEditTable extends Page {
 		set(jm0, x, y, w * 5, 100, w, 50);
 		set(jmh, x, y, w * 6, 100, w, 50);
 		set(jm1, x, y, w * 7, 100, w, 50);
-		set(rar, x, y, 0, 150, w, 50);
-		for (int i = 0; i < brars.length; i++)
-			set(brars[i], x, y, w + w * i, 150, w, 50);
-		set(cgb, x, y, w * 4, 200, w, 50);
-		set(jcg, x, y, w * 5, 200, w, 50);
-		set(lrb, x, y, w * 6, 200, w, 50);
-		set(jlr, x, y, w * 7, 200, w, 50);
 		for (int i = 0; i < 4; i++)
 			set(star[i], x, y, w * (2 + i), 0, w, 50);
-		set(jcmin, x, y, 0, 200, w, 50);
-		set(jcmax, x, y, w, 200, w, 50);
-		set(jnum, x, y, w * 2, 200, w, 50);
-		set(one, x, y, w * 3, 200, w, 50);
+		set(lt, x, y, 0, 150, 1400, 100);
+		lt.componentResized(x, y);
 	}
 
 	protected void setData(Stage st) {
@@ -163,7 +127,7 @@ class HeadEditTable extends Page {
 		abler(st != null);
 		if (st == null)
 			return;
-		changing = true;
+		change(true);
 		name.setText(st.toString());
 		jhea.setText("" + st.health);
 		jlen.setText("" + st.len);
@@ -181,20 +145,8 @@ class HeadEditTable extends Page {
 			else
 				star[i].setText(i + 1 + str + "/");
 		Limit lim = st.lim;
-		if (lim.rare > 0) {
-			for (int i = 0; i < brars.length; i++)
-				brars[i].setSelected(((lim.rare >> i) & 1) > 0);
-		} else {
-			for (int i = 0; i < brars.length; i++)
-				brars[i].setSelected(true);
-		}
-		jcmax.setText(limits[4] + ": " + sta.lim.max);
-		jcmin.setText(limits[3] + ": " + sta.lim.min);
-		jnum.setText(limits[1] + ": " + sta.lim.num);
-		jcg.setText("" + sta.lim.group);
-		jlr.setText("" + sta.lim.lvr);
-		one.setSelected(sta.lim.line == 1);
-		changing = false;
+		lt.setLimit(lim);
+		change(false);
 	}
 
 	private void abler(boolean b) {
@@ -206,23 +158,14 @@ class HeadEditTable extends Page {
 		jbg.setEnabled(b);
 		jcas.setEnabled(b);
 		jmax.setEnabled(b);
-		jcmin.setEnabled(b);
-		jnum.setEnabled(b);
-		jcmax.setEnabled(b);
 		con.setEnabled(b);
-		one.setEnabled(b);
-		cgb.setEnabled(b);
-		jcg.setEnabled(b);
-		lrb.setEnabled(b);
-		jlr.setEnabled(b);
 		mus.setEnabled(b);
 		jm0.setEnabled(b);
 		jmh.setEnabled(b);
 		jm1.setEnabled(b);
-		for (JTG jtb : brars)
-			jtb.setEnabled(b);
 		for (JTF jtf : star)
 			jtf.setEnabled(b);
+		lt.abler(b);
 	}
 
 	private void addListeners() {
@@ -243,22 +186,6 @@ class HeadEditTable extends Page {
 			}
 		});
 
-		cgb.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				cgp = new CharaGroupPage(getFront(), pac, false);
-				changePanel(cgp);
-			}
-		});
-
-		lrb.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				lrp = new LvRestrictPage(getFront(), pac, false);
-				changePanel(lrp);
-			}
-		});
-
 		mus.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -275,41 +202,15 @@ class HeadEditTable extends Page {
 			}
 		});
 
-		one.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				sta.lim.line = one.isSelected() ? 1 : 0;
-				setData(sta);
-			}
-		});
-
-		for (int i = 0; i < brars.length; i++) {
-			int I = i;
-			brars[i].addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (changing)
-						return;
-					sta.lim.rare ^= 1 << I;
-					setData(sta);
-				}
-
-			});
-		}
 	}
 
 	private void ini() {
 		set(hea);
 		set(len);
 		set(max);
-		set(rar);
-		add(cgb);
-		add(lrb);
 		add(bg);
 		add(cas);
 		add(con);
-		add(one);
 		add(mus);
 		set(jhea);
 		set(jlen);
@@ -317,19 +218,12 @@ class HeadEditTable extends Page {
 		set(jcas);
 		set(jmax);
 		set(name);
-		set(jcmin);
-		set(jcmax);
-		set(jnum);
-		set(jcg);
-		set(jlr);
 		set(jm0);
 		set(jmh);
 		set(jm1);
+		add(lt);
 		con.setSelected(true);
-		for (int i = 0; i < brars.length; i++) {
-			add(brars[i] = new JTG(rarity[i]));
-			brars[i].setSelected(true);
-		}
+
 		for (int i = 0; i < 4; i++)
 			set(star[i] = new JTF());
 		addListeners();
@@ -403,26 +297,6 @@ class HeadEditTable extends Page {
 					sta.map.stars = ans;
 				}
 			}
-		if (jtf == jcmax) {
-			if (val < 0)
-				return;
-			sta.lim.max = val;
-		}
-		if (jtf == jcmin) {
-			if (val < 0)
-				return;
-			sta.lim.min = val;
-		}
-		if (jtf == jnum) {
-			if (val < 0 || val > 50)
-				return;
-			sta.lim.num = val;
-		}
-		if (jtf == jcg)
-			sta.lim.group = pac.mc.groups.get(val);
-		if (jtf == jlr)
-			sta.lim.lvr = pac.mc.lvrs.get(val);
-
 		if (jtf == jm0)
 			sta.mus0 = val;
 		if (jtf == jmh)
@@ -444,19 +318,17 @@ class HeadEditTable extends Page {
 		jtf.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent fe) {
-				if (changing)
+				if (isAdj())
 					return;
-				changing = true;
 				if (jtf == jm0)
 					musl = 0;
 				if (jtf == jm1)
 					musl = 1;
-				changing = false;
 			}
 
 			@Override
 			public void focusLost(FocusEvent fe) {
-				if (changing)
+				if (isAdj())
 					return;
 				input(jtf, jtf.getText());
 				setData(sta);

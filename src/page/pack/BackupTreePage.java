@@ -47,6 +47,7 @@ import page.support.Exporter;
 import utilpc.Backup;
 import utilpc.BackupData;
 import utilpc.Interpret;
+import utilpc.UtilPC;
 
 public class BackupTreePage extends Page {
 
@@ -416,7 +417,7 @@ public class BackupTreePage extends Page {
 				for (Entry<Unit, int[]> e : blu.lu.map.entrySet()) {
 					Unit u = e.getKey();
 					Form f = u.forms[u.forms.length - 1];
-					String str = u.toString() + " - " + f.lvText(e.getValue())[0];
+					String str = u.toString() + " - " + UtilPC.lvText(f, e.getValue())[0];
 					DefaultMutableTreeNode nuv = new DefaultMutableTreeNode(str);
 					nlv.add(nuv);
 				}

@@ -6,17 +6,21 @@ import java.nio.file.ClosedFileSystemException;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
+import common.CommonStatic;
 import common.system.files.AssetData;
 import common.system.files.VFile;
-import io.Writer;
 import main.Opts;
 import page.LoadPage;
 
 public class ZipLib {
 
-	public static final String[] LIBREQS = { "000001", "000002", "000003", "080602", "080603" };
-	public static final String[] OPTREQS = { "080504", "080604" };
+	public static final String[] LIBREQS = { "000001", "000002", "000003", "080602", "080603", "080504", "080604",
+			"080700", "080705", "080706" };
+	public static final String[] OPTREQS = {};
 
 	public static FileSystem lib;
 	public static LibInfo info;
@@ -28,8 +32,7 @@ public class ZipLib {
 		for (String req : LIBREQS)
 			if (info == null || !info.merge.set.contains(req)) {
 				Opts.loadErr("this version requires lib " + req);
-				Writer.logClose(false);
-				System.exit(0);
+				CommonStatic.def.exit(false);
 			}
 	}
 
@@ -43,13 +46,12 @@ public class ZipLib {
 		try {
 			lib = FileSystems.newFileSystem(f.toPath(), null);
 			info = new LibInfo(lib);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			Opts.loadErr("cannot access ./assets/assets.zip");
 			if (Opts.conf("do you want to re-download assets?"))
 				new File("./assets/assets.zip").deleteOnExit();
-			Writer.logClose(false);
-			System.exit(0);
+			CommonStatic.def.exit(false);
 		}
 		f = new File("./assets/custom.zip");
 		if (f.exists())
@@ -96,6 +98,24 @@ public class ZipLib {
 					VFile.root.build(pi.path, AssetData.getAsset(data));
 					LoadPage.prog("reading assets " + i++ + "/" + tot);
 				}
+
+			File f = new File("./assets/custom/org/");
+			if (f.exists()) {
+				List<Path> l = new ArrayList<Path>();
+				Files.walk(f.toPath()).forEach(path -> {
+					if (Files.isDirectory(path))
+						return;
+					if (path.getFileName().toString().startsWith("."))
+						return;
+					l.add(path);
+				});
+				for (Path path : l) {
+					String str = "." + path.toString().substring(15);
+					byte[] data = Files.readAllBytes(path);
+					VFile.root.build(str, AssetData.getAsset(data));
+					LoadPage.prog("reading assets " + i++ + "/" + tot);
+				}
+			}
 
 			VFile.root.sort();
 			VFile.root.getIf(p -> {

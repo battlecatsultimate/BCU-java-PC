@@ -20,6 +20,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.CommonStatic;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.util.anim.AnimC;
@@ -46,6 +47,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	private static final long serialVersionUID = 1L;
 
 	private final JTF jtf = new JTF();
+	private final JTF resz = new JTF("resize to: _%");
 	private final JBTN back = new JBTN(0, "back");
 	private final JBTN add = new JBTN(0, "add");
 	private final JBTN rem = new JBTN(0, "rem");
@@ -164,6 +166,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		set(rem, x, y, 600, 200, 200, 50);
 		set(impt, x, y, 350, 300, 200, 50);
 		set(expt, x, y, 600, 300, 200, 50);
+		set(resz, x, y, 350, 400, 200, 50);
 		set(loca, x, y, 600, 400, 200, 50);
 		set(jtf, x, y, 350, 100, 200, 50);
 		set(copy, x, y, 600, 100, 200, 50);
@@ -267,8 +270,11 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				changing = true;
 				String str = jtf.getText().trim();
 				str = MainBCU.validate(str);
-				if (icet.anim == null || icet.anim.name.equals(str))
+				if (str.length() == 0 || icet.anim == null || icet.anim.name.equals(str)) {
+					if (icet.anim != null)
+						jtf.setText(icet.anim.name);
 					return;
+				}
 				DIYAnim da = DIYAnim.map.remove(icet.anim.name);
 				DIYAnim rep = DIYAnim.map.get(str);
 				if (rep != null && Opts.conf(
@@ -525,10 +531,20 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 		});
 
+		resz.setLnr(x -> {
+			double d = CommonStatic.parseIntN(resz.getText()) * 0.01;
+			if (Opts.conf("do you want to resize sprite to " + d + "%?")) {
+				icet.anim.resize(d);
+				icet.anim.ICedited();
+				icet.anim.unSave("resized");
+			}
+			resz.setText("resize to: _%");
+		});
 	}
 
 	private void ini() {
 		add(aep);
+		add(resz);
 		add(back);
 		add(relo);
 		add(save);
@@ -571,6 +587,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		addl.setEnabled(anim != null);
 		swcl.setEnabled(anim != null);
 		save.setEnabled(anim != null);
+		resz.setEditable(anim != null);
 		icet.setCut(anim);
 		sb.setAnim(anim);
 		if (sb.sele == -1)

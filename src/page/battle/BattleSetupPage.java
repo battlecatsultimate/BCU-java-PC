@@ -112,9 +112,11 @@ public class BattleSetupPage extends LubCont {
 				if (snip.isSelected())
 					ints[0] |= 2;
 				BasisLU b = BasisSet.current.sele;
-				if (conf.length == 1 && conf[0] == 0)
+				if (conf.length == 1 && conf[0] == 0) {
 					b = RandStage.getLU(star);
-				changePanel(new BattleInfoPage(getThis(), st, 0, b, ints));
+					star = 0;
+				}
+				changePanel(new BattleInfoPage(getThis(), st, star, b, ints));
 			}
 		});
 

@@ -16,7 +16,9 @@ import javax.imageio.ImageIO;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import io.BCJSON;
 import io.Reader;
+import io.WebFileIO;
 import io.Writer;
 
 public class Temp {
@@ -165,6 +167,19 @@ public class Temp {
 
 	public static void main$a(String[] args) throws Exception {
 		System.out.println(85 & -4);
+	}
+
+	public static void main$d(String[] args) {
+		File file = new File("./img/temp.zip");
+		String url = BCJSON.GITRES;
+		// "https://www.dropbox.com/s/w6edohrqmr24scf/assets.zip?dl=1";
+		long time = System.currentTimeMillis();
+		WebFileIO.download(WebFileIO.FAST, url, file, p -> {
+			long dt = System.currentTimeMillis() - time;
+			double speed = p.tot * p.prog / dt;
+			System.out.println((int) (p.prog * 100) + "%, " + speed + "KB/s");
+		});
+
 	}
 
 	public static BufferedImage real(BufferedImage bimg, BufferedImage exc) {
