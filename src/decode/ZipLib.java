@@ -20,7 +20,7 @@ public class ZipLib {
 
 	public static final String[] LIBREQS = { "000001", "000002", "000003", "080602", "080603", "080504", "080604",
 			"080700", "080705", "080706" };
-	public static final String[] OPTREQS = { "080800" };
+	public static final String[] OPTREQS = {};
 
 	public static FileSystem lib;
 	public static LibInfo info;
@@ -104,6 +104,8 @@ public class ZipLib {
 				List<Path> l = new ArrayList<Path>();
 				Files.walk(f.toPath()).forEach(path -> {
 					if (Files.isDirectory(path))
+						return;
+					if (path.getFileName().toString().startsWith("."))
 						return;
 					l.add(path);
 				});

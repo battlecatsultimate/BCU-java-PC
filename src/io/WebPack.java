@@ -251,6 +251,7 @@ public class WebPack {
 		rate = new int[2][6];
 		packlist.put(pid, this);
 		icon = new WebImg("");
+		time = "";
 	}
 
 	protected WebPack(JSONObject pack) {
