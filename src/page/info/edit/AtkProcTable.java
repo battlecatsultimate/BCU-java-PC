@@ -136,7 +136,7 @@ class AtkProcTable extends Page {
 				set(jtfs[i][j]);
 			}
 		}
-		jtfs[13][4].setToolTipText("<html>use warp animation: +1<br>" + "use burrow animation: +2<br>"
+		jtfs[14][4].setToolTipText("<html>use warp animation: +1<br>" + "use burrow animation: +2<br>"
 				+ "use burrow animation and disable burrow: +3<br>" + "disregard limit: +4<br>" + "fix buff^: +8<br>"
 				+ "same health: +16<br>" + "random layer: +32<br>" + "only on hit*: +64 <br>"
 				+ "only on kill*: +128<br>" + "^: not applicapable for unit<br>"
