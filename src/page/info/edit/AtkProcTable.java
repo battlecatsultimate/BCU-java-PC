@@ -22,7 +22,7 @@ class AtkProcTable extends Page {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final int LEN = 17, SEC = 12;
+	private static final int LEN = 18, SEC = 12;
 	private static final int[] INDS = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 20, 27, 29, 21, 22, 23, 24, 25, 26 };
 	private static final int[] TREA = new int[] { 2, 1, 1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 	private static final int[][] STRS = new int[][] { { 0, 1, 2 }, { 0, 1 }, { 0, 1 }, { 0, 9 }, { 0, 4 }, { 0, 1, 3 },
@@ -136,7 +136,7 @@ class AtkProcTable extends Page {
 				set(jtfs[i][j]);
 			}
 		}
-		jtfs[14][4].setToolTipText("<html>use warp animation: +1<br>" + "use burrow animation: +2<br>"
+		jtfs[SEC + 2][4].setToolTipText("<html>use warp animation: +1<br>" + "use burrow animation: +2<br>"
 				+ "use burrow animation and disable burrow: +3<br>" + "disregard limit: +4<br>" + "fix buff^: +8<br>"
 				+ "same health: +16<br>" + "random layer: +32<br>" + "only on hit*: +64 <br>"
 				+ "only on kill*: +128<br>" + "^: not applicapable for unit<br>"
