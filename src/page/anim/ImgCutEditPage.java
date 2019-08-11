@@ -1,5 +1,6 @@
 package page.anim;
 
+import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
@@ -61,6 +63,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	private final JBTN expt = new JBTN(0, "export");
 	private final JBTN ico = new JBTN(0, "icon");
 	private final JBTN loca = new JBTN(0, "localize");
+	private final JBTN merg = new JBTN(0, "merge");
 	private final JLabel icon = new JLabel();
 	private final JList<DIYAnim> jlu = new JList<>();
 	private final JScrollPane jspu = new JScrollPane(jlu);
@@ -164,10 +167,11 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		set(jspu, x, y, 0, 50, 300, 500);
 		set(add, x, y, 350, 200, 200, 50);
 		set(rem, x, y, 600, 200, 200, 50);
-		set(impt, x, y, 350, 300, 200, 50);
-		set(expt, x, y, 600, 300, 200, 50);
-		set(resz, x, y, 350, 400, 200, 50);
-		set(loca, x, y, 600, 400, 200, 50);
+		set(impt, x, y, 350, 250, 200, 50);
+		set(expt, x, y, 600, 250, 200, 50);
+		set(resz, x, y, 350, 300, 200, 50);
+		set(loca, x, y, 600, 300, 200, 50);
+		set(merg, x, y, 350, 350, 200, 50);
 		set(jtf, x, y, 350, 100, 200, 50);
 		set(copy, x, y, 600, 100, 200, 50);
 		set(addl, x, y, 350, 500, 200, 50);
@@ -540,6 +544,52 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			}
 			resz.setText("resize to: _%");
 		});
+
+		merg.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				changing = true;
+				String str = icet.anim.name;
+				str = AnimC.getAvailable(str);
+				AnimC ac = new AnimC(str, icet.anim);
+				List<DIYAnim> list = jlu.getSelectedValuesList();
+				for (DIYAnim da : list) {
+					if (da.anim == icet.anim)
+						continue;
+					int w0 = ac.num.getWidth();
+					int h0 = ac.num.getHeight();
+					int w1 = da.anim.num.getWidth();
+					int h1 = da.anim.num.getHeight();
+					int x = w0 > h0 * 2 ? 0 : w0;
+					int y = w0 > h0 * 2 ? h0 : 0;
+					int sw = Math.max(w0, x + w1);
+					int sh = Math.max(h0, y + h1);
+					BufferedImage b0 = (BufferedImage) ac.num.bimg();
+					BufferedImage b1 = (BufferedImage) da.anim.num.bimg();
+					BufferedImage bimg = new BufferedImage(sw, sh, BufferedImage.TYPE_INT_ARGB);
+					Graphics g = bimg.getGraphics();
+					g.drawImage(b0, 0, 0, null);
+					g.drawImage(b1, x, y, null);
+					try {
+						ac.setNum(FakeImage.read(bimg));
+					} catch (IOException e1) {
+						e1.printStackTrace();
+					}
+					ac.merge(da.anim, x, y);
+				}
+				ac.ICedited();
+				ac.unSave("merge");
+				DIYAnim da = new DIYAnim(str, ac);
+				DIYAnim.map.put(str, da);
+				Vector<DIYAnim> v = new Vector<>(DIYAnim.map.values());
+				jlu.setListData(v);
+				jlu.setSelectedValue(da, true);
+				setA(da);
+				changing = false;
+			}
+
+		});
 	}
 
 	private void ini() {
@@ -565,6 +615,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		add(icon);
 		add(loca);
 		add(ico);
+		add(merg);
 		add.setEnabled(aep.focus == null);
 		jtf.setEnabled(aep.focus == null);
 		relo.setEnabled(aep.focus == null);
@@ -600,6 +651,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		copy.setEnabled(aep.focus == null && anim != null);
 		impt.setEnabled(anim != null);
 		expt.setEnabled(anim != null);
+		merg.setEnabled(jlu.getSelectedValuesList().size() > 1);
 		if (da != null && da.anim.edi != null)
 			icon.setIcon(UtilPC.getIcon(da.anim.edi));
 		setB(sb.sele);
