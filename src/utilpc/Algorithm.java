@@ -184,23 +184,14 @@ public class Algorithm {
 				}
 			return new int[] { w, h };
 		}
+
 		private static Comparator<int[]> getComp(int t) {
 			return (o1, o2) -> o1[1] != o2[1] ? Integer.compare(o2[1], o1[1]) : Integer.compare(o1[0], o2[0]);
 		}
 
-		private static int size(int[][] ans) {
-			int w = 0, h = 0;
-			for (int[] a : ans)
-				if (a != null) {
-					w = Math.max(w, a[0] + a[2]);
-					h = Math.max(h, a[1] + a[3]);
-				}
-			return w * h;
-		}
-
 		private final int[][] rects;
 
-		private int min, count;
+		private int min, len, count;
 
 		private int[][] best = null;
 
@@ -208,7 +199,14 @@ public class Algorithm {
 
 		private StackRect(int[][] rs) {
 			rects = rs;
-			min = getDefSize();
+			int w = 0, h = 0;
+			for (int[] a : rects)
+				if (a != null) {
+					w = Math.max(w, a[0]);
+					h = Math.max(h, a[1]);
+				}
+			min = rects.length * w * h;
+			len = (int) (Math.ceil(Math.sqrt(rects.length)) * (w + h));
 		}
 
 		private boolean detRep(int[][] ans, int i) {
@@ -219,16 +217,6 @@ public class Algorithm {
 			if (ans[i - 1][1] > ans[i][1])
 				return true;
 			return false;
-		}
-
-		private int getDefSize() {
-			int w = 0, h = 0;
-			for (int[] a : rects)
-				if (a != null) {
-					w = Math.max(w, a[0]);
-					h = Math.max(h, a[1]);
-				}
-			return rects.length * w * h;
 		}
 
 		private void operate(int[][] ans, Dot dots) {
@@ -248,7 +236,8 @@ public class Algorithm {
 						if (detRep(ans, i))
 							continue;
 						int hash = Arrays.deepHashCode(ans);
-						if (size(ans) < min && !set.contains(hash)) {
+						int[] dim = dim(ans);
+						if (restrict(dim) && !set.contains(hash)) {
 							set.add(hash);
 							Dot ndot = d.copy(0).add(ans[i][2], ans[i][3]).findHead();
 							operate(ans, ndot);
@@ -258,9 +247,10 @@ public class Algorithm {
 					ans[i] = null;
 				}
 			if (!operated) {
-				int are = size(ans);
-				if (are < min) {
-					min = are;
+				int[] dim = dim(ans);
+				if (restrict(dim)) {
+					min = dim[0] * dim[1];
+					len = dim[0] + dim[1];
 					best = ans.clone();
 					for (int i = 0; i < best.length; i++)
 						best[i] = best[i].clone();
@@ -272,6 +262,16 @@ public class Algorithm {
 			return i > 0 && rects[i - 1][0] == rects[i][0] && rects[i - 1][1] == rects[i][1];
 		}
 
+		private boolean restrict(int[] dim) {
+			if (dim[0] * dim[1] < min)
+				return true;
+			if (dim[0] * dim[1] > min)
+				return false;
+			if (dim[0] + dim[1] < len)
+				return true;
+			return dim[0] + dim[1] == len && best == null;
+		}
+
 		private int[][] stack() {
 			Arrays.sort(rects, getComp(DEFTYPE));
 			int[][] ans = new int[rects.length][];
@@ -280,6 +280,12 @@ public class Algorithm {
 			return best;
 		}
 
+	}
+
+	public static void main(String[] strs) {
+		int[][] rect = { { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 } };
+		SRResult res = stackRect(rect);
+		System.out.println(res.w + "," + res.h);
 	}
 
 	public static SRResult stackRect(int[][] rects) {
