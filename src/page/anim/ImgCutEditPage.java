@@ -11,7 +11,6 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
@@ -41,6 +40,8 @@ import page.Page;
 import page.support.AnimLCR;
 import page.support.Exporter;
 import page.support.Importer;
+import utilpc.Algorithm;
+import utilpc.Algorithm.SRResult;
 import utilpc.ReColor;
 import utilpc.UtilPC;
 
@@ -550,33 +551,30 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				changing = true;
-				String str = icet.anim.name;
-				str = AnimC.getAvailable(str);
-				AnimC ac = new AnimC(str, icet.anim);
-				List<DIYAnim> list = jlu.getSelectedValuesList();
-				for (DIYAnim da : list) {
-					if (da.anim == icet.anim)
-						continue;
-					int w0 = ac.num.getWidth();
-					int h0 = ac.num.getHeight();
-					int w1 = da.anim.num.getWidth();
-					int h1 = da.anim.num.getHeight();
-					int x = w0 > h0 * 2 ? 0 : w0;
-					int y = w0 > h0 * 2 ? h0 : 0;
-					int sw = Math.max(w0, x + w1);
-					int sh = Math.max(h0, y + h1);
-					BufferedImage b0 = (BufferedImage) ac.num.bimg();
-					BufferedImage b1 = (BufferedImage) da.anim.num.bimg();
-					BufferedImage bimg = new BufferedImage(sw, sh, BufferedImage.TYPE_INT_ARGB);
-					Graphics g = bimg.getGraphics();
-					g.drawImage(b0, 0, 0, null);
-					g.drawImage(b1, x, y, null);
-					try {
-						ac.setNum(FakeImage.read(bimg));
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					}
-					ac.merge(da.anim, x, y);
+				String str = AnimC.getAvailable("merged");
+				DIYAnim[] list = jlu.getSelectedValuesList().toArray(new DIYAnim[0]);
+				int[][] rect = new int[list.length][2];
+				for (int i = 0; i < list.length; i++) {
+					rect[i][0] = list[i].anim.num.getWidth();
+					rect[i][1] = list[i].anim.num.getHeight();
+				}
+				SRResult ans = Algorithm.stackRect(rect);
+				AnimC cen = list[ans.center].anim;
+				AnimC ac = new AnimC(str, cen);
+				BufferedImage bimg = new BufferedImage(ans.w, ans.h, BufferedImage.TYPE_INT_ARGB);
+				Graphics g = bimg.getGraphics();
+				for (int i = 0; i < list.length; i++) {
+					BufferedImage b = (BufferedImage) list[i].anim.num.bimg();
+					int x = ans.pos[i][0];
+					int y = ans.pos[i][1];
+					g.drawImage(b, x, y, null);
+					if (i != ans.center)
+						ac.merge(list[i].anim, x, y);
+				}
+				try {
+					ac.setNum(FakeImage.read(bimg));
+				} catch (IOException e1) {
+					e1.printStackTrace();
 				}
 				ac.ICedited();
 				ac.unSave("merge");
