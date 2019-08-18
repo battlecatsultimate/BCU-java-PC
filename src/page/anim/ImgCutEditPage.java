@@ -65,6 +65,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	private final JBTN ico = new JBTN(0, "icon");
 	private final JBTN loca = new JBTN(0, "localize");
 	private final JBTN merg = new JBTN(0, "merge");
+	private final JBTN spri = new JBTN(0, "sprite");
 	private final JLabel icon = new JLabel();
 	private final JList<DIYAnim> jlu = new JList<>();
 	private final JScrollPane jspu = new JScrollPane(jlu);
@@ -76,6 +77,8 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	private final JScrollPane jspic = new JScrollPane(icet);
 	private final SpriteBox sb = new SpriteBox(this);
 	private final EditHead aep;
+
+	private SpriteEditPage sep;
 
 	private boolean changing = false;
 
@@ -160,6 +163,19 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	}
 
 	@Override
+	protected void renew() {
+		if (sep != null && Opts.conf("Do you want to save edited sprite?"))
+			try {
+				icet.anim.setNum(FakeImage.read(sep.getEdit()));
+				icet.anim.saveImg();
+				icet.anim.reloImg();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		sep = null;
+	}
+
+	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(aep, x, y, 550, 0, 1750, 50);
@@ -173,6 +189,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		set(resz, x, y, 350, 300, 200, 50);
 		set(loca, x, y, 600, 300, 200, 50);
 		set(merg, x, y, 350, 350, 200, 50);
+		set(spri, x, y, 600, 350, 200, 50);
 		set(jtf, x, y, 350, 100, 200, 50);
 		set(copy, x, y, 600, 100, 200, 50);
 		set(addl, x, y, 350, 500, 200, 50);
@@ -511,6 +528,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				}
 				ReColor.transcolor((BufferedImage) icet.anim.num.bimg(), data, jlf.getSelectedIndex(),
 						jlt.getSelectedIndex());
+				icet.anim.num.mark("recolor-finished");
 				icet.anim.ICedited();
 			}
 
@@ -576,7 +594,8 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-				ac.ICedited();
+				ac.saveImg();
+				ac.reloImg();
 				ac.unSave("merge");
 				DIYAnim da = new DIYAnim(str, ac);
 				DIYAnim.map.put(str, da);
@@ -588,6 +607,9 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			}
 
 		});
+
+		spri.setLnr(x -> changePanel(sep = new SpriteEditPage(this, (BufferedImage) icet.anim.num.bimg())));
+
 	}
 
 	private void ini() {
@@ -614,6 +636,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		add(loca);
 		add(ico);
 		add(merg);
+		add(spri);
 		add.setEnabled(aep.focus == null);
 		jtf.setEnabled(aep.focus == null);
 		relo.setEnabled(aep.focus == null);
@@ -649,6 +672,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		copy.setEnabled(aep.focus == null && anim != null);
 		impt.setEnabled(anim != null);
 		expt.setEnabled(anim != null);
+		spri.setEnabled(anim != null);
 		merg.setEnabled(jlu.getSelectedValuesList().size() > 1);
 		if (da != null && da.anim.edi != null)
 			icon.setIcon(UtilPC.getIcon(da.anim.edi));

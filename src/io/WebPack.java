@@ -190,8 +190,8 @@ public class WebPack {
 			if (t == WebPack.SORT_UPDATE) {
 				Pack p1 = Pack.map.get(o1.pid);
 				Pack p2 = Pack.map.get(o2.pid);
-				int a1 = p1 == null ? 0 : (p1.version >= o1.version ? 1 : 2);
-				int a2 = p2 == null ? 0 : (p2.version >= o2.version ? 1 : 2);
+				int a1 = p1 == null || p1.version == o1.version ? -2 : (p1.version > o1.version ? 1 : 2);
+				int a2 = p2 == null || p2.version == o2.version ? -2 : (p2.version > o2.version ? 1 : 2);
 				if (a1 == a2)
 					return comp(WebPack.SORT_NEW, o1, o2, true);
 				return -Integer.compare(a1, a2);

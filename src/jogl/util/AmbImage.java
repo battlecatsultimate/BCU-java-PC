@@ -116,6 +116,7 @@ public class AmbImage implements FakeImage {
 				}
 				force = false;
 				stream = abos.toByteArray();
+				gl = null;
 			}
 		}
 	}

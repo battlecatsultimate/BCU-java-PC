@@ -219,7 +219,7 @@ public class WebMainPage extends Page {
 					down.setText(2, "download");
 				else if (p.editable)
 					down.setEnabled(false);
-				else if (p.version < obj.version)
+				else if (p.version != obj.version)
 					down.setText(p.version + " > " + obj.version);
 				else {
 					down.setText(2, "downloaded");
@@ -337,7 +337,7 @@ public class WebMainPage extends Page {
 					down.setText(2, "download");
 				else if (p.editable)
 					down.setEnabled(false);
-				else if (p.version < obj.version)
+				else if (p.version != obj.version)
 					down.setText(p.version + " > " + obj.version);
 				else {
 					down.setText(2, "downloaded");

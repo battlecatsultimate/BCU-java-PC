@@ -1,5 +1,7 @@
 package utilpc;
 
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Set;
@@ -21,6 +23,53 @@ public class Algorithm {
 			for (int i = 0; i < ans.length; i++)
 				if (ans[i][0] == 0 && ans[i][1] == 0)
 					center = i;
+		}
+
+	}
+
+	private static class ColorShift {
+
+		private static int method = 0;
+
+		private static float mid(float x, double t) {
+			if (method == 0)
+				return mid$seg(x, t);
+			else
+				return mid$inv(x, t);
+		}
+
+		private static float mid$inv(float x, double t) {
+			float c = (2 * x - 1) / x;
+			float a = 2 * c - 1;
+			float b = 2 * c - 2 * c * c;
+			float f = (float) (b / (t + a) + c);
+			if (Float.isFinite(f))
+				return f;
+			return x;
+		}
+
+		private static float mid$seg(float x, double t) {
+			return (float) ((1 - Math.abs(t)) * (x - 0.5) + t * 0.5 + 0.5);
+		}
+
+		private static int proc(int p0, double h, double s, double b) {
+			int r0 = (p0 >> 16) & 0xff;
+			int g0 = (p0 >> 8) & 0xff;
+			int b0 = p0 & 0xff;
+			int a = (p0 >> 24) & 0xff;
+			float[] hsb = Color.RGBtoHSB(r0, g0, b0, null);
+			return Color.HSBtoRGB((float) (hsb[0] + h), mid(hsb[1], s), mid(hsb[2], b)) & (a << 24 | 0xffffff);
+		}
+
+		private static BufferedImage shift(BufferedImage bimg, double h, double s, double b) {
+			BufferedImage ans = new BufferedImage(bimg.getWidth(), bimg.getHeight(), bimg.getType());
+			for (int i = 0; i < bimg.getWidth(); i++)
+				for (int j = 0; j < bimg.getHeight(); j++) {
+					int p0 = bimg.getRGB(i, j);
+					int p1 = proc(p0, h, s, b);
+					ans.setRGB(i, j, p1);
+				}
+			return ans;
 		}
 
 	}
@@ -282,10 +331,8 @@ public class Algorithm {
 
 	}
 
-	public static void main(String[] strs) {
-		int[][] rect = { { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 }, { 5, 5 }, { 6, 6 } };
-		SRResult res = stackRect(rect);
-		System.out.println(res.w + "," + res.h);
+	public static BufferedImage shift(BufferedImage bimg, double h, double s, double b) {
+		return ColorShift.shift(bimg, h, s, b);
 	}
 
 	public static SRResult stackRect(int[][] rects) {
