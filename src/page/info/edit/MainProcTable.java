@@ -25,13 +25,13 @@ class MainProcTable extends Page {
 	private static final int F_A = 0, F_P = 1, F_PC = 2, F_N = 3;
 	private static final int U_N = 0, U_T = 1, U_PC = 2;
 
-	private static final int[] INDS = { 9, 10, 11, 12, 28 };
+	private static final int[] INDS = { 9, 10, 11, 12, 28, 30 };
 	private static final int[][] LENS = { { F_PC, F_P }, { F_PC }, { F_P, F_N }, { F_N, F_P, F_PC, F_A, F_A, F_P },
-			{ F_P } };
+			{ F_P }, { F_PC, F_P } };
 	private static final int[][] UNIT = { { U_PC, U_PC }, { U_PC }, { U_N, U_N }, { U_N, U_T, U_PC, U_N, U_N, U_N },
-			{ U_N } };
+			{ U_N }, { U_PC, U_T } };
 	private static final String[][] STRS = { { "HP", "inc" }, { "prob" }, { "times", "dist" },
-			{ "times", "time", "HP", "p0", "p1", "type" }, { "type" } };
+			{ "times", "time", "HP", "p0", "p1", "type" }, { "type" }, { "prob", "time" } };
 
 	private final JL[] tits = new JL[INDS.length];
 	private final JL[][] jls = new JL[INDS.length][];
@@ -52,7 +52,7 @@ class MainProcTable extends Page {
 
 	@Override
 	protected void resized(int x, int y) {
-		setPreferredSize(size(x, y, 300, 850).toDimension());
+		setPreferredSize(size(x, y, 300, 1000).toDimension());
 		int h = 0;
 		for (int i = 0; i < INDS.length; i++) {
 			set(tits[i], x, y, 0, h, 300, 50);

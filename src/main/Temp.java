@@ -7,30 +7,69 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Queue;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
 import javax.imageio.ImageIO;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import common.CommonStatic;
+import common.system.fake.ImageBuilder;
+import common.util.stage.MapColc;
+import common.util.stage.StageMap;
+import decode.ZipLib;
 import io.BCJSON;
 import io.Reader;
 import io.WebFileIO;
 import io.Writer;
+import page.awt.AWTBBB;
+import page.awt.BBBuilder;
+import utilpc.UtilPC;
+import utilpc.awt.PCIB;
 
 public class Temp {
 
-	public static void main$0(String[] args) throws FileNotFoundException {
-		for (File fi : new File("./lib/lang/zh/").listFiles()) {
-			Queue<String> qs = Reader.readLines(fi);
-			PrintStream out = new PrintStream(fi);
-			for (String str : qs)
-				out.println(unescapeJava(str));
-			out.close();
-		}
+	public static void main(String[] args) throws FileNotFoundException {
+		Reader.getData$0();
+
+		ImageBuilder.builder = new PCIB();
+		BBBuilder.def = AWTBBB.INS;
+		CommonStatic.def = new UtilPC.PCItr();
+
+		ZipLib.init();
+		ZipLib.read();
+		Reader.getData$1();
+
+		Map<Integer, List<StageMap>> map = new TreeMap<>();
+		MapColc.MAPS.forEach((id, mc) -> {
+			for (StageMap sm : mc.maps)
+				if (sm.info != null) {
+					int i0 = sm.info.rand + 100;
+					int i1 = sm.info.time + 100;
+					if (i0 >= 1000 || i0 < 0 || i1 >= 1000 || i1 < 0)
+						System.out.println("Unexpected: " + i0 + "," + i1);
+					int key = i0 * 1000 + i1;
+					List<StageMap> list;
+					if (map.containsKey(key))
+						list = map.get(key);
+					else
+						map.put(key, list = new ArrayList<StageMap>());
+					list.add(sm);
+				}
+		});
+		map.forEach((key, l) -> {
+			String stk = (key / 1000 - 100) + "," + (key % 1000 - 100) + ": ";
+			if (l.size() > 1)
+				System.out.println(stk + "size = " + l.size());
+			else
+				System.out.println(stk + "id = " + l.get(0).toString());
+		});
 
 	}
 
