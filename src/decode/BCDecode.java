@@ -187,6 +187,14 @@ public class BCDecode {
 				list = arr;
 			}
 
+			private void findBlock(String str) {
+				for (Block b : blocks)
+					if (b.name.equals(str)) {
+						for (int i = b.line0; i < b.line1; i++)
+							System.out.println(list[i]);
+					}
+			}
+
 			private void run() {
 				for (String str : list) {
 					if (str.length() > 0) {
@@ -211,14 +219,19 @@ public class BCDecode {
 
 			}
 
-			private void findBlock(String str) {
-				for (Block b : blocks)
-					if (b.name.equals(str)) {
-						for (int i = b.line0; i < b.line1; i++)
-							System.out.println(list[i]);
-					}
-			}
+		}
 
+		private static String getFuncName(String line) {
+			int l0 = 0, lv = 0;
+			for (int i = 0; i < line.length(); i++) {
+				if (lv == 0 && line.charAt(i) == ' ')
+					l0 = i + 1;
+				else if (line.charAt(i) == '<')
+					lv++;
+				else if (line.charAt(i) == '>')
+					lv--;
+			}
+			return line.substring(l0);
 		}
 
 		private static int level(String str) {
@@ -301,19 +314,6 @@ public class BCDecode {
 				}
 			}
 			return bre == -1 ? ans : ans.substring(0, bre).trim();
-		}
-
-		private static String getFuncName(String line) {
-			int l0 = 0, lv = 0;
-			for (int i = 0; i < line.length(); i++) {
-				if (lv == 0 && line.charAt(i) == ' ')
-					l0 = i + 1;
-				else if (line.charAt(i) == '<')
-					lv++;
-				else if (line.charAt(i) == '>')
-					lv--;
-			}
-			return line.substring(l0);
 		}
 
 		private static String[] processor(String path) {
