@@ -6,7 +6,7 @@ import page.Page;
 
 public class Opts {
 
-	public static final int MEMORY = 1001, SECTY = 1002, REQITN = 1003;
+	public static final int MEMORY = 1001, SECTY = 1002, REQITN = 1003, INSTALL = 1004;
 
 	private static boolean nshowi, nshowu;
 
@@ -48,9 +48,12 @@ public class Opts {
 		if (id == MEMORY)
 			pop("not enough memory. Current memory: " + is[0] + "MB.", "not enough memory");
 		if (id == SECTY)
-			pop("Failed to access files. Please move BCU to another place", "file permission error");
+			pop("Failed to access files. Please move BCU folder to another place", "file permission error");
 		if (id == REQITN)
 			pop("failed to connect to internet while download is necessary", "download error");
+		if (id == INSTALL)
+			pop("<html>BCU library is not properly installed.<br>Download and run BCU-0-4-8-22 to install BCU library</html>",
+					"library not installed");
 	}
 
 	public static void pop(String text, String title) {

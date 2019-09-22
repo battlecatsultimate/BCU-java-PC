@@ -217,7 +217,7 @@ public abstract class EntityEditPage extends Page {
 		link.setEnabled(editable);
 		atkn.setEnabled(editable);
 		comm.setEnabled(editable);
-		fct.setEnabled(editable);
+		jcbs.setEnabled(editable);
 	}
 
 	@Override
@@ -374,6 +374,9 @@ public abstract class EntityEditPage extends Page {
 			else if (o instanceof Enemy)
 				changePanel(new EnemyViewPage(getThis(), (Enemy) o));
 		});
+
+		e.setEnabled(editable);
+		u.setEnabled(editable);
 	}
 
 	private void addListeners() {

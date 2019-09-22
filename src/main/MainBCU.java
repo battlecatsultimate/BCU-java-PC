@@ -22,7 +22,7 @@ import utilpc.awt.PCIB;
 
 public class MainBCU {
 
-	public static final int ver = 40831;
+	public static final int ver = 40832;
 
 	public static int FILTER_TYPE = 0;
 	public static final boolean WRITE = !new File("./.project").exists();
@@ -37,6 +37,10 @@ public class MainBCU {
 		long mem = Runtime.getRuntime().maxMemory();
 		if (mem >> 28 == 0) {
 			Opts.pop(Opts.MEMORY, "" + (mem >> 20));
+			System.exit(0);
+		}
+		if (!new File("./BCU_lib").exists()) {
+			Opts.pop(Opts.INSTALL);
 			System.exit(0);
 		}
 
