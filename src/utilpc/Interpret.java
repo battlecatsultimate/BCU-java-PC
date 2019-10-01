@@ -345,7 +345,7 @@ public class Interpret extends Data {
 		COMF = Page.get(3, "na", 6);
 		COMN = Page.get(3, "nb", 25);
 		TCTX = Page.get(3, "tc", 6);
-		PCTX = Page.get(3, "aq", 41);
+		PCTX = Page.get(3, "aq", 52);
 		EABI = new String[EABIIND.length];
 		for (int i = 0; i < EABI.length; i++) {
 			if (EABIIND[i] < 100)
