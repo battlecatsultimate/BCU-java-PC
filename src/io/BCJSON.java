@@ -95,6 +95,18 @@ public class BCJSON extends WebFileIO {
 
 		if (data != null && data.length() >= 7) {
 			LoadPage.prog("check jar update...");
+			if (MainBCU.ver < data.getInt("jar-test")) {
+				if (Opts.updateCheck("JAR", data.getString("jar-test-desc"))) {
+					int ver = data.getInt("jar-test");
+					String name = "BCU" + (ver >= 40800 ? "-" : " ");
+					name += Data.revVer(ver) + ".jar";
+					if (download(GITRES + "jar/" + name, new File("./" + name), LoadPage.lp))
+						CommonStatic.def.exit(false);
+					else
+						Opts.dloadErr(name);
+				}
+
+			}
 			if (MainBCU.ver < data.getInt("jar")) {
 				if (Opts.updateCheck("JAR", data.getString("jar-desc"))) {
 					int ver = data.getInt("jar");
@@ -369,7 +381,8 @@ public class BCJSON extends WebFileIO {
 			int n = ja.length();
 			for (int i = 0; i < n; i++) {
 				JSONArray ent = ja.getJSONArray(i);
-				libmap.put(ent.getString(0), ent.getString(1));
+				if (Integer.parseInt(ent.getString(2)) <= MainBCU.ver)
+					libmap.put(ent.getString(0), ent.getString(1));
 			}
 			List<String> libs;
 			if (ZipLib.info != null)
