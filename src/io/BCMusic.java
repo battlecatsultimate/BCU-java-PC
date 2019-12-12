@@ -26,14 +26,14 @@ import javax.sound.sampled.LineListener;
 public class BCMusic extends Data implements LineListener {
 
 	private static final List<BCMusic> SES = new ArrayList<BCMusic>();
-	private static final int FACTOR = 20, CD = 5;
-	private static final byte[][] CACHE = new byte[200][];
+	private static final int FACTOR = 20, CD = 5, TOT = 200;
+	private static final byte[][] CACHE = new byte[TOT][];
 
 	public static boolean play = true;
 	public static int music = -1;
 	public static int VOL_BG = 20, VOL_SE = 20;
-	private static boolean[] secall = new boolean[100];
-	private static int[] secd = new int[100];
+	private static boolean[] secall = new boolean[TOT];
+	private static int[] secd = new int[TOT];
 
 	private static BCMusic BG;
 
