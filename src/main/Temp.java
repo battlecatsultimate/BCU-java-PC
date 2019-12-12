@@ -42,44 +42,6 @@ public class Temp {
 		System.out.println(new TreeSet<String>(Arrays.asList(fp.list())));
 	}
 
-	public static void main$large(String[] args) throws FileNotFoundException {
-		Reader.getData$0();
-
-		ImageBuilder.builder = new PCIB();
-		BBBuilder.def = AWTBBB.INS;
-		CommonStatic.def = new UtilPC.PCItr();
-
-		ZipLib.init();
-		ZipLib.read();
-		Reader.getData$1();
-
-		Map<Integer, List<StageMap>> map = new TreeMap<>();
-		MapColc.MAPS.forEach((id, mc) -> {
-			for (StageMap sm : mc.maps)
-				if (sm.info != null) {
-					int i0 = sm.info.rand + 100;
-					int i1 = sm.info.time + 100;
-					if (i0 >= 1000 || i0 < 0 || i1 >= 1000 || i1 < 0)
-						System.out.println("Unexpected: " + i0 + "," + i1);
-					int key = i0 * 1000 + i1;
-					List<StageMap> list;
-					if (map.containsKey(key))
-						list = map.get(key);
-					else
-						map.put(key, list = new ArrayList<StageMap>());
-					list.add(sm);
-				}
-		});
-		map.forEach((key, l) -> {
-			String stk = (key / 1000 - 100) + "," + (key % 1000 - 100) + ": ";
-			if (l.size() > 1)
-				System.out.println(stk + "size = " + l.size());
-			else
-				System.out.println(stk + "id = " + l.get(0).toString());
-		});
-
-	}
-
 	public static void main$1(String[] args) {
 		try {
 			BufferedImage b0 = ImageIO.read(new File("./img/in.png"));
@@ -224,6 +186,44 @@ public class Temp {
 			long dt = System.currentTimeMillis() - time;
 			double speed = p.tot * p.prog / dt;
 			System.out.println((int) (p.prog * 100) + "%, " + speed + "KB/s");
+		});
+
+	}
+
+	public static void main$large(String[] args) throws FileNotFoundException {
+		Reader.getData$0();
+
+		ImageBuilder.builder = new PCIB();
+		BBBuilder.def = AWTBBB.INS;
+		CommonStatic.def = new UtilPC.PCItr();
+
+		ZipLib.init();
+		ZipLib.read();
+		Reader.getData$1();
+
+		Map<Integer, List<StageMap>> map = new TreeMap<>();
+		MapColc.MAPS.forEach((id, mc) -> {
+			for (StageMap sm : mc.maps)
+				if (sm.info != null) {
+					int i0 = sm.info.rand + 100;
+					int i1 = sm.info.time + 100;
+					if (i0 >= 1000 || i0 < 0 || i1 >= 1000 || i1 < 0)
+						System.out.println("Unexpected: " + i0 + "," + i1);
+					int key = i0 * 1000 + i1;
+					List<StageMap> list;
+					if (map.containsKey(key))
+						list = map.get(key);
+					else
+						map.put(key, list = new ArrayList<StageMap>());
+					list.add(sm);
+				}
+		});
+		map.forEach((key, l) -> {
+			String stk = (key / 1000 - 100) + "," + (key % 1000 - 100) + ": ";
+			if (l.size() > 1)
+				System.out.println(stk + "size = " + l.size());
+			else
+				System.out.println(stk + "id = " + l.get(0).toString());
 		});
 
 	}

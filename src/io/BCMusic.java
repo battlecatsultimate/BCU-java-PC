@@ -27,7 +27,7 @@ public class BCMusic extends Data implements LineListener {
 
 	private static final List<BCMusic> SES = new ArrayList<BCMusic>();
 	private static final int FACTOR = 20, CD = 5;
-	private static final byte[][] CACHE = new byte[100][];
+	private static final byte[][] CACHE = new byte[200][];
 
 	public static boolean play = true;
 	public static int music = -1;

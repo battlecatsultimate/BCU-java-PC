@@ -19,7 +19,9 @@ import page.LoadPage;
 public class ZipLib {
 
 	public static final String[] LIBREQS = { "000001", "000002", "000003", "080602", "080603", "080504", "080604",
-			"080700", "080705", "080706" };
+			"080700", "080705", "080706", "080800", "080801", "080900", "080902", "081000", "081005", "090000",
+			"090100", "090102" };
+
 	public static final String[] OPTREQS = {};
 
 	public static FileSystem lib;
