@@ -1,6 +1,0 @@
-[submodule "src/common"]
-	path = src/common
-	url = https://github.com/battlecatsultimate/BCU_java_util_common.git
-[submodule "common"]
-	path = common
-	url = https://github.com/battlecatsultimate/BCU_java_util_common.git
