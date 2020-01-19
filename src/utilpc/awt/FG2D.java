@@ -47,8 +47,8 @@ public class FG2D implements FakeGraphics {
 	}
 
 	@Override
-	public void colRect(int x, int y, int w, int h, int r, int gr, int b, int... a) {
-		int al = a.length > 0 ? a[0] : 255;
+	public void colRect(int x, int y, int w, int h, int r, int gr, int b, int a) {
+		int al = a >= 0 ? a : 255;
 		Color c = new Color(r, gr, b, al);
 		g.setColor(c);
 		g.fillRect(x, y, w, h);
@@ -129,15 +129,15 @@ public class FG2D implements FakeGraphics {
 	}
 
 	@Override
-	public void setComposite(int mode, int... para) {
+	public void setComposite(int mode, int p0, int p1) {
 		if (mode == DEF)
 			g.setComposite(comp);
 		if (mode == TRANS)
-			g.setComposite(AlphaComposite.getInstance(SRC_OVER, (float) (para[0] / 256.0)));
+			g.setComposite(AlphaComposite.getInstance(SRC_OVER, (float) (p0 / 256.0)));
 		if (mode == BLEND)
-			g.setComposite(new Blender(para[0], para[1]));
+			g.setComposite(new Blender(p0, p1));
 		if (mode == GRAY)
-			g.setComposite(new Converter(para[0]));
+			g.setComposite(new Converter(p0));
 
 	}
 

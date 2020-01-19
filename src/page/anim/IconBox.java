@@ -64,7 +64,7 @@ public interface IconBox extends ViewBox {
 					gra.setComposite(FakeGraphics.BLEND, 256, 1);
 					bimg = Res.ico[0][4].getImg();
 					gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r));
-					gra.setComposite(FakeGraphics.DEF);
+					gra.setComposite(FakeGraphics.DEF, 0, 0);
 				}
 				if (mode == 0 && type > 1) {
 					bimg = Res.ico[0][5].getImg();
@@ -89,7 +89,7 @@ public interface IconBox extends ViewBox {
 						gra.setComposite(FakeGraphics.BLEND, 256, -1);
 						bimg = Res.ico[0][4].getImg();
 						gra.drawImage(bimg, line[0], line[1], bw * r, bh * r);
-						gra.setComposite(FakeGraphics.DEF);
+						gra.setComposite(FakeGraphics.DEF, 0, 0);
 					}
 				}
 			}

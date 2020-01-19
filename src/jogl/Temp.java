@@ -69,7 +69,7 @@ public class Temp extends StdGLC {
 	public void drawFake(GLGraphics fg) {
 		fg.setColor(FakeGraphics.RED);
 		fg.fillRect(100, 100, 200, 200);
-		fg.colRect(300, 100, 200, 200, 255, 0, 255);
+		fg.colRect(300, 100, 200, 200, 255, 0, 255, -1);
 		fg.gradRect(500, 100, 200, 200, 0, 100, new int[] { 255, 255, 255 }, 0, 300, new int[] { 0, 0, 0 });
 		// FakeTransform ft = fg.getTransform();
 		for (int i = 0; i < 1; i++)
