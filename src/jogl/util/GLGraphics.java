@@ -29,12 +29,12 @@ public class GLGraphics implements GeoAuto {
 			g = gl2;
 		}
 
-		protected void colRect(int x, int y, int w, int h, int r, int gr, int b, int... a) {
+		protected void colRect(int x, int y, int w, int h, int r, int gr, int b, int a) {
 			checkMode();
-			if (a.length == 0)
+			if (a == -1)
 				setColor(r, gr, b);
 			else
-				g.glColor4f(r / 256f, gr / 256f, b / 256f, a[0] / 256f);
+				g.glColor4f(r / 256f, gr / 256f, b / 256f, a / 256f);
 			color = null;
 			g.glBegin(GL2ES3.GL_QUADS);
 			addP(x, y);
@@ -156,13 +156,14 @@ public class GLGraphics implements GeoAuto {
 
 		int mode;
 
-		int[] para;
+		int p0, p1;
 
 		boolean done;
 
-		public GLC(int mod, int... par) {
+		public GLC(int mod, int x0, int x1) {
 			mode = mod;
-			para = par;
+			p0 = x0;
+			p1 = x1;
 		}
 	}
 
@@ -190,7 +191,7 @@ public class GLGraphics implements GeoAuto {
 
 	private int mode = PURE;
 	private int bind = 0;
-	private GLC comp = new GLC(DEF);
+	private GLC comp = new GLC(DEF, 0, 0);
 
 	public GLGraphics(GL2 gl2, int wid, int hei) {
 		g = gl2;
@@ -269,13 +270,13 @@ public class GLGraphics implements GeoAuto {
 	}
 
 	@Override
-	public void setComposite(int mode, int... para) {
+	public void setComposite(int mode, int p0, int p1) {
 		if (mode == GRAY) { // 1-d
 			checkMode(PURE);
 			g.glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ZERO);
 			setColor(WHITE);
 		} else
-			comp = new GLC(mode, para);
+			comp = new GLC(mode, p0, p1);
 	}
 
 	@Override
@@ -328,7 +329,6 @@ public class GLGraphics implements GeoAuto {
 		if (comp.done)
 			return;
 		int mode = comp.mode;
-		int[] para = comp.para;
 		comp.done = true;
 		if (mode == DEF) {
 			// sC *sA + dC *(1-sA)
@@ -338,23 +338,23 @@ public class GLGraphics implements GeoAuto {
 		if (mode == TRANS) {
 			g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			g.glUniform1i(tm.mode, 1);
-			g.glUniform1f(tm.para, para[0] * 1.0f / 256);
+			g.glUniform1f(tm.para, comp.p0 * 1.0f / 256);
 		}
 		if (mode == BLEND) {
-			g.glUniform1f(tm.para, para[0] * 1.0f / 256);
-			if (para[1] == 0) {
+			g.glUniform1f(tm.para, comp.p0 * 1.0f / 256);
+			if (comp.p1 == 0) {
 				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 				g.glUniform1i(tm.mode, 1);
-			} else if (para[1] == 1) {// d+s*a
+			} else if (comp.p1 == 1) {// d+s*a
 				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 				g.glUniform1i(tm.mode, 1);// sA=sA*p
-			} else if (para[1] == 2) {// d*(1-a+s*a)
+			} else if (comp.p1 == 2) {// d*(1-a+s*a)
 				g.glBlendFunc(GL_ZERO, GL_SRC_COLOR);
 				g.glUniform1i(tm.mode, 2);// sA=sA*p, sC=1-sA+sC*sA
-			} else if (para[1] == 3) {// d+(1-d)*s*a
+			} else if (comp.p1 == 3) {// d+(1-d)*s*a
 				g.glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE);
 				g.glUniform1i(tm.mode, 1);// sA=sA*p
-			} else if (para[1] == -1) {// d-s*a
+			} else if (comp.p1 == -1) {// d-s*a
 				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 				g.glUniform1i(tm.mode, 3);// sA=-sA*p
 			}
@@ -366,7 +366,7 @@ public class GLGraphics implements GeoAuto {
 interface GeoAuto extends FakeGraphics {
 
 	@Override
-	public default void colRect(int x, int y, int w, int h, int r, int gr, int b, int... a) {
+	public default void colRect(int x, int y, int w, int h, int r, int gr, int b, int a) {
 		getGeo().colRect(x, y, w, h, r, gr, b, a);
 	}
 

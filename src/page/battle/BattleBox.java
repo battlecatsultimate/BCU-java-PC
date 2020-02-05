@@ -110,7 +110,7 @@ public interface BattleBox {
 			int w = box.getWidth();
 			int h = box.getHeight();
 			if (siz * minH > h * bar / 10)
-				siz = 1.0 * h / minH;
+				siz = 1.0 * h * bar / 10 / minH;
 			if (siz * maxH < h)
 				siz = 1.0 * h / maxH;
 			if (siz * maxW < w)
@@ -218,8 +218,8 @@ public interface BattleBox {
 					int dh = (int) (hr * 12);
 					double cd = 1.0 * cool / sb.elu.maxC[i / 5][i % 5];
 					int xw = (int) (cd * (iw - dw * 2));
-					g.colRect(x + iw - dw - xw, y + ih - dh * 2, xw, dh, 0, 0, 0);
-					g.colRect(x + dw, y + ih - dh * 2, iw - dw * 2 - xw, dh, 100, 212, 255);
+					g.colRect(x + iw - dw - xw, y + ih - dh * 2, xw, dh, 0, 0, 0, -1);
+					g.colRect(x + dw, y + ih - dh * 2, iw - dw * 2 - xw, dh, 100, 212, 255, -1);
 				} else
 					Res.getCost(pri, !b, new SymCoord(g, hr, x += iw, y += ih, 3));
 			}
@@ -301,7 +301,7 @@ public interface BattleBox {
 			}
 
 			if (sb.s_stop > 0) {
-				gra.setComposite(FakeGraphics.GRAY, 0);
+				gra.setComposite(FakeGraphics.GRAY, 0, 0);
 				gra.fillRect(0, 0, w, h);
 				for (int i = 0; i < 10; i++) {
 					int dep = i * DEP;
