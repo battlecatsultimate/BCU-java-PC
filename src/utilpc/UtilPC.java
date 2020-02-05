@@ -16,9 +16,13 @@ import common.battle.data.PCoin;
 import common.io.InStream;
 import common.io.OutStream;
 import common.system.VImg;
+import common.system.fake.FakeImage;
+import common.system.files.FDByte;
 import common.system.files.FileData;
 import common.system.files.VFile;
 import common.util.Res;
+import common.util.anim.AnimC.AnimLoader;
+import common.util.anim.AnimC;
 import common.util.anim.AnimU;
 import common.util.pack.Background;
 import common.util.unit.Form;
@@ -34,6 +38,85 @@ public class UtilPC {
 
 	public static class PCItr implements Itf {
 
+		private static class PCAL implements AnimC.AnimLoader {
+
+			private String name;
+			private FakeImage num;
+			private FileData imgcut, mamodel, anims[];
+			private VImg uni, edi;
+
+			private PCAL(InStream is) {
+				name = "local animation";
+
+				try {
+					num = FakeImage.read(is.nextBytesI());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				imgcut = new FDByte(is.nextBytesI());
+				mamodel = new FDByte(is.nextBytesI());
+				int n = is.nextInt();
+				anims = new FileData[n];
+				for (int i = 0; i < n; i++)
+					anims[i] = new FDByte(is.nextBytesI());
+				if (!is.end()) {
+					VImg vimg = new VImg(is.nextBytesI());
+					vimg.mark("uni or edi");
+					if (vimg.getImg().getHeight() == 32)
+						edi = vimg;
+					else
+						uni = vimg;
+				}
+				if (!is.end())
+					uni = new VImg(is.nextBytesI());
+				if (uni != null && uni != Res.slot[0])
+					uni.mark("uni");
+				if (edi != null)
+					edi.mark("edi");
+			}
+
+			@Override
+			public VImg getEdi() {
+				return edi;
+			}
+
+			@Override
+			public FileData getIC() {
+				return imgcut;
+			}
+
+			@Override
+			public FileData[] getMA() {
+				return anims;
+			}
+
+			@Override
+			public FileData getMM() {
+				return mamodel;
+			}
+
+			@Override
+			public String getName() {
+				return name;
+			}
+
+			@Override
+			public FakeImage getNum() {
+				return num;
+			}
+
+			@Override
+			public int getStatus() {
+				return 1;
+			}
+
+			@Override
+			public VImg getUni() {
+				return uni;
+			}
+
+		}
+
 		@Override
 		public void check(File f) {
 			Writer.check(f);
@@ -48,6 +131,11 @@ public class UtilPC {
 		public void exit(boolean save) {
 			Writer.logClose(save);
 			System.exit(0);
+		}
+
+		@Override
+		public AnimLoader loadAnim(InStream is) {
+			return new PCAL(is);
 		}
 
 		@Override
@@ -80,6 +168,11 @@ public class UtilPC {
 		public void redefine(Class<?> cls) {
 			if (cls == AnimU.class)
 				red$AnimU();
+		}
+
+		@Override
+		public File route(String path) {
+			return new File(path);
 		}
 
 		@Override

@@ -197,7 +197,7 @@ public abstract class EntityEditPage extends Page {
 			add(jcba);
 			Vector<AnimC> vda = new Vector<>();
 			AnimC ac = ((AnimC) ce.getPack().anim);
-			if (!ac.inPool)
+			if (ac.inPool != 0)
 				vda.add(ac);
 			vda.addAll(DIYAnim.getAnims());
 			jcba.setModel(new DefaultComboBoxModel<>(vda));

@@ -20,9 +20,12 @@ public class ZipLib {
 
 	public static final String[] LIBREQS = { "000001", "000002", "000003", "080602", "080603", "080504", "080604",
 			"080700", "080705", "080706", "080800", "080801", "080900", "080902", "081000", "081005", "090000",
-			"090100", "090102" };
+			"090100", "090102", "090103", "090200" };
 
 	public static final String[] OPTREQS = {};
+
+	public static final String[] NONREQS = { "080605", "080802", "080901", "081001", "090001", "090101", "090104",
+			"090201" };
 
 	public static FileSystem lib;
 	public static LibInfo info;

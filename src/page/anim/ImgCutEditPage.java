@@ -370,7 +370,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			AnimC ac = icet.anim;
 			ac.check();
 			ac.delete();
-			ac.inPool = false;
+			ac.inPool = 1;
 			DIYAnim.map.remove(ac.name);
 			Vector<DIYAnim> v = new Vector<>(DIYAnim.map.values());
 			jlu.setListData(v);
@@ -668,7 +668,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		jtf.setText(anim == null ? "" : anim.name);
 		boolean del = da != null && da.deletable();
 		rem.setEnabled(aep.focus == null && da != null && del);
-		loca.setEnabled(aep.focus == null && da != null && !del && da.anim.inPool);
+		loca.setEnabled(aep.focus == null && da != null && !del && da.anim.inPool == 0);
 		copy.setEnabled(aep.focus == null && anim != null);
 		impt.setEnabled(anim != null);
 		expt.setEnabled(anim != null);
