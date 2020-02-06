@@ -22,12 +22,13 @@ class AtkProcTable extends Page {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final int LEN = 18, SEC = 12;
-	private static final int[] INDS = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 20, 27, 29, 21, 22, 23, 24, 25, 26 };
+	private static final int LEN = 20, SEC = 12;
+	private static final int[] INDS = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 20, 27, 29, 21, 22, 23, 24, 25, 26, 31,
+			32 };
 	private static final int[] TREA = new int[] { 2, 1, 1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 	private static final int[][] STRS = new int[][] { { 0, 1, 2 }, { 0, 1 }, { 0, 1 }, { 0, 9 }, { 0, 4 }, { 0, 1, 3 },
 			{ 0 }, { 0, 1, 2 }, { 0, 1 }, { 0 }, { 0 }, { 0, 9 }, { 0, 1 }, { 0, 1 }, { 0, 5, 2, 9, 6, 1 },
-			{ 0, 7, 8, 1, 2, 10 }, { 0, 1, 5 }, { 0, 1, 11, 10, 6 } };
+			{ 0, 7, 8, 1, 2, 10 }, { 0, 1, 5 }, { 0, 1, 11, 10, 6 }, { 0, 12 }, { 0, 2, 2, 1 } };
 
 	private static String getString(int ind) {
 		if (ind == 0)
@@ -54,6 +55,8 @@ class AtkProcTable extends Page {
 			return "itv";
 		else if (ind == 11)
 			return "damage";
+		else if (ind == 12)
+			return "percent";
 		else
 			return "!";
 	}
@@ -109,7 +112,7 @@ class AtkProcTable extends Page {
 						str += "(" + (int) (ints[INDS[i]][j] * 1.2) + ")";
 					else if (vals[j] == 2)
 						str += "(" + (int) (ints[INDS[i]][j] * 1.3) + ")";
-				if (vals[j] == 0 || vals[j] == 3 || vals[j] == 9)
+				if (vals[j] == 0 || vals[j] == 3 || vals[j] == 9 || vals[j] == 12)
 					str += "%";
 				if (vals[j] == 1 || vals[j] == 10)
 					str += "f";
@@ -152,9 +155,9 @@ class AtkProcTable extends Page {
 				for (int j = 0; j < STRS[i].length; j++)
 					if (jtf == jtfs[i][j]) {
 						int type = STRS[i][j];
-						if ((type == 0 || type == 4) && val < 0)
+						if ((type == 0 || type == 4 || type == 12) && val < 0)
 							val = 0;
-						if ((type == 0 || type == 3) && val > 100)
+						if ((type == 0 || type == 3 || type == 12) && val > 100)
 							val = 100;
 						if ((type == 1 || type == 10) && val < -1)
 							val = -1;
