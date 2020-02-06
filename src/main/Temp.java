@@ -11,12 +11,9 @@ import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.TreeSet;
-
 import javax.imageio.ImageIO;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
@@ -38,8 +35,9 @@ import utilpc.awt.PCIB;
 public class Temp {
 
 	public static void main(String[] args) {
-		File fp = new File("./pack");
-		System.out.println(new TreeSet<String>(Arrays.asList(fp.list())));
+		File fp = new File("./BCU_lib");
+		for (String str : fp.list())
+			System.out.println('"' + str + "\",");
 	}
 
 	public static void main$1(String[] args) {

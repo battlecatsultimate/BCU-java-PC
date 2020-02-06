@@ -1,6 +1,7 @@
 package utilpc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import common.battle.BasisLU;
@@ -63,14 +64,14 @@ public class Interpret extends Data {
 			{ 0, -1, 3, 1 }, { 0, -1 }, { 0, -1, 1, 4 }, { 0, -1, 1 }, { 5, -1, 7 }, { 0, -1 }, { -1, 4, 6 },
 			{ -1, 1, 5, 6 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { 0, -1 },
 			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 4 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 }, { -1 },
-			{ 0, -1, 7 }, { 0, -1, 1 }, { 0, -1, 7 } };
+			{ 0, -1, 7 }, { 0, -1, 1 }, { 0, -1, 7 }, { 0, -1, 1, 8, 4 } };
 
 	/** proc data locator */
 	private static final int[][] LOC = { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 1, -1 },
 			{ 0, -1, 2, 1 }, { 0, -1 }, { 0, -1, 1, 2 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { -1, 1, 0 },
 			{ -1, 1, 2, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { 0, -1 },
 			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 2 }, { 0, -1, 3 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 }, { -1 },
-			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 1 } };
+			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 3, 1, 2 } };
 
 	/** combo string component */
 	private static final String[][] CDP = { { "", "+", "-" }, { "_", "_%", "_f", "Lv._" } };
@@ -341,7 +342,7 @@ public class Interpret extends Data {
 		PROC = Page.get(3, "p", CMP.length);
 		SPROC = Page.get(3, "sp", CMP.length);
 		TREA = Page.get(3, "t", 36);
-		TEXT = Page.get(3, "d", 8);
+		TEXT = Page.get(3, "d", 9);
 		COMF = Page.get(3, "na", 6);
 		COMN = Page.get(3, "nb", 25);
 		TCTX = Page.get(3, "tc", 6);

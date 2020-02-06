@@ -52,7 +52,7 @@ public class Opts {
 		if (id == REQITN)
 			pop("failed to connect to internet while download is necessary", "download error");
 		if (id == INSTALL)
-			pop("<html>BCU library is not properly installed.<br>Download and run BCU-0-4-8-22 to install BCU library</html>",
+			pop("<html>BCU library is not properly installed.<br>Download and run BCU-Installer to install BCU library</html>",
 					"library not installed");
 	}
 

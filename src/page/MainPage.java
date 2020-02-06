@@ -360,7 +360,7 @@ public class MainPage extends Page {
 		add(save);
 		add(seicon);
 		add(sgifau);
-		add(intn);
+		// add(intn);
 		add(rply);
 		add(bckp);
 		add(allf);

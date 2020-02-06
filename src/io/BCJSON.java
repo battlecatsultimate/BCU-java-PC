@@ -31,13 +31,13 @@ import page.LoadPage;
 
 public class BCJSON extends WebFileIO {
 
-	public static final String WEBSITE = "http://battle-cats-ultimate.000webhostapp.com";
+	public static final String WEBSITE = "https://battlecatsultimate.github.io/bcu-page";
 	public static final String GITRES = "https://github.com/battlecatsultimate/bcu-resources/raw/master/resources/";
 
 	public static int ID = 0;
 	public static int cal_ver = 0;
 
-	private static final String req = WEBSITE + "/api/java/";
+	private static final String req = WEBSITE + "/api/";
 	private static final String path = "./assets/";
 
 	private static boolean DOWNLOAD_LIBS = true;
@@ -86,20 +86,34 @@ public class BCJSON extends WebFileIO {
 		File f;
 		JSONObject data = null;
 		try {
-			data = getJSON("getupdate.php");
+			data = get("getUpdate.json");
 		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		checkAssets(data);
 		if (DOWNLOAD_LIBS)
 			checkLibs(data);
 
-		if (data != null && data.length() >= 7) {
+		if (data != null) {
 			LoadPage.prog("check jar update...");
-			if (MainBCU.ver < data.getInt("jar-test")) {
-				if (Opts.updateCheck("JAR", data.getString("jar-test-desc"))) {
-					int ver = data.getInt("jar-test");
-					String name = "BCU" + (ver >= 40800 ? "-" : " ");
-					name += Data.revVer(ver) + ".jar";
+
+			JSONArray upds = data.getJSONArray("pc-jars");
+			JSONArray lf = null;
+			JSONArray lt = (JSONArray) upds.get(0);
+			if (lt.getInt(2) == 1)
+				lt = null;
+			for (int i = 0; i < upds.length(); i++) {
+				JSONArray v = (JSONArray) upds.get(0);
+				if (v.getInt(2) == 1) {
+					lf = v;
+					break;
+				}
+			}
+
+			if (lt != null && MainBCU.ver < Integer.parseInt(lt.getString(0))) {
+				if (Opts.updateCheck("JAR", lt.getString(1))) {
+					int ver = Integer.parseInt(lt.getString(0));
+					String name = "BCU-" + Data.revVer(ver) + ".jar";
 					if (download(GITRES + "jar/" + name, new File("./" + name), LoadPage.lp))
 						CommonStatic.def.exit(false);
 					else
@@ -107,11 +121,11 @@ public class BCJSON extends WebFileIO {
 				}
 
 			}
-			if (MainBCU.ver < data.getInt("jar")) {
-				if (Opts.updateCheck("JAR", data.getString("jar-desc"))) {
-					int ver = data.getInt("jar");
-					String name = "BCU" + (ver >= 40800 ? "-" : " ");
-					name += Data.revVer(ver) + ".jar";
+
+			if (lf != null && MainBCU.ver < Integer.parseInt(lf.getString(0))) {
+				if (Opts.updateCheck("JAR", lf.getString(1))) {
+					int ver = Integer.parseInt(lf.getString(0));
+					String name = "BCU-" + Data.revVer(ver) + ".jar";
 					if (download(GITRES + "jar/" + name, new File("./" + name), LoadPage.lp))
 						CommonStatic.def.exit(false);
 					else
@@ -119,6 +133,7 @@ public class BCJSON extends WebFileIO {
 				}
 
 			}
+
 			LoadPage.prog("check text update...");
 			for (int i = 0; i < cals.length; i++)
 				if (!(f = new File(path + cals[i])).exists() && !download(GITRES + cals[i], f, null))
@@ -377,7 +392,7 @@ public class BCJSON extends WebFileIO {
 	private static void checkAssets(JSONObject lib) {
 		if (lib != null && lib.length() > 1) {
 			Map<String, String> libmap = new TreeMap<>();
-			JSONArray ja = lib.getJSONArray("assets");
+			JSONArray ja = lib.getJSONArray("pc-assets");
 			int n = ja.length();
 			for (int i = 0; i < n; i++) {
 				JSONArray ent = ja.getJSONArray(i);
@@ -443,14 +458,26 @@ public class BCJSON extends WebFileIO {
 		}
 	}
 
-	private static JSONObject getJSON(String url) throws IOException {
-		JSONObject inp = new JSONObject();
-		inp.put("bcuver", MainBCU.ver);
-		JSONObject ans = read(inp.toString(), url);
-		int ret = ans.getInt("ret");
-		if (ret == 0)
-			return ans;
-		throw new IOException(ans.getString("message"));
+	private static JSONObject get(String app) throws IOException {
+
+		URL url = new URL(req + app);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setConnectTimeout(5000);
+		conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+		conn.setDoOutput(true);
+		conn.setDoInput(true);
+		conn.setRequestMethod("GET");
+		InputStream in = conn.getInputStream();
+		InputStreamReader isr = new InputStreamReader(in, "UTF-8");
+		String result = readAll(new BufferedReader(isr));
+		if (!MainBCU.WRITE)
+			System.out.println("result: " + result);
+		if (!result.startsWith("{"))
+			throw new IOException(result);
+		JSONObject ans = new JSONObject(result);
+		in.close();
+		conn.disconnect();
+		return ans;
 	}
 
 	private static String process(String str) {
@@ -466,7 +493,7 @@ public class BCJSON extends WebFileIO {
 		conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
 		conn.setDoOutput(true);
 		conn.setDoInput(true);
-		conn.setRequestMethod("POST");
+		conn.setRequestMethod("GET");
 		OutputStream os = conn.getOutputStream();
 		os.write(json.getBytes("UTF-8"));
 		os.close();
