@@ -26,9 +26,8 @@ import javax.sound.sampled.LineListener;
 public class BCMusic extends Data implements LineListener {
 
 	private static final List<BCMusic> SES = new ArrayList<BCMusic>();
-	private static final int FACTOR = 20, CD = 5, TOT = 200;
+	private static final int FACTOR = 20, CD = 5, TOT = 113;
 	private static final byte[][] CACHE = new byte[TOT][];
-	private final static int NUM = 113;
 
 	public static boolean play = true;
 	public static int music = -1;
@@ -39,7 +38,7 @@ public class BCMusic extends Data implements LineListener {
 	private static BCMusic BG;
 
 	public static synchronized void flush(boolean allow) {
-		for (int i = 0; i < NUM; i++) {
+		for (int i = 0; i < TOT; i++) {
 			if (secd[i] == 0 && secall[i] && allow)
 				try {
 					secd[i] = CD;
@@ -53,7 +52,7 @@ public class BCMusic extends Data implements LineListener {
 			if (secd[i] > 0)
 				secd[i]--;
 		}
-		secall = new boolean[NUM];
+		secall = new boolean[TOT];
 	}
 
 	public static synchronized void play(int ind) {
@@ -126,7 +125,7 @@ public class BCMusic extends Data implements LineListener {
 		for (BCMusic ms : SES)
 			ms.stop();
 		SES.clear();
-		secd = new int[NUM];
+		secd = new int[TOT];
 	}
 
 	private static float getVol(int vol) {
