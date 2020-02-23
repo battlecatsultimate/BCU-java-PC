@@ -108,7 +108,6 @@ public class BCMusic extends Data implements LineListener {
 	public static synchronized void setSE(int ind) {
 		if (!play || VOL_SE == 0)
 			return;
-		System.out.println(secall.length);
 		secall[ind] = true;
 	}
 
