@@ -38,7 +38,7 @@ public class BCMusic extends Data implements LineListener {
 	private static BCMusic BG;
 
 	public static synchronized void flush(boolean allow) {
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < TOT; i++) {
 			if (secd[i] == 0 && secall[i] && allow)
 				try {
 					secd[i] = CD;
@@ -52,7 +52,7 @@ public class BCMusic extends Data implements LineListener {
 			if (secd[i] > 0)
 				secd[i]--;
 		}
-		secall = new boolean[100];
+		secall = new boolean[TOT];
 	}
 
 	public static synchronized void play(int ind) {
@@ -124,7 +124,7 @@ public class BCMusic extends Data implements LineListener {
 		for (BCMusic ms : SES)
 			ms.stop();
 		SES.clear();
-		secd = new int[100];
+		secd = new int[TOT];
 	}
 
 	private static float getVol(int vol) {
