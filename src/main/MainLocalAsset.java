@@ -24,7 +24,7 @@ public class MainLocalAsset {
 					e.printStackTrace();
 				}
 			}
-			
+
 			Opts.pop("Merging finished", "end");
 		} catch (Exception e) {
 			Opts.pop(e.toString(), "Unknown Error");
