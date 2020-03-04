@@ -71,6 +71,11 @@ public class FIBI implements FakeImage {
 		bimg.setRGB(i, j, p);
 	}
 
+	@Override
+	public void unload() {
+		
+	}
+
 }
 
 class BIBuilder extends ImageBuilder {
@@ -102,5 +107,4 @@ class BIBuilder extends ImageBuilder {
 			return ImageIO.write(bimg, fmt, (OutputStream) o);
 		return false;
 	}
-
 }

@@ -130,5 +130,10 @@ public class GLImage implements FakeImage {
 	protected GLImage root() {
 		return par == null ? this : par.root();
 	}
+	
+	@Override
+	public void unload() {
+		
+	}
 
 }

@@ -176,5 +176,10 @@ public class AmbImage implements FakeImage {
 		force = true;
 		gl = null;
 	}
+	
+	@Override
+	public void unload() {
+		
+	}
 
 }
