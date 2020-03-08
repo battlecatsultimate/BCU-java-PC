@@ -80,8 +80,8 @@ public class Interpret extends Data {
 			{}, { 1, 1 }, { 1, 1 }, { 2, 2 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 },
 			{ 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 } };
 
-	public static final int[] EABIIND = { 5, 7, 8, 9, 10, 11, 12, 15, 16, 18, 113, 114, 115, 116, 117, 118, 119 };
-	public static final int[] ABIIND = { 113, 114, 115, 116, 117, 118, 119 };
+	public static final int[] EABIIND = { 5, 7, 8, 9, 10, 11, 12, 15, 16, 18, 113, 114, 115, 116, 117, 118, 119, 133 };
+	public static final int[] ABIIND = { 113, 114, 115, 116, 117, 118, 119, 133 };
 	public static final int IMUSFT = 13, EFILTER = 8;
 
 	static {
