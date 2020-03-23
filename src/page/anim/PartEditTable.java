@@ -9,7 +9,7 @@ import java.util.List;
 import javax.swing.ListSelectionModel;
 import javax.swing.text.JTextComponent;
 
-import common.util.anim.AnimC;
+import common.util.anim.AnimCE;
 import common.util.anim.MaAnim;
 import common.util.anim.Part;
 import page.Page;
@@ -22,7 +22,7 @@ class PartEditTable extends AnimTable<int[]> {
 
 	private static final String[] strs = new String[] { "frame", "value", "easing", "parameter" };
 
-	protected AnimC anim;
+	protected AnimCE anim;
 	protected MaAnim ma;
 	protected Part part;
 	private Page page;
@@ -155,7 +155,7 @@ class PartEditTable extends AnimTable<int[]> {
 		page.callBack(null);
 	}
 
-	protected void setAnim(AnimC au, MaAnim maa, Part p) {
+	protected void setAnim(AnimCE au, MaAnim maa, Part p) {
 		if (cellEditor != null)
 			cellEditor.stopCellEditing();
 		anim = au;

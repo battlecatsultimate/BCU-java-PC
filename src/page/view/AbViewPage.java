@@ -18,7 +18,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import common.util.Animable;
-import common.util.anim.AnimC;
+import common.util.anim.AnimCE;
 import common.util.anim.AnimD;
 import common.util.anim.AnimI;
 import common.util.anim.EAnimI;
@@ -213,8 +213,8 @@ public abstract class AbViewPage extends Page {
 					return;
 				AnimD eau = (AnimD) ei.anim();
 				String str = "new anim";
-				str = AnimC.getAvailable(str);
-				AnimC ac = new AnimC(str, eau);
+				str = AnimCE.getAvailable(str);
+				AnimCE ac = new AnimCE(str, eau);
 				DIYAnim da = new DIYAnim(str, ac);
 				DIYAnim.map.put(str, da);
 				changePanel(new ImgCutEditPage(getThis()));

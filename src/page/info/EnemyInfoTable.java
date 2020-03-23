@@ -119,8 +119,8 @@ public class EnemyInfoTable extends Page {
 		int itv = e.de.getItv();
 		main[0][0].setText("ID");
 		main[0][1].setText("" + e.id);
-		if (e.anim.edi != null && e.anim.edi.getImg() != null)
-			main[0][2].setIcon(UtilPC.getIcon(e.anim.edi));
+		if (e.anim.getEdi() != null && e.anim.getEdi().getImg() != null)
+			main[0][2].setIcon(UtilPC.getIcon(e.anim.getEdi()));
 		main[0][3].setText(1, "trait");
 		main[0][4].setText(Interpret.getTrait(e.de.getType(), e.de.getStar()));
 		main[1][0].setText(1, "mult");

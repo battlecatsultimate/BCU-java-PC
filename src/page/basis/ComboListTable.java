@@ -67,7 +67,7 @@ public class ComboListTable extends SortTable<Combo> {
 					jl.setIcon(null);
 					return jl;
 				}
-				jl.setIcon(UtilPC.getIcon(form.anim.uni));
+				jl.setIcon(UtilPC.getIcon(form.anim.getUni()));
 				return jl;
 			}
 

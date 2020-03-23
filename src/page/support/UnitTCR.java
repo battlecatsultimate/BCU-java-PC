@@ -35,7 +35,7 @@ public class UnitTCR extends DefaultTableCellRenderer {
 		jl.setText(e.toString());
 		jl.setIcon(null);
 		jl.setHorizontalTextPosition(SwingConstants.RIGHT);
-		VImg vimg = e.anim.edi;
+		VImg vimg = e.anim.getEdi();
 		if (vimg == null)
 			return jl;
 		jl.setIcon(UtilPC.getIcon(vimg));

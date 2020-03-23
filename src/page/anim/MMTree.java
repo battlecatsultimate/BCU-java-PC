@@ -9,12 +9,12 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import common.util.anim.AnimC;
+import common.util.anim.AnimCE;
 import common.util.anim.MaModel;
 
 class MMTree implements TreeExpansionListener {
 
-	protected final AnimC anim;
+	protected final AnimCE anim;
 	protected final TreeCont tc;
 	private final MaModel mm;
 	private JTree jtr;
@@ -22,7 +22,7 @@ class MMTree implements TreeExpansionListener {
 	private DefaultMutableTreeNode[] data;
 	private boolean adj;
 
-	protected MMTree(TreeCont cont, AnimC am, JTree tree) {
+	protected MMTree(TreeCont cont, AnimCE am, JTree tree) {
 		tc = cont;
 		anim = am;
 		mm = am.mamodel;

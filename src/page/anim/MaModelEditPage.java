@@ -21,7 +21,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
 
 import common.CommonStatic;
-import common.util.anim.AnimC;
+import common.util.anim.AnimCE;
 import common.util.anim.EAnimS;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
@@ -409,7 +409,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			setB(-1);
 			return;
 		}
-		AnimC anim = da.getAnimC();
+		AnimCE anim = da.getAnimC();
 		mmet.setMaModel(anim);
 		mb.setEntity(new EAnimS(anim, anim.mamodel));
 		ImgCut ic = anim.imgcut;
@@ -449,7 +449,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		}
 	}
 
-	private void setTree(AnimC dat) {
+	private void setTree(AnimCE dat) {
 		change(dat, anim -> {
 			if (anim == null) {
 				jtr.setModel(new DefaultTreeModel(null));

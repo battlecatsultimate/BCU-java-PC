@@ -24,7 +24,8 @@ import javax.swing.event.ListSelectionListener;
 import common.CommonStatic;
 import common.system.VImg;
 import common.system.fake.FakeImage;
-import common.util.anim.AnimC;
+import common.system.fake.FakeImage.Marker;
+import common.util.anim.AnimCE;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.Part;
@@ -224,8 +225,8 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				if (bimg == null)
 					return;
 				changing = true;
-				String str = AnimC.getAvailable("new anim");
-				AnimC ac = new AnimC(str);
+				String str = AnimCE.getAvailable("new anim");
+				AnimCE ac = new AnimCE(str);
 				try {
 					ac.setNum(FakeImage.read(bimg));
 				} catch (IOException e) {
@@ -250,7 +251,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			public void actionPerformed(ActionEvent arg0) {
 				BufferedImage bimg = new Importer("Update your sprite").getImg();
 				if (bimg != null) {
-					AnimC ac = icet.anim;
+					AnimCE ac = icet.anim;
 					try {
 						ac.setNum(FakeImage.read(bimg));
 						ac.saveImg();
@@ -267,7 +268,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new Exporter((BufferedImage) icet.anim.num.bimg(), Exporter.EXP_IMG);
+				new Exporter((BufferedImage) icet.anim.getNum().bimg(), Exporter.EXP_IMG);
 			}
 
 		});
@@ -315,7 +316,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 					jlu.setSelectedValue(rep, true);
 					setA(rep);
 				} else {
-					str = AnimC.getAvailable(str);
+					str = AnimCE.getAvailable(str);
 					icet.anim.renameTo(str);
 					DIYAnim.map.put(str, da);
 					jtf.setText(str);
@@ -330,8 +331,8 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
 				String str = icet.anim.name;
-				str = AnimC.getAvailable(str);
-				AnimC ac = new AnimC(str, icet.anim);
+				str = AnimCE.getAvailable(str);
+				AnimCE ac = new AnimCE(str, icet.anim);
 				DIYAnim da = new DIYAnim(str, ac);
 				DIYAnim.map.put(str, da);
 				Vector<DIYAnim> v = new Vector<>(DIYAnim.map.values());
@@ -348,7 +349,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				return;
 			changing = true;
 			int ind = jlu.getSelectedIndex();
-			AnimC ac = icet.anim;
+			AnimCE ac = icet.anim;
 			ac.delete();
 			DIYAnim.map.remove(ac.name);
 			Vector<DIYAnim> v = new Vector<>(DIYAnim.map.values());
@@ -367,7 +368,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				return;
 			changing = true;
 			int ind = jlu.getSelectedIndex();
-			AnimC ac = icet.anim;
+			AnimCE ac = icet.anim;
 			ac.check();
 			ac.delete();
 			ac.inPool = 1;
@@ -411,8 +412,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				BufferedImage bimg = new Importer("select enemy icon").getImg();
 				if (bimg == null)
 					return;
-				icet.anim.edi = new VImg(bimg);
-				icet.anim.edi.mark("edi");
+				icet.anim.setEdi(new VImg(bimg));
 				icet.anim.saveIcon();
 				File f = new File("./res/img/.png");
 				Writer.check(f);
@@ -421,8 +421,8 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				if (icet.anim.edi != null)
-					icon.setIcon(UtilPC.getIcon(icet.anim.edi));
+				if (icet.anim.getEdi() != null)
+					icon.setIcon(UtilPC.getIcon(icet.anim.getEdi()));
 			}
 
 		});
@@ -526,9 +526,9 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 					ImgCut ic = icet.ic;
 					data = ic.cuts[ind];
 				}
-				ReColor.transcolor((BufferedImage) icet.anim.num.bimg(), data, jlf.getSelectedIndex(),
+				ReColor.transcolor((BufferedImage) icet.anim.getNum().bimg(), data, jlf.getSelectedIndex(),
 						jlt.getSelectedIndex());
-				icet.anim.num.mark("recolor-finished");
+				icet.anim.getNum().mark(Marker.RECOLORED);
 				icet.anim.ICedited();
 			}
 
@@ -569,20 +569,20 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				changing = true;
-				String str = AnimC.getAvailable("merged");
+				String str = AnimCE.getAvailable("merged");
 				DIYAnim[] list = jlu.getSelectedValuesList().toArray(new DIYAnim[0]);
 				int[][] rect = new int[list.length][2];
 				for (int i = 0; i < list.length; i++) {
-					rect[i][0] = list[i].anim.num.getWidth();
-					rect[i][1] = list[i].anim.num.getHeight();
+					rect[i][0] = list[i].anim.getNum().getWidth();
+					rect[i][1] = list[i].anim.getNum().getHeight();
 				}
 				SRResult ans = Algorithm.stackRect(rect);
-				AnimC cen = list[ans.center].anim;
-				AnimC ac = new AnimC(str, cen);
+				AnimCE cen = list[ans.center].anim;
+				AnimCE ac = new AnimCE(str, cen);
 				BufferedImage bimg = new BufferedImage(ans.w, ans.h, BufferedImage.TYPE_INT_ARGB);
 				Graphics g = bimg.getGraphics();
 				for (int i = 0; i < list.length; i++) {
-					BufferedImage b = (BufferedImage) list[i].anim.num.bimg();
+					BufferedImage b = (BufferedImage) list[i].anim.getNum().bimg();
 					int x = ans.pos[i][0];
 					int y = ans.pos[i][1];
 					g.drawImage(b, x, y, null);
@@ -608,7 +608,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 		});
 
-		spri.setLnr(x -> changePanel(sep = new SpriteEditPage(this, (BufferedImage) icet.anim.num.bimg())));
+		spri.setLnr(x -> changePanel(sep = new SpriteEditPage(this, (BufferedImage) icet.anim.getNum().bimg())));
 
 	}
 
@@ -655,7 +655,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		if (da != null && da.getAnimC().mismatch)
 			da = null;
 		aep.setAnim(da);
-		AnimC anim = da == null ? null : da.getAnimC();
+		AnimCE anim = da == null ? null : da.getAnimC();
 		addl.setEnabled(anim != null);
 		swcl.setEnabled(anim != null);
 		save.setEnabled(anim != null);
@@ -674,8 +674,8 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		expt.setEnabled(anim != null);
 		spri.setEnabled(anim != null);
 		merg.setEnabled(jlu.getSelectedValuesList().size() > 1);
-		if (da != null && da.anim.edi != null)
-			icon.setIcon(UtilPC.getIcon(da.anim.edi));
+		if (da != null && da.anim.getEdi() != null)
+			icon.setIcon(UtilPC.getIcon(da.anim.getEdi()));
 		setB(sb.sele);
 		changing = boo;
 	}

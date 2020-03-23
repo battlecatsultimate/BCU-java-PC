@@ -8,7 +8,7 @@ import java.util.EventObject;
 import javax.swing.ListSelectionModel;
 import javax.swing.text.JTextComponent;
 
-import common.util.anim.AnimC;
+import common.util.anim.AnimCE;
 import common.util.anim.MaModel;
 import page.Page;
 import page.support.AnimTable;
@@ -21,7 +21,7 @@ class MaModelEditTable extends AnimTable<int[]> {
 	private static final String[] strs = new String[] { "id", "parent", "img", "z-order", "pos-x", "pos-y", "pivot-x",
 			"pivot-y", "scale-x", "scale-y", "angle", "opacity", "glow", "name" };
 
-	protected AnimC anim;
+	protected AnimCE anim;
 	protected MaModel mm;
 
 	private Page page;
@@ -197,7 +197,7 @@ class MaModelEditTable extends AnimTable<int[]> {
 		page.callBack(null);
 	}
 
-	protected void setMaModel(AnimC au) {
+	protected void setMaModel(AnimCE au) {
 		if (cellEditor != null)
 			cellEditor.stopCellEditing();
 		anim = au;

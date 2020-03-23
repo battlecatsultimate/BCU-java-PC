@@ -18,7 +18,7 @@ import javax.swing.event.ListSelectionListener;
 
 import common.CommonStatic;
 import common.battle.data.CustomUnit;
-import common.util.anim.AnimC;
+import common.util.anim.AnimCE;
 import common.util.pack.Pack;
 import common.util.unit.DIYAnim;
 import common.util.unit.Form;
@@ -319,7 +319,7 @@ public class UnitManagePage extends Page {
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
 				CustomUnit cu = new CustomUnit();
-				AnimC ac = jld.getSelectedValue().anim;
+				AnimCE ac = jld.getSelectedValue().anim;
 				frm = new Form(uni, uni.forms.length, "new form", ac, cu);
 				uni.forms = Arrays.copyOf(uni.forms, uni.forms.length + 1);
 				uni.forms[uni.forms.length - 1] = frm;

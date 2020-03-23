@@ -127,13 +127,13 @@ public class GLImage implements FakeImage {
 	public void setRGB(int i, int j, int p) {
 	}
 
-	protected GLImage root() {
-		return par == null ? this : par.root();
-	}
-	
 	@Override
 	public void unload() {
-		
+
+	}
+
+	protected GLImage root() {
+		return par == null ? this : par.root();
 	}
 
 }

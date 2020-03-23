@@ -6,7 +6,7 @@ import java.util.EventObject;
 
 import javax.swing.text.JTextComponent;
 
-import common.util.anim.AnimC;
+import common.util.anim.AnimCE;
 import common.util.anim.ImgCut;
 import page.support.AbJTable;
 
@@ -16,7 +16,7 @@ class ImgCutEditTable extends AbJTable {
 
 	private static final String[] strs = new String[] { "id", "x", "y", "w", "h", "name" };
 
-	protected AnimC anim;
+	protected AnimCE anim;
 	protected ImgCut ic;
 
 	@Override
@@ -90,7 +90,7 @@ class ImgCutEditTable extends AbJTable {
 		anim.ICedited();
 	}
 
-	protected void setCut(AnimC au) {
+	protected void setCut(AnimCE au) {
 		if (cellEditor != null)
 			cellEditor.stopCellEditing();
 		anim = au;

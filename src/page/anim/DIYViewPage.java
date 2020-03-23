@@ -13,7 +13,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import common.system.VImg;
-import common.util.anim.AnimC;
+import common.util.anim.AnimCE;
 import common.util.unit.DIYAnim;
 import main.Opts;
 import page.JBTN;
@@ -118,7 +118,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		if (e != null && e.getAnimC().mismatch)
 			e = null;
 		aep.setAnim(e);
-		uni.setIcon(e == null ? null : UtilPC.getIcon(e.anim.uni));
+		uni.setIcon(e == null ? null : UtilPC.getIcon(e.anim.getUni()));
 		if (e == null)
 			return;
 		setAnim(e);
@@ -164,18 +164,17 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 			VImg clip = new VImg(ib.getClip());
 			if (IconBox.IBConf.mode == 0
 					&& Opts.conf("are you sure to replace display icon? This action cannot be undone")) {
-				AnimC ac = aep.anim.anim;
-				ac.edi = clip;
-				ac.edi.mark("edi");
+				AnimCE ac = aep.anim.anim;
+				ac.setEdi(clip);
 				ac.saveIcon();
 				jlu.repaint();
 			}
 			if (IconBox.IBConf.mode == 1
 					&& Opts.conf("are you sure to replace battle icon? This action cannot be undone")) {
-				AnimC ac = aep.anim.anim;
-				ac.uni = new VImg(ib.getClip());
+				AnimCE ac = aep.anim.anim;
+				ac.setUni(new VImg(ib.getClip()));
 				ac.saveUni();
-				uni.setIcon(UtilPC.getIcon(ac.uni));
+				uni.setIcon(UtilPC.getIcon(ac.getUni()));
 			}
 		});
 

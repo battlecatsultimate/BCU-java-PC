@@ -90,34 +90,31 @@ public class AmbImage implements FakeImage {
 	}
 
 	@Override
-	public void mark(Object o) {
-		if (o instanceof String) {
-			String str = (String) o;
-			if (str.equals("uni"))
-				forceBI();
-			if (str.equals("BG")) {
-				checkBI();
-				if (bimg.bimg().getWidth() % 4 != 0)
-					force = true;
+	public void mark(Marker str) {
+
+		if (str == Marker.UNI)
+			forceBI();
+		if (str == Marker.BG) {
+			checkBI();
+			if (bimg.bimg().getWidth() % 4 != 0)
+				force = true;
+		}
+		if (str == Marker.EDI)
+			forceBI();
+		if (str == Marker.RECOLOR)
+			checkBI();
+		if (str == Marker.RECOLORED) {
+			// TODO if graphics is faster?
+			ByteArrayOutputStream abos = new ByteArrayOutputStream();
+			try {
+				ImageIO.write(bimg(), "PNG", abos);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			if (str.equals("edi"))
-				forceBI();
-			if (str.equals("uni or edi"))
-				forceBI();
-			if (str.equals("recolor"))
-				checkBI();
-			if (str.equals("recolor-finished")) {
-				// TODO if graphics is faster?
-				ByteArrayOutputStream abos = new ByteArrayOutputStream();
-				try {
-					ImageIO.write(bimg(), "PNG", abos);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				force = false;
-				stream = abos.toByteArray();
-				gl = null;
-			}
+			force = false;
+			stream = abos.toByteArray();
+			gl = null;
+
 		}
 	}
 
@@ -125,6 +122,11 @@ public class AmbImage implements FakeImage {
 	public void setRGB(int i, int j, int p) {
 		forceBI();
 		bimg.setRGB(i, j, p);
+	}
+
+	@Override
+	public void unload() {
+
 	}
 
 	private void check() {
@@ -175,11 +177,6 @@ public class AmbImage implements FakeImage {
 		checkBI();
 		force = true;
 		gl = null;
-	}
-	
-	@Override
-	public void unload() {
-		
 	}
 
 }

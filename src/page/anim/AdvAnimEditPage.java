@@ -23,7 +23,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 
 import common.CommonStatic;
-import common.util.anim.AnimC;
+import common.util.anim.AnimCE;
 import common.util.anim.EPart;
 import common.util.anim.MaAnim;
 import common.util.anim.Part;
@@ -75,14 +75,14 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 	private final JL infm = new JL();
 	private final JL lmul = new JL("</>");
 	private final JTF tmul = new JTF();
-	private final AnimC ac;
+	private final AnimCE ac;
 	private final int animID;
 	private final MMTree mmt;
 	private Point p = null;
 	private boolean pause;
 	private Part[] keeps;
 
-	public AdvAnimEditPage(Page p, AnimC anim, int id) {
+	public AdvAnimEditPage(Page p, AnimCE anim, int id) {
 		super(p);
 		ac = anim;
 		animID = id;

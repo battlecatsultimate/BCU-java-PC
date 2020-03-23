@@ -15,7 +15,7 @@ import com.jogamp.opengl.util.FPSAnimator;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.ImageBuilder;
-import common.util.anim.AnimC;
+import common.util.anim.AnimCE;
 import common.util.anim.AnimU;
 import common.util.anim.EAnimU;
 import jogl.util.GLGraphics;
@@ -23,7 +23,7 @@ import jogl.util.GLIB;
 
 public class Temp extends StdGLC {
 
-	private static AnimU test;
+	private static AnimU<?> test;
 	private static EAnimU ent;
 
 	public static void main(String[] args) throws IOException {
@@ -53,7 +53,7 @@ public class Temp extends StdGLC {
 
 		});
 		// 91, 377
-		test = new AnimC("dio");
+		test = new AnimCE("dio");
 		test.check();
 		ent = test.getEAnim(2);
 

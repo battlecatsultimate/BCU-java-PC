@@ -196,7 +196,7 @@ public interface BattleBox {
 			hr = Math.min(r, hr);
 			for (int i = 0; i < 10; i++) {
 				Form f = sb.b.lu.fs[i / 5][i % 5];
-				FakeImage img = f == null ? Res.slot[0].getImg() : f.anim.uni.getImg();
+				FakeImage img = f == null ? Res.slot[0].getImg() : f.anim.getUni().getImg();
 				iw = (int) (hr * img.getWidth());
 				ih = (int) (hr * img.getHeight());
 				int x = (w - iw * 5) / 2 + iw * (i % 5);

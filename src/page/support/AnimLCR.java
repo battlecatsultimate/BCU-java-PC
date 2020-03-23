@@ -26,7 +26,7 @@ public class AnimLCR extends DefaultListCellRenderer {
 		jl.setHorizontalTextPosition(SwingConstants.RIGHT);
 		VImg v;
 		if (o instanceof Animable<?>)
-			v = ((Animable<? extends AnimU>) o).anim.edi;
+			v = ((Animable<? extends AnimU<?>>) o).anim.getEdi();
 		else if (o instanceof AbEnemy)
 			v = ((AbEnemy) o).getIcon();
 		else

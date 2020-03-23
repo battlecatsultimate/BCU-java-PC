@@ -24,7 +24,7 @@ import common.battle.BasisSet;
 import common.battle.data.AtkDataModel;
 import common.battle.data.CustomEntity;
 import common.util.Animable;
-import common.util.anim.AnimC;
+import common.util.anim.AnimCE;
 import common.util.anim.AnimU;
 import common.util.pack.Pack;
 import common.util.pack.Soul;
@@ -90,7 +90,7 @@ public abstract class EntityEditPage extends Page {
 	private final JL vrev = new JL();
 	private final JL vres = new JL();
 	private final JL vitv = new JL();
-	private final JComboBox<AnimC> jcba = new JComboBox<>();
+	private final JComboBox<AnimCE> jcba = new JComboBox<>();
 	private final JComboBox<Soul> jcbs = new JComboBox<>();
 	private final ListJtfPolicy ljp = new ListJtfPolicy();
 	private final AtkEditTable aet;
@@ -195,8 +195,8 @@ public abstract class EntityEditPage extends Page {
 		jcbs.setModel(new DefaultComboBoxModel<>(vec));
 		if (editable) {
 			add(jcba);
-			Vector<AnimC> vda = new Vector<>();
-			AnimC ac = ((AnimC) ce.getPack().anim);
+			Vector<AnimCE> vda = new Vector<>();
+			AnimCE ac = ((AnimCE) ce.getPack().anim);
 			if (ac.inPool != 0)
 				vda.add(ac);
 			vda.addAll(DIYAnim.getAnims());
@@ -351,7 +351,7 @@ public abstract class EntityEditPage extends Page {
 			ind = ints.length - 1;
 		setA(ind);
 		jli.setSelectedIndex(ind);
-		Animable<AnimU> ene = ce.getPack();
+		Animable<AnimU<?>> ene = ce.getPack();
 		if (editable)
 			jcba.setSelectedItem(ene.anim);
 		jcbs.setSelectedItem(SoulStore.getSoul(ce.death));
@@ -368,7 +368,7 @@ public abstract class EntityEditPage extends Page {
 
 		a.setLnr(x -> {
 			if (editable)
-				changePanel(new DIYViewPage(getThis(), new DIYAnim((AnimC) jcba.getSelectedItem())));
+				changePanel(new DIYViewPage(getThis(), new DIYAnim((AnimCE) jcba.getSelectedItem())));
 			else if (o instanceof Unit)
 				changePanel(new UnitViewPage(getThis(), (Unit) o));
 			else if (o instanceof Enemy)
@@ -479,7 +479,7 @@ public abstract class EntityEditPage extends Page {
 			public void actionPerformed(ActionEvent arg0) {
 				if (changing)
 					return;
-				ce.getPack().anim = (AnimC) jcba.getSelectedItem();
+				ce.getPack().anim = (AnimCE) jcba.getSelectedItem();
 				setData(ce);
 
 			}

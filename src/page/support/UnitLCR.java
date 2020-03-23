@@ -27,7 +27,7 @@ public class UnitLCR extends DefaultListCellRenderer {
 		jl.setText(o.toString());
 		jl.setIcon(null);
 		jl.setHorizontalTextPosition(SwingConstants.RIGHT);
-		VImg v = form.anim.edi;
+		VImg v = form.anim.getEdi();
 		if (v == null)
 			return jl;
 		jl.setIcon(UtilPC.getIcon(v));

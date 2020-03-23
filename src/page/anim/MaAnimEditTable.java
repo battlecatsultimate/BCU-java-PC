@@ -9,7 +9,7 @@ import java.util.List;
 import javax.swing.ListSelectionModel;
 import javax.swing.text.JTextComponent;
 
-import common.util.anim.AnimC;
+import common.util.anim.AnimCE;
 import common.util.anim.MaAnim;
 import common.util.anim.Part;
 import page.Page;
@@ -22,7 +22,7 @@ public class MaAnimEditTable extends AnimTable<Part> {
 
 	private static final String[] strs = new String[] { "part id", "modification", "loop", "name" };
 
-	public AnimC anim;
+	public AnimCE anim;
 	public MaAnim ma;
 	private Page page;
 
@@ -158,7 +158,7 @@ public class MaAnimEditTable extends AnimTable<Part> {
 		page.callBack(null);
 	}
 
-	protected void setAnim(AnimC au, MaAnim maa) {
+	protected void setAnim(AnimCE au, MaAnim maa) {
 		if (cellEditor != null)
 			cellEditor.stopCellEditing();
 		anim = au;

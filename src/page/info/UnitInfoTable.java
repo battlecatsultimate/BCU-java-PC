@@ -156,8 +156,8 @@ public class UnitInfoTable extends Page {
 		}
 		main[0][0].setText("ID");
 		main[0][1].setText(f.uid + "-" + f.fid);
-		if (f.anim.edi.getImg() != null)
-			main[0][2].setIcon(UtilPC.getIcon(f.anim.edi));
+		if (f.anim.getEdi().getImg() != null)
+			main[0][2].setIcon(UtilPC.getIcon(f.anim.getEdi()));
 		main[0][3].setText(1, "trait");
 		main[1][0].setText(Interpret.RARITY[f.unit.rarity]);
 		main[1][2].setText("HP / HB");

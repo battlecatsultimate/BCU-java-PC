@@ -21,9 +21,11 @@ import common.system.files.FDByte;
 import common.system.files.FileData;
 import common.system.files.VFile;
 import common.util.Res;
-import common.util.anim.AnimC.AnimLoader;
-import common.util.anim.AnimC;
+import common.util.anim.AnimCI;
 import common.util.anim.AnimU;
+import common.util.anim.ImgCut;
+import common.util.anim.MaAnim;
+import common.util.anim.MaModel;
 import common.util.pack.Background;
 import common.util.unit.Form;
 import io.BCMusic;
@@ -38,11 +40,13 @@ public class UtilPC {
 
 	public static class PCItr implements Itf {
 
-		private static class PCAL implements AnimC.AnimLoader {
+		private static class PCAL implements AnimCI.AnimLoader {
 
 			private String name;
 			private FakeImage num;
-			private FileData imgcut, mamodel, anims[];
+			private ImgCut imgcut;
+			private MaModel mamodel;
+			private MaAnim anims[];
 			private VImg uni, edi;
 
 			private PCAL(InStream is) {
@@ -53,15 +57,14 @@ public class UtilPC {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				imgcut = new FDByte(is.nextBytesI());
-				mamodel = new FDByte(is.nextBytesI());
+				imgcut = ImgCut.newIns(new FDByte(is.nextBytesI()));
+				mamodel = MaModel.newIns(new FDByte(is.nextBytesI()));
 				int n = is.nextInt();
-				anims = new FileData[n];
+				anims = new MaAnim[n];
 				for (int i = 0; i < n; i++)
-					anims[i] = new FDByte(is.nextBytesI());
+					anims[i] = MaAnim.newIns(new FDByte(is.nextBytesI()));
 				if (!is.end()) {
 					VImg vimg = new VImg(is.nextBytesI());
-					vimg.mark("uni or edi");
 					if (vimg.getImg().getHeight() == 32)
 						edi = vimg;
 					else
@@ -69,10 +72,6 @@ public class UtilPC {
 				}
 				if (!is.end())
 					uni = new VImg(is.nextBytesI());
-				if (uni != null && uni != Res.slot[0])
-					uni.mark("uni");
-				if (edi != null)
-					edi.mark("edi");
 			}
 
 			@Override
@@ -81,17 +80,17 @@ public class UtilPC {
 			}
 
 			@Override
-			public FileData getIC() {
+			public ImgCut getIC() {
 				return imgcut;
 			}
 
 			@Override
-			public FileData[] getMA() {
+			public MaAnim[] getMA() {
 				return anims;
 			}
 
 			@Override
-			public FileData getMM() {
+			public MaModel getMM() {
 				return mamodel;
 			}
 
@@ -134,7 +133,7 @@ public class UtilPC {
 		}
 
 		@Override
-		public AnimLoader loadAnim(InStream is) {
+		public AnimCI.AnimLoader loadAnim(InStream is) {
 			return new PCAL(is);
 		}
 

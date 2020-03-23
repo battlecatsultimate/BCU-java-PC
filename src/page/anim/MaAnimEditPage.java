@@ -25,7 +25,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import common.CommonStatic;
-import common.util.anim.AnimC;
+import common.util.anim.AnimCE;
 import common.util.anim.EPart;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
@@ -115,7 +115,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 				}
 			});
 		int ind = jlt.getSelectedIndex();
-		AnimC ac = maet.anim;
+		AnimCE ac = maet.anim;
 		if (ind < 0 || ac == null)
 			return;
 		int time = ab.ent == null ? 0 : ab.ent.ind();
@@ -573,7 +573,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 				setB(null, -1);
 				return;
 			}
-			AnimC anim = da.getAnimC();
+			AnimCE anim = da.getAnimC();
 			int ind = jlt.getSelectedIndex();
 			String[] val = anim.names();
 			jlt.setListData(val);
@@ -597,7 +597,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 	private void setB(DIYAnim da, int ind) {
 		change(0, x -> {
-			AnimC ac = da == null ? null : da.getAnimC();
+			AnimCE ac = da == null ? null : da.getAnimC();
 			MaAnim anim = ac == null || ind < 0 ? null : ac.anims[ind];
 			addp.setEnabled(anim != null);
 			tmul.setEditable(anim != null);

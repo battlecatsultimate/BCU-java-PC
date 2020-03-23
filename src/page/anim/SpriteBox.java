@@ -8,7 +8,7 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
-import common.util.anim.AnimC;
+import common.util.anim.AnimCE;
 import common.util.anim.ImgCut;
 import page.Page;
 import utilpc.PP;
@@ -17,7 +17,7 @@ class SpriteBox extends Canvas {
 
 	private static final long serialVersionUID = 1L;
 
-	private AnimC anim;
+	private AnimCE anim;
 	private Point c;
 	private int skip = 0;
 	private boolean ctrl, drag;
@@ -40,7 +40,7 @@ class SpriteBox extends Canvas {
 		g.dispose();
 	}
 
-	public synchronized void setAnim(AnimC anim) {
+	public synchronized void setAnim(AnimCE anim) {
 		if (this.anim != anim) {
 			this.anim = anim;
 			sele = -1;
@@ -56,7 +56,7 @@ class SpriteBox extends Canvas {
 			return null;
 		Graphics2D gra = (Graphics2D) img.getGraphics();
 		if (anim != null) {
-			BufferedImage spr = (BufferedImage) anim.num.bimg();
+			BufferedImage spr = (BufferedImage) anim.getNum().bimg();
 			int aw = spr.getWidth();
 			int ah = spr.getHeight();
 			double r = Math.min(1.0 * w / aw, 1.0 * h / ah);
@@ -142,7 +142,7 @@ class SpriteBox extends Canvas {
 			return -1;
 		int w = getWidth();
 		int h = getHeight();
-		BufferedImage spr = (BufferedImage) anim.num.bimg();
+		BufferedImage spr = (BufferedImage) anim.getNum().bimg();
 		int aw = spr.getWidth();
 		int ah = spr.getHeight();
 		double r = Math.min(1.0 * w / aw, 1.0 * h / ah);
@@ -169,7 +169,7 @@ class SpriteBox extends Canvas {
 	private Point getPoint(Point p) {
 		int w = getWidth();
 		int h = getHeight();
-		BufferedImage spr = (BufferedImage) anim.num.bimg();
+		BufferedImage spr = (BufferedImage) anim.getNum().bimg();
 		int aw = spr.getWidth();
 		int ah = spr.getHeight();
 		double r = Math.min(1.0 * w / aw, 1.0 * h / ah);
