@@ -364,6 +364,10 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		change(0, o -> {
 			MaModel mm = mmet.mm;
 			int[] rows = mmet.getSelectedRows();
+			
+			if(rows[0] == 0)
+				return;
+			
 			boolean[] bs = new boolean[mm.n];
 			int total = rows.length;
 			for (int ind : rows)
