@@ -474,7 +474,7 @@ public class BackupTreePage extends Page {
 	}
 
 	private void setT$Pack(InStream is) {
-		Pack p = new Pack(is, false);
+		Pack p = new Pack(is, null, false);
 		p.zreadt();
 		DefaultMutableTreeNode top = new DefaultMutableTreeNode(p + "/");
 		DefaultMutableTreeNode tene = new DefaultMutableTreeNode("enemies/");

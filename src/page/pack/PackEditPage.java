@@ -296,7 +296,7 @@ public class PackEditPage extends Page {
 
 		});
 
-		extr.setLnr(x -> pac.packUp());
+		extr.setLnr(x -> pac.packUp(null));
 
 		unpk.setLnr(x -> {
 			pac.unpack();

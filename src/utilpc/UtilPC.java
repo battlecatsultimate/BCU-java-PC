@@ -11,6 +11,10 @@ import java.util.function.Function;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
+import com.google.common.io.Files;
+
+import common.CommonStatic;
+import common.CommonStatic.ImgReader;
 import common.CommonStatic.Itf;
 import common.battle.data.PCoin;
 import common.io.InStream;
@@ -20,6 +24,7 @@ import common.system.fake.FakeImage;
 import common.system.files.FDByte;
 import common.system.files.FileData;
 import common.system.files.VFile;
+import common.util.Data;
 import common.util.Res;
 import common.util.anim.AnimCI;
 import common.util.anim.AnimU;
@@ -39,6 +44,41 @@ import utilpc.awt.FG2D;
 public class UtilPC {
 
 	public static class PCItr implements Itf {
+
+		private static class MusicReader implements ImgReader {
+
+			private final int pid, mid;
+
+			private MusicReader(int p, int m) {
+				pid = p;
+				mid = m;
+			}
+
+			@Override
+			public File readFile(InStream is) {
+				byte[] bs = is.subStream().nextBytesI();
+				String path = "./pack/music/" + Data.hex(pid) + "/" + Data.trio(mid) + ".ogg";
+				File f = CommonStatic.def.route(path);
+				CommonStatic.def.check(f);
+				try {
+					Files.write(bs, f);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				return f;
+			}
+
+			@Override
+			public FakeImage readImg(String str) {
+				return null;
+			}
+
+			@Override
+			public VImg readImgOptional(String str) {
+				return null;
+			}
+
+		}
 
 		private static class PCAL implements AnimCI.AnimLoader {
 
@@ -72,6 +112,19 @@ public class UtilPC {
 				}
 				if (!is.end())
 					uni = new VImg(is.nextBytesI());
+			}
+
+			private PCAL(InStream is, ImgReader r) {
+				is.nextString();
+				num = r.readImg(is.nextString());
+				edi = r.readImgOptional(is.nextString());
+				uni = r.readImgOptional(is.nextString());
+				imgcut = ImgCut.newIns(new FDByte(is.nextBytesI()));
+				mamodel = MaModel.newIns(new FDByte(is.nextBytesI()));
+				int n = is.nextInt();
+				anims = new MaAnim[n];
+				for (int i = 0; i < n; i++)
+					anims[i] = MaAnim.newIns(new FDByte(is.nextBytesI()));
 			}
 
 			@Override
@@ -133,8 +186,18 @@ public class UtilPC {
 		}
 
 		@Override
-		public AnimCI.AnimLoader loadAnim(InStream is) {
-			return new PCAL(is);
+		public ImgReader getMusicReader(int pid, int mid) {
+			return new MusicReader(pid, mid);
+		}
+
+		@Override
+		public ImgReader getReader(File f) {
+			return null;
+		}
+
+		@Override
+		public AnimCI.AnimLoader loadAnim(InStream is, ImgReader r) {
+			return r == null ? new PCAL(is) : new PCAL(is, r);
 		}
 
 		@Override
