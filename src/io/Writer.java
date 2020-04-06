@@ -34,6 +34,7 @@ import main.Opts;
 import main.Printer;
 import page.MainFrame;
 import page.MainLocale;
+import page.battle.BattleInfoPage;
 import page.support.Exporter;
 import page.support.Importer;
 import page.view.ViewBox;
@@ -347,6 +348,7 @@ public class Writer extends DataIO {
 		Exporter.write(out);
 		Importer.write(out);
 		out.println("--- place holder ---");
+		out.println("large screen: " + (BattleInfoPage.DEF_LARGE ? 1 : 0));
 		out.close();
 	}
 

@@ -38,6 +38,8 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 
 	private static final long serialVersionUID = 1L;
 
+	public static boolean DEF_LARGE = false;
+
 	public static BattleInfoPage current = null;
 
 	public static void redefine() {
@@ -110,7 +112,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		bb = BBBuilder.def.getCtrl(this, sb);
 		basis = sb;
 		ct.setData(basis.sb.st);
-
+		jtb.setSelected(DEF_LARGE);
 		ini();
 		rply.setText(0, "rply");
 		resized();
@@ -266,6 +268,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			remove((Canvas) bb);
 			resized();
 			add((Canvas) bb);
+			DEF_LARGE = jtb.isSelected();
 		});
 
 		back.setLnr(x -> {

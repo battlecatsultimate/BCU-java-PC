@@ -45,6 +45,7 @@ import main.Opts;
 import page.LoadPage;
 import page.MainFrame;
 import page.MainLocale;
+import page.battle.BattleInfoPage;
 import page.support.Exporter;
 import page.support.Importer;
 import page.view.ViewBox;
@@ -395,6 +396,8 @@ public class Reader extends DataIO {
 					MainLocale.exTTT = parseInt(qs.poll()) == 1;
 					Exporter.read(qs);
 					Importer.read(qs);
+					qs.poll();// place holder
+					BattleInfoPage.DEF_LARGE = parseInt(qs.poll()) == 1;
 				} catch (Exception e) {
 				}
 			} else {
