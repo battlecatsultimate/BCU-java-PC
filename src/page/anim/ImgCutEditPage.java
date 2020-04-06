@@ -333,6 +333,8 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				String str = icet.anim.name;
 				str = AnimCE.getAvailable(str);
 				AnimCE ac = new AnimCE(str, icet.anim);
+				ac.setEdi(icet.anim.getEdi());
+				ac.setUni(icet.anim.getUni());
 				DIYAnim da = new DIYAnim(str, ac);
 				DIYAnim.map.put(str, da);
 				Vector<DIYAnim> v = new Vector<>(DIYAnim.map.values());
