@@ -110,7 +110,7 @@ public class GLImage implements FakeImage {
 
 	@Override
 	public GLImage getSubimage(int i, int j, int k, int l) {
-		return new GLImage(this, i, j, k, l);
+		return new GLImage(this, rect[0] + i, rect[1] + j, k, l);
 	}
 
 	@Override

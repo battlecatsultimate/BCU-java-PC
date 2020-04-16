@@ -33,8 +33,8 @@ public interface BattleBox {
 		private static final int DEP = 4;
 		private static final int bar = 8, wave = 28, castw = 128, casth = 256;
 		private static final int c0y = -130, c1y = -130, c2y = -258;
-		private static final int[] cany = new int[] { -134, -134, -134, -250, -250, -134, -134 };
-		private static final int[] canx = new int[] { 0, 0, 0, 64, 64, 0, 0 };
+		private static final int[] cany = new int[] { -134, -134, -134, -250, -250, -134, -134, -134 };
+		private static final int[] canx = new int[] { 0, 0, 0, 64, 64, 0, 0, 0 };
 
 		public static void drawNyCast(FakeGraphics gra, int y, int x, double siz, int[] inf) {
 			FakeImage bimg = NyCastle.main[2][inf[2]].getImg();
