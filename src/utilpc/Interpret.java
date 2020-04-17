@@ -49,14 +49,14 @@ public class Interpret extends Data {
 
 	/** treasure orderer */
 	public static final int[] TIND = { 0, 1, 18, 19, 20, 21, 22, 23, 2, 3, 4, 5, 24, 25, 26, 27, 28, 6, 7, 8, 9, 10, 11,
-			12, 13, 14, 15, 16, 17, 29, 30, 31, 32, 33, 34, 35 };
+			12, 13, 14, 15, 16, 17, 29, 30, 31, 32, 33, 34, 35, 36 };
 
 	/** treasure grouper */
-	public static final int[][] TCOLP = { { 0, 6 }, { 8, 6 }, { 14, 3 }, { 17, 4 }, { 21, 3 }, { 29, 7 } };
+	public static final int[][] TCOLP = { { 0, 6 }, { 8, 6 }, { 14, 3 }, { 17, 4 }, { 21, 3 }, { 29, 8 } };
 
 	/** treasure max */
 	private static final int[] TMAX = { 30, 30, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 600, 1500, 100,
-			100, 100, 30, 30, 30, 30, 30, 10, 300, 300, 600, 600, 600, 20, 20, 20, 20, 20, 20, 20 };
+			100, 100, 30, 30, 30, 30, 30, 10, 300, 300, 600, 600, 600, 20, 20, 20, 20, 20, 20, 20, 20 };
 
 	/** proc data formatter */
 	private static final int[][] CMP = { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 2, -1 },
@@ -286,6 +286,8 @@ public class Interpret extends Data {
 			return t.bslv[BASE_GROUND];
 		else if (ind == 35)
 			return t.bslv[BASE_BARRIER];
+		else if (ind == 36)
+			return t.bslv[BASE_CURSE];
 		return -1;
 	}
 
@@ -340,7 +342,7 @@ public class Interpret extends Data {
 		ATKCONF = Page.get(3, "aa", 6);
 		PROC = Page.get(3, "p", CMP.length);
 		SPROC = Page.get(3, "sp", CMP.length);
-		TREA = Page.get(3, "t", 36);
+		TREA = Page.get(3, "t", 37);
 		TEXT = Page.get(3, "d", 9);
 		COMF = Page.get(3, "na", 6);
 		COMN = Page.get(3, "nb", 25);
