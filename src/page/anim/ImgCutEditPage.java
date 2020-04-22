@@ -268,7 +268,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				new Exporter((BufferedImage) icet.anim.getNum().bimg(), Exporter.EXP_IMG);
+				new Exporter((BufferedImage) icet.anim.getNum(true).bimg(), Exporter.EXP_IMG);
 			}
 
 		});
@@ -528,9 +528,9 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 					ImgCut ic = icet.ic;
 					data = ic.cuts[ind];
 				}
-				ReColor.transcolor((BufferedImage) icet.anim.getNum().bimg(), data, jlf.getSelectedIndex(),
+				ReColor.transcolor((BufferedImage) icet.anim.getNum(true).bimg(), data, jlf.getSelectedIndex(),
 						jlt.getSelectedIndex());
-				icet.anim.getNum().mark(Marker.RECOLORED);
+				icet.anim.getNum(true).mark(Marker.RECOLORED);
 				icet.anim.ICedited();
 			}
 
@@ -575,8 +575,8 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				DIYAnim[] list = jlu.getSelectedValuesList().toArray(new DIYAnim[0]);
 				int[][] rect = new int[list.length][2];
 				for (int i = 0; i < list.length; i++) {
-					rect[i][0] = list[i].anim.getNum().getWidth();
-					rect[i][1] = list[i].anim.getNum().getHeight();
+					rect[i][0] = list[i].anim.getNum(true).getWidth();
+					rect[i][1] = list[i].anim.getNum(true).getHeight();
 				}
 				SRResult ans = Algorithm.stackRect(rect);
 				AnimCE cen = list[ans.center].anim;
@@ -584,7 +584,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				BufferedImage bimg = new BufferedImage(ans.w, ans.h, BufferedImage.TYPE_INT_ARGB);
 				Graphics g = bimg.getGraphics();
 				for (int i = 0; i < list.length; i++) {
-					BufferedImage b = (BufferedImage) list[i].anim.getNum().bimg();
+					BufferedImage b = (BufferedImage) list[i].anim.getNum(true).bimg();
 					int x = ans.pos[i][0];
 					int y = ans.pos[i][1];
 					g.drawImage(b, x, y, null);
@@ -610,7 +610,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 		});
 
-		spri.setLnr(x -> changePanel(sep = new SpriteEditPage(this, (BufferedImage) icet.anim.getNum().bimg())));
+		spri.setLnr(x -> changePanel(sep = new SpriteEditPage(this, (BufferedImage) icet.anim.getNum(true).bimg())));
 
 	}
 

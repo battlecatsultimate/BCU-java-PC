@@ -153,7 +153,7 @@ public class UtilPC {
 			}
 
 			@Override
-			public FakeImage getNum() {
+			public FakeImage getNum(boolean load) {
 				return num;
 			}
 

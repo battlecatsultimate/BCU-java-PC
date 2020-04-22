@@ -56,7 +56,7 @@ class SpriteBox extends Canvas {
 			return null;
 		Graphics2D gra = (Graphics2D) img.getGraphics();
 		if (anim != null) {
-			BufferedImage spr = (BufferedImage) anim.getNum().bimg();
+			BufferedImage spr = (BufferedImage) anim.getNum(true).bimg();
 			int aw = spr.getWidth();
 			int ah = spr.getHeight();
 			double r = Math.min(1.0 * w / aw, 1.0 * h / ah);
@@ -142,7 +142,7 @@ class SpriteBox extends Canvas {
 			return -1;
 		int w = getWidth();
 		int h = getHeight();
-		BufferedImage spr = (BufferedImage) anim.getNum().bimg();
+		BufferedImage spr = (BufferedImage) anim.getNum(true).bimg();
 		int aw = spr.getWidth();
 		int ah = spr.getHeight();
 		double r = Math.min(1.0 * w / aw, 1.0 * h / ah);
@@ -169,7 +169,7 @@ class SpriteBox extends Canvas {
 	private Point getPoint(Point p) {
 		int w = getWidth();
 		int h = getHeight();
-		BufferedImage spr = (BufferedImage) anim.getNum().bimg();
+		BufferedImage spr = (BufferedImage) anim.getNum(true).bimg();
 		int aw = spr.getWidth();
 		int ah = spr.getHeight();
 		double r = Math.min(1.0 * w / aw, 1.0 * h / ah);
