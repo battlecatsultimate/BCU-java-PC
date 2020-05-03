@@ -75,6 +75,11 @@ public class FIBI implements FakeImage {
 	public void unload() {
 
 	}
+	
+	@Override
+	public boolean isValid() {
+		return true;
+	}
 
 }
 
