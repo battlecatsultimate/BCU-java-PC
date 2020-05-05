@@ -453,6 +453,8 @@ public class Interpret extends Data {
 			t.bslv[BASE_GROUND] = v;
 		else if (ind == 35)
 			t.bslv[BASE_BARRIER] = v;
+		else if (ind == 36)
+			t.bslv[BASE_CURSE] = v;
 
 	}
 
