@@ -6,6 +6,8 @@ import java.util.List;
 import common.battle.BasisLU;
 import common.battle.BasisSet;
 import common.battle.Treasure;
+import common.battle.data.AtkDataModel;
+import common.battle.data.CustomEntity;
 import common.battle.data.MaskAtk;
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskEntity;
@@ -63,14 +65,14 @@ public class Interpret extends Data {
 			{ 0, -1, 3, 1 }, { 0, -1 }, { 0, -1, 1, 4 }, { 0, -1, 1 }, { 5, -1, 7 }, { 0, -1 }, { -1, 4, 6 },
 			{ -1, 1, 5, 6 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { 0, -1 },
 			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 4 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 }, { -1 },
-			{ 0, -1, 7 }, { 0, -1, 1 }, { 0, -1, 7 }, { 0, -1, 4, 8, 1 }, { -1 }, {-1} };
+			{ 0, -1, 7 }, { 0, -1, 1 }, { 0, -1, 7 }, { 0, -1, 4, 8, 1 }, { -1 }, {-1}, {0, -1, 1, 3}, {0, -1, 1} };
 
 	/** proc data locator */
 	private static final int[][] LOC = { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 1, -1 },
 			{ 0, -1, 2, 1 }, { 0, -1 }, { 0, -1, 1, 2 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { -1, 1, 0 },
 			{ -1, 1, 2, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { 0, -1 },
 			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 2 }, { 0, -1, 3 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 }, { -1 },
-			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 1, 2, 3 }, { -1 }, {-1} };
+			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 1, 2, 3 }, { -1 }, {-1}, {0, -1, 1, 2}, {0, -1, 1} };
 
 	/** combo string component */
 	private static final String[][] CDP = { { "", "+", "-" }, { "_", "_%", "_f", "Lv._" } };
@@ -104,9 +106,26 @@ public class Interpret extends Data {
 
 	public static List<String> getAbi(MaskEntity me) {
 		int tb = me.touchBase();
-		MaskAtk ma = me.getRepAtk();
-		int lds = ma.getShortPoint();
-		int ldr = ma.getLongPoint() - ma.getShortPoint();
+		final MaskAtk ma;
+		
+		if(me.getAtkCount() == 1) {
+			ma = me.getAtkModel(0);
+		} else {
+			ma = me.getRepAtk();
+		}
+		
+		int lds;
+		int ldr;
+		
+		if(allRangeSame(me)) {
+			lds = me.getAtkModel(0).getShortPoint();
+			ldr = me.getAtkModel(0).getLongPoint() - me.getAtkModel(0).getShortPoint();
+		} else {
+			lds = ma.getShortPoint();
+			ldr = ma.getLongPoint() - ma.getShortPoint();
+		}
+		
+		
 		List<String> l = new ArrayList<>();
 		if (lds > 0) {
 			int p0 = Math.min(lds, lds + ldr);
@@ -126,6 +145,38 @@ public class Interpret extends Data {
 		if (imu.length() > 10)
 			l.add(imu);
 		return l;
+	}
+	
+	public static boolean allRangeSame(MaskEntity me) {
+		if(me instanceof CustomEntity) {
+			List<Integer> near = new ArrayList<>();
+			List<Integer> far = new ArrayList<>();
+			
+			for(AtkDataModel atk : ((CustomEntity) me).atks) {
+				near.add(atk.getShortPoint());
+				far.add(atk.getLongPoint());
+			}
+			
+			if(near.isEmpty() && far.isEmpty()) {
+				return true;
+			}
+			
+			for(int n : near) {
+				if(n != near.get(0)) {
+					return false;
+				}
+			}
+			
+			for(int f : far) {
+				if(f != far.get(0)) {
+					return false;
+				}
+			}
+			
+			return true;
+		} else {
+			return true;
+		}
 	}
 
 	public static String[] getComboFilter(int n) {

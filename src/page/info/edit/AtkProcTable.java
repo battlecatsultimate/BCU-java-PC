@@ -22,13 +22,13 @@ class AtkProcTable extends Page {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final int LEN = 20, SEC = 12;
+	private static final int LEN = 22, SEC = 14;
 	private static final int[] INDS = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 20, 27, 29, 21, 22, 23, 24, 25, 26, 31,
-			32 };
-	private static final int[] TREA = new int[] { 2, 1, 1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+			32, 35, 36 };
+	private static final int[] TREA = new int[] { 2, 1, 1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 	private static final int[][] STRS = new int[][] { { 0, 1, 2 }, { 0, 1 }, { 0, 1 }, { 0, 9 }, { 0, 4 }, { 0, 1, 3 },
 			{ 0 }, { 0, 1, 2 }, { 0, 1 }, { 0 }, { 0 }, { 0, 9 }, { 0, 1 }, { 0, 1 }, { 0, 5, 2, 9, 6, 1 },
-			{ 0, 7, 8, 1, 2, 10 }, { 0, 1, 5 }, { 0, 1, 11, 10, 6 }, { 0, 12 }, { 0, 2, 2, 1 } };
+			{ 0, 7, 8, 1, 2, 10 }, { 0, 1, 5 }, { 0, 1, 11, 10, 6 }, { 0, 12 }, { 0, 2, 2, 1 }, {0, 1,  13}, {0, 1, 14, 6}};
 
 	private static String getString(int ind) {
 		if (ind == 0)
@@ -57,6 +57,10 @@ class AtkProcTable extends Page {
 			return "damage";
 		else if (ind == 12)
 			return "percent";
+		else if (ind == 13)
+			return "debuff";
+		else if (ind == 14)
+			return "speed";
 		else
 			return "!";
 	}
@@ -112,13 +116,12 @@ class AtkProcTable extends Page {
 						str += "(" + (int) (ints[INDS[i]][j] * 1.2) + ")";
 					else if (vals[j] == 2)
 						str += "(" + (int) (ints[INDS[i]][j] * 1.3) + ")";
-				if (vals[j] == 0 || vals[j] == 3 || vals[j] == 9 || vals[j] == 12)
+				if (vals[j] == 0 || vals[j] == 3 || vals[j] == 9 || vals[j] == 12 || vals[j] == 13)
 					str += "%";
 				if (vals[j] == 1 || vals[j] == 10)
 					str += "f";
 				jtfs[i][j].setText(str);
 			}
-
 		}
 	}
 
@@ -139,11 +142,13 @@ class AtkProcTable extends Page {
 				set(jtfs[i][j]);
 			}
 		}
-		jtfs[SEC + 2][4].setToolTipText("<html>use warp animation: +1<br>" + "use burrow animation: +2<br>"
+		jtfs[14][4].setToolTipText("<html>use warp animation: +1<br>" + "use burrow animation: +2<br>"
 				+ "use burrow animation and disable burrow: +3<br>" + "disregard limit: +4<br>" + "fix buff^: +8<br>"
 				+ "same health: +16<br>" + "random layer: +32<br>" + "only on hit*: +64 <br>"
 				+ "only on kill*: +128<br>" + "^: not applicapable for unit<br>"
 				+ "*: distance relative to damaged entity</html>");
+		jtfs[21][3].setToolTipText("<html>type 0 : make target faster with fixed speed<br>"+"type 1: make target faster with percent<br>"
+				+ "type 2 : make target have specific speed</html>");
 		setFocusTraversalPolicy(ljp);
 		setFocusCycleRoot(true);
 	}
