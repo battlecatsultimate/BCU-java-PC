@@ -28,7 +28,7 @@ class AtkProcTable extends Page {
 	private static final int[] TREA = new int[] { 2, 1, 1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 	private static final int[][] STRS = new int[][] { { 0, 1, 2 }, { 0, 1 }, { 0, 1 }, { 0, 9 }, { 0, 4 }, { 0, 1, 3 },
 			{ 0 }, { 0, 1, 2 }, { 0, 1 }, { 0 }, { 0 }, { 0, 9 }, { 0, 1 }, { 0, 1 }, { 0, 5, 2, 9, 6, 1 },
-			{ 0, 7, 8, 1, 2, 10 }, { 0, 1, 5 }, { 0, 1, 11, 10, 6 }, { 0, 12 }, { 0, 2, 2, 1 }, {0, 1,  13}, {0, 1, 14, 6}};
+			{ 0, 7, 8, 1, 2, 10 }, { 0, 1, 5, 6 }, { 0, 1, 11, 10, 6 }, { 0, 12 }, { 0, 2, 2, 1 }, {0, 1,  13}, {0, 1, 14, 6}};
 
 	private static String getString(int ind) {
 		if (ind == 0)
@@ -147,6 +147,7 @@ class AtkProcTable extends Page {
 				+ "same health: +16<br>" + "random layer: +32<br>" + "only on hit*: +64 <br>"
 				+ "only on kill*: +128<br>" + "^: not applicapable for unit<br>"
 				+ "*: distance relative to damaged entity</html>");
+		jtfs[16][3].setToolTipText("<html>type 0 : change only BG<br>"+"type 1 : change BG with killing all entities</html>");
 		jtfs[21][3].setToolTipText("<html>type 0 : make target faster with fixed speed<br>"+"type 1: make target faster with percent<br>"
 				+ "type 2 : make target have specific speed</html>");
 		setFocusTraversalPolicy(ljp);
@@ -162,7 +163,7 @@ class AtkProcTable extends Page {
 						int type = STRS[i][j];
 						if ((type == 0 || type == 4 || type == 12) && val < 0)
 							val = 0;
-						if ((type == 0 || type == 3 || type == 12) && val > 100)
+						if ((type == 0 || type == 12) && val > 100)
 							val = 100;
 						if ((type == 1 || type == 10) && val < -1)
 							val = -1;
