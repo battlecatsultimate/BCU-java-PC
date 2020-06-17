@@ -246,6 +246,9 @@ public class UtilPC {
 		public boolean writeBytes(OutStream os, String path) {
 			return Writer.writeBytes(os, path);
 		}
+		
+		@Override
+		public void writeErrorLog(Exception e) {}
 
 		private void red$AnimU() {
 			String s0 = "move";
