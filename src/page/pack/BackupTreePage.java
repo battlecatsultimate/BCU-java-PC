@@ -36,6 +36,7 @@ import common.util.stage.Stage;
 import common.util.stage.StageMap;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
+import common.util.unit.Level;
 import common.util.unit.Unit;
 import common.util.unit.UnitLevel;
 import io.ZipAccess;
@@ -414,10 +415,10 @@ public class BackupTreePage extends Page {
 				nlu.add(nli);
 				DefaultMutableTreeNode nlv = new DefaultMutableTreeNode("levels/");
 				nli.add(nlv);
-				for (Entry<Unit, int[]> e : blu.lu.map.entrySet()) {
+				for (Entry<Unit, Level> e : blu.lu.map.entrySet()) {
 					Unit u = e.getKey();
 					Form f = u.forms[u.forms.length - 1];
-					String str = u.toString() + " - " + UtilPC.lvText(f, e.getValue())[0];
+					String str = u.toString() + " - " + UtilPC.lvText(f, e.getValue().lvs)[0];
 					DefaultMutableTreeNode nuv = new DefaultMutableTreeNode(str);
 					nlv.add(nuv);
 				}

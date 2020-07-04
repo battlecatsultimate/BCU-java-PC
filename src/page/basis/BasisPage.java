@@ -604,7 +604,7 @@ public class BasisPage extends LubCont {
 			pcoin.setText("");
 			return;
 		}
-		String[] strs = UtilPC.lvText(f, lu().getLv(f.unit));
+		String[] strs = UtilPC.lvText(f, lu().getLv(f.unit).lvs);
 		lvjtf.setText(strs[0]);
 		pcoin.setText(strs[1]);
 	}

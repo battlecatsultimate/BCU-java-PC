@@ -13,6 +13,7 @@ import java.util.Queue;
 import common.CommonStatic;
 import common.CommonStatic.Account;
 import common.battle.BasisSet;
+import common.battle.data.Orb;
 import common.battle.data.PCoin;
 import common.io.DataIO;
 import common.io.InStream;
@@ -427,7 +428,7 @@ public class Reader extends DataIO {
 		RandStage.read();
 		CharaGroup.read();
 		Limit.read();
-
+		Orb.read();
 	}
 
 }
