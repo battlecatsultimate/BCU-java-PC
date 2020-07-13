@@ -57,6 +57,7 @@ public class BasisPage extends LubCont {
 	private final JTF bsjtf = new JTF();
 	private final JTF bjtf = new JTF();
 	private final JTF lvjtf = new JTF();
+	private final JBTN lvorb = new JBTN(0, "orb");
 	private final JLabel pcoin = new JLabel();
 	private final Vector<BasisSet> vbs = new Vector<>(BasisSet.list);
 	private final ReorderList<BasisSet> jlbs = new ReorderList<>(vbs);
@@ -172,6 +173,7 @@ public class BasisPage extends LubCont {
 		set(form, x, y, 1000, 400, 200, 50);
 		set(pcoin, x, y, 1000, 0, 600, 50);
 		set(lvjtf, x, y, 1000, 50, 350, 50);
+		set(lvorb, x, y, 1350, 50, 250, 50);
 		set(setc, x, y, 1050, 700, 200, 50);
 		for (int i = 0; i < 3; i++)
 			set(jbcs[i], x, y, 750, 1100 + 50 * i, 200, 50);
@@ -227,6 +229,12 @@ public class BasisPage extends LubCont {
 				lub.setLv(lv);
 				if (lub.sf != null)
 					setLvs(lub.sf);
+			}
+		});
+		
+		lvorb.setLnr(x -> {
+			if(lub.sf != null) {
+				changePanel(new LevelEditPage(this, lu().getLv(lub.sf.unit), lub.sf));
 			}
 		});
 
@@ -501,6 +509,7 @@ public class BasisPage extends LubCont {
 		add(form);
 		add(lvjtf);
 		add(pcoin);
+		add(lvorb);
 		add(ncb);
 		add(jbcs[0] = new JBTN(0, "ctop"));
 		add(jbcs[1] = new JBTN(0, "cmid"));
@@ -525,6 +534,7 @@ public class BasisPage extends LubCont {
 		addListeners$0();
 		addListeners$1();
 		addListeners$2();
+		lvorb.setEnabled(lub.sf != null);
 	}
 
 	private LineUp lu() {
@@ -599,12 +609,17 @@ public class BasisPage extends LubCont {
 	}
 
 	private void setLvs(Form f) {
+		lvorb.setEnabled(f != null);
+		
 		if (f == null) {
 			lvjtf.setText("");
 			pcoin.setText("");
 			return;
 		}
-		String[] strs = UtilPC.lvText(f, lu().getLv(f.unit).lvs);
+		
+		lvorb.setVisible(f.orbs != null);
+		
+		String[] strs = UtilPC.lvText(f, lu().getLv(f.unit).getLvs());
 		lvjtf.setText(strs[0]);
 		pcoin.setText(strs[1]);
 	}

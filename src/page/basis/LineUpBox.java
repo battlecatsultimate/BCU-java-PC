@@ -64,14 +64,14 @@ public class LineUpBox extends Canvas {
 				if (time == 1 && sf != null && f.uid == sf.uid && relative == null)
 					gra.drawImage(Res.slot[1].getImg(), 120 * j, 100 * i);
 				if (sf == null || sf != f || relative == null)
-					Res.getCost(lu.getLv(f.unit).lvs[0], true,
+					Res.getCost(lu.getLv(f.unit).getLvs()[0], true,
 							new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
 			}
 		if (relative != null && sf != null) {
 			Point p = relative.sf(mouse).toPoint();
 			FakeImage uni = sf.anim.getUni().getImg();
 			gra.drawImage(uni, p.x, p.y);
-			Res.getCost(lu.getLv(sf.unit).lvs[0], true, new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
+			Res.getCost(lu.getLv(sf.unit).getLvs()[0], true, new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
 		}
 		g.drawImage(bimg, 0, 0, getWidth(), getHeight(), null);
 		pt++;
@@ -156,7 +156,7 @@ public class LineUpBox extends Canvas {
 	protected void setLv(int[] lv) {
 		if (lv.length == 0 || sf == null)
 			return;
-		lu.setLv(sf.unit, sf.regulateLv(lv, lu.getLv(sf.unit).lvs));
+		lu.setLv(sf.unit, sf.regulateLv(lv, lu.getLv(sf.unit).getLvs()));
 	}
 
 	protected void setPos(int pos) {

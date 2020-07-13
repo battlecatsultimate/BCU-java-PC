@@ -8,6 +8,7 @@ import common.battle.StageBasis;
 import common.battle.attack.ContAb;
 import common.battle.entity.EAnimCont;
 import common.battle.entity.Entity;
+import common.battle.entity.WaprCont;
 import common.system.P;
 import common.system.SymCoord;
 import common.system.VImg;
@@ -281,7 +282,14 @@ public interface BattleBox {
 						gra.setTransform(at);
 						double p = getX(eac.pos);
 						double y = midh - (road_h - DEP * eac.layer) * siz;
-						eac.draw(gra, new P(p, y), psiz);
+						
+						if(eac instanceof WaprCont) {
+							double dx = ((WaprCont)eac).dire == -1 ? -27*siz : -24*siz;
+							eac.draw(gra, new P(p + dx, y-24*siz), psiz);
+						} else {
+							eac.draw(gra, new P(p, y), psiz);
+						}
+						
 					}
 			}
 

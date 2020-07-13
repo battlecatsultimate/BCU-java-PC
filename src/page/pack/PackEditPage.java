@@ -223,7 +223,7 @@ public class PackEditPage extends Page {
 			public void valueChanged(ListSelectionEvent arg0) {
 				if (jld.getValueIsAdjusting())
 					return;
-				adde.setEnabled(pac != null && pac != Pack.def && jld.getSelectedValue() != null);
+				adde.setEnabled(pac != null && pac != Pack.def && jld.getSelectedValue() != null && pac.editable);
 			}
 
 		});

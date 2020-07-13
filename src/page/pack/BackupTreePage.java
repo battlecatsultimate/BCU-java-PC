@@ -418,7 +418,7 @@ public class BackupTreePage extends Page {
 				for (Entry<Unit, Level> e : blu.lu.map.entrySet()) {
 					Unit u = e.getKey();
 					Form f = u.forms[u.forms.length - 1];
-					String str = u.toString() + " - " + UtilPC.lvText(f, e.getValue().lvs)[0];
+					String str = u.toString() + " - " + UtilPC.lvText(f, e.getValue().getLvs())[0];
 					DefaultMutableTreeNode nuv = new DefaultMutableTreeNode(str);
 					nlv.add(nuv);
 				}
