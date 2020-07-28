@@ -26,14 +26,14 @@ public class EnemyInfoPage extends Page {
 	private BasisSet b = BasisSet.current;
 
 	public EnemyInfoPage(Page p, Enemy de) {
-		this(p, de, 100);
+		this(p, de, 100, 0);
 	}
 
-	public EnemyInfoPage(Page p, Enemy de, int mul) {
+	public EnemyInfoPage(Page p, Enemy de, int mul, int mula) {
 		super(p);
 		e = de;
 
-		info = new EnemyInfoTable(this, de, mul);
+		info = new EnemyInfoTable(this, de, mul, mula);
 		trea = new TreaTable(this, b);
 		ini();
 		resized();

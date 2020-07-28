@@ -318,68 +318,62 @@ public class BCMusic extends Data {
 				player.rewind();
 				player.start();
 			} else {
-				loadSound(ind, openFile(bytes));
+				switch(ind) {
+					case 20:
+						if(hit != null) {
+							if(h) {
+								hit[0].stop();
+								hit[0].rewind();
+								hit[1].start();
+							} else {
+								hit[1].stop();
+								hit[1].rewind();
+								hit[0].start();
+							}
+							
+							h = !h;
+						}
+						break;
+					case 21:
+						if(hit1 != null) {
+							if(h1) {
+								hit1[0].stop();
+								hit1[0].rewind();
+								hit1[1].start();
+							} else {
+								hit1[1].stop();
+								hit1[1].rewind();
+								hit1[0].start();
+							}
+							
+							h1 = !h1;
+						}
+						break;
+					case 22:
+						if(baseHit != null) {
+							if(bh) {
+								baseHit[0].stop();
+								baseHit[0].rewind();
+								baseHit[1].start();
+							} else {
+								baseHit[1].stop();
+								baseHit[1].rewind();
+								baseHit[0].start();
+							}
+							
+							bh = !bh;
+						}
+						break;
+					default:
+						loadSound(ind, openFile(bytes));
+				}
 			}
 		}
 	}
 	
 	private static void loadSound(int ind, Clip c) {
-		switch(ind) {
-		case 20: //hit
-			if(hit != null) {
-				if(h) {
-					hit[0].stop();
-					hit[0].rewind();
-					hit[1].start();
-					
-					h = !h;
-				} else {
-					hit[1].stop();
-					hit[1].rewind();
-					hit[0].start();
-					
-					h = !h;
-				}
-			}
-			break;
-		case 21:
-			if(hit1 != null) {
-				if(h1) {
-					hit1[0].stop();
-					hit1[0].rewind();
-					hit1[1].start();
-					
-					h1 = !h1;
-				} else {
-					hit1[1].stop();
-					hit1[1].rewind();
-					hit1[0].start();
-					
-					h1 = !h1;
-				}
-			}
-			break;
-		case 22:
-			if(baseHit != null) {
-				if(bh) {
-					baseHit[0].stop();
-					baseHit[0].rewind();
-					baseHit[1].start();
-					
-					bh = !bh;
-				} else {
-					baseHit[1].stop();
-					baseHit[1].rewind();
-					baseHit[0].start();
-					
-					bh = !bh;
-				}
-			}
-			break;
-		default:
-			BCPlayer player = new BCPlayer(c, ind);
-			
-			player.start();
-		}
+		BCPlayer player = new BCPlayer(c, ind);
+		
+		player.start();
 	}
 }

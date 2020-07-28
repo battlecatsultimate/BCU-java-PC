@@ -32,7 +32,7 @@ public class OrbBox extends Canvas {
 		
 		FG2D f = new FG2D(img.getGraphics());
 		
-		f.drawImage(Orb.TRAITS[orbs[1]], 0, 0, a, a);
+		f.drawImage(Orb.TRAITS[Orb.reverse(orbs[1])], 0, 0, a, a);
 		f.setComposite(FG2D.TRANS, 204, 0);
 		f.drawImage(Orb.TYPES[orbs[0]], 0, 0, a, a);
 		f.setComposite(FG2D.DEF, 0, 0);

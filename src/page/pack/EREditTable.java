@@ -143,7 +143,7 @@ class EREditTable extends AbJTable implements Reorderable {
 		EREnt<Integer> er = rand.list.get(r);
 		AbEnemy e = EnemyStore.getAbEnemy(er.ent, true);
 		if (e != null && e instanceof Enemy)
-			MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, er.multi));
+			MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, er.multi, er.mula));
 	}
 
 	protected synchronized int remLine() {

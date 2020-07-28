@@ -5,7 +5,9 @@ import static common.util.stage.SCDef.C1;
 
 import java.awt.Point;
 
+import common.CommonStatic;
 import common.util.stage.EStage;
+import common.util.stage.SCDef;
 import common.util.stage.Stage;
 import common.util.unit.Enemy;
 import common.util.unit.EnemyStore;
@@ -70,8 +72,9 @@ class ComingTable extends AbJTable {
 		c = lnk[c];
 		if (data == null || r < 0 || c < 0 || r >= data.length || c >= data[r].length)
 			return null;
-		if (c == 2)
+		if (c == 2) {
 			return data[r][c] + "%";
+		}
 		if (data[r][c] == null)
 			return "";
 		else
@@ -87,7 +90,8 @@ class ComingTable extends AbJTable {
 		if (r < 0 || r >= data.length || c != 1)
 			return;
 		Enemy e = (Enemy) data[r][c];
-		MainFrame.changePanel(new EnemyInfoPage(page, e, (int) data[r][2]));
+		int[] d = CommonStatic.parseIntsN((String) data[r][2]);
+		MainFrame.changePanel(new EnemyInfoPage(page, e, d[0], d[1]));
 
 	}
 
@@ -100,7 +104,7 @@ class ComingTable extends AbJTable {
 			link[i] = ind;
 			data[link[i]][1] = EnemyStore.getAbEnemy(info[i][0], false);
 			data[link[i]][0] = info[i][8] == 1 ? "boss" : "";
-			data[link[i]][2] = info[i][9];
+			data[link[i]][2] = CommonStatic.toArrayFormat(info[i][9], info[i][SCDef.M1]);
 			data[link[i]][3] = info[i][1] == 0 ? "infinite" : info[i][1];
 			if (info[i][C0] >= info[i][C1])
 				data[link[i]][4] = info[i][C0] + "%";

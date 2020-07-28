@@ -13,9 +13,11 @@ import static common.util.stage.SCDef.R0;
 import static common.util.stage.SCDef.R1;
 import static common.util.stage.SCDef.S0;
 import static common.util.stage.SCDef.S1;
+import static common.util.stage.SCDef.M1;
 
 import java.awt.Point;
 
+import common.CommonStatic;
 import common.util.Data;
 import common.util.stage.SCGroup;
 import common.util.stage.Stage;
@@ -93,7 +95,13 @@ public class StageTable extends AbJTable {
 		if (r < 0 || r >= data.length || c != 1)
 			return;
 		Enemy e = (Enemy) data[r][c];
-		MainFrame.changePanel(new EnemyInfoPage(page, e, (int) data[r][2]));
+		
+		if(!(data[r][2] instanceof String))
+			return;
+		
+		int[] d = CommonStatic.parseIntsN((String) data[r][2]);
+		
+		MainFrame.changePanel(new EnemyInfoPage(page, e, d[0], d[1]));
 	}
 
 	protected void setData(Stage st) {
@@ -103,7 +111,7 @@ public class StageTable extends AbJTable {
 			int ind = info.length - i - 1;
 			data[ind][1] = EnemyStore.getEnemy(info[i][E]);
 			data[ind][0] = info[i][B] == 1 ? "boss" : "";
-			data[ind][2] = info[i][M];
+			data[ind][2] = CommonStatic.toArrayFormat( info[i][M], info[i][M1]);
 			data[ind][3] = info[i][N] == 0 ? "infinite" : info[i][N];
 			if (info[i][C0] >= info[i][C1])
 				data[ind][4] = info[i][C0] + "%";

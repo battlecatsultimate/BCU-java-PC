@@ -25,6 +25,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.system.MultiLangCont;
 import common.util.pack.Pack;
 import common.util.unit.Enemy;
 import common.util.unit.EnemyStore;
@@ -46,6 +47,8 @@ public abstract class EnemyFilterBox extends Page {
 	}
 
 	protected Pack pac;
+	
+	protected String name = "";
 
 	protected EnemyFilterBox(Page p, Pack pack) {
 		super(p);
@@ -84,6 +87,12 @@ class EFBButton extends EnemyFilterBox {
 		JTG[][] btns = new JTG[][] { rare, trait, abis, proc, atkt };
 		AttList.btnDealer(x, y, btns, orop, -1, 0, 1, -1, 2);
 	}
+	
+	@Override
+	public void callBack(Object o) {
+		confirm();
+	}
+
 
 	private void confirm() {
 		List<Enemy> ans = new ArrayList<>();
@@ -123,11 +132,27 @@ class EFBButton extends EnemyFilterBox {
 						b3 |= isType(e.de, i);
 					else
 						b3 &= isType(e.de, i);
+			boolean b4 = true;
+			
+			String ename;
+			
+			ename = MultiLangCont.ENAME.getCont(e);
+			
+			if(ename == null)
+				ename = e.name;
+			
+			if(ename == null)
+				ename = "";
+			
+			if(name != null) {
+				b4 = ename.toLowerCase().contains(name.toLowerCase());
+			}
+			
 			b0 = nonSele(rare) | b0;
 			b1 = nonSele(trait) | b1;
 			b2 = nonSele(abis) & nonSele(proc) | b2;
 			b3 = nonSele(atkt) | b3;
-			if (b0 & b1 & b2 & b3)
+			if (b0 & b1 & b2 & b3 & b4)
 				ans.add(e);
 		}
 		getFront().callBack(ans);
@@ -229,6 +254,11 @@ class EFBList extends EnemyFilterBox {
 		set(jab, x, y, 250, 50, 200, 1100);
 		set(jat, x, y, 0, 850, 200, 300);
 	}
+	
+	@Override
+	public void callBack(Object o) {
+		confirm();
+	}
 
 	private void confirm() {
 		List<Enemy> ans = new ArrayList<>();
@@ -261,11 +291,28 @@ class EFBList extends EnemyFilterBox {
 					b3 |= isType(e.de, i);
 				else
 					b3 &= isType(e.de, i);
+			
+			boolean b4 = true;
+			
+			String ename;
+			
+			ename = MultiLangCont.ENAME.getCont(e);
+			
+			if(ename == null)
+				ename = e.name;
+			
+			if(ename == null)
+				ename = "";
+			
+			if(name != null) {
+				b4 = ename.toLowerCase().contains(name.toLowerCase());
+			}
+			
 			b0 = rare.getSelectedIndex() == -1 | b0;
 			b1 = trait.getSelectedIndex() == -1 | b1;
 			b2 = abis.getSelectedIndex() == -1 | b2;
 			b3 = atkt.getSelectedIndex() == -1 | b3;
-			if (b0 & b1 & b2 & b3)
+			if (b0 & b1 & b2 & b3 & b4)
 				ans.add(e);
 		}
 		getFront().callBack(ans);

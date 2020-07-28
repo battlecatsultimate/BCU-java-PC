@@ -13,6 +13,7 @@ import static common.util.stage.SCDef.R0;
 import static common.util.stage.SCDef.R1;
 import static common.util.stage.SCDef.S0;
 import static common.util.stage.SCDef.S1;
+import static common.util.stage.SCDef.M1;
 
 import java.awt.Component;
 import java.awt.Point;
@@ -153,6 +154,16 @@ class StageEditTable extends AbJTable implements Reorderable {
 			int i = ((String) arg0).length();
 			set(r, c, i > 0 ? 1 : 0, 0);
 
+		} else if(c == 2) {
+			int [] data = CommonStatic.parseIntsN((String) arg0);
+			
+			if(data.length == 0) {
+				return;
+			} else if(data.length == 1) {
+				set(r, c, data[0], -1);
+			} else {
+				set(r, c, data[0], data[1]);
+			}
 		} else {
 			int i = arg0 instanceof Integer ? (Integer) arg0 : CommonStatic.parseIntN((String) arg0);
 			set(r, c, i, 0);
@@ -185,6 +196,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 			ans[sind][C0] = 100;
 			ans[sind][L1] = 9;
 			ans[sind][M] = 100;
+			ans[sind][M1] = 100;
 		}
 		stage.datas = ans;
 		ind++;
@@ -211,7 +223,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 			return;
 		AbEnemy e = EnemyStore.getAbEnemy(info[ind][0], true);
 		if (e != null && e instanceof Enemy)
-			MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, info[ind][9]));
+			MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, info[ind][9], info[ind][SCDef.M1]));
 		if (e != null && e instanceof EneRand)
 			MainFrame.changePanel(new EREditPage(page, pack, (EneRand) e));
 	}
@@ -262,7 +274,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 		else if (c == 1)
 			return EnemyStore.getAbEnemy(data[E], true);
 		else if (c == 2)
-			return data[M] + "%";
+			return CommonStatic.toArrayFormat(data[M], data[M1]) + "%";
 		else if (c == 3)
 			return data[N] == 0 ? "infinite" : data[N];
 		else if (c == 4)
@@ -297,8 +309,11 @@ class StageEditTable extends AbJTable implements Reorderable {
 			data[B] = v;
 		else if (c == 1)
 			data[E] = v;
-		else if (c == 2)
-			data[M] = v;
+		else if (c == 2) {
+			System.out.println(v + "|"+para);
+			data[M] = v == -1 ? data[M] : v;
+			data[M1] = para == -1 ? v : para;
+		}
 		else if (c == 3)
 			data[N] = v;
 		else if (c == 4)
