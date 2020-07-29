@@ -160,6 +160,8 @@ public class UnitFLUPage extends LubCont {
 		add(ufb);
 		add(jsp);
 		add(lub);
+		add(seatf);
+		add(seabt);
 		show.setSelected(true);
 		addListeners();
 	}

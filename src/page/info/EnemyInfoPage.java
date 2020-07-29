@@ -26,7 +26,7 @@ public class EnemyInfoPage extends Page {
 	private BasisSet b = BasisSet.current;
 
 	public EnemyInfoPage(Page p, Enemy de) {
-		this(p, de, 100, 0);
+		this(p, de, 100, 100);
 	}
 
 	public EnemyInfoPage(Page p, Enemy de, int mul, int mula) {
