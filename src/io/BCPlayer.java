@@ -34,7 +34,10 @@ public class BCPlayer implements LineListener{
 	}
 	
 	protected void setVolume(int vol) {
-		master.setValue(vol);
+		float range = master.getMaximum() - master.getMinimum();
+		float real_vol = (range * ((float) vol) / 100f) + master.getMinimum();
+		
+		master.setValue(real_vol);
 	}
 	
 	protected void release() {

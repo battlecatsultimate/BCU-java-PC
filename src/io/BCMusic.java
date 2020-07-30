@@ -45,6 +45,7 @@ public class BCMusic extends Data {
 			for(int i = 0; i < hit.length; i++) {
 				try {
 					hit[i] = new BCPlayer(openFile(MusicStore.getMusic(20)), 20);
+					hit[i].setVolume(VOL_SE);
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
@@ -57,6 +58,7 @@ public class BCMusic extends Data {
 			for(int i = 0; i < hit1.length; i++) {
 				try {
 					hit1[i] = new BCPlayer(openFile(MusicStore.getMusic(21)), 21);
+					hit1[i].setVolume(VOL_SE);
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
@@ -69,6 +71,7 @@ public class BCMusic extends Data {
 			for(int i = 0; i < baseHit.length; i++) {
 				try {
 					baseHit[i] = new BCPlayer(openFile(MusicStore.getMusic(22)), 22);
+					baseHit[i].setVolume(VOL_SE);
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
@@ -258,6 +261,7 @@ public class BCMusic extends Data {
 			}
 			
 			BG = new BCPlayer(c, -1);
+			BG.setVolume(VOL_BG);
 			
 			BG.start();
 			
@@ -297,6 +301,7 @@ public class BCMusic extends Data {
 			}
 			
 			BG = new BCPlayer(c, -1);
+			BG.setVolume(VOL_BG);
 			
 			BG.start();
 			
@@ -373,6 +378,7 @@ public class BCMusic extends Data {
 	
 	private static void loadSound(int ind, Clip c) {
 		BCPlayer player = new BCPlayer(c, ind);
+		player.setVolume(VOL_SE);
 		
 		player.start();
 	}
