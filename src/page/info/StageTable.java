@@ -16,6 +16,7 @@ import static common.util.stage.SCDef.S1;
 import static common.util.stage.SCDef.M1;
 
 import java.awt.Point;
+import java.awt.event.MouseEvent;
 
 import common.CommonStatic;
 import common.util.Data;
@@ -84,6 +85,15 @@ public class StageTable extends AbJTable {
 		if (c == 2)
 			return data[r][c] + "%";
 		return data[r][c];
+	}
+	
+	@Override
+	public String getToolTipText(MouseEvent e) {
+		if(columnAtPoint(e.getPoint()) == 2) {
+			return "{hp, atk}";
+		} else {
+			return null;
+		}
 	}
 
 	protected void clicked(Point p) {

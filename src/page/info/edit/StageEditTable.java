@@ -18,6 +18,7 @@ import static common.util.stage.SCDef.M1;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
 import javax.swing.text.JTextComponent;
@@ -167,6 +168,15 @@ class StageEditTable extends AbJTable implements Reorderable {
 		} else {
 			int i = arg0 instanceof Integer ? (Integer) arg0 : CommonStatic.parseIntN((String) arg0);
 			set(r, c, i, 0);
+		}
+	}
+	
+	@Override
+	public String getToolTipText(MouseEvent e) {
+		if(columnAtPoint(e.getPoint()) == 2) {
+			return "{hp, atk}";
+		} else {
+			return null;
 		}
 	}
 
