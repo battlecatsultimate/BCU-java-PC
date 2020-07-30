@@ -9,6 +9,12 @@ import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineEvent.Type;
 
 public class BCPlayer implements LineListener{
+	private static final int FACTOR = 20;
+	
+	private static float getVol(int vol) {
+		return FACTOR * ((float) Math.log10(vol) - 2);
+	}
+	
 	private final int ind;
 	private final Clip c;
 	private final FloatControl master;
@@ -34,10 +40,7 @@ public class BCPlayer implements LineListener{
 	}
 	
 	protected void setVolume(int vol) {
-		float range = master.getMaximum() - master.getMinimum();
-		float real_vol = (range * ((float) vol) / 100f) + master.getMinimum();
-		
-		master.setValue(real_vol);
+		master.setValue(getVol(vol));
 	}
 	
 	protected void release() {
