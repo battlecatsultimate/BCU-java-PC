@@ -273,12 +273,14 @@ public class ConfigPage extends Page {
 				Page.BGCOLOR = new Color(255, 255, 255);
 				setBackground(BGCOLOR);
 				SwingUtilities.updateComponentTreeUI(this);
+				theme.setToolTipText(MainLocale.getLoc(0, "themel"));
 			} else {
 				theme.setText(MainLocale.getLoc(0, "themed"));
 				Theme.DARK.setTheme();
 				Page.BGCOLOR = new Color(40, 40, 40);
 				setBackground(BGCOLOR);
 				SwingUtilities.updateComponentTreeUI(this);
+				theme.setToolTipText(MainLocale.getLoc(0, "themed"));
 			}
 		});
 	}
