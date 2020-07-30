@@ -1,5 +1,6 @@
 package page;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -8,6 +9,7 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
@@ -22,6 +24,7 @@ import io.Reader;
 import main.MainBCU;
 import main.Opts;
 import page.view.ViewBox;
+import utilpc.Theme;
 
 public class ConfigPage extends Page {
 
@@ -45,6 +48,7 @@ public class ConfigPage extends Page {
 	private final JL jlmax = new JL(0, "opamax");
 	private final JL jlbg = new JL(0, "BGvol");
 	private final JL jlse = new JL(0, "SEvol");
+	private final JBTN theme = new JBTN(0, MainBCU.light ? "themel" : "themed");
 	private final JSlider jsmin = new JSlider(0, 100);
 	private final JSlider jsmax = new JSlider(0, 100);
 	private final JSlider jsbg = new JSlider(0, 100);
@@ -102,6 +106,7 @@ public class ConfigPage extends Page {
 		set(exla, x, y, 1100, 650, 450, 50);
 		set(extt, x, y, 1100, 750, 450, 50);
 		set(rlla, x, y, 1100, 850, 450, 50);
+		set(theme, x, y, 1100, 950, 450, 50);
 	}
 
 	private void addListeners() {
@@ -259,6 +264,23 @@ public class ConfigPage extends Page {
 			}
 		});
 
+		theme.setLnr((b) -> {
+			MainBCU.light = !MainBCU.light;
+			
+			if(MainBCU.light) {
+				theme.setText(MainLocale.getLoc(0, "themel"));
+				Theme.LIGHT.setTheme();
+				Page.BGCOLOR = new Color(255, 255, 255);
+				setBackground(BGCOLOR);
+				SwingUtilities.updateComponentTreeUI(this);
+			} else {
+				theme.setText(MainLocale.getLoc(0, "themed"));
+				Theme.DARK.setTheme();
+				Page.BGCOLOR = new Color(40, 40, 40);
+				setBackground(BGCOLOR);
+				SwingUtilities.updateComponentTreeUI(this);
+			}
+		});
 	}
 
 	private void ini() {
@@ -282,6 +304,7 @@ public class ConfigPage extends Page {
 		add(jlse);
 		set(jsbg);
 		set(jsse);
+		add(theme);
 		jls.setSelectedIndex(CommonStatic.Lang.lang);
 		jll.setSelectedIndex(EventReader.loc);
 		jsmin.setValue(ImgCore.deadOpa);

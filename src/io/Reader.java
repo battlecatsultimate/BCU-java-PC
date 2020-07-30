@@ -399,6 +399,7 @@ public class Reader extends DataIO {
 					Importer.read(qs);
 					qs.poll();// place holder
 					BattleInfoPage.DEF_LARGE = parseInt(qs.poll()) == 1;
+					MainBCU.light = parseInt(qs.poll()) == 1;
 				} catch (Exception e) {
 				}
 			} else {

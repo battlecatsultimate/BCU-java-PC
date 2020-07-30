@@ -14,13 +14,14 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ToolTipManager;
 
+import main.MainBCU;
 import utilpc.PP;
 
 public abstract class Page extends JPanel implements RetFunc {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final Color BGCOLOR = Color.WHITE;
+	public static Color BGCOLOR = MainBCU.light ? new Color(255, 255, 255) : new Color(54, 54, 54);
 
 	static {
 		ToolTipManager.sharedInstance().setInitialDelay(100);
@@ -100,6 +101,9 @@ public abstract class Page extends JPanel implements RetFunc {
 	}
 
 	public final Page getFront() {
+		if(front != null) {
+			front.setBackground(BGCOLOR);
+		}
 		return front;
 	}
 
