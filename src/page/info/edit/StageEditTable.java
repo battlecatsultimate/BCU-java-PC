@@ -320,7 +320,6 @@ class StageEditTable extends AbJTable implements Reorderable {
 		else if (c == 1)
 			data[E] = v;
 		else if (c == 2) {
-			System.out.println(v + "|"+para);
 			data[M] = v == -1 ? data[M] : v;
 			data[M1] = para == -1 ? v : para;
 		}

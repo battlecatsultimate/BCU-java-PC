@@ -30,7 +30,7 @@ public class MainBCU {
 	public static int FILTER_TYPE = 0;
 	public static final boolean WRITE = !new File("./.project").exists();
 	public static boolean preload = false, trueRun = false, loaded = false, USE_JOGL = false;
-	public static boolean light = false;
+	public static boolean light = false, nimbus = true;
 
 	public static String getTime() {
 		return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
@@ -45,12 +45,16 @@ public class MainBCU {
 		BBBuilder.def = USE_JOGL ? new GLBBB() : AWTBBB.INS;
 		CommonStatic.def = new UtilPC.PCItr();
 		
-		if(light) {
-			Theme.LIGHT.setTheme();
-			Page.BGCOLOR = new Color(255, 255, 255);
+		if(nimbus) {
+			if(light) {
+				Theme.LIGHT.setTheme();
+				Page.BGCOLOR = new Color(255, 255, 255);
+			} else {
+				Theme.DARK.setTheme();
+				Page.BGCOLOR = new Color(40, 40, 40);
+			}
 		} else {
-			Theme.DARK.setTheme();
-			Page.BGCOLOR = new Color(40, 40, 40);
+			Page.BGCOLOR = new Color(255, 255, 255);
 		}
 
 		new MainFrame(Data.revVer(MainBCU.ver)).initialize();

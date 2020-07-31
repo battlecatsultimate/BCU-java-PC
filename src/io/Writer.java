@@ -350,6 +350,7 @@ public class Writer extends DataIO {
 		out.println("--- place holder ---");
 		out.println("large screen: " + (BattleInfoPage.DEF_LARGE ? 1 : 0));
 		out.println("theme= "+(MainBCU.light ? 1 : 0));
+		out.println("nimbus="+(MainBCU.nimbus ? 1 : 0));
 		out.close();
 	}
 

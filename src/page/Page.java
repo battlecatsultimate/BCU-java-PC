@@ -21,7 +21,7 @@ public abstract class Page extends JPanel implements RetFunc {
 
 	private static final long serialVersionUID = 1L;
 
-	public static Color BGCOLOR = MainBCU.light ? new Color(255, 255, 255) : new Color(54, 54, 54);
+	public static Color BGCOLOR = MainBCU.light || !MainBCU.nimbus ? new Color(255, 255, 255) : new Color(54, 54, 54);
 
 	static {
 		ToolTipManager.sharedInstance().setInitialDelay(100);
