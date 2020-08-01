@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Queue;
 import java.util.function.Function;
@@ -262,6 +263,25 @@ public class UtilPC {
 			AnimU.strs0 = MainLocale.getLoc(0, s0, s1, s2, s3);
 			AnimU.strs1 = MainLocale.getLoc(0, s0, s1, s2, s3, s4, s5, s6);
 			AnimU.strs2 = MainLocale.getLoc(0, s0, s1, s2, s3, s7);
+		}
+
+		@Override
+		public long getMusicLength(File f) {
+			if(!f.exists()) {
+				return -1;
+			}
+			
+			try {
+				OggTimeReader otr = new OggTimeReader(f);
+				
+				return otr.getTime();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				return -1;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return -1;
+			}
 		}
 
 	}

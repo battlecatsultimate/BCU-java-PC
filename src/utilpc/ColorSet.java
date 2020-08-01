@@ -54,6 +54,8 @@ public class ColorSet {
 		UIManager.put("nimbusSelectedText", NIMBUS_SELECT_TEXT);
 		UIManager.put("nimbusSelectionBackground", NIMBUS_SELECT_BG);
 		UIManager.put("text", NIMBUS_TEXT);
+		UIManager.put("List[Selected].textForeground", NIMBUS_TEXT);
+		UIManager.put("Table.textForeground", NIMBUS_TEXT);
 
 		try {
 			for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
