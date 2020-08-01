@@ -174,9 +174,9 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	@Override
 	protected void renew() {
 		if (basis.sb.getEBHP() * 100 < basis.sb.st.mush)
-			BCMusic.play(basis.sb.st.mus1);
+			BCMusic.play(basis.sb.st.mus1, basis.sb.st.loop1);
 		else
-			BCMusic.play(basis.sb.st.mus0);
+			BCMusic.play(basis.sb.st.mus0, basis.sb.st.loop0);
 	}
 
 	@Override
@@ -255,7 +255,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		ucount.setText(sb.entityCount(-1) + "/" + sb.max_num);
 		resized();
 		if (sb.getEBHP() * 100 <= sb.st.mush && BCMusic.music != sb.st.mus1)
-			BCMusic.play(sb.st.mus1);
+			BCMusic.play(sb.st.mus1, sb.st.loop1);
 		if (bb instanceof BBRecd) {
 			BBRecd bbr = (BBRecd) bb;
 			stream.setText("frame left: " + bbr.info());
