@@ -41,8 +41,10 @@ public class BCPlayer implements LineListener{
 		this.loop = loop;
 		this.isLooping = looping;
 		
-		if(loop > 0) {
+		if(loop > 0 && loop * 1000 < c.getMicrosecondLength()) {
 			c.setLoopPoints(milliToFrame(loop), -1);
+		} else if(loop * 1000 >= c.getMicrosecondLength()) {
+			c.loop(0);
 		}
 	}
 	
