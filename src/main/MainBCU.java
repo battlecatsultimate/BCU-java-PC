@@ -25,7 +25,7 @@ import utilpc.awt.PCIB;
 
 public class MainBCU {
 
-	public static final int ver = 41001;
+	public static final int ver = 41002;
 
 	public static int FILTER_TYPE = 0;
 	public static final boolean WRITE = !new File("./.project").exists();
