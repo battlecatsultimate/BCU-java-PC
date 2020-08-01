@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.io.File;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 
 import javax.swing.BorderFactory;
@@ -12,6 +14,7 @@ import javax.swing.SwingConstants;
 
 import common.CommonStatic;
 import common.util.pack.BGStore;
+import common.util.pack.MusicStore;
 import common.util.pack.Pack;
 import common.util.stage.Castles;
 import common.util.stage.Limit;
@@ -47,6 +50,10 @@ class HeadEditTable extends Page {
 	private final JTG con = new JTG(1, "ht03");
 	private final JTF[] star = new JTF[4];
 	private final JTF jmax = new JTF();
+	private final JL loop = new JL(1, "lop");
+	private final JL loop1 = new JL(1, "lop1");
+	private final JTF lop = new JTF();
+	private final JTF lop1 = new JTF();
 	private final LimitTable lt;
 
 	private Stage sta;
@@ -92,6 +99,7 @@ class HeadEditTable extends Page {
 			jtf.setText("" + mp.getSelected());
 			input(jtf, "" + mp.getSelected());
 		}
+		
 		bvp = null;
 		cvp = null;
 		mp = null;
@@ -112,13 +120,17 @@ class HeadEditTable extends Page {
 		set(jbg, x, y, w, 100, w, 50);
 		set(cas, x, y, w * 2, 100, w, 50);
 		set(jcas, x, y, w * 3, 100, w, 50);
-		set(mus, x, y, w * 4, 100, w, 50);
-		set(jm0, x, y, w * 5, 100, w, 50);
-		set(jmh, x, y, w * 6, 100, w, 50);
-		set(jm1, x, y, w * 7, 100, w, 50);
+		set(mus, x, y, 0, 150, w, 50);
+		set(jm0, x, y, w , 150, w, 50);
+		set(loop, x, y, w * 2, 150, w, 50);
+		set(lop, x, y, w * 3, 150, w, 50);
+		set(jmh, x, y, w * 4, 150, w, 50);
+		set(jm1, x, y, w * 5, 150, w, 50);
+		set(loop1, x, y, w * 6, 150, w, 50);
+		set(lop1, x, y, w * 7, 150, w, 50);
 		for (int i = 0; i < 4; i++)
 			set(star[i], x, y, w * (2 + i), 0, w, 50);
-		set(lt, x, y, 0, 150, 1400, 100);
+		set(lt, x, y, 0, 200, 1400, 100);
 		lt.componentResized(x, y);
 	}
 
@@ -147,6 +159,30 @@ class HeadEditTable extends Page {
 		Limit lim = st.lim;
 		lt.setLimit(lim);
 		change(false);
+		
+		lop.setText(convertTime(sta.loop0));
+		lop1.setText(convertTime(sta.loop1));
+		
+		if(sta.mus0 != -1) {
+			lop.setEnabled(true);
+			getMusTime(sta.mus0, lop);
+		} else {
+			lop.setText("00:00.000");
+			lop.setToolTipText("No music");
+			sta.loop0 = 0;
+			lop.setEnabled(false);
+		}
+		
+		if(sta.mus1 != -1) {
+			lop1.setEnabled(true);
+			getMusTime(sta.mus1, lop1);
+		} else {
+			lop1.setText("00:00.000");
+			lop1.setToolTipText("No music");
+			sta.loop1 = 0;
+			lop1.setEnabled(false);
+		}
+		
 	}
 
 	private void abler(boolean b) {
@@ -222,6 +258,10 @@ class HeadEditTable extends Page {
 		set(jmh);
 		set(jm1);
 		add(lt);
+		set(loop);
+		set(lop);
+		set(loop1);
+		set(lop1);
 		con.setSelected(true);
 
 		for (int i = 0; i < 4; i++)
@@ -297,13 +337,54 @@ class HeadEditTable extends Page {
 					sta.map.stars = ans;
 				}
 			}
-		if (jtf == jm0)
+		if (jtf == jm0) {
 			sta.mus0 = val;
+			
+			if(sta.mus0 != -1) {
+				lop.setEnabled(true);
+				getMusTime(sta.mus0, lop);
+			} else {
+				lop.setText("00:00.000");
+				sta.loop0 = 0;
+				lop.setEnabled(false);
+			}
+		}
+		
 		if (jtf == jmh)
 			sta.mush = val;
-		if (jtf == jm1)
+		
+		if (jtf == jm1) {
 			sta.mus1 = val;
-
+			
+			if(sta.mus1 != -1) {
+				lop1.setEnabled(true);
+				getMusTime(sta.mus1, lop1);
+			} else {
+				lop1.setText("00:00.000");
+				sta.loop1 = 0;
+				lop1.setEnabled(false);
+			}
+		}
+		
+		if (jtf == lop) {
+			int tim = toMilli(jtf.getText());
+			
+			if(tim != -1) {
+				sta.loop0 = tim;
+			}
+			
+			lop.setText(convertTime(sta.loop0));
+		}
+		
+		if (jtf == lop1) {
+			int tim = toMilli(jtf.getText());
+			
+			if(tim != -1) {
+				sta.loop1 = tim;
+			}
+			
+			lop1.setText(convertTime(sta.loop1));
+		}
 	}
 
 	private void set(JLabel jl) {
@@ -335,6 +416,80 @@ class HeadEditTable extends Page {
 			}
 		});
 
+	}
+	
+	private void getMusTime(int mus, JTF jtf) {
+		
+		File f = MusicStore.getMusic(mus);
+		
+		if(f == null || !f.exists()) {
+			jtf.setToolTipText("Music not found");
+			return;
+		}
+		
+		try {
+			long duration = CommonStatic.def.getMusicLength(f);
+			
+			if(duration == -1) {
+				jtf.setToolTipText("Invalid Format");
+			} else if(duration == -2) {
+				jtf.setToolTipText("Unsupported Format");
+			} else if(duration == -3) {
+				jtf.setToolTipText("Can't get duration");
+			} else if(duration >= 0) {
+				jtf.setToolTipText(convertTime(duration));
+			} else {
+				jtf.setToolTipText("Unknown error "+duration);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private String convertTime(long milli) {
+		long min = milli / 60 / 1000;
+		
+		double time = (double) milli - (double) min * 60000;
+		
+		time /= 1000;
+		
+		DecimalFormat df = new DecimalFormat("#.###");
+		
+		double s = Double.parseDouble(df.format(time));
+		
+		if(s >= 60) {
+			s -= 60;
+			min += 1;
+		}
+		
+		if(s < 10) {
+			return min + ":"+"0"+df.format(s);
+		} else {
+			return min + ":"+df.format(s);
+		}
+	}
+	
+	private int toMilli(String time) {
+		try {
+			int [] times = CommonStatic.parseIntsN(time);
+			
+			if(times.length == 1) {
+				return times[0] * 1000;
+			} else if(times.length == 2) {
+				return (times[0] * 60 + times[1]) * 1000;
+			} else if(times.length == 3) {
+				if(times[2] < 1000) {
+					return (times[0] * 60 + times[1]) * 1000 + times[2];
+				} else {
+					String decimal = Integer.toString(times[2]).substring(0, 3);
+					return (times[0] * 60 + times[1]) * 1000 + Integer.parseInt(decimal);
+				}
+			} else {
+				return -1;
+			}
+		} catch(Exception e) {
+			return -1;
+		}
 	}
 
 }

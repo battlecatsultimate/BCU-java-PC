@@ -109,13 +109,13 @@ public class StageEditPage extends Page {
 	protected synchronized void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);
-		set(info, x, y, 900, 50, 1400, 250);
-		set(addl, x, y, 900, 350, 200, 50);
-		set(reml, x, y, 1100, 350, 200, 50);
-		set(elim, x, y, 1600, 350, 200, 50);
-		set(recd, x, y, 1850, 350, 200, 50);
-		set(advs, x, y, 2100, 350, 200, 50);
-		set(jspjt, x, y, 900, 400, 1400, 900);
+		set(info, x, y, 900, 50, 1400, 300);
+		set(addl, x, y, 900, 400, 200, 50);
+		set(reml, x, y, 1100, 400, 200, 50);
+		set(elim, x, y, 1600, 400, 200, 50);
+		set(recd, x, y, 1850, 400, 200, 50);
+		set(advs, x, y, 2100, 400, 200, 50);
+		set(jspjt, x, y, 900, 450, 1400, 900);
 
 		set(jspsm, x, y, 0, 50, 300, 800);
 		set(cpsm, x, y, 0, 850, 300, 50);
