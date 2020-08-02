@@ -1,22 +1,9 @@
 package page.info;
 
-import static common.util.stage.SCDef.B;
-import static common.util.stage.SCDef.C0;
-import static common.util.stage.SCDef.C1;
-import static common.util.stage.SCDef.E;
-import static common.util.stage.SCDef.G;
-import static common.util.stage.SCDef.L0;
-import static common.util.stage.SCDef.L1;
-import static common.util.stage.SCDef.M;
-import static common.util.stage.SCDef.N;
-import static common.util.stage.SCDef.R0;
-import static common.util.stage.SCDef.R1;
-import static common.util.stage.SCDef.S0;
-import static common.util.stage.SCDef.S1;
-
 import java.awt.Point;
 
 import common.util.Data;
+import common.util.stage.SCDef.Line;
 import common.util.stage.SCGroup;
 import common.util.stage.Stage;
 import common.util.unit.Enemy;
@@ -97,30 +84,31 @@ public class StageTable extends AbJTable {
 	}
 
 	protected void setData(Stage st) {
-		int[][] info = st.data.getSimple();
+		Line[] info = st.data.getSimple();
 		data = new Object[info.length][9];
 		for (int i = 0; i < info.length; i++) {
 			int ind = info.length - i - 1;
-			data[ind][1] = EnemyStore.getEnemy(info[i][E]);
-			data[ind][0] = info[i][B] == 1 ? "boss" : "";
-			data[ind][2] = info[i][M];
-			data[ind][3] = info[i][N] == 0 ? "infinite" : info[i][N];
-			if (info[i][C0] >= info[i][C1])
-				data[ind][4] = info[i][C0] + "%";
+			data[ind][1] = EnemyStore.getEnemy(info[i].enemy);
+			data[ind][0] = info[i].boss == 1 ? "boss" : "";
+			data[ind][2] = info[i].multiple;
+			data[ind][3] = info[i].number == 0 ? "infinite" : info[i].number;
+			if (info[i].castle_0 >= info[i].castle_1)
+				data[ind][4] = info[i].castle_0 + "%";
 			else
-				data[ind][4] = info[i][C0] + "~" + info[i][C1] + "%";
-			if (Math.abs(info[i][S0]) >= Math.abs(info[i][S1]))
-				data[ind][5] = info[i][S0];
+				data[ind][4] = info[i].castle_0 + "~" + info[i].castle_1 + "%";
+			if (Math.abs(info[i].spawn_0) >= Math.abs(info[i].spawn_1))
+				data[ind][5] = info[i].spawn_0;
 			else
-				data[ind][5] = info[i][S0] + "~" + info[i][S1];
+				data[ind][5] = info[i].spawn_0 + "~" + info[i].spawn_1;
 
-			if (info[i][R0] == info[i][R1])
-				data[ind][6] = info[i][R0];
+			if (info[i].respawn_0 == info[i].respawn_1)
+				data[ind][6] = info[i].respawn_0;
 			else
-				data[ind][6] = info[i][R0] + "~" + info[i][R1];
+				data[ind][6] = info[i].respawn_0 + "~" + info[i].respawn_1;
 
-			data[ind][7] = info[i][L0] == info[i][L1] ? info[i][L0] : info[i][L0] + "~" + info[i][L1];
-			int g = info[i][G];
+			data[ind][7] = info[i].layer_0 == info[i].layer_1 ? info[i].layer_0
+					: info[i].layer_0 + "~" + info[i].layer_1;
+			int g = info[i].group;
 			SCGroup scg = st.data.sub.get(g);
 			data[ind][8] = scg == null ? g != 0 ? Data.trio(g) + " - invalid" : "" : scg.toString();
 

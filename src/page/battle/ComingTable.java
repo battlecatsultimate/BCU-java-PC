@@ -1,11 +1,9 @@
 package page.battle;
 
-import static common.util.stage.SCDef.C0;
-import static common.util.stage.SCDef.C1;
-
 import java.awt.Point;
 
 import common.util.stage.EStage;
+import common.util.stage.SCDef.Line;
 import common.util.stage.Stage;
 import common.util.unit.Enemy;
 import common.util.unit.EnemyStore;
@@ -92,20 +90,20 @@ class ComingTable extends AbJTable {
 	}
 
 	protected void setData(Stage st) {
-		int[][] info = st.data.getSimple();
+		Line[] info = st.data.getSimple();
 		data = new Object[info.length][6];
 		link = new int[info.length];
 		for (int i = 0; i < info.length; i++) {
 			int ind = info.length - i - 1;
 			link[i] = ind;
-			data[link[i]][1] = EnemyStore.getAbEnemy(info[i][0], false);
-			data[link[i]][0] = info[i][8] == 1 ? "boss" : "";
-			data[link[i]][2] = info[i][9];
-			data[link[i]][3] = info[i][1] == 0 ? "infinite" : info[i][1];
-			if (info[i][C0] >= info[i][C1])
-				data[link[i]][4] = info[i][C0] + "%";
+			data[link[i]][1] = EnemyStore.getAbEnemy(info[i].enemy, false);
+			data[link[i]][0] = info[i].boss == 1 ? "boss" : "";
+			data[link[i]][2] = info[i].multiple;
+			data[link[i]][3] = info[i].number == 0 ? "infinite" : info[i].number;
+			if (info[i].castle_0 >= info[i].castle_1)
+				data[link[i]][4] = info[i].castle_0 + "%";
 			else
-				data[link[i]][4] = info[i][C0] + "~" + info[i][C1] + "%";
+				data[link[i]][4] = info[i].castle_0 + "~" + info[i].castle_1 + "%";
 		}
 	}
 

@@ -1,19 +1,5 @@
 package page.info.edit;
 
-import static common.util.stage.SCDef.B;
-import static common.util.stage.SCDef.C0;
-import static common.util.stage.SCDef.C1;
-import static common.util.stage.SCDef.E;
-import static common.util.stage.SCDef.G;
-import static common.util.stage.SCDef.L0;
-import static common.util.stage.SCDef.L1;
-import static common.util.stage.SCDef.M;
-import static common.util.stage.SCDef.N;
-import static common.util.stage.SCDef.R0;
-import static common.util.stage.SCDef.R1;
-import static common.util.stage.SCDef.S0;
-import static common.util.stage.SCDef.S1;
-
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -25,6 +11,7 @@ import common.CommonStatic;
 import common.util.Data;
 import common.util.pack.Pack;
 import common.util.stage.SCDef;
+import common.util.stage.SCDef.Line;
 import common.util.stage.SCGroup;
 import common.util.stage.Stage;
 import common.util.unit.AbEnemy;
@@ -121,10 +108,10 @@ class StageEditTable extends AbJTable implements Reorderable {
 			fin--;
 		if (fin == ori)
 			return;
-		int[][] info = stage.datas;
+		Line[] info = stage.datas;
 		int ior = info.length - ori - 1;
 		int ifi = info.length - fin - 1;
-		int[] temp = info[ior];
+		Line temp = info[ior];
 		if (ior < ifi)
 			for (int i = ior; i < ifi; i++)
 				info[i] = info[i + 1];
@@ -165,10 +152,10 @@ class StageEditTable extends AbJTable implements Reorderable {
 		int ind = getSelectedRow();
 		if (ind == -1)
 			ind = 0;
-		int[][] info = stage.datas;
+		Line[] info = stage.datas;
 		int len = info.length;
 		int sind = len - ind - 1;
-		int[][] ans = new int[len + 1][];
+		Line[] ans = new Line[len + 1];
 		if (sind >= 0) {
 			for (int i = 0; i < sind; i++)
 				ans[i] = info[i];
@@ -179,12 +166,12 @@ class StageEditTable extends AbJTable implements Reorderable {
 		if (enemy == null && sind < info.length && getSelectedRow() >= 0)
 			ans[sind] = info[sind].clone();
 		else {
-			ans[sind] = new int[SCDef.SIZE];
-			ans[sind][E] = enemy == null ? -1 : enemy.getID();
-			ans[sind][N] = 1;
-			ans[sind][C0] = 100;
-			ans[sind][L1] = 9;
-			ans[sind][M] = 100;
+			ans[sind] = new Line();
+			ans[sind].enemy = enemy == null ? -1 : enemy.getID();
+			ans[sind].number = 1;
+			ans[sind].castle_0 = 100;
+			ans[sind].layer_0 = 9;
+			ans[sind].multiple = 100;
 		}
 		stage.datas = ans;
 		ind++;
@@ -192,7 +179,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 			ind = ans.length - 1;
 		for (int i = 0; i < ans.length; i++)
 			if (ans[i] == null)
-				ans[i] = new int[10];
+				ans[i] = new Line();
 		return ind;
 	}
 
@@ -202,16 +189,16 @@ class StageEditTable extends AbJTable implements Reorderable {
 		int c = getColumnModel().getColumnIndexAtX(p.x);
 		c = lnk[c];
 		int r = p.y / getRowHeight();
-		int[][] info = stage.datas;
+		Line[] info = stage.datas;
 		int len = info.length;
 		if (r < 0 || r >= getRowCount() || c != 1)
 			return;
 		int ind = len - r - 1;
 		if (info[ind] == null)
 			return;
-		AbEnemy e = EnemyStore.getAbEnemy(info[ind][0], true);
+		AbEnemy e = EnemyStore.getAbEnemy(info[ind].enemy, true);
 		if (e != null && e instanceof Enemy)
-			MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, info[ind][9]));
+			MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, info[ind].multiple));
 		if (e != null && e instanceof EneRand)
 			MainFrame.changePanel(new EREditPage(page, pack, (EneRand) e));
 	}
@@ -220,13 +207,13 @@ class StageEditTable extends AbJTable implements Reorderable {
 		if (stage == null)
 			return -1;
 		int ind = getSelectedRow();
-		int[][] info = stage.datas;
+		Line[] info = stage.datas;
 		if (info.length == 0)
 			return -1;
 		if (ind == -1)
 			ind = 0;
 		int sind = info.length - ind - 1;
-		int[][] ans = new int[info.length - 1][];
+		Line[] ans = new Line[info.length - 1];
 		for (int i = 0; i < ans.length; i++)
 			if (i < sind)
 				ans[i] = info[i];
@@ -253,28 +240,28 @@ class StageEditTable extends AbJTable implements Reorderable {
 	private Object get(int r, int c) {
 		if (r < 0 || r >= stage.datas.length)
 			return null;
-		int[][] info = stage.datas;
-		int[] data = info[info.length - r - 1];
+		Line[] info = stage.datas;
+		Line data = info[info.length - r - 1];
 		if (data == null)
 			return null;
 		if (c == 0)
-			return data[B] == 1 ? "boss" : "";
+			return data.boss == 1 ? "boss" : "";
 		else if (c == 1)
-			return EnemyStore.getAbEnemy(data[E], true);
+			return EnemyStore.getAbEnemy(data.enemy, true);
 		else if (c == 2)
-			return data[M] + "%";
+			return data.multiple + "%";
 		else if (c == 3)
-			return data[N] == 0 ? "infinite" : data[N];
+			return data.number == 0 ? "infinite" : data.number;
 		else if (c == 4)
-			return (data[C0] >= data[C1] ? data[C0] : data[C0] + "~" + data[C1]) + "%";
+			return (data.castle_0 >= data.castle_1 ? data.castle_0 : data.castle_0 + "~" + data.castle_1) + "%";
 		else if (c == 5)
-			return Math.abs(data[S0]) >= Math.abs(data[S1]) ? data[S0] : data[S0] + "~" + data[S1];
+			return Math.abs(data.spawn_0) >= Math.abs(data.spawn_1) ? data.spawn_0 : data.spawn_0 + "~" + data.spawn_1;
 		else if (c == 6)
-			return data[R0] == data[R1] ? data[R0] : data[R0] + "~" + data[R1];
+			return data.respawn_0 == data.respawn_1 ? data.respawn_0 : data.respawn_0 + "~" + data.respawn_1;
 		else if (c == 7)
-			return data[L0] == data[L1] ? data[L0] : data[L0] + "~" + data[L1];
+			return data.layer_0 == data.layer_1 ? data.layer_0 : data.layer_0 + "~" + data.layer_1;
 		else if (c == 8) {
-			int g = data[G];
+			int g = data.group;
 			SCGroup scg = stage.sub.get(g);
 			return scg == null ? g != 0 ? Data.trio(g) + " - invalid" : "" : scg.toString();
 		}
@@ -291,51 +278,51 @@ class StageEditTable extends AbJTable implements Reorderable {
 			return;
 		if (c != 5 && v < 0)
 			v = 0;
-		int[][] info = stage.datas;
-		int[] data = info[info.length - r - 1];
+		Line[] info = stage.datas;
+		Line data = info[info.length - r - 1];
 		if (c == 0)
-			data[B] = v;
+			data.boss = v;
 		else if (c == 1)
-			data[E] = v;
+			data.enemy = v;
 		else if (c == 2)
-			data[M] = v;
+			data.multiple = v;
 		else if (c == 3)
-			data[N] = v;
+			data.number = v;
 		else if (c == 4)
 			if (para == -1)
-				data[C0] = data[C1] = v;
+				data.castle_0 = data.castle_1 = v;
 			else {
-				data[C0] = Math.min(v, para);
-				data[C1] = Math.max(v, para);
+				data.castle_0 = Math.min(v, para);
+				data.castle_1 = Math.max(v, para);
 			}
 		else if (c == 5)
 			if (para == -1)
-				data[S0] = data[S1] = v;
+				data.spawn_0 = data.spawn_1 = v;
 			else {
 				if (Math.abs(v) > Math.abs(para)) {
-					data[S1] = v;
-					data[S0] = para;
+					data.spawn_1 = v;
+					data.spawn_0 = para;
 				} else {
-					data[S0] = v;
-					data[S1] = para;
+					data.spawn_0 = v;
+					data.spawn_1 = para;
 				}
 			}
 		else if (c == 6)
 			if (para == -1)
-				data[R0] = data[R1] = v;
+				data.respawn_0 = data.respawn_1 = v;
 			else {
-				data[R0] = Math.min(v, para);
-				data[R1] = Math.max(v, para);
+				data.respawn_0 = Math.min(v, para);
+				data.respawn_1 = Math.max(v, para);
 			}
 		else if (c == 7)
 			if (para == -1)
-				data[L0] = data[L1] = v;
+				data.layer_0 = data.layer_1 = v;
 			else {
-				data[L0] = Math.min(v, para);
-				data[L1] = Math.max(v, para);
+				data.layer_0 = Math.min(v, para);
+				data.layer_1 = Math.max(v, para);
 			}
 		else if (c == 8)
-			data[G] = Math.max(0, v);
+			data.group = Math.max(0, v);
 	}
 
 }

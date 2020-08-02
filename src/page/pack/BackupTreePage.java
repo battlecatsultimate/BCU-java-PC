@@ -24,6 +24,7 @@ import common.battle.BasisSet;
 import common.battle.data.AtkDataModel;
 import common.battle.data.CustomEntity;
 import common.io.InStream;
+import common.io.json.JsonEncoder;
 import common.system.files.VFile;
 import common.system.files.VFileRoot;
 import common.util.anim.MaAnim;
@@ -32,6 +33,7 @@ import common.util.pack.Background;
 import common.util.pack.Pack;
 import common.util.stage.CharaGroup;
 import common.util.stage.LvRestrict;
+import common.util.stage.SCDef.Line;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
 import common.util.unit.Enemy;
@@ -504,35 +506,23 @@ public class BackupTreePage extends Page {
 		}
 		DefaultMutableTreeNode tmc = new DefaultMutableTreeNode("stages/");
 		top.add(tmc);
-		String[] stastr = get(1, "t", 7);
 		for (StageMap sm : p.mc.maps) {
 			DefaultMutableTreeNode tsm = new DefaultMutableTreeNode(sm + "/");
 			tmc.add(tsm);
 			for (Stage st : sm.list) {
 				DefaultMutableTreeNode tst = new DefaultMutableTreeNode(st + "/");
 				tsm.add(tst);
-				int[][] info = st.data.getSimple();
-				Object[][] data = new Object[info.length][7];
-				for (int i = 0; i < info.length; i++) {
-					int ind = info.length - i - 1;
-					data[ind][1] = info[i][0];
-					data[ind][0] = info[i][8] == 1 ? "boss " : "";
-					data[ind][2] = info[i][9];
-					data[ind][3] = info[i][1] == 0 ? "infinite" : info[i][1];
-					data[ind][4] = info[i][5] + "%";
-					data[ind][5] = info[i][2];
-					if (info[i][3] == info[i][4])
-						data[ind][6] = info[i][3];
-					else
-						data[ind][6] = info[i][3] + "~" + info[i][4];
-				}
-				for (Object[] dat : data) {
-					DefaultMutableTreeNode te = new DefaultMutableTreeNode("" + dat[0] + dat[1] + "/");
-					tst.add(te);
-					for (int i = 2; i < dat.length; i++) {
-						DefaultMutableTreeNode ti = new DefaultMutableTreeNode(stastr[i] + ": " + dat[i]);
-						te.add(ti);
+				Line[] info = st.data.getSimple();
+				String[] data = new String[info.length];
+				for(int i=0;i<info.length;i++)
+					try {
+						data[i] = JsonEncoder.encode(info[i]).toString();
+					} catch (Exception e1) {
+						e1.printStackTrace();
 					}
+				for (String dat : data) {
+					DefaultMutableTreeNode te = new DefaultMutableTreeNode(dat);
+					tst.add(te);
 				}
 			}
 		}

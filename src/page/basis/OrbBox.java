@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import common.battle.data.Orb;
+import common.system.fake.FakeGraphics;
 import utilpc.awt.FG2D;
 
 public class OrbBox extends Canvas {
@@ -33,9 +34,9 @@ public class OrbBox extends Canvas {
 		FG2D f = new FG2D(img.getGraphics());
 		
 		f.drawImage(Orb.TRAITS[orbs[1]], 0, 0, a, a);
-		f.setComposite(FG2D.TRANS, 204, 0);
+		f.setComposite(FakeGraphics.TRANS, 204, 0);
 		f.drawImage(Orb.TYPES[orbs[0]], 0, 0, a, a);
-		f.setComposite(FG2D.DEF, 0, 0);
+		f.setComposite(FakeGraphics.DEF, 0, 0);
 		f.drawImage(Orb.GRADES[orbs[2]], 0, 0, a, a);
 		
 		g.drawImage(img, (int) ((w-a)/2), (int) ((h-a)/2), null);

@@ -20,6 +20,7 @@ import common.CommonStatic;
 import common.battle.BasisSet;
 import common.battle.LineUp;
 import common.battle.data.Orb;
+import common.util.Data;
 import common.util.unit.Form;
 import common.util.unit.Level;
 import main.Opts;
@@ -440,7 +441,7 @@ public class LevelEditPage extends Page {
 		String [] traits;
 		String [] grades;
 		
-		if(data[0] == Orb.ORB_ATK) {
+		if(data[0] == Data.ORB_ATK) {
 			traitData = new ArrayList<>(Orb.ATKORB.keySet());
 			
 			traits = new String[traitData.size()];
