@@ -10,6 +10,8 @@ import javax.swing.SwingConstants;
 import common.system.VImg;
 import common.util.unit.Form;
 import common.util.unit.Unit;
+import main.MainBCU;
+import utilpc.Theme;
 import utilpc.UtilPC;
 
 public class UnitLCR extends DefaultListCellRenderer {
@@ -31,6 +33,9 @@ public class UnitLCR extends DefaultListCellRenderer {
 		if (v == null)
 			return jl;
 		jl.setIcon(UtilPC.getIcon(v));
+		if(s && MainBCU.nimbus) {
+			jl.setBackground(MainBCU.light ? Theme.LIGHT.NIMBUS_SELECT_BG : Theme.DARK.NIMBUS_SELECT_BG);
+		}
 		return jl;
 	}
 }

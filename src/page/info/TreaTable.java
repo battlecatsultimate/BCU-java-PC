@@ -23,6 +23,7 @@ import javax.swing.JLabel;
 import common.CommonStatic;
 import common.battle.BasisSet;
 import common.system.Node;
+import main.MainBCU;
 import page.JTF;
 import page.JTG;
 import page.Page;
@@ -173,7 +174,7 @@ public class TreaTable extends Page {
 				add(jln[i]);
 				add(jtf[i]);
 			} else
-				jln[i].setForeground(Color.BLUE);
+				jln[i].setForeground(MainBCU.light ? Color.BLUE : new Color(84, 110, 122));
 			if (--k == 0)
 				cur = colp.side(cur);
 

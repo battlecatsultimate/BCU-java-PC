@@ -28,6 +28,7 @@ import page.JBTN;
 import page.JTF;
 import page.MainLocale;
 import page.Page;
+import utilpc.Interpret;
 import utilpc.UtilPC;
 
 public class LevelEditPage extends Page {
@@ -155,7 +156,7 @@ public class LevelEditPage extends Page {
 		});
 		
 		add.setLnr(x -> {
-			int[] data = {0, 0, 0};
+			int[] data = {0, Orb.DATA.get(0), 0};
 			
 			orbs.add(data);
 			
@@ -335,28 +336,18 @@ public class LevelEditPage extends Page {
 	}
 	
 	private String getTrait(int trait) {
-		switch(trait) {
-			case 0:
-				return MainLocale.getLoc(3, "c1");
-			case 1:
-				return MainLocale.getLoc(3, "c2");
-			case 2:
-				return MainLocale.getLoc(3, "c3");
-			case 3:
-				return MainLocale.getLoc(3, "c4");
-			case 4:
-				return MainLocale.getLoc(3, "c5");
-			case 5:
-				return MainLocale.getLoc(3, "c6");
-			case 6:
-				return MainLocale.getLoc(3, "c7");
-			case 7:
-				return MainLocale.getLoc(3, "c8");
-			case 8:
-				return MainLocale.getLoc(3, "c0");
-			default:
-				return "Unknown Trait "+trait;
+		String res = "";
+		
+		for(int i = 0; i < Interpret.TRAIT.length; i++) {
+			if (((trait >> i) & 1) > 0) {
+				res += Interpret.TRAIT[i]+ "/ ";
+			}
 		}
+		
+		if(res.endsWith("/ "))
+			res = res.substring(0, res.length() - 2);
+		
+		return res;
 	}
 	
 	private String getGrade(int grade) {

@@ -301,6 +301,7 @@ public class PackEditPage extends Page {
 		unpk.setLnr(x -> {
 			pac.unpack();
 			unpk.setEnabled(false);
+			extr.setEnabled(true);
 		});
 
 	}
@@ -667,7 +668,9 @@ public class PackEditPage extends Page {
 		vmsc.setEnabled(pac != null);
 		recd.setEnabled(pac != null && pac != Pack.def);
 		boolean canUnpack = pac != null && pac != Pack.def && !pac.editable && pac.author.equals(Account.USERNAME);
+		boolean canExport = pac != null && pac != Pack.def && pac.editable && pac.author.equals(Account.USERNAME);
 		unpk.setEnabled(canUnpack);
+		extr.setEnabled(canExport);
 		if (b)
 			jtfp.setText(pack.name);
 		if (pac == null) {

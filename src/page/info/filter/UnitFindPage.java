@@ -10,6 +10,7 @@ import javax.swing.JScrollPane;
 import common.util.pack.Pack;
 import common.util.unit.Form;
 import page.JBTN;
+import page.JTF;
 import page.JTG;
 import page.Page;
 
@@ -22,6 +23,8 @@ public class UnitFindPage extends Page {
 	private final UnitListTable ult = new UnitListTable(this);
 	private final JScrollPane jsp = new JScrollPane(ult);
 	private final UnitFilterBox ufb;
+	private final JTF seatf = new JTF();
+	private final JBTN seabt = new JBTN(0, "search");
 
 	public UnitFindPage(Page p, Pack pack) {
 		super(p);
@@ -60,6 +63,8 @@ public class UnitFindPage extends Page {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);
 		set(show, x, y, 250, 0, 200, 50);
+		set(seatf, x, y, 550, 0, 1000, 50);
+		set(seabt, x, y, 1600, 0, 200, 50);
 		if (show.isSelected()) {
 			int[] siz = ufb.getSizer();
 			set(ufb, x, y, 50, 100, siz[0], siz[1]);
@@ -92,6 +97,24 @@ public class UnitFindPage extends Page {
 			}
 		});
 
+		seabt.setLnr((b) -> {
+			if(ufb != null) {
+				ufb.name = seatf.getText();
+				
+				ufb.callBack(null);
+			}
+		});
+		
+		seatf.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(ufb != null) {
+					ufb.name = seatf.getText();
+					
+					ufb.callBack(null);
+				}
+			}
+		});
 	}
 
 	private void ini() {
@@ -99,6 +122,8 @@ public class UnitFindPage extends Page {
 		add(show);
 		add(ufb);
 		add(jsp);
+		add(seatf);
+		add(seabt);
 		show.setSelected(true);
 		addListeners();
 	}

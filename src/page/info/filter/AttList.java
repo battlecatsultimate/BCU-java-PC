@@ -12,8 +12,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 
+import main.MainBCU;
 import page.JTG;
 import page.Page;
+import utilpc.Theme;
 import utilpc.UtilPC;
 
 class AttList extends JList<String> {
@@ -40,6 +42,9 @@ class AttList extends JList<String> {
 	}
 
 	protected AttList(int type, int para) {
+		if(MainBCU.nimbus) {
+			setSelectionBackground(MainBCU.light ? Theme.LIGHT.NIMBUS_SELECT_BG : Theme.DARK.NIMBUS_SELECT_BG);
+		}
 		setCellRenderer(new DefaultListCellRenderer() {
 
 			private static final long serialVersionUID = 1L;

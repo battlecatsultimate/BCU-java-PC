@@ -23,6 +23,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import common.battle.data.MaskUnit;
+import common.system.MultiLangCont;
 import common.util.pack.Pack;
 import common.util.unit.Form;
 import common.util.unit.Unit;
@@ -45,6 +46,8 @@ public abstract class UnitFilterBox extends Page {
 	}
 
 	protected Pack pac;
+	
+	public String name = "";
 
 	protected UnitFilterBox(Page p, Pack pack) {
 		super(p);
@@ -82,6 +85,11 @@ class UFBButton extends UnitFilterBox {
 	protected void resized(int x, int y) {
 		JTG[][] btns = new JTG[][] { rare, trait, abis, proc, atkt };
 		AttList.btnDealer(x, y, btns, orop, -1, 0, 1, -1, 2);
+	}
+	
+	@Override
+	public void callBack(Object o) {
+		confirm();
 	}
 
 	private void confirm() {
@@ -121,11 +129,24 @@ class UFBButton extends UnitFilterBox {
 							b3 |= isType(du, i);
 						else
 							b3 &= isType(du, i);
+				boolean b4 = true;
+				
+				String fname = MultiLangCont.FNAME.getCont(f);
+				
+				if(fname == null)
+					fname = f.name;
+				
+				if(fname == null)
+					fname = "";
+				
+				if(name != null)
+					b4 = fname.toLowerCase().contains(name.toLowerCase());
+				
 				b0 = nonSele(rare) | b0;
 				b1 = nonSele(trait) | b1;
 				b2 = nonSele(abis) & nonSele(proc) | b2;
 				b3 = nonSele(atkt) | b3;
-				if (b0 & b1 & b2 & b3)
+				if (b0 & b1 & b2 & b3 & b4)
 					ans.add(f);
 			}
 		getFront().callBack(ans);
@@ -227,6 +248,11 @@ class UFBList extends UnitFilterBox {
 		set(jab, x, y, 250, 50, 200, 1100);
 		set(jat, x, y, 0, 850, 200, 300);
 	}
+	
+	@Override
+	public void callBack(Object o) {
+		confirm();
+	}
 
 	private void confirm() {
 		List<Form> ans = new ArrayList<>();
@@ -261,11 +287,25 @@ class UFBList extends UnitFilterBox {
 						b3 |= isType(du, i);
 					else
 						b3 &= isType(du, i);
+				
+				boolean b4 = true;
+				
+				String fname = MultiLangCont.FNAME.getCont(f);
+				
+				if(fname == null)
+					fname = f.name;
+				
+				if(fname == null)
+					fname = "";
+				
+				if(name != null)
+					b4 = fname.toLowerCase().contains(name.toLowerCase());
+				
 				b0 = rare.getSelectedIndex() == -1 | b0;
 				b1 = trait.getSelectedIndex() == -1 | b1;
 				b2 = abis.getSelectedIndex() == -1 | b2;
 				b3 = atkt.getSelectedIndex() == -1 | b3;
-				if (b0 & b1 & b2 & b3)
+				if (b0 & b1 & b2 & b3 & b4)
 					ans.add(f);
 			}
 		getFront().callBack(ans);

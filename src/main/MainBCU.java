@@ -1,5 +1,6 @@
 package main;
 
+import java.awt.Color;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,18 +16,21 @@ import jogl.GLBBB;
 import jogl.util.GLIB;
 import page.MainFrame;
 import page.MainPage;
+import page.Page;
 import page.awt.AWTBBB;
 import page.awt.BBBuilder;
+import utilpc.Theme;
 import utilpc.UtilPC;
 import utilpc.awt.PCIB;
 
 public class MainBCU {
 
-	public static final int ver = 40914;
+	public static final int ver = 41002;
 
 	public static int FILTER_TYPE = 0;
 	public static final boolean WRITE = !new File("./.project").exists();
-	public static boolean preload = false, trueRun = false, loaded = false, USE_JOGL = false;
+	public static boolean preload = false, trueRun = true, loaded = false, USE_JOGL = false;
+	public static boolean light = false, nimbus = true;
 
 	public static String getTime() {
 		return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
@@ -39,11 +43,7 @@ public class MainBCU {
 			Opts.pop(Opts.MEMORY, "" + (mem >> 20));
 			System.exit(0);
 		}
-		if (!new File("./BCU_lib").exists()) {
-			Opts.pop(Opts.INSTALL);
-			System.exit(0);
-		}
-
+		
 		Writer.logPrepare();
 		Writer.logSetup();
 		Reader.getData$0();
@@ -51,6 +51,18 @@ public class MainBCU {
 		ImageBuilder.builder = USE_JOGL ? new GLIB() : new PCIB();
 		BBBuilder.def = USE_JOGL ? new GLBBB() : AWTBBB.INS;
 		CommonStatic.def = new UtilPC.PCItr();
+		
+		if(nimbus) {
+			if(light) {
+				Theme.LIGHT.setTheme();
+				Page.BGCOLOR = new Color(255, 255, 255);
+			} else {
+				Theme.DARK.setTheme();
+				Page.BGCOLOR = new Color(40, 40, 40);
+			}
+		} else {
+			Page.BGCOLOR = new Color(255, 255, 255);
+		}
 
 		new MainFrame(Data.revVer(MainBCU.ver)).initialize();
 		new Timer().start();

@@ -57,6 +57,10 @@ public class MusicEditPage extends Page {
 		back.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				if(BCMusic.BG != null && BCMusic.BG.isPlaying()) {
+					BCMusic.BG.stop();
+				}
+				
 				changePanel(getFront());
 			}
 		});
@@ -87,7 +91,7 @@ public class MusicEditPage extends Page {
 			public void actionPerformed(ActionEvent arg0) {
 				if (sele == null)
 					return;
-				BCMusic.setBG(sele);
+				BCMusic.setBG(sele, 0);
 			}
 		});
 

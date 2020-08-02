@@ -11,6 +11,8 @@ import common.system.VImg;
 import common.util.Animable;
 import common.util.anim.AnimU;
 import common.util.unit.AbEnemy;
+import main.MainBCU;
+import utilpc.Theme;
 import utilpc.UtilPC;
 
 public class AnimLCR extends DefaultListCellRenderer {
@@ -24,6 +26,11 @@ public class AnimLCR extends DefaultListCellRenderer {
 		jl.setText(o.toString());
 		jl.setIcon(null);
 		jl.setHorizontalTextPosition(SwingConstants.RIGHT);
+		
+		if(s && MainBCU.nimbus) {
+			jl.setBackground(MainBCU.light ? Theme.LIGHT.NIMBUS_SELECT_BG : Theme.DARK.NIMBUS_SELECT_BG);
+		}
+		
 		VImg v;
 		if (o instanceof Animable<?>)
 			v = ((Animable<? extends AnimU<?>>) o).anim.getEdi();

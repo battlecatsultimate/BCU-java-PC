@@ -1,6 +1,7 @@
 package page.info;
 
 import java.awt.Point;
+import java.text.DecimalFormat;
 
 import common.util.stage.Castles;
 import common.util.stage.CharaGroup;
@@ -8,6 +9,7 @@ import common.util.stage.Limit;
 import common.util.stage.LvRestrict;
 import common.util.stage.Stage;
 import page.MainFrame;
+import page.MainLocale;
 import page.Page;
 import page.pack.CharaGroupPage;
 import page.pack.LvRestrictPage;
@@ -114,6 +116,10 @@ public class HeadTable extends AbJTable {
 		img[1] = st.bg;
 		img[2] = infs[5];
 		img[3] = st.getCastle();
+		img[4] = MainLocale.getLoc(1,  "lop");
+		img[5] = convertTime(st.loop0);
+		img[6] = MainLocale.getLoc(1, "lop1");
+		img[7] = convertTime(st.loop1);
 		Limit lim = st.getLim(0);
 		if (lim != null) {
 			if (lim.rare != 0) {
@@ -153,6 +159,29 @@ public class HeadTable extends AbJTable {
 			}
 		}
 		data = lstr;
+	}
+	
+	private String convertTime(long milli) {
+		long min = milli / 60 / 1000;
+		
+		double time = (double) milli - (double) min * 60000;
+		
+		time /= 1000;
+		
+		DecimalFormat df = new DecimalFormat("#.###");
+		
+		double s = Double.parseDouble(df.format(time));
+		
+		if(s >= 60) {
+			s -= 60;
+			min += 1;
+		}
+		
+		if(s < 10) {
+			return min + ":"+"0"+df.format(s);
+		} else {
+			return min + ":"+df.format(s);
+		}
 	}
 
 }

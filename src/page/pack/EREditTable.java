@@ -143,7 +143,7 @@ class EREditTable extends AbJTable implements Reorderable {
 		EREnt<Integer> er = rand.list.get(r);
 		AbEnemy e = EnemyStore.getAbEnemy(er.ent, true);
 		if (e != null && e instanceof Enemy)
-			MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, er.multi));
+			MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, er.multi, er.mula));
 	}
 
 	protected synchronized int remLine() {
@@ -174,7 +174,7 @@ class EREditTable extends AbJTable implements Reorderable {
 		if (c == 0)
 			return EnemyStore.getAbEnemy(er.ent, true);
 		else if (c == 1)
-			return er.multi + "%";
+			return CommonStatic.toArrayFormat(er.multi, er.mula) + "%";
 		else if (c == 2)
 			return er.share;
 		return null;
@@ -188,9 +188,10 @@ class EREditTable extends AbJTable implements Reorderable {
 			v = 0;
 		if (c == 0)
 			er.ent = v;
-		else if (c == 1)
+		else if (c == 1) {
 			er.multi = v;
-		else if (c == 2)
+			er.mula = para != -1 ? para : v;
+		} else if (c == 2)
 			er.share = v;
 	}
 

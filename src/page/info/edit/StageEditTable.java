@@ -3,6 +3,7 @@ package page.info.edit;
 import java.awt.Component;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
 import javax.swing.text.JTextComponent;
@@ -140,9 +141,28 @@ class StageEditTable extends AbJTable implements Reorderable {
 			int i = ((String) arg0).length();
 			set(r, c, i > 0 ? 1 : 0, 0);
 
+		} else if (c == 2) {
+			int[] data = CommonStatic.parseIntsN((String) arg0);
+
+			if (data.length == 0) {
+				return;
+			} else if (data.length == 1) {
+				set(r, c, data[0], -1);
+			} else {
+				set(r, c, data[0], data[1]);
+			}
 		} else {
 			int i = arg0 instanceof Integer ? (Integer) arg0 : CommonStatic.parseIntN((String) arg0);
 			set(r, c, i, 0);
+		}
+	}
+
+	@Override
+	public String getToolTipText(MouseEvent e) {
+		if (columnAtPoint(e.getPoint()) == 2) {
+			return "{hp, atk}";
+		} else {
+			return null;
 		}
 	}
 
@@ -172,6 +192,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 			ans[sind].castle_0 = 100;
 			ans[sind].layer_0 = 9;
 			ans[sind].multiple = 100;
+			ans[sind].mult_atk = 100;
 		}
 		stage.datas = ans;
 		ind++;
@@ -198,7 +219,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 			return;
 		AbEnemy e = EnemyStore.getAbEnemy(info[ind].enemy, true);
 		if (e != null && e instanceof Enemy)
-			MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, info[ind].multiple));
+			MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, info[ind].multiple, info[ind].mult_atk));
 		if (e != null && e instanceof EneRand)
 			MainFrame.changePanel(new EREditPage(page, pack, (EneRand) e));
 	}
@@ -249,7 +270,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 		else if (c == 1)
 			return EnemyStore.getAbEnemy(data.enemy, true);
 		else if (c == 2)
-			return data.multiple + "%";
+			return CommonStatic.toArrayFormat(data.multiple, data.mult_atk) + "%";
 		else if (c == 3)
 			return data.number == 0 ? "infinite" : data.number;
 		else if (c == 4)
@@ -284,9 +305,10 @@ class StageEditTable extends AbJTable implements Reorderable {
 			data.boss = v;
 		else if (c == 1)
 			data.enemy = v;
-		else if (c == 2)
-			data.multiple = v;
-		else if (c == 3)
+		else if (c == 2) {
+			data.multiple = v == -1 ? data.multiple : v;
+			data.mult_atk = para == -1 ? v : para;
+		} else if (c == 3)
 			data.number = v;
 		else if (c == 4)
 			if (para == -1)

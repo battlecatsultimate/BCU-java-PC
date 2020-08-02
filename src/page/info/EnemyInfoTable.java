@@ -28,14 +28,15 @@ public class EnemyInfoTable extends Page {
 
 	private final BasisSet b;
 	private final Enemy e;
-	private int multi;
+	private int multi, mulatk;
 
-	protected EnemyInfoTable(Page p, Enemy de, int mul) {
+	protected EnemyInfoTable(Page p, Enemy de, int mul, int mula) {
 		super(p);
 		b = BasisSet.current;
 
 		e = de;
 		multi = mul;
+		mulatk = mula;
 		atks = new JL[e.de.rawAtkData().length][8];
 		List<String> ls = Interpret.getAbi(e.de);
 		abis = new JLabel[ls.size()];
@@ -54,11 +55,12 @@ public class EnemyInfoTable extends Page {
 
 	protected void reset() {
 		double mul = multi * e.de.multi(b) / 100;
+		double mula = mulatk * e.de.multi(b) / 100;
 		main[1][3].setText("" + (int) (e.de.getHp() * mul));
-		main[2][3].setText("" + (int) (e.de.allAtk() * mul * 30 / e.de.getItv()));
+		main[2][3].setText("" + (int) (e.de.allAtk() * mula * 30 / e.de.getItv()));
 		int[][] atkData = e.de.rawAtkData();
 		for (int i = 0; i < atks.length; i++)
-			atks[i][1].setText("" + (int) (atkData[i][0] * mul));
+			atks[i][1].setText("" + (int) (atkData[i][0] * mula));
 	}
 
 	@Override
@@ -88,10 +90,28 @@ public class EnemyInfoTable extends Page {
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				int val = CommonStatic.parseIntN(jtf.getText());
-				if (val != -1)
-					multi = val;
-				jtf.setText(multi + "%");
+				int [] data = CommonStatic.parseIntsN(jtf.getText().trim().replace("%", ""));
+				
+				if(data.length == 1) {
+					if(data[0] != -1) {
+						multi = mulatk = data[0];
+					}
+					
+					jtf.setText(CommonStatic.toArrayFormat(multi, mulatk)+"%");
+				} else if(data.length == 2) {
+					if(data[0] != -1) {
+						multi = data[0];
+					}
+					
+					if(data[1] != -1) {
+						mulatk = data[1];
+					}
+					
+					jtf.setText(CommonStatic.toArrayFormat(multi, mulatk)+"%");
+				} else {
+					jtf.setText(CommonStatic.toArrayFormat(multi, mulatk)+"%");
+				}
+
 				reset();
 			}
 
@@ -115,7 +135,7 @@ public class EnemyInfoTable extends Page {
 					atks[i][j].setHorizontalAlignment(SwingConstants.CENTER);
 			}
 		add(jtf);
-		jtf.setText(multi + "%");
+		jtf.setText(CommonStatic.toArrayFormat(multi, mulatk) + "%");
 		int itv = e.de.getItv();
 		main[0][0].setText("ID");
 		main[0][1].setText("" + e.id);
