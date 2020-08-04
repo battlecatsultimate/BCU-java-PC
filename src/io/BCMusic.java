@@ -92,7 +92,7 @@ public class BCMusic extends Data {
 		secall = new boolean[TOT];
 	}
 
-	public static synchronized void play(int ind, int loop) {
+	public static synchronized void play(int ind, long loop) {
 		music = ind;
 		File f = MusicStore.getMusic(ind);
 		if (f != null)
@@ -168,7 +168,7 @@ public class BCMusic extends Data {
 		}
 	}
 
-	public static synchronized void setBG(File f, int loop) {
+	public static synchronized void setBG(File f, long loop) {
 		if (!play)
 			return;
 		try {
@@ -248,7 +248,7 @@ public class BCMusic extends Data {
 		return line;
 	}
 	
-	private static void loadSound(int ind, File file, float vol, boolean b, int loop) throws Exception {
+	private static void loadSound(int ind, File file, float vol, boolean b, long loop) throws Exception {
 		// set ind to -1 to tell it's BG
 		
 		if(b) {
@@ -288,7 +288,7 @@ public class BCMusic extends Data {
 		}
 	}
 	
-	private static void loadSound(int ind, byte[] bytes, float vol, boolean b, int loop) throws Exception {
+	private static void loadSound(int ind, byte[] bytes, float vol, boolean b, long loop) throws Exception {
 		// set ind to -1 to tell it's BG
 		
 		if(b) {

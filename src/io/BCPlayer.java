@@ -18,7 +18,7 @@ public class BCPlayer implements LineListener{
 	private final int ind;
 	private final Clip c;
 	private final FloatControl master;
-	private final int loop;
+	private final long loop;
 	private final boolean isLooping;
 	
 	private boolean rewinding = false;
@@ -33,7 +33,7 @@ public class BCPlayer implements LineListener{
 		this.isLooping = looping;
 	}
 	
-	protected BCPlayer(Clip c, int ind, int loop, boolean looping) {
+	protected BCPlayer(Clip c, int ind, long loop, boolean looping) {
 		this.ind = ind;
 		this.c = c;
 		this.c.addLineListener(this);
@@ -41,7 +41,7 @@ public class BCPlayer implements LineListener{
 		this.loop = loop;
 		this.isLooping = looping;
 		
-		if(loop > 0 && loop * 1000 < c.getMicrosecondLength()) {
+		if(loop > 0 && (long) loop * 1000 < c.getMicrosecondLength()) {
 			c.setLoopPoints(milliToFrame(loop), -1);
 		} else if(loop * 1000 >= c.getMicrosecondLength()) {
 			c.loop(0);
