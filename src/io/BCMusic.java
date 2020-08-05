@@ -166,13 +166,23 @@ public class BCMusic extends Data {
 			
 			baseHit = null;
 		}
+		
+		if(BG != null) {
+			BG.release();
+			BG = null;
+		}
 	}
 
 	public static synchronized void setBG(File f, long loop) {
 		if (!play)
 			return;
 		try {
-			loadSound(-1, f, getVol(VOL_BG), true, loop);
+			if(BG != null) {
+				BG.release();
+				loadSound(-1, f, getVol(VOL_BG), true, loop);
+			} else {
+				loadSound(-1, f, getVol(VOL_BG), true, loop);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

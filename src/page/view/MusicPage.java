@@ -66,6 +66,7 @@ public class MusicPage extends Page {
 		back.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				BCMusic.clear();
 				changePanel(getFront());
 			}
 		});

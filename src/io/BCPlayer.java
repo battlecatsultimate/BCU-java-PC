@@ -16,8 +16,8 @@ public class BCPlayer implements LineListener{
 	}
 	
 	private final int ind;
-	private final Clip c;
-	private final FloatControl master;
+	private Clip c;
+	private FloatControl master;
 	private final long loop;
 	private final boolean isLooping;
 	
@@ -63,9 +63,16 @@ public class BCPlayer implements LineListener{
 	}
 	
 	protected void release() {
+		if(playing) {
+			stop();
+		}
 		playing = false;
 		rewinding = false;
-		c.close();
+		if(c != null) {
+			c.close();
+			c = null;
+		}
+		master = null;
 	}
 	
 	public boolean isPlaying() {
@@ -74,7 +81,9 @@ public class BCPlayer implements LineListener{
 	
 	public void stop() {
 		playing = false;
-		c.stop();
+		if(c != null) {
+			c.stop();
+		}
 	}
 	
 	protected void start() {
