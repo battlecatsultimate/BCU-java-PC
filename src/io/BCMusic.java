@@ -171,6 +171,8 @@ public class BCMusic extends Data {
 			BG.release();
 			BG = null;
 		}
+		
+		sounds.clear();
 	}
 
 	public static synchronized void setBG(File f, long loop) {
@@ -216,8 +218,6 @@ public class BCMusic extends Data {
 		if (BG != null)
 			BG.stop();
 		
-		BG = null;
-		
 		for(ArrayDeque<BCPlayer> players : sounds.values()) {
 			players.forEach((player) -> {
 				player.stop();
@@ -242,10 +242,12 @@ public class BCMusic extends Data {
 		DataLine.Info info = new DataLine.Info(Clip.class, format);
 		Clip line = (Clip) AudioSystem.getLine(info);
 		line.open(stream);
+		raw.close();
+		stream.close();
 		return line;
 	}
 
-	public static Clip openFile(File file) throws Exception {
+	private static Clip openFile(File file) throws Exception {
 		AudioInputStream raw = AudioSystem.getAudioInputStream(file);
 		AudioFormat rf = raw.getFormat();
 		int ch = rf.getChannels();
@@ -255,6 +257,8 @@ public class BCMusic extends Data {
 		DataLine.Info info = new DataLine.Info(Clip.class, format);
 		Clip line = (Clip) AudioSystem.getLine(info);
 		line.open(stream);
+		raw.close();
+		stream.close();
 		return line;
 	}
 	
@@ -268,6 +272,7 @@ public class BCMusic extends Data {
 			
 			if(BG != null) {
 				BG.stop();
+				BG.release();
 			}
 			
 			BG = new BCPlayer(c, -1, loop, true);
