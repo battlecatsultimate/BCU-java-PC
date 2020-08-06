@@ -367,7 +367,7 @@ class HeadEditTable extends Page {
 		}
 		
 		if (jtf == lop) {
-			int tim = toMilli(jtf.getText());
+			long tim = toMilli(jtf.getText());
 			
 			if(tim != -1) {
 				sta.loop0 = tim;
@@ -377,7 +377,7 @@ class HeadEditTable extends Page {
 		}
 		
 		if (jtf == lop1) {
-			int tim = toMilli(jtf.getText());
+			long tim = toMilli(jtf.getText());
 			
 			if(tim != -1) {
 				sta.loop1 = tim;
@@ -469,9 +469,15 @@ class HeadEditTable extends Page {
 		}
 	}
 	
-	private int toMilli(String time) {
+	private long toMilli(String time) {
 		try {
-			int [] times = CommonStatic.parseIntsN(time);
+			long [] times = CommonStatic.parseLongsN(time);
+			
+			for(long t : times) {
+				if(t < 0) {
+					return -1;
+				}
+			}
 			
 			if(times.length == 1) {
 				return times[0] * 1000;
@@ -481,7 +487,7 @@ class HeadEditTable extends Page {
 				if(times[2] < 1000) {
 					return (times[0] * 60 + times[1]) * 1000 + times[2];
 				} else {
-					String decimal = Integer.toString(times[2]).substring(0, 3);
+					String decimal = Long.toString(times[2]).substring(0, 3);
 					return (times[0] * 60 + times[1]) * 1000 + Integer.parseInt(decimal);
 				}
 			} else {

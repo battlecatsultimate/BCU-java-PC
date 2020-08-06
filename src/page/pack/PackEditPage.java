@@ -668,7 +668,7 @@ public class PackEditPage extends Page {
 		vmsc.setEnabled(pac != null);
 		recd.setEnabled(pac != null && pac != Pack.def);
 		boolean canUnpack = pac != null && pac != Pack.def && !pac.editable && pac.author.equals(Account.USERNAME);
-		boolean canExport = pac != null && pac != Pack.def && pac.editable && pac.author.equals(Account.USERNAME);
+		boolean canExport = pac != null && pac != Pack.def && pac.editable;
 		unpk.setEnabled(canUnpack);
 		extr.setEnabled(canExport);
 		if (b)

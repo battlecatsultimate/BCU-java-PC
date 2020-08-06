@@ -92,7 +92,7 @@ public class BCMusic extends Data {
 		secall = new boolean[TOT];
 	}
 
-	public static synchronized void play(int ind, int loop) {
+	public static synchronized void play(int ind, long loop) {
 		music = ind;
 		File f = MusicStore.getMusic(ind);
 		if (f != null)
@@ -166,13 +166,25 @@ public class BCMusic extends Data {
 			
 			baseHit = null;
 		}
+		
+		if(BG != null) {
+			BG.release();
+			BG = null;
+		}
+		
+		sounds.clear();
 	}
 
-	public static synchronized void setBG(File f, int loop) {
+	public static synchronized void setBG(File f, long loop) {
 		if (!play)
 			return;
 		try {
-			loadSound(-1, f, getVol(VOL_BG), true, loop);
+			if(BG != null) {
+				BG.release();
+				loadSound(-1, f, getVol(VOL_BG), true, loop);
+			} else {
+				loadSound(-1, f, getVol(VOL_BG), true, loop);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -206,8 +218,6 @@ public class BCMusic extends Data {
 		if (BG != null)
 			BG.stop();
 		
-		BG = null;
-		
 		for(ArrayDeque<BCPlayer> players : sounds.values()) {
 			players.forEach((player) -> {
 				player.stop();
@@ -232,10 +242,12 @@ public class BCMusic extends Data {
 		DataLine.Info info = new DataLine.Info(Clip.class, format);
 		Clip line = (Clip) AudioSystem.getLine(info);
 		line.open(stream);
+		raw.close();
+		stream.close();
 		return line;
 	}
 
-	public static Clip openFile(File file) throws Exception {
+	private static Clip openFile(File file) throws Exception {
 		AudioInputStream raw = AudioSystem.getAudioInputStream(file);
 		AudioFormat rf = raw.getFormat();
 		int ch = rf.getChannels();
@@ -245,10 +257,12 @@ public class BCMusic extends Data {
 		DataLine.Info info = new DataLine.Info(Clip.class, format);
 		Clip line = (Clip) AudioSystem.getLine(info);
 		line.open(stream);
+		raw.close();
+		stream.close();
 		return line;
 	}
 	
-	private static void loadSound(int ind, File file, float vol, boolean b, int loop) throws Exception {
+	private static void loadSound(int ind, File file, float vol, boolean b, long loop) throws Exception {
 		// set ind to -1 to tell it's BG
 		
 		if(b) {
@@ -258,6 +272,7 @@ public class BCMusic extends Data {
 			
 			if(BG != null) {
 				BG.stop();
+				BG.release();
 			}
 			
 			BG = new BCPlayer(c, -1, loop, true);
@@ -288,7 +303,7 @@ public class BCMusic extends Data {
 		}
 	}
 	
-	private static void loadSound(int ind, byte[] bytes, float vol, boolean b, int loop) throws Exception {
+	private static void loadSound(int ind, byte[] bytes, float vol, boolean b, long loop) throws Exception {
 		// set ind to -1 to tell it's BG
 		
 		if(b) {
