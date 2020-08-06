@@ -46,7 +46,7 @@ public abstract class UnitFilterBox extends Page {
 	}
 
 	protected Pack pac;
-	
+
 	public String name = "";
 
 	protected UnitFilterBox(Page p, Pack pack) {
@@ -86,7 +86,7 @@ class UFBButton extends UnitFilterBox {
 		JTG[][] btns = new JTG[][] { rare, trait, abis, proc, atkt };
 		AttList.btnDealer(x, y, btns, orop, -1, 0, 1, -1, 2);
 	}
-	
+
 	@Override
 	public void callBack(Object o) {
 		confirm();
@@ -119,9 +119,9 @@ class UFBButton extends UnitFilterBox {
 				for (int i = 0; i < proc.length; i++)
 					if (proc[i].isSelected())
 						if (orop[1].isSelected())
-							b2 |= du.getAllProc(i)[0] > 0;
+							b2 |= du.getAllProc().getArr(i).exists();
 						else
-							b2 &= du.getAllProc(i)[0] > 0;
+							b2 &= du.getAllProc().getArr(i).exists();
 				boolean b3 = !orop[2].isSelected();
 				for (int i = 0; i < atkt.length; i++)
 					if (atkt[i].isSelected())
@@ -130,18 +130,18 @@ class UFBButton extends UnitFilterBox {
 						else
 							b3 &= isType(du, i);
 				boolean b4 = true;
-				
+
 				String fname = MultiLangCont.FNAME.getCont(f);
-				
-				if(fname == null)
+
+				if (fname == null)
 					fname = f.name;
-				
-				if(fname == null)
+
+				if (fname == null)
 					fname = "";
-				
-				if(name != null)
+
+				if (name != null)
 					b4 = fname.toLowerCase().contains(name.toLowerCase());
-				
+
 				b0 = nonSele(rare) | b0;
 				b1 = nonSele(trait) | b1;
 				b2 = nonSele(abis) & nonSele(proc) | b2;
@@ -248,7 +248,7 @@ class UFBList extends UnitFilterBox {
 		set(jab, x, y, 250, 50, 200, 1100);
 		set(jat, x, y, 0, 850, 200, 300);
 	}
-	
+
 	@Override
 	public void callBack(Object o) {
 		confirm();
@@ -278,29 +278,29 @@ class UFBList extends UnitFilterBox {
 						else
 							b2 &= bind;
 					} else if (orop[1].isSelected())
-						b2 |= du.getAllProc(i - len)[0] > 0;
+						b2 |= du.getAllProc().getArr(i - len).exists();
 					else
-						b2 &= du.getAllProc(i - len)[0] > 0;
+						b2 &= du.getAllProc().getArr(i - len).exists();
 				boolean b3 = !orop[2].isSelected();
 				for (int i : atkt.getSelectedIndices())
 					if (orop[2].isSelected())
 						b3 |= isType(du, i);
 					else
 						b3 &= isType(du, i);
-				
+
 				boolean b4 = true;
-				
+
 				String fname = MultiLangCont.FNAME.getCont(f);
-				
-				if(fname == null)
+
+				if (fname == null)
 					fname = f.name;
-				
-				if(fname == null)
+
+				if (fname == null)
 					fname = "";
-				
-				if(name != null)
+
+				if (name != null)
 					b4 = fname.toLowerCase().contains(name.toLowerCase());
-				
+
 				b0 = rare.getSelectedIndex() == -1 | b0;
 				b1 = trait.getSelectedIndex() == -1 | b1;
 				b2 = abis.getSelectedIndex() == -1 | b2;

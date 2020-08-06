@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
@@ -87,6 +88,7 @@ class BIBuilder extends ImageBuilder {
 
 	@Override
 	public FIBI build(Object o) throws IOException {
+		
 		if (o == null)
 			return null;
 		if (o instanceof BufferedImage)
@@ -95,6 +97,8 @@ class BIBuilder extends ImageBuilder {
 		BufferedImage b = null;
 		if (o instanceof File)
 			b = ImageIO.read((File) o);
+		else if(o instanceof InputStream)
+			b = ImageIO.read((InputStream) o);
 		else if (o instanceof byte[])
 			b = ImageIO.read(new ByteArrayInputStream((byte[]) o));
 		return b == null ? null : new FIBI(b);

@@ -11,6 +11,7 @@ import javax.swing.SwingConstants;
 
 import common.CommonStatic;
 import common.util.Data;
+import common.util.Data.Proc;
 import page.JL;
 import page.JTF;
 import page.Page;
@@ -23,12 +24,13 @@ class AtkProcTable extends Page {
 	private static final long serialVersionUID = 1L;
 
 	private static final int LEN = 22, SEC = 14;
-	private static final int[] INDS = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 20, 27, 29, 21, 22, 23, 24, 25, 26, 31,
-			32, 35, 36 };
+	private static final int[] INDS = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 20, 27, 29, 21, 22, 23, 24, 25, 26, 31, 32,
+			35, 36 };
 	private static final int[] TREA = new int[] { 2, 1, 1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 	private static final int[][] STRS = new int[][] { { 0, 1, 2 }, { 0, 1 }, { 0, 1 }, { 0, 9 }, { 0, 4 }, { 0, 1, 3 },
 			{ 0 }, { 0, 1, 2 }, { 0, 1 }, { 0 }, { 0 }, { 0, 9 }, { 0, 1 }, { 0, 1 }, { 0, 5, 2, 9, 6, 1 },
-			{ 0, 7, 8, 1, 2, 10 }, { 0, 1, 5, 6 }, { 0, 1, 11, 10, 6 }, { 0, 12 }, { 0, 2, 2, 1 }, {0, 1,  13}, {0, 1, 14, 6}};
+			{ 0, 7, 8, 1, 2, 10 }, { 0, 1, 5, 6 }, { 0, 1, 11, 10, 6 }, { 0, 12 }, { 0, 2, 2, 1 }, { 0, 1, 13 },
+			{ 0, 1, 14, 6 } };
 
 	private static String getString(int ind) {
 		if (ind == 0)
@@ -71,7 +73,7 @@ class AtkProcTable extends Page {
 	private final ListJtfPolicy ljp = new ListJtfPolicy();
 	private final boolean editable, isUnit;
 
-	private int[][] proc;
+	private Proc proc;
 
 	protected AtkProcTable(Page p, boolean edit, boolean unit) {
 		super(p);
@@ -98,24 +100,28 @@ class AtkProcTable extends Page {
 		}
 	}
 
-	protected void setData(int[][] ints) {
+	protected void setData(Proc ints) {
 		proc = ints;
+
+		// check defaults
+		if (ints.KB.prob > 0) {
+			if (ints.KB.dis == 0)
+				ints.KB.dis = Data.KB_DIS[Data.INT_KB];
+			if (ints.KB.time == 0)
+				ints.KB.time = Data.KB_TIME[Data.INT_KB];
+		}
+		if (ints.CRIT.prob > 0 && ints.CRIT.mult == 0)
+			ints.CRIT.mult = 200;
+
 		for (int i = 0; i < LEN; i++) {
 			int[] vals = STRS[i];
-			// check extra abilities
-			if (i == 0 && ints[i][0] > 0 && ints[i][1] == 0)
-				ints[i][1] = Data.KB_TIME[Data.INT_KB];
-			if (i == 0 && ints[i][0] > 0 && ints[i][2] == 0)
-				ints[i][2] = Data.KB_DIS[Data.INT_KB];
-			if (i == 3 && ints[i][0] > 0 && ints[i][1] == 0)
-				ints[i][1] = 200;
 			for (int j = 0; j < vals.length; j++) {
-				String str = "" + ints[INDS[i]][j];
+				String str = "" + ints.getArr(INDS[i]).get(j);
 				if (isUnit && TREA[i] == j)
 					if (vals[j] == 1)
-						str += "(" + (int) (ints[INDS[i]][j] * 1.2) + ")";
+						str += "(" + (int) (ints.getArr(INDS[i]).get(j) * 1.2) + ")";
 					else if (vals[j] == 2)
-						str += "(" + (int) (ints[INDS[i]][j] * 1.3) + ")";
+						str += "(" + (int) (ints.getArr(INDS[i]).get(j) * 1.3) + ")";
 				if (vals[j] == 0 || vals[j] == 3 || vals[j] == 9 || vals[j] == 12 || vals[j] == 13)
 					str += "%";
 				if (vals[j] == 1 || vals[j] == 10)
@@ -147,9 +153,10 @@ class AtkProcTable extends Page {
 				+ "same health: +16<br>" + "random layer: +32<br>" + "only on hit*: +64 <br>"
 				+ "only on kill*: +128<br>" + "^: not applicapable for unit<br>"
 				+ "*: distance relative to damaged entity</html>");
-		jtfs[16][3].setToolTipText("<html>type 0 : change only BG<br>"+"type 1 : change BG with killing all entities</html>");
-		jtfs[21][3].setToolTipText("<html>type 0 : make target faster with fixed speed<br>"+"type 1: make target faster with percent<br>"
-				+ "type 2 : make target have specific speed</html>");
+		jtfs[16][3].setToolTipText(
+				"<html>type 0 : change only BG<br>" + "type 1 : change BG with killing all entities</html>");
+		jtfs[21][3].setToolTipText("<html>type 0 : make target faster with fixed speed<br>"
+				+ "type 1: make target faster with percent<br>" + "type 2 : make target have specific speed</html>");
 		setFocusTraversalPolicy(ljp);
 		setFocusCycleRoot(true);
 	}
@@ -167,7 +174,7 @@ class AtkProcTable extends Page {
 							val = 100;
 						if ((type == 1 || type == 10) && val < -1)
 							val = -1;
-						proc[INDS[i]][j] = val;
+						proc.getArr(INDS[i]).set(j, val);
 					}
 		}
 		getFront().callBack(null);

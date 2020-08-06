@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import common.CommonStatic;
+import common.util.Data.Proc;
 import page.JL;
 import page.JTF;
 import page.Page;
@@ -39,7 +40,7 @@ class MainProcTable extends Page {
 
 	private final ListJtfPolicy ljp = new ListJtfPolicy();
 
-	private int[][] proc;
+	private Proc proc;
 
 	private final boolean editable;
 
@@ -66,16 +67,16 @@ class MainProcTable extends Page {
 
 	}
 
-	protected void setData(int[][] ints) {
+	protected void setData(Proc ints) {
 		proc = ints;
 		for (int i = 0; i < INDS.length; i++)
 			for (int j = 0; j < UNIT[i].length; j++)
 				if (UNIT[i][j] == U_N)
-					jtfs[i][j].setText(ints[INDS[i]][j] + "");
+					jtfs[i][j].setText(ints.getArr(INDS[i]).get(j) + "");
 				else if (UNIT[i][j] == U_T)
-					jtfs[i][j].setText(ints[INDS[i]][j] + "f");
+					jtfs[i][j].setText(ints.getArr(INDS[i]).get(j) + "f");
 				else if (UNIT[i][j] == U_PC)
-					jtfs[i][j].setText(ints[INDS[i]][j] + "%");
+					jtfs[i][j].setText(ints.getArr(INDS[i]).get(j) + "%");
 	}
 
 	private void ini() {
@@ -126,7 +127,7 @@ class MainProcTable extends Page {
 							if (val < -1)
 								val = -1;
 						}
-						proc[INDS[i]][j] = val;
+						proc.getArr(INDS[i]).set(j, val);
 					}
 		}
 		getFront().callBack(null);

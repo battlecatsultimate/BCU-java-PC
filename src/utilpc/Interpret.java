@@ -203,12 +203,12 @@ public class Interpret extends Data {
 		List<String> l = new ArrayList<>();
 		MaskAtk ma = de.getRepAtk();
 		for (int i = 0; i < PROC.length; i++) {
-			if (ma.getProc(i)[0] == 0)
+			if (ma.getProc().getArr(i).get(0) == 0)
 				continue;
 			String ans = "";
 			String proc = PROC[i];
 			if (PROC[i].startsWith("IMU"))
-				if (ma.getProc(i)[0] == 100) {
+				if (ma.getProc().getArr(i).get(0) == 100) {
 					l.add(Page.get(3, "imu") + PROC[i].substring(3));
 					continue;
 				} else
@@ -217,7 +217,7 @@ public class Interpret extends Data {
 				if (CMP[i][j] == -1)
 					ans += proc + " ";
 				else {
-					int pro = ma.getProc(i)[LOC[i][j]];
+					int pro = ma.getProc().getArr(i).get(LOC[i][j]);
 					String rep = pro == -1 ? Page.get(3, "inf") : "" + pro;
 					ans += TEXT[CMP[i][j]].replaceFirst("_", rep) + " ";
 				}
@@ -231,12 +231,12 @@ public class Interpret extends Data {
 		List<String> l = new ArrayList<>();
 		MaskAtk ma = du.getRepAtk();
 		for (int i = 0; i < PROC.length; i++) {
-			if (ma.getProc(i)[0] == 0)
+			if (ma.getProc().getArr(i).get(0) == 0)
 				continue;
 			String ans = "";
 			String proc = PROC[i];
 			if (PROC[i].startsWith("IMU"))
-				if (ma.getProc(i)[0] == 100) {
+				if (ma.getProc().getArr(i).get(0) == 100) {
 					l.add(Page.get(3, "imu") + PROC[i].substring(3));
 					continue;
 				} else
@@ -245,7 +245,7 @@ public class Interpret extends Data {
 				if (CMP[i][j] == -1)
 					ans += proc + " ";
 				else {
-					int pro = ma.getProc(i)[LOC[i][j]];
+					int pro = ma.getProc().getArr(i).get(LOC[i][j]);
 					String rep = pro == -1 ? Page.get(3, "inf") : "" + pro;
 					ans += TEXT[CMP[i][j]].replaceFirst("_", rep) + " ";
 				}

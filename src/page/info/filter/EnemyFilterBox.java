@@ -122,9 +122,9 @@ class EFBButton extends EnemyFilterBox {
 			for (int i = 0; i < proc.length; i++)
 				if (proc[i].isSelected())
 					if (orop[1].isSelected())
-						b2 |= e.de.getAllProc(i)[0] != 0;
+						b2 |= e.de.getAllProc().getArr(i).exists();
 					else
-						b2 &= e.de.getAllProc(i)[0] != 0;
+						b2 &= e.de.getAllProc().getArr(i).exists();
 			boolean b3 = !orop[2].isSelected();
 			for (int i = 0; i < atkt.length; i++)
 				if (atkt[i].isSelected())
@@ -282,9 +282,9 @@ class EFBList extends EnemyFilterBox {
 					else
 						b2 &= bind;
 				} else if (orop[1].isSelected())
-					b2 |= e.de.getAllProc(i - len)[0] != 0;
+					b2 |= e.de.getAllProc().getArr(i - len).exists();
 				else
-					b2 &= e.de.getAllProc(i - len)[0] != 0;
+					b2 &= e.de.getAllProc().getArr(i - len).exists();
 			boolean b3 = !orop[2].isSelected();
 			for (int i : atkt.getSelectedIndices())
 				if (orop[2].isSelected())

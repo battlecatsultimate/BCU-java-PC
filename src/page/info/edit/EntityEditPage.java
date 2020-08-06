@@ -24,6 +24,7 @@ import common.battle.BasisSet;
 import common.battle.data.AtkDataModel;
 import common.battle.data.CustomEntity;
 import common.util.Animable;
+import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.anim.AnimU;
 import common.util.pack.Pack;
@@ -128,9 +129,9 @@ public abstract class EntityEditPage extends Page {
 				for (int i = 0; i < ABIIND.length; i++) {
 					int id = ABIIND[i] - 100;
 					if ((vals[2] & (1 << id - IMUSFT)) > 0)
-						ce.getProc(id)[0] = 100;
+						((Data.Proc.IMU)ce.getProc().getArr(id)).mult = 100;
 					else
-						ce.getProc(id)[0] = 0;
+						((Data.Proc.IMU)ce.getProc().getArr(id)).mult = 0;
 				}
 				ce.loop = (ce.abi & AB_GLASS) > 0 ? 1 : -1;
 			}
