@@ -1,241 +1,268 @@
 {
     "KB": {
-        "abbr_name": null,
-        "full_name": null,
+        "abbr_name": "KB",
+        "full_name": "Knock Back",
         "tooltip": null,
-        "format": "(prob)%",
+        "format": [
+            "(prob)% chance to knock back target with ",
+            "[(dis==0){default distance}(time!=0){the distance of (dis) units}] and ",
+            "[(time==0){default duration}(time>0){duration of (_dispTime(time))}]."
+        ],
         "class": {
             "prob": {
-                "name": null,
+                "name": "chance",
                 "tooltip": null
             },
             "time": {
-                "name": null,
-                "tooltip": null
+                "name": "duration",
+                "tooltip": "enter 0 for default value"
             },
             "dis": {
-                "name": null,
-                "tooltip": null
+                "name": "distance",
+                "tooltip": "enter 0 for default value"
             }
         }
     },
     "STOP": {
-        "abbr_name": null,
-        "full_name": null,
+        "abbr_name": "stop",
+        "full_name": "Stop",
         "tooltip": null,
-        "format": null,
+        "format": "(prob)% chance to stop target for (_dispTime(time))",
         "class": {
             "prob": {
-                "name": null,
+                "name": "chance",
                 "tooltip": null
             },
             "time": {
-                "name": null,
-                "tooltip": null
+                "name": "duration",
+                "tooltip": "actual duration is subjected to treasure values and traits"
             }
         }
     },
     "SLOW": {
-        "abbr_name": null,
-        "full_name": null,
+        "abbr_name": "slow",
+        "full_name": "Slow",
         "tooltip": null,
-        "format": null,
+        "format": "(prob)% chance to slow target for (_dispTime(time))",
         "class": {
             "prob": {
-                "name": null,
+                "name": "chance",
                 "tooltip": null
             },
             "time": {
-                "name": null,
-                "tooltip": null
+                "name": "duration",
+                "tooltip": "actual duration is subjected to treasure values and traits"
             }
         }
     },
     "CRIT": {
-        "abbr_name": null,
-        "full_name": null,
-        "tooltip": null,
-        "format": null,
+        "abbr_name": "crit",
+        "full_name": "Critical Hit",
+        "tooltip": "deal more damage to non-metal enemies, and deal original damage to metal enemies. See mult field for water cannon type attack.",
+        "format": [
+            "(prob)% chance to deal a critical hit",
+            "[(mult>0&mult!=200){ that deals (mult)% damage to non-metal enemies}",
+            "(mult<0){ that deals the damage as (mult)% of current health to metal enemies}]."
+        ],
         "class": {
             "prob": {
-                "name": null,
+                "name": "chance",
                 "tooltip": null
             },
             "mult": {
-                "name": null,
-                "tooltip": null
+                "name": "multiplier",
+                "tooltip": "default value is 200. enter negative value for water cannon type attack that deal percent damage to metal enemies."
             }
         }
     },
     "WAVE": {
-        "abbr_name": null,
-        "full_name": null,
+        "abbr_name": "wave",
+        "full_name": "Wave",
         "tooltip": null,
-        "format": null,
+        "format": "(prob)% chance to create a Lv.(lv) wave",
         "class": {
             "prob": {
-                "name": null,
+                "name": "chance",
                 "tooltip": null
             },
             "lv": {
-                "name": null,
+                "name": "level",
                 "tooltip": null
             }
         }
     },
     "WEAK": {
-        "abbr_name": null,
-        "full_name": null,
+        "abbr_name": "weak",
+        "full_name": "Weak",
         "tooltip": null,
-        "format": null,
+        "format": "(prob)% chance to weaken target to (mult)% attack for (_dispTime(time))",
         "class": {
             "prob": {
-                "name": null,
+                "name": "chance",
                 "tooltip": null
             },
             "time": {
-                "name": null,
+                "name": "duration",
                 "tooltip": null
             },
             "mult": {
-                "name": null,
-                "tooltip": null
+                "name": "multiplier",
+                "tooltip": "What percent of original attack the target will be weaken to"
             }
         }
     },
     "BREAK": {
-        "abbr_name": null,
-        "full_name": null,
+        "abbr_name": "break",
+        "full_name": "Barrier Breaker",
         "tooltip": null,
-        "format": null,
+        "format": "(prob)% chance to break barrier",
         "class": {
             "prob": {
-                "name": null,
+                "name": "chance",
                 "tooltip": null
             }
         }
     },
     "WARP": {
-        "abbr_name": null,
-        "full_name": null,
+        "abbr_name": "warp",
+        "full_name": "Warp",
         "tooltip": null,
-        "format": null,
+        "format": "(prob)% chance to warp target back for the duration of (_dispTime(time)) and distance of (dis) units",
         "class": {
             "prob": {
-                "name": null,
+                "name": "chance",
                 "tooltip": null
             },
             "time": {
-                "name": null,
-                "tooltip": null
+                "name": "duration",
+                "tooltip": "exclude time for warp animation"
             },
             "dis": {
-                "name": null,
+                "name": "distance",
                 "tooltip": null
             }
         }
     },
     "CURSE": {
-        "abbr_name": null,
-        "full_name": null,
+        "abbr_name": "curse",
+        "full_name": "Curse",
         "tooltip": null,
-        "format": null,
+        "format": "(prob)% chance to curse target for the duration of (_dispTime(time))",
         "class": {
             "prob": {
-                "name": null,
+                "name": "chance",
                 "tooltip": null
             },
             "time": {
-                "name": null,
+                "name": "duration",
                 "tooltip": null
             }
         }
     },
     "STRONG": {
-        "abbr_name": null,
-        "full_name": null,
+        "abbr_name": "inc. atk",
+        "full_name": "Attack Up",
         "tooltip": null,
-        "format": null,
+        "format": "increase attack by (mult)% after health dropped below (health)%",
         "class": {
             "health": {
-                "name": null,
+                "name": "health",
                 "tooltip": null
             },
             "mult": {
-                "name": null,
+                "name": "increment",
                 "tooltip": null
             }
         }
     },
     "LETHAL": {
-        "abbr_name": null,
-        "full_name": null,
+        "abbr_name": "lethal",
+        "full_name": "Lethal Strike",
         "tooltip": null,
-        "format": null,
+        "format": "(prob)% chance to survive lethal damage",
         "class": {
             "prob": {
-                "name": null,
+                "name": "chance",
                 "tooltip": null
             }
         }
     },
     "BURROW": {
-        "abbr_name": null,
-        "full_name": null,
+        "abbr_name": "burrow",
+        "full_name": "Burrow",
         "tooltip": null,
-        "format": null,
+        "format": "burrow [(count<0){infinite}(count>=0&&count<=1){(count) time}(count>1){(count) times}] for the distance of (dis) units.",
         "class": {
             "count": {
-                "name": null,
-                "tooltip": null
+                "name": "burrow count",
+                "tooltip": "enter -1 for infinite times"
             },
             "dis": {
-                "name": null,
-                "tooltip": null
+                "name": "distance",
+                "tooltip": "burrow time is decided by speed and distance together"
             }
         }
     },
     "REVIVE": {
-        "abbr_name": null,
-        "full_name": null,
+        "abbr_name": "revive",
+        "full_name": "Revive",
         "tooltip": null,
-        "format": null,
+        "format": [
+            "revive [(count<0){infinite}(count>=0&&count<=1){(count) time}(count>1){(count) times}]",
+            " (_dispTime(time)) after death with health of (health)% of maximum.",
+            "[(type.imu_zkill){ Immune to Zombie Killer ability.}",
+            "(type.revive_others){ This ability will be applicable to other ",
+            "[(type.revive_non_zombie){allies}",
+            "(!type.revive_non_zombie){zombie allies}] ",
+            "[(type.range_type>=2){that once being }]",
+            "in the range of (dis_0)~(dis_1)}] [",
+            "(type.range_type==0){when this entity is on the stage ans walking/waiting/attacking}",
+            "(type.range_type==1){when this entity is present on the stage}",
+            "(type.range_type==2){as long as this entity is present on the stage}",
+            "(type.range_type==3){effective forever}]}]."
+        ],
         "class": {
             "count": {
-                "name": null,
-                "tooltip": null
+                "name": "revive count",
+                "tooltip": "enter -1 for infinite times"
             },
             "time": {
-                "name": null,
+                "name": "delay",
                 "tooltip": null
             },
             "health": {
-                "name": null,
-                "tooltip": null
+                "name": "health",
+                "tooltip": "health in percent after revive"
             },
             "dis_0": {
-                "name": null,
-                "tooltip": null
+                "name": "point 0",
+                "tooltip": "advaneced: ranged revive point 0. Applicapable only when revive others is enabled"
             },
             "dis_1": {
-                "name": null,
-                "tooltip": null
+                "name": "point 1",
+                "tooltip": "advaneced: ranged revive point 1. Applicapable only when revive others is enabled"
             },
             "type.range_type": {
-                "name": null,
-                "tooltip": null
+                "name": "range type",
+                "tooltip": [
+                    "Applicapable only when revive others is enabled",
+                    "0 for effective in range when in normal state. ",
+                    "1 for effective in range when present on the stage. ",
+                    "2 for effective for allies once passed the range as long as it is on the stage. ",
+                    "3 for effective for allies once passed the range forever"
+                ]
             },
             "type.imu_zkill": {
-                "name": null,
-                "tooltip": null
+                "name": "imu. ZKill",
+                "tooltip": "immune to Zombie Killer ability"
             },
             "type.revive_non_zombie": {
-                "name": null,
-                "tooltip": null
+                "name": "non-zombie",
+                "tooltip": "revive non-zombie as well. Applicapable only when revive others is enabled"
             },
             "type.revive_others": {
-                "name": null,
-                "tooltip": null
+                "name": "revive others",
+                "tooltip": "toggle point for advanced range revive feature"
             }
         }
     },
