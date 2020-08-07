@@ -1,0 +1,678 @@
+{
+    "KB": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": "(prob)%",
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            },
+            "time": {
+                "name": null,
+                "tooltip": null
+            },
+            "dis": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "STOP": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            },
+            "time": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "SLOW": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            },
+            "time": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "CRIT": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            },
+            "mult": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "WAVE": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            },
+            "lv": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "WEAK": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            },
+            "time": {
+                "name": null,
+                "tooltip": null
+            },
+            "mult": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "BREAK": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "WARP": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            },
+            "time": {
+                "name": null,
+                "tooltip": null
+            },
+            "dis": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "CURSE": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            },
+            "time": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "STRONG": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "health": {
+                "name": null,
+                "tooltip": null
+            },
+            "mult": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "LETHAL": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "BURROW": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "count": {
+                "name": null,
+                "tooltip": null
+            },
+            "dis": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "REVIVE": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "count": {
+                "name": null,
+                "tooltip": null
+            },
+            "time": {
+                "name": null,
+                "tooltip": null
+            },
+            "health": {
+                "name": null,
+                "tooltip": null
+            },
+            "dis_0": {
+                "name": null,
+                "tooltip": null
+            },
+            "dis_1": {
+                "name": null,
+                "tooltip": null
+            },
+            "type.range_type": {
+                "name": null,
+                "tooltip": null
+            },
+            "type.imu_zkill": {
+                "name": null,
+                "tooltip": null
+            },
+            "type.revive_non_zombie": {
+                "name": null,
+                "tooltip": null
+            },
+            "type.revive_others": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "IMUKB": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "mult": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "IMUSTOP": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "mult": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "IMUSLOW": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "mult": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "IMUWAVE": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "mult": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "IMUWEAK": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "mult": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "IMUWARP": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "mult": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "IMUCURSE": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "mult": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "SNIPER": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "TIME": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            },
+            "time": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "SEAL": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            },
+            "time": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "SUMMON": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            },
+            "id": {
+                "name": null,
+                "tooltip": null
+            },
+            "dis": {
+                "name": null,
+                "tooltip": null
+            },
+            "mult": {
+                "name": null,
+                "tooltip": null
+            },
+            "type.anim_type": {
+                "name": null,
+                "tooltip": null
+            },
+            "type.ignore_limit": {
+                "name": null,
+                "tooltip": null
+            },
+            "type.fix_buff": {
+                "name": null,
+                "tooltip": null
+            },
+            "type.same_health": {
+                "name": null,
+                "tooltip": null
+            },
+            "type.random_layer": {
+                "name": null,
+                "tooltip": null
+            },
+            "type.on_hit": {
+                "name": null,
+                "tooltip": null
+            },
+            "type.on_kill": {
+                "name": null,
+                "tooltip": null
+            },
+            "time": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "MOVEWAVE": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            },
+            "speed": {
+                "name": null,
+                "tooltip": null
+            },
+            "width": {
+                "name": null,
+                "tooltip": null
+            },
+            "time": {
+                "name": null,
+                "tooltip": null
+            },
+            "dis": {
+                "name": null,
+                "tooltip": null
+            },
+            "itv": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "THEME": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            },
+            "time": {
+                "name": null,
+                "tooltip": null
+            },
+            "id": {
+                "name": null,
+                "tooltip": null
+            },
+            "type.kill": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "POISON": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            },
+            "time": {
+                "name": null,
+                "tooltip": null
+            },
+            "damage": {
+                "name": null,
+                "tooltip": null
+            },
+            "itv": {
+                "name": null,
+                "tooltip": null
+            },
+            "type.damage_type": {
+                "name": null,
+                "tooltip": null
+            },
+            "type.unstackable": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "BOSS": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "CRITI": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "type": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "SATK": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            },
+            "mult": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "IMUATK": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            },
+            "time": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "POIATK": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            },
+            "mult": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "VOLC": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            },
+            "dis_0": {
+                "name": null,
+                "tooltip": null
+            },
+            "dis_1": {
+                "name": null,
+                "tooltip": null
+            },
+            "time": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "IMUPOIATK": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "mult": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "IMUVOLC": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "mult": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "ARMOR": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            },
+            "time": {
+                "name": null,
+                "tooltip": null
+            },
+            "mult": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    },
+    "SPEED": {
+        "abbr_name": null,
+        "full_name": null,
+        "tooltip": null,
+        "format": null,
+        "class": {
+            "prob": {
+                "name": null,
+                "tooltip": null
+            },
+            "time": {
+                "name": null,
+                "tooltip": null
+            },
+            "speed": {
+                "name": null,
+                "tooltip": null
+            },
+            "type": {
+                "name": null,
+                "tooltip": null
+            }
+        }
+    }
+}

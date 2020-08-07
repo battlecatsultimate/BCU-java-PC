@@ -6,6 +6,8 @@ import java.util.function.Consumer;
 
 import javax.swing.JButton;
 
+import common.util.lang.LocaleCenter.Binder;
+
 public class JBTN extends JButton implements LocComp {
 
 	private static final long serialVersionUID = 1L;
@@ -23,6 +25,11 @@ public class JBTN extends JButton implements LocComp {
 
 	public JBTN(String str) {
 		this(-1, str);
+	}
+
+	public JBTN(Binder binder) {
+		this();
+		lsc.init(binder);
 	}
 
 	@Override

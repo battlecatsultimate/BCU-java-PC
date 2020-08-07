@@ -3,6 +3,8 @@ package page;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 
+import common.util.lang.LocaleCenter.Binder;
+
 public class JL extends JLabel implements LocComp {
 
 	private static final long serialVersionUID = 1L;
@@ -21,6 +23,11 @@ public class JL extends JLabel implements LocComp {
 
 	public JL(String str) {
 		this(-1, str);
+	}
+
+	public JL(Binder binder) {
+		this();
+		lsc.init(binder);
 	}
 
 	@Override

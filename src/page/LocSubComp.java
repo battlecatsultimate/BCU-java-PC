@@ -11,13 +11,67 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
+import common.util.lang.LocaleCenter.Binder;
 import utilpc.PP;
 
 class LocSubComp {
 
+	static class LocBinder implements Binder {
+
+		private final int loc;
+		private final String info;
+		private final LocSubComp par;
+
+		LocBinder(LocSubComp par, int loc, String info) {
+			this.par = par;
+			this.loc = loc;
+			this.info = info;
+		}
+
+		@Override
+		public String getNameValue() {
+			return MainLocale.getLoc(loc, info);
+		}
+
+		@Override
+		public void setNameValue(String str) {
+			MainLocale.setLoc(loc, info, str);
+		}
+
+		@Override
+		public String getToolTipValue() {
+			if (par.page == null)
+				return null;
+			return MainLocale.getTTT(par.page.getClass().getSimpleName(), info);
+		}
+
+		@Override
+		public void setToolTipValue(String str) {
+			if (par.page == null)
+				return;
+			MainLocale.setTTT(par.page.getClass().getSimpleName(), info, str);
+		}
+
+		@Override
+		public String getNameID() {
+			return loc < 0 ? null : MainLocale.RENN[loc] + "_" + info;
+		}
+
+		public String getTooltipID() {
+			if (par.page == null)
+				return null;
+			return par.page.getClass().getSimpleName() + "_" + info;
+		}
+
+		@Override
+		public Binder refresh() {
+			return this;
+		}
+
+	}
+
 	protected final LocComp lc;
-	protected int loc = -1;
-	protected String info;
+	protected Binder binder;
 	protected Page page;
 
 	public LocSubComp(LocComp comp) {
@@ -27,37 +81,29 @@ class LocSubComp {
 
 	protected void added(Page p) {
 		page = p;
-		setTTT();
+		update();
 	}
 
-	protected void init(int i, String str) {
-		lc.setToolTipText(setLoc(i, str));
+	protected void init(Binder b) {
+		binder = b;
+		update();
 	}
 
 	protected void reLoc() {
-		init(loc, info);
-		setTTT();
+		binder = binder.refresh();
+		update();
 	}
 
-	protected void setText(int i, String str) {
-		lc.setText(str);
-		setLoc(i, str);
-		setTTT();
-	}
-
-	private String setLoc(int i, String str) {
-		String ans = MainLocale.getLoc(loc = i, info = str);
-		lc.setText(ans);
-		return ans;
-	}
-
-	private void setTTT() {
-		if (page == null || info == null)
+	private void update() {
+		if (binder == null)
 			return;
-		String str = page.getClass().getSimpleName();
-		String ttt = MainLocale.getTTT(str, info);
-		if (ttt != null)
-			lc.setToolTipText(ttt);
+		lc.setText(binder.getNameValue());
+		if (binder.getToolTipValue() != null)
+			lc.setToolTipText(binder.getToolTipValue());
+	}
+
+	protected void init(int i, String str) {
+		init(new LocBinder(this, i, str));
 	}
 
 }
@@ -73,45 +119,44 @@ class LSCPop extends MouseAdapter {
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		if (arg0.getButton() == MouseEvent.BUTTON3 && lsc.page != null) {
-			String cls = lsc.page.getClass().getSimpleName();
 			JPanel panel = new JPanel();
 			PP size = new PP(lsc.page.getRootPage().getSize()).times(0.25);
 			panel.setPreferredSize(size.toDimension());
 			panel.setLayout(new BorderLayout());
 			JPanel top = new JPanel(new GridLayout(2, 2));
-			JTF id0 = new JTF(lsc.info);
-			JTF id1 = new JTF(cls + "_" + lsc.info);
+			JL id1 = new JL(lsc.binder.getTooltipID());
+			JL id0 = new JL(lsc.binder.getNameID());
 			top.add(new JLabel("tooltip ID to edit: "));
 			top.add(id1);
-			String lab = (lsc.loc >= 0 ? MainLocale.RENN[lsc.loc] : "") + "_";
-			top.add(new JLabel("name ID to edit: " + lab));
+			top.add(new JLabel("name ID to edit: "));
 			top.add(id0);
 			panel.add(top, BorderLayout.PAGE_START);
-			JTF jtf = new JTF(lsc.lc.getText());
+			JTF jtf = new JTF(lsc.binder.getNameValue());
 			panel.add(jtf, BorderLayout.PAGE_END);
 			JTextPane jta = new JTextPane();
-			jta.setText(lsc.lc.getToolTipText());
+			jta.setText(lsc.binder.getToolTipValue());
 			panel.add(new JScrollPane(jta), BorderLayout.CENTER);
-			if (lsc.loc < 0) {
+			if (lsc.binder.getNameID() == null) {
 				id0.setEnabled(false);
 				jtf.setEnabled(false);
+			}
+			if (lsc.binder.getTooltipID() == null) {
+				id1.setEnabled(false);
+				jta.setEnabled(false);
 			}
 			int type = JOptionPane.OK_CANCEL_OPTION;
 			int ok = JOptionPane.OK_OPTION;
 			int res = JOptionPane.showConfirmDialog(null, panel, "", type);
 			String str = jtf.getText();
 			String ttt = jta.getText();
-			if (res == ok && str != null && !str.equals(lsc.lc.getText())) {
-				MainLocale.setLoc(lsc.loc, id0.getText().trim(), str);
+			if (res == ok && str != null && !str.equals(lsc.binder.getNameValue())) {
+				lsc.binder.setNameValue(str);
 				Page.renewLoc(lsc.page);
 			}
-			if (res == ok && ttt != null
-					&& (!ttt.equals(lsc.lc.getToolTipText()) || !id1.getText().equals(cls + "_" + lsc.info))) {
-				String[] ids = id1.getText().trim().split("_", 2);
-				if (ids.length == 2 && ids[0].length() > 0 && ids[1].length() > 0) {
-					MainLocale.setTTT(ids[0], ids[1], ttt);
-					Page.renewLoc(lsc.page);
-				}
+			if (res == ok && ttt != null && !ttt.equals(lsc.binder.getToolTipValue())) {
+				lsc.binder.setToolTipValue(ttt);
+				Page.renewLoc(lsc.page);
+
 			}
 		}
 

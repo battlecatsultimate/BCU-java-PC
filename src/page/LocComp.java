@@ -22,7 +22,7 @@ interface LocComp extends CustomComp {
 	}
 
 	public default void setText(int i, String str) {
-		getLSC().setText(i, str);
+		getLSC().init(i, str);
 	}
 
 	public void setText(String t);
