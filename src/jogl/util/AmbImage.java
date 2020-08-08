@@ -1,19 +1,24 @@
 package jogl.util;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.function.Supplier;
 
 import javax.imageio.ImageIO;
 
+import common.pack.Source;
 import common.system.fake.FakeImage;
+import common.system.files.FileData;
 import jogl.GLStatic;
 import utilpc.awt.FIBI;
 
 public class AmbImage implements FakeImage {
 
-	private byte[] stream;
+	private Supplier<InputStream> stream;
 	private File file;
 	private AmbImage par;
 	private int[] cs;
@@ -21,6 +26,13 @@ public class AmbImage implements FakeImage {
 
 	private FIBI bimg;
 	private GLImage gl;
+
+	public AmbImage(FileData data) {
+		stream = () -> Source.ctx.noticeError(() -> data.getStream(), "failed to get stream");
+		file = null;
+		par = null;
+		cs = null;
+	}
 
 	protected AmbImage(BufferedImage b) {
 		stream = null;
@@ -31,16 +43,16 @@ public class AmbImage implements FakeImage {
 		force = true;
 	}
 
-	protected AmbImage(byte[] is) {
-		stream = is;
-		file = null;
+	protected AmbImage(File f) {
+		stream = null;
+		file = f;
 		par = null;
 		cs = null;
 	}
 
-	protected AmbImage(File f) {
-		stream = null;
-		file = f;
+	protected AmbImage(InputStream is) {
+		stream = () -> is;
+		file = null;
 		par = null;
 		cs = null;
 	}
@@ -117,7 +129,7 @@ public class AmbImage implements FakeImage {
 				e.printStackTrace();
 			}
 			force = false;
-			stream = abos.toByteArray();
+			stream = () -> new ByteArrayInputStream(abos.toByteArray());
 			gl = null;
 
 		}
@@ -148,7 +160,7 @@ public class AmbImage implements FakeImage {
 			return;
 		try {
 			if (stream != null)
-				bimg = (FIBI) FIBI.builder.build(stream);
+				bimg = (FIBI) FIBI.builder.build(stream.get());
 			else if (file != null)
 				bimg = (FIBI) FIBI.builder.build(file);
 			else {
@@ -168,7 +180,7 @@ public class AmbImage implements FakeImage {
 		if (force)
 			gl = GLImage.build(bimg.bimg());
 		else if (stream != null)
-			gl = GLImage.build(stream);
+			gl = GLImage.build(stream.get());
 		else if (file != null)
 			gl = GLImage.build(file);
 		else {

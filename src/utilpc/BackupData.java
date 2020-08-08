@@ -1,6 +1,7 @@
 package utilpc;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Queue;
 
 import common.io.InStream;
@@ -36,6 +37,11 @@ public class BackupData implements FileData {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	@Override
+	public InputStream getStream() throws Exception {
+		return null;// TODO
 	}
 
 	@Override
