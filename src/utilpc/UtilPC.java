@@ -20,6 +20,7 @@ import common.CommonStatic.Itf;
 import common.battle.data.PCoin;
 import common.io.InStream;
 import common.io.OutStream;
+import common.pack.Source;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.files.FDByte;
@@ -27,7 +28,6 @@ import common.system.files.FileData;
 import common.system.files.VFile;
 import common.util.Data;
 import common.util.Res;
-import common.util.anim.AnimCI;
 import common.util.anim.AnimU;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
@@ -81,7 +81,7 @@ public class UtilPC {
 
 		}
 
-		private static class PCAL implements AnimCI.AnimLoader {
+		private static class PCAL implements Source.AnimLoader {
 
 			private String name;
 			private FakeImage num;
@@ -154,7 +154,7 @@ public class UtilPC {
 			}
 
 			@Override
-			public FakeImage getNum(boolean load) {
+			public FakeImage getNum() {
 				return num;
 			}
 
@@ -187,6 +187,25 @@ public class UtilPC {
 		}
 
 		@Override
+		public long getMusicLength(File f) {
+			if (!f.exists()) {
+				return -1;
+			}
+
+			try {
+				OggTimeReader otr = new OggTimeReader(f);
+
+				return otr.getTime();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				return -1;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return -1;
+			}
+		}
+
+		@Override
 		public ImgReader getMusicReader(int pid, int mid) {
 			return new MusicReader(pid, mid);
 		}
@@ -197,7 +216,7 @@ public class UtilPC {
 		}
 
 		@Override
-		public AnimCI.AnimLoader loadAnim(InStream is, ImgReader r) {
+		public Source.AnimLoader loadAnim(InStream is, ImgReader r) {
 			return r == null ? new PCAL(is) : new PCAL(is, r);
 		}
 
@@ -247,9 +266,10 @@ public class UtilPC {
 		public boolean writeBytes(OutStream os, String path) {
 			return Writer.writeBytes(os, path);
 		}
-		
+
 		@Override
-		public void writeErrorLog(Exception e) {}
+		public void writeErrorLog(Exception e) {
+		}
 
 		private void red$AnimU() {
 			String s0 = "move";
@@ -263,25 +283,6 @@ public class UtilPC {
 			AnimU.strs0 = MainLocale.getLoc(0, s0, s1, s2, s3);
 			AnimU.strs1 = MainLocale.getLoc(0, s0, s1, s2, s3, s4, s5, s6);
 			AnimU.strs2 = MainLocale.getLoc(0, s0, s1, s2, s3, s7);
-		}
-
-		@Override
-		public long getMusicLength(File f) {
-			if(!f.exists()) {
-				return -1;
-			}
-			
-			try {
-				OggTimeReader otr = new OggTimeReader(f);
-				
-				return otr.getTime();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				return -1;
-			} catch (Exception e) {
-				e.printStackTrace();
-				return -1;
-			}
 		}
 
 	}

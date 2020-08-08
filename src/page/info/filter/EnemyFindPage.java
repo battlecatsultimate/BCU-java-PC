@@ -103,20 +103,20 @@ public class EnemyFindPage extends Page {
 		});
 
 		seabt.setLnr((b) -> {
-			if(efb != null) {
+			if (efb != null) {
 				efb.name = seatf.getText();
-			
+
 				efb.callBack(null);
 			}
 		});
-		
+
 		seatf.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(efb != null) {
+				if (efb != null) {
 					efb.name = seatf.getText();
-				
+
 					efb.callBack(null);
 				}
 			}

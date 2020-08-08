@@ -29,13 +29,20 @@ class LocSubComp {
 		}
 
 		@Override
+		public String getNameID() {
+			return loc < 0 ? null : MainLocale.RENN[loc] + "_" + info;
+		}
+
+		@Override
 		public String getNameValue() {
 			return MainLocale.getLoc(loc, info);
 		}
 
 		@Override
-		public void setNameValue(String str) {
-			MainLocale.setLoc(loc, info, str);
+		public String getTooltipID() {
+			if (par.page == null)
+				return null;
+			return par.page.getClass().getSimpleName() + "_" + info;
 		}
 
 		@Override
@@ -46,26 +53,20 @@ class LocSubComp {
 		}
 
 		@Override
+		public Binder refresh() {
+			return this;
+		}
+
+		@Override
+		public void setNameValue(String str) {
+			MainLocale.setLoc(loc, info, str);
+		}
+
+		@Override
 		public void setToolTipValue(String str) {
 			if (par.page == null)
 				return;
 			MainLocale.setTTT(par.page.getClass().getSimpleName(), info, str);
-		}
-
-		@Override
-		public String getNameID() {
-			return loc < 0 ? null : MainLocale.RENN[loc] + "_" + info;
-		}
-
-		public String getTooltipID() {
-			if (par.page == null)
-				return null;
-			return par.page.getClass().getSimpleName() + "_" + info;
-		}
-
-		@Override
-		public Binder refresh() {
-			return this;
 		}
 
 	}
@@ -89,6 +90,10 @@ class LocSubComp {
 		update();
 	}
 
+	protected void init(int i, String str) {
+		init(new LocBinder(this, i, str));
+	}
+
 	protected void reLoc() {
 		binder = binder.refresh();
 		update();
@@ -100,10 +105,6 @@ class LocSubComp {
 		lc.setText(binder.getNameValue());
 		if (binder.getToolTipValue() != null)
 			lc.setToolTipText(binder.getToolTipValue());
-	}
-
-	protected void init(int i, String str) {
-		init(new LocBinder(this, i, str));
 	}
 
 }

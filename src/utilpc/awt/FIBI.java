@@ -68,6 +68,11 @@ public class FIBI implements FakeImage {
 	}
 
 	@Override
+	public boolean isValid() {
+		return true;
+	}
+
+	@Override
 	public void setRGB(int i, int j, int p) {
 		bimg.setRGB(i, j, p);
 	}
@@ -76,11 +81,6 @@ public class FIBI implements FakeImage {
 	public void unload() {
 
 	}
-	
-	@Override
-	public boolean isValid() {
-		return true;
-	}
 
 }
 
@@ -88,7 +88,7 @@ class BIBuilder extends ImageBuilder {
 
 	@Override
 	public FIBI build(Object o) throws IOException {
-		
+
 		if (o == null)
 			return null;
 		if (o instanceof BufferedImage)
@@ -97,7 +97,7 @@ class BIBuilder extends ImageBuilder {
 		BufferedImage b = null;
 		if (o instanceof File)
 			b = ImageIO.read((File) o);
-		else if(o instanceof InputStream)
+		else if (o instanceof InputStream)
 			b = ImageIO.read((InputStream) o);
 		else if (o instanceof byte[])
 			b = ImageIO.read(new ByteArrayInputStream((byte[]) o));

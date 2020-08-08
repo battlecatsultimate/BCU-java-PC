@@ -116,7 +116,7 @@ public class HeadTable extends AbJTable {
 		img[1] = st.bg;
 		img[2] = infs[5];
 		img[3] = st.getCastle();
-		img[4] = MainLocale.getLoc(1,  "lop");
+		img[4] = MainLocale.getLoc(1, "lop");
 		img[5] = convertTime(st.loop0);
 		img[6] = MainLocale.getLoc(1, "lop1");
 		img[7] = convertTime(st.loop1);
@@ -160,27 +160,27 @@ public class HeadTable extends AbJTable {
 		}
 		data = lstr;
 	}
-	
+
 	private String convertTime(long milli) {
 		long min = milli / 60 / 1000;
-		
-		double time = (double) milli - (double) min * 60000;
-		
+
+		double time = milli - (double) min * 60000;
+
 		time /= 1000;
-		
+
 		DecimalFormat df = new DecimalFormat("#.###");
-		
+
 		double s = Double.parseDouble(df.format(time));
-		
-		if(s >= 60) {
+
+		if (s >= 60) {
 			s -= 60;
 			min += 1;
 		}
-		
-		if(s < 10) {
-			return min + ":"+"0"+df.format(s);
+
+		if (s < 10) {
+			return min + ":" + "0" + df.format(s);
 		} else {
-			return min + ":"+df.format(s);
+			return min + ":" + df.format(s);
 		}
 	}
 

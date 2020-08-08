@@ -282,14 +282,14 @@ public interface BattleBox {
 						gra.setTransform(at);
 						double p = getX(eac.pos);
 						double y = midh - (road_h - DEP * eac.layer) * siz;
-						
-						if(eac instanceof WaprCont) {
-							double dx = ((WaprCont)eac).dire == -1 ? -27*siz : -24*siz;
-							eac.draw(gra, new P(p + dx, y-24*siz), psiz);
+
+						if (eac instanceof WaprCont) {
+							double dx = ((WaprCont) eac).dire == -1 ? -27 * siz : -24 * siz;
+							eac.draw(gra, new P(p + dx, y - 24 * siz), psiz);
 						} else {
 							eac.draw(gra, new P(p, y), psiz);
 						}
-						
+
 					}
 			}
 

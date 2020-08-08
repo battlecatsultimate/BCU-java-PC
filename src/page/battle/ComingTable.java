@@ -101,7 +101,7 @@ class ComingTable extends AbJTable {
 			link[i] = ind;
 			data[link[i]][1] = EnemyStore.getAbEnemy(info[i].enemy, false);
 			data[link[i]][0] = info[i].boss == 1 ? "boss" : "";
-			data[link[i]][2] = CommonStatic.toArrayFormat(info[i].multiple,info[i].mult_atk);
+			data[link[i]][2] = CommonStatic.toArrayFormat(info[i].multiple, info[i].mult_atk);
 			data[link[i]][3] = info[i].number == 0 ? "infinite" : info[i].number;
 			if (info[i].castle_0 >= info[i].castle_1)
 				data[link[i]][4] = info[i].castle_0 + "%";

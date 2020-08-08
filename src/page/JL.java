@@ -16,6 +16,11 @@ public class JL extends JLabel implements LocComp {
 		setBorder(BorderFactory.createEtchedBorder());
 	}
 
+	public JL(Binder binder) {
+		this();
+		lsc.init(binder);
+	}
+
 	public JL(int i, String str) {
 		this();
 		lsc.init(i, str);
@@ -23,11 +28,6 @@ public class JL extends JLabel implements LocComp {
 
 	public JL(String str) {
 		this(-1, str);
-	}
-
-	public JL(Binder binder) {
-		this();
-		lsc.init(binder);
 	}
 
 	@Override

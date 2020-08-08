@@ -24,7 +24,6 @@ import common.io.DataIO;
 import common.io.OutStream;
 import common.util.Data;
 import common.util.ImgCore;
-import common.util.pack.Pack;
 import common.util.stage.Recd;
 import common.util.unit.DIYAnim;
 import decode.ZipLib;
@@ -201,7 +200,7 @@ public class Writer extends DataIO {
 			e.printStackTrace();
 		}
 		try {
-			Pack.writeAll();
+			// TODO write all packs
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -349,8 +348,8 @@ public class Writer extends DataIO {
 		Importer.write(out);
 		out.println("--- place holder ---");
 		out.println("large screen: " + (BattleInfoPage.DEF_LARGE ? 1 : 0));
-		out.println("theme= "+(MainBCU.light ? 1 : 0));
-		out.println("nimbus="+(MainBCU.nimbus ? 1 : 0));
+		out.println("theme= " + (MainBCU.light ? 1 : 0));
+		out.println("nimbus=" + (MainBCU.nimbus ? 1 : 0));
 		out.close();
 	}
 

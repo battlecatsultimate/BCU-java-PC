@@ -206,7 +206,7 @@ public abstract class Editor {
 			EDITMAP.put("time", Pipes::lim_inf);
 			EDITMAP.put("itv", Pipes::lim_inf);
 			EDITMAP.put("count", Pipes::lim_inf);
-			
+
 			DISPMAP.put("KB.dis", Pipes::trea_dis);
 			DISPMAP.put("STOP.time", Pipes::trea_time);
 			DISPMAP.put("SLOW.time", Pipes::trea_time);

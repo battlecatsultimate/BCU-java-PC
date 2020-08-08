@@ -77,6 +77,11 @@ class UFBButton extends UnitFilterBox {
 	}
 
 	@Override
+	public void callBack(Object o) {
+		confirm();
+	}
+
+	@Override
 	public int[] getSizer() {
 		return new int[] { 2000, 400, 1, 400 };
 	}
@@ -85,11 +90,6 @@ class UFBButton extends UnitFilterBox {
 	protected void resized(int x, int y) {
 		JTG[][] btns = new JTG[][] { rare, trait, abis, proc, atkt };
 		AttList.btnDealer(x, y, btns, orop, -1, 0, 1, -1, 2);
-	}
-
-	@Override
-	public void callBack(Object o) {
-		confirm();
 	}
 
 	private void confirm() {
@@ -233,6 +233,11 @@ class UFBList extends UnitFilterBox {
 	}
 
 	@Override
+	public void callBack(Object o) {
+		confirm();
+	}
+
+	@Override
 	public int[] getSizer() {
 		return new int[] { 450, 1150, 0, 500 };
 	}
@@ -247,11 +252,6 @@ class UFBList extends UnitFilterBox {
 		set(jt, x, y, 0, 400, 200, 350);
 		set(jab, x, y, 250, 50, 200, 1100);
 		set(jat, x, y, 0, 850, 200, 300);
-	}
-
-	@Override
-	public void callBack(Object o) {
-		confirm();
 	}
 
 	private void confirm() {

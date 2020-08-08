@@ -33,7 +33,7 @@ public class UnitLCR extends DefaultListCellRenderer {
 		if (v == null)
 			return jl;
 		jl.setIcon(UtilPC.getIcon(v));
-		if(s && MainBCU.nimbus) {
+		if (s && MainBCU.nimbus) {
 			jl.setBackground(MainBCU.light ? Theme.LIGHT.NIMBUS_SELECT_BG : Theme.DARK.NIMBUS_SELECT_BG);
 		}
 		return jl;

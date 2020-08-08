@@ -129,9 +129,9 @@ public abstract class EntityEditPage extends Page {
 				for (int i = 0; i < ABIIND.length; i++) {
 					int id = ABIIND[i] - 100;
 					if ((vals[2] & (1 << id - IMUSFT)) > 0)
-						((Data.Proc.IMU)ce.getProc().getArr(id)).mult = 100;
+						((Data.Proc.IMU) ce.getProc().getArr(id)).mult = 100;
 					else
-						((Data.Proc.IMU)ce.getProc().getArr(id)).mult = 0;
+						((Data.Proc.IMU) ce.getProc().getArr(id)).mult = 0;
 				}
 				ce.loop = (ce.abi & AB_GLASS) > 0 ? 1 : -1;
 			}
@@ -198,7 +198,7 @@ public abstract class EntityEditPage extends Page {
 			add(jcba);
 			Vector<AnimCE> vda = new Vector<>();
 			AnimCE ac = ((AnimCE) ce.getPack().anim);
-			if (ac.inPool != 0)
+			if (!ac.inPool())
 				vda.add(ac);
 			vda.addAll(DIYAnim.getAnims());
 			jcba.setModel(new DefaultComboBoxModel<>(vda));

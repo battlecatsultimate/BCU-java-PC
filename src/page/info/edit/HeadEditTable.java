@@ -99,7 +99,7 @@ class HeadEditTable extends Page {
 			jtf.setText("" + mp.getSelected());
 			input(jtf, "" + mp.getSelected());
 		}
-		
+
 		bvp = null;
 		cvp = null;
 		mp = null;
@@ -121,7 +121,7 @@ class HeadEditTable extends Page {
 		set(cas, x, y, w * 2, 100, w, 50);
 		set(jcas, x, y, w * 3, 100, w, 50);
 		set(mus, x, y, 0, 150, w, 50);
-		set(jm0, x, y, w , 150, w, 50);
+		set(jm0, x, y, w, 150, w, 50);
 		set(loop, x, y, w * 2, 150, w, 50);
 		set(lop, x, y, w * 3, 150, w, 50);
 		set(jmh, x, y, w * 4, 150, w, 50);
@@ -159,11 +159,11 @@ class HeadEditTable extends Page {
 		Limit lim = st.lim;
 		lt.setLimit(lim);
 		change(false);
-		
+
 		lop.setText(convertTime(sta.loop0));
 		lop1.setText(convertTime(sta.loop1));
-		
-		if(sta.mus0 != -1) {
+
+		if (sta.mus0 != -1) {
 			lop.setEnabled(true);
 			getMusTime(sta.mus0, lop);
 		} else {
@@ -172,8 +172,8 @@ class HeadEditTable extends Page {
 			sta.loop0 = 0;
 			lop.setEnabled(false);
 		}
-		
-		if(sta.mus1 != -1) {
+
+		if (sta.mus1 != -1) {
 			lop1.setEnabled(true);
 			getMusTime(sta.mus1, lop1);
 		} else {
@@ -182,7 +182,7 @@ class HeadEditTable extends Page {
 			sta.loop1 = 0;
 			lop1.setEnabled(false);
 		}
-		
+
 	}
 
 	private void abler(boolean b) {
@@ -238,6 +238,57 @@ class HeadEditTable extends Page {
 			}
 		});
 
+	}
+
+	private String convertTime(long milli) {
+		long min = milli / 60 / 1000;
+
+		double time = milli - (double) min * 60000;
+
+		time /= 1000;
+
+		DecimalFormat df = new DecimalFormat("#.###");
+
+		double s = Double.parseDouble(df.format(time));
+
+		if (s >= 60) {
+			s -= 60;
+			min += 1;
+		}
+
+		if (s < 10) {
+			return min + ":" + "0" + df.format(s);
+		} else {
+			return min + ":" + df.format(s);
+		}
+	}
+
+	private void getMusTime(int mus, JTF jtf) {
+
+		File f = MusicStore.getMusic(mus);
+
+		if (f == null || !f.exists()) {
+			jtf.setToolTipText("Music not found");
+			return;
+		}
+
+		try {
+			long duration = CommonStatic.def.getMusicLength(f);
+
+			if (duration == -1) {
+				jtf.setToolTipText("Invalid Format");
+			} else if (duration == -2) {
+				jtf.setToolTipText("Unsupported Format");
+			} else if (duration == -3) {
+				jtf.setToolTipText("Can't get duration");
+			} else if (duration >= 0) {
+				jtf.setToolTipText(convertTime(duration));
+			} else {
+				jtf.setToolTipText("Unknown error " + duration);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void ini() {
@@ -339,8 +390,8 @@ class HeadEditTable extends Page {
 			}
 		if (jtf == jm0) {
 			sta.mus0 = val;
-			
-			if(sta.mus0 != -1) {
+
+			if (sta.mus0 != -1) {
 				lop.setEnabled(true);
 				getMusTime(sta.mus0, lop);
 			} else {
@@ -349,14 +400,14 @@ class HeadEditTable extends Page {
 				lop.setEnabled(false);
 			}
 		}
-		
+
 		if (jtf == jmh)
 			sta.mush = val;
-		
+
 		if (jtf == jm1) {
 			sta.mus1 = val;
-			
-			if(sta.mus1 != -1) {
+
+			if (sta.mus1 != -1) {
 				lop1.setEnabled(true);
 				getMusTime(sta.mus1, lop1);
 			} else {
@@ -365,24 +416,24 @@ class HeadEditTable extends Page {
 				lop1.setEnabled(false);
 			}
 		}
-		
+
 		if (jtf == lop) {
 			long tim = toMilli(jtf.getText());
-			
-			if(tim != -1) {
+
+			if (tim != -1) {
 				sta.loop0 = tim;
 			}
-			
+
 			lop.setText(convertTime(sta.loop0));
 		}
-		
+
 		if (jtf == lop1) {
 			long tim = toMilli(jtf.getText());
-			
-			if(tim != -1) {
+
+			if (tim != -1) {
 				sta.loop1 = tim;
 			}
-			
+
 			lop1.setText(convertTime(sta.loop1));
 		}
 	}
@@ -417,74 +468,23 @@ class HeadEditTable extends Page {
 		});
 
 	}
-	
-	private void getMusTime(int mus, JTF jtf) {
-		
-		File f = MusicStore.getMusic(mus);
-		
-		if(f == null || !f.exists()) {
-			jtf.setToolTipText("Music not found");
-			return;
-		}
-		
-		try {
-			long duration = CommonStatic.def.getMusicLength(f);
-			
-			if(duration == -1) {
-				jtf.setToolTipText("Invalid Format");
-			} else if(duration == -2) {
-				jtf.setToolTipText("Unsupported Format");
-			} else if(duration == -3) {
-				jtf.setToolTipText("Can't get duration");
-			} else if(duration >= 0) {
-				jtf.setToolTipText(convertTime(duration));
-			} else {
-				jtf.setToolTipText("Unknown error "+duration);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private String convertTime(long milli) {
-		long min = milli / 60 / 1000;
-		
-		double time = (double) milli - (double) min * 60000;
-		
-		time /= 1000;
-		
-		DecimalFormat df = new DecimalFormat("#.###");
-		
-		double s = Double.parseDouble(df.format(time));
-		
-		if(s >= 60) {
-			s -= 60;
-			min += 1;
-		}
-		
-		if(s < 10) {
-			return min + ":"+"0"+df.format(s);
-		} else {
-			return min + ":"+df.format(s);
-		}
-	}
-	
+
 	private long toMilli(String time) {
 		try {
-			long [] times = CommonStatic.parseLongsN(time);
-			
-			for(long t : times) {
-				if(t < 0) {
+			long[] times = CommonStatic.parseLongsN(time);
+
+			for (long t : times) {
+				if (t < 0) {
 					return -1;
 				}
 			}
-			
-			if(times.length == 1) {
+
+			if (times.length == 1) {
 				return times[0] * 1000;
-			} else if(times.length == 2) {
+			} else if (times.length == 2) {
 				return (times[0] * 60 + times[1]) * 1000;
-			} else if(times.length == 3) {
-				if(times[2] < 1000) {
+			} else if (times.length == 3) {
+				if (times[2] < 1000) {
 					return (times[0] * 60 + times[1]) * 1000 + times[2];
 				} else {
 					String decimal = Long.toString(times[2]).substring(0, 3);
@@ -493,7 +493,7 @@ class HeadEditTable extends Page {
 			} else {
 				return -1;
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			return -1;
 		}
 	}

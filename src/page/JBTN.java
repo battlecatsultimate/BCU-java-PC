@@ -18,6 +18,11 @@ public class JBTN extends JButton implements LocComp {
 		lsc = new LocSubComp(this);
 	}
 
+	public JBTN(Binder binder) {
+		this();
+		lsc.init(binder);
+	}
+
 	public JBTN(int i, String str) {
 		this();
 		lsc.init(i, str);
@@ -25,11 +30,6 @@ public class JBTN extends JButton implements LocComp {
 
 	public JBTN(String str) {
 		this(-1, str);
-	}
-
-	public JBTN(Binder binder) {
-		this();
-		lsc.init(binder);
 	}
 
 	@Override

@@ -43,7 +43,7 @@ public class MainBCU {
 			Opts.pop(Opts.MEMORY, "" + (mem >> 20));
 			System.exit(0);
 		}
-		
+
 		Writer.logPrepare();
 		Writer.logSetup();
 		Reader.getData$0();
@@ -51,9 +51,9 @@ public class MainBCU {
 		ImageBuilder.builder = USE_JOGL ? new GLIB() : new PCIB();
 		BBBuilder.def = USE_JOGL ? new GLBBB() : AWTBBB.INS;
 		CommonStatic.def = new UtilPC.PCItr();
-		
-		if(nimbus) {
-			if(light) {
+
+		if (nimbus) {
+			if (light) {
 				Theme.LIGHT.setTheme();
 				Page.BGCOLOR = new Color(255, 255, 255);
 			} else {

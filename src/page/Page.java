@@ -101,7 +101,7 @@ public abstract class Page extends JPanel implements RetFunc {
 	}
 
 	public final Page getFront() {
-		if(front != null) {
+		if (front != null) {
 			front.setBackground(BGCOLOR);
 		}
 		return front;

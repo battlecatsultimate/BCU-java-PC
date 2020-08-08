@@ -332,7 +332,7 @@ public class BCJSON extends WebFileIO {
 		WebPack wp = packlist.get(pid);
 		wp.version++;
 		p.version = wp.version;
-		p.packUp(null);
+		// TODO packup
 		File f = new File("./pack/" + pid + ".bcupack");
 		if (f.exists())
 			try {

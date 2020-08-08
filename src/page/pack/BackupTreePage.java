@@ -514,7 +514,7 @@ public class BackupTreePage extends Page {
 				tsm.add(tst);
 				Line[] info = st.data.getSimple();
 				String[] data = new String[info.length];
-				for(int i=0;i<info.length;i++)
+				for (int i = 0; i < info.length; i++)
 					try {
 						data[i] = JsonEncoder.encode(info[i]).toString();
 					} catch (Exception e1) {

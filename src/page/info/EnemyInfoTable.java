@@ -90,26 +90,26 @@ public class EnemyInfoTable extends Page {
 
 			@Override
 			public void focusLost(FocusEvent e) {
-				int [] data = CommonStatic.parseIntsN(jtf.getText().trim().replace("%", ""));
-				
-				if(data.length == 1) {
-					if(data[0] != -1) {
+				int[] data = CommonStatic.parseIntsN(jtf.getText().trim().replace("%", ""));
+
+				if (data.length == 1) {
+					if (data[0] != -1) {
 						multi = mulatk = data[0];
 					}
-					
-					jtf.setText(CommonStatic.toArrayFormat(multi, mulatk)+"%");
-				} else if(data.length == 2) {
-					if(data[0] != -1) {
+
+					jtf.setText(CommonStatic.toArrayFormat(multi, mulatk) + "%");
+				} else if (data.length == 2) {
+					if (data[0] != -1) {
 						multi = data[0];
 					}
-					
-					if(data[1] != -1) {
+
+					if (data[1] != -1) {
 						mulatk = data[1];
 					}
-					
-					jtf.setText(CommonStatic.toArrayFormat(multi, mulatk)+"%");
+
+					jtf.setText(CommonStatic.toArrayFormat(multi, mulatk) + "%");
 				} else {
-					jtf.setText(CommonStatic.toArrayFormat(multi, mulatk)+"%");
+					jtf.setText(CommonStatic.toArrayFormat(multi, mulatk) + "%");
 				}
 
 				reset();

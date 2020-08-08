@@ -265,18 +265,18 @@ public class ConfigPage extends Page {
 				BCMusic.play = musc.isSelected();
 			}
 		});
-		
+
 		nimbus.setLnr((b) -> {
 			MainBCU.nimbus = !MainBCU.nimbus;
-			
+
 			if (Opts.conf("This requires restart to apply. Do you want to restart?"))
 				CommonStatic.def.exit(true);
 		});
 
 		theme.setLnr((b) -> {
 			MainBCU.light = !MainBCU.light;
-			
-			if(MainBCU.light) {
+
+			if (MainBCU.light) {
 				theme.setText(MainLocale.getLoc(0, "themel"));
 				Theme.LIGHT.setTheme();
 				Page.BGCOLOR = new Color(255, 255, 255);
@@ -346,7 +346,7 @@ public class ConfigPage extends Page {
 		refe.setSelected(ImgCore.ref);
 		musc.setSelected(BCMusic.play);
 		jogl.setSelected(MainBCU.USE_JOGL);
-		if(!MainBCU.nimbus) {
+		if (!MainBCU.nimbus) {
 			theme.setEnabled(false);
 		}
 		addListeners();

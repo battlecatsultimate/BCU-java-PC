@@ -47,7 +47,7 @@ public abstract class EnemyFilterBox extends Page {
 	}
 
 	protected Pack pac;
-	
+
 	protected String name = "";
 
 	protected EnemyFilterBox(Page p, Pack pack) {
@@ -78,6 +78,11 @@ class EFBButton extends EnemyFilterBox {
 	}
 
 	@Override
+	public void callBack(Object o) {
+		confirm();
+	}
+
+	@Override
 	protected int[] getSizer() {
 		return new int[] { 2000, 400, 1, 400 };
 	}
@@ -87,12 +92,6 @@ class EFBButton extends EnemyFilterBox {
 		JTG[][] btns = new JTG[][] { rare, trait, abis, proc, atkt };
 		AttList.btnDealer(x, y, btns, orop, -1, 0, 1, -1, 2);
 	}
-	
-	@Override
-	public void callBack(Object o) {
-		confirm();
-	}
-
 
 	private void confirm() {
 		List<Enemy> ans = new ArrayList<>();
@@ -133,21 +132,21 @@ class EFBButton extends EnemyFilterBox {
 					else
 						b3 &= isType(e.de, i);
 			boolean b4 = true;
-			
+
 			String ename;
-			
+
 			ename = MultiLangCont.ENAME.getCont(e);
-			
-			if(ename == null)
+
+			if (ename == null)
 				ename = e.name;
-			
-			if(ename == null)
+
+			if (ename == null)
 				ename = "";
-			
-			if(name != null) {
+
+			if (name != null) {
 				b4 = ename.toLowerCase().contains(name.toLowerCase());
 			}
-			
+
 			b0 = nonSele(rare) | b0;
 			b1 = nonSele(trait) | b1;
 			b2 = nonSele(abis) & nonSele(proc) | b2;
@@ -239,6 +238,11 @@ class EFBList extends EnemyFilterBox {
 	}
 
 	@Override
+	public void callBack(Object o) {
+		confirm();
+	}
+
+	@Override
 	protected int[] getSizer() {
 		return new int[] { 450, 1150, 0, 500 };
 	}
@@ -253,11 +257,6 @@ class EFBList extends EnemyFilterBox {
 		set(jt, x, y, 0, 400, 200, 350);
 		set(jab, x, y, 250, 50, 200, 1100);
 		set(jat, x, y, 0, 850, 200, 300);
-	}
-	
-	@Override
-	public void callBack(Object o) {
-		confirm();
 	}
 
 	private void confirm() {
@@ -291,23 +290,23 @@ class EFBList extends EnemyFilterBox {
 					b3 |= isType(e.de, i);
 				else
 					b3 &= isType(e.de, i);
-			
+
 			boolean b4 = true;
-			
+
 			String ename;
-			
+
 			ename = MultiLangCont.ENAME.getCont(e);
-			
-			if(ename == null)
+
+			if (ename == null)
 				ename = e.name;
-			
-			if(ename == null)
+
+			if (ename == null)
 				ename = "";
-			
-			if(name != null) {
+
+			if (name != null) {
 				b4 = ename.toLowerCase().contains(name.toLowerCase());
 			}
-			
+
 			b0 = rare.getSelectedIndex() == -1 | b0;
 			b1 = trait.getSelectedIndex() == -1 | b1;
 			b2 = abis.getSelectedIndex() == -1 | b2;

@@ -65,14 +65,16 @@ public class Interpret extends Data {
 			{ 0, -1, 3, 1 }, { 0, -1 }, { 0, -1, 1, 4 }, { 0, -1, 1 }, { 5, -1, 7 }, { 0, -1 }, { -1, 4, 6 },
 			{ -1, 1, 5, 6 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { 0, -1 },
 			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 4 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 }, { -1 },
-			{ 0, -1, 7 }, { 0, -1, 1 }, { 0, -1, 7 }, { 0, -1, 4, 8, 1 }, { -1 }, {-1}, {0, -1, 1, 3}, {0, -1, 1} };
+			{ 0, -1, 7 }, { 0, -1, 1 }, { 0, -1, 7 }, { 0, -1, 4, 8, 1 }, { -1 }, { -1 }, { 0, -1, 1, 3 },
+			{ 0, -1, 1 } };
 
 	/** proc data locator */
 	private static final int[][] LOC = { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 1, -1 },
 			{ 0, -1, 2, 1 }, { 0, -1 }, { 0, -1, 1, 2 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { -1, 1, 0 },
 			{ -1, 1, 2, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { 0, -1 },
 			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 2 }, { 0, -1, 3 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 }, { -1 },
-			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 1, 2, 3 }, { -1 }, {-1}, {0, -1, 1, 2}, {0, -1, 1} };
+			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 1, 2, 3 }, { -1 }, { -1 }, { 0, -1, 1, 2 },
+			{ 0, -1, 1 } };
 
 	/** combo string component */
 	private static final String[][] CDP = { { "", "+", "-" }, { "_", "_%", "_f", "Lv._" } };
@@ -82,12 +84,45 @@ public class Interpret extends Data {
 			{}, { 1, 1 }, { 1, 1 }, { 2, 2 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 },
 			{ 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 } };
 
-	public static final int[] EABIIND = { 5, 7, 8, 9, 10, 11, 12, 15, 16, 18, 113, 114, 115, 116, 117, 118, 119, 133, 134 };
-	public static final int[] ABIIND = { 113, 114, 115, 116, 117, 118, 119, 133 , 134};
+	public static final int[] EABIIND = { 5, 7, 8, 9, 10, 11, 12, 15, 16, 18, 113, 114, 115, 116, 117, 118, 119, 133,
+			134 };
+	public static final int[] ABIIND = { 113, 114, 115, 116, 117, 118, 119, 133, 134 };
 	public static final int IMUSFT = 13, EFILTER = 8;
 
 	static {
 		redefine();
+	}
+
+	public static boolean allRangeSame(MaskEntity me) {
+		if (me instanceof CustomEntity) {
+			List<Integer> near = new ArrayList<>();
+			List<Integer> far = new ArrayList<>();
+
+			for (AtkDataModel atk : ((CustomEntity) me).atks) {
+				near.add(atk.getShortPoint());
+				far.add(atk.getLongPoint());
+			}
+
+			if (near.isEmpty() && far.isEmpty()) {
+				return true;
+			}
+
+			for (int n : near) {
+				if (n != near.get(0)) {
+					return false;
+				}
+			}
+
+			for (int f : far) {
+				if (f != far.get(0)) {
+					return false;
+				}
+			}
+
+			return true;
+		} else {
+			return true;
+		}
 	}
 
 	public static String comboInfo(Combo c) {
@@ -107,25 +142,24 @@ public class Interpret extends Data {
 	public static List<String> getAbi(MaskEntity me) {
 		int tb = me.touchBase();
 		final MaskAtk ma;
-		
-		if(me.getAtkCount() == 1) {
+
+		if (me.getAtkCount() == 1) {
 			ma = me.getAtkModel(0);
 		} else {
 			ma = me.getRepAtk();
 		}
-		
+
 		int lds;
 		int ldr;
-		
-		if(allRangeSame(me)) {
+
+		if (allRangeSame(me)) {
 			lds = me.getAtkModel(0).getShortPoint();
 			ldr = me.getAtkModel(0).getLongPoint() - me.getAtkModel(0).getShortPoint();
 		} else {
 			lds = ma.getShortPoint();
 			ldr = ma.getLongPoint() - ma.getShortPoint();
 		}
-		
-		
+
 		List<String> l = new ArrayList<>();
 		if (lds > 0) {
 			int p0 = Math.min(lds, lds + ldr);
@@ -145,38 +179,6 @@ public class Interpret extends Data {
 		if (imu.length() > 10)
 			l.add(imu);
 		return l;
-	}
-	
-	public static boolean allRangeSame(MaskEntity me) {
-		if(me instanceof CustomEntity) {
-			List<Integer> near = new ArrayList<>();
-			List<Integer> far = new ArrayList<>();
-			
-			for(AtkDataModel atk : ((CustomEntity) me).atks) {
-				near.add(atk.getShortPoint());
-				far.add(atk.getLongPoint());
-			}
-			
-			if(near.isEmpty() && far.isEmpty()) {
-				return true;
-			}
-			
-			for(int n : near) {
-				if(n != near.get(0)) {
-					return false;
-				}
-			}
-			
-			for(int f : far) {
-				if(f != far.get(0)) {
-					return false;
-				}
-			}
-			
-			return true;
-		} else {
-			return true;
-		}
 	}
 
 	public static String[] getComboFilter(int n) {

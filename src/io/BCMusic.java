@@ -29,55 +29,104 @@ public class BCMusic extends Data {
 	private static boolean[] secall = new boolean[TOT];
 
 	public static BCPlayer BG;
-	
+
 	private static BCPlayer[] hit;
 	private static BCPlayer[] hit1;
 	private static BCPlayer[] baseHit;
-	
+
 	private static boolean h, h1, bh;
-	
-	protected static Map<Integer,ArrayDeque<BCPlayer>> sounds = new HashMap<Integer, ArrayDeque<BCPlayer>>();
-	
+
+	protected static Map<Integer, ArrayDeque<BCPlayer>> sounds = new HashMap<Integer, ArrayDeque<BCPlayer>>();
+
+	public static void clear() {
+		for (ArrayDeque<BCPlayer> clips : sounds.values()) {
+			while (true) {
+				BCPlayer c = clips.poll();
+
+				if (c != null) {
+					c.release();
+					c = null;
+				} else {
+					break;
+				}
+			}
+		}
+
+		if (hit != null) {
+			for (int i = 0; i < hit.length; i++) {
+				hit[i].release();
+				hit[i] = null;
+			}
+
+			hit = null;
+		}
+
+		if (hit1 != null) {
+			for (int i = 0; i < hit1.length; i++) {
+				hit1[i].release();
+				hit1[i] = null;
+			}
+
+			hit1 = null;
+		}
+
+		if (baseHit != null) {
+			for (int i = 0; i < baseHit.length; i++) {
+				baseHit[i].release();
+				baseHit[i] = null;
+			}
+
+			baseHit = null;
+		}
+
+		if (BG != null) {
+			BG.release();
+			BG = null;
+		}
+
+		sounds.clear();
+	}
+
 	public static synchronized void flush(boolean allow) {
-		if(hit == null) {
+		if (hit == null) {
 			hit = new BCPlayer[2];
-			
-			for(int i = 0; i < hit.length; i++) {
+
+			for (int i = 0; i < hit.length; i++) {
 				try {
 					hit[i] = new BCPlayer(openFile(MusicStore.getMusic(20)), 20, false);
 					hit[i].setVolume(VOL_SE);
-				} catch(Exception e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		
-		if(hit1 == null) {
+
+		if (hit1 == null) {
 			hit1 = new BCPlayer[2];
-			
-			for(int i = 0; i < hit1.length; i++) {
+
+			for (int i = 0; i < hit1.length; i++) {
 				try {
 					hit1[i] = new BCPlayer(openFile(MusicStore.getMusic(21)), 21, false);
 					hit1[i].setVolume(VOL_SE);
-				} catch(Exception e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		
-		if(baseHit == null) {
+
+		if (baseHit == null) {
 			baseHit = new BCPlayer[2];
-			
-			for(int i = 0; i < baseHit.length; i++) {
+
+			for (int i = 0; i < baseHit.length; i++) {
 				try {
 					baseHit[i] = new BCPlayer(openFile(MusicStore.getMusic(22)), 22, false);
 					baseHit[i].setVolume(VOL_SE);
-				} catch(Exception e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}
-		
+
 		for (int i = 0; i < TOT; i++) {
 			if (secall[i] && allow)
 				try {
@@ -125,61 +174,12 @@ public class BCMusic extends Data {
 				}
 		}
 	}
-	
-	public static void clear() {
-		for(ArrayDeque<BCPlayer> clips : sounds.values()) {
-			while(true) {
-				BCPlayer c = clips.poll();
-				
-				if(c != null) {
-					c.release();
-					c = null;
-				} else {
-					break;
-				}
-			}
-		}
-		
-		if(hit != null) {
-			for(int i = 0; i < hit.length; i++) {
-				hit[i].release();
-				hit[i] = null;
-			}
-			
-			hit = null;
-		}
-		
-		if(hit1 != null) {
-			for(int i = 0; i < hit1.length; i++) {
-				hit1[i].release();
-				hit1[i] = null;
-			}
-			
-			hit1 = null;
-		}
-		
-		if(baseHit != null) {
-			for(int i = 0; i < baseHit.length; i++) {
-				baseHit[i].release();
-				baseHit[i] = null;
-			}
-			
-			baseHit = null;
-		}
-		
-		if(BG != null) {
-			BG.release();
-			BG = null;
-		}
-		
-		sounds.clear();
-	}
 
 	public static synchronized void setBG(File f, long loop) {
 		if (!play)
 			return;
 		try {
-			if(BG != null) {
+			if (BG != null) {
 				BG.release();
 				loadSound(-1, f, getVol(VOL_BG), true, loop);
 			} else {
@@ -192,8 +192,8 @@ public class BCMusic extends Data {
 
 	public static synchronized void setBGVol(int vol) {
 		VOL_BG = vol;
-		
-		if(BG != null) {
+
+		if (BG != null) {
 			BG.setVolume(vol);
 		}
 	}
@@ -206,8 +206,8 @@ public class BCMusic extends Data {
 
 	public static synchronized void setSEVol(int vol) {
 		VOL_SE = vol;
-		
-		for(ArrayDeque<BCPlayer> players : sounds.values()) {
+
+		for (ArrayDeque<BCPlayer> players : sounds.values()) {
 			players.forEach((player) -> {
 				player.setVolume(vol);
 			});
@@ -217,18 +217,154 @@ public class BCMusic extends Data {
 	public static synchronized void stopAll() {
 		if (BG != null)
 			BG.stop();
-		
-		for(ArrayDeque<BCPlayer> players : sounds.values()) {
+
+		for (ArrayDeque<BCPlayer> players : sounds.values()) {
 			players.forEach((player) -> {
 				player.stop();
 			});
 		}
-		
+
 		clear();
 	}
 
 	private static float getVol(int vol) {
 		return FACTOR * ((float) Math.log10(vol) - 2);
+	}
+
+	private static void loadSound(int ind, byte[] bytes, float vol, boolean b, long loop) throws Exception {
+		// set ind to -1 to tell it's BG
+
+		if (b) {
+			Clip c = openFile(bytes);
+
+			c.loop(Clip.LOOP_CONTINUOUSLY);
+
+			if (BG != null) {
+				BG.stop();
+			}
+
+			BG = new BCPlayer(c, -1, loop, true);
+			BG.setVolume(VOL_BG);
+
+			BG.start();
+
+			return;
+		}
+
+		ArrayDeque<BCPlayer> clips = sounds.get(ind);
+
+		if (clips == null) {
+			clips = new ArrayDeque<BCPlayer>();
+
+			sounds.put(ind, clips);
+
+			loadSound(ind, openFile(bytes), false);
+		} else {
+			BCPlayer player = clips.poll();
+
+			if (player != null) {
+				player.rewind();
+				player.start();
+			} else {
+				switch (ind) {
+				case 20:
+					if (hit != null) {
+						if (h) {
+							hit[0].stop();
+							hit[0].rewind();
+							hit[1].start();
+						} else {
+							hit[1].stop();
+							hit[1].rewind();
+							hit[0].start();
+						}
+
+						h = !h;
+					}
+					break;
+				case 21:
+					if (hit1 != null) {
+						if (h1) {
+							hit1[0].stop();
+							hit1[0].rewind();
+							hit1[1].start();
+						} else {
+							hit1[1].stop();
+							hit1[1].rewind();
+							hit1[0].start();
+						}
+
+						h1 = !h1;
+					}
+					break;
+				case 22:
+					if (baseHit != null) {
+						if (bh) {
+							baseHit[0].stop();
+							baseHit[0].rewind();
+							baseHit[1].start();
+						} else {
+							baseHit[1].stop();
+							baseHit[1].rewind();
+							baseHit[0].start();
+						}
+
+						bh = !bh;
+					}
+					break;
+				default:
+					loadSound(ind, openFile(bytes), false);
+				}
+			}
+		}
+	}
+
+	private static void loadSound(int ind, Clip c, boolean loop) {
+		BCPlayer player = new BCPlayer(c, ind, loop);
+		player.setVolume(VOL_SE);
+
+		player.start();
+	}
+
+	private static void loadSound(int ind, File file, float vol, boolean b, long loop) throws Exception {
+		// set ind to -1 to tell it's BG
+
+		if (b) {
+			Clip c = openFile(file);
+
+			c.loop(Clip.LOOP_CONTINUOUSLY);
+
+			if (BG != null) {
+				BG.stop();
+				BG.release();
+			}
+
+			BG = new BCPlayer(c, -1, loop, true);
+			BG.setVolume(VOL_BG);
+
+			BG.start();
+
+			return;
+		}
+
+		ArrayDeque<BCPlayer> clips = sounds.get(ind);
+
+		if (clips == null) {
+			clips = new ArrayDeque<BCPlayer>();
+
+			sounds.put(ind, clips);
+
+			loadSound(ind, openFile(file), false);
+		} else {
+			BCPlayer player = clips.poll();
+
+			if (player != null) {
+				player.rewind();
+				player.start();
+			} else {
+				loadSound(ind, openFile(file), false);
+			}
+		}
 	}
 
 	private static Clip openFile(byte[] data) throws Exception {
@@ -260,141 +396,5 @@ public class BCMusic extends Data {
 		raw.close();
 		stream.close();
 		return line;
-	}
-	
-	private static void loadSound(int ind, File file, float vol, boolean b, long loop) throws Exception {
-		// set ind to -1 to tell it's BG
-		
-		if(b) {
-			Clip c = openFile(file);
-			
-			c.loop(Clip.LOOP_CONTINUOUSLY);
-			
-			if(BG != null) {
-				BG.stop();
-				BG.release();
-			}
-			
-			BG = new BCPlayer(c, -1, loop, true);
-			BG.setVolume(VOL_BG);
-			
-			BG.start();
-			
-			return;
-		} 
-		
-		ArrayDeque<BCPlayer> clips = sounds.get(ind);
-		
-		if(clips == null) {
-			clips = new ArrayDeque<BCPlayer>();
-			
-			sounds.put(ind, clips);
-			
-			loadSound(ind, openFile(file), false);
-		} else {
-			BCPlayer player = clips.poll();
-			
-			if(player != null) {
-				player.rewind();
-				player.start();
-			} else {
-				loadSound(ind, openFile(file), false);
-			}
-		}
-	}
-	
-	private static void loadSound(int ind, byte[] bytes, float vol, boolean b, long loop) throws Exception {
-		// set ind to -1 to tell it's BG
-		
-		if(b) {
-			Clip c = openFile(bytes);
-			
-			c.loop(Clip.LOOP_CONTINUOUSLY);
-			
-			if(BG != null) {
-				BG.stop();
-			}
-			
-			BG = new BCPlayer(c, -1, loop, true);
-			BG.setVolume(VOL_BG);
-			
-			BG.start();
-			
-			return;
-		} 
-		
-		ArrayDeque<BCPlayer> clips = sounds.get(ind);
-		
-		if(clips == null) {
-			clips = new ArrayDeque<BCPlayer>();
-			
-			sounds.put(ind, clips);
-			
-			loadSound(ind, openFile(bytes), false);
-		} else {
-			BCPlayer player = clips.poll();
-			
-			if(player != null) {
-				player.rewind();
-				player.start();
-			} else {
-				switch(ind) {
-					case 20:
-						if(hit != null) {
-							if(h) {
-								hit[0].stop();
-								hit[0].rewind();
-								hit[1].start();
-							} else {
-								hit[1].stop();
-								hit[1].rewind();
-								hit[0].start();
-							}
-							
-							h = !h;
-						}
-						break;
-					case 21:
-						if(hit1 != null) {
-							if(h1) {
-								hit1[0].stop();
-								hit1[0].rewind();
-								hit1[1].start();
-							} else {
-								hit1[1].stop();
-								hit1[1].rewind();
-								hit1[0].start();
-							}
-							
-							h1 = !h1;
-						}
-						break;
-					case 22:
-						if(baseHit != null) {
-							if(bh) {
-								baseHit[0].stop();
-								baseHit[0].rewind();
-								baseHit[1].start();
-							} else {
-								baseHit[1].stop();
-								baseHit[1].rewind();
-								baseHit[0].start();
-							}
-							
-							bh = !bh;
-						}
-						break;
-					default:
-						loadSound(ind, openFile(bytes), false);
-				}
-			}
-		}
-	}
-	
-	private static void loadSound(int ind, Clip c, boolean loop) {
-		BCPlayer player = new BCPlayer(c, ind, loop);
-		player.setVolume(VOL_SE);
-		
-		player.start();
 	}
 }

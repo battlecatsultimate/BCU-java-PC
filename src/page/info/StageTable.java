@@ -65,21 +65,21 @@ public class StageTable extends AbJTable {
 	}
 
 	@Override
+	public String getToolTipText(MouseEvent e) {
+		if (columnAtPoint(e.getPoint()) == 2) {
+			return "{hp, atk}";
+		} else {
+			return null;
+		}
+	}
+
+	@Override
 	public Object getValueAt(int r, int c) {
 		if (data == null || r < 0 || c < 0 || r >= data.length || c >= data[r].length)
 			return null;
 		if (c == 2)
 			return data[r][c] + "%";
 		return data[r][c];
-	}
-	
-	@Override
-	public String getToolTipText(MouseEvent e) {
-		if(columnAtPoint(e.getPoint()) == 2) {
-			return "{hp, atk}";
-		} else {
-			return null;
-		}
 	}
 
 	protected void clicked(Point p) {
@@ -91,12 +91,12 @@ public class StageTable extends AbJTable {
 		if (r < 0 || r >= data.length || c != 1)
 			return;
 		Enemy e = (Enemy) data[r][c];
-		
-		if(!(data[r][2] instanceof String))
+
+		if (!(data[r][2] instanceof String))
 			return;
-		
+
 		int[] d = CommonStatic.parseIntsN((String) data[r][2]);
-		
+
 		MainFrame.changePanel(new EnemyInfoPage(page, e, d[0], d[1]));
 	}
 
@@ -107,7 +107,7 @@ public class StageTable extends AbJTable {
 			int ind = info.length - i - 1;
 			data[ind][1] = EnemyStore.getEnemy(info[i].enemy);
 			data[ind][0] = info[i].boss == 1 ? "boss" : "";
-			data[ind][2] = CommonStatic.toArrayFormat(info[i].multiple,info[i].mult_atk);
+			data[ind][2] = CommonStatic.toArrayFormat(info[i].multiple, info[i].mult_atk);
 			data[ind][3] = info[i].number == 0 ? "infinite" : info[i].number;
 			if (info[i].castle_0 >= info[i].castle_1)
 				data[ind][4] = info[i].castle_0 + "%";

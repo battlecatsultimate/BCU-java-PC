@@ -124,17 +124,17 @@ public class GLImage implements FakeImage {
 	}
 
 	@Override
+	public boolean isValid() {
+		return true;
+	}
+
+	@Override
 	public void setRGB(int i, int j, int p) {
 	}
 
 	@Override
 	public void unload() {
 
-	}
-	
-	@Override
-	public boolean isValid() {
-		return true;
 	}
 
 	protected GLImage root() {

@@ -92,6 +92,15 @@ class StageEditTable extends AbJTable implements Reorderable {
 	}
 
 	@Override
+	public String getToolTipText(MouseEvent e) {
+		if (columnAtPoint(e.getPoint()) == 2) {
+			return "{hp, atk}";
+		} else {
+			return null;
+		}
+	}
+
+	@Override
 	public synchronized Object getValueAt(int r, int c) {
 		if (stage == null || r < 0 || c < 0 || r >= stage.datas.length || c > lnk.length)
 			return null;
@@ -154,15 +163,6 @@ class StageEditTable extends AbJTable implements Reorderable {
 		} else {
 			int i = arg0 instanceof Integer ? (Integer) arg0 : CommonStatic.parseIntN((String) arg0);
 			set(r, c, i, 0);
-		}
-	}
-
-	@Override
-	public String getToolTipText(MouseEvent e) {
-		if (columnAtPoint(e.getPoint()) == 2) {
-			return "{hp, atk}";
-		} else {
-			return null;
 		}
 	}
 

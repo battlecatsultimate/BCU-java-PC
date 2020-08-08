@@ -6,6 +6,21 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 public class ColorSet {
+	public final Color CONTROL;
+
+	public final Color INFO;
+	public final Color NIMBUS_BASE;
+	public final Color NIMBUS_ALERT_YELLOW;
+	public final Color NIMBUS_DISABLED_TEXT;
+	public final Color NIMBUS_FOCUS;
+	public final Color NIMBUS_GREEN;
+	public final Color NIMBUS_INFO_BLUE;
+	public final Color NIMBUS_LIGHT_BG;
+	public final Color NIMBUS_ORANGE;
+	public final Color NIMBUS_RED;
+	public final Color NIMBUS_SELECT_TEXT;
+	public final Color NIMBUS_SELECT_BG;
+	public final Color NIMBUS_TEXT;
 	ColorSet(Color control, Color info, Color nb, Color nay, Color ndt, Color nf, Color ng, Color nib, Color nlb,
 			Color no, Color nr, Color nst, Color nsb, Color nt) {
 		this.CONTROL = control;
@@ -23,21 +38,6 @@ public class ColorSet {
 		this.NIMBUS_SELECT_BG = nsb;
 		this.NIMBUS_TEXT = nt;
 	}
-
-	public final Color CONTROL;
-	public final Color INFO;
-	public final Color NIMBUS_BASE;
-	public final Color NIMBUS_ALERT_YELLOW;
-	public final Color NIMBUS_DISABLED_TEXT;
-	public final Color NIMBUS_FOCUS;
-	public final Color NIMBUS_GREEN;
-	public final Color NIMBUS_INFO_BLUE;
-	public final Color NIMBUS_LIGHT_BG;
-	public final Color NIMBUS_ORANGE;
-	public final Color NIMBUS_RED;
-	public final Color NIMBUS_SELECT_TEXT;
-	public final Color NIMBUS_SELECT_BG;
-	public final Color NIMBUS_TEXT;
 
 	public void setTheme() {
 		UIManager.put("control", CONTROL);

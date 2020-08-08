@@ -132,21 +132,21 @@ public class UnitFLUPage extends LubCont {
 			}
 
 		});
-		
+
 		seabt.setLnr((b) -> {
-			if(ufb != null) {
+			if (ufb != null) {
 				ufb.name = seatf.getText();
-				
+
 				ufb.callBack(null);
 			}
 		});
-		
+
 		seatf.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if(ufb != null) {
+				if (ufb != null) {
 					ufb.name = seatf.getText();
-					
+
 					ufb.callBack(null);
 				}
 			}

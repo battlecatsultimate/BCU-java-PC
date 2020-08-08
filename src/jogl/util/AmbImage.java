@@ -90,6 +90,11 @@ public class AmbImage implements FakeImage {
 	}
 
 	@Override
+	public boolean isValid() {
+		return true;
+	}
+
+	@Override
 	public void mark(Marker str) {
 
 		if (str == Marker.UNI)
@@ -177,11 +182,6 @@ public class AmbImage implements FakeImage {
 		checkBI();
 		force = true;
 		gl = null;
-	}
-	
-	@Override
-	public boolean isValid() {
-		return true;
 	}
 
 }
