@@ -1,8 +1,8 @@
 {
     "KB": {
         "prob": 50,
-        "time": 32,
-        "dis": 0
+        "time": 1,
+        "dis": 1
     },
     "STOP": {
         "prob": 0,
@@ -13,8 +13,8 @@
         "time": 0
     },
     "CRIT": {
-        "prob": 0,
-        "mult": 0
+        "prob": 100,
+        "mult": 300
     },
     "WAVE": {
         "prob": 0,
@@ -49,16 +49,16 @@
         "dis": 0
     },
     "REVIVE": {
-        "count": 0,
-        "time": 0,
-        "health": 0,
-        "dis_0": 0,
-        "dis_1": 0,
+        "count": 5,
+        "time": 30,
+        "health": 100,
+        "dis_0": -100,
+        "dis_1": 100,
         "type": {
-            "range_type": 0,
-            "imu_zkill": false,
-            "revive_non_zombie": false,
-            "revive_others": false
+            "range_type": 2,
+            "imu_zkill": true,
+            "revive_non_zombie": true,
+            "revive_others": true
         }
     },
     "IMUKB": {
@@ -94,18 +94,18 @@
         "time": 0
     },
     "SUMMON": {
-        "prob": 0,
-        "id": 0,
-        "dis": 0,
-        "mult": 0,
+        "prob": 100,
+        "id": 1,
+        "dis": 100,
+        "mult": 300,
         "type": {
-            "anim_type": 0,
+            "anim_type": 3,
             "ignore_limit": false,
             "fix_buff": false,
             "same_health": false,
             "random_layer": false,
             "on_hit": false,
-            "on_kill": false
+            "on_kill": true
         },
         "time": 0
     },
@@ -131,7 +131,7 @@
         "damage": 0,
         "itv": 0,
         "type": {
-            "damage_type": 0,
+            "damage_type": 2,
             "unstackable": false
         }
     },
@@ -139,7 +139,7 @@
         "prob": 0
     },
     "CRITI": {
-        "type": 0
+        "type": 2
     },
     "SATK": {
         "prob": 0,
