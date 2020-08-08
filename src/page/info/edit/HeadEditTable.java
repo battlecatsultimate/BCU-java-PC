@@ -6,7 +6,9 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.File;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Arrays;
+import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -453,7 +455,11 @@ class HeadEditTable extends Page {
 		
 		time /= 1000;
 		
-		DecimalFormat df = new DecimalFormat("#.###");
+		NumberFormat nf = NumberFormat.getInstance(Locale.US);
+		
+		DecimalFormat df = (DecimalFormat) nf;
+		
+		df.applyPattern("#.###");
 		
 		double s = Double.parseDouble(df.format(time));
 		
