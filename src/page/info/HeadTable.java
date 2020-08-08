@@ -2,6 +2,8 @@ package page.info;
 
 import java.awt.Point;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 import common.util.stage.Castles;
 import common.util.stage.CharaGroup;
@@ -168,7 +170,8 @@ public class HeadTable extends AbJTable {
 		
 		time /= 1000;
 		
-		DecimalFormat df = new DecimalFormat("#.###");
+		DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+		df.applyPattern("#.###");
 		
 		double s = Double.parseDouble(df.format(time));
 		
