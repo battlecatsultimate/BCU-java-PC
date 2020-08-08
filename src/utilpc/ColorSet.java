@@ -21,6 +21,7 @@ public class ColorSet {
 	public final Color NIMBUS_SELECT_TEXT;
 	public final Color NIMBUS_SELECT_BG;
 	public final Color NIMBUS_TEXT;
+
 	ColorSet(Color control, Color info, Color nb, Color nay, Color ndt, Color nf, Color ng, Color nib, Color nlb,
 			Color no, Color nr, Color nst, Color nsb, Color nt) {
 		this.CONTROL = control;

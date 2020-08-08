@@ -295,10 +295,10 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				str = MainBCU.validate(str);
 				if (str.length() == 0 || icet.anim == null || icet.anim.name.equals(str)) {
 					if (icet.anim != null)
-						jtf.setText(icet.anim.name);
+						jtf.setText(icet.anim.name.id);
 					return;
 				}
-				DIYAnim da = DIYAnim.map.remove(icet.anim.name);
+				DIYAnim da = DIYAnim.map.remove(icet.anim.name.id);
 				DIYAnim rep = DIYAnim.map.get(str);
 				if (rep != null && Opts.conf(
 						"Do you want to replace animation? This action cannot be undone. The animation which originally keeps this name will be replaced by selected animation.")) {
@@ -330,7 +330,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
-				String str = icet.anim.name;
+				String str = icet.anim.name.id;
 				str = AnimCE.getAvailable(str);
 				AnimCE ac = new AnimCE(str, icet.anim);
 				ac.setEdi(icet.anim.getEdi());
@@ -353,7 +353,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			int ind = jlu.getSelectedIndex();
 			AnimCE ac = icet.anim;
 			ac.delete();
-			DIYAnim.map.remove(ac.name);
+			DIYAnim.map.remove(ac.name.id);
 			Vector<DIYAnim> v = new Vector<>(DIYAnim.map.values());
 			jlu.setListData(v);
 			if (ind >= v.size())
@@ -373,8 +373,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			AnimCE ac = icet.anim;
 			ac.check();
 			ac.delete();
-			// FIXME localization
-			DIYAnim.map.remove(ac.name);
+			DIYAnim.map.remove(ac.name.id);
 			Vector<DIYAnim> v = new Vector<>(DIYAnim.map.values());
 			jlu.setListData(v);
 			if (ind >= v.size())
@@ -667,7 +666,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		if (sb.sele == -1)
 			icet.clearSelection();
 		jtf.setEnabled(anim != null);
-		jtf.setText(anim == null ? "" : anim.name);
+		jtf.setText(anim == null ? "" : anim.name.id);
 		boolean del = da != null && da.deletable();
 		rem.setEnabled(aep.focus == null && da != null && del);
 		loca.setEnabled(aep.focus == null && da != null && !del && !anim.inPool());

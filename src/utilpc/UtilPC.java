@@ -21,6 +21,7 @@ import common.battle.data.PCoin;
 import common.io.InStream;
 import common.io.OutStream;
 import common.pack.Source;
+import common.pack.Source.Identifier;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.files.FDByte;
@@ -149,8 +150,8 @@ public class UtilPC {
 			}
 
 			@Override
-			public String getName() {
-				return name;
+			public Identifier getName() {
+				return new Identifier(null, name);
 			}
 
 			@Override
