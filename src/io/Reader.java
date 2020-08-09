@@ -34,7 +34,6 @@ import common.util.stage.Recd;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
 import common.util.unit.Combo;
-import common.util.unit.DIYAnim;
 import common.util.unit.Enemy;
 import common.util.unit.Unit;
 import event.EventReader;

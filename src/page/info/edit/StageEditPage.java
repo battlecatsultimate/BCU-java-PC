@@ -19,7 +19,6 @@ import common.util.stage.MapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
 import common.util.unit.Enemy;
-import common.util.unit.EnemyStore;
 import main.Opts;
 import page.JBTN;
 import page.Page;

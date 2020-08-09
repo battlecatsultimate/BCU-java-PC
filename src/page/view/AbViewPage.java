@@ -22,7 +22,6 @@ import common.util.anim.AnimCE;
 import common.util.anim.AnimD;
 import common.util.anim.AnimI;
 import common.util.anim.EAnimI;
-import common.util.unit.DIYAnim;
 import io.Writer;
 import main.Timer;
 import page.JBTN;

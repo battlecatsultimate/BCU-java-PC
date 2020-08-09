@@ -11,7 +11,6 @@ import common.util.Data;
 import common.util.stage.SCDef;
 import common.util.stage.SCGroup;
 import common.util.unit.AbEnemy;
-import common.util.unit.EnemyStore;
 import page.MainLocale;
 import page.support.AbJTable;
 import page.support.EnemyTCR;

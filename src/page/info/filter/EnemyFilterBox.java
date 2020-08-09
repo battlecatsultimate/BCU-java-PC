@@ -28,7 +28,6 @@ import javax.swing.event.ListSelectionListener;
 import common.system.MultiLangCont;
 import common.util.pack.Pack;
 import common.util.unit.Enemy;
-import common.util.unit.EnemyStore;
 import main.MainBCU;
 import page.JTG;
 import page.Page;

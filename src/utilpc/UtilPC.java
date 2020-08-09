@@ -21,7 +21,7 @@ import common.battle.data.PCoin;
 import common.io.InStream;
 import common.io.OutStream;
 import common.pack.Source;
-import common.pack.Source.Identifier;
+import common.pack.PackData.Identifier;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.files.FDByte;

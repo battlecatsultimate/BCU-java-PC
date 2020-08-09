@@ -20,7 +20,6 @@ import common.battle.data.CustomEnemy;
 import common.util.pack.Pack;
 import common.util.stage.MapColc;
 import common.util.stage.StageMap;
-import common.util.unit.DIYAnim;
 import common.util.unit.Enemy;
 import io.Writer;
 import main.MainBCU;

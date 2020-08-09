@@ -14,7 +14,6 @@ import javax.swing.event.ListSelectionListener;
 
 import common.system.VImg;
 import common.util.anim.AnimCE;
-import common.util.unit.DIYAnim;
 import main.Opts;
 import page.JBTN;
 import page.JTG;

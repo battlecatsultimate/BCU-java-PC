@@ -10,7 +10,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import common.battle.LineUp;
 import common.util.unit.Combo;
 import common.util.unit.Form;
-import common.util.unit.UnitStore;
 import page.MainLocale;
 import page.Page;
 import page.support.SortTable;

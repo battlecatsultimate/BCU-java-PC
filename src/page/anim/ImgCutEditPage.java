@@ -30,7 +30,6 @@ import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.Part;
 import common.util.pack.Pack;
-import common.util.unit.DIYAnim;
 import common.util.unit.Enemy;
 import io.Writer;
 import main.MainBCU;

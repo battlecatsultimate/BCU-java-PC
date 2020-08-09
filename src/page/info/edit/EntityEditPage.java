@@ -30,7 +30,6 @@ import common.util.anim.AnimU;
 import common.util.pack.Pack;
 import common.util.pack.Soul;
 import common.util.pack.SoulStore;
-import common.util.unit.DIYAnim;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;

@@ -25,7 +25,6 @@ import common.io.OutStream;
 import common.util.Data;
 import common.util.ImgCore;
 import common.util.stage.Recd;
-import common.util.unit.DIYAnim;
 import decode.ZipLib;
 import event.EventReader;
 import main.MainBCU;

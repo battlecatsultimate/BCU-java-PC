@@ -13,7 +13,6 @@ import javax.swing.event.ListSelectionListener;
 import common.battle.data.CustomEnemy;
 import common.util.pack.Pack;
 import common.util.unit.Enemy;
-import common.util.unit.EnemyStore;
 import page.JBTN;
 import page.Page;
 import page.info.EnemyInfoPage;

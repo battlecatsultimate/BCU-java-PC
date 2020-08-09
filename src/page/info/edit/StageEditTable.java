@@ -18,7 +18,6 @@ import common.util.stage.Stage;
 import common.util.unit.AbEnemy;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
-import common.util.unit.EnemyStore;
 import page.MainFrame;
 import page.Page;
 import page.info.EnemyInfoPage;

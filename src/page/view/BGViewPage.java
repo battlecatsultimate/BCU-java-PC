@@ -10,7 +10,6 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import common.util.pack.BGStore;
 import common.util.pack.Background;
 import common.util.pack.Pack;
 import page.JBTN;

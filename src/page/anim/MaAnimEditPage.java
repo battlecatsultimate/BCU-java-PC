@@ -31,7 +31,6 @@ import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
 import common.util.anim.Part;
-import common.util.unit.DIYAnim;
 import main.Opts;
 import page.JBTN;
 import page.JTF;

@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import common.CommonStatic.EditLink;
-import common.util.unit.DIYAnim;
 import io.Writer;
 import page.JBTN;
 import page.Page;

@@ -13,7 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import common.CommonStatic;
-import common.util.pack.BGStore;
 import common.util.pack.MusicStore;
 import common.util.pack.Pack;
 import common.util.stage.Castles;

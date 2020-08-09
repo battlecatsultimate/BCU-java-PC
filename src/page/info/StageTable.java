@@ -9,7 +9,6 @@ import common.util.stage.SCDef.Line;
 import common.util.stage.SCGroup;
 import common.util.stage.Stage;
 import common.util.unit.Enemy;
-import common.util.unit.EnemyStore;
 import page.MainFrame;
 import page.Page;
 import page.support.AbJTable;

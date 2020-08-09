@@ -17,7 +17,6 @@ import common.util.pack.Pack;
 import common.util.unit.AbEnemy;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
-import common.util.unit.EnemyStore;
 import main.Opts;
 import page.JBTN;
 import page.JTF;
