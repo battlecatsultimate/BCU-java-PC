@@ -22,6 +22,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import common.CommonStatic;
+import common.pack.PackData.UserPack;
+import common.pack.Source.Workspace;
+import common.pack.UserProfile;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
@@ -29,7 +32,6 @@ import common.util.anim.AnimCE;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.Part;
-import common.util.pack.Pack;
 import common.util.unit.Enemy;
 import io.Writer;
 import main.MainBCU;
@@ -67,7 +69,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	private final JBTN merg = new JBTN(0, "merge");
 	private final JBTN spri = new JBTN(0, "sprite");
 	private final JLabel icon = new JLabel();
-	private final JList<DIYAnim> jlu = new JList<>();
+	private final JList<AnimCE> jlu = new JList<>();
 	private final JScrollPane jspu = new JScrollPane(jlu);
 	private final JList<String> jlf = new JList<>(ReColor.strs);
 	private final JScrollPane jspf = new JScrollPane(jlf);
@@ -86,9 +88,9 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		super(p);
 		aep = new EditHead(this, 1);
 		if (aep.focus == null)
-			jlu.setListData(new Vector<>(DIYAnim.map.values()));
+			jlu.setListData(new Vector<>(Workspace.loadAnimations(null)));
 		else
-			jlu.setListData(new DIYAnim[] { aep.focus });
+			jlu.setListData(new AnimCE[] { aep.focus });
 		ini();
 		resized();
 
@@ -98,9 +100,9 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		super(p);
 		aep = bar;
 		if (aep.focus == null)
-			jlu.setListData(new Vector<>(DIYAnim.map.values()));
+			jlu.setListData(new Vector<>(Workspace.loadAnimations(null)));
 		else
-			jlu.setListData(new DIYAnim[] { aep.focus });
+			jlu.setListData(new AnimCE[] { aep.focus });
 		ini();
 		resized();
 	}
@@ -119,7 +121,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	}
 
 	@Override
-	public void setSelection(DIYAnim ac) {
+	public void setSelection(AnimCE ac) {
 		changing = true;
 		jlu.setSelectedValue(ac, true);
 		setA(ac);
@@ -233,12 +235,10 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				}
 				ac.saveImg();
 				ac.createNew();
-				DIYAnim da = new DIYAnim(str, ac);
-				DIYAnim.map.put(str, da);
-				Vector<DIYAnim> v = new Vector<>(DIYAnim.map.values());
+				Vector<AnimCE> v = new Vector<>(AnimCE.map().values());
 				jlu.setListData(v);
-				jlu.setSelectedValue(da, true);
-				setA(da);
+				jlu.setSelectedValue(ac, true);
+				setA(ac);
 				changing = false;
 			}
 
@@ -292,32 +292,26 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				changing = true;
 				String str = jtf.getText().trim();
 				str = MainBCU.validate(str);
-				if (str.length() == 0 || icet.anim == null || icet.anim.name.equals(str)) {
+				if (str.length() == 0 || icet.anim == null || icet.anim.name.id.equals(str)) {
 					if (icet.anim != null)
 						jtf.setText(icet.anim.name.id);
 					return;
 				}
-				DIYAnim da = DIYAnim.map.remove(icet.anim.name.id);
-				DIYAnim rep = DIYAnim.map.get(str);
+				AnimCE rep = AnimCE.map().get(str);
 				if (rep != null && Opts.conf(
 						"Do you want to replace animation? This action cannot be undone. The animation which originally keeps this name will be replaced by selected animation.")) {
-					da.anim.delete();
-					da.anim.name = rep.anim.name;
-					for (Pack pack : Pack.map.values())
-						for (Enemy e : pack.es.getList())
-							if (e.anim == rep.anim)
-								e.anim = da.anim;
-					rep.anim = da.anim;
-					rep.anim.saveImg();
-					rep.anim.saveIcon();
-					Vector<DIYAnim> v = new Vector<>(DIYAnim.map.values());
+					icet.anim.renameTo(str);
+					for (UserPack pack : UserProfile.packs())
+						for (Enemy e : pack.enemies.getList())
+							if (e.anim == rep)
+								e.anim = icet.anim;
+					Vector<AnimCE> v = new Vector<>(AnimCE.map().values());
 					jlu.setListData(v);
 					jlu.setSelectedValue(rep, true);
 					setA(rep);
 				} else {
 					str = AnimCE.getAvailable(str);
 					icet.anim.renameTo(str);
-					DIYAnim.map.put(str, da);
 					jtf.setText(str);
 				}
 				changing = false;
@@ -334,12 +328,10 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				AnimCE ac = new AnimCE(str, icet.anim);
 				ac.setEdi(icet.anim.getEdi());
 				ac.setUni(icet.anim.getUni());
-				DIYAnim da = new DIYAnim(str, ac);
-				DIYAnim.map.put(str, da);
-				Vector<DIYAnim> v = new Vector<>(DIYAnim.map.values());
+				Vector<AnimCE> v = new Vector<>(AnimCE.map().values());
 				jlu.setListData(v);
-				jlu.setSelectedValue(da, true);
-				setA(da);
+				jlu.setSelectedValue(ac, true);
+				setA(ac);
 				changing = false;
 			}
 
@@ -352,8 +344,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			int ind = jlu.getSelectedIndex();
 			AnimCE ac = icet.anim;
 			ac.delete();
-			DIYAnim.map.remove(ac.name.id);
-			Vector<DIYAnim> v = new Vector<>(DIYAnim.map.values());
+			Vector<AnimCE> v = new Vector<>(AnimCE.map().values());
 			jlu.setListData(v);
 			if (ind >= v.size())
 				ind--;
@@ -372,8 +363,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			AnimCE ac = icet.anim;
 			ac.check();
 			ac.delete();
-			DIYAnim.map.remove(ac.name.id);
-			Vector<DIYAnim> v = new Vector<>(DIYAnim.map.values());
+			Vector<AnimCE> v = new Vector<>(AnimCE.map().values());
 			jlu.setListData(v);
 			if (ind >= v.size())
 				ind--;
@@ -570,24 +560,24 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			public void actionPerformed(ActionEvent e) {
 				changing = true;
 				String str = AnimCE.getAvailable("merged");
-				DIYAnim[] list = jlu.getSelectedValuesList().toArray(new DIYAnim[0]);
+				AnimCE[] list = jlu.getSelectedValuesList().toArray(new AnimCE[0]);
 				int[][] rect = new int[list.length][2];
 				for (int i = 0; i < list.length; i++) {
-					rect[i][0] = list[i].anim.getNum().getWidth();
-					rect[i][1] = list[i].anim.getNum().getHeight();
+					rect[i][0] = list[i].getNum().getWidth();
+					rect[i][1] = list[i].getNum().getHeight();
 				}
 				SRResult ans = Algorithm.stackRect(rect);
-				AnimCE cen = list[ans.center].anim;
+				AnimCE cen = list[ans.center];
 				AnimCE ac = new AnimCE(str, cen);
 				BufferedImage bimg = new BufferedImage(ans.w, ans.h, BufferedImage.TYPE_INT_ARGB);
 				Graphics g = bimg.getGraphics();
 				for (int i = 0; i < list.length; i++) {
-					BufferedImage b = (BufferedImage) list[i].anim.getNum().bimg();
+					BufferedImage b = (BufferedImage) list[i].getNum().bimg();
 					int x = ans.pos[i][0];
 					int y = ans.pos[i][1];
 					g.drawImage(b, x, y, null);
 					if (i != ans.center)
-						ac.merge(list[i].anim, x, y);
+						ac.merge(list[i], x, y);
 				}
 				try {
 					ac.setNum(FakeImage.read(bimg));
@@ -597,12 +587,10 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				ac.saveImg();
 				ac.reloImg();
 				ac.unSave("merge");
-				DIYAnim da = new DIYAnim(str, ac);
-				DIYAnim.map.put(str, da);
-				Vector<DIYAnim> v = new Vector<>(DIYAnim.map.values());
+				Vector<AnimCE> v = new Vector<>(AnimCE.map().values());
 				jlu.setListData(v);
-				jlu.setSelectedValue(da, true);
-				setA(da);
+				jlu.setSelectedValue(ac, true);
+				setA(ac);
 				changing = false;
 			}
 
@@ -649,13 +637,10 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		addListeners$1();
 	}
 
-	private void setA(DIYAnim da) {
+	private void setA(AnimCE anim) {
 		boolean boo = changing;
 		changing = true;
-		if (da != null && da.getAnimC().mismatch)
-			da = null;
-		aep.setAnim(da);
-		AnimCE anim = da == null ? null : da.getAnimC();
+		aep.setAnim(anim);
 		addl.setEnabled(anim != null);
 		swcl.setEnabled(anim != null);
 		save.setEnabled(anim != null);
@@ -666,16 +651,16 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			icet.clearSelection();
 		jtf.setEnabled(anim != null);
 		jtf.setText(anim == null ? "" : anim.name.id);
-		boolean del = da != null && da.deletable();
-		rem.setEnabled(aep.focus == null && da != null && del);
-		loca.setEnabled(aep.focus == null && da != null && !del && !anim.inPool());
+		boolean del = anim != null && anim.deletable();
+		rem.setEnabled(aep.focus == null && anim != null && del);
+		loca.setEnabled(aep.focus == null && anim != null && !del && !anim.inPool());
 		copy.setEnabled(aep.focus == null && anim != null);
 		impt.setEnabled(anim != null);
 		expt.setEnabled(anim != null);
 		spri.setEnabled(anim != null);
 		merg.setEnabled(jlu.getSelectedValuesList().size() > 1);
-		if (da != null && da.anim.getEdi() != null)
-			icon.setIcon(UtilPC.getIcon(da.anim.getEdi()));
+		if (anim != null && anim.getEdi() != null)
+			icon.setIcon(UtilPC.getIcon(anim.getEdi()));
 		setB(sb.sele);
 		changing = boo;
 	}

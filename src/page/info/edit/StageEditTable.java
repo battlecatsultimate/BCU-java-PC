@@ -10,7 +10,6 @@ import javax.swing.text.JTextComponent;
 
 import common.CommonStatic;
 import common.util.Data;
-import common.util.pack.Pack;
 import common.util.stage.SCDef;
 import common.util.stage.SCDef.Line;
 import common.util.stage.SCGroup;

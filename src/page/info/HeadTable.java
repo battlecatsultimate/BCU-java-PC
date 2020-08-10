@@ -3,7 +3,7 @@ package page.info;
 import java.awt.Point;
 import java.text.DecimalFormat;
 
-import common.util.stage.Castles;
+import common.util.stage.CastleList;
 import common.util.stage.CharaGroup;
 import common.util.stage.Limit;
 import common.util.stage.LvRestrict;
@@ -83,7 +83,7 @@ public class HeadTable extends AbJTable {
 		if (r == 2 && c == 1)
 			MainFrame.changePanel(new BGViewPage(page, null, sta.bg));
 		if (r == 2 && c == 3)
-			MainFrame.changePanel(new CastleViewPage(page, Castles.map.values(), sta.getCastle()));
+			MainFrame.changePanel(new CastleViewPage(page, CastleList.from(sta), sta.castle));
 		if (r == 2 && c == 5 && data[r][c] != null && data[r][c] instanceof LvRestrict)
 			MainFrame.changePanel(new LvRestrictPage(page, (LvRestrict) data[r][c]));
 		if (r == 2 && c == 7 && data[r][c] != null)
@@ -100,7 +100,7 @@ public class HeadTable extends AbJTable {
 		rar = lstr[3];
 		reg = lstr[4];
 		tit[0] = "ID:";
-		tit[1] = st.map.mc.name + "-" + st.map.id + "-" + st.id();
+		tit[1] = st.map.mc.toString() + "-" + st.map.id + "-" + st.id();
 		String star = Page.get(1, "star");
 		for (int i = 0; i < st.map.stars.length; i++)
 			tit[2 + i] = (i + 1) + star + ": " + st.map.stars[i] + "%";
@@ -115,7 +115,7 @@ public class HeadTable extends AbJTable {
 		img[0] = infs[4];
 		img[1] = st.bg;
 		img[2] = infs[5];
-		img[3] = st.getCastle();
+		img[3] = st.castle;
 		img[4] = MainLocale.getLoc(1, "lop");
 		img[5] = convertTime(st.loop0);
 		img[6] = MainLocale.getLoc(1, "lop1");

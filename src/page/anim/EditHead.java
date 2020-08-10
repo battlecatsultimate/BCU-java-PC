@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import common.CommonStatic.EditLink;
+import common.util.anim.AnimCE;
 import io.Writer;
 import page.JBTN;
 import page.Page;
@@ -19,7 +20,7 @@ public class EditHead extends Page implements EditLink {
 	private final JBTN mmdl = new JBTN(0, "camm");
 	private final JBTN manm = new JBTN(0, "cama");
 
-	protected DIYAnim focus;
+	protected AnimCE focus;
 
 	private DIYViewPage p0;
 	private ImgCutEditPage p1;
@@ -29,7 +30,7 @@ public class EditHead extends Page implements EditLink {
 	private Page cur;
 	private boolean changing = false;
 
-	protected DIYAnim anim;
+	protected AnimCE anim;
 
 	public EditHead(Page p, int v) {
 		super(p.getFront());
@@ -49,18 +50,18 @@ public class EditHead extends Page implements EditLink {
 
 	@Override
 	public void review() {
-		undo.setEnabled(anim != null && anim.getAnimC().history.size() > 1);
+		undo.setEnabled(anim != null && anim.history.size() > 1);
 		cur.callBack("review");
 		if (anim != null)
-			undo.setToolTipText(anim.getAnimC().getUndo());
+			undo.setToolTipText(anim.getUndo());
 	}
 
-	public void setAnim(DIYAnim da) {
+	public void setAnim(AnimCE da) {
 		if (changing)
 			return;
 		anim = da;
 		if (anim != null)
-			anim.getAnimC().link = this;
+			anim.link = this;
 		review();
 	}
 
@@ -166,7 +167,7 @@ public class EditHead extends Page implements EditLink {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				anim.getAnimC().restore();
+				anim.restore();
 				review();
 				((AbEditPage) cur).setSelection(anim);
 			}

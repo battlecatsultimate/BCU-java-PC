@@ -7,10 +7,10 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.pack.UserProfile;
 import common.util.anim.AnimI;
 import common.util.pack.EffAnim;
 import common.util.pack.NyCastle;
-import common.util.pack.SoulStore;
 import page.Page;
 
 public class EffectViewPage extends AbViewPage {
@@ -28,7 +28,7 @@ public class EffectViewPage extends AbViewPage {
 			va.add(a);
 		for (AnimI a : NyCastle.atks)
 			va.add(a);
-		va.addAll(SoulStore.getAll(null));
+		va.addAll(UserProfile.getBCData().souls.getList());
 		jlu.setListData(va);
 		ini();
 		resized();

@@ -10,7 +10,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import common.util.Data;
-import common.util.pack.Pack;
 import common.util.stage.CharaGroup;
 import common.util.unit.Unit;
 import page.JBTN;

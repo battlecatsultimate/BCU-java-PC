@@ -8,7 +8,6 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
-import common.util.pack.Pack;
 import common.util.unit.Enemy;
 import page.JBTN;
 import page.JTF;
@@ -28,7 +27,7 @@ public class EnemyFindPage extends Page {
 	private final JTF seatf = new JTF();
 	private final JBTN seabt = new JBTN(0, "search");
 
-	public EnemyFindPage(Page p, Pack pack) {
+	public EnemyFindPage(Page p, String pack) {
 		super(p);
 
 		efb = EnemyFilterBox.getNew(this, pack);

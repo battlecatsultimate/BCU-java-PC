@@ -3,6 +3,7 @@ package page.battle;
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskUnit;
 import common.battle.entity.Entity;
+import common.pack.PackData.Identifier;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import page.MainLocale;
@@ -46,7 +47,7 @@ class EntityTable extends SortTable<Entity> {
 	@Override
 	protected int compare(Entity e0, Entity e1, int c) {
 		if (c == 1)
-			return Integer.compare(getID(e0), getID(e1));
+			return getID(e0).compareTo(getID(e1));
 		else
 			return Long.compare((long) get(e0, c), (long) get(e1, c));
 	}
@@ -68,12 +69,12 @@ class EntityTable extends SortTable<Entity> {
 		return title;
 	}
 
-	private int getID(Entity e) {
+	private Identifier getID(Entity e) {
 		if (e.data instanceof MaskUnit)
 			return ((MaskUnit) e.data).getPack().uid;
 		if (e.data instanceof MaskEnemy)
 			return ((MaskEnemy) e.data).getPack().id;
-		return 0;
+		return null;
 	}
 
 }

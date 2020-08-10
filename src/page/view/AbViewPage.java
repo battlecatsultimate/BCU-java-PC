@@ -213,9 +213,7 @@ public abstract class AbViewPage extends Page {
 				AnimD eau = (AnimD) ei.anim();
 				String str = "new anim";
 				str = AnimCE.getAvailable(str);
-				AnimCE ac = new AnimCE(str, eau);
-				DIYAnim da = new DIYAnim(str, ac);
-				DIYAnim.map.put(str, da);
+				new AnimCE(str, eau);
 				changePanel(new ImgCutEditPage(getThis()));
 			}
 		});

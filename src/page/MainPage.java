@@ -7,7 +7,6 @@ import java.io.IOException;
 import javax.swing.JLabel;
 
 import common.CommonStatic.Account;
-import common.util.pack.Pack;
 import common.util.stage.MapColc;
 import io.BCJSON;
 import io.Writer;
@@ -22,8 +21,6 @@ import page.event.EventLoadPage;
 import page.info.StageViewPage;
 import page.info.filter.EnemyFindPage;
 import page.info.filter.UnitFindPage;
-import page.internet.LoginPage;
-import page.internet.WebMainPage;
 import page.pack.BackupTreePage;
 import page.pack.PackEditPage;
 import page.pack.ResourcePage;
@@ -126,7 +123,7 @@ public class MainPage extends Page {
 		vuni.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new UnitViewPage(getThis(), (Pack) null));
+				changePanel(new UnitViewPage(getThis(), (PackData) null));
 			}
 		});
 

@@ -5,7 +5,7 @@ import static utilpc.Interpret.IMUSFT;
 
 import common.battle.data.CustomEnemy;
 import common.battle.data.CustomEntity;
-import common.util.pack.Pack;
+import common.pack.UserProfile;
 import common.util.unit.Enemy;
 import page.JBTN;
 import page.JL;
@@ -29,11 +29,11 @@ public class EnemyEditPage extends EntityEditPage {
 	private final Enemy ene;
 	private final CustomEnemy ce;
 
-	public EnemyEditPage(Page p, Pack pac, Enemy e) {
-		super(p, pac, (CustomEntity) e.de, pac.editable);
+	public EnemyEditPage(Page p, Enemy e) {
+		super(p, e.id.pack, (CustomEntity) e.de, UserProfile.getUserPack(e.id.pack).editable);
 		ene = e;
 		ce = (CustomEnemy) ene.de;
-		eeb = new EnemyEditBox(this, pac.editable);
+		eeb = new EnemyEditBox(this, editable);
 		ini();
 		setData((CustomEnemy) e.de);
 		resized();

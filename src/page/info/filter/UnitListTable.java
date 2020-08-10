@@ -63,8 +63,10 @@ public class UnitListTable extends SortTable<Form> {
 
 	@Override
 	protected int compare(Form e0, Form e1, int c) {
-		if (c == 0)
-			return e0.uid > e1.uid ? 1 : e0.uid < e1.uid ? -1 : e0.fid > e1.fid ? 1 : e0.fid < e1.fid ? -1 : 0;
+		if (c == 0) {
+			int val = e0.uid.compareTo(e1.uid);
+			return val != 0 ? val : Integer.compare(e0.fid, e1.fid);
+		}
 		if (c == 1)
 			return e0.toString().compareTo(e1.toString());
 		int i0 = (int) get(e0, c);

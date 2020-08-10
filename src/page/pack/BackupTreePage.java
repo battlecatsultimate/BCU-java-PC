@@ -30,7 +30,6 @@ import common.system.files.VFileRoot;
 import common.util.anim.MaAnim;
 import common.util.anim.Part;
 import common.util.pack.Background;
-import common.util.pack.Pack;
 import common.util.stage.CharaGroup;
 import common.util.stage.LvRestrict;
 import common.util.stage.SCDef.Line;

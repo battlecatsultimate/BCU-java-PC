@@ -25,8 +25,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.pack.UserProfile;
 import common.system.MultiLangCont;
-import common.util.pack.Pack;
 import common.util.unit.Enemy;
 import main.MainBCU;
 import page.JTG;
@@ -37,7 +37,7 @@ public abstract class EnemyFilterBox extends Page {
 
 	private static final long serialVersionUID = 1L;
 
-	public static EnemyFilterBox getNew(Page p, Pack pack) {
+	public static EnemyFilterBox getNew(Page p, String pack) {
 		if (MainBCU.FILTER_TYPE == 0)
 			return new EFBButton(p, pack);
 		if (MainBCU.FILTER_TYPE == 1)
@@ -45,11 +45,11 @@ public abstract class EnemyFilterBox extends Page {
 		return null;
 	}
 
-	protected Pack pac;
+	protected String pac;
 
 	protected String name = "";
 
-	protected EnemyFilterBox(Page p, Pack pack) {
+	protected EnemyFilterBox(Page p, String pack) {
 		super(p);
 		pac = pack;
 	}
@@ -69,7 +69,7 @@ class EFBButton extends EnemyFilterBox {
 	private final JTG[] proc = new JTG[SPROC.length];
 	private final JTG[] atkt = new JTG[ATKCONF.length];
 
-	protected EFBButton(Page p, Pack pack) {
+	protected EFBButton(Page p, String pack) {
 		super(p, pack);
 
 		ini();
@@ -94,7 +94,7 @@ class EFBButton extends EnemyFilterBox {
 
 	private void confirm() {
 		List<Enemy> ans = new ArrayList<>();
-		for (Enemy e : EnemyStore.getAll(pac, true)) {
+		for (Enemy e : UserProfile.getAll(pac, Enemy.class)) {
 			int t = e.de.getType();
 			int a = e.de.getAbi();
 			boolean b0 = false;
@@ -229,7 +229,7 @@ class EFBList extends EnemyFilterBox {
 	private final JScrollPane jab = new JScrollPane(abis);
 	private final JScrollPane jat = new JScrollPane(atkt);
 
-	protected EFBList(Page p, Pack pack) {
+	protected EFBList(Page p, String pack) {
 		super(p, pack);
 
 		ini();
@@ -260,7 +260,7 @@ class EFBList extends EnemyFilterBox {
 
 	private void confirm() {
 		List<Enemy> ans = new ArrayList<>();
-		for (Enemy e : EnemyStore.getAll(pac, true)) {
+		for (Enemy e : UserProfile.getAll(pac, Enemy.class)) {
 			int t = e.de.getType();
 			int a = e.de.getAbi();
 			boolean b0 = isER(e, rare.getSelectedIndex());

@@ -13,9 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import common.CommonStatic;
-import common.util.pack.MusicStore;
-import common.util.pack.Pack;
-import common.util.stage.Castles;
 import common.util.stage.Limit;
 import common.util.stage.Recd;
 import common.util.stage.Stage;

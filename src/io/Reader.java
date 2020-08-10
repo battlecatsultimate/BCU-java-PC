@@ -24,7 +24,6 @@ import common.util.Res;
 import common.util.pack.Background;
 import common.util.pack.EffAnim;
 import common.util.pack.NyCastle;
-import common.util.pack.Pack;
 import common.util.pack.Soul;
 import common.util.stage.CharaGroup;
 import common.util.stage.Limit;

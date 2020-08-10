@@ -11,9 +11,9 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import common.system.VImg;
-import common.util.stage.AbCastle;
-import common.util.stage.Castles;
+import common.pack.PackData.Identifier;
+import common.util.stage.CastleImg;
+import common.util.stage.CastleList;
 import page.JBTN;
 import page.Page;
 import utilpc.UtilPC;
@@ -23,42 +23,40 @@ public class CastleViewPage extends Page {
 	private static final long serialVersionUID = 1L;
 
 	private final JBTN back = new JBTN(0, "back");
-	private final JList<AbCastle> jlsm = new JList<>();
+	private final JList<CastleList> jlsm = new JList<>();
 	private final JScrollPane jspsm = new JScrollPane(jlsm);
-	private final JList<VImg> jlst = new JList<>();
+	private final JList<CastleImg> jlst = new JList<>();
 	private final JScrollPane jspst = new JScrollPane(jlst);
 	private final JLabel jl = new JLabel();
 
 	public CastleViewPage(Page p) {
-		this(p, Castles.map.values());
+		this(p, CastleList.map().values());
 	}
 
-	public CastleViewPage(Page p, AbCastle sele) {
-		this(p, Castles.map.values());
+	public CastleViewPage(Page p, CastleList sele) {
+		this(p);
 		jlsm.setSelectedValue(sele, true);
 	}
 
-	public CastleViewPage(Page p, Collection<AbCastle> list) {
+	public CastleViewPage(Page p, Collection<CastleList> list) {
 		super(p);
-
-		Vector<AbCastle> vec = new Vector<>();
+		Vector<CastleList> vec = new Vector<>();
 		vec.addAll(list);
 		jlsm.setListData(vec);
 		ini();
 		resized();
 	}
 
-	public CastleViewPage(Page p, Collection<AbCastle> defcas, int ind) {
+	public CastleViewPage(Page p, Collection<CastleList> defcas, Identifier id) {
 		this(p, defcas);
-		jlsm.setSelectedValue(Castles.map.get(ind / 1000), true);
-		jlst.setSelectedIndex(ind % 1000);
+		CastleList abcas = CastleList.map().get(id.pack);
+		jlsm.setSelectedValue(abcas, true);
+		jlst.setSelectedValue(abcas.get(id.id), true);
 	}
 
-	public int getVal() {
-		AbCastle ac = jlsm.getSelectedValue();
-		if (ac == null)
-			return -1;
-		return ac.getCasID(jlst.getSelectedValue());
+	public Identifier getVal() {
+		CastleImg img = jlst.getSelectedValue();
+		return img == null ? null : img.getID();
 	}
 
 	@Override
@@ -84,7 +82,7 @@ public class CastleViewPage extends Page {
 			public void valueChanged(ListSelectionEvent arg0) {
 				if (arg0.getValueIsAdjusting())
 					return;
-				AbCastle sm = jlsm.getSelectedValue();
+				CastleList sm = jlsm.getSelectedValue();
 				if (sm == null)
 					return;
 				jlst.setListData(new Vector<>(sm.getList()));
@@ -99,11 +97,11 @@ public class CastleViewPage extends Page {
 			public void valueChanged(ListSelectionEvent arg0) {
 				if (arg0.getValueIsAdjusting())
 					return;
-				VImg s = jlst.getSelectedValue();
+				CastleImg s = jlst.getSelectedValue();
 				if (s == null)
 					jl.setIcon(null);
 				else
-					jl.setIcon(UtilPC.getIcon(s));
+					jl.setIcon(UtilPC.getIcon(s.img));
 			}
 
 		});

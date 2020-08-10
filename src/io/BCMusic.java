@@ -1,9 +1,6 @@
 package io;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,10 +10,10 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
-import common.CommonStatic;
+import common.pack.PackData.Identifier;
+import common.pack.UserProfile;
 import common.util.Data;
-import common.util.pack.MusicStore;
-import common.util.pack.Pack;
+import common.util.stage.Music;
 
 public class BCMusic extends Data {
 
@@ -24,7 +21,7 @@ public class BCMusic extends Data {
 	private static final byte[][] CACHE = new byte[TOT][];
 
 	public static boolean play = true;
-	public static int music = -1;
+	public static Identifier music = null;
 	public static int VOL_BG = 20, VOL_SE = 20;
 	private static boolean[] secall = new boolean[TOT];
 
@@ -93,7 +90,7 @@ public class BCMusic extends Data {
 
 			for (int i = 0; i < hit.length; i++) {
 				try {
-					hit[i] = new BCPlayer(openFile(MusicStore.getMusic(20)), 20, false);
+					hit[i] = new BCPlayer(openFile(UserProfile.getBCData().musics.get(20)), 20, false);
 					hit[i].setVolume(VOL_SE);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -106,7 +103,7 @@ public class BCMusic extends Data {
 
 			for (int i = 0; i < hit1.length; i++) {
 				try {
-					hit1[i] = new BCPlayer(openFile(MusicStore.getMusic(21)), 21, false);
+					hit1[i] = new BCPlayer(openFile(UserProfile.getBCData().musics.get(21)), 21, false);
 					hit1[i].setVolume(VOL_SE);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -119,7 +116,7 @@ public class BCMusic extends Data {
 
 			for (int i = 0; i < baseHit.length; i++) {
 				try {
-					baseHit[i] = new BCPlayer(openFile(MusicStore.getMusic(22)), 22, false);
+					baseHit[i] = new BCPlayer(openFile(UserProfile.getBCData().musics.get(22)), 22, false);
 					baseHit[i].setVolume(VOL_SE);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -131,7 +128,7 @@ public class BCMusic extends Data {
 			if (secall[i] && allow)
 				try {
 					if (CACHE[i] == null)
-						loadSound(i, MusicStore.getMusic(i), getVol(VOL_SE), false, 0);
+						loadSound(i, UserProfile.getBCData().musics.get(i), getVol(VOL_SE), false, 0);
 					else
 						loadSound(i, CACHE[i], getVol(VOL_SE), false, 0);
 				} catch (Exception e) {
@@ -141,41 +138,19 @@ public class BCMusic extends Data {
 		secall = new boolean[TOT];
 	}
 
-	public static synchronized void play(int ind, long loop) {
-		music = ind;
-		File f = MusicStore.getMusic(ind);
+	public static synchronized void play(Identifier mus1, long loop) {
+		music = mus1;
+		Music f = UserProfile.getMusic(mus1);
 		if (f != null)
 			setBG(f, loop);
 	}
 
-	public static void read() {
-		File dict = new File("./assets/music/");
-		if (!dict.exists())
-			return;
-		File[] fs = dict.listFiles();
-		for (File f : fs) {
-			String str = f.getName();
-			if (str.length() != 7)
-				continue;
-			if (!str.endsWith(".ogg"))
-				continue;
-			int id = CommonStatic.parseIntN(str.substring(0, 3));
-			if (id == -1)
-				continue;
-			Pack.def.ms.set(id, f);
-			for (int i : SE_ALL)
-				if (i == id) {
-					try {
-						CACHE[id] = Files.readAllBytes(f.toPath());
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					break;
-				}
-		}
+	public static void preload() {
+		for (int i : SE_ALL)
+			BCMusic.CACHE[i] = UserProfile.getBCData().musics.get(i).data.getBytes();
 	}
 
-	public static synchronized void setBG(File f, long loop) {
+	public static synchronized void setBG(Music f, long loop) {
 		if (!play)
 			return;
 		try {
@@ -233,35 +208,24 @@ public class BCMusic extends Data {
 
 	private static void loadSound(int ind, byte[] bytes, float vol, boolean b, long loop) throws Exception {
 		// set ind to -1 to tell it's BG
-
 		if (b) {
 			Clip c = openFile(bytes);
-
 			c.loop(Clip.LOOP_CONTINUOUSLY);
-
 			if (BG != null) {
 				BG.stop();
 			}
-
 			BG = new BCPlayer(c, -1, loop, true);
 			BG.setVolume(VOL_BG);
-
 			BG.start();
-
 			return;
 		}
-
 		ArrayDeque<BCPlayer> clips = sounds.get(ind);
-
 		if (clips == null) {
 			clips = new ArrayDeque<BCPlayer>();
-
 			sounds.put(ind, clips);
-
 			loadSound(ind, openFile(bytes), false);
 		} else {
 			BCPlayer player = clips.poll();
-
 			if (player != null) {
 				player.rewind();
 				player.start();
@@ -278,7 +242,6 @@ public class BCMusic extends Data {
 							hit[1].rewind();
 							hit[0].start();
 						}
-
 						h = !h;
 					}
 					break;
@@ -293,7 +256,6 @@ public class BCMusic extends Data {
 							hit1[1].rewind();
 							hit1[0].start();
 						}
-
 						h1 = !h1;
 					}
 					break;
@@ -308,7 +270,6 @@ public class BCMusic extends Data {
 							baseHit[1].rewind();
 							baseHit[0].start();
 						}
-
 						bh = !bh;
 					}
 					break;
@@ -326,38 +287,27 @@ public class BCMusic extends Data {
 		player.start();
 	}
 
-	private static void loadSound(int ind, File file, float vol, boolean b, long loop) throws Exception {
+	private static void loadSound(int ind, Music file, float vol, boolean b, long loop) throws Exception {
 		// set ind to -1 to tell it's BG
-
 		if (b) {
 			Clip c = openFile(file);
-
 			c.loop(Clip.LOOP_CONTINUOUSLY);
-
 			if (BG != null) {
 				BG.stop();
 				BG.release();
 			}
-
 			BG = new BCPlayer(c, -1, loop, true);
 			BG.setVolume(VOL_BG);
-
 			BG.start();
-
 			return;
 		}
-
 		ArrayDeque<BCPlayer> clips = sounds.get(ind);
-
 		if (clips == null) {
 			clips = new ArrayDeque<BCPlayer>();
-
 			sounds.put(ind, clips);
-
 			loadSound(ind, openFile(file), false);
 		} else {
 			BCPlayer player = clips.poll();
-
 			if (player != null) {
 				player.rewind();
 				player.start();
@@ -383,8 +333,8 @@ public class BCMusic extends Data {
 		return line;
 	}
 
-	private static Clip openFile(File file) throws Exception {
-		AudioInputStream raw = AudioSystem.getAudioInputStream(file);
+	private static Clip openFile(Music file) throws Exception {
+		AudioInputStream raw = AudioSystem.getAudioInputStream(file.data.getStream());
 		AudioFormat rf = raw.getFormat();
 		int ch = rf.getChannels();
 		float rate = rf.getSampleRate();

@@ -9,6 +9,8 @@ import common.battle.attack.ContAb;
 import common.battle.entity.EAnimCont;
 import common.battle.entity.Entity;
 import common.battle.entity.WaprCont;
+import common.pack.PackData.Identifier;
+import common.pack.UserProfile;
 import common.system.P;
 import common.system.SymCoord;
 import common.system.VImg;
@@ -19,7 +21,6 @@ import common.util.Data;
 import common.util.ImgCore;
 import common.util.Res;
 import common.util.pack.NyCastle;
-import common.util.stage.Castles;
 import common.util.unit.Form;
 import page.RetFunc;
 import utilpc.PP;
@@ -233,10 +234,8 @@ public interface BattleBox {
 			int posy = (int) (midh - road_h * siz);
 			int posx = (int) ((800 * ratio + off) * siz + pos);
 			if (!drawCast) {
-				int cind = sb.st.getCastle();
-				if (cind == -1)
-					cind = 0;
-				VImg cast = Castles.getCastle(cind);
+				Identifier cind = sb.st.castle;
+				VImg cast = UserProfile.getCastle(cind);
 				FakeImage bimg = cast.getImg();
 				int bw = (int) (bimg.getWidth() * siz);
 				int bh = (int) (bimg.getHeight() * siz);

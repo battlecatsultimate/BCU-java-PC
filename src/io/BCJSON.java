@@ -1,7 +1,5 @@
 package io;
 
-import static io.WebPack.packlist;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.TreeMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -23,7 +20,6 @@ import org.json.JSONObject;
 import common.CommonStatic;
 import common.CommonStatic.Account;
 import common.util.Data;
-import common.util.pack.Pack;
 import decode.ZipLib;
 import main.MainBCU;
 import main.Opts;
@@ -172,220 +168,6 @@ public class BCJSON extends WebFileIO {
 		if (need) {
 			Opts.pop(Opts.REQITN);
 			CommonStatic.def.exit(false);
-		}
-	}
-
-	public static boolean delete(int pid) {
-		JSONObject inp = new JSONObject();
-		inp.put("uid", ID);
-		inp.put("password", Account.PASSWORD);
-		inp.put("pid", pid);
-		try {
-			JSONObject ans = read(inp.toString(), "delete.php");
-			int ret = ans.getInt("ret");
-			if (ret == 0) {
-				WebPack wp = packlist.get(pid);
-				wp.state = 1 - wp.state;
-			}
-			return ret == 0;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public static int getID(String str) throws IOException {
-		JSONObject inp = new JSONObject();
-		inp.put("name", str);
-		if (Account.PASSWORD == 0)
-			Account.PASSWORD = new Random().nextLong();
-		inp.put("password", Account.PASSWORD);
-		inp.put("bcuver", MainBCU.ver);
-		JSONObject ans = read(inp.toString(), "login.php");
-		int ret = ans.getInt("ret");
-		if (ret == 0)
-			return ans.getInt("id");
-		if (ret == 1)
-			return -1;
-		else if (ret == 2)
-			return -100;
-		throw new IOException(ans.getString("message"));
-	}
-
-	public static boolean getPackInfo(WebPack wp, int pid) {
-		JSONObject inp = new JSONObject();
-		inp.put("user", ID);
-		inp.put("pid", Data.hex(pid));
-		inp.put("bcuver", MainBCU.ver);
-
-		try {
-			JSONObject res = read(inp.toString(), "getPackInfo.php");
-			JSONObject packs = res.getJSONObject("pack");
-			wp.desp = packs.getString("desp");
-			wp.loadImg(packs.getJSONArray("img"));
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public static int getPassword(String str) throws IOException {
-		JSONObject inp = new JSONObject();
-		inp.put("name", str);
-		JSONObject ans = read(inp.toString(), "acquire.php");
-		int ret = ans.getInt("ret");
-		if (ret == 0) {
-			Account.PASSWORD = ans.getLong("password");
-			return ans.getInt("id");
-		}
-		if (ret == 1)
-			return -1;
-		else if (ret == 2)
-			return -100 - ans.getInt("err");
-		throw new IOException(ans.getString("message"));
-	}
-
-	public static int[][] getRate(JSONObject arr) {
-		int[][] ans = new int[2][6];
-		JSONArray tot = arr.getJSONArray("tot");
-		JSONArray cur = arr.getJSONArray("cur");
-		for (int i = 0; i < 6; i++) {
-			ans[0][i] = tot.getInt(i);
-			ans[1][i] = cur.getInt(i);
-		}
-		return ans;
-	}
-
-	/** upload a pack */
-	public static int initUpload(int pid, String name, String desc) {
-		JSONObject inp = new JSONObject();
-		inp.put("uid", ID);
-		inp.put("password", Account.PASSWORD);
-		inp.put("pid", pid);
-		inp.put("name", process(name));
-		inp.put("desc", process(desc));
-		inp.put("bcuver", MainBCU.ver);
-
-		try {
-			JSONObject ans = read(inp.toString(), "upload.php");
-			int ret = ans.getInt("ret");
-			if (ret == 0) {
-				WebPack wp = new WebPack(pid);
-				wp.author = Account.USERNAME;
-				wp.desp = desc;
-				wp.name = name;
-				wp.uid = ID;
-				boolean b = reversion(pid);
-				return b ? 0 : 5;
-			} else if (ret == 2)
-				return ans.getInt("err");
-			return ret;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return 4;
-		}
-	}
-
-	public static int[][] rate(int pid, int val) {
-		JSONObject inp = new JSONObject();
-		inp.put("uid", ID);
-		inp.put("password", Account.PASSWORD);
-		inp.put("pid", pid);
-		inp.put("rate", val + 1);
-
-		try {
-			JSONObject ans = read(inp.toString(), "rate.php");
-			int ret = ans.getInt("ret");
-			return ret == 0 ? getRate(ans.getJSONObject("rate")) : null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public static void refreshPacks() throws IOException {
-		JSONObject inp = new JSONObject();
-		inp.put("user", ID);
-		inp.put("bcuver", MainBCU.ver);
-		JSONObject res = read(inp.toString(), "getinfo.php");
-		JSONArray packs = res.getJSONArray("pack");
-		int len = packs.length();
-		packlist.clear();
-		for (int i = 0; i < len; i++) {
-			new WebPack(packs.getJSONObject(i));
-		}
-	}
-
-	public static boolean report(File f) {
-		try {
-			return upload(f, req + "logio.php");
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	/** update a pack */
-	public static boolean reversion(int pid) {
-		Pack p = Pack.map.get(pid);
-		WebPack wp = packlist.get(pid);
-		wp.version++;
-		p.version = wp.version;
-		// TODO packup
-		File f = new File("./pack/" + pid + ".bcupack");
-		if (f.exists())
-			try {
-				boolean b = upload(f, req + "fileio.php");
-				if (b) {
-					JSONObject inp = new JSONObject();
-					inp.put("uid", ID);
-					inp.put("password", Account.PASSWORD);
-					inp.put("pid", pid);
-					inp.put("rev", 1);
-					inp.put("bcuver", MainBCU.ver);
-					JSONObject ans = read(inp.toString(), "upload.php");
-					if (ans.getInt("ret") == 0)
-						return true;
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		wp.version--;
-		p.version = wp.version;
-		return false;
-	}
-
-	/** update pack information */
-	public static boolean update(int pid, String name, String desc) {
-		JSONObject inp = new JSONObject();
-		inp.put("uid", ID);
-		inp.put("password", Account.PASSWORD);
-		inp.put("pid", pid);
-		inp.put("name", process(name));
-		inp.put("desc", process(desc));
-
-		try {
-			JSONObject ans = read(inp.toString(), "upload.php");
-			int ret = ans.getInt("ret");
-			if (ret == 0) {
-				WebPack wp = packlist.get(pid);
-				wp.desp = desc;
-				wp.name = name;
-			}
-			return ret == 0;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	public static boolean uploadImg(int pid, String iid, File f) {
-		try {
-			return upload(f, req + "uploadImage.php?packid=" + pid + "&imgid=" + iid);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
 		}
 	}
 

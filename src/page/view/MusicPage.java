@@ -2,14 +2,14 @@ package page.view;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.Collection;
 
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
-import common.util.pack.MusicStore;
-import common.util.pack.Pack;
+import common.pack.PackData.Identifier;
+import common.pack.UserProfile;
+import common.util.stage.Music;
 import io.BCMusic;
 import page.JBTN;
 import page.Page;
@@ -21,32 +21,32 @@ public class MusicPage extends Page {
 	private final JBTN back = new JBTN(0, "back");
 	private final JBTN strt = new JBTN(0, "start");
 
-	private final JList<File> jlf = new JList<>();
+	private final JList<Music> jlf = new JList<>();
 	private final JScrollPane jsp = new JScrollPane(jlf);
 
 	public MusicPage(Page p) {
-		this(p, MusicStore.getAll(null));
+		this(p, UserProfile.getBCData().musics.getList());
 
 	}
 
-	public MusicPage(Page p, Collection<File> mus) {
+	public MusicPage(Page p, Collection<Music> mus) {
 		super(p);
-		jlf.setListData(mus.toArray(new File[0]));
+		jlf.setListData(mus.toArray(new Music[0]));
 		ini();
 		resized();
 	}
 
-	public MusicPage(Page p, int mus) {
-		this(p, Pack.map.get(mus / 1000));
-		jlf.setSelectedIndex(mus);
+	public MusicPage(Page p, Identifier id) {
+		this(p, id.pack);
+		jlf.setSelectedValue(UserProfile.getMusic(id), true);
 	}
 
-	public MusicPage(Page p, Pack pack) {
-		this(p, MusicStore.getAll(pack));
+	public MusicPage(Page p, String pack) {
+		this(p, UserProfile.getAll(pack, Music.class));
 	}
 
-	public int getSelected() {
-		return MusicStore.getID(jlf.getSelectedValue());
+	public Identifier getSelected() {
+		return jlf.getSelectedValue().getID();
 	}
 
 	@Override

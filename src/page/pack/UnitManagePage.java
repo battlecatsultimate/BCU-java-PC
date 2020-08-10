@@ -19,7 +19,6 @@ import javax.swing.event.ListSelectionListener;
 import common.CommonStatic;
 import common.battle.data.CustomUnit;
 import common.util.anim.AnimCE;
-import common.util.pack.Pack;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import common.util.unit.UnitLevel;

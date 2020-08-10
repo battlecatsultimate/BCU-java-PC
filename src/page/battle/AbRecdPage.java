@@ -126,7 +126,7 @@ public abstract class AbRecdPage extends Page {
 	private void addListeners() {
 		back.setLnr(x -> changePanel(getFront()));
 
-		vsta.setLnr(x -> changePanel(svp = new StageViewPage(getThis(), MapColc.MAPS.values(), getSelection().st)));
+		vsta.setLnr(x -> changePanel(svp = new StageViewPage(getThis(), MapColc.values(), getSelection().st)));
 
 		jlu.setLnr(x -> changePanel(bp = new BasisPage(getThis())));
 

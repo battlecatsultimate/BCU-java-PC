@@ -23,13 +23,12 @@ import common.battle.Basis;
 import common.battle.BasisSet;
 import common.battle.data.AtkDataModel;
 import common.battle.data.CustomEntity;
+import common.pack.UserProfile;
 import common.util.Animable;
 import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.anim.AnimU;
-import common.util.pack.Pack;
 import common.util.pack.Soul;
-import common.util.pack.SoulStore;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
@@ -96,17 +95,17 @@ public abstract class EntityEditPage extends Page {
 	private final AtkEditTable aet;
 	private final MainProcTable mpt;
 	private final JScrollPane jspm;
-	private final boolean editable;
 	private final CustomEntity ce;
-	private final Pack pack;
+	private final String pack;
 
 	private boolean changing = false;
 	private EnemyFindPage efp;
 	private UnitFindPage ufp;
 
+	protected final boolean editable;
 	protected final Basis bas = BasisSet.current;
 
-	public EntityEditPage(Page p, Pack pac, CustomEntity e, boolean edit) {
+	public EntityEditPage(Page p, String pac, CustomEntity e, boolean edit) {
 		super(p);
 		pack = pac;
 		ce = e;
@@ -191,7 +190,7 @@ public abstract class EntityEditPage extends Page {
 		add(jcbs);
 		Vector<Soul> vec = new Vector<Soul>();
 		vec.add(null);
-		vec.addAll(SoulStore.getAll(pack));
+		vec.addAll(UserProfile.getAll(pack, Soul.class));
 		jcbs.setModel(new DefaultComboBoxModel<>(vec));
 		if (editable) {
 			add(jcba);
@@ -199,7 +198,7 @@ public abstract class EntityEditPage extends Page {
 			AnimCE ac = ((AnimCE) ce.getPack().anim);
 			if (!ac.inPool())
 				vda.add(ac);
-			vda.addAll(DIYAnim.getAnims());
+			vda.addAll(AnimCE.map().values());
 			jcba.setModel(new DefaultComboBoxModel<>(vda));
 		}
 		setFocusTraversalPolicy(ljp);
@@ -354,9 +353,9 @@ public abstract class EntityEditPage extends Page {
 		Animable<AnimU<?>> ene = ce.getPack();
 		if (editable)
 			jcba.setSelectedItem(ene.anim);
-		jcbs.setSelectedItem(SoulStore.getSoul(ce.death));
+		jcbs.setSelectedItem(UserProfile.getSoul(ce.death));
 		vrev.setText(ce.rev == null ? "x" : (KB_TIME[INT_HB] - ce.rev.pre + "f"));
-		Soul s = SoulStore.getSoul(ce.death);
+		Soul s = UserProfile.getSoul(ce.death);
 		vres.setText(ce.res == null ? "x" : s == null ? "-" : (s.len(0) - ce.res.pre + "f"));
 		changing = false;
 	}
@@ -368,7 +367,7 @@ public abstract class EntityEditPage extends Page {
 
 		a.setLnr(x -> {
 			if (editable)
-				changePanel(new DIYViewPage(getThis(), new DIYAnim((AnimCE) jcba.getSelectedItem())));
+				changePanel(new DIYViewPage(getThis(), (AnimCE) jcba.getSelectedItem()));
 			else if (o instanceof Unit)
 				changePanel(new UnitViewPage(getThis(), (Unit) o));
 			else if (o instanceof Enemy)
@@ -492,7 +491,7 @@ public abstract class EntityEditPage extends Page {
 			public void actionPerformed(ActionEvent arg0) {
 				if (changing)
 					return;
-				ce.death = SoulStore.getID((Soul) jcbs.getSelectedItem());
+				ce.death = ((Soul) jcbs.getSelectedItem()).getID();
 				setData(ce);
 
 			}

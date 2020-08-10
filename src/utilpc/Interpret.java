@@ -11,9 +11,10 @@ import common.battle.data.CustomEntity;
 import common.battle.data.MaskAtk;
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskEntity;
+import common.pack.PackData.Identifier;
 import common.util.Data;
-import common.util.pack.Pack;
 import common.util.stage.MapColc;
+import common.util.stage.MapColc.DefMapColc;
 import common.util.unit.Combo;
 import common.util.unit.Enemy;
 import page.Page;
@@ -351,11 +352,11 @@ public class Interpret extends Data {
 			return e.de.getStar() == 1;
 		List<MapColc> lis = e.findMap();
 		boolean colab = false;
-		if (lis.contains(MapColc.getMap("C")))
+		if (lis.contains(DefMapColc.getMap("C")))
 			if (lis.size() == 1)
 				colab = true;
 			else if (lis.size() == 2)
-				colab = lis.contains(MapColc.getMap("R")) || lis.contains(MapColc.getMap("CH"));
+				colab = lis.contains(DefMapColc.getMap("R")) || lis.contains(DefMapColc.getMap("CH"));
 
 		if (t == 2)
 			return !colab;
@@ -364,7 +365,7 @@ public class Interpret extends Data {
 		if (t == 4)
 			return colab;
 		if (t == 5)
-			return e.pac != Pack.def;
+			return !e.id.pack.equals(Identifier.DEF);
 		return false;
 	}
 

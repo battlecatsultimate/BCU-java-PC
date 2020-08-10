@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import common.CommonStatic;
+import common.pack.UserProfile;
 import common.util.Data;
 import common.util.stage.SCDef.Line;
 import common.util.stage.SCGroup;
@@ -104,7 +105,7 @@ public class StageTable extends AbJTable {
 		data = new Object[info.length][9];
 		for (int i = 0; i < info.length; i++) {
 			int ind = info.length - i - 1;
-			data[ind][1] = EnemyStore.getEnemy(info[i].enemy);
+			data[ind][1] = UserProfile.getEnemy(info[i].enemy);
 			data[ind][0] = info[i].boss == 1 ? "boss" : "";
 			data[ind][2] = CommonStatic.toArrayFormat(info[i].multiple, info[i].mult_atk);
 			data[ind][3] = info[i].number == 0 ? "infinite" : info[i].number;

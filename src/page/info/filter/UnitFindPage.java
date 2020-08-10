@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.swing.JScrollPane;
 
-import common.util.pack.Pack;
 import common.util.unit.Form;
 import page.JBTN;
 import page.JTF;
@@ -26,7 +25,7 @@ public class UnitFindPage extends Page {
 	private final JTF seatf = new JTF();
 	private final JBTN seabt = new JBTN(0, "search");
 
-	public UnitFindPage(Page p, Pack pack) {
+	public UnitFindPage(Page p, String pack) {
 		super(p);
 
 		ufb = UnitFilterBox.getNew(this, pack);

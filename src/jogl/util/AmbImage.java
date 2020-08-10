@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 import javax.imageio.ImageIO;
 
 import common.pack.Source;
+import common.pack.Context.ErrType;
 import common.system.fake.FakeImage;
 import common.system.files.FileData;
 import jogl.GLStatic;
@@ -28,7 +29,7 @@ public class AmbImage implements FakeImage {
 	private GLImage gl;
 
 	public AmbImage(FileData data) {
-		stream = () -> Source.ctx.noticeError(() -> data.getStream(), "failed to get stream");
+		stream = () -> Source.ctx.noticeError(() -> data.getStream(), ErrType.ERROR, "failed to get stream");
 		file = null;
 		par = null;
 		cs = null;

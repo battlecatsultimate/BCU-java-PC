@@ -8,6 +8,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import common.battle.LineUp;
+import common.pack.UserProfile;
 import common.util.unit.Combo;
 import common.util.unit.Form;
 import page.MainLocale;
@@ -117,7 +118,7 @@ public class ComboListTable extends SortTable<Combo> {
 		if (c == 2)
 			return lu.occupance(t);
 		if (t.units.length > c - 3)
-			return UnitStore.get(t.units[c - 3]);
+			return UserProfile.getBCData().units.get(t.units[c - 3][0]).forms[t.units[c - 3][1]];
 		return null;
 	}
 

@@ -17,7 +17,8 @@ import javax.swing.event.ListSelectionListener;
 
 import common.CommonStatic.Account;
 import common.battle.data.CustomEnemy;
-import common.util.pack.Pack;
+import common.pack.PackData.UserPack;
+import common.util.anim.AnimCE;
 import common.util.stage.MapColc;
 import common.util.stage.StageMap;
 import common.util.unit.Enemy;
@@ -44,18 +45,18 @@ public class PackEditPage extends Page {
 	private static final long serialVersionUID = 1L;
 
 	private final JBTN back = new JBTN(0, "back");
-	private final Vector<Pack> vpack = new Vector<>(Pack.map.values());
-	private final JList<Pack> jlp = new JList<>(vpack);
+	private final Vector<UserPack> vpack = new Vector<>(Pack.map.values());
+	private final JList<UserPack> jlp = new JList<>(vpack);
 	private final JScrollPane jspp = new JScrollPane(jlp);
 	private final JList<Enemy> jle = new JList<>();
 	private final JScrollPane jspe = new JScrollPane(jle);
-	private final JList<DIYAnim> jld = new JList<>(new Vector<>(DIYAnim.map.values()));
+	private final JList<AnimCE> jld = new JList<>(new Vector<>(AnimCE.map().values()));
 	private final JScrollPane jspd = new JScrollPane(jld);
 	private final ReorderList<StageMap> jls = new ReorderList<>();
 	private final JScrollPane jsps = new JScrollPane(jls);
-	private final JList<Pack> jlr = new JList<>();
+	private final JList<UserPack> jlr = new JList<>();
 	private final JScrollPane jspr = new JScrollPane(jlr);
-	private final JList<Pack> jlt = new JList<>(vpack);
+	private final JList<UserPack> jlt = new JList<>(vpack);
 	private final JScrollPane jspt = new JScrollPane(jlt);
 
 	private final JBTN addp = new JBTN(0, "add");
@@ -90,7 +91,7 @@ public class PackEditPage extends Page {
 	private final JL lbr = new JL(0, "parent");
 	private final JL lbt = new JL(0, "selepar");
 
-	private Pack pac;
+	private UserPack pac;
 	private Enemy ene;
 	private StageMap sm;
 	private boolean changing = false;
@@ -654,7 +655,7 @@ public class PackEditPage extends Page {
 			jtfs.setText(map.name);
 	}
 
-	private void setPack(Pack pack) {
+	private void setPack(UserPack pack) {
 		pac = pack;
 		boolean b = pac != null && pac.editable;
 		remp.setEnabled(pac != null && pac != Pack.def && pac.canDelete());
@@ -672,18 +673,18 @@ public class PackEditPage extends Page {
 		unpk.setEnabled(canUnpack);
 		extr.setEnabled(canExport);
 		if (b)
-			jtfp.setText(pack.name);
+			jtfp.setText(pack.desc.name);
 		if (pac == null) {
 			jle.setListData(new Enemy[0]);
-			jlr.setListData(new Pack[0]);
+			jlr.setListData(new UserPack[0]);
 		} else {
-			jle.setListData(pac.es.getList().toArray(new Enemy[0]));
+			jle.setListData(pac.enemies.getList().toArray(new Enemy[0]));
 			jle.clearSelection();
 			updateJlr();
 			jlr.clearSelection();
 		}
 		checkAddr();
-		boolean b0 = pac != null && pac != Pack.def;
+		boolean b0 = pac != null;
 		sdiy.setEnabled(b0);
 		if (b0) {
 			jls.setListData(pac.mc.maps);
@@ -695,7 +696,7 @@ public class PackEditPage extends Page {
 		setEnemy(null);
 	}
 
-	private void setRely(Pack rel) {
+	private void setRely(UserPack rel) {
 		if (pac == null || rel == null) {
 			remr.setEnabled(false);
 			return;
@@ -711,8 +712,8 @@ public class PackEditPage extends Page {
 	}
 
 	private void updateJlr() {
-		Pack[] rel = new Pack[pac.rely.size()];
-		for (int i = 0; i < pac.rely.size(); i++)
+		UserPack[] rel = new UserPack[pac.desc.dependency.size()];
+		for (int i = 0; i < pac.desc.dependency.size(); i++)
 			rel[i] = Pack.map.get(pac.rely.get(i));
 		jlr.setListData(rel);
 	}

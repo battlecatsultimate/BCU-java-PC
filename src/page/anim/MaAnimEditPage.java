@@ -49,7 +49,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			"13 horizontal flip", "14 vertical flip", "50 extend" };
 
 	private final JBTN back = new JBTN(0, "back");
-	private final JList<DIYAnim> jlu = new JList<>();
+	private final JList<AnimCE> jlu = new JList<>();
 	private final JScrollPane jspu = new JScrollPane(jlu);
 	private final JList<String> jlt = new JList<>();
 	private final JScrollPane jspt = new JScrollPane(jlt);
@@ -123,7 +123,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 	}
 
 	@Override
-	public void setSelection(DIYAnim a) {
+	public void setSelection(AnimCE a) {
 		change(a, ac -> {
 			jlu.setSelectedValue(ac, true);
 			setA(ac);
@@ -163,13 +163,13 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 	@Override
 	protected void renew() {
 
-		DIYAnim da = jlu.getSelectedValue();
+		AnimCE da = jlu.getSelectedValue();
 		int ani = jlt.getSelectedIndex();
 		int par = maet.getSelectedRow();
 		int row = mpet.getSelectedRow();
-		Vector<DIYAnim> vec = new Vector<>();
+		Vector<AnimCE> vec = new Vector<>();
 		if (aep.focus == null)
-			vec.addAll(DIYAnim.map.values());
+			vec.addAll(AnimCE.map().values());
 		else
 			vec.add(aep.focus);
 		change(0, x -> {
@@ -177,7 +177,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			if (da != null && vec.contains(da)) {
 				setA(da);
 				jlu.setSelectedValue(da, true);
-				if (ani >= 0 && ani < da.anim.anims.length) {
+				if (ani >= 0 && ani < da.anims.length) {
 					setB(da, ani);
 					if (par >= 0 && par < maet.ma.parts.length) {
 						setC(par);
@@ -277,7 +277,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			public void valueChanged(ListSelectionEvent arg0) {
 				if (isAdj() || jlt.getValueIsAdjusting())
 					return;
-				DIYAnim da = jlu.getSelectedValue();
+				AnimCE da = jlu.getSelectedValue();
 				int ind = jlt.getSelectedIndex();
 				setB(da, ind);
 			}
@@ -560,26 +560,23 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		addListeners$3();
 	}
 
-	private void setA(DIYAnim dan) {
-		if (dan != null && dan.getAnimC().mismatch)
-			dan = null;
-		change(dan, da -> {
-			aep.setAnim(da);
-			if (da == null) {
+	private void setA(AnimCE dan) {
+		change(dan, anim -> {
+			aep.setAnim(anim);
+			if (anim == null) {
 				jlt.setListData(new String[0]);
 				sb.setAnim(null);
 				jlp.setListData(new String[0]);
 				setB(null, -1);
 				return;
 			}
-			AnimCE anim = da.getAnimC();
 			int ind = jlt.getSelectedIndex();
 			String[] val = anim.names();
 			jlt.setListData(val);
 			if (ind >= val.length)
 				ind = val.length - 1;
 			jlt.setSelectedIndex(ind);
-			setB(da, ind);
+			setB(anim, ind);
 			sb.setAnim(anim);
 			ImgCut ic = anim.imgcut;
 			String[] name = new String[ic.n];
@@ -594,16 +591,15 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		});
 	}
 
-	private void setB(DIYAnim da, int ind) {
+	private void setB(AnimCE ac, int ind) {
 		change(0, x -> {
-			AnimCE ac = da == null ? null : da.getAnimC();
 			MaAnim anim = ac == null || ind < 0 ? null : ac.anims[ind];
 			addp.setEnabled(anim != null);
 			tmul.setEditable(anim != null);
 			advs.setEnabled(anim != null);
 			sort.setEnabled(anim != null);
 			jtl.setEnabled(anim != null);
-			if (da == null || ind == -1) {
+			if (ac == null || ind == -1) {
 				maet.setAnim(null, null);
 				ab.setEntity(null);
 				setC(-1);

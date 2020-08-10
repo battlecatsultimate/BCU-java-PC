@@ -10,8 +10,9 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.pack.PackData.Identifier;
+import common.pack.UserProfile;
 import common.util.pack.Background;
-import common.util.pack.Pack;
 import page.JBTN;
 import page.Page;
 import utilpc.UtilPC;
@@ -25,17 +26,16 @@ public class BGViewPage extends Page {
 	private final JScrollPane jspst = new JScrollPane(jlst);
 	private final JLabel jl = new JLabel();
 
-	public BGViewPage(Page p, Pack pac) {
+	public BGViewPage(Page p, String pac) {
 		super(p);
-
-		jlst.setListData(new Vector<>(BGStore.getAll(pac)));
+		jlst.setListData(new Vector<>(UserProfile.getAll(pac, Background.class)));
 		ini();
 		resized();
 	}
 
-	public BGViewPage(Page front, Pack pac, int bg) {
+	public BGViewPage(Page front, String pac, Identifier bg) {
 		this(front, pac);
-		jlst.setSelectedValue(BGStore.getBG(bg), false);
+		jlst.setSelectedValue(UserProfile.getBG(bg), false);
 	}
 
 	public Background getSelected() {

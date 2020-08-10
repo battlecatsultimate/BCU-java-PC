@@ -23,8 +23,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import common.battle.data.MaskUnit;
+import common.pack.UserProfile;
 import common.system.MultiLangCont;
-import common.util.pack.Pack;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import main.MainBCU;
@@ -36,7 +36,7 @@ public abstract class UnitFilterBox extends Page {
 
 	private static final long serialVersionUID = 1L;
 
-	public static UnitFilterBox getNew(Page p, Pack pack) {
+	public static UnitFilterBox getNew(Page p, String pack) {
 		if (MainBCU.FILTER_TYPE == 0)
 			return new UFBButton(p, pack);
 		if (MainBCU.FILTER_TYPE == 1)
@@ -44,11 +44,11 @@ public abstract class UnitFilterBox extends Page {
 		return null;
 	}
 
-	protected Pack pac;
+	protected String pac;
 
 	public String name = "";
 
-	protected UnitFilterBox(Page p, Pack pack) {
+	protected UnitFilterBox(Page p, String pack) {
 		super(p);
 		pac = pack;
 	}
@@ -68,7 +68,7 @@ class UFBButton extends UnitFilterBox {
 	private final JTG[] proc = new JTG[SPROC.length];
 	private final JTG[] atkt = new JTG[ATKCONF.length];
 
-	protected UFBButton(Page p, Pack pack) {
+	protected UFBButton(Page p, String pack) {
 		super(p, pack);
 
 		ini();
@@ -93,7 +93,7 @@ class UFBButton extends UnitFilterBox {
 
 	private void confirm() {
 		List<Form> ans = new ArrayList<>();
-		for (Unit u : UnitStore.getAll(pac, true))
+		for (Unit u : UserProfile.getAll(pac, Unit.class))
 			for (Form f : u.forms) {
 				MaskUnit du = f.maxu();
 				int t = du.getType();
@@ -224,7 +224,7 @@ class UFBList extends UnitFilterBox {
 	private final JScrollPane jab = new JScrollPane(abis);
 	private final JScrollPane jat = new JScrollPane(atkt);
 
-	protected UFBList(Page p, Pack pack) {
+	protected UFBList(Page p, String pack) {
 		super(p, pack);
 
 		ini();
@@ -255,7 +255,7 @@ class UFBList extends UnitFilterBox {
 
 	private void confirm() {
 		List<Form> ans = new ArrayList<>();
-		for (Unit u : UnitStore.getAll(pac, true))
+		for (Unit u : UserProfile.getAll(pac, Unit.class))
 			for (Form f : u.forms) {
 				MaskUnit du = f.maxu();
 				int t = du.getType();

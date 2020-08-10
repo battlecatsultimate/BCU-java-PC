@@ -9,8 +9,8 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.pack.UserProfile;
 import common.system.Node;
-import common.util.pack.Pack;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import page.JBTN;
@@ -28,18 +28,18 @@ public class UnitViewPage extends AbViewPage {
 	private final JScrollPane jspf = new JScrollPane(jlf);
 	private final JBTN stat = new JBTN(0, "stat");
 
-	private final Pack pac;
+	private final String pac;
 
-	public UnitViewPage(Page p, Pack pack) {
+	public UnitViewPage(Page p, String pack) {
 		super(p);
-
-		jlu.setListData(new Vector<>(UnitStore.getAll(pac = pack, false)));
+		pac = pack;
+		jlu.setListData(new Vector<>(UserProfile.getAll(pack, Unit.class)));
 		ini();
 		resized();
 	}
 
 	public UnitViewPage(Page p, Unit u) {
-		this(p, u.pack);
+		this(p, u.getID().pack);
 		jlu.setSelectedValue(u, true);
 	}
 
@@ -97,7 +97,7 @@ public class UnitViewPage extends AbViewPage {
 				Unit u = jlu.getSelectedValue();
 				if (u == null)
 					return;
-				Node<Unit> n = Node.getList(UnitStore.getAll(pac, false), u);
+				Node<Unit> n = Node.getList(UserProfile.getAll(pac, Unit.class), u);
 				changePanel(new UnitInfoPage(getThis(), n));
 			}
 

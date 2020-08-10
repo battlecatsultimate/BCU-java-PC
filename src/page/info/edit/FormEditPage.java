@@ -5,7 +5,7 @@ import static utilpc.Interpret.IMUSFT;
 
 import common.battle.data.CustomEntity;
 import common.battle.data.CustomUnit;
-import common.util.pack.Pack;
+import common.pack.PackData.UserPack;
 import common.util.unit.Form;
 import page.JBTN;
 import page.JL;
@@ -33,8 +33,8 @@ public class FormEditPage extends EntityEditPage {
 	private final CustomUnit cu;
 	private int lv;
 
-	public FormEditPage(Page p, Pack pac, Form f) {
-		super(p, pac, (CustomEntity) f.du, pac.editable);
+	public FormEditPage(Page p, UserPack pac, Form f) {
+		super(p, pac.desc.id, (CustomEntity) f.du, pac.editable);
 		form = f;
 		cu = (CustomUnit) form.du;
 		lv = f.unit.getPrefLv();

@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 import java.util.TreeMap;
 
 import common.CommonStatic;
-import common.util.stage.MapColc;
+import common.util.stage.MapColc.DefMapColc;
 import main.MainBCU;
 
 public strictfp class Namer {
@@ -46,7 +46,7 @@ public strictfp class Namer {
 	public static String getE(int id) {
 		try {
 			if (id / 1000 == 1)
-				return MapColc.getMap(id).toString();
+				return DefMapColc.getMap(id).toString();
 			else
 				return ERES[CommonStatic.Lang.lang].getString("" + id);
 		} catch (MissingResourceException e) {
@@ -75,7 +75,7 @@ public strictfp class Namer {
 	public static String getEPure(int id) {
 		try {
 			if (id / 1000 == 1)
-				return MapColc.getMap(id).toString();
+				return DefMapColc.getMap(id).toString();
 			else if (id / 1000 != 0 && id / 1000 != 3)
 				return ERES[CommonStatic.Lang.lang].getString("" + id);
 			return "";

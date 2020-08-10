@@ -11,7 +11,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import common.battle.data.CustomEnemy;
-import common.util.pack.Pack;
+import common.pack.UserProfile;
 import common.util.unit.Enemy;
 import page.JBTN;
 import page.Page;
@@ -29,14 +29,13 @@ public class EnemyViewPage extends AbViewPage {
 	private final JLabel source = new JLabel("Source of enemy icon: DB");
 
 	public EnemyViewPage(Page p, Enemy e) {
-		this(p, e.pac);
+		this(p, e.getID().pack);
 		jlu.setSelectedValue(e, true);
 	}
 
-	public EnemyViewPage(Page p, Pack pac) {
+	public EnemyViewPage(Page p, String pac) {
 		super(p);
-
-		jlu.setListData(new Vector<>(EnemyStore.getAll(pac, false)));
+		jlu.setListData(new Vector<>(UserProfile.getAll(pac, Enemy.class)));
 		ini();
 		resized();
 	}
@@ -78,9 +77,9 @@ public class EnemyViewPage extends AbViewPage {
 				Enemy ene = jlu.getSelectedValue();
 				if (ene == null)
 					return;
-				if (ene.de instanceof CustomEnemy)
-					changePanel(new EnemyEditPage(getThis(), ene.pac, ene));
-				else
+				if (ene.de instanceof CustomEnemy) {
+					changePanel(new EnemyEditPage(getThis(), ene));
+				} else
 					changePanel(new EnemyInfoPage(getThis(), ene));
 			}
 

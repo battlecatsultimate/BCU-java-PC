@@ -12,6 +12,7 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.pack.Source.Workspace;
 import common.system.VImg;
 import common.util.anim.AnimCE;
 import main.Opts;
@@ -29,7 +30,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 
 	private static final String[] icos = new String[] { "default", "starred", "EF", "TF", "uni_f", "uni_c", "uni_s" };
 
-	private final JList<DIYAnim> jlu = new JList<>();
+	private final JList<AnimCE> jlu = new JList<>();
 	private final JScrollPane jspu = new JScrollPane(jlu);
 	private final EditHead aep;
 
@@ -47,11 +48,11 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		resized();
 	}
 
-	public DIYViewPage(Page p, DIYAnim ac) {
+	public DIYViewPage(Page p, AnimCE ac) {
 		super(p, BBBuilder.def.getIconBox());
 		ib = (IconBox) vb;
 		aep = new EditHead(this, 0);
-		if (!DIYAnim.map.containsValue(ac))
+		if (!ac.inPool())
 			aep.focus = ac;
 		ini();
 		resized();
@@ -67,7 +68,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 	}
 
 	@Override
-	public void setSelection(DIYAnim ac) {
+	public void setSelection(AnimCE ac) {
 		jlu.setSelectedValue(ac, true);
 	}
 
@@ -94,9 +95,9 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 	@Override
 	protected void renew() {
 		if (aep.focus == null)
-			jlu.setListData(new Vector<>(DIYAnim.map.values()));
+			jlu.setListData(new Vector<AnimCE>(Workspace.loadAnimations("_local")));
 		else
-			jlu.setListData(new DIYAnim[] { aep.focus });
+			jlu.setListData(new AnimCE[] { aep.focus });
 		jlu.setSelectedIndex(0);
 	}
 
@@ -113,11 +114,9 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 
 	@Override
 	protected void updateChoice() {
-		DIYAnim e = jlu.getSelectedValue();
-		if (e != null && e.getAnimC().mismatch)
-			e = null;
+		AnimCE e = jlu.getSelectedValue();
 		aep.setAnim(e);
-		uni.setIcon(e == null ? null : UtilPC.getIcon(e.anim.getUni()));
+		uni.setIcon(e == null ? null : UtilPC.getIcon(e.getUni()));
 		if (e == null)
 			return;
 		setAnim(e);
@@ -163,14 +162,14 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 			VImg clip = new VImg(ib.getClip());
 			if (IconBox.IBConf.mode == 0
 					&& Opts.conf("are you sure to replace display icon? This action cannot be undone")) {
-				AnimCE ac = aep.anim.anim;
+				AnimCE ac = aep.anim;
 				ac.setEdi(clip);
 				ac.saveIcon();
 				jlu.repaint();
 			}
 			if (IconBox.IBConf.mode == 1
 					&& Opts.conf("are you sure to replace battle icon? This action cannot be undone")) {
-				AnimCE ac = aep.anim.anim;
+				AnimCE ac = aep.anim;
 				ac.setUni(new VImg(ib.getClip()));
 				ac.saveUni();
 				uni.setIcon(UtilPC.getIcon(ac.getUni()));

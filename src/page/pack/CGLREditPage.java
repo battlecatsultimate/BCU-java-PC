@@ -15,9 +15,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import common.CommonStatic;
-import common.system.FixIndexList;
 import common.util.Data;
-import common.util.pack.Pack;
 import common.util.stage.CharaGroup;
 import common.util.stage.LvRestrict;
 import common.util.unit.Form;

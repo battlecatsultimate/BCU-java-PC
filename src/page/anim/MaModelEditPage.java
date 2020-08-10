@@ -38,7 +38,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	private static final double res = 0.95;
 
 	private final JBTN back = new JBTN(0, "back");
-	private final JList<DIYAnim> jlu = new JList<>();
+	private final JList<AnimCE> jlu = new JList<>();
 	private final JScrollPane jspu = new JScrollPane(jlu);
 	private final JList<String> jlp = new JList<>();
 	private final JScrollPane jspp = new JScrollPane(jlp);
@@ -89,7 +89,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	}
 
 	@Override
-	public void setSelection(DIYAnim anim) {
+	public void setSelection(AnimCE anim) {
 		change(anim, ac -> {
 			jlu.setSelectedValue(ac, true);
 			setA(ac);
@@ -129,10 +129,10 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	@Override
 	protected void renew() {
 		change(this, page -> {
-			DIYAnim da = jlu.getSelectedValue();
-			Vector<DIYAnim> vec = new Vector<>();
+			AnimCE da = jlu.getSelectedValue();
+			Vector<AnimCE> vec = new Vector<>();
 			if (aep.focus == null)
-				vec.addAll(DIYAnim.map.values());
+				vec.addAll(AnimCE.map().values());
 			else
 				vec.add(aep.focus);
 			jlu.setListData(vec);
@@ -396,15 +396,13 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		});
 	}
 
-	private void setA(DIYAnim da) {
-		if (da != null && da.getAnimC().mismatch)
-			da = null;
-		aep.setAnim(da);
-		setTree(da == null ? null : da.anim);
-		addl.setEnabled(da != null);
-		sort.setEnabled(da != null);
-		revt.setEnabled(da != null);
-		if (da == null) {
+	private void setA(AnimCE anim) {
+		aep.setAnim(anim);
+		setTree(anim);
+		addl.setEnabled(anim != null);
+		sort.setEnabled(anim != null);
+		revt.setEnabled(anim != null);
+		if (anim == null) {
 			mmet.setMaModel(null);
 			mb.setEntity(null);
 			sb.setAnim(null);
@@ -412,7 +410,6 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			setB(-1);
 			return;
 		}
-		AnimCE anim = da.getAnimC();
 		mmet.setMaModel(anim);
 		mb.setEntity(new EAnimS(anim, anim.mamodel));
 		ImgCut ic = anim.imgcut;

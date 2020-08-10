@@ -21,7 +21,6 @@ import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.util.Data;
 import common.util.pack.Background;
-import common.util.pack.Pack;
 import io.Writer;
 import page.JBTN;
 import page.JTF;

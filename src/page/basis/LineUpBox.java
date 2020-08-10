@@ -59,7 +59,7 @@ public class LineUpBox extends Canvas {
 					continue;
 				if (time == 0 && sc != null)
 					for (int[] fc : sc.units)
-						if (f.uid == fc[0] && f.fid >= fc[1])
+						if (LineUp.eq(f.uid, fc[0]) && f.fid >= fc[1])
 							gra.drawImage(Res.slot[2].getImg(), 120 * j, 100 * i);
 				if (time == 1 && sf != null && f.uid == sf.uid && relative == null)
 					gra.drawImage(Res.slot[1].getImg(), 120 * j, 100 * i);
