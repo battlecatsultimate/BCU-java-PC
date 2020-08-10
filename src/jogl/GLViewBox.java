@@ -6,6 +6,7 @@ import static page.anim.IconBox.IBConf.mode;
 import static page.anim.IconBox.IBConf.type;
 
 import java.awt.AWTException;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Robot;
@@ -68,7 +69,21 @@ class GLIconBox extends GLViewBox implements IconBox {
 		r.width = line[2];
 		r.height = line[3];
 		try {
-			return new Robot().createScreenCapture(r);
+			BufferedImage clip = new Robot().createScreenCapture(r);
+			FakeImage img = Res.ico[mode][type].getImg();
+			
+			int bw = img.getWidth();
+			int bh = img.getHeight();
+			
+			double a = Math.min(1.0 * line[2] / bw, 1.0 * line[3] / bh);
+			
+			 Image tmp = clip.getScaledInstance((int) (line[2] / a), (int) (line[3] /a), Image.SCALE_SMOOTH);
+			 
+			BufferedImage res = new BufferedImage(bw, bh, BufferedImage.TYPE_3BYTE_BGR);
+			res.getGraphics().drawImage(tmp, 0, 0, null);
+			
+			return res;
+			
 		} catch (AWTException e) {
 			e.printStackTrace();
 			return null;
