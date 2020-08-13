@@ -35,7 +35,7 @@ public class BGViewPage extends Page {
 
 	public BGViewPage(Page front, String pac, Identifier bg) {
 		this(front, pac);
-		jlst.setSelectedValue(UserProfile.getBG(bg), false);
+		jlst.setSelectedValue(UserProfile.get(bg,Background.class), false);
 	}
 
 	public Background getSelected() {

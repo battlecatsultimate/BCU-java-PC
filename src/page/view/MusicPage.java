@@ -38,7 +38,7 @@ public class MusicPage extends Page {
 
 	public MusicPage(Page p, Identifier id) {
 		this(p, id.pack);
-		jlf.setSelectedValue(UserProfile.getMusic(id), true);
+		jlf.setSelectedValue(UserProfile.get(id,Music.class), true);
 	}
 
 	public MusicPage(Page p, String pack) {

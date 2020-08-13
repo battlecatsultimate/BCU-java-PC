@@ -63,20 +63,6 @@ public class BCJSON extends WebFileIO {
 
 	}
 
-	public static boolean changePassword(long pass) {
-		JSONObject inp = new JSONObject();
-		inp.put("uid", ID);
-		inp.put("password", Account.PASSWORD);
-		inp.put("newpass", pass);
-		try {
-			JSONObject ans = read(inp.toString(), "changePassword.php");
-			return ans.getInt("ret") == 0;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
 	public static void checkDownload() {
 		LoadPage.prog("check download");
 		File f;
@@ -105,7 +91,6 @@ public class BCJSON extends WebFileIO {
 					break;
 				}
 			}
-
 			if (lt != null && MainBCU.ver < Integer.parseInt(lt.getString(0))) {
 				if (Opts.updateCheck("JAR", lt.getString(1))) {
 					int ver = Integer.parseInt(lt.getString(0));
@@ -115,9 +100,7 @@ public class BCJSON extends WebFileIO {
 					else
 						Opts.dloadErr(name);
 				}
-
 			}
-
 			if (lf != null && MainBCU.ver < Integer.parseInt(lf.getString(0))) {
 				if (Opts.updateCheck("JAR", lf.getString(1))) {
 					int ver = Integer.parseInt(lf.getString(0));
@@ -127,9 +110,7 @@ public class BCJSON extends WebFileIO {
 					else
 						Opts.dloadErr(name);
 				}
-
 			}
-
 			LoadPage.prog("check text update...");
 			for (int i = 0; i < cals.length; i++)
 				if (!(f = new File(path + cals[i])).exists() && !download(GITRES + cals[i], f, null))
@@ -142,7 +123,6 @@ public class BCJSON extends WebFileIO {
 					cal_ver = data.getInt("cal");
 				}
 			}
-
 			LoadPage.prog("check music update...");
 			int music = data.getInt("music");
 			boolean[] mus = new boolean[music];

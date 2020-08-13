@@ -353,9 +353,9 @@ public abstract class EntityEditPage extends Page {
 		Animable<AnimU<?>> ene = ce.getPack();
 		if (editable)
 			jcba.setSelectedItem(ene.anim);
-		jcbs.setSelectedItem(UserProfile.getSoul(ce.death));
+		jcbs.setSelectedItem(UserProfile.get(ce.death, Soul.class));
 		vrev.setText(ce.rev == null ? "x" : (KB_TIME[INT_HB] - ce.rev.pre + "f"));
-		Soul s = UserProfile.getSoul(ce.death);
+		Soul s = UserProfile.get(ce.death,Soul.class);
 		vres.setText(ce.res == null ? "x" : s == null ? "-" : (s.len(0) - ce.res.pre + "f"));
 		changing = false;
 	}

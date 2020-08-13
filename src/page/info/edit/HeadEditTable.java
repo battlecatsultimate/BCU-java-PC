@@ -13,7 +13,12 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import common.CommonStatic;
+import common.pack.PackData.Identifier;
+import common.pack.PackData.UserPack;
+import common.pack.UserProfile;
+import common.util.stage.CastleList;
 import common.util.stage.Limit;
+import common.util.stage.Music;
 import common.util.stage.Recd;
 import common.util.stage.Stage;
 import page.JBTN;
@@ -53,17 +58,17 @@ class HeadEditTable extends Page {
 	private final LimitTable lt;
 
 	private Stage sta;
-	private final Pack pac;
+	private final UserPack pac;
 	private BGViewPage bvp;
 	private CastleViewPage cvp;
 	private MusicPage mp;
 
 	private int musl = 0;
 
-	protected HeadEditTable(Page p, Pack pack) {
+	protected HeadEditTable(Page p, UserPack pack) {
 		super(p);
 		pac = pack;
-		lt = new LimitTable(p, this, pac);
+		lt = new LimitTable(p, this, pac.mc);
 		ini();
 	}
 
@@ -76,18 +81,18 @@ class HeadEditTable extends Page {
 	protected void renew() {
 		lt.renew();
 		if (bvp != null) {
-			int val = bvp.getSelected().id;
-			if (val == -1)
+			Identifier val = bvp.getSelected().id;
+			if (val == null)
 				return;
-			jbg.setText("" + val);
-			input(jbg, "" + val);
+			jbg.setText(val.toString());
+			input(jbg, val.toString());
 		}
 		if (cvp != null) {
-			int val = cvp.getVal();
-			if (val == -1)
+			Identifier val = cvp.getVal();
+			if (val == null)
 				return;
-			jcas.setText("" + val);
-			input(jcas, "" + val);
+			jcas.setText(val.toString());
+			input(jcas, val.toString());
 		}
 
 		if (mp != null) {
@@ -140,7 +145,7 @@ class HeadEditTable extends Page {
 		jhea.setText("" + st.health);
 		jlen.setText("" + st.len);
 		jbg.setText("" + st.bg);
-		jcas.setText("" + st.getCastle());
+		jcas.setText("" + st.castle);
 		jm0.setText("" + st.mus0);
 		jmh.setText("<" + st.mush + "% health:");
 		jm1.setText("" + st.mus1);
@@ -159,7 +164,7 @@ class HeadEditTable extends Page {
 		lop.setText(convertTime(sta.loop0));
 		lop1.setText(convertTime(sta.loop1));
 
-		if (sta.mus0 != -1) {
+		if (sta.mus0 !=null) {
 			lop.setEnabled(true);
 			getMusTime(sta.mus0, lop);
 		} else {
@@ -169,7 +174,7 @@ class HeadEditTable extends Page {
 			lop.setEnabled(false);
 		}
 
-		if (sta.mus1 != -1) {
+		if (sta.mus1 != null) {
 			lop1.setEnabled(true);
 			getMusTime(sta.mus1, lop1);
 		} else {
@@ -205,7 +210,7 @@ class HeadEditTable extends Page {
 		bg.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				bvp = new BGViewPage(getFront(), pac, sta.bg);
+				bvp = new BGViewPage(getFront(), pac.desc.id, sta.bg);
 				changePanel(bvp);
 			}
 		});
@@ -213,7 +218,7 @@ class HeadEditTable extends Page {
 		cas.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				cvp = new CastleViewPage(getFront(), pac.casList(), sta.getCastle());
+				cvp = new CastleViewPage(getFront(), CastleList.from(sta), sta.castle);
 				changePanel(cvp);
 			}
 		});
@@ -221,7 +226,7 @@ class HeadEditTable extends Page {
 		mus.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				mp = new MusicPage(getFront(), pac);
+				mp = new MusicPage(getFront(), pac.desc.id);
 				changePanel(mp);
 			}
 		});
@@ -259,9 +264,9 @@ class HeadEditTable extends Page {
 		}
 	}
 
-	private void getMusTime(int mus, JTF jtf) {
+	private void getMusTime(Identifier mus1, JTF jtf) {
 
-		File f = MusicStore.getMusic(mus);
+		Music f = UserProfile.get(mus1,Music.class);
 
 		if (f == null || !f.exists()) {
 			jtf.setToolTipText("Music not found");
@@ -387,7 +392,7 @@ class HeadEditTable extends Page {
 		if (jtf == jm0) {
 			sta.mus0 = val;
 
-			if (sta.mus0 != -1) {
+			if (sta.mus0 != null) {
 				lop.setEnabled(true);
 				getMusTime(sta.mus0, lop);
 			} else {
@@ -403,7 +408,7 @@ class HeadEditTable extends Page {
 		if (jtf == jm1) {
 			sta.mus1 = val;
 
-			if (sta.mus1 != -1) {
+			if (sta.mus1 != null) {
 				lop1.setEnabled(true);
 				getMusTime(sta.mus1, lop1);
 			} else {

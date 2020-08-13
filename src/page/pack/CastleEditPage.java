@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -15,7 +16,13 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.pack.PackData.Identifier;
+import common.pack.PackData.UserPack;
+import common.pack.Source.Workspace;
 import common.system.VImg;
+import common.util.Data;
+import common.util.stage.CastleImg;
+import common.util.stage.CastleList;
 import io.Writer;
 import page.JBTN;
 import page.Page;
@@ -28,7 +35,7 @@ public class CastleEditPage extends Page {
 	private static final long serialVersionUID = 1L;
 
 	private final JBTN back = new JBTN(0, "back");
-	private final JList<String> jlst = new JList<>();
+	private final JList<CastleImg> jlst = new JList<>();
 	private final JScrollPane jspst = new JScrollPane(jlst);
 	private final JLabel jl = new JLabel();
 
@@ -37,16 +44,15 @@ public class CastleEditPage extends Page {
 	private final JBTN impc = new JBTN(0, "import");
 	private final JBTN expc = new JBTN(0, "export");
 
-	private final Pack pack;
-	private final CasStore cas;
-	private List<VImg> list;
+	private final UserPack pack;
+	private final CastleList cas;
 
 	private boolean changing = false;
 
-	public CastleEditPage(Page p, Pack ac) {
+	public CastleEditPage(Page p, UserPack ac) {
 		super(p);
 		pack = ac;
-		cas = ac.cs;
+		cas = ac.castles;
 
 		ini();
 		resized();
@@ -79,10 +85,10 @@ public class CastleEditPage extends Page {
 			public void valueChanged(ListSelectionEvent arg0) {
 				if (changing || arg0.getValueIsAdjusting())
 					return;
-				int ind = jlst.getSelectedIndex();
+				CastleImg img = jlst.getSelectedValue();
 				ImageIcon ic = null;
-				if (ind >= 0) {
-					VImg s = list.get(ind);
+				if (img != null) {
+					VImg s = img.img;
 					if (s != null)
 						ic = UtilPC.getIcon(s);
 				}
@@ -102,21 +108,18 @@ public class CastleEditPage extends Page {
 		impc.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				int ind = jlst.getSelectedIndex();
-				if (ind >= 0) {
-					VImg s = list.get(ind);
-					if (s != null)
-						getFile("Choose your file", s);
-				}
+				CastleImg img = jlst.getSelectedValue();
+				if (img != null)
+					getFile("Choose your file", img);
 			}
 		});
 
 		expc.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				int ind = jlst.getSelectedIndex();
-				if (ind >= 0) {
-					VImg s = list.get(ind);
+				CastleImg img = jlst.getSelectedValue();
+				if (img != null) {
+					VImg s = img.img;
 					if (s != null)
 						new Exporter((BufferedImage) s.getImg().bimg(), Exporter.EXP_IMG);
 				}
@@ -126,22 +129,21 @@ public class CastleEditPage extends Page {
 		remc.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				int ind = jlst.getSelectedIndex();
-				if (ind < 0)
-					return;
-				VImg vimg = list.remove(ind);
-				int name = cas.indexOf(vimg);
-				cas.remove(vimg);
-				new File("./res/img/" + pack.id + "/cas/" + name + ".png");
-				changing = true;
-				setList();
-				changing = false;
+				CastleImg img = jlst.getSelectedValue();
+				ImageIcon ic = null;
+				if (img != null) {
+					cas.remove(img);
+					// FIXME delete img
+					changing = true;
+					setList();
+					changing = false;
+				}
 			}
 		});
 
 	}
 
-	private void getFile(String str, VImg vimg) {
+	private void getFile(String str, CastleImg vimg) {
 		BufferedImage bimg = new Importer(str).getImg();
 		if (bimg == null)
 			return;
@@ -150,14 +152,13 @@ public class CastleEditPage extends Page {
 			return;
 		}
 		if (vimg == null)
-			cas.add(vimg = new VImg(bimg));
+			cas.add(vimg = new CastleImg(new Identifier(pack.desc.id, cas.nextInd()), new VImg(bimg)));
 		else
-			vimg.setImg(bimg);
-		String path = "./res/img/" + pack.id + "/cas/";
+			vimg.img.setImg(bimg);
 		try {
-			File file = new File(path + cas.nameOf(vimg) + ".png");
-			Writer.check(file);
-			ImageIO.write(bimg, "PNG", file);
+			OutputStream os = ((Workspace) pack.source).writeFile("castles/" + Data.trio(vimg.id.id) + ".png");
+			ImageIO.write(bimg, "PNG", os);
+			os.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 			getFile("Failed to save file", vimg);
@@ -183,23 +184,14 @@ public class CastleEditPage extends Page {
 
 	private void setList() {
 		int ind = jlst.getSelectedIndex();
-		list = cas.getList();
-		String[] str = new String[list.size()];
-		for (int i = 0; i < str.length; i++)
-			str[i] = cas.nameOf(list.get(i));
-		jlst.setListData(str);
+		jlst.setListData(cas.getList().toArray(new CastleImg[0]));
 		if (ind < 0)
 			ind = 0;
 		if (ind >= cas.size())
 			ind = cas.size() - 1;
 		jlst.setSelectedIndex(ind);
-		ImageIcon ic = null;
-		if (ind >= 0) {
-			VImg s = list.get(ind);
-			if (s != null)
-				ic = UtilPC.getIcon(s);
-		}
-		jl.setIcon(ic);
+		CastleImg img = jlst.getSelectedValue();
+		jl.setIcon(img == null ? null : UtilPC.getIcon(img.img));
 
 	}
 

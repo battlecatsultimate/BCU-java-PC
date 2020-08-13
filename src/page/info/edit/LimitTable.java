@@ -11,6 +11,7 @@ import javax.swing.SwingConstants;
 
 import common.CommonStatic;
 import common.util.stage.Limit;
+import common.util.stage.MapColc.PackMapColc;
 import page.JBTN;
 import page.JL;
 import page.JTF;
@@ -45,7 +46,7 @@ public class LimitTable extends Page {
 	private final JL rar = new JL(1, "ht10");
 	private final JTG[] brars = new JTG[6];
 
-	private final Pack pac;
+	private final PackMapColc pac;
 	private final Page par, main;
 
 	private CharaGroupPage cgp;
@@ -53,7 +54,7 @@ public class LimitTable extends Page {
 
 	private Limit lim;
 
-	protected LimitTable(Page p0, Page p1, Pack p) {
+	protected LimitTable(Page p0, Page p1, PackMapColc p) {
 		super(null);
 		main = p0;
 		par = p1;
@@ -212,9 +213,9 @@ public class LimitTable extends Page {
 			lim.num = val;
 		}
 		if (jtf == jcg)
-			lim.group = pac.mc.groups.get(val);
+			lim.group = pac.groups.get(val);
 		if (jtf == jlr)
-			lim.lvr = pac.mc.lvrs.get(val);
+			lim.lvr = pac.lvrs.get(val);
 
 	}
 

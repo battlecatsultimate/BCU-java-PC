@@ -3,14 +3,18 @@ package page.info.edit;
 import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.util.EventObject;
+import java.util.Map.Entry;
 
 import javax.swing.text.JTextComponent;
 
 import common.CommonStatic;
+import common.pack.PackData.Identifier;
+import common.pack.UserProfile;
 import common.util.Data;
 import common.util.stage.SCDef;
 import common.util.stage.SCGroup;
 import common.util.unit.AbEnemy;
+import common.util.unit.Enemy;
 import page.MainLocale;
 import page.support.AbJTable;
 import page.support.EnemyTCR;
@@ -87,14 +91,10 @@ class SCGroupEditTable extends AbJTable {
 		if (scd == null)
 			return;
 		c = lnk[c];
-		if (c > 0) {
+		if (c == 1) {
 			int[] is = CommonStatic.parseIntsN((String) arg0);
-			if (is.length == 0)
-				return;
 			if (is.length == 1)
-				set(r, c, is[0], -1);
-			else
-				set(r, c, is[0], is[1]);
+				set(r, is[0]);
 		}
 	}
 
@@ -102,12 +102,10 @@ class SCGroupEditTable extends AbJTable {
 		if (scd == null)
 			return;
 		int ind = getSelectedRow();
-		int eid = 0;
+
 		if (enemy == null)
-			while (scd.smap.containsKey(eid++))
-				;
-		else
-			eid = enemy.getID();
+			return;
+		Identifier eid = enemy.getID();
 		if (scd.smap.containsKey(eid))
 			return;
 		scd.smap.put(eid, 0);
@@ -124,7 +122,7 @@ class SCGroupEditTable extends AbJTable {
 		int ind = getSelectedRow();
 		if (ind == -1)
 			return;
-		scd.smap.remove(scd.getSMap()[ind][0]);
+		scd.smap.remove(scd.getSMap()[ind].getKey());
 		if (ind >= scd.smap.size())
 			ind--;
 		if (ind < 0)
@@ -134,31 +132,27 @@ class SCGroupEditTable extends AbJTable {
 	}
 
 	private Object get(int r, int c) {
-		int[][] info = scd.getSMap();
+		Entry<Identifier, Integer>[] info = scd.getSMap();
 		if (r >= info.length)
 			return null;
-		int[] data = info[r];
 		if (c == 0)
-			return EnemyStore.getAbEnemy(data[0], true);
+			return UserProfile.get(info[r].getKey(), Enemy.class);
 		else if (c == 1) {
-			int g = data[1];
+			int g = info[r].getValue();
 			SCGroup scg = scd.sub.get(g);
 			return scg == null ? g != 0 ? Data.trio(g) + " - invalid" : "" : scg.toString();
 		}
 		return null;
 	}
 
-	private void set(int r, int c, int v, int para) {
-		int[][] info = scd.getSMap();
+	private void set(int r, int v) {
+		Entry<Identifier, Integer>[] info = scd.getSMap();
 		if (r >= info.length)
 			return;
-		int[] data = info[r];
+		Entry<Identifier, Integer> data = info[r];
 		if (v < 0)
 			v = 0;
-		if (c == 0)
-			scd.smap.put(v, scd.smap.remove(data[0]));
-		else if (c == 1)
-			scd.smap.put(data[0], v);
+		scd.smap.put(data.getKey(), v);
 	}
 
 }

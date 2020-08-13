@@ -7,6 +7,7 @@ import javax.swing.event.ListSelectionListener;
 
 import common.CommonStatic;
 import common.util.stage.Limit;
+import common.util.stage.MapColc.PackMapColc;
 import common.util.stage.Stage;
 import page.JBTN;
 import page.JTF;
@@ -30,7 +31,7 @@ public class LimitEditPage extends Page {
 	protected LimitEditPage(Page p, Stage stage) {
 		super(p);
 		st = stage;
-		lt = new LimitTable(this, this, stage.map.mc.pack);
+		lt = new LimitTable(this, this, (PackMapColc) stage.map.mc);
 		ini();
 		resized();
 	}

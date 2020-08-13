@@ -140,7 +140,7 @@ public class BCMusic extends Data {
 
 	public static synchronized void play(Identifier mus1, long loop) {
 		music = mus1;
-		Music f = UserProfile.getMusic(mus1);
+		Music f = UserProfile.get(mus1,Music.class);
 		if (f != null)
 			setBG(f, loop);
 	}

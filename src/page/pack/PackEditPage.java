@@ -18,6 +18,7 @@ import javax.swing.event.ListSelectionListener;
 import common.CommonStatic.Account;
 import common.battle.data.CustomEnemy;
 import common.pack.PackData.UserPack;
+import common.pack.UserProfile;
 import common.util.anim.AnimCE;
 import common.util.stage.MapColc;
 import common.util.stage.StageMap;
@@ -45,7 +46,7 @@ public class PackEditPage extends Page {
 	private static final long serialVersionUID = 1L;
 
 	private final JBTN back = new JBTN(0, "back");
-	private final Vector<UserPack> vpack = new Vector<>(Pack.map.values());
+	private final Vector<UserPack> vpack = new Vector<>(UserProfile.packs());
 	private final JList<UserPack> jlp = new JList<>(vpack);
 	private final JScrollPane jspp = new JScrollPane(jlp);
 	private final JList<Enemy> jle = new JList<>();

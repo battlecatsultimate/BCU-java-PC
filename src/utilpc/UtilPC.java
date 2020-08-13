@@ -21,6 +21,7 @@ import common.battle.data.PCoin;
 import common.io.InStream;
 import common.io.OutStream;
 import common.pack.Source;
+import common.pack.Source.ResourceLocation;
 import common.pack.PackData.Identifier;
 import common.system.VImg;
 import common.system.fake.FakeImage;
@@ -150,8 +151,8 @@ public class UtilPC {
 			}
 
 			@Override
-			public Identifier getName() {
-				return new Identifier(null, name);
+			public ResourceLocation getName() {
+				return new ResourceLocation(null, name);
 			}
 
 			@Override

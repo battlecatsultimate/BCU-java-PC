@@ -15,6 +15,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import common.CommonStatic;
+import common.pack.FixIndexList;
+import common.pack.PackData.UserPack;
 import common.util.Data;
 import common.util.stage.CharaGroup;
 import common.util.stage.LvRestrict;
@@ -61,7 +63,7 @@ public class CGLREditPage extends Page {
 
 	private final JBTN vuif = new JBTN(0, "vuif");
 
-	private final Pack pack;
+	private final UserPack pack;
 	private final FixIndexList<CharaGroup> lcg;
 	private final FixIndexList<LvRestrict> llr;
 
@@ -70,7 +72,7 @@ public class CGLREditPage extends Page {
 	private LvRestrict lr;
 	private UnitFindPage ufp;
 
-	protected CGLREditPage(Page p, Pack pac) {
+	protected CGLREditPage(Page p, UserPack pac) {
 		super(p);
 
 		pack = pac;
@@ -137,7 +139,7 @@ public class CGLREditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (ufp == null)
-					ufp = new UnitFindPage(getThis(), pack);
+					ufp = new UnitFindPage(getThis(), pack.desc.id);
 				changePanel(ufp);
 			}
 		});

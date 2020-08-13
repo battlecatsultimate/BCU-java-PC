@@ -18,6 +18,8 @@ import javax.swing.event.ListSelectionListener;
 
 import common.CommonStatic;
 import common.battle.data.CustomUnit;
+import common.pack.PackData.UserPack;
+import common.pack.UserProfile;
 import common.util.anim.AnimCE;
 import common.util.unit.Form;
 import common.util.unit.Unit;
@@ -39,14 +41,14 @@ public class UnitManagePage extends Page {
 	private static final long serialVersionUID = 1L;
 
 	private final JBTN back = new JBTN(0, "back");
-	private final Vector<Pack> vpack = new Vector<>(Pack.map.values());
-	private final JList<Pack> jlp = new JList<>(vpack);
+	private final Vector<UserPack> vpack = new Vector<>(UserProfile.packs());
+	private final JList<UserPack> jlp = new JList<>(vpack);
 	private final JScrollPane jspp = new JScrollPane(jlp);
 	private final JList<Unit> jlu = new JList<>();
 	private final JScrollPane jspu = new JScrollPane(jlu);
 	private final ReorderList<Form> jlf = new ReorderList<>();
 	private final JScrollPane jspf = new JScrollPane(jlf);
-	private final JList<DIYAnim> jld = new JList<>(new Vector<>(DIYAnim.map.values()));
+	private final JList<AnimCE> jld = new JList<>(new Vector<>(AnimCE.map().values()));
 	private final JScrollPane jspd = new JScrollPane(jld);
 	private final JList<UnitLevel> jll = new JList<>();
 	private final JScrollPane jspl = new JScrollPane(jll);
@@ -74,13 +76,13 @@ public class UnitManagePage extends Page {
 	private final JL lbmp = new JL(0, "maxp");
 	private final JL lbf = new JL(1, "forms");
 
-	private Pack pac;
+	private UserPack pac;
 	private Unit uni;
 	private Form frm;
 	private UnitLevel ul;
 	private boolean changing = false;
 
-	public UnitManagePage(Page p, Pack pack) {
+	public UnitManagePage(Page p, UserPack pack) {
 		super(p);
 
 		pac = pack;
@@ -389,9 +391,9 @@ public class UnitManagePage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
-				int ind = pac.us.lvlist.nextInd();
+				int ind = pac.unitLevels.nextInd();
 				ul = new UnitLevel(pac.us.pack, ind, UnitLevel.def);
-				pac.us.lvlist.set(ind, ul);
+				pac.unitLevels.set(ind, ul);
 				setPack(pac);
 				changing = false;
 			}
@@ -403,9 +405,9 @@ public class UnitManagePage extends Page {
 				changing = true;
 				int ind = jll.getSelectedIndex();
 				UnitLevel ul = jll.getSelectedValue();
-				pac.us.lvlist.remove(ul);
+				pac.unitLevels.remove(ul);
 				setPack(pac);
-				if (ind >= pac.us.lvlist.size())
+				if (ind >= pac.unitLevels.size())
 					ind--;
 				jll.setSelectedIndex(ind);
 				setLevel(jll.getSelectedValue());
@@ -504,7 +506,7 @@ public class UnitManagePage extends Page {
 		reml.setEnabled(b && ul.units.size() == 0);
 	}
 
-	private void setPack(Pack pack) {
+	private void setPack(UserPack pack) {
 		pac = pack;
 		if (jlp.getSelectedValue() != pack) {
 			boolean boo = changing;
@@ -524,17 +526,17 @@ public class UnitManagePage extends Page {
 			jll.setListData(new UnitLevel[0]);
 			cbl.removeAllItems();
 		} else {
-			jlu.setListData(pac.us.ulist.getList().toArray(new Unit[0]));
+			jlu.setListData(pac.units.getList().toArray(new Unit[0]));
 			jlu.clearSelection();
-			jll.setListData(pac.us.lvlist.getList().toArray(new UnitLevel[0]));
+			jll.setListData(pac.unitLevels.getList().toArray(new UnitLevel[0]));
 			setLevel(jll.getSelectedValue());
-			List<UnitLevel> l = pac.us.getlevels();
+			List<UnitLevel> l = pac.units.getlevels();
 			cbl.setModel(new DefaultComboBoxModel<>(l.toArray(new UnitLevel[0])));
 		}
 		changing = boo;
-		if (pac == null || !pac.us.ulist.contains(uni))
+		if (pac == null || !pac.units.contains(uni))
 			uni = null;
-		if (pac == null || !pac.us.lvlist.contains(ul))
+		if (pac == null || !pac.unitLevels.contains(ul))
 			ul = null;
 		setUnit(uni);
 		setLevel(ul);
