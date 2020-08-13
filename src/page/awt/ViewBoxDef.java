@@ -10,8 +10,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
+import common.CommonStatic;
 import common.system.fake.FakeGraphics;
-import common.util.ImgCore;
 import common.util.anim.EAnimI;
 import main.Timer;
 import page.JTG;
@@ -104,7 +104,7 @@ class ViewBoxDef extends Canvas implements ViewBox, ViewBox.VBExporter {
 			gra.dispose();
 		} else
 			g.drawImage(prev, 0, 0, null);
-		if (ImgCore.ref) {
+		if (CommonStatic.getConfig().ref) {
 			g.setColor(Color.ORANGE);
 			g.drawString("Time cost: " + Timer.inter + "%", 20, 20);
 		}

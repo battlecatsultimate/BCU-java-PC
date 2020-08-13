@@ -13,6 +13,9 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.pack.PackData.Identifier;
+import common.pack.PackData.UserPack;
+import common.pack.UserProfile;
 import common.util.unit.AbEnemy;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
@@ -47,21 +50,21 @@ public class EREditPage extends Page {
 	private final JTF name = new JTF();
 	private final JTG[] type = new JTG[3];
 
-	private final Pack pack;
+	private final UserPack pack;
 
 	private EnemyFindPage efp;
 
 	private EneRand rand;
 
-	public EREditPage(Page p, Pack pac) {
+	public EREditPage(Page p, UserPack pac) {
 		super(p);
 		pack = pac;
-		jle.setListData(EnemyStore.getAll(pack, true).toArray(new AbEnemy[0]));
+		jle.setListData(UserProfile.getAll(pack.desc.id, AbEnemy.class).toArray(new AbEnemy[0]));
 		ini();
 		resized();
 	}
 
-	public EREditPage(Page page, Pack pac, EneRand e) {
+	public EREditPage(Page page, UserPack pac, EneRand e) {
 		this(page, pac);
 		jle.setSelectedValue(e, true);
 	}
@@ -139,7 +142,7 @@ public class EREditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (efp == null)
-					efp = new EnemyFindPage(getThis(), pack);
+					efp = new EnemyFindPage(getThis(), pack.desc.id);
 				changePanel(efp);
 			}
 		});
@@ -159,11 +162,11 @@ public class EREditPage extends Page {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				int id = pack.es.ers.nextInd();
-				rand = new EneRand(pack, id + 500);
-				pack.es.ers.add(rand);
+				int id = pack.randEnemies.nextInd();
+				rand = new EneRand(new Identifier<>(pack.desc.id, EneRand.class, id));
+				pack.randEnemies.add(rand);
 				change(null, p -> {
-					jlst.setListData(pack.es.ers.getList().toArray(new EneRand[0]));
+					jlst.setListData(pack.randEnemies.getList().toArray(new EneRand[0]));
 					jlst.setSelectedValue(rand, true);
 					setER(rand);
 				});
@@ -181,9 +184,9 @@ public class EREditPage extends Page {
 				int ind = jlst.getSelectedIndex() - 1;
 				if (ind < 0)
 					ind = -1;
-				pack.es.ers.remove(rand);
+				pack.randEnemies.remove(rand);
 				change(ind, IND -> {
-					List<EneRand> l = pack.es.ers.getList();
+					List<EneRand> l = pack.randEnemies.getList();
 					jlst.setListData(l.toArray(new EneRand[0]));
 
 					if (IND < l.size())
@@ -238,7 +241,7 @@ public class EREditPage extends Page {
 		add(name);
 		for (int i = 0; i < 3; i++)
 			add(type[i] = new JTG(1, "ert" + i));
-		setES(pack == null ? null : pack.es);
+		setES();
 		jle.setCellRenderer(new AnimLCR());
 		addListeners();
 
@@ -265,15 +268,15 @@ public class EREditPage extends Page {
 		resized();
 	}
 
-	private void setES(EnemyStore sm) {
-		if (sm == null) {
+	private void setES() {
+		if (pack == null) {
 			jlst.setListData(new EneRand[0]);
 			setER(null);
 			adds.setEnabled(false);
 			return;
 		}
 		adds.setEnabled(pack.editable);
-		List<EneRand> l = sm.ers.getList();
+		List<EneRand> l = pack.randEnemies.getList();
 		jlst.setListData(l.toArray(new EneRand[0]));
 		if (l.size() == 0) {
 			jlst.clearSelection();
@@ -281,7 +284,7 @@ public class EREditPage extends Page {
 			return;
 		}
 		jlst.setSelectedIndex(0);
-		setER(sm.ers.getList().get(0));
+		setER(pack.randEnemies.getList().get(0));
 	}
 
 }

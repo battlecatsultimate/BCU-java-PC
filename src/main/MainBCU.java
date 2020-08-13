@@ -1,17 +1,15 @@
 package main;
 
 import java.awt.Color;
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import common.CommonStatic;
+import common.io.assets.Admin;
+import common.pack.UserProfile;
 import common.system.fake.ImageBuilder;
 import common.util.Data;
-import decode.ZipLib;
-import io.BCJSON;
 import io.Reader;
-import io.Writer;
 import jogl.GLBBB;
 import jogl.util.GLIB;
 import page.MainFrame;
@@ -25,11 +23,11 @@ import utilpc.awt.PCIB;
 
 public class MainBCU {
 
-	public static final int ver = 41004;
+	public static final int ver = 50000;
 
 	public static int FILTER_TYPE = 0;
-	public static final boolean WRITE = !new File("./.project").exists();
-	public static boolean preload = false, trueRun = true, loaded = false, USE_JOGL = false;
+	public static final boolean WRITE = false;// !new File("./.project").exists();
+	public static boolean preload = false, trueRun = true, loaded = false, USE_JOGL = true;
 	public static boolean light = false, nimbus = true;
 
 	public static String getTime() {
@@ -44,13 +42,17 @@ public class MainBCU {
 			System.exit(0);
 		}
 
-		Writer.logPrepare();
-		Writer.logSetup();
+		UserProfile.profile();
+		CommonStatic.def = new UtilPC.PCItr();
+
+		// Writer.logPrepare();
+		// Writer.logSetup();
 		Reader.getData$0();
 
 		ImageBuilder.builder = USE_JOGL ? new GLIB() : new PCIB();
 		BBBuilder.def = USE_JOGL ? new GLBBB() : AWTBBB.INS;
-		CommonStatic.def = new UtilPC.PCItr();
+		CommonStatic.ctx = new Admin.AdminContext();
+		CommonStatic.ctx.initProfile();
 
 		if (nimbus) {
 			if (light) {
@@ -66,10 +68,10 @@ public class MainBCU {
 
 		new MainFrame(Data.revVer(MainBCU.ver)).initialize();
 		new Timer().start();
-		ZipLib.init();
-		BCJSON.checkDownload();
-		ZipLib.read();
-		Reader.getData$1();
+		// AssetLoader.previewAssets();
+		// BCJSON.checkDownload();
+		// Reader.getData$0();
+		// Reader.getData$1();
 		loaded = true;
 		MainFrame.changePanel(new MainPage());
 	}

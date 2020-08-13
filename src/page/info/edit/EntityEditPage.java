@@ -103,7 +103,7 @@ public abstract class EntityEditPage extends Page {
 	private UnitFindPage ufp;
 
 	protected final boolean editable;
-	protected final Basis bas = BasisSet.current;
+	protected final Basis bas = BasisSet.current();
 
 	public EntityEditPage(Page p, String pac, CustomEntity e, boolean edit) {
 		super(p);
@@ -353,9 +353,9 @@ public abstract class EntityEditPage extends Page {
 		Animable<AnimU<?>> ene = ce.getPack();
 		if (editable)
 			jcba.setSelectedItem(ene.anim);
-		jcbs.setSelectedItem(UserProfile.get(ce.death, Soul.class));
+		jcbs.setSelectedItem(ce.death.get());
 		vrev.setText(ce.rev == null ? "x" : (KB_TIME[INT_HB] - ce.rev.pre + "f"));
-		Soul s = UserProfile.get(ce.death,Soul.class);
+		Soul s = ce.death.get();
 		vres.setText(ce.res == null ? "x" : s == null ? "-" : (s.len(0) - ce.res.pre + "f"));
 		changing = false;
 	}

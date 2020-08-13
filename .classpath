@@ -10,7 +10,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry excluding="decode/|event/|io/|io/drive/|jogl/|jogl/util/|jogl/util/shader/|main/|page/|page/anim/|page/awt/|page/basis/|page/battle/|page/event/|page/info/|page/info/edit/|page/info/filter/|page/pack/|page/pack/BackupTreePage.java|page/pack/BGEditPage.java|page/pack/CastleEditPage.java|page/pack/CGLREditPage.java|page/pack/CharaGroupPage.java|page/pack/EREditPage.java|page/pack/EREditTable.java|page/pack/LvRestrictPage.java|page/pack/MusicEditPage.java|page/pack/PackEditPage.java|page/pack/RecdPackPage.java|page/pack/ResourcePage.java|page/pack/UnitManagePage.java|page/support/|page/view/|res/|utilpc/|utilpc/awt/" including="**/*.java" kind="src" output="target/classes" path="src">
+	<classpathentry including="**/*.java" kind="src" output="target/classes" path="src">
 		<attributes>
 			<attribute name="optional" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>

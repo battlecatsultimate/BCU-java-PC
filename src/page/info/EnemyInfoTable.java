@@ -32,7 +32,7 @@ public class EnemyInfoTable extends Page {
 
 	protected EnemyInfoTable(Page p, Enemy de, int mul, int mula) {
 		super(p);
-		b = BasisSet.current;
+		b = BasisSet.current();
 
 		e = de;
 		multi = mul;

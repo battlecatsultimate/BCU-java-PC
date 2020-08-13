@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.util.Set;
 import java.util.TreeSet;
 
+import common.CommonStatic;
 import common.battle.LineUp;
 import common.system.P;
 import common.system.SymCoord;
@@ -41,6 +42,7 @@ public class LineUpBox extends Canvas {
 
 	@Override
 	public void paint(Graphics g) {
+		VImg[] slot = CommonStatic.getBCAssets().slot;
 		Image bimg = createImage(600, 300);
 		if (bimg == null)
 			return;
@@ -50,7 +52,7 @@ public class LineUpBox extends Canvas {
 				Form f = getForm(i, j);
 				VImg img;
 				if (f == null)
-					img = Res.slot[0];
+					img = slot[0];
 				else
 					img = f.anim.getUni();
 				if (sf == null || sf != f || relative == null)
@@ -60,9 +62,9 @@ public class LineUpBox extends Canvas {
 				if (time == 0 && sc != null)
 					for (int[] fc : sc.units)
 						if (LineUp.eq(f.uid, fc[0]) && f.fid >= fc[1])
-							gra.drawImage(Res.slot[2].getImg(), 120 * j, 100 * i);
+							gra.drawImage(slot[2].getImg(), 120 * j, 100 * i);
 				if (time == 1 && sf != null && f.uid == sf.uid && relative == null)
-					gra.drawImage(Res.slot[1].getImg(), 120 * j, 100 * i);
+					gra.drawImage(slot[1].getImg(), 120 * j, 100 * i);
 				if (sf == null || sf != f || relative == null)
 					Res.getCost(lu.getLv(f.unit).getLvs()[0], true,
 							new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));

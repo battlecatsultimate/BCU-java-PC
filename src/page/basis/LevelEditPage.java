@@ -19,7 +19,6 @@ import javax.swing.event.ListSelectionListener;
 import common.CommonStatic;
 import common.battle.BasisSet;
 import common.battle.LineUp;
-import common.battle.data.Orb;
 import common.util.Data;
 import common.util.unit.Form;
 import common.util.unit.Level;
@@ -156,7 +155,7 @@ public class LevelEditPage extends Page {
 		});
 
 		add.setLnr(x -> {
-			int[] data = { 0, Orb.DATA.get(0), 0 };
+			int[] data = { 0, CommonStatic.getBCAssets().DATA.get(0), 0 };
 
 			orbs.add(data);
 
@@ -420,7 +419,7 @@ public class LevelEditPage extends Page {
 		String[] grades;
 
 		if (data[0] == Data.ORB_ATK) {
-			traitData = new ArrayList<>(Orb.ATKORB.keySet());
+			traitData = new ArrayList<>(CommonStatic.getBCAssets().ATKORB.keySet());
 
 			traits = new String[traitData.size()];
 
@@ -432,7 +431,7 @@ public class LevelEditPage extends Page {
 				data[1] = traitData.get(0);
 			}
 
-			gradeData = Orb.ATKORB.get(data[1]);
+			gradeData = CommonStatic.getBCAssets().ATKORB.get(data[1]);
 
 			grades = new String[gradeData.size()];
 
@@ -444,7 +443,7 @@ public class LevelEditPage extends Page {
 				data[2] = gradeData.get(2);
 			}
 		} else {
-			traitData = new ArrayList<>(Orb.RESORB.keySet());
+			traitData = new ArrayList<>(CommonStatic.getBCAssets().RESORB.keySet());
 
 			traits = new String[traitData.size()];
 
@@ -456,7 +455,7 @@ public class LevelEditPage extends Page {
 				data[1] = traitData.get(0);
 			}
 
-			gradeData = Orb.RESORB.get(data[1]);
+			gradeData = CommonStatic.getBCAssets().RESORB.get(data[1]);
 
 			grades = new String[gradeData.size()];
 
@@ -497,7 +496,7 @@ public class LevelEditPage extends Page {
 	}
 
 	private LineUp lu() {
-		return BasisSet.current.sele.lu;
+		return BasisSet.current().sele.lu;
 	}
 
 	private void setLvOrb(int[] lvs, int[][] orbs) {

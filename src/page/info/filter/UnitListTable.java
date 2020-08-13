@@ -76,7 +76,7 @@ public class UnitListTable extends SortTable<Form> {
 
 	@Override
 	protected Object get(Form e, int c) {
-		Basis b = BasisSet.current;
+		Basis b = BasisSet.current();
 		MaskUnit du = e.maxu();
 		double mul = e.unit.lv.getMult(e.unit.getPrefLv());
 		double atk = b.t().getAtkMulti();

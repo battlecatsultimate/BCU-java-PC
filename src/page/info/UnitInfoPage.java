@@ -32,7 +32,7 @@ public class UnitInfoPage extends Page {
 	private Node<Unit> n;
 
 	public UnitInfoPage(Page p, Node<Unit> de) {
-		this(p, de, BasisSet.current);
+		this(p, de, BasisSet.current());
 	}
 
 	private UnitInfoPage(Page p, Node<Unit> de, BasisSet bas) {

@@ -79,7 +79,7 @@ public abstract class AbRecdPage extends Page {
 		if (editable && bp != null) {
 			Recd r = getSelection();
 			if (r != null && Opts.conf("are you sure to change lineup?")) {
-				r.lu = BasisSet.current.sele.copy();
+				r.lu = BasisSet.current().sele.copy();
 				r.marked = true;
 			}
 		}

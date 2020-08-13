@@ -23,7 +23,7 @@ public class EnemyInfoPage extends Page {
 	private final TreaTable trea;
 
 	private final Enemy e;
-	private BasisSet b = BasisSet.current;
+	private BasisSet b = BasisSet.current();
 
 	public EnemyInfoPage(Page p, Enemy de) {
 		this(p, de, 100, 100);

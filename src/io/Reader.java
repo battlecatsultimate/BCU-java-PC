@@ -11,34 +11,17 @@ import java.util.ArrayList;
 import java.util.Queue;
 
 import common.CommonStatic;
-import common.CommonStatic.Account;
-import common.battle.BasisSet;
-import common.battle.data.Orb;
-import common.battle.data.PCoin;
+import common.CommonStatic.Config;
 import common.io.DataIO;
 import common.io.InStream;
-import common.system.MultiLangCont;
-import common.system.files.VFileRoot;
-import common.util.ImgCore;
-import common.util.Res;
-import common.util.pack.Background;
-import common.util.pack.EffAnim;
-import common.util.pack.NyCastle;
-import common.util.pack.Soul;
-import common.util.stage.CharaGroup;
-import common.util.stage.Limit;
+import common.pack.UserProfile;
+import common.util.lang.MultiLangCont;
 import common.util.stage.MapColc;
-import common.util.stage.RandStage;
-import common.util.stage.Recd;
+import common.util.stage.MapColc.DefMapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
-import common.util.unit.Combo;
 import common.util.unit.Enemy;
 import common.util.unit.Unit;
-import event.EventReader;
-import event.GroupPattern;
-import event.HourGrouper;
-import event.Namer;
 import main.MainBCU;
 import main.Opts;
 import page.LoadPage;
@@ -48,54 +31,16 @@ import page.battle.BattleInfoPage;
 import page.support.Exporter;
 import page.support.Importer;
 import page.view.ViewBox;
-import utilpc.BackupData;
 
 public class Reader extends DataIO {
 
-	public static VFileRoot<BackupData> alt;
-
 	public static void getData$0() {
-		try {
-			readInfo();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		readInfo();
 	}
 
 	public static void getData$1() {
-		try {
-			LoadPage.prog("reading basic images");
-			Res.readData();
-			LoadPage.prog("reading units");
-			Unit.readData();
-			LoadPage.prog("reading enemies");
-			Enemy.readData();
-		} catch (Exception e) {
-			e.printStackTrace();
-			Opts.loadErr("error in reading: reading basic data");
-			System.exit(0);
-		}
-
-		try {
-			readOthers();
-			LoadPage.prog("reading calendar infomation");
-			readID();
-			readGroup();
-			readLang();
-		} catch (Exception e) {
-			e.printStackTrace();
-			Opts.loadErr("error in reading: reading additional data");
-			System.exit(0);
-		}
-
-		try {
-			readCustom();
-			BCMusic.read();
-		} catch (Exception e) {
-			e.printStackTrace();
-			Opts.loadErr("error in reading: reading custom data");
-			System.exit(0);
-		}
+		readLang();
+		BCMusic.preload();
 	}
 
 	public static InStream readBytes(File file) {
@@ -147,11 +92,11 @@ public class Reader extends DataIO {
 									continue;
 								String[] ids = idstr.split("-");
 								int id0 = CommonStatic.parseIntN(ids[0]);
-								MapColc mc = MapColc.MAPS.get(id0);
+								MapColc mc = DefMapColc.getMap(id0 * 1000).mc;
 								if (mc == null)
 									continue;
 								if (ids.length == 1) {
-									MultiLangCont.MCNAME.put(ni, mc, name);
+									MultiLangCont.getStatic().MCNAME.put(ni, mc, name);
 									continue;
 								}
 								int id1 = CommonStatic.parseIntN(ids[1]);
@@ -161,14 +106,14 @@ public class Reader extends DataIO {
 								if (sm == null)
 									continue;
 								if (ids.length == 2) {
-									MultiLangCont.SMNAME.put(ni, sm, name);
+									MultiLangCont.getStatic().SMNAME.put(ni, sm, name);
 									continue;
 								}
 								int id2 = CommonStatic.parseIntN(ids[2]);
 								if (id2 >= sm.list.size() || id2 < 0)
 									continue;
 								Stage st = sm.list.get(id2);
-								MultiLangCont.STNAME.put(ni, st, name);
+								MultiLangCont.getStatic().STNAME.put(ni, st, name);
 							}
 						continue;
 					}
@@ -176,11 +121,11 @@ public class Reader extends DataIO {
 						Queue<String> qs = readLines(fl);
 						for (String str : qs) {
 							String[] strs = str.trim().split("\t");
-							Unit u = Pack.def.us.ulist.get(CommonStatic.parseIntN(strs[0]));
+							Unit u = UserProfile.getBCData().units.get(CommonStatic.parseIntN(strs[0]));
 							if (u == null)
 								continue;
 							for (int i = 0; i < Math.min(u.forms.length, strs.length - 1); i++)
-								MultiLangCont.FNAME.put(ni, u.forms[i], strs[i + 1].trim());
+								MultiLangCont.getStatic().FNAME.put(ni, u.forms[i], strs[i + 1].trim());
 						}
 						continue;
 					}
@@ -188,10 +133,10 @@ public class Reader extends DataIO {
 						Queue<String> qs = readLines(fl);
 						for (String str : qs) {
 							String[] strs = str.trim().split("\t");
-							Enemy e = Pack.def.es.get(CommonStatic.parseIntN(strs[0]));
+							Enemy e = UserProfile.getBCData().enemies.get(CommonStatic.parseIntN(strs[0]));
 							if (e == null || strs.length < 2)
 								continue;
-							MultiLangCont.ENAME.put(ni, e, strs[1].trim());
+							MultiLangCont.getStatic().ENAME.put(ni, e, strs[1].trim());
 						}
 						continue;
 					}
@@ -253,136 +198,27 @@ public class Reader extends DataIO {
 		return ans;
 	}
 
-	private static void readCustom() {
-		LoadPage.prog("reading custom data");
-		alt = null;
-		try {
-			ZipAccess.getList();
-			alt = ZipAccess.extractAllList();
-		} catch (Exception e) {
-			e.printStackTrace();
-			Opts.loadErr("cannot access ./user/backup.zip");
-			if (Opts.conf("do you want to delete broken backups?"))
-				new File("./user/backup.zip").deleteOnExit();
-			Writer.logClose(false);
-			System.exit(0);
-		}
-		try {
-			DIYAnim.read();
-		} catch (Exception e) {
-			e.printStackTrace();
-			Opts.loadErr("error in reading: reading custom animation");
-			System.exit(0);
-		}
-		LoadPage.prog("reading custom data...");
-		try {
-			Pack.read();
-		} catch (Exception e) {
-			e.printStackTrace();
-			Opts.loadErr("error in reading: reading custom pack");
-			System.exit(0);
-		}
-		Recd.read();
-		File file = new File("./user/basis.v");
-		if (file.exists())
-			try {
-				BasisSet.read(readBytes(file));
-			} catch (Exception e) {
-				e.printStackTrace();
-				Opts.loadErr("error in reading: reading basis");
-				System.exit(0);
-			}
-	}
-
-	private static void readGroup() {
-		File f = new File("./assets/calendar/group event.txt");
-		Queue<String> qs = readLines(f);
-		try {
-			while (qs.size() > 0) {
-				String[] str = qs.poll().trim().split("\t");
-				int n = Integer.parseInt(str[0].trim());
-				String[] strs = new String[n];
-				for (int i = 0; i < n; i++)
-					strs[i] = qs.poll().trim();
-				new GroupPattern(str[1].trim(), strs);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		f = new File("./assets/calendar/group hour.txt");
-		qs = readLines(f);
-		try {
-			HourGrouper.process(qs);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private static void readID() {
-		File f = new File("./assets/calendar/event ID.txt");
-		Queue<String> qs = readLines(f);
-		for (String str : qs) {
-			String[] strs = str.trim().split("\t");
-			if (strs.length != 2)
-				continue;
-			int id = -2;
-			try {
-				id = Integer.parseInt(strs[0].trim());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			Namer.EMAP.put(id, strs[1]);
-		}
-		f = new File("./assets/calendar/gacha ID.txt");
-		qs = readLines(f);
-		for (String str : qs) {
-			String[] strs = str.trim().split("\t");
-			if (strs.length != 2)
-				continue;
-			int id = -2;
-			try {
-				id = Integer.parseInt(strs[0].trim());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			Namer.GMAP.put(id, strs[1]);
-		}
-		f = new File("./assets/calendar/item ID.txt");
-		qs = readLines(f);
-		for (String str : qs) {
-			String[] strs = str.trim().split("\t");
-			if (strs.length != 2)
-				continue;
-			int id = -2;
-			try {
-				id = Integer.parseInt(strs[0].trim());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			Namer.IMAP.put(id, strs[1]);
-		}
-	}
-
 	private static void readInfo() {
 		try {
 			File f = new File("./user/data.ini");
 			if (f.exists()) {
 				try {
+					Config cfg = CommonStatic.getConfig();
 					Queue<String> qs = readLines(f);
-					CommonStatic.Lang.lang = parseInt(qs.poll());
+					cfg.lang = parseInt(qs.poll());
 					int[] r = parseInts(4, qs.poll());
 					MainFrame.crect = new Rectangle(r[0], r[1], r[2], r[3]);
 					MainBCU.preload = parseInt(qs.poll()) == 1;
-					ImgCore.ints = parseInts(4, qs.poll());
+					cfg.ints = parseInts(4, qs.poll());
 					ViewBox.Conf.white = parseInt(qs.poll()) == 1;
-					ImgCore.ref = parseInt(qs.poll()) == 1;
+					cfg.ref = parseInt(qs.poll()) == 1;
 					MainBCU.USE_JOGL = parseInt(qs.poll()) == 1;
-					ImgCore.deadOpa = parseInt(qs.poll());
-					ImgCore.fullOpa = parseInt(qs.poll());
+					cfg.deadOpa = parseInt(qs.poll());
+					cfg.fullOpa = parseInt(qs.poll());
 					MainBCU.FILTER_TYPE = parseInt(qs.poll());
-					EventReader.loc = parseInt(qs.poll());
-					Account.USERNAME = qs.poll().trim();
-					Account.PASSWORD = Long.parseLong(qs.poll());
+					parseInt(qs.poll());
+					qs.poll().trim(); // username
+					Long.parseLong(qs.poll()); // TODO password
 					qs.poll();// place holder
 					BCJSON.cal_ver = parseInt(qs.poll());
 					int[] ints = CommonStatic.parseIntsN(qs.poll());
@@ -412,23 +248,6 @@ public class Reader extends DataIO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	private static void readOthers() {
-		LoadPage.prog("reading extra unit data");
-		Combo.readFile();
-		PCoin.read();
-		LoadPage.prog("reading extra graphics data");
-		EffAnim.read();
-		Background.read();
-		NyCastle.read();
-		Soul.read();
-		LoadPage.prog("reading stage data");
-		MapColc.read();
-		RandStage.read();
-		CharaGroup.read();
-		Limit.read();
-		Orb.read();
 	}
 
 }

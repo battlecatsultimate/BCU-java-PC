@@ -59,7 +59,7 @@ public class BasisPage extends LubCont {
 	private final JTF lvjtf = new JTF();
 	private final JBTN lvorb = new JBTN(0, "orb");
 	private final JLabel pcoin = new JLabel();
-	private final Vector<BasisSet> vbs = new Vector<>(BasisSet.list);
+	private final Vector<BasisSet> vbs = new Vector<>(BasisSet.list());
 	private final ReorderList<BasisSet> jlbs = new ReorderList<>(vbs);
 	private final JScrollPane jspbs = new JScrollPane(jlbs);
 	private final Vector<BasisLU> vb = new Vector<>();
@@ -83,7 +83,7 @@ public class BasisPage extends LubCont {
 
 	private UnitFLUPage ufp;
 
-	private final TreaTable trea = new TreaTable(this, BasisSet.current);
+	private final TreaTable trea = new TreaTable(this, BasisSet.current());
 
 	public BasisPage(Page p) {
 		super(p);
@@ -245,8 +245,8 @@ public class BasisPage extends LubCont {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					current.sele.nyc[I]++;
-					current.sele.nyc[I] %= NyCastle.TOT;
+					current().sele.nyc[I]++;
+					current().sele.nyc[I] %= NyCastle.TOT;
 				}
 
 			});
@@ -263,7 +263,7 @@ public class BasisPage extends LubCont {
 					return;
 				changing = true;
 				if (jlbs.getSelectedValue() == null)
-					jlbs.setSelectedValue(BasisSet.current, true);
+					jlbs.setSelectedValue(BasisSet.current(), true);
 				else
 					setBS(jlbs.getSelectedValue());
 				changing = false;
@@ -277,7 +277,7 @@ public class BasisPage extends LubCont {
 					return;
 				changing = true;
 				if (jlb.getSelectedValue() == null)
-					jlb.setSelectedValue(BasisSet.current.sele, true);
+					jlb.setSelectedValue(BasisSet.current().sele, true);
 				else
 					setB(jlb.getSelectedValue());
 				changing = false;
@@ -289,7 +289,7 @@ public class BasisPage extends LubCont {
 			@Override
 			public void reordered(int ori, int fin) {
 				changing = false;
-				List<BasisSet> l = BasisSet.list;
+				List<BasisSet> l = BasisSet.list();
 				BasisSet b = l.remove(ori);
 				l.add(fin, b);
 			}
@@ -305,14 +305,14 @@ public class BasisPage extends LubCont {
 
 			@Override
 			public boolean add(BasisLU blu) {
-				BasisSet.current.lb.add(blu);
+				BasisSet.current().lb.add(blu);
 				return true;
 			}
 
 			@Override
 			public void reordered(int ori, int fin) {
 				changing = false;
-				List<BasisLU> l = BasisSet.current.lb;
+				List<BasisLU> l = BasisSet.current().lb;
 				BasisLU b = l.remove(ori);
 				l.add(fin, b);
 			}
@@ -330,7 +330,7 @@ public class BasisPage extends LubCont {
 				changing = true;
 				BasisSet b = new BasisSet();
 				vbs.clear();
-				vbs.addAll(BasisSet.list);
+				vbs.addAll(BasisSet.list());
 				jlbs.setListData(vbs);
 				jlbs.setSelectedValue(b, true);
 				setBS(b);
@@ -342,11 +342,11 @@ public class BasisPage extends LubCont {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
-				BasisSet.list.remove(current);
+				BasisSet.list().remove(current());
 				vbs.clear();
-				vbs.addAll(BasisSet.list);
+				vbs.addAll(BasisSet.list());
 				jlbs.setListData(vbs);
-				BasisSet b = BasisSet.list.get(BasisSet.list.size() - 1);
+				BasisSet b = BasisSet.list().get(BasisSet.list().size() - 1);
 				jlbs.setSelectedValue(b, true);
 				setBS(b);
 				changing = false;
@@ -357,9 +357,9 @@ public class BasisPage extends LubCont {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
-				BasisSet b = new BasisSet(current);
+				BasisSet b = new BasisSet(current());
 				vbs.clear();
-				vbs.addAll(BasisSet.list);
+				vbs.addAll(BasisSet.list());
 				jlbs.setListData(vbs);
 				jlbs.setSelectedValue(b, true);
 				setBS(b);
@@ -371,9 +371,9 @@ public class BasisPage extends LubCont {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
-				BasisLU b = current.add();
+				BasisLU b = current().add();
 				vb.clear();
-				vb.addAll(current.lb);
+				vb.addAll(current().lb);
 				jlb.setListData(vb);
 				jlb.setSelectedValue(b, true);
 				setB(b);
@@ -385,9 +385,9 @@ public class BasisPage extends LubCont {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
-				BasisLU b = current.remove();
+				BasisLU b = current().remove();
 				vb.clear();
-				vb.addAll(current.lb);
+				vb.addAll(current().lb);
 				jlb.setListData(vb);
 				jlb.setSelectedValue(b, true);
 				setB(b);
@@ -400,8 +400,8 @@ public class BasisPage extends LubCont {
 			public void focusLost(FocusEvent arg0) {
 				String str = bsjtf.getText().trim();
 				if (str.length() > 0)
-					BasisSet.current.name = str;
-				bsjtf.setText(BasisSet.current.name);
+					BasisSet.current().name = str;
+				bsjtf.setText(BasisSet.current().name);
 				jlbs.repaint();
 			}
 		});
@@ -411,8 +411,8 @@ public class BasisPage extends LubCont {
 			public void focusLost(FocusEvent arg0) {
 				String str = bjtf.getText().trim();
 				if (str.length() > 0)
-					BasisSet.current.sele.name = str;
-				bjtf.setText(BasisSet.current.sele.name);
+					BasisSet.current().sele.name = str;
+				bjtf.setText(BasisSet.current().sele.name);
 				jlb.repaint();
 			}
 		});
@@ -517,7 +517,7 @@ public class BasisPage extends LubCont {
 		ul.setCellRenderer(new UnitLCR());
 		int m0 = ListSelectionModel.SINGLE_SELECTION;
 		int m1 = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
-		jlbs.setSelectedValue(current, true);
+		jlbs.setSelectedValue(current(), true);
 		jlcs.setSelectedIndex(0);
 		jlbs.setSelectionMode(m0);
 		jlb.setSelectionMode(m0);
@@ -526,10 +526,10 @@ public class BasisPage extends LubCont {
 		jlcn.setSelectionMode(m0);
 		jlc.getSelectionModel().setSelectionMode(m0);
 		setCS(0);
-		setBS(current);
+		setBS(current());
 		lub.setLU(lu());
-		bsjtf.setText(BasisSet.current.name);
-		bjtf.setText(BasisSet.current.sele.name);
+		bsjtf.setText(BasisSet.current().name);
+		bjtf.setText(BasisSet.current().sele.name);
 		changeLU();
 		addListeners$0();
 		addListeners$1();
@@ -538,29 +538,29 @@ public class BasisPage extends LubCont {
 	}
 
 	private LineUp lu() {
-		return BasisSet.current.sele.lu;
+		return BasisSet.current().sele.lu;
 	}
 
 	private void setB(BasisLU b) {
-		current.sele = b;
+		current().sele = b;
 		lub.setLU(b == null ? null : b.lu);
-		brem.setEnabled(current.lb.size() > 1);
-		bjtf.setText(BasisSet.current.sele.name);
+		brem.setEnabled(current().lb.size() > 1);
+		bjtf.setText(BasisSet.current().sele.name);
 		ncb.set(b.nyc);
 		changeLU();
 		callBack(lub.sf);
 	}
 
 	private void setBS(BasisSet bs) {
-		current = bs;
+		BasisSet.setCurrent(bs);
 		vb.clear();
 		vb.addAll(bs.lb);
 		jlb.setListData(vb);
 		BasisLU b = bs.sele;
 		jlb.setSelectedValue(b, true);
 		trea.setBasis(bs);
-		bsjtf.setText(BasisSet.current.name);
-		bsrem.setEnabled(current != BasisSet.def);
+		bsjtf.setText(BasisSet.current().name);
+		bsrem.setEnabled(current() != BasisSet.def());
 		setB(b);
 	}
 
@@ -582,14 +582,14 @@ public class BasisPage extends LubCont {
 		int[] cls = jlcl.getSelectedIndices();
 		if (cls.length == 0) {
 			List<Combo> lc = new ArrayList<>();
-			for (int i = 0; i < Combo.filter[cs].length; i++)
-				for (Combo c : Combo.combos[Combo.filter[cs][i]])
+			for (int i = 0; i < CommonStatic.getBCAssets().filter[cs].length; i++)
+				for (Combo c : CommonStatic.getBCAssets().combos[CommonStatic.getBCAssets().filter[cs][i]])
 					lc.add(c);
 			jlc.setList(lc);
 		} else {
 			List<Combo> lc = new ArrayList<>();
 			for (int val : cls)
-				for (Combo c : Combo.combos[Combo.filter[cs][val]])
+				for (Combo c : CommonStatic.getBCAssets().combos[CommonStatic.getBCAssets().filter[cs][val]])
 					lc.add(c);
 			jlc.setList(lc);
 		}

@@ -3,10 +3,11 @@ package page.battle;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
+import common.CommonStatic;
+import common.CommonStatic.BCAuxAssets;
 import common.battle.SBCtrl;
 import common.system.P;
 import common.system.fake.FakeImage;
-import common.util.Res;
 import common.util.unit.Form;
 import page.battle.BattleBox.BBPainter;
 import page.battle.BattleBox.OuterBox;
@@ -23,12 +24,13 @@ public class BBCtrl extends BBPainter {
 
 	@Override
 	public synchronized void click(Point p, int button) {
+		BCAuxAssets aux = CommonStatic.getBCAssets();
 		int w = box.getWidth();
 		int h = box.getHeight();
 		double hr = unir;
 		for (int i = 0; i < 10; i++) {
 			Form f = sbc.sb.b.lu.fs[i / 5][i % 5];
-			FakeImage img = f == null ? Res.slot[0].getImg() : f.anim.getUni().getImg();
+			FakeImage img = f == null ? aux.slot[0].getImg() : f.anim.getUni().getImg();
 			int iw = (int) (hr * img.getWidth());
 			int ih = (int) (hr * img.getHeight());
 			int x = (w - iw * 5) / 2 + iw * (i % 5);
@@ -39,8 +41,8 @@ public class BBCtrl extends BBPainter {
 				sbc.action.add(10);
 		}
 		hr = corr;
-		FakeImage left = Res.battle[0][0].getImg();
-		FakeImage right = Res.battle[1][0].getImg();
+		FakeImage left = aux.battle[0][0].getImg();
+		FakeImage right = aux.battle[1][0].getImg();
 		int ih = (int) (hr * left.getHeight());
 		int iw = (int) (hr * left.getWidth());
 		if (!new PP(p).out(new P(0, h - ih), new P(iw, h), 0))
@@ -51,10 +53,10 @@ public class BBCtrl extends BBPainter {
 			sbc.action.add(-2);
 
 		if ((sbc.sb.conf[0] & 2) > 0) {
-			FakeImage bimg = Res.battle[2][1].getImg();
+			FakeImage bimg = aux.battle[2][1].getImg();
 			int cw = bimg.getWidth();
 			int ch = bimg.getHeight();
-			int mh = Res.num[0][0].getImg().getHeight();
+			int mh = aux.num[0][0].getImg().getHeight();
 			if (!new PP(p).out(new P(w - cw, mh), new P(w, mh + ch), 0))
 				sbc.action.add(-3);
 		}

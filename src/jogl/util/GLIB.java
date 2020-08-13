@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+import common.CommonStatic;
 import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
 import common.system.files.VFile;
@@ -19,7 +20,7 @@ public class GLIB extends ImageBuilder {
 			return null;
 		if (o instanceof FakeImage)
 			return (FakeImage) o;
-		if (icon)
+		if (CommonStatic.getConfig().icon)
 			return FIBI.builder.build(o);
 		if (o instanceof VFile<?>)
 			return new AmbImage(((VFile<?>) o).getData());

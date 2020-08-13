@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import common.CommonStatic;
+import common.CommonStatic.Lang;
 import common.util.anim.AnimU;
 
 import java.util.MissingResourceException;
@@ -21,10 +22,10 @@ import page.info.StageTable;
 import page.info.edit.StageEditPage;
 import page.info.filter.EnemyListTable;
 import page.info.filter.UnitListTable;
-import page.pack.EREditPage;
+// FIXME include page.pack import page.pack.EREditPage;
 import utilpc.Interpret;
 
-public strictfp class MainLocale extends CommonStatic.Lang {
+public strictfp class MainLocale {
 
 	public static final Map<String, MainLocale> NAMP = new TreeMap<>();
 	public static final Map<String, TTT> TMAP = new TreeMap<>();
@@ -58,9 +59,9 @@ public strictfp class MainLocale extends CommonStatic.Lang {
 	public static String getLoc(int loc, String key) {
 		if (loc >= 0 && loc < 4) {
 			String loci = RENN[loc] + "_";
-			String locl = loci + LOC_CODE[lang];
+			String locl = loci + langCode();
 			if (NAMP.containsKey(locl) && NAMP.get(locl).contains(key)) {
-				String str = NAMP.get(loci + LOC_CODE[lang]).get(key);
+				String str = NAMP.get(loci + langCode()).get(key);
 				if (str.equals("(null)"))
 					str = RENS[loc].getString(key);
 				String[] strs = str.split("#");
@@ -97,7 +98,7 @@ public strictfp class MainLocale extends CommonStatic.Lang {
 	}
 
 	public static void saveWorks() {
-		for (String loc : LOC_CODE) {
+		for (String loc : Lang.LOC_CODE) {
 			TTT ttt = TMAP.get(loc);
 			if (ttt != null && ttt.edited)
 				ttt.write(Writer.newFile("./lib/lang/" + loc + "/tutorial.txt"));
@@ -110,7 +111,7 @@ public strictfp class MainLocale extends CommonStatic.Lang {
 	}
 
 	protected static String getTTT(String page, String text) {
-		String loc = LOC_CODE[lang];
+		String loc = langCode();
 		String ans = null;
 		if (TMAP.containsKey(loc))
 			ans = TMAP.get(loc).getTTT(page, text);
@@ -118,7 +119,7 @@ public strictfp class MainLocale extends CommonStatic.Lang {
 			return ans;
 		if (exTTT)
 			return "[" + page + "_" + text + "]";
-		loc = LOC_CODE[0];
+		loc = Lang.LOC_CODE[0];
 		if (TMAP.containsKey(loc))
 			return TMAP.get(loc).getTTT(page, text);
 		return null;
@@ -134,13 +135,13 @@ public strictfp class MainLocale extends CommonStatic.Lang {
 		HeadTable.redefine();
 		BattleInfoPage.redefine();
 		StageEditPage.redefine();
-		EREditPage.redefine();
+		// FIXME inlucde page.pack EREditPage.redefine();
 	}
 
 	protected static void setLoc(int i, String key, String value) {
 		if (i < 0)
 			return;
-		String loc = RENN[i] + "_" + LOC_CODE[lang];
+		String loc = RENN[i] + "_" + langCode();
 		MainLocale ml = NAMP.get(loc);
 		if (ml == null)
 			NAMP.put(loc, ml = new MainLocale(loc));
@@ -149,7 +150,11 @@ public strictfp class MainLocale extends CommonStatic.Lang {
 	}
 
 	protected static void setTTT(String loc, String info, String str) {
-		addTTT(LOC_CODE[lang], loc, info, str).edited = true;
+		addTTT(langCode(), loc, info, str).edited = true;
+	}
+
+	private static String langCode() {
+		return CommonStatic.Lang.LOC_CODE[CommonStatic.getConfig().lang];
 	}
 
 	public final Map<String, String> res = new TreeMap<>();

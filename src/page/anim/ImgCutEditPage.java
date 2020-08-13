@@ -292,9 +292,9 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				changing = true;
 				String str = jtf.getText().trim();
 				str = MainBCU.validate(str);
-				if (str.length() == 0 || icet.anim == null || icet.anim.name.id.equals(str)) {
+				if (str.length() == 0 || icet.anim == null || icet.anim.id.id.equals(str)) {
 					if (icet.anim != null)
-						jtf.setText(icet.anim.name.id);
+						jtf.setText(icet.anim.id.id);
 					return;
 				}
 				AnimCE rep = AnimCE.map().get(str);
@@ -323,7 +323,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
-				String str = icet.anim.name.id;
+				String str = icet.anim.id.id;
 				str = AnimCE.getAvailable(str);
 				AnimCE ac = new AnimCE(str, icet.anim);
 				ac.setEdi(icet.anim.getEdi());
@@ -650,7 +650,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		if (sb.sele == -1)
 			icet.clearSelection();
 		jtf.setEnabled(anim != null);
-		jtf.setText(anim == null ? "" : anim.name.id);
+		jtf.setText(anim == null ? "" : anim.id.id);
 		boolean del = anim != null && anim.deletable();
 		rem.setEnabled(aep.focus == null && anim != null && del);
 		loca.setEnabled(aep.focus == null && anim != null && !del && !anim.inPool());

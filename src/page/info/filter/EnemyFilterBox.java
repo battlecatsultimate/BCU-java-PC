@@ -26,7 +26,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import common.pack.UserProfile;
-import common.system.MultiLangCont;
+import common.util.lang.MultiLangCont;
 import common.util.unit.Enemy;
 import main.MainBCU;
 import page.JTG;
@@ -134,7 +134,7 @@ class EFBButton extends EnemyFilterBox {
 
 			String ename;
 
-			ename = MultiLangCont.ENAME.getCont(e);
+			ename = MultiLangCont.getStatic().ENAME.getCont(e);
 
 			if (ename == null)
 				ename = e.name;
@@ -294,7 +294,7 @@ class EFBList extends EnemyFilterBox {
 
 			String ename;
 
-			ename = MultiLangCont.ENAME.getCont(e);
+			ename = MultiLangCont.getStatic().ENAME.getCont(e);
 
 			if (ename == null)
 				ename = e.name;

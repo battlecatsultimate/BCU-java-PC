@@ -54,7 +54,7 @@ public class BattleSetupPage extends LubCont {
 
 	@Override
 	protected void renew() {
-		BasisSet b = BasisSet.current;
+		BasisSet b = BasisSet.current();
 		jl.setText(b + "-" + b.sele);
 		if (st.lim != null && st.lim.lvr != null)
 			strt.setEnabled(st.lim.lvr.isValid(b.sele.lu));
@@ -111,7 +111,7 @@ public class BattleSetupPage extends LubCont {
 					ints[0] |= 1;
 				if (snip.isSelected())
 					ints[0] |= 2;
-				BasisLU b = BasisSet.current.sele;
+				BasisLU b = BasisSet.current().sele;
 				if (conf.length == 1 && conf[0] == 0) {
 					b = RandStage.getLU(star);
 					star = 0;
@@ -123,7 +123,7 @@ public class BattleSetupPage extends LubCont {
 		tmax.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				st.lim.lvr.validate(BasisSet.current.sele.lu);
+				st.lim.lvr.validate(BasisSet.current().sele.lu);
 				renew();
 			}
 		});

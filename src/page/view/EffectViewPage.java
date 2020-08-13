@@ -7,10 +7,9 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.CommonStatic;
 import common.pack.UserProfile;
 import common.util.anim.AnimI;
-import common.util.pack.EffAnim;
-import common.util.pack.NyCastle;
 import page.Page;
 
 public class EffectViewPage extends AbViewPage {
@@ -24,9 +23,9 @@ public class EffectViewPage extends AbViewPage {
 		super(p);
 
 		Vector<AnimI> va = new Vector<>();
-		for (AnimI a : EffAnim.effas)
+		for (AnimI a : CommonStatic.getBCAssets().effas)
 			va.add(a);
-		for (AnimI a : NyCastle.atks)
+		for (AnimI a : CommonStatic.getBCAssets().atks)
 			va.add(a);
 		va.addAll(UserProfile.getBCData().souls.getList());
 		jlu.setListData(va);

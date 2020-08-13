@@ -14,6 +14,8 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.pack.PackData.UserPack;
+import common.pack.UserProfile;
 import common.util.Data;
 import common.util.stage.CharaGroup;
 import common.util.stage.LvRestrict;
@@ -28,7 +30,7 @@ public class LvRestrictPage extends Page {
 
 	private final JBTN back = new JBTN(0, "back");
 	private final JBTN cglr = new JBTN(0, "edit");
-	private final JList<Pack> jlpk = new JList<>(Pack.map.values().toArray(new Pack[0]));
+	private final JList<UserPack> jlpk = new JList<>(UserProfile.packs().toArray(new UserPack[0]));
 	private final JList<LvRestrict> jllr = new JList<>();
 	private final JList<CharaGroup> jlcg = new JList<>();
 	private final JList<Unit> jlus = new JList<>();
@@ -42,7 +44,7 @@ public class LvRestrictPage extends Page {
 	private final JLabel[] lra = new JLabel[Data.RARITY_TOT];
 
 	private boolean changing = false;
-	private Pack pack;
+	private UserPack pack;
 	public LvRestrict lr;
 	public CharaGroup cg;
 
@@ -209,7 +211,7 @@ public class LvRestrictPage extends Page {
 		jllr.setEnabled(pack != null);
 		cglr.setEnabled(pack != null && pack.editable);
 		Collection<LvRestrict> clr = null;
-		if (pack == null || pack == Pack.def)
+		if (pack == null) // FIXME def
 			jllr.setListData(new LvRestrict[0]);
 		else
 			clr = pack.mc.lvrs.getList();

@@ -36,16 +36,16 @@ public class MusicPage extends Page {
 		resized();
 	}
 
-	public MusicPage(Page p, Identifier id) {
+	public MusicPage(Page p, Identifier<Music> id) {
 		this(p, id.pack);
-		jlf.setSelectedValue(UserProfile.get(id,Music.class), true);
+		jlf.setSelectedValue(id.get(), true);
 	}
 
 	public MusicPage(Page p, String pack) {
 		this(p, UserProfile.getAll(pack, Music.class));
 	}
 
-	public Identifier getSelected() {
+	public Identifier<Music> getSelected() {
 		return jlf.getSelectedValue().getID();
 	}
 

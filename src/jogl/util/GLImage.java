@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
@@ -24,9 +25,11 @@ public class GLImage implements FakeImage {
 		try {
 			TextureData data = null;
 			if (o instanceof byte[])
-				data = TextureIO.newTextureData(GLP, new ByteArrayInputStream((byte[]) o), MIP, "PNG");
+				o = new ByteArrayInputStream((byte[]) o);
 			if (o instanceof File)
 				data = TextureIO.newTextureData(GLStatic.GLP, (File) o, GLStatic.MIP, "PNG");
+			if (o instanceof InputStream)
+				data = TextureIO.newTextureData(GLP, (InputStream) o, MIP, "PNG");
 			if (o instanceof BufferedImage) {
 				BufferedImage bimg = (BufferedImage) o;
 				bimg = check(bimg);

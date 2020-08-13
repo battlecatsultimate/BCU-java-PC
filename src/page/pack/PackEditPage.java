@@ -15,7 +15,6 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import common.CommonStatic.Account;
 import common.battle.data.CustomEnemy;
 import common.pack.PackData.UserPack;
 import common.pack.UserProfile;

@@ -3,6 +3,7 @@ package page;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import javax.swing.JButton;
 
@@ -46,6 +47,10 @@ public class JBTN extends JButton implements LocComp {
 			}
 
 		});
+	}
+
+	public void setLnr(Supplier<Page> s) {
+		setLnr((e) -> MainFrame.changePanel(s.get()));
 	}
 
 }

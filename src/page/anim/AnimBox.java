@@ -8,8 +8,8 @@ import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.image.BufferedImage;
 
+import common.CommonStatic;
 import common.system.P;
-import common.util.ImgCore;
 import common.util.anim.EAnimD;
 import common.util.anim.EAnimU;
 import main.Timer;
@@ -38,7 +38,7 @@ class AnimBox extends Canvas {
 		if (prev == null)
 			return;
 		g.drawImage(prev, 0, 0, null);
-		if (ImgCore.ref) {
+		if (CommonStatic.getConfig().ref) {
 			g.setColor(Color.ORANGE);
 			g.drawString("Time cost: " + Timer.inter + "%", 20, 20);
 		}

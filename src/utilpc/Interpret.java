@@ -3,6 +3,7 @@ package utilpc;
 import java.util.ArrayList;
 import java.util.List;
 
+import common.CommonStatic;
 import common.battle.BasisLU;
 import common.battle.BasisSet;
 import common.battle.Treasure;
@@ -13,6 +14,9 @@ import common.battle.data.MaskEnemy;
 import common.battle.data.MaskEntity;
 import common.pack.PackData.Identifier;
 import common.util.Data;
+import common.util.Data.Proc.ProcItem;
+import common.util.lang.Formatter;
+import common.util.lang.ProcLang;
 import common.util.stage.MapColc;
 import common.util.stage.MapColc.DefMapColc;
 import common.util.unit.Combo;
@@ -69,14 +73,6 @@ public class Interpret extends Data {
 			{ 0, -1, 7 }, { 0, -1, 1 }, { 0, -1, 7 }, { 0, -1, 4, 8, 1 }, { -1 }, { -1 }, { 0, -1, 1, 3 },
 			{ 0, -1, 1 } };
 
-	/** proc data locator */
-	private static final int[][] LOC = { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 1, -1 },
-			{ 0, -1, 2, 1 }, { 0, -1 }, { 0, -1, 1, 2 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { -1, 1, 0 },
-			{ -1, 1, 2, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { -1, 0 }, { 0, -1 },
-			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 2 }, { 0, -1, 3 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 }, { -1 },
-			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 1, 2, 3 }, { -1 }, { -1 }, { 0, -1, 1, 2 },
-			{ 0, -1, 1 } };
-
 	/** combo string component */
 	private static final String[][] CDP = { { "", "+", "-" }, { "_", "_%", "_f", "Lv._" } };
 
@@ -127,7 +123,7 @@ public class Interpret extends Data {
 	}
 
 	public static String comboInfo(Combo c) {
-		return combo(c.type, Combo.values[c.type][c.lv]);
+		return combo(c.type, CommonStatic.getBCAssets().values[c.type][c.lv]);
 	}
 
 	public static String[] comboInfo(int[] inc) {
@@ -183,7 +179,7 @@ public class Interpret extends Data {
 	}
 
 	public static String[] getComboFilter(int n) {
-		int[] res = Combo.filter[n];
+		int[] res = CommonStatic.getBCAssets().filter[n];
 		String[] strs = new String[res.length];
 		for (int i = 0; i < res.length; i++)
 			strs[i] = COMN[res[i]];
@@ -203,56 +199,32 @@ public class Interpret extends Data {
 	}
 
 	public static List<String> getProc(MaskEnemy de) {
+		Formatter.Context ctx = new Formatter.Context(true, false);
 		List<String> l = new ArrayList<>();
 		MaskAtk ma = de.getRepAtk();
 		for (int i = 0; i < PROC.length; i++) {
-			if (ma.getProc().getArr(i).get(0) == 0)
+			ProcItem item = ma.getProc().getArr(i);
+			if (!item.exists())
 				continue;
-			String ans = "";
-			String proc = PROC[i];
-			if (PROC[i].startsWith("IMU"))
-				if (ma.getProc().getArr(i).get(0) == 100) {
-					l.add(Page.get(3, "imu") + PROC[i].substring(3));
-					continue;
-				} else
-					proc = Page.get(3, "res") + proc.substring(3);
-			for (int j = 0; j < CMP[i].length; j++)
-				if (CMP[i][j] == -1)
-					ans += proc + " ";
-				else {
-					int pro = ma.getProc().getArr(i).get(LOC[i][j]);
-					String rep = pro == -1 ? Page.get(3, "inf") : "" + pro;
-					ans += TEXT[CMP[i][j]].replaceFirst("_", rep) + " ";
-				}
+			String format = ProcLang.get().get(i).format;
+			String formatted = Formatter.format(format, item, ctx);
+			l.add(formatted);
 
-			l.add(ans);
 		}
 		return l;
 	}
 
 	public static List<String> getProc(MaskEntity du, Treasure t, int trait) {
 		List<String> l = new ArrayList<>();
+		Formatter.Context ctx = new Formatter.Context(false, false);
 		MaskAtk ma = du.getRepAtk();
 		for (int i = 0; i < PROC.length; i++) {
-			if (ma.getProc().getArr(i).get(0) == 0)
+			ProcItem item = ma.getProc().getArr(i);
+			if (!item.exists())
 				continue;
-			String ans = "";
-			String proc = PROC[i];
-			if (PROC[i].startsWith("IMU"))
-				if (ma.getProc().getArr(i).get(0) == 100) {
-					l.add(Page.get(3, "imu") + PROC[i].substring(3));
-					continue;
-				} else
-					proc = Page.get(3, "res") + proc.substring(3);
-			for (int j = 0; j < CMP[i].length; j++)
-				if (CMP[i][j] == -1)
-					ans += proc + " ";
-				else {
-					int pro = ma.getProc().getArr(i).get(LOC[i][j]);
-					String rep = pro == -1 ? Page.get(3, "inf") : "" + pro;
-					ans += TEXT[CMP[i][j]].replaceFirst("_", rep) + " ";
-				}
-			l.add(ans);
+			String format = ProcLang.get().get(i).format;
+			String formatted = Formatter.format(format, item, ctx);
+			l.add(formatted);
 		}
 		return l;
 	}

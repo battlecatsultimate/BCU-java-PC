@@ -17,6 +17,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import common.CommonStatic;
+import common.pack.PackData.UserPack;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.util.Data;
@@ -49,18 +50,15 @@ public class BGEditPage extends Page {
 	private final JTG top = new JTG("top");
 	private final JTF[] cs = new JTF[4];
 
-	private final Pack pack;
-	private final BGStore bg;
+	private final UserPack pack;
 	private List<Background> list;
 	private BGViewPage bvp;
 	private Background bgr;
 	private boolean changing = false;
 
-	public BGEditPage(Page p, Pack ac) {
+	public BGEditPage(Page p, UserPack ac) {
 		super(p);
 		pack = ac;
-		bg = ac.bg;
-
 		ini();
 		resized();
 	}

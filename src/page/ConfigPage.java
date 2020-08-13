@@ -16,9 +16,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import common.CommonStatic;
+import common.CommonStatic.Config;
 import common.util.ImgCore;
-import event.EventBase;
-import event.EventReader;
 import io.BCMusic;
 import io.Reader;
 import main.MainBCU;
@@ -30,6 +29,9 @@ public class ConfigPage extends Page {
 
 	private static final long serialVersionUID = 1L;
 
+	private static Config cfg() {
+		return CommonStatic.getConfig();
+	}
 	private final JBTN back = new JBTN(0, "back");
 	private final JBTN filt = new JBTN(0, "filter" + MainBCU.FILTER_TYPE);
 	private final JBTN rlla = new JBTN(0, "rllang");
@@ -55,9 +57,8 @@ public class ConfigPage extends Page {
 	private final JSlider jsbg = new JSlider(0, 100);
 	private final JSlider jsse = new JSlider(0, 100);
 	private final JList<String> jls = new JList<>(MainLocale.LOC_NAME);
+
 	private final JScrollPane jsps = new JScrollPane(jls);
-	private final JList<String> jll = new JList<>(EventReader.LOC_NAME);
-	private final JScrollPane jspl = new JScrollPane(jll);
 
 	private boolean changing = false;
 
@@ -74,7 +75,7 @@ public class ConfigPage extends Page {
 		jlmax.setText(0, "opamax");
 		for (int i = 0; i < 4; i++) {
 			name[i].setText(0, ImgCore.NAME[i]);
-			vals[i].setText(0, ImgCore.VAL[ImgCore.ints[i]]);
+			vals[i].setText(0, ImgCore.VAL[cfg().ints[i]]);
 		}
 	}
 
@@ -102,7 +103,6 @@ public class ConfigPage extends Page {
 		set(jlse, x, y, 50, 950, 400, 50);
 		set(jsse, x, y, 50, 1000, 1000, 100);
 		set(filt, x, y, 1100, 550, 200, 50);
-		set(jspl, x, y, 1350, 100, 200, 400);
 		set(musc, x, y, 1350, 550, 200, 50);
 		set(exla, x, y, 1100, 650, 450, 50);
 		set(extt, x, y, 1100, 750, 450, 50);
@@ -160,7 +160,7 @@ public class ConfigPage extends Page {
 		refe.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				ImgCore.ref = refe.isSelected();
+				cfg().ref = refe.isSelected();
 			}
 		});
 
@@ -179,10 +179,10 @@ public class ConfigPage extends Page {
 			left[i].addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					ImgCore.ints[I]--;
-					vals[I].setText(0, ImgCore.VAL[ImgCore.ints[I]]);
-					left[I].setEnabled(ImgCore.ints[I] > 0);
-					right[I].setEnabled(ImgCore.ints[I] < 2);
+					cfg().ints[I]--;
+					vals[I].setText(0, ImgCore.VAL[cfg().ints[I]]);
+					left[I].setEnabled(cfg().ints[I] > 0);
+					right[I].setEnabled(cfg().ints[I] < 2);
 				}
 
 			});
@@ -190,10 +190,10 @@ public class ConfigPage extends Page {
 			right[i].addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					ImgCore.ints[I]++;
-					vals[I].setText(0, ImgCore.VAL[ImgCore.ints[I]]);
-					left[I].setEnabled(ImgCore.ints[I] > 0);
-					right[I].setEnabled(ImgCore.ints[I] < 2);
+					cfg().ints[I]++;
+					vals[I].setText(0, ImgCore.VAL[cfg().ints[I]]);
+					left[I].setEnabled(cfg().ints[I] > 0);
+					right[I].setEnabled(cfg().ints[I] < 2);
 				}
 
 			});
@@ -203,14 +203,14 @@ public class ConfigPage extends Page {
 		jsmin.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
-				ImgCore.deadOpa = jsmin.getValue();
+				cfg().deadOpa = jsmin.getValue();
 			}
 		});
 
 		jsmax.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
-				ImgCore.fullOpa = jsmax.getValue();
+				cfg().fullOpa = jsmax.getValue();
 			}
 		});
 
@@ -235,9 +235,9 @@ public class ConfigPage extends Page {
 					return;
 				changing = true;
 				if (jls.getSelectedIndex() == -1) {
-					jls.setSelectedIndex(CommonStatic.Lang.lang);
+					jls.setSelectedIndex(cfg().lang);
 				}
-				CommonStatic.Lang.lang = jls.getSelectedIndex();
+				cfg().lang = jls.getSelectedIndex();
 				Page.renewLoc(getThis());
 				changing = false;
 			}
@@ -248,14 +248,6 @@ public class ConfigPage extends Page {
 			public void actionPerformed(ActionEvent e) {
 				MainBCU.FILTER_TYPE = 1 - MainBCU.FILTER_TYPE;
 				filt.setText(0, "filter" + MainBCU.FILTER_TYPE);
-			}
-		});
-
-		jll.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				EventReader.loc = jll.getSelectedIndex();
-				EventBase.clear();
 			}
 		});
 
@@ -306,7 +298,6 @@ public class ConfigPage extends Page {
 		add(jlmin);
 		add(jlmax);
 		add(filt);
-		add(jspl);
 		add(musc);
 		add(rlla);
 		add(exla);
@@ -317,17 +308,16 @@ public class ConfigPage extends Page {
 		set(jsse);
 		add(nimbus);
 		add(theme);
-		jls.setSelectedIndex(CommonStatic.Lang.lang);
-		jll.setSelectedIndex(EventReader.loc);
-		jsmin.setValue(ImgCore.deadOpa);
-		jsmax.setValue(ImgCore.fullOpa);
+		jls.setSelectedIndex(cfg().lang);
+		jsmin.setValue(cfg().deadOpa);
+		jsmax.setValue(cfg().fullOpa);
 		jsbg.setValue(BCMusic.VOL_BG);
 		jsse.setValue(BCMusic.VOL_SE);
 		for (int i = 0; i < 4; i++) {
 			left[i] = new JBTN("<");
 			right[i] = new JBTN(">");
 			name[i] = new JL(0, ImgCore.NAME[i]);
-			vals[i] = new JL(0, ImgCore.VAL[ImgCore.ints[i]]);
+			vals[i] = new JL(0, ImgCore.VAL[cfg().ints[i]]);
 			add(left[i]);
 			add(right[i]);
 			add(name[i]);
@@ -336,14 +326,14 @@ public class ConfigPage extends Page {
 			vals[i].setHorizontalAlignment(SwingConstants.CENTER);
 			name[i].setBorder(BorderFactory.createEtchedBorder());
 			vals[i].setBorder(BorderFactory.createEtchedBorder());
-			left[i].setEnabled(ImgCore.ints[i] > 0);
-			right[i].setEnabled(ImgCore.ints[i] < 2);
+			left[i].setEnabled(cfg().ints[i] > 0);
+			right[i].setEnabled(cfg().ints[i] < 2);
 		}
 		exla.setSelected(MainLocale.exLang);
 		extt.setSelected(MainLocale.exTTT);
 		prel.setSelected(MainBCU.preload);
 		whit.setSelected(ViewBox.Conf.white);
-		refe.setSelected(ImgCore.ref);
+		refe.setSelected(cfg().ref);
 		musc.setSelected(BCMusic.play);
 		jogl.setSelected(MainBCU.USE_JOGL);
 		if (!MainBCU.nimbus) {

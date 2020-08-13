@@ -13,7 +13,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import common.system.files.AssetData;
 import common.system.files.VFile;
 import common.system.files.VFileRoot;
 import io.Writer;
@@ -31,7 +30,7 @@ public class ResourcePage extends Page {
 	private final JTree jls = new JTree();
 	private final JScrollPane jsps = new JScrollPane(jls);
 
-	private VFile<AssetData> sel;
+	private VFile<?> sel;
 	private boolean changing;
 
 	public ResourcePage(Page p) {
@@ -72,7 +71,6 @@ public class ResourcePage extends Page {
 
 		jls.addTreeSelectionListener(new TreeSelectionListener() {
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public void valueChanged(TreeSelectionEvent arg0) {
 				if (changing)
@@ -83,7 +81,7 @@ public class ResourcePage extends Page {
 					obj = tp.getLastPathComponent();
 					if (obj != null)
 						obj = ((DefaultMutableTreeNode) obj).getUserObject();
-					sel = obj instanceof VFile ? (VFile<AssetData>) obj : null;
+					sel = obj instanceof VFile ? (VFile<?>) obj : null;
 				} else
 					sel = null;
 				setSele();
@@ -93,8 +91,8 @@ public class ResourcePage extends Page {
 
 	}
 
-	private void addTree(DefaultMutableTreeNode par, VFile<AssetData> vf) {
-		for (VFile<AssetData> c : vf.list()) {
+	private void addTree(DefaultMutableTreeNode par, VFile<?> vf) {
+		for (VFile<?> c : vf.list()) {
 			DefaultMutableTreeNode cur = new DefaultMutableTreeNode(c);
 			par.add(cur);
 			if (c.list() != null)
@@ -102,9 +100,9 @@ public class ResourcePage extends Page {
 		}
 	}
 
-	private void filemove(String dst, VFile<AssetData> src) {
+	private void filemove(String dst, VFile<?> src) {
 		if (src.list() != null)
-			for (VFile<AssetData> c : src.list())
+			for (VFile<?> c : src.list())
 				filemove(dst + src.getName() + "/", c);
 		else
 			Writer.writeBytes(src.getData().getBytes(), dst + src.getName());
@@ -116,7 +114,7 @@ public class ResourcePage extends Page {
 		add(rept);
 		add(jln);
 		setSele();
-		setTree(VFile.root);
+		setTree(VFile.getBCFileTree());
 		addListeners();
 	}
 
@@ -124,7 +122,7 @@ public class ResourcePage extends Page {
 		rept.setEnabled(sel != null);
 	}
 
-	private void setTree(VFileRoot<AssetData> vfr) {
+	private void setTree(VFileRoot<?> vfr) {
 		if (vfr == null) {
 			jls.setModel(new DefaultTreeModel(null));
 			return;

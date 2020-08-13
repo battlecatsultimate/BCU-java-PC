@@ -21,7 +21,7 @@ public class BCMusic extends Data {
 	private static final byte[][] CACHE = new byte[TOT][];
 
 	public static boolean play = true;
-	public static Identifier music = null;
+	public static Identifier<Music> music = null;
 	public static int VOL_BG = 20, VOL_SE = 20;
 	private static boolean[] secall = new boolean[TOT];
 
@@ -138,9 +138,9 @@ public class BCMusic extends Data {
 		secall = new boolean[TOT];
 	}
 
-	public static synchronized void play(Identifier mus1, long loop) {
+	public static synchronized void play(Identifier<Music> mus1, long loop) {
 		music = mus1;
-		Music f = UserProfile.get(mus1,Music.class);
+		Music f = music.get();
 		if (f != null)
 			setBG(f, loop);
 	}

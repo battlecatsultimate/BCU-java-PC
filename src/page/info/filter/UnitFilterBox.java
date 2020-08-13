@@ -24,7 +24,7 @@ import javax.swing.event.ListSelectionListener;
 
 import common.battle.data.MaskUnit;
 import common.pack.UserProfile;
-import common.system.MultiLangCont;
+import common.util.lang.MultiLangCont;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import main.MainBCU;
@@ -130,7 +130,7 @@ class UFBButton extends UnitFilterBox {
 							b3 &= isType(du, i);
 				boolean b4 = true;
 
-				String fname = MultiLangCont.FNAME.getCont(f);
+				String fname = MultiLangCont.getStatic().FNAME.getCont(f);
 
 				if (fname == null)
 					fname = f.name;
@@ -289,7 +289,7 @@ class UFBList extends UnitFilterBox {
 
 				boolean b4 = true;
 
-				String fname = MultiLangCont.FNAME.getCont(f);
+				String fname = MultiLangCont.getStatic().FNAME.getCont(f);
 
 				if (fname == null)
 					fname = f.name;

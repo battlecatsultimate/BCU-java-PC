@@ -36,7 +36,7 @@ public class UnitInfoTable extends Page {
 
 	protected UnitInfoTable(Page p, Form de) {
 		super(p);
-		b = BasisSet.current;
+		b = BasisSet.current();
 
 		f = de;
 		multi = de.unit.getPrefLvs();

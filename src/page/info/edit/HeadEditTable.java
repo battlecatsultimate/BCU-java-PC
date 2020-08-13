@@ -164,7 +164,7 @@ class HeadEditTable extends Page {
 		lop.setText(convertTime(sta.loop0));
 		lop1.setText(convertTime(sta.loop1));
 
-		if (sta.mus0 !=null) {
+		if (sta.mus0 != null) {
 			lop.setEnabled(true);
 			getMusTime(sta.mus0, lop);
 		} else {
@@ -264,11 +264,11 @@ class HeadEditTable extends Page {
 		}
 	}
 
-	private void getMusTime(Identifier mus1, JTF jtf) {
+	private void getMusTime(Identifier<Music> mus1, JTF jtf) {
 
-		Music f = UserProfile.get(mus1,Music.class);
+		Music f = mus1.get();
 
-		if (f == null || !f.exists()) {
+		if (f == null || f.data == null) {
 			jtf.setToolTipText("Music not found");
 			return;
 		}

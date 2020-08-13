@@ -17,11 +17,10 @@ import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 
+import common.CommonStatic;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeTransform;
-import common.util.ImgCore;
-import common.util.Res;
 import common.util.anim.EAnimI;
 import jogl.util.GLGraphics;
 import page.JTG;
@@ -42,20 +41,20 @@ class GLIconBox extends GLViewBox implements IconBox {
 
 	@Override
 	public void changeType() {
-		FakeImage bimg = Res.ico[mode][type].getImg();
+		FakeImage bimg = CommonStatic.getBCAssets().ico[mode][type].getImg();
 		line[2] = bimg.getWidth();
 		line[3] = bimg.getHeight();
 	}
 
 	@Override
 	public void draw(FakeGraphics gra) {
-		boolean b = ImgCore.ref;
-		ImgCore.ref = false;
+		boolean b = CommonStatic.getConfig().ref;
+		CommonStatic.getConfig().ref = false;
 		getCtrl().predraw(gra);
 		FakeTransform at = gra.getTransform();
 		super.draw(gra);
 		gra.setTransform(at);
-		ImgCore.ref = b;
+		CommonStatic.getConfig().ref = b;
 		getCtrl().postdraw(gra);
 	}
 

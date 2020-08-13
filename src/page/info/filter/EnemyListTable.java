@@ -28,7 +28,7 @@ public class EnemyListTable extends SortTable<Enemy> {
 
 	private final Page page;
 
-	private final Basis b = BasisSet.current;
+	private final Basis b = BasisSet.current();
 
 	protected EnemyListTable(Page p) {
 		page = p;

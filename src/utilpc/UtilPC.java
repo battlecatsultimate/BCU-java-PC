@@ -22,24 +22,21 @@ import common.io.InStream;
 import common.io.OutStream;
 import common.pack.Source;
 import common.pack.Source.ResourceLocation;
-import common.pack.PackData.Identifier;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.files.FDByte;
-import common.system.files.FileData;
 import common.system.files.VFile;
 import common.util.Data;
-import common.util.Res;
 import common.util.anim.AnimU;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
 import common.util.pack.Background;
+import common.util.stage.Music;
 import common.util.unit.Form;
 import io.BCMusic;
 import io.Reader;
 import io.Writer;
-import main.Opts;
 import page.LoadPage;
 import page.MainLocale;
 import utilpc.awt.FG2D;
@@ -189,8 +186,8 @@ public class UtilPC {
 		}
 
 		@Override
-		public long getMusicLength(File f) {
-			if (!f.exists()) {
+		public long getMusicLength(Music f) {
+			if (f.data == null) {
 				return -1;
 			}
 
@@ -245,7 +242,7 @@ public class UtilPC {
 
 		@Override
 		public <T> T readSave(String path, Function<Queue<String>, T> func) {
-			return UtilPC.readSave(path, func);
+			return func.apply(VFile.getFile(path).getData().readLine());
 		}
 
 		@Override
@@ -313,9 +310,9 @@ public class UtilPC {
 	public static BufferedImage getIcon(int type, int id) {
 		type += id / 100;
 		id %= 100;
-		if (Res.icon[type][id] == null)
+		if (CommonStatic.getBCAssets().icon[type][id] == null)
 			return null;
-		return (BufferedImage) Res.icon[type][id].getImg().bimg();
+		return (BufferedImage) CommonStatic.getBCAssets().icon[type][id].getImg().bimg();
 	}
 
 	public static ImageIcon getIcon(VImg v) {
@@ -339,41 +336,6 @@ public class UtilPC {
 			str += lvs[5] + "}";
 			return new String[] { str, lab };
 		}
-	}
-
-	private static <T> T readSave(String path, Function<Queue<String>, T> func) {
-		VFile<? extends FileData> f = VFile.getFile(path);
-		VFile<BackupData> b = Reader.alt == null ? null : Reader.alt.find(path);
-		int ind = 0;
-		while (true) {
-			if (f != null && f.getData() != null) {
-				T ic = null;
-				Queue<String> qs = f.getData().readLine();
-				if (qs != null)
-					try {
-						ic = func.apply(qs);
-					} catch (Exception e) {
-						e.printStackTrace();
-						ic = null;
-					}
-				if (ic != null)
-					return ic;
-			}
-			if (b == null)
-				break;
-			if (b.list() == null)
-				if (b != f)
-					f = b;
-				else
-					break;
-			else if (ind < b.list().size())
-				f = b.list().get(ind++);
-			else
-				break;
-		}
-		if (f != null)
-			Opts.animErr(path);
-		return func.apply(null);
 	}
 
 }

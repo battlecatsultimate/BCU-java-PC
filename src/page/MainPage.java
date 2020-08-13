@@ -1,14 +1,8 @@
 package page;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.IOException;
-
 import javax.swing.JLabel;
 
-import common.CommonStatic.Account;
 import common.util.stage.MapColc;
-import io.BCJSON;
 import io.Writer;
 import page.anim.DIYViewPage;
 import page.anim.ImgCutEditPage;
@@ -17,12 +11,9 @@ import page.anim.MaModelEditPage;
 import page.basis.BasisPage;
 import page.battle.BattleInfoPage;
 import page.battle.RecdManagePage;
-import page.event.EventLoadPage;
 import page.info.StageViewPage;
 import page.info.filter.EnemyFindPage;
 import page.info.filter.UnitFindPage;
-import page.pack.BackupTreePage;
-import page.pack.PackEditPage;
 import page.pack.ResourcePage;
 import page.view.BGViewPage;
 import page.view.CastleViewPage;
@@ -56,14 +47,9 @@ public class MainPage extends Page {
 	private final JBTN caic = new JBTN(0, "caic");
 	private final JBTN camm = new JBTN(0, "camm");
 	private final JBTN cama = new JBTN(0, "cama");
-	private final JBTN event = new JBTN(0, "event");
-	private final JBTN gacha = new JBTN(0, "gacha");
-	private final JBTN item = new JBTN(0, "item");
-	private final JBTN cald = new JBTN(0, "calendar");
 	private final JBTN save = new JBTN(0, "save");
 	private final JBTN bckp = new JBTN(0, "backup");
 	private final JBTN allf = new JBTN(0, "all file");
-	private final JBTN intn = new JBTN(-1, "battlecatsultimate");
 
 	public MainPage() {
 		super(null);
@@ -110,224 +96,30 @@ public class MainPage extends Page {
 		set(caic, x, y, 1500, 300, 200, 50);
 		set(camm, x, y, 1500, 400, 200, 50);
 		set(cama, x, y, 1500, 500, 200, 50);
-
-		set(event, x, y, 1800, 200, 200, 50);
-		set(gacha, x, y, 1800, 300, 200, 50);
-		set(item, x, y, 1800, 400, 200, 50);
-		set(cald, x, y, 1800, 500, 200, 50);
-
-		set(intn, x, y, 900, 100, 500, 50);
 	}
 
 	private void addListeners() {
-		vuni.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new UnitViewPage(getThis(), (PackData) null));
-			}
-		});
-
-		vene.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new EnemyViewPage(getThis(), (Pack) null));
-			}
-		});
-
-		vsta.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new StageViewPage(getThis(), MapColc.MAPS.values()));
-			}
-		});
-
-		vdiy.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new DIYViewPage(getThis()));
-			}
-		});
-
-		conf.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new ConfigPage(getThis()));
-			}
-		});
-
-		veff.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new EffectViewPage(getThis()));
-			}
-		});
-
-		vcas.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new CastleViewPage(getThis()));
-			}
-		});
-
-		vbgr.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new BGViewPage(getThis(), null));
-			}
-		});
-
-		veif.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new EnemyFindPage(getThis(), null));
-			}
-		});
-
-		vuif.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new UnitFindPage(getThis(), null));
-			}
-		});
-
-		bass.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new BasisPage(getThis()));
-			}
-		});
-
-		curr.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(BattleInfoPage.current);
-			}
-		});
-
-		pcus.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new PackEditPage(getThis()));
-			}
-		});
-
-		event.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new EventLoadPage(getThis(), 0, false));
-			}
-		});
-
-		gacha.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new EventLoadPage(getThis(), 1, false));
-			}
-		});
-
-		item.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new EventLoadPage(getThis(), 2, false));
-			}
-		});
-
-		cald.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new EventLoadPage(getThis(), 3, false));
-			}
-		});
-
-		caic.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new ImgCutEditPage(getThis()));
-			}
-		});
-
-		camm.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new MaModelEditPage(getThis()));
-			}
-		});
-
-		cama.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new MaAnimEditPage(getThis()));
-			}
-		});
-
-		save.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Writer.writeData();
-			}
-
-		});
-
-		vmsc.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new MusicPage(getThis()));
-			}
-
-		});
-
-		rply.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new RecdManagePage(getThis()));
-			}
-
-		});
-
-		bckp.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new BackupTreePage(getThis(), true));
-			}
-
-		});
-
-		allf.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new ResourcePage(getThis()));
-			}
-
-		});
-
-		intn.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (BCJSON.ID > 0) {
-					changePanel(new WebMainPage(getThis()));
-					return;
-				}
-				if (Account.USERNAME.length() > 0 && Account.PASSWORD != 0) {
-					try {
-						int id = BCJSON.getID(Account.USERNAME);
-						if (id > 0) {
-							BCJSON.ID = id;
-							changePanel(new WebMainPage(getThis()));
-							return;
-						}
-					} catch (IOException e) {
-					}
-				}
-				changePanel(new LoginPage(getThis()));
-			}
-
-		});
+		vuni.setLnr(() -> new UnitViewPage(this, (String) null));
+		vene.setLnr(() -> new EnemyViewPage(this, (String) null));
+		vsta.setLnr(() -> new StageViewPage(this, MapColc.values()));
+		vdiy.setLnr(() -> new DIYViewPage(this));
+		conf.setLnr(() -> new ConfigPage(this));
+		veff.setLnr(() -> new EffectViewPage(this));
+		vcas.setLnr(() -> new CastleViewPage(this));
+		vbgr.setLnr(() -> new BGViewPage(this, null));
+		veif.setLnr(() -> new EnemyFindPage(this, null));
+		vuif.setLnr(() -> new UnitFindPage(this, null));
+		bass.setLnr(() -> new BasisPage(this));
+		curr.setLnr(() -> BattleInfoPage.current);
+		// FIXME pcus.setLnr(() -> new PackEditPage(this));
+		caic.setLnr(() -> new ImgCutEditPage(this));
+		camm.setLnr(() -> new MaModelEditPage(this));
+		cama.setLnr(() -> new MaAnimEditPage(this));
+		save.setLnr((e) -> Writer.writeData());
+		vmsc.setLnr(() -> new MusicPage(this));
+		rply.setLnr(() -> new RecdManagePage(this));
+		// FIXME bckp.setLnr(() -> new BackupTreePage(this, true));
+		allf.setLnr(() -> new ResourcePage(this));
 
 	}
 
@@ -347,17 +139,12 @@ public class MainPage extends Page {
 		add(memo);
 		add(curr);
 		add(pcus);
-		add(event);
-		add(gacha);
-		add(item);
-		add(cald);
 		add(caic);
 		add(camm);
 		add(cama);
 		add(save);
 		add(seicon);
 		add(sgifau);
-		// add(intn);
 		add(rply);
 		add(bckp);
 		add(allf);

@@ -7,11 +7,11 @@ import static page.anim.IconBox.IBConf.type;
 
 import java.awt.image.BufferedImage;
 
+import common.CommonStatic;
+import common.CommonStatic.Config;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeTransform;
-import common.util.ImgCore;
-import common.util.Res;
 import page.anim.IconBox;
 
 class IconBoxDef extends ViewBoxDef implements IconBox {
@@ -27,26 +27,27 @@ class IconBoxDef extends ViewBoxDef implements IconBox {
 
 	@Override
 	public void changeType() {
-		FakeImage bimg = Res.ico[mode][type].getImg();
+		FakeImage bimg = CommonStatic.getBCAssets().ico[mode][type].getImg();
 		line[2] = bimg.getWidth();
 		line[3] = bimg.getHeight();
 	}
 
 	@Override
 	public synchronized void draw(FakeGraphics gra) {
-		boolean b = ImgCore.ref;
-		ImgCore.ref = false;
+		Config cfg = CommonStatic.getConfig();
+		boolean b = cfg.ref;
+		cfg.ref = false;
 		getCtrl().predraw(gra);
 		FakeTransform at = gra.getTransform();
 		super.draw(gra);
 		gra.setTransform(at);
-		ImgCore.ref = b;
+		cfg.ref = b;
 		getCtrl().postdraw(gra);
 	}
 
 	@Override
 	public BufferedImage getClip() {
-		FakeImage bimg = Res.ico[mode][type].getImg();
+		FakeImage bimg = CommonStatic.getBCAssets().ico[mode][type].getImg();
 		int bw = bimg.getWidth();
 		int bh = bimg.getHeight();
 		double r = Math.min(1.0 * line[2] / bw, 1.0 * line[3] / bh);
