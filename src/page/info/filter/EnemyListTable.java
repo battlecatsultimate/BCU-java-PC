@@ -62,6 +62,9 @@ public class EnemyListTable extends SortTable<Enemy> {
 	protected int compare(Enemy e0, Enemy e1, int c) {
 		if (c == 1)
 			c--;
+		if (c == 0) {
+			return e0.getID().compareTo(e1.getID());
+		}
 		int i0 = (int) get(e0, c);
 		int i1 = (int) get(e1, c);
 		return i0 > i1 ? 1 : i0 == i1 ? 0 : -1;

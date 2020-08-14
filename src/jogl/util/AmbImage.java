@@ -170,7 +170,7 @@ public class AmbImage implements FakeImage {
 			}
 			if (bimg == null)
 				failed = true;
-			System.out.println(bimg);//TODO
+			System.out.println(bimg);// TODO
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

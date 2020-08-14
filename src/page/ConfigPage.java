@@ -32,6 +32,7 @@ public class ConfigPage extends Page {
 	private static Config cfg() {
 		return CommonStatic.getConfig();
 	}
+
 	private final JBTN back = new JBTN(0, "back");
 	private final JBTN filt = new JBTN(0, "filter" + MainBCU.FILTER_TYPE);
 	private final JBTN rlla = new JBTN(0, "rllang");
