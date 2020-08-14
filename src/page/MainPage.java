@@ -118,7 +118,6 @@ public class MainPage extends Page {
 		save.setLnr((e) -> Writer.writeData());
 		vmsc.setLnr(() -> new MusicPage(this));
 		rply.setLnr(() -> new RecdManagePage(this));
-		// FIXME bckp.setLnr(() -> new BackupTreePage(this, true));
 		allf.setLnr(() -> new ResourcePage(this));
 
 	}

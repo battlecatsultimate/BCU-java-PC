@@ -10,10 +10,7 @@ import java.util.function.Supplier;
 
 import javax.imageio.ImageIO;
 
-import common.CommonStatic;
-import common.pack.Context.ErrType;
 import common.system.fake.FakeImage;
-import common.system.files.FileData;
 import jogl.GLStatic;
 import utilpc.awt.FIBI;
 
@@ -27,13 +24,6 @@ public class AmbImage implements FakeImage {
 
 	private FIBI bimg;
 	private GLImage gl;
-
-	public AmbImage(FileData data) {
-		stream = () -> CommonStatic.ctx.noticeErr(() -> data.getStream(), ErrType.ERROR, "failed to get stream");
-		file = null;
-		par = null;
-		cs = null;
-	}
 
 	protected AmbImage(BufferedImage b) {
 		stream = null;
@@ -51,8 +41,8 @@ public class AmbImage implements FakeImage {
 		cs = null;
 	}
 
-	protected AmbImage(InputStream is) {
-		stream = () -> is;
+	protected AmbImage(Supplier<InputStream> sup) {
+		stream = sup;
 		file = null;
 		par = null;
 		cs = null;
@@ -161,7 +151,7 @@ public class AmbImage implements FakeImage {
 			return;
 		try {
 			if (stream != null)
-				bimg = (FIBI) FIBI.builder.build(stream.get());
+				bimg = (FIBI) FIBI.builder.build(stream);
 			else if (file != null)
 				bimg = (FIBI) FIBI.builder.build(file);
 			else {
@@ -170,7 +160,6 @@ public class AmbImage implements FakeImage {
 			}
 			if (bimg == null)
 				failed = true;
-			System.out.println(bimg);// TODO
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

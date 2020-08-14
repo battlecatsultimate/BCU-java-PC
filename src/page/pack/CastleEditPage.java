@@ -3,11 +3,8 @@ package page.pack;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.List;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -16,14 +13,12 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import common.pack.PackData.Identifier;
 import common.pack.PackData.UserPack;
 import common.pack.Source.Workspace;
 import common.system.VImg;
 import common.util.Data;
 import common.util.stage.CastleImg;
 import common.util.stage.CastleList;
-import io.Writer;
 import page.JBTN;
 import page.Page;
 import page.support.Exporter;
@@ -130,10 +125,9 @@ public class CastleEditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				CastleImg img = jlst.getSelectedValue();
-				ImageIcon ic = null;
 				if (img != null) {
 					cas.remove(img);
-					// FIXME delete img
+					((Workspace) pack.source).getCasFile(img.getID()).delete();
 					changing = true;
 					setList();
 					changing = false;
@@ -152,7 +146,7 @@ public class CastleEditPage extends Page {
 			return;
 		}
 		if (vimg == null)
-			cas.add(vimg = new CastleImg(new Identifier(pack.desc.id, cas.nextInd()), new VImg(bimg)));
+			cas.add(vimg = new CastleImg(pack.getID(CastleImg.class, cas.nextInd()), new VImg(bimg)));
 		else
 			vimg.img.setImg(bimg);
 		try {

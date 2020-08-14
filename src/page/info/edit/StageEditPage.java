@@ -14,9 +14,12 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.pack.PackData.UserPack;
+import common.pack.UserProfile;
 import common.util.stage.MapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
+import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
 import main.Opts;
 import page.JBTN;
@@ -70,14 +73,14 @@ public class StageEditPage extends Page {
 	private final HeadEditTable info;
 
 	private final MapColc mc;
-	private final Pack pack;
+	private final String pack;
 
 	private final EnemyFindPage efp;
 
 	private boolean changing = false;
 	private Stage stage;
 
-	public StageEditPage(Page p, MapColc map, Pack pac) {
+	public StageEditPage(Page p, MapColc map, String pac) {
 		super(p);
 		mc = map;
 		pack = pac;
@@ -85,7 +88,7 @@ public class StageEditPage extends Page {
 		jspjt = new JScrollPane(jt);
 		info = new HeadEditTable(this, pac);
 		jlsm.setListData(mc.maps);
-		jle.setListData(EnemyStore.getAll(pack, true).toArray(new Enemy[0]));
+		jle.setListData(UserProfile.getAll(pack, Enemy.class).toArray(new Enemy[0]));
 		efp = new EnemyFindPage(getThis(), pack);
 		ini();
 	}

@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.Color;
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -9,7 +10,6 @@ import common.io.assets.Admin;
 import common.pack.UserProfile;
 import common.system.fake.ImageBuilder;
 import common.util.Data;
-import io.Reader;
 import jogl.GLBBB;
 import jogl.util.GLIB;
 import page.MainFrame;
@@ -26,7 +26,7 @@ public class MainBCU {
 	public static final int ver = 50000;
 
 	public static int FILTER_TYPE = 0;
-	public static final boolean WRITE = false;// !new File("./.project").exists();
+	public static final boolean WRITE = !new File("./.project").exists();
 	public static boolean preload = false, trueRun = true, loaded = false, USE_JOGL = true;
 	public static boolean light = false, nimbus = true;
 
@@ -47,7 +47,7 @@ public class MainBCU {
 
 		// Writer.logPrepare();
 		// Writer.logSetup();
-		Reader.getData$0();
+		// Reader.getData$0();
 
 		ImageBuilder.builder = USE_JOGL ? new GLIB() : new PCIB();
 		BBBuilder.def = USE_JOGL ? new GLBBB() : AWTBBB.INS;

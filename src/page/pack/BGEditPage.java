@@ -7,8 +7,6 @@ import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-
 import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -17,12 +15,13 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import common.CommonStatic;
+import common.pack.Context;
+import common.pack.Context.ErrType;
 import common.pack.PackData.UserPack;
+import common.pack.Source.Workspace;
 import common.system.VImg;
 import common.system.fake.FakeImage;
-import common.util.Data;
 import common.util.pack.Background;
-import io.Writer;
 import page.JBTN;
 import page.JTF;
 import page.JTG;
@@ -37,7 +36,7 @@ public class BGEditPage extends Page {
 	private static final long serialVersionUID = 1L;
 
 	private final JBTN back = new JBTN(0, "back");
-	private final JList<String> jlst = new JList<>();
+	private final JList<Background> jlst = new JList<>();
 	private final JScrollPane jspst = new JScrollPane(jlst);
 	private final JLabel jl = new JLabel();
 
@@ -51,7 +50,6 @@ public class BGEditPage extends Page {
 	private final JTF[] cs = new JTF[4];
 
 	private final UserPack pack;
-	private List<Background> list;
 	private BGViewPage bvp;
 	private Background bgr;
 	private boolean changing = false;
@@ -66,17 +64,16 @@ public class BGEditPage extends Page {
 	@Override
 	protected void renew() {
 		if (bvp != null) {
-			Background bgr = bvp.getSelected();
+			bgr = bvp.getSelected();
 			if (bgr != null) {
-				bg.add(bgr = bgr.copy(pack, bg.nextInd()));
+				pack.bgs.add(bgr = bgr.copy(pack.getID(Background.class, pack.bgs.nextInd())));
 				setList(bgr);
-				String path = "./res/img/" + pack.id + "/bg/";
+				File file = ((Workspace) pack.source).getBGFile(bgr.getID());
 				try {
-					File file = new File(path + bg.nameOf(bgr) + ".png");
-					Writer.check(file);
+					Context.check(file);
 					FakeImage.write(bgr.img.getImg(), "PNG", file);
 				} catch (IOException e) {
-					e.printStackTrace();
+					CommonStatic.ctx.noticeErr(e, ErrType.WARN, "Failed to save file");
 					getFile("Failed to save file", bgr);
 					return;
 				}
@@ -122,10 +119,8 @@ public class BGEditPage extends Page {
 		remc.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				list.remove(bgr);
-				int name = bg.indexOf(bgr);
-				bg.remove(bgr);
-				new File("./res/img/" + pack.id + "/bg/" + Data.trio(name) + ".png").delete();
+				pack.bgs.remove(bgr);
+				((Workspace) pack.source).getBGFile(bgr.getID()).delete();
 				setList(null);
 			}
 		});
@@ -158,7 +153,7 @@ public class BGEditPage extends Page {
 			public void valueChanged(ListSelectionEvent arg0) {
 				if (changing || jlst.getValueIsAdjusting())
 					return;
-				setBG(jlst.getSelectedIndex());
+				setBG(jlst.getSelectedValue());
 			}
 
 		});
@@ -205,19 +200,19 @@ public class BGEditPage extends Page {
 			getFile("Wrong img size. Img size: w=1024, h=1024", bgr);
 			return;
 		}
-		if (bgr == null)
-			bgr = bg.add(new VImg(bimg));
-		else {
+		if (bgr == null) {
+			bgr = new Background(pack.getID(Background.class, pack.bgs.nextInd()), new VImg(bimg));
+			pack.bgs.add(bgr);
+		} else {
 			bgr.img.setImg(bimg);
 			bgr.load();
 		}
-		String path = "./res/img/" + pack.id + "/bg/";
 		try {
-			File file = new File(path + bg.nameOf(bgr) + ".png");
-			Writer.check(file);
+			File file = ((Workspace) pack.source).getBGFile(bgr.id);
+			Context.check(file);
 			ImageIO.write(bimg, "PNG", file);
 		} catch (IOException e) {
-			e.printStackTrace();
+			CommonStatic.ctx.noticeErr(e, ErrType.WARN, "failed to write file");
 			getFile("Failed to save file", bgr);
 			return;
 		}
@@ -241,13 +236,13 @@ public class BGEditPage extends Page {
 		addListeners$1();
 	}
 
-	private void setBG(int ind) {
-		bgr = ind < 0 ? null : list.get(ind);
+	private void setBG(Background bg) {
+		bgr = bg;
 
-		if (jlst.getSelectedIndex() != ind) {
+		if (jlst.getSelectedValue() != bg) {
 			boolean boo = changing;
 			changing = true;
-			jlst.setSelectedIndex(ind);
+			jlst.setSelectedValue(bg, true);
 			changing = boo;
 		}
 
@@ -284,23 +279,17 @@ public class BGEditPage extends Page {
 	private void setList(Background bcgr) {
 		bgr = bcgr;
 		int ind = jlst.getSelectedIndex();
-		list = bg.getList();
-		String[] str = new String[list.size()];
-		for (int i = 0; i < str.length; i++)
-			str[i] = bg.nameOf(list.get(i));
-		if (bgr != null)
-			ind = list.indexOf(bgr);
+		Background[] arr = pack.bgs.getList().toArray(new Background[0]);
 		if (ind < 0)
 			ind = 0;
-		if (ind >= bg.size())
-			ind = bg.size() - 1;
-
+		if (ind >= arr.length)
+			ind = arr.length - 1;
 		boolean boo = changing;
 		changing = true;
-		jlst.setListData(str);
+		jlst.setListData(arr);
 		jlst.setSelectedIndex(ind);
 		changing = boo;
-		setBG(ind);
+		setBG(bgr);
 	}
 
 }
