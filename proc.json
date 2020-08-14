@@ -95,7 +95,7 @@
     },
     "SUMMON": {
         "prob": 100,
-        "id": 1,
+        "id": null,
         "dis": 100,
         "mult": 300,
         "type": {
@@ -120,7 +120,7 @@
     "THEME": {
         "prob": 0,
         "time": 0,
-        "id": 0,
+        "id": null,
         "type": {
             "kill": false
         }

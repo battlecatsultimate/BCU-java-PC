@@ -707,46 +707,52 @@
         }
     },
     "ARMOR": {
-        "abbr_name": null,
-        "full_name": null,
+        "abbr_name": "armor break",
+        "full_name": "Armor Break",
         "tooltip": null,
-        "format": null,
+        "format": "(prob)% chance to let target receive (mult)% of damages for the duration of (_dispTime(time))",
         "class": {
             "prob": {
-                "name": null,
+                "name": "chance",
                 "tooltip": null
             },
             "time": {
-                "name": null,
+                "name": "duration",
                 "tooltip": null
             },
             "mult": {
-                "name": null,
+                "name": "percent",
                 "tooltip": null
             }
         }
     },
     "SPEED": {
-        "abbr_name": null,
-        "full_name": null,
+        "abbr_name": "haste",
+        "full_name": "Haste",
         "tooltip": null,
-        "format": null,
+        "format": [
+            "(prob)% chance to ",
+            "[(type==0){add}(type==1){increase}(type==2){set}]",
+            " target's speed ",
+            "[(type!=2){by}(type==2){to}] (speed)[(type==1){%}]",
+            " for a duration of (_dispTime(time))"
+        ],
         "class": {
             "prob": {
-                "name": null,
+                "name": "chance",
                 "tooltip": null
             },
             "time": {
-                "name": null,
+                "name": "duration",
                 "tooltip": null
             },
             "speed": {
-                "name": null,
+                "name": "speed",
                 "tooltip": null
             },
             "type": {
-                "name": null,
-                "tooltip": null
+                "name": "type",
+                "tooltip": "0 for adding speed by a value, 1 for increasing the speed by a percentage, 2 for setting speed to a value"
             }
         }
     }
