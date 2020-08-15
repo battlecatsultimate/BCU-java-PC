@@ -56,7 +56,7 @@ public class UnitViewPage extends AbViewPage {
 		Form f = jlf.getSelectedValue();
 		if (f == null)
 			return;
-		setAnim(f);
+		setAnim(f.anim);
 	}
 
 	private void addListeners() {

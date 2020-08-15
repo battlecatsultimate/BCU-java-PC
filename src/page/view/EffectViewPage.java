@@ -16,16 +16,16 @@ public class EffectViewPage extends AbViewPage {
 
 	private static final long serialVersionUID = 1L;
 
-	private final JList<AnimI> jlu = new JList<>();
+	private final JList<AnimI<?, ?>> jlu = new JList<>();
 	private final JScrollPane jspu = new JScrollPane(jlu);
 
 	public EffectViewPage(Page p) {
 		super(p);
 
-		Vector<AnimI> va = new Vector<>();
-		for (AnimI a : CommonStatic.getBCAssets().effas)
+		Vector<AnimI<?, ?>> va = new Vector<>();
+		for (AnimI<?, ?> a : CommonStatic.getBCAssets().effas.values())
 			va.add(a);
-		for (AnimI a : CommonStatic.getBCAssets().atks)
+		for (AnimI<?, ?> a : CommonStatic.getBCAssets().atks)
 			va.add(a);
 		va.addAll(UserProfile.getBCData().souls.getList());
 		jlu.setListData(va);
@@ -42,7 +42,7 @@ public class EffectViewPage extends AbViewPage {
 
 	@Override
 	protected void updateChoice() {
-		AnimI u = jlu.getSelectedValue();
+		AnimI<?, ?> u = jlu.getSelectedValue();
 		if (u == null)
 			return;
 		setAnim(u);

@@ -28,7 +28,9 @@ import common.util.Animable;
 import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.anim.AnimU;
+import common.util.anim.AnimU.UType;
 import common.util.pack.Soul;
+import common.util.pack.Soul.SoulType;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
@@ -350,13 +352,13 @@ public abstract class EntityEditPage extends Page {
 			ind = ints.length - 1;
 		setA(ind);
 		jli.setSelectedIndex(ind);
-		Animable<AnimU<?>> ene = ce.getPack();
+		Animable<AnimU<?>, UType> ene = ce.getPack();
 		if (editable)
 			jcba.setSelectedItem(ene.anim);
 		jcbs.setSelectedItem(ce.death.get());
 		vrev.setText(ce.rev == null ? "x" : (KB_TIME[INT_HB] - ce.rev.pre + "f"));
 		Soul s = ce.death.get();
-		vres.setText(ce.res == null ? "x" : s == null ? "-" : (s.len(0) - ce.res.pre + "f"));
+		vres.setText(ce.res == null ? "x" : s == null ? "-" : (s.len(SoulType.DEF) - ce.res.pre + "f"));
 		changing = false;
 	}
 

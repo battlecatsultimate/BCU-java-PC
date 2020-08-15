@@ -118,7 +118,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		if (ind < 0 || ac == null)
 			return;
 		int time = ab.ent == null ? 0 : ab.ent.ind();
-		ab.setEntity(ac.getEAnim(ind));
+		ab.setEntity(ac.getEAnim(ac.types[ind]));
 		ab.ent.setTime(time);
 	}
 
@@ -502,7 +502,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			}
 		});
 
-		advs.setLnr(x -> changePanel(new AdvAnimEditPage(this, maet.anim, jlt.getSelectedIndex())));
+		advs.setLnr(() -> new AdvAnimEditPage(this, maet.anim, maet.anim.types[jlt.getSelectedIndex()]));
 
 		sort.setLnr(x -> Arrays.sort(maet.ma.parts));
 
@@ -593,7 +593,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 	private void setB(AnimCE ac, int ind) {
 		change(0, x -> {
-			MaAnim anim = ac == null || ind < 0 ? null : ac.anims[ind];
+			MaAnim anim = ac == null || ind < 0 ? null : ac.getMaAnim(ac.types[ind]);
 			addp.setEnabled(anim != null);
 			tmul.setEditable(anim != null);
 			advs.setEnabled(anim != null);
@@ -607,7 +607,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			}
 			int row = maet.getSelectedRow();
 			maet.setAnim(ac, anim);
-			ab.setEntity(ac.getEAnim(ind));
+			ab.setEntity(ac.getEAnim(ac.types[ind]));
 			if (row >= maet.getRowCount()) {
 				maet.clearSelection();
 				row = -1;

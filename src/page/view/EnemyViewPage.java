@@ -54,7 +54,7 @@ public class EnemyViewPage extends AbViewPage {
 		Enemy u = jlu.getSelectedValue();
 		if (u == null)
 			return;
-		setAnim(u);
+		setAnim(u.anim);
 	}
 
 	private void addListeners() {

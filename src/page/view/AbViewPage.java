@@ -17,7 +17,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import common.util.Animable;
 import common.util.anim.AnimCE;
 import common.util.anim.AnimD;
 import common.util.anim.AnimI;
@@ -145,7 +144,7 @@ public abstract class AbViewPage extends Page {
 		set(gif, x, y, 1600, 1150, 400, 50);
 	}
 
-	protected void setAnim(Animable<? extends AnimI> a) {
+	protected <T extends Enum<T> & AnimI.AnimType<?, T>> void setAnim(AnimI<?, T> a) {
 		if (!changingT) {
 			int ind = jlt.getSelectedIndex();
 			if (ind == -1)
@@ -159,7 +158,7 @@ public abstract class AbViewPage extends Page {
 		}
 		if (jlt.getSelectedIndex() == -1)
 			return;
-		vb.setEntity(a.getEAnim(jlt.getSelectedIndex()));
+		vb.setEntity(a.getEAnim(a.types()[jlt.getSelectedIndex()]));
 		jtl.setMinimum(0);
 		jtl.setMaximum(vb.getEnt().len());
 		jtl.setLabelTable(null);
@@ -210,7 +209,7 @@ public abstract class AbViewPage extends Page {
 				EAnimI ei = vb.getEnt();
 				if (ei == null || !(ei.anim() instanceof AnimD))
 					return;
-				AnimD eau = (AnimD) ei.anim();
+				AnimD<?, ?> eau = (AnimD<?, ?>) ei.anim();
 				String str = "new anim";
 				str = AnimCE.getAvailable(str);
 				new AnimCE(str, eau);

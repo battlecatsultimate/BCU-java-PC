@@ -7,8 +7,6 @@ import java.util.Map.Entry;
 
 import common.CommonStatic;
 import common.CommonStatic.Lang;
-import common.util.anim.AnimU;
-
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
@@ -126,7 +124,6 @@ public strictfp class MainLocale {
 	}
 
 	protected static void redefine() {
-		AnimU.redefine();
 		Interpret.redefine();
 		EnemyListTable.redefine();
 		UnitListTable.redefine();

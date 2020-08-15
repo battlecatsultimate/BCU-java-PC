@@ -26,7 +26,7 @@ class AnimBox extends Canvas {
 	protected final P ori = new P(0, 0);
 	protected double siz = 0.5;
 
-	protected EAnimD ent;
+	protected EAnimD<?> ent;
 
 	protected AnimBox() {
 		setIgnoreRepaint(true);

@@ -27,7 +27,6 @@ import common.system.fake.FakeImage;
 import common.system.files.FDByte;
 import common.system.files.VFile;
 import common.util.Data;
-import common.util.anim.AnimU;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.MaModel;
@@ -38,7 +37,6 @@ import io.BCMusic;
 import io.Reader;
 import io.Writer;
 import page.LoadPage;
-import page.MainLocale;
 import utilpc.awt.FG2D;
 
 public class UtilPC {
@@ -246,12 +244,6 @@ public class UtilPC {
 		}
 
 		@Override
-		public void redefine(Class<?> cls) {
-			if (cls == AnimU.class)
-				red$AnimU();
-		}
-
-		@Override
 		public File route(String path) {
 			return new File(path);
 		}
@@ -268,20 +260,6 @@ public class UtilPC {
 
 		@Override
 		public void writeErrorLog(Exception e) {
-		}
-
-		private void red$AnimU() {
-			String s0 = "move";
-			String s1 = "wait";
-			String s2 = "atk";
-			String s3 = "kb";
-			String s4 = "down";
-			String s5 = "under";
-			String s6 = "up";
-			String s7 = "entry";
-			AnimU.strs0 = MainLocale.getLoc(0, s0, s1, s2, s3);
-			AnimU.strs1 = MainLocale.getLoc(0, s0, s1, s2, s3, s4, s5, s6);
-			AnimU.strs2 = MainLocale.getLoc(0, s0, s1, s2, s3, s7);
 		}
 
 	}

@@ -55,7 +55,7 @@ public class Temp extends StdGLC {
 		// 91, 377
 		test = new AnimCE("dio");
 		test.check();
-		ent = test.getEAnim(2);
+		ent = test.getEAnim(AnimU.UType.ATK);
 
 		// adding canvas to it
 		frame.getContentPane().add(glcanvas);

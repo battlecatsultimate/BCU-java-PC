@@ -69,7 +69,7 @@ class EntityTable extends SortTable<Entity> {
 		return title;
 	}
 
-	private Identifier getID(Entity e) {
+	private Identifier<?> getID(Entity e) {
 		if (e.data instanceof MaskUnit)
 			return ((MaskUnit) e.data).getPack().uid;
 		if (e.data instanceof MaskEnemy)
