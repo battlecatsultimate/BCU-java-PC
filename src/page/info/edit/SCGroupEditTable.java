@@ -9,12 +9,10 @@ import javax.swing.text.JTextComponent;
 
 import common.CommonStatic;
 import common.pack.PackData.Identifier;
-import common.pack.UserProfile;
 import common.util.Data;
 import common.util.stage.SCDef;
 import common.util.stage.SCGroup;
 import common.util.unit.AbEnemy;
-import common.util.unit.Enemy;
 import page.MainLocale;
 import page.support.AbJTable;
 import page.support.EnemyTCR;
@@ -105,7 +103,7 @@ class SCGroupEditTable extends AbJTable {
 
 		if (enemy == null)
 			return;
-		Identifier eid = enemy.getID();
+		Identifier<AbEnemy> eid = enemy.getID();
 		if (scd.smap.containsKey(eid))
 			return;
 		scd.smap.put(eid, 0);
@@ -132,11 +130,11 @@ class SCGroupEditTable extends AbJTable {
 	}
 
 	private Object get(int r, int c) {
-		Entry<Identifier, Integer>[] info = scd.getSMap();
+		Entry<Identifier<AbEnemy>, Integer>[] info = scd.getSMap();
 		if (r >= info.length)
 			return null;
 		if (c == 0)
-			return UserProfile.get(info[r].getKey(), Enemy.class);
+			return info[r].getKey().get();
 		else if (c == 1) {
 			int g = info[r].getValue();
 			SCGroup scg = scd.sub.get(g);
@@ -146,10 +144,10 @@ class SCGroupEditTable extends AbJTable {
 	}
 
 	private void set(int r, int v) {
-		Entry<Identifier, Integer>[] info = scd.getSMap();
+		Entry<Identifier<AbEnemy>, Integer>[] info = scd.getSMap();
 		if (r >= info.length)
 			return;
-		Entry<Identifier, Integer> data = info[r];
+		Entry<Identifier<AbEnemy>, Integer> data = info[r];
 		if (v < 0)
 			v = 0;
 		scd.smap.put(data.getKey(), v);

@@ -30,7 +30,7 @@ public class LvRestrictPage extends Page {
 
 	private final JBTN back = new JBTN(0, "back");
 	private final JBTN cglr = new JBTN(0, "edit");
-	private final JList<UserPack> jlpk = new JList<>(UserProfile.packs().toArray(new UserPack[0]));
+	private final JList<UserPack> jlpk = new JList<>(UserProfile.getUserPacks().toArray(new UserPack[0]));
 	private final JList<LvRestrict> jllr = new JList<>();
 	private final JList<CharaGroup> jlcg = new JList<>();
 	private final JList<Unit> jlus = new JList<>();
@@ -55,18 +55,18 @@ public class LvRestrictPage extends Page {
 		resized();
 	}
 
-	public LvRestrictPage(Page p, Data pac, boolean b) {
-		this(p);
-		jlpk.setSelectedValue(pac, true);
-		jlpk.setEnabled(b);
-	}
-
 	public LvRestrictPage(Page p, LvRestrict lvr) {
 		this(p);
 		lr = lvr;
-		pack = lr.pack;
+		pack = (UserPack) lr.getCont();
 		jlpk.setSelectedValue(pack, true);
 		jllr.setSelectedValue(lr, true);
+	}
+
+	public LvRestrictPage(Page p, UserPack pac, boolean b) {
+		this(p);
+		jlpk.setSelectedValue(pac, true);
+		jlpk.setEnabled(b);
 	}
 
 	@Override
@@ -211,10 +211,10 @@ public class LvRestrictPage extends Page {
 		jllr.setEnabled(pack != null);
 		cglr.setEnabled(pack != null && pack.editable);
 		Collection<LvRestrict> clr = null;
-		if (pack == null) // FIXME def
+		if (pack == null)
 			jllr.setListData(new LvRestrict[0]);
 		else
-			clr = pack.mc.lvrs.getList();
+			clr = pack.lvrs.getList();
 		if (clr != null) {
 			jllr.setListData(clr.toArray(new LvRestrict[0]));
 			if (lr != null && !clr.contains(lr))

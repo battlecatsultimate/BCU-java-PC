@@ -31,7 +31,7 @@ public class LimitEditPage extends Page {
 	protected LimitEditPage(Page p, Stage stage) {
 		super(p);
 		st = stage;
-		lt = new LimitTable(this, this, (PackMapColc) stage.map.mc);
+		lt = new LimitTable(this, this, ((PackMapColc) stage.map.mc).pack);
 		ini();
 		resized();
 	}

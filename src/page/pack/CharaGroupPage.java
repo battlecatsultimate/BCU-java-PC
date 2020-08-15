@@ -9,7 +9,9 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import common.util.Data;
+import common.pack.PackData;
+import common.pack.PackData.UserPack;
+import common.pack.UserProfile;
 import common.util.stage.CharaGroup;
 import common.util.unit.Unit;
 import page.JBTN;
@@ -23,7 +25,7 @@ public class CharaGroupPage extends Page {
 
 	private final JBTN back = new JBTN(0, "back");
 	private final JBTN cglr = new JBTN(0, "edit");
-	private final JList<Pack> jlpk = new JList<>(Pack.map.values().toArray(new Pack[0]));
+	private final JList<PackData> jlpk = new JList<>(UserProfile.getAllPacks().toArray(new PackData[0]));
 	private final JList<CharaGroup> jlcg = new JList<>();
 	private final JList<Unit> jlus = new JList<>();
 	private final JScrollPane jsppk = new JScrollPane(jlpk);
@@ -32,7 +34,7 @@ public class CharaGroupPage extends Page {
 	private final JL cgt = new JL(0, "include");
 
 	private boolean changing = false;
-	private Pack pack;
+	private PackData pack;
 	public CharaGroup cg;
 
 	public CharaGroupPage(Page p) {
@@ -45,12 +47,12 @@ public class CharaGroupPage extends Page {
 	public CharaGroupPage(Page p, CharaGroup chg) {
 		this(p);
 		cg = chg;
-		pack = cg.pack;
+		pack = cg.getCont();
 		jlpk.setSelectedValue(pack, true);
 		jlcg.setSelectedValue(cg, true);
 	}
 
-	public CharaGroupPage(Page p, Data pac, boolean b) {
+	public CharaGroupPage(Page p, PackData pac, boolean b) {
 		this(p);
 		jlpk.setSelectedValue(pac, true);
 		jlpk.setEnabled(b);
@@ -79,7 +81,7 @@ public class CharaGroupPage extends Page {
 		cglr.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new CGLREditPage(getThis(), pack));
+				changePanel(new CGLREditPage(getThis(), (UserPack) pack));
 			}
 		});
 
@@ -137,14 +139,11 @@ public class CharaGroupPage extends Page {
 
 	private void updatePack() {
 		jlcg.setEnabled(pack != null);
-		cglr.setEnabled(pack != null && pack.editable);
+		cglr.setEnabled(pack != null && pack instanceof UserPack && ((UserPack) pack).editable);
 		Collection<CharaGroup> ccg = null;
 		if (pack == null)
 			jlcg.setListData(new CharaGroup[0]);
-		else if (pack == Pack.def)
-			ccg = CharaGroup.map.values();
-		else
-			ccg = pack.mc.groups.getList();
+		ccg = pack.groups.getList();
 		if (ccg != null) {
 			jlcg.setListData(ccg.toArray(new CharaGroup[0]));
 			if (cg != null && !ccg.contains(cg))

@@ -66,7 +66,7 @@ public class BGEditPage extends Page {
 		if (bvp != null) {
 			bgr = bvp.getSelected();
 			if (bgr != null) {
-				pack.bgs.add(bgr = bgr.copy(pack.getID(Background.class, pack.bgs.nextInd())));
+				pack.bgs.add(bgr = bgr.copy(pack.getNextID(Background.class)));
 				setList(bgr);
 				File file = ((Workspace) pack.source).getBGFile(bgr.getID());
 				try {
@@ -201,7 +201,7 @@ public class BGEditPage extends Page {
 			return;
 		}
 		if (bgr == null) {
-			bgr = new Background(pack.getID(Background.class, pack.bgs.nextInd()), new VImg(bimg));
+			bgr = new Background(pack.getNextID(Background.class), new VImg(bimg));
 			pack.bgs.add(bgr);
 		} else {
 			bgr.img.setImg(bimg);

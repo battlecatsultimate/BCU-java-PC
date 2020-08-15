@@ -301,7 +301,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				if (rep != null && Opts.conf(
 						"Do you want to replace animation? This action cannot be undone. The animation which originally keeps this name will be replaced by selected animation.")) {
 					icet.anim.renameTo(str);
-					for (UserPack pack : UserProfile.packs())
+					for (UserPack pack : UserProfile.getUserPacks())
 						for (Enemy e : pack.enemies.getList())
 							if (e.anim == rep)
 								e.anim = icet.anim;

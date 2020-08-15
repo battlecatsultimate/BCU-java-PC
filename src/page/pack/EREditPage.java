@@ -13,7 +13,6 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import common.pack.PackData.Identifier;
 import common.pack.PackData.UserPack;
 import common.pack.UserProfile;
 import common.util.unit.AbEnemy;
@@ -162,8 +161,7 @@ public class EREditPage extends Page {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				int id = pack.randEnemies.nextInd();
-				rand = new EneRand(new Identifier<>(pack.desc.id, EneRand.class, id));
+				rand = new EneRand(pack.getNextID(EneRand.class));
 				pack.randEnemies.add(rand);
 				change(null, p -> {
 					jlst.setListData(pack.randEnemies.getList().toArray(new EneRand[0]));

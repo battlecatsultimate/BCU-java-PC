@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 
@@ -15,7 +14,8 @@ import javax.swing.SwingConstants;
 import common.CommonStatic;
 import common.pack.PackData.Identifier;
 import common.pack.PackData.UserPack;
-import common.pack.UserProfile;
+import common.util.pack.Background;
+import common.util.stage.CastleImg;
 import common.util.stage.CastleList;
 import common.util.stage.Limit;
 import common.util.stage.Music;
@@ -68,7 +68,7 @@ class HeadEditTable extends Page {
 	protected HeadEditTable(Page p, UserPack pack) {
 		super(p);
 		pac = pack;
-		lt = new LimitTable(p, this, pac.mc);
+		lt = new LimitTable(p, this, pac);
 		ini();
 	}
 
@@ -81,24 +81,47 @@ class HeadEditTable extends Page {
 	protected void renew() {
 		lt.renew();
 		if (bvp != null) {
-			Identifier val = bvp.getSelected().id;
+			Identifier<Background> val = bvp.getSelected().id;
 			if (val == null)
 				return;
 			jbg.setText(val.toString());
-			input(jbg, val.toString());
+			sta.bg = val;
 		}
 		if (cvp != null) {
-			Identifier val = cvp.getVal();
+			Identifier<CastleImg> val = cvp.getVal();
 			if (val == null)
 				return;
 			jcas.setText(val.toString());
-			input(jcas, val.toString());
+			sta.castle = val;
 		}
 
 		if (mp != null) {
 			JTF jtf = musl == 0 ? jm0 : jm1;
-			jtf.setText("" + mp.getSelected());
-			input(jtf, "" + mp.getSelected());
+			Identifier<Music> val = mp.getSelected();
+			jtf.setText("" + val);
+			if (jtf == jm0) {
+				sta.mus0 = val;
+				if (sta.mus0 != null) {
+					lop.setEnabled(true);
+					getMusTime(sta.mus0, lop);
+				} else {
+					lop.setText("00:00.000");
+					sta.loop0 = 0;
+					lop.setEnabled(false);
+				}
+			}
+			if (jtf == jm1) {
+				sta.mus1 = val;
+				if (sta.mus1 != null) {
+					lop1.setEnabled(true);
+					getMusTime(sta.mus1, lop1);
+				} else {
+					lop1.setText("00:00.000");
+					sta.loop1 = 0;
+					lop1.setEnabled(false);
+				}
+			}
+
 		}
 
 		bvp = null;
@@ -243,20 +266,14 @@ class HeadEditTable extends Page {
 
 	private String convertTime(long milli) {
 		long min = milli / 60 / 1000;
-
 		double time = milli - (double) min * 60000;
-
 		time /= 1000;
-
 		DecimalFormat df = new DecimalFormat("#.###");
-
 		double s = Double.parseDouble(df.format(time));
-
 		if (s >= 60) {
 			s -= 60;
 			min += 1;
 		}
-
 		if (s < 10) {
 			return min + ":" + "0" + df.format(s);
 		} else {
@@ -265,14 +282,11 @@ class HeadEditTable extends Page {
 	}
 
 	private void getMusTime(Identifier<Music> mus1, JTF jtf) {
-
 		Music f = mus1.get();
-
 		if (f == null || f.data == null) {
 			jtf.setToolTipText("Music not found");
 			return;
 		}
-
 		try {
 			long duration = CommonStatic.def.getMusicLength(f);
 
@@ -328,7 +342,7 @@ class HeadEditTable extends Page {
 		if (jtf == name) {
 			str = str.trim();
 			if (str.length() > 0)
-				sta.setName(str);
+				sta.name = str;
 			for (Recd r : Recd.map.values())
 				if (r.st == sta)
 					r.marked = true;
@@ -346,19 +360,6 @@ class HeadEditTable extends Page {
 			if (val < 2000)
 				val = 2000;
 			sta.len = val;
-		}
-		if (jtf == jbg) {
-			if (val < 0 || BGStore.getBG(val) == null)
-				return;
-			if (!pac.usable(val / 1000))
-				return;
-			sta.bg = val;
-		}
-		if (jtf == jcas) {
-			if (Castles.getCastle(val) == null || !pac.usable(val / 1000))
-				jcas.setText("" + sta.getCastle());
-			else
-				sta.setCast(val);
 		}
 		if (jtf == jmax) {
 			if (val <= 0 || val > 50)
@@ -389,34 +390,9 @@ class HeadEditTable extends Page {
 					sta.map.stars = ans;
 				}
 			}
-		if (jtf == jm0) {
-			sta.mus0 = val;
-
-			if (sta.mus0 != null) {
-				lop.setEnabled(true);
-				getMusTime(sta.mus0, lop);
-			} else {
-				lop.setText("00:00.000");
-				sta.loop0 = 0;
-				lop.setEnabled(false);
-			}
-		}
 
 		if (jtf == jmh)
 			sta.mush = val;
-
-		if (jtf == jm1) {
-			sta.mus1 = val;
-
-			if (sta.mus1 != null) {
-				lop1.setEnabled(true);
-				getMusTime(sta.mus1, lop1);
-			} else {
-				lop1.setText("00:00.000");
-				sta.loop1 = 0;
-				lop1.setEnabled(false);
-			}
-		}
 
 		if (jtf == lop) {
 			long tim = toMilli(jtf.getText());
