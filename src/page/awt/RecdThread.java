@@ -9,7 +9,9 @@ import javax.imageio.ImageIO;
 
 import org.jcodec.api.awt.AWTSequenceEncoder;
 
-import io.Writer;
+import common.pack.Context;
+import common.util.Data;
+import io.BCUWriter;
 import page.RetFunc;
 import res.AnimatedGifEncoder;
 
@@ -24,7 +26,7 @@ public abstract class RecdThread extends Thread {
 			gif = new AnimatedGifEncoder();
 			gif.setDelay(33);
 			gif.setRepeat(0);
-			Writer.writeGIF(gif, path);
+			BCUWriter.writeGIF(gif, path);
 		}
 
 		@Override
@@ -73,7 +75,7 @@ public abstract class RecdThread extends Thread {
 		@Override
 		void quit() {
 			finish();
-			Writer.delete(file);
+			Data.err(() -> Context.delete(file));
 		}
 
 		@Override
@@ -100,7 +102,7 @@ public abstract class RecdThread extends Thread {
 			path = "./img/" + out + "/";
 			File f = new File(path);
 			if (f.exists())
-				Writer.delete(f);
+				Data.err(() -> Context.delete(f));
 		}
 
 		@Override
@@ -110,7 +112,7 @@ public abstract class RecdThread extends Thread {
 
 		@Override
 		void quit() {
-			Writer.delete(new File(path));
+			Data.err(() -> Context.delete(new File(path)));
 		}
 
 		@Override
@@ -127,7 +129,7 @@ public abstract class RecdThread extends Thread {
 				str += "0";
 			str += count;
 			File f = new File(path + str + ".png");
-			Writer.check(f);
+			Data.err(() -> Context.check(f));
 			try {
 				ImageIO.write(bimg, "PNG", f);
 			} catch (IOException e) {

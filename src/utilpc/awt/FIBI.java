@@ -10,10 +10,11 @@ import java.util.function.Supplier;
 
 import javax.imageio.ImageIO;
 
+import common.pack.Context;
 import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
 import common.system.files.FileData;
-import io.Writer;
+import common.util.Data;
 
 public class FIBI implements FakeImage {
 
@@ -117,7 +118,7 @@ class BIBuilder extends ImageBuilder {
 		if (bimg == null)
 			return false;
 		if (o instanceof File) {
-			Writer.check((File) o);
+			Data.err(() -> Context.check((File) o));
 			return ImageIO.write(bimg, fmt, (File) o);
 		} else if (o instanceof OutputStream)
 			return ImageIO.write(bimg, fmt, (OutputStream) o);

@@ -19,7 +19,6 @@ import common.pack.UserProfile;
 import common.util.stage.MapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
-import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
 import main.Opts;
 import page.JBTN;
@@ -58,7 +57,7 @@ public class StageEditPage extends Page {
 	private final JScrollPane jspsm = new JScrollPane(jlsm);
 	private final ReorderList<Stage> jlst = new ReorderList<>();
 	private final JScrollPane jspst = new JScrollPane(jlst);
-	private final JList<StageMap> lpsm = new JList<>(Stage.clipmc.maps);
+	private final JList<StageMap> lpsm = new JList<>(Stage.CLIPMC.maps);
 	private final JScrollPane jlpsm = new JScrollPane(lpsm);
 	private final JList<Stage> lpst = new JList<>();
 	private final JScrollPane jlpst = new JScrollPane(lpst);
@@ -80,11 +79,11 @@ public class StageEditPage extends Page {
 	private boolean changing = false;
 	private Stage stage;
 
-	public StageEditPage(Page p, MapColc map, String pac) {
+	public StageEditPage(Page p, MapColc map, UserPack pac) {
 		super(p);
 		mc = map;
-		pack = pac;
-		jt = new StageEditTable(this, pack);
+		pack = pac.desc.id;
+		jt = new StageEditTable(this, pac);
 		jspjt = new JScrollPane(jt);
 		info = new HeadEditTable(this, pac);
 		jlsm.setListData(mc.maps);
@@ -279,7 +278,7 @@ public class StageEditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				StageMap sm = jlsm.getSelectedValue();
-				MapColc col = Stage.clipmc;
+				MapColc col = Stage.CLIPMC;
 				StageMap copy = sm.copy(col);
 				int n = col.maps.length;
 				col.maps = Arrays.copyOf(col.maps, n + 1);
@@ -295,10 +294,10 @@ public class StageEditPage extends Page {
 		cpst.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Stage copy = stage.copy(Stage.clipsm);
-				Stage.clipsm.add(copy);
+				Stage copy = stage.copy(Stage.CLIPSM);
+				Stage.CLIPSM.add(copy);
 				changing = true;
-				lpst.setListData(new Vector<>(Stage.clipsm.list));
+				lpst.setListData(new Vector<>(Stage.CLIPSM.list));
 				lpst.setSelectedValue(copy, true);
 				lpsm.setSelectedIndex(0);
 				setBB(copy);
@@ -344,7 +343,7 @@ public class StageEditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				int ind = lpsm.getSelectedIndex();
-				MapColc col = Stage.clipmc;
+				MapColc col = Stage.CLIPMC;
 				StageMap[] sms = new StageMap[col.maps.length - 1];
 				for (int i = 0; i < ind; i++)
 					sms[i] = col.maps[i];
@@ -379,7 +378,7 @@ public class StageEditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				StageMap sm = jlsm.getSelectedValue();
-				stage = new Stage(sm);
+				stage = new Stage.PackStage(sm);
 				sm.add(stage);
 				changing = true;
 				jlst.setListData(sm.list.toArray(new Stage[0]));
@@ -514,7 +513,7 @@ public class StageEditPage extends Page {
 			return;
 		}
 		lpst.setListData(new Vector<>(sm.list));
-		rmsm.setEnabled(sm != Stage.clipsm);
+		rmsm.setEnabled(sm != Stage.CLIPSM);
 		if (sm.list.size() == 0) {
 			lpst.clearSelection();
 			ptsm.setEnabled(false);

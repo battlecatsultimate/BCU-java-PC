@@ -20,6 +20,8 @@ import common.pack.PackData.UserPack;
 import common.util.Data;
 import common.util.stage.CharaGroup;
 import common.util.stage.LvRestrict;
+import common.util.stage.CharaGroup.PackCG;
+import common.util.stage.LvRestrict.PackLR;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import page.JBTN;
@@ -68,16 +70,17 @@ public class CGLREditPage extends Page {
 	private final FixIndexList<LvRestrict> llr;
 
 	private boolean changing = false;
-	private CharaGroup cg, sb;
-	private LvRestrict lr;
+	private PackCG cg;
+	private CharaGroup sb;
+	private PackLR lr;
 	private UnitFindPage ufp;
 
 	protected CGLREditPage(Page p, UserPack pac) {
 		super(p);
 
 		pack = pac;
-		lcg = pack.mc.groups;
-		llr = pack.mc.lvrs;
+		lcg = pack.groups;
+		llr = pack.lvrs;
 		ini();
 		resized();
 	}
@@ -152,8 +155,7 @@ public class CGLREditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
-				int ind = lcg.nextInd();
-				cg = new CharaGroup(pack, ind, 0);
+				cg = new CharaGroup.PackCG(pack.getNextID(CharaGroup.class));
 				lcg.add(cg);
 				updateCGL();
 				jlcg.setSelectedValue(cg, true);
@@ -174,7 +176,7 @@ public class CGLREditPage extends Page {
 				list.remove(cg);
 				lcg.remove(cg);
 				if (ind >= 0)
-					cg = list.get(ind);
+					cg = (PackCG) list.get(ind);
 				else
 					cg = null;
 				updateCGL();
@@ -189,7 +191,7 @@ public class CGLREditPage extends Page {
 				if (changing || jlcg.getValueIsAdjusting())
 					return;
 				changing = true;
-				cg = jlcg.getSelectedValue();
+				cg = (PackCG) jlcg.getSelectedValue();
 				updateCG();
 				changing = false;
 			}
@@ -242,10 +244,11 @@ public class CGLREditPage extends Page {
 		});
 
 		jtfna.setLnr(x -> {
+			PackCG pcg = cg;
 			String str = jtfna.getText();
-			if (cg.name.equals(str))
+			if (pcg.name.equals(str))
 				return;
-			cg.name = str;
+			pcg.name = str;
 		});
 	}
 
@@ -255,8 +258,7 @@ public class CGLREditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
-				int ind = llr.nextInd();
-				lr = new LvRestrict(pack, ind);
+				lr = new LvRestrict.PackLR(pack.getNextID(LvRestrict.class));
 				llr.add(lr);
 				updateLRL();
 				jllr.setSelectedValue(lr, true);
@@ -277,7 +279,7 @@ public class CGLREditPage extends Page {
 				list.remove(lr);
 				llr.remove(lr);
 				if (ind >= 0)
-					lr = list.get(ind);
+					lr = (PackLR) list.get(ind);
 				else
 					lr = null;
 				updateLRL();
@@ -292,7 +294,7 @@ public class CGLREditPage extends Page {
 				if (changing || jllr.getValueIsAdjusting())
 					return;
 				changing = true;
-				lr = jllr.getSelectedValue();
+				lr = (PackLR) jllr.getSelectedValue();
 				updateLR();
 				changing = false;
 			}

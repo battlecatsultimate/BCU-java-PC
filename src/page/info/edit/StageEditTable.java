@@ -9,6 +9,7 @@ import java.util.EventObject;
 import javax.swing.text.JTextComponent;
 
 import common.CommonStatic;
+import common.pack.PackData.UserPack;
 import common.util.Data;
 import common.util.stage.SCDef;
 import common.util.stage.SCDef.Line;
@@ -42,11 +43,11 @@ class StageEditTable extends AbJTable implements Reorderable {
 
 	private SCDef stage;
 	private final Page page;
-	private final Pack pack;
+	private final UserPack pack;
 
 	private boolean changing = false;
 
-	protected StageEditTable(Page p, Pack pac) {
+	protected StageEditTable(Page p, UserPack pac) {
 		page = p;
 		pack = pac;
 		setTransferHandler(new InTableTH(this));
@@ -185,7 +186,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 			ans[sind] = info[sind].clone();
 		else {
 			ans[sind] = new Line();
-			ans[sind].enemy = enemy == null ? -1 : enemy.getID();
+			ans[sind].enemy = enemy == null ? null : enemy.getID();
 			ans[sind].number = 1;
 			ans[sind].castle_0 = 100;
 			ans[sind].layer_0 = 9;
@@ -215,7 +216,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 		int ind = len - r - 1;
 		if (info[ind] == null)
 			return;
-		AbEnemy e = EnemyStore.getAbEnemy(info[ind].enemy, true);
+		AbEnemy e = info[ind].enemy.get();
 		if (e != null && e instanceof Enemy)
 			MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, info[ind].multiple, info[ind].mult_atk));
 		if (e != null && e instanceof EneRand)
@@ -266,7 +267,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 		if (c == 0)
 			return data.boss == 1 ? "boss" : "";
 		else if (c == 1)
-			return EnemyStore.getAbEnemy(data.enemy, true);
+			return data.enemy == null ? null : data.enemy.get();
 		else if (c == 2)
 			return CommonStatic.toArrayFormat(data.multiple, data.mult_atk) + "%";
 		else if (c == 3)
@@ -301,8 +302,6 @@ class StageEditTable extends AbJTable implements Reorderable {
 		Line data = info[info.length - r - 1];
 		if (c == 0)
 			data.boss = v;
-		else if (c == 1)
-			data.enemy = v;
 		else if (c == 2) {
 			data.multiple = v == -1 ? data.multiple : v;
 			data.mult_atk = para == -1 ? v : para;

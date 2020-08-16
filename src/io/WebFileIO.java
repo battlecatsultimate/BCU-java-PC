@@ -27,6 +27,8 @@ import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.util.ExponentialBackOff;
 
+import common.pack.Context;
+import common.util.Data;
 import main.Opts;
 import main.Printer;
 
@@ -37,7 +39,7 @@ public class WebFileIO {
 	private static HttpTransport transport;
 
 	public static boolean download(int size, String url, File file, Consumer<Progress> c) {
-		Writer.check(file);
+		Data.err(() -> Context.check(file));
 		try {
 			if (transport == null)
 				transport = GoogleNetHttpTransport.newTrustedTransport();

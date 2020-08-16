@@ -11,7 +11,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
 
-import io.Writer;
+import io.BCUWriter;
 import main.MainBCU;
 import page.basis.ComboListTable;
 import page.battle.BattleInfoPage;
@@ -99,11 +99,11 @@ public strictfp class MainLocale {
 		for (String loc : Lang.LOC_CODE) {
 			TTT ttt = TMAP.get(loc);
 			if (ttt != null && ttt.edited)
-				ttt.write(Writer.newFile("./lib/lang/" + loc + "/tutorial.txt"));
+				ttt.write(BCUWriter.newFile("./lib/lang/" + loc + "/tutorial.txt"));
 			for (int i = 0; i < 4; i++) {
 				MainLocale ml = NAMP.get(RENN[i] + "_" + loc);
 				if (ml != null && ml.edited)
-					ml.write(Writer.newFile("./lib/lang/" + loc + "/" + RENN[i] + ".properties"));
+					ml.write(BCUWriter.newFile("./lib/lang/" + loc + "/" + RENN[i] + ".properties"));
 			}
 		}
 	}

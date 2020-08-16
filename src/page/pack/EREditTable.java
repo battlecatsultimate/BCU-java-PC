@@ -8,6 +8,7 @@ import java.util.EventObject;
 import javax.swing.text.JTextComponent;
 
 import common.CommonStatic;
+import common.pack.PackData.Identifier;
 import common.util.EREnt;
 import common.util.unit.AbEnemy;
 import common.util.unit.EneRand;
@@ -125,9 +126,9 @@ class EREditTable extends AbJTable implements Reorderable {
 		int ind = getSelectedRow();
 		if (ind == -1)
 			ind = 0;
-		EREnt<Integer> er = new EREnt<>();
+		EREnt<Identifier<AbEnemy>> er = new EREnt<>();
 		rand.list.add(er);
-		er.ent = enemy == null ? -1 : enemy.getID();
+		er.ent = enemy == null ? null : enemy.getID();
 		return rand.list.size() - 1;
 	}
 
@@ -139,8 +140,8 @@ class EREditTable extends AbJTable implements Reorderable {
 		if (c != 0)
 			return;
 		int r = p.y / getRowHeight();
-		EREnt<Integer> er = rand.list.get(r);
-		AbEnemy e = EnemyStore.getAbEnemy(er.ent, true);
+		EREnt<Identifier<AbEnemy>> er = rand.list.get(r);
+		AbEnemy e = er.ent.get();
 		if (e != null && e instanceof Enemy)
 			MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, er.multi, er.mula));
 	}
@@ -169,9 +170,9 @@ class EREditTable extends AbJTable implements Reorderable {
 	private Object get(int r, int c) {
 		if (rand == null)
 			return null;
-		EREnt<Integer> er = rand.list.get(r);
+		EREnt<Identifier<AbEnemy>> er = rand.list.get(r);
 		if (c == 0)
-			return EnemyStore.getAbEnemy(er.ent, true);
+			return er.ent.get();
 		else if (c == 1)
 			return CommonStatic.toArrayFormat(er.multi, er.mula) + "%";
 		else if (c == 2)
@@ -182,12 +183,10 @@ class EREditTable extends AbJTable implements Reorderable {
 	private void set(int r, int c, int v, int para) {
 		if (rand == null)
 			return;
-		EREnt<Integer> er = rand.list.get(r);
+		EREnt<Identifier<AbEnemy>> er = rand.list.get(r);
 		if (v < 0)
 			v = 0;
-		if (c == 0)
-			er.ent = v;
-		else if (c == 1) {
+		if (c == 1) {
 			er.multi = v;
 			er.mula = para != -1 ? para : v;
 		} else if (c == 2)

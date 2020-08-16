@@ -9,11 +9,9 @@ import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
 
-import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
@@ -33,7 +31,6 @@ import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.Part;
 import common.util.unit.Enemy;
-import io.Writer;
 import main.MainBCU;
 import main.Opts;
 import page.JBTN;
@@ -404,13 +401,6 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 					return;
 				icet.anim.setEdi(new VImg(bimg));
 				icet.anim.saveIcon();
-				File f = new File("./res/img/.png");
-				Writer.check(f);
-				try {
-					ImageIO.write(bimg, "PNG", f);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 				if (icet.anim.getEdi() != null)
 					icon.setIcon(UtilPC.getIcon(icet.anim.getEdi()));
 			}

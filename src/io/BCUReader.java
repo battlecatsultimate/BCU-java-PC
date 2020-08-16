@@ -1,20 +1,25 @@
 package io;
 
-import static java.lang.Character.isDigit;
-
 import java.awt.Rectangle;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Queue;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import common.CommonStatic;
 import common.CommonStatic.Config;
+import common.battle.BasisSet;
 import common.io.DataIO;
 import common.io.InStream;
+import common.io.json.JsonDecoder;
 import common.pack.UserProfile;
+import common.pack.Context.ErrType;
 import common.util.lang.MultiLangCont;
 import common.util.stage.MapColc;
 import common.util.stage.MapColc.DefMapColc;
@@ -32,13 +37,10 @@ import page.support.Exporter;
 import page.support.Importer;
 import page.view.ViewBox;
 
-public class Reader extends DataIO {
-
-	public static void getData$0() {
-		readInfo();
-	}
+public class BCUReader extends DataIO {
 
 	public static void getData$1() {
+		BasisSet.read();
 		readLang();
 		BCMusic.preload();
 	}
@@ -52,6 +54,42 @@ public class Reader extends DataIO {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static void readInfo() {
+		File f = new File("./user/config.json");
+		if (f.exists()) {
+			try (java.io.Reader r = new FileReader(f)) {
+				JsonElement je = JsonParser.parseReader(r);
+				r.close();
+				Config cfg = CommonStatic.getConfig();
+				JsonDecoder.inject(je, Config.class, cfg);
+				JsonObject jo = je.getAsJsonObject();
+				int[] rect = new int[4];
+				JsonDecoder.inject(jo.get("crect"), int[].class, rect);
+				MainFrame.crect = new Rectangle(rect[0], rect[1], rect[2], rect[3]);
+				MainBCU.preload = jo.get("preload").getAsBoolean();
+				ViewBox.Conf.white = jo.get("transparent").getAsBoolean();
+				MainBCU.USE_JOGL = jo.get("JOGL").getAsBoolean();
+				MainBCU.FILTER_TYPE = jo.get("filter").getAsInt();
+				BCMusic.play = jo.get("play_sound").getAsBoolean();
+				BCMusic.VOL_BG = jo.get("volume_BG").getAsInt();
+				BCMusic.VOL_SE = jo.get("volume_SE").getAsInt();
+				MainLocale.exLang = jo.get("edit_lang").getAsBoolean();
+				MainLocale.exTTT = jo.get("edit_tooltip").getAsBoolean();
+				BattleInfoPage.DEF_LARGE = jo.get("large_screen").getAsBoolean();
+				MainBCU.light = jo.get("style_light").getAsBoolean();
+				MainBCU.nimbus = jo.get("style_nimbus").getAsBoolean();
+				String[] exp = JsonDecoder.decode(jo.get("export_paths"), String[].class);
+				String[] imp = JsonDecoder.decode(jo.get("import_paths"), String[].class);
+				for (int i = 0; i < Exporter.curs.length; i++)
+					Exporter.curs[i] = exp[i] == null ? null : new File(exp[i]);
+				for (int i = 0; i < Importer.curs.length; i++)
+					Importer.curs[i] = imp[i] == null ? null : new File(imp[i]);
+			} catch (Exception e) {
+				CommonStatic.ctx.noticeErr(e, ErrType.WARN, "failed to read config");
+			}
+		}
 	}
 
 	public static void readLang() {
@@ -166,88 +204,6 @@ public class Reader extends DataIO {
 			return null;
 		}
 
-	}
-
-	private static int parseInt(String str) {
-		return parseInts(1, str)[0];
-	}
-
-	private static int[] parseInts(int n, String str) {
-		ArrayList<String> lstr = new ArrayList<>();
-		int t = -1;
-		for (int i = 0; i < str.length(); i++)
-			if (t == -1) {
-				if (isDigit(str.charAt(i)) || str.charAt(i) == '-' || str.charAt(i) == '+')
-					t = i;
-			} else if (!isDigit(str.charAt(i))) {
-				lstr.add(str.substring(t, i));
-				t = -1;
-			}
-		if (t != -1)
-			lstr.add(str.substring(t));
-		int ind = 0;
-		while (ind < lstr.size()) {
-			if (isDigit(lstr.get(ind).charAt(0)) || lstr.get(ind).length() > 1)
-				ind++;
-			else
-				lstr.remove(ind);
-		}
-		int[] ans = new int[n];
-		for (int i = lstr.size() - n; i < lstr.size(); i++)
-			ans[i - lstr.size() + n] = Integer.parseInt(lstr.get(i));
-		return ans;
-	}
-
-	private static void readInfo() {
-		try {
-			File f = new File("./user/data.ini");
-			if (f.exists()) {
-				try {
-					Config cfg = CommonStatic.getConfig();
-					Queue<String> qs = readLines(f);
-					cfg.lang = parseInt(qs.poll());
-					int[] r = parseInts(4, qs.poll());
-					MainFrame.crect = new Rectangle(r[0], r[1], r[2], r[3]);
-					MainBCU.preload = parseInt(qs.poll()) == 1;
-					cfg.ints = parseInts(4, qs.poll());
-					ViewBox.Conf.white = parseInt(qs.poll()) == 1;
-					cfg.ref = parseInt(qs.poll()) == 1;
-					MainBCU.USE_JOGL = parseInt(qs.poll()) == 1;
-					cfg.deadOpa = parseInt(qs.poll());
-					cfg.fullOpa = parseInt(qs.poll());
-					MainBCU.FILTER_TYPE = parseInt(qs.poll());
-					parseInt(qs.poll());
-					qs.poll().trim(); // username
-					Long.parseLong(qs.poll()); // TODO password
-					qs.poll();// place holder
-					BCJSON.cal_ver = parseInt(qs.poll());
-					int[] ints = CommonStatic.parseIntsN(qs.poll());
-					BCMusic.play = ints[0] == 1;
-					if (ints.length == 3) {
-						BCMusic.VOL_BG = ints[1];
-						BCMusic.VOL_SE = ints[2];
-					}
-					MainLocale.exLang = parseInt(qs.poll()) == 1;
-					MainLocale.exTTT = parseInt(qs.poll()) == 1;
-					Exporter.read(qs);
-					Importer.read(qs);
-					qs.poll();// place holder
-					BattleInfoPage.DEF_LARGE = parseInt(qs.poll()) == 1;
-					MainBCU.light = parseInt(qs.poll()) == 1;
-					MainBCU.nimbus = parseInt(qs.poll()) == 1;
-				} catch (Exception e) {
-				}
-			} else {
-				f.getParentFile().mkdirs();
-				try {
-					f.createNewFile();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 }

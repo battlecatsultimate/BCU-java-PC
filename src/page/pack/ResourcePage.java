@@ -15,7 +15,7 @@ import javax.swing.tree.TreePath;
 
 import common.system.files.VFile;
 import common.system.files.VFileRoot;
-import io.Writer;
+import io.BCUWriter;
 import page.JBTN;
 import page.Page;
 import page.support.Exporter;
@@ -105,7 +105,7 @@ public class ResourcePage extends Page {
 			for (VFile<?> c : src.list())
 				filemove(dst + src.getName() + "/", c);
 		else
-			Writer.writeBytes(src.getData().getBytes(), dst + src.getName());
+			BCUWriter.writeBytes(src.getData().getBytes(), dst + src.getName());
 	}
 
 	private void ini() {

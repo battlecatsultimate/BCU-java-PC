@@ -21,7 +21,7 @@ import common.util.anim.AnimCE;
 import common.util.anim.AnimD;
 import common.util.anim.AnimI;
 import common.util.anim.EAnimI;
-import io.Writer;
+import io.BCUWriter;
 import main.Timer;
 import page.JBTN;
 import page.JTG;
@@ -269,7 +269,7 @@ public abstract class AbViewPage extends Page {
 			public void actionPerformed(ActionEvent arg0) {
 				String str = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 				File f = new File("./img/" + str + ".png");
-				Writer.writeImage(vb.getPrev(), f);
+				BCUWriter.writeImage(vb.getPrev(), f);
 			}
 		});
 

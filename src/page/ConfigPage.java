@@ -19,7 +19,7 @@ import common.CommonStatic;
 import common.CommonStatic.Config;
 import common.util.ImgCore;
 import io.BCMusic;
-import io.Reader;
+import io.BCUReader;
 import main.MainBCU;
 import main.Opts;
 import page.view.ViewBox;
@@ -146,7 +146,7 @@ public class ConfigPage extends Page {
 		rlla.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Reader.readLang();
+				BCUReader.readLang();
 				Page.renewLoc(getThis());
 			}
 		});

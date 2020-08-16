@@ -17,12 +17,13 @@ import javax.swing.event.ListSelectionListener;
 
 import common.battle.data.CustomEnemy;
 import common.pack.PackData.UserPack;
+import common.pack.Source.ZipSource;
 import common.pack.UserProfile;
 import common.util.anim.AnimCE;
 import common.util.stage.MapColc;
 import common.util.stage.StageMap;
 import common.util.unit.Enemy;
-import io.Writer;
+import io.BCUWriter;
 import main.MainBCU;
 import main.Opts;
 import page.JBTN;
@@ -183,7 +184,7 @@ public class PackEditPage extends Page {
 				if (pac != null && pac.editable)
 					changePanel(new CastleEditPage(getThis(), pac));
 				else if (pac != null)
-					changePanel(new CastleViewPage(getThis(), pac.cs));
+					changePanel(new CastleViewPage(getThis(), pac.castles));
 			}
 		});
 
@@ -193,7 +194,7 @@ public class PackEditPage extends Page {
 				if (pac != null && pac.editable)
 					changePanel(new BGEditPage(getThis(), pac));
 				else if (pac != null)
-					changePanel(new BGViewPage(getThis(), pac));
+					changePanel(new BGViewPage(getThis(), pac.getID()));
 			}
 		});
 
@@ -223,7 +224,7 @@ public class PackEditPage extends Page {
 			public void valueChanged(ListSelectionEvent arg0) {
 				if (jld.getValueIsAdjusting())
 					return;
-				adde.setEnabled(pac != null && pac != Pack.def && jld.getSelectedValue() != null && pac.editable);
+				adde.setEnabled(pac != null && jld.getSelectedValue() != null && pac.editable);
 			}
 
 		});
@@ -253,11 +254,8 @@ public class PackEditPage extends Page {
 					return;
 				changing = true;
 				int ind = jlp.getSelectedIndex();
-				Pack.map.remove(pac.id);
-				if (pac.editable)
-					pac.delete();
-				else
-					Writer.delete(pac.file);
+				UserProfile.remove(pac);
+				pac.delete();
 				vpack.remove(pac);
 				jlp.setListData(vpack);
 				jlt.setListData(vpack);
@@ -287,11 +285,9 @@ public class PackEditPage extends Page {
 			@Override
 			public void focusLost(FocusEvent fe) {
 				String str = jtfp.getText().trim();
-				str = MainBCU.validate(str);
-				if (pac.name.equals(str))
+				if (pac.desc.name.equals(str))
 					return;
-				str = Pack.getAvailable(str);
-				pac.name = str;
+				pac.desc.name = str;
 			}
 
 		});
@@ -300,7 +296,7 @@ public class PackEditPage extends Page {
 		});// TODO packup
 
 		unpk.setLnr(x -> {
-			pac.unpack();
+			((ZipSource) pac.source).unzip(password);
 			unpk.setEnabled(false);
 			extr.setEnabled(true);
 		});
@@ -343,8 +339,8 @@ public class PackEditPage extends Page {
 					return;
 				changing = true;
 				int ind = jle.getSelectedIndex();
-				pac.es.remove(ene);
-				jle.setListData(pac.es.getList().toArray(new Enemy[0]));
+				pac.enemies.remove(ene);
+				jle.setListData(pac.enemies.getList().toArray(new Enemy[0]));
 				if (ind >= 0)
 					ind--;
 				jle.setSelectedIndex(ind);
@@ -358,7 +354,7 @@ public class PackEditPage extends Page {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				EnemyEditPage eet = new EnemyEditPage(getThis(), pac, ene);
+				EnemyEditPage eet = new EnemyEditPage(getThis(), ene);
 				changePanel(eet);
 			}
 		});
@@ -376,7 +372,7 @@ public class PackEditPage extends Page {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new EnemyViewPage(getThis(), pac));
+				changePanel(new EnemyViewPage(getThis(), pac.getID()));
 			}
 
 		});
@@ -415,15 +411,8 @@ public class PackEditPage extends Page {
 
 		});
 
-		vmsc.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(
-						pac.editable ? new MusicEditPage(getThis(), pac) : new MusicPage(getThis(), pac.ms.getList()));
-			}
-
-		});
+		vmsc.setLnr(pac.editable ? () -> new MusicEditPage(getThis(), pac)
+				: () -> new MusicPage(getThis(), pac.musics.getList()));
 
 		jls.addListSelectionListener(new ListSelectionListener() {
 
@@ -536,11 +525,11 @@ public class PackEditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
-				Pack rel = jlt.getSelectedValue();
-				pac.rely.add(rel.id);
-				for (int id : rel.rely)
-					if (!pac.rely.contains(id))
-						pac.rely.add(id);
+				UserPack rel = jlt.getSelectedValue();
+				pac.desc.dependency.add(rel.getID());
+				for (String id : rel.desc.dependency)
+					if (!pac.desc.dependency.contains(id))
+						pac.desc.dependency.add(id);
 				updateJlr();
 				jlr.setSelectedValue(rel, true);
 				setRely(rel);
@@ -555,12 +544,12 @@ public class PackEditPage extends Page {
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
 				int ind = jlr.getSelectedIndex() - 1;
-				Pack rel = jlr.getSelectedValue();
+				UserPack rel = jlr.getSelectedValue();
 				if (pac.relyOn(rel.id) >= 0)
 					if (Opts.conf("this action cannot be undone. Are you sure to remove "
 							+ "all elements in this pack from the selected parent?"))
-						pac.forceRemoveParent(rel.id);
-				pac.rely.remove((Integer) rel.id);
+						pac.forceRemoveParent(rel.getID());
+				pac.desc.dependency.remove(rel.getID());
 				updateJlr();
 				jlr.setSelectedIndex(ind);
 				setRely(jlr.getSelectedValue());
@@ -701,7 +690,7 @@ public class PackEditPage extends Page {
 			remr.setEnabled(false);
 			return;
 		}
-		int re = pac.relyOn(rel.id);
+		int re = pac.relyOn(rel.getID());
 		if (rel.id < 1000) {
 			remr.setEnabled(false);
 			return;

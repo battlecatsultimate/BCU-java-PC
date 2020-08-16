@@ -58,10 +58,10 @@
     "CRIT": {
         "abbr_name": "crit",
         "full_name": "Critical Hit",
-        "tooltip": "deal more damage to non-metal enemies, and deal original damage to metal enemies. See mult field for water cannon type attack.",
+        "tooltip": "deal more damage to metal and non-metal enemies. See mult field for water cannon type attack.",
         "format": [
             "(prob)% chance to deal a critical hit",
-            "[(mult>0&mult!=200){ that deals (mult)% damage to non-metal enemies}",
+            "[(mult>0&mult!=200){ that deals (mult)% damage to enemies}",
             "(mult<0){ that deals the damage as (_abs(mult))% of current health to metal enemies}]."
         ],
         "class": {

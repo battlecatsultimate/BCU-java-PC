@@ -214,8 +214,9 @@ public class UnitManagePage extends Page {
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
 				CustomUnit cu = new CustomUnit();
-				Unit u = pac.us.add(jld.getSelectedValue(), cu);
-				jlu.setListData(pac.us.ulist.getList().toArray(new Unit[0]));
+				Unit u = new Unit(pac.getNextID(Unit.class), jld.getSelectedValue(), cu);
+				pac.units.add(u);
+				jlu.setListData(pac.units.getList().toArray(new Unit[0]));
 				jlu.setSelectedValue(u, true);
 				setUnit(u);
 				changing = false;
@@ -230,9 +231,9 @@ public class UnitManagePage extends Page {
 					return;
 				changing = true;
 				int ind = jlu.getSelectedIndex();
-				pac.us.ulist.remove(uni);
+				pac.units.remove(uni);
 				uni.lv.units.remove(uni);
-				jlu.setListData(pac.us.ulist.getList().toArray(new Unit[0]));
+				jlu.setListData(pac.units.getList().toArray(new Unit[0]));
 				if (ind >= 0)
 					ind--;
 				jlu.setSelectedIndex(ind);
@@ -319,7 +320,7 @@ public class UnitManagePage extends Page {
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
 				CustomUnit cu = new CustomUnit();
-				AnimCE ac = jld.getSelectedValue().anim;
+				AnimCE ac = jld.getSelectedValue();
 				frm = new Form(uni, uni.forms.length, "new form", ac, cu);
 				uni.forms = Arrays.copyOf(uni.forms, uni.forms.length + 1);
 				uni.forms[uni.forms.length - 1] = frm;
@@ -391,9 +392,8 @@ public class UnitManagePage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
-				int ind = pac.unitLevels.nextInd();
-				ul = new UnitLevel(pac.us.pack, ind, UnitLevel.def);
-				pac.unitLevels.set(ind, ul);
+				ul = new UnitLevel(pac.getNextID(UnitLevel.class), UnitLevel.def);
+				pac.unitLevels.add(ul);
 				setPack(pac);
 				changing = false;
 			}
@@ -530,7 +530,7 @@ public class UnitManagePage extends Page {
 			jlu.clearSelection();
 			jll.setListData(pac.unitLevels.getList().toArray(new UnitLevel[0]));
 			setLevel(jll.getSelectedValue());
-			List<UnitLevel> l = pac.units.getlevels();
+			List<UnitLevel> l = pac.unitLevels.getList();
 			cbl.setModel(new DefaultComboBoxModel<>(l.toArray(new UnitLevel[0])));
 		}
 		changing = boo;

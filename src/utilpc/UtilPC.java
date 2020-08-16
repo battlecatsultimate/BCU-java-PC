@@ -20,6 +20,7 @@ import common.CommonStatic.Itf;
 import common.battle.data.PCoin;
 import common.io.InStream;
 import common.io.OutStream;
+import common.pack.Context;
 import common.pack.Source;
 import common.pack.Source.ResourceLocation;
 import common.system.VImg;
@@ -34,8 +35,8 @@ import common.util.pack.Background;
 import common.util.stage.Music;
 import common.util.unit.Form;
 import io.BCMusic;
-import io.Reader;
-import io.Writer;
+import io.BCUReader;
+import io.BCUWriter;
 import page.LoadPage;
 import utilpc.awt.FG2D;
 
@@ -57,7 +58,7 @@ public class UtilPC {
 				byte[] bs = is.subStream().nextBytesI();
 				String path = "./pack/music/" + Data.hex(pid) + "/" + Data.trio(mid) + ".ogg";
 				File f = CommonStatic.def.route(path);
-				CommonStatic.def.check(f);
+				Data.err(() -> Context.check(f));
 				try {
 					Files.write(bs, f);
 				} catch (IOException e) {
@@ -168,18 +169,8 @@ public class UtilPC {
 		}
 
 		@Override
-		public void check(File f) {
-			Writer.check(f);
-		}
-
-		@Override
-		public void delete(File file) {
-			Writer.delete(file);
-		}
-
-		@Override
 		public void exit(boolean save) {
-			Writer.logClose(save);
+			BCUWriter.logClose(save);
 			System.exit(0);
 		}
 
@@ -225,7 +216,7 @@ public class UtilPC {
 
 		@Override
 		public InStream readBytes(File fi) {
-			return Reader.readBytes(fi);
+			return BCUReader.readBytes(fi);
 		}
 
 		@Override
@@ -255,7 +246,7 @@ public class UtilPC {
 
 		@Override
 		public boolean writeBytes(OutStream os, String path) {
-			return Writer.writeBytes(os, path);
+			return BCUWriter.writeBytes(os, path);
 		}
 
 		@Override

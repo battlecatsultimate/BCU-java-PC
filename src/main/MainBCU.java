@@ -10,6 +10,8 @@ import common.io.assets.Admin;
 import common.pack.UserProfile;
 import common.system.fake.ImageBuilder;
 import common.util.Data;
+import io.BCUReader;
+import io.BCUWriter;
 import jogl.GLBBB;
 import jogl.util.GLIB;
 import page.MainFrame;
@@ -45,9 +47,9 @@ public class MainBCU {
 		UserProfile.profile();
 		CommonStatic.def = new UtilPC.PCItr();
 
-		// Writer.logPrepare();
-		// Writer.logSetup();
-		// Reader.getData$0();
+		BCUWriter.logPrepare();
+		BCUWriter.logSetup();
+		BCUReader.readInfo();
 
 		ImageBuilder.builder = USE_JOGL ? new GLIB() : new PCIB();
 		BBBuilder.def = USE_JOGL ? new GLBBB() : AWTBBB.INS;
@@ -70,8 +72,8 @@ public class MainBCU {
 		new Timer().start();
 		// AssetLoader.previewAssets();
 		// BCJSON.checkDownload();
-		// Reader.getData$0();
-		// Reader.getData$1();
+
+		BCUReader.getData$1();
 		loaded = true;
 		MainFrame.changePanel(new MainPage());
 	}

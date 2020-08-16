@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
@@ -13,17 +14,18 @@ import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Queue;
-
 import javax.imageio.ImageIO;
+
+import com.google.gson.JsonObject;
 
 import common.CommonStatic;
 import common.battle.BasisSet;
 import common.io.DataIO;
 import common.io.OutStream;
+import common.io.json.JsonEncoder;
+import common.pack.Context;
+import common.pack.Context.ErrType;
 import common.util.Data;
-import common.util.ImgCore;
-import common.util.stage.Recd;
 import main.MainBCU;
 import main.Opts;
 import main.Printer;
@@ -35,65 +37,23 @@ import page.support.Importer;
 import page.view.ViewBox;
 import res.AnimatedGifEncoder;
 
-public class Writer extends DataIO {
+public class BCUWriter extends DataIO {
 
 	private static File log, ph;
 	private static WriteStream ps;
 
-	public static boolean check(File f) {
-		boolean suc = true;
-		if (!f.getParentFile().exists())
-			suc &= f.getParentFile().mkdirs();
-		if (suc)
-			try {
-				if (!f.exists())
-					if (f.isDirectory())
-						suc &= f.mkdir();
-					else
-						suc &= f.createNewFile();
-			} catch (IOException e1) {
-				e1.printStackTrace();
-				suc = false;
-			}
-		if (!suc) {
-			ps.println("failed to create file: " + f.getPath());
-			Opts.ioErr("failed to create file: " + f.getPath());
-		}
-		return suc;
-	}
-
-	public static void delete(File f) {
-		if (f == null || !f.exists())
-			return;
-		if (f.isDirectory())
-			for (File i : f.listFiles())
-				delete(i);
-		if (!f.delete())
-			Opts.ioErr("failed to delete " + f);
-	}
-
 	public static void logClose(boolean save) {
-		try {
-			writeOptions();
-			if (save && MainBCU.loaded && MainBCU.trueRun) {
-				writeData();
-			}
-			if (ZipLib.lib != null)
-				ZipLib.lib.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+		writeOptions();
+		if (save && MainBCU.loaded && MainBCU.trueRun) {
+			writeData();
 		}
-		delete(new File("./lib/"));
 		if (ps.writed) {
 			ps.println("version: " + Data.revVer(MainBCU.ver));
-			ps.println("user: " + Account.USERNAME);
 		}
 		ps.close();
 		ph.deleteOnExit();
 		if (log.length() == 0)
 			log.deleteOnExit();
-		else
-			BCJSON.report(log);
 	}
 
 	public static void logPrepare() {
@@ -133,9 +93,10 @@ public class Writer extends DataIO {
 
 	public static PrintStream newFile(String str) {
 		File f = new File(str);
-		check(f);
+
 		PrintStream out = null;
 		try {
+			Context.check(f);
 			out = new PrintStream(f, "UTF-8");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -145,9 +106,9 @@ public class Writer extends DataIO {
 
 	public static boolean writeBytes(byte[] bs, String path) {
 		File f = new File(path);
-		check(f);
 		FileOutputStream fos = null;
 		try {
+			Context.check(f);
 			fos = new FileOutputStream(f);
 			fos.write(bs);
 			fos.close();
@@ -190,40 +151,9 @@ public class Writer extends DataIO {
 	}
 
 	public static void writeData() {
-		try {
-			writeBytes(BasisSet.writeAll(), "./user/basis.v");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			// TODO write all packs
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			for (Recd r : Recd.map.values())
-				if (r.marked)
-					r.write();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		for (DIYAnim da : DIYAnim.map.values())
-			if (!da.getAnimC().isSaved())
-				try {
-					da.getAnimC().save();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-		try {
-			ZipAccess.saveWork(MainBCU.getTime());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			MainLocale.saveWorks();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		// FIXME write data
+		BasisSet.write();
+		writeOptions();
 	}
 
 	public static void writeGIF(AnimatedGifEncoder age, String path) {
@@ -238,7 +168,7 @@ public class Writer extends DataIO {
 	public static boolean writeImage(BufferedImage bimg, File f) {
 		if (bimg == null)
 			return false;
-		boolean suc = Writer.check(f);
+		boolean suc = Data.err(() -> Context.check(f));
 		if (suc)
 			try {
 				suc = ImageIO.write(bimg, "PNG", f);
@@ -254,33 +184,8 @@ public class Writer extends DataIO {
 		return suc;
 	}
 
-	public static void writeURL(Queue<String> qs, String name) {
-		File f = new File("./url/" + name + "/" + MainBCU.getTime() + ".tsv");
-		if (!f.getParentFile().exists())
-			f.getParentFile().mkdirs();
-		if (!f.exists())
-			try {
-				f.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		PrintStream out = null;
-		try {
-			out = new PrintStream(new FileOutputStream(f), true, "UTF-8");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		if (out == null)
-			return;
-		out.println("[start]");
-		for (String s : qs)
-			out.println(s);
-		out.println("[end]");
-		out.close();
-	}
-
 	private static boolean writeFile(OutStream os, File f, byte[] md5) {
-		boolean suc = check(f);
+		boolean suc = Data.err(() -> Context.check(f));
 		FileOutputStream fos = null;
 		try {
 			fos = new FileOutputStream(f);
@@ -319,34 +224,36 @@ public class Writer extends DataIO {
 	}
 
 	private static void writeOptions() {
-		PrintStream out = newFile("./user/data.ini");
-		out.println("lang= " + CommonStatic.Lang.lang);
+		File f = new File("./user/config.json");
+		JsonObject jo = JsonEncoder.encode(CommonStatic.getConfig()).getAsJsonObject();
 		Rectangle r = MainFrame.crect;
-		out.println("rect= {" + r.x + ',' + r.y + ',' + r.width + ',' + r.height + '}');
-		out.println("preload= " + (MainBCU.preload ? 1 : 0));
-		int[] is = ImgCore.ints;
-		out.println("render= {" + is[0] + "," + is[1] + "," + is[2] + "," + is[3] + "}");
-		out.println("white bg= " + (ViewBox.Conf.white ? 1 : 0));
-		out.println("show axis= " + (ImgCore.ref ? 1 : 0));
-		out.println("use OpenGL: " + (MainBCU.USE_JOGL ? 1 : 0));
-		out.println("min opacity= " + ImgCore.deadOpa);
-		out.println("max opacity= " + ImgCore.fullOpa);
-		out.println("filter= " + MainBCU.FILTER_TYPE);
-		out.println("location= " + EventReader.loc);
-		out.println(Account.USERNAME);
-		out.println(Account.PASSWORD);
-		out.println("--- place holder ---");
-		out.println("calendar version= " + BCJSON.cal_ver);
-		out.println("BG and SE volume= " + (BCMusic.play ? 1 : 0) + ", " + BCMusic.VOL_BG + ", " + BCMusic.VOL_SE);
-		out.println("edit name= " + (MainLocale.exLang ? 1 : 0));
-		out.println("edit tip= " + (MainLocale.exTTT ? 1 : 0));
-		Exporter.write(out);
-		Importer.write(out);
-		out.println("--- place holder ---");
-		out.println("large screen: " + (BattleInfoPage.DEF_LARGE ? 1 : 0));
-		out.println("theme= " + (MainBCU.light ? 1 : 0));
-		out.println("nimbus=" + (MainBCU.nimbus ? 1 : 0));
-		out.close();
+		jo.add("crect", JsonEncoder.encode(new int[] { r.x, r.y, r.width, r.height }));
+		jo.addProperty("preload", MainBCU.preload);
+		jo.addProperty("transparent", ViewBox.Conf.white);
+		jo.addProperty("JOGL", MainBCU.USE_JOGL);
+		jo.addProperty("filter", MainBCU.FILTER_TYPE);
+		jo.addProperty("play_sound", BCMusic.play);
+		jo.addProperty("volume_BG", BCMusic.VOL_BG);
+		jo.addProperty("volume_SE", BCMusic.VOL_SE);
+		jo.addProperty("edit_lang", MainLocale.exLang);
+		jo.addProperty("edit_tooltip", MainLocale.exTTT);
+		jo.addProperty("large_screen", BattleInfoPage.DEF_LARGE);
+		jo.addProperty("style_light", MainBCU.light);
+		jo.addProperty("style_nimbus", MainBCU.nimbus);
+		String[] exp = new String[Exporter.curs.length];
+		for (int i = 0; i < exp.length; i++)
+			exp[i] = Exporter.curs[i] == null ? null : Exporter.curs[i].toString();
+		String[] imp = new String[Importer.curs.length];
+		for (int i = 0; i < imp.length; i++)
+			imp[i] = Importer.curs[i] == null ? null : Importer.curs[i].toString();
+		jo.add("export_paths", JsonEncoder.encode(exp));
+		jo.add("import_paths", JsonEncoder.encode(imp));
+		try (java.io.Writer w = new FileWriter(f)) {
+			w.write(jo.toString());
+			w.close();
+		} catch (Exception e) {
+			CommonStatic.ctx.noticeErr(e, ErrType.ERROR, "failed to write config");
+		}
 	}
 
 }

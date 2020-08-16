@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 import common.CommonStatic.EditLink;
 import common.util.anim.AnimCE;
-import io.Writer;
+import io.BCUWriter;
 import page.JBTN;
 import page.Page;
 
@@ -154,14 +154,7 @@ public class EditHead extends Page implements EditLink {
 
 		});
 
-		save.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Writer.writeData();
-			}
-
-		});
+		save.setLnr((e) -> BCUWriter.writeData());
 
 		undo.addActionListener(new ActionListener() {
 

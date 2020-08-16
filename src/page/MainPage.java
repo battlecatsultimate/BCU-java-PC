@@ -3,7 +3,7 @@ package page;
 import javax.swing.JLabel;
 
 import common.util.stage.MapColc;
-import io.Writer;
+import io.BCUWriter;
 import page.anim.DIYViewPage;
 import page.anim.ImgCutEditPage;
 import page.anim.MaAnimEditPage;
@@ -115,7 +115,7 @@ public class MainPage extends Page {
 		caic.setLnr(() -> new ImgCutEditPage(this));
 		camm.setLnr(() -> new MaModelEditPage(this));
 		cama.setLnr(() -> new MaAnimEditPage(this));
-		save.setLnr((e) -> Writer.writeData());
+		save.setLnr((e) -> BCUWriter.writeData());
 		vmsc.setLnr(() -> new MusicPage(this));
 		rply.setLnr(() -> new RecdManagePage(this));
 		allf.setLnr(() -> new ResourcePage(this));

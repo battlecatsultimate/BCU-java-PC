@@ -136,7 +136,7 @@ public class StageViewPage extends StagePage {
 				StageMap sm = jlsm.getSelectedValue();
 				if (sm == null)
 					return;
-				MapColc mc = Stage.clipmc;
+				MapColc mc = Stage.CLIPMC;
 				StageMap copy = sm.copy(mc);
 				mc.maps = Arrays.copyOf(mc.maps, mc.maps.length + 1);
 				mc.maps[mc.maps.length - 1] = copy;
@@ -149,7 +149,7 @@ public class StageViewPage extends StagePage {
 				Stage stage = jlst.getSelectedValue();
 				if (stage == null)
 					return;
-				Stage.clipsm.add(stage.copy(Stage.clipsm));
+				Stage.CLIPSM.add(stage.copy(Stage.CLIPSM));
 			}
 		});
 
