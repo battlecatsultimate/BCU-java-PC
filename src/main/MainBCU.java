@@ -46,6 +46,7 @@ public class MainBCU {
 
 		UserProfile.profile();
 		CommonStatic.def = new UtilPC.PCItr();
+		CommonStatic.ctx = new Admin.AdminContext();
 
 		BCUWriter.logPrepare();
 		BCUWriter.logSetup();
@@ -53,7 +54,6 @@ public class MainBCU {
 
 		ImageBuilder.builder = USE_JOGL ? new GLIB() : new PCIB();
 		BBBuilder.def = USE_JOGL ? new GLBBB() : AWTBBB.INS;
-		CommonStatic.ctx = new Admin.AdminContext();
 		CommonStatic.ctx.initProfile();
 
 		if (nimbus) {

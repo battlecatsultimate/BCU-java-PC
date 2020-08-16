@@ -14,7 +14,6 @@ import com.google.gson.JsonParser;
 
 import common.CommonStatic;
 import common.CommonStatic.Config;
-import common.battle.BasisSet;
 import common.io.DataIO;
 import common.io.InStream;
 import common.io.json.JsonDecoder;
@@ -40,7 +39,6 @@ import page.view.ViewBox;
 public class BCUReader extends DataIO {
 
 	public static void getData$1() {
-		BasisSet.read();
 		readLang();
 		BCMusic.preload();
 	}
@@ -65,8 +63,7 @@ public class BCUReader extends DataIO {
 				Config cfg = CommonStatic.getConfig();
 				JsonDecoder.inject(je, Config.class, cfg);
 				JsonObject jo = je.getAsJsonObject();
-				int[] rect = new int[4];
-				JsonDecoder.inject(jo.get("crect"), int[].class, rect);
+				int[] rect = JsonDecoder.decode(jo.get("crect"), int[].class);
 				MainFrame.crect = new Rectangle(rect[0], rect[1], rect[2], rect[3]);
 				MainBCU.preload = jo.get("preload").getAsBoolean();
 				ViewBox.Conf.white = jo.get("transparent").getAsBoolean();

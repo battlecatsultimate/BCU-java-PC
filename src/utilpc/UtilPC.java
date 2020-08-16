@@ -22,6 +22,7 @@ import common.io.InStream;
 import common.io.OutStream;
 import common.pack.Context;
 import common.pack.Source;
+import common.pack.Context.ErrType;
 import common.pack.Source.ResourceLocation;
 import common.system.VImg;
 import common.system.fake.FakeImage;
@@ -231,7 +232,8 @@ public class UtilPC {
 
 		@Override
 		public <T> T readSave(String path, Function<Queue<String>, T> func) {
-			return func.apply(VFile.getFile(path).getData().readLine());
+			return CommonStatic.ctx.noticeErr(() -> func.apply(VFile.getFile(path).getData().readLine()), ErrType.ERROR,
+					"failed to read " + path);
 		}
 
 		@Override
