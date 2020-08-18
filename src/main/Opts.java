@@ -61,6 +61,10 @@ public class Opts {
 		JOptionPane.showMessageDialog(null, text, title, opt);
 	}
 
+	public static String read(String string) {
+		return JOptionPane.showInputDialog(null, string, "");
+	}
+
 	public static void recdErr(String name, String suf) {
 		pop("replay " + name + " uses unavailable " + suf, "replay read error");
 	}

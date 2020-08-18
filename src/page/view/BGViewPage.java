@@ -15,9 +15,10 @@ import common.pack.UserProfile;
 import common.util.pack.Background;
 import page.JBTN;
 import page.Page;
+import page.SupPage;
 import utilpc.UtilPC;
 
-public class BGViewPage extends Page {
+public class BGViewPage extends Page implements SupPage<Background> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -38,6 +39,7 @@ public class BGViewPage extends Page {
 		jlst.setSelectedValue(bg.get(), false);
 	}
 
+	@Override
 	public Background getSelected() {
 		return jlst.getSelectedValue();
 	}

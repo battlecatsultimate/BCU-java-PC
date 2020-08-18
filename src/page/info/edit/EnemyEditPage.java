@@ -30,7 +30,7 @@ public class EnemyEditPage extends EntityEditPage {
 	private final CustomEnemy ce;
 
 	public EnemyEditPage(Page p, Enemy e) {
-		super(p, e.id.pack, (CustomEntity) e.de, UserProfile.getUserPack(e.id.pack).editable);
+		super(p, e.id.pack, (CustomEntity) e.de, UserProfile.getUserPack(e.id.pack).editable, true);
 		ene = e;
 		ce = (CustomEnemy) ene.de;
 		eeb = new EnemyEditBox(this, editable);

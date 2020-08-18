@@ -6,6 +6,8 @@ import java.util.function.Consumer;
 
 import javax.swing.JToggleButton;
 
+import common.util.lang.LocaleCenter.Binder;
+
 public class JTG extends JToggleButton implements LocComp {
 
 	private static final long serialVersionUID = 1L;
@@ -14,6 +16,11 @@ public class JTG extends JToggleButton implements LocComp {
 
 	public JTG() {
 		lsc = new LocSubComp(this);
+	}
+
+	public JTG(Binder binder) {
+		this();
+		lsc.init(binder);
 	}
 
 	public JTG(int i, String str) {

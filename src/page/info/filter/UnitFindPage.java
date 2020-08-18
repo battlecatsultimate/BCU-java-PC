@@ -8,12 +8,14 @@ import java.util.List;
 import javax.swing.JScrollPane;
 
 import common.util.unit.Form;
+import common.util.unit.Unit;
 import page.JBTN;
 import page.JTF;
 import page.JTG;
 import page.Page;
+import page.SupPage;
 
-public class UnitFindPage extends Page {
+public class UnitFindPage extends Page implements SupPage<Unit> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -48,6 +50,12 @@ public class UnitFindPage extends Page {
 
 	public List<Form> getList() {
 		return ult.list;
+	}
+
+	@Override
+	public Unit getSelected() {
+		Form f = getForm();
+		return f == null ? null : f.unit;
 	}
 
 	@Override

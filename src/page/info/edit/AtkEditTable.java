@@ -42,7 +42,7 @@ class AtkEditTable extends Page {
 	private final JTG isr = new JTG(1, "isr");
 
 	private final ListJtfPolicy ljp = new ListJtfPolicy();
-	private final AtkProcTable apt;
+	private final ProcTable.AtkProcTable apt;
 	private final JScrollPane jsp;
 	private final boolean editable;
 
@@ -53,8 +53,7 @@ class AtkEditTable extends Page {
 
 	protected AtkEditTable(Page p, boolean edit, boolean unit) {
 		super(p);
-
-		apt = new AtkProcTable(this, edit, unit);
+		apt = new ProcTable.AtkProcTable(this, edit, unit);
 		jsp = new JScrollPane(apt);
 		editable = edit;
 		ini();

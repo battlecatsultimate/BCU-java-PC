@@ -29,8 +29,11 @@ import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.anim.AnimU;
 import common.util.anim.AnimU.UType;
+import common.util.lang.Editors;
+import common.util.pack.Background;
 import common.util.pack.Soul;
 import common.util.pack.Soul.SoulType;
+import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
@@ -40,7 +43,9 @@ import page.JL;
 import page.JTF;
 import page.JTG;
 import page.Page;
+import page.SupPage;
 import page.anim.DIYViewPage;
+import page.info.edit.SwingEditor.EditCtrl;
 import page.info.filter.EnemyFindPage;
 import page.info.filter.UnitFindPage;
 import page.support.ListJtfPolicy;
@@ -95,7 +100,7 @@ public abstract class EntityEditPage extends Page {
 	private final JComboBox<Soul> jcbs = new JComboBox<>();
 	private final ListJtfPolicy ljp = new ListJtfPolicy();
 	private final AtkEditTable aet;
-	private final MainProcTable mpt;
+	private final ProcTable.MainProcTable mpt;
 	private final JScrollPane jspm;
 	private final CustomEntity ce;
 	private final String pack;
@@ -107,12 +112,13 @@ public abstract class EntityEditPage extends Page {
 	protected final boolean editable;
 	protected final Basis bas = BasisSet.current();
 
-	public EntityEditPage(Page p, String pac, CustomEntity e, boolean edit) {
+	public EntityEditPage(Page p, String pac, CustomEntity e, boolean edit, boolean isEnemy) {
 		super(p);
+		Editors.setEditorSupplier(new EditCtrl(isEnemy, this::getBGSup, this::getEnemySup, this::getUnitSup));
 		pack = pac;
 		ce = e;
-		aet = new AtkEditTable(this, edit, false);
-		mpt = new MainProcTable(this, edit);
+		aet = new AtkEditTable(this, edit, !isEnemy);
+		mpt = new ProcTable.MainProcTable(this, edit, !isEnemy);
 		jspm = new JScrollPane(mpt);
 		editable = edit;
 		if (!editable)
@@ -223,9 +229,9 @@ public abstract class EntityEditPage extends Page {
 
 	@Override
 	protected void renew() {
-		if (efp != null && efp.getEnemy() != null
+		if (efp != null && efp.getSelected() != null
 				&& Opts.conf("do you want to overwrite stats? This operation cannot be undone")) {
-			Enemy e = efp.getEnemy();
+			Enemy e = efp.getSelected();
 			ce.importData(e.de);
 			setData(ce);
 		}
@@ -509,6 +515,18 @@ public abstract class EntityEditPage extends Page {
 			return ce.rev == null ? ce.res : ce.rev;
 		else
 			return ce.res;
+	}
+
+	private SupPage<Background> getBGSup() {
+		return null; // FIXME
+	}
+
+	private SupPage<AbEnemy> getEnemySup() {
+		return null; // FIXME
+	}
+
+	private SupPage<Unit> getUnitSup() {
+		return null; // FIXME
 	}
 
 	private void input(JTF jtf, String text) {

@@ -236,7 +236,8 @@ public class PackEditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
-				pac = Data.err(() -> UserProfile.initJsonPack("packid"));// FIXME
+				String str = Opts.read("pack ID = "); // FIXME
+				pac = Data.err(() -> UserProfile.initJsonPack(str));
 				vpack.add(pac);
 				jlp.setListData(vpack);
 				jlt.setListData(vpack);
@@ -296,7 +297,8 @@ public class PackEditPage extends Page {
 		});
 
 		unpk.setLnr(x -> {
-			Data.err(() -> ((ZipSource) pac.source).unzip(null));// FIXME
+			String str = Opts.read("password: "); // FIXME
+			Data.err(() -> ((ZipSource) pac.source).unzip(str));
 			unpk.setEnabled(false);
 			extr.setEnabled(true);
 		});
@@ -352,41 +354,13 @@ public class PackEditPage extends Page {
 
 		});
 
-		edit.addActionListener(new ActionListener() {
+		edit.setLnr(() -> new EnemyEditPage(getThis(), ene));
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				EnemyEditPage eet = new EnemyEditPage(getThis(), ene);
-				changePanel(eet);
-			}
-		});
+		jtfe.setLnr(e -> ene.name = jtfe.getText().trim());
 
-		jtfe.addFocusListener(new FocusAdapter() {
+		vene.setLnr(() -> new EnemyViewPage(getThis(), pac.getID()));
 
-			@Override
-			public void focusLost(FocusEvent fe) {
-				ene.name = jtfe.getText().trim();
-			}
-
-		});
-
-		vene.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new EnemyViewPage(getThis(), pac.getID()));
-			}
-
-		});
-
-		ener.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new EREditPage(getThis(), pac));
-			}
-
-		});
+		ener.setLnr(() -> new EREditPage(getThis(), pac));
 
 	}
 
@@ -413,8 +387,8 @@ public class PackEditPage extends Page {
 
 		});
 
-		vmsc.setLnr(pac.editable ? () -> new MusicEditPage(getThis(), pac)
-				: () -> new MusicPage(getThis(), pac.musics.getList()));
+		vmsc.setLnr(() -> pac.editable ? new MusicEditPage(getThis(), pac)
+				: new MusicPage(getThis(), pac.musics.getList()));
 
 		jls.addListSelectionListener(new ListSelectionListener() {
 

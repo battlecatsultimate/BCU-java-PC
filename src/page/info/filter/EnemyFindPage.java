@@ -8,13 +8,15 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
+import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
 import page.JBTN;
 import page.JTF;
 import page.JTG;
 import page.Page;
+import page.SupPage;
 
-public class EnemyFindPage extends Page {
+public class EnemyFindPage extends Page implements SupPage<AbEnemy> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -42,16 +44,17 @@ public class EnemyFindPage extends Page {
 		resized();
 	}
 
-	public Enemy getEnemy() {
+	public List<Enemy> getList() {
+		return elt.list;
+	}
+
+	@Override
+	public Enemy getSelected() {
 		int sel = elt.getSelectedRow();
 		if (sel < 0)
 			return null;
 		return elt.list.get(sel);
 
-	}
-
-	public List<Enemy> getList() {
-		return elt.list;
 	}
 
 	@Override

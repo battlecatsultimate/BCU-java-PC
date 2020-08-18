@@ -12,7 +12,6 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import common.pack.Source.Workspace;
 import common.system.VImg;
 import common.util.anim.AnimCE;
 import main.Opts;
@@ -95,7 +94,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 	@Override
 	protected void renew() {
 		if (aep.focus == null)
-			jlu.setListData(new Vector<AnimCE>(Workspace.loadAnimations("_local")));
+			jlu.setListData(new Vector<AnimCE>(AnimCE.map().values()));
 		else
 			jlu.setListData(new AnimCE[] { aep.focus });
 		jlu.setSelectedIndex(0);
