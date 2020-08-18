@@ -19,12 +19,11 @@ import common.battle.data.CustomEnemy;
 import common.pack.PackData.UserPack;
 import common.pack.Source.ZipSource;
 import common.pack.UserProfile;
+import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.stage.MapColc;
 import common.util.stage.StageMap;
 import common.util.unit.Enemy;
-import io.BCUWriter;
-import main.MainBCU;
 import main.Opts;
 import page.JBTN;
 import page.JL;
@@ -237,7 +236,7 @@ public class PackEditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
-				pac = Pack.getNewPack();
+				pac = Data.err(() -> UserProfile.initJsonPack("packid"));// FIXME
 				vpack.add(pac);
 				jlp.setListData(vpack);
 				jlt.setListData(vpack);
@@ -293,10 +292,11 @@ public class PackEditPage extends Page {
 		});
 
 		extr.setLnr(x -> {
-		});// TODO packup
+			// FIXME packup
+		});
 
 		unpk.setLnr(x -> {
-			((ZipSource) pac.source).unzip(password);
+			Data.err(() -> ((ZipSource) pac.source).unzip(null));// FIXME
 			unpk.setEnabled(false);
 			extr.setEnabled(true);
 		});
@@ -323,8 +323,10 @@ public class PackEditPage extends Page {
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
 				CustomEnemy ce = new CustomEnemy();
-				Enemy e = pac.es.addEnemy(jld.getSelectedValue(), ce);
-				jle.setListData(pac.es.getList().toArray(new Enemy[0]));
+				AnimCE anim = jld.getSelectedValue();
+				Enemy e = new Enemy(pac.getNextID(Enemy.class), anim, ce);
+				pac.enemies.add(e);
+				jle.setListData(pac.enemies.getList().toArray(new Enemy[0]));
 				jle.setSelectedValue(e, true);
 				setEnemy(e);
 				changing = false;
@@ -545,7 +547,7 @@ public class PackEditPage extends Page {
 				changing = true;
 				int ind = jlr.getSelectedIndex() - 1;
 				UserPack rel = jlr.getSelectedValue();
-				if (pac.relyOn(rel.id) >= 0)
+				if (pac.relyOn(rel.getID()))
 					if (Opts.conf("this action cannot be undone. Are you sure to remove "
 							+ "all elements in this pack from the selected parent?"))
 						pac.forceRemoveParent(rel.getID());
@@ -565,13 +567,13 @@ public class PackEditPage extends Page {
 			addr.setEnabled(false);
 			return;
 		}
-		Pack rel = jlt.getSelectedValue();
+		UserPack rel = jlt.getSelectedValue();
 		boolean b = pac.editable;
-		b &= rel != null && !pac.rely.contains(rel.id);
+		b &= rel != null && !pac.desc.dependency.contains(rel.getID());
 		b &= rel != pac;
 		if (b)
-			for (int id : rel.rely)
-				if (id == pac.id)
+			for (String id : rel.desc.dependency)
+				if (id.equals(pac.getID()))
 					b = false;
 		addr.setEnabled(b);
 	}
@@ -647,18 +649,18 @@ public class PackEditPage extends Page {
 	private void setPack(UserPack pack) {
 		pac = pack;
 		boolean b = pac != null && pac.editable;
-		remp.setEnabled(pac != null && pac != Pack.def && pac.canDelete());
+		remp.setEnabled(pac != null);
 		jtfp.setEnabled(b);
 		adde.setEnabled(b && jld.getSelectedValue() != null);
 		adds.setEnabled(b);
-		extr.setEnabled(pac != null && pac != Pack.def);
+		extr.setEnabled(pac != null);
 		vcas.setEnabled(pac != null);
 		vbgr.setEnabled(pac != null);
 		vene.setEnabled(pac != null);
 		vmsc.setEnabled(pac != null);
-		recd.setEnabled(pac != null && pac != Pack.def);
-		boolean canUnpack = pac != null && pac != Pack.def && !pac.editable && pac.author.equals(Account.USERNAME);
-		boolean canExport = pac != null && pac != Pack.def && pac.editable;
+		recd.setEnabled(pac != null);
+		boolean canUnpack = pac != null && !pac.editable;
+		boolean canExport = pac != null && pac.editable;
 		unpk.setEnabled(canUnpack);
 		extr.setEnabled(canExport);
 		if (b)
@@ -690,20 +692,16 @@ public class PackEditPage extends Page {
 			remr.setEnabled(false);
 			return;
 		}
-		int re = pac.relyOn(rel.getID());
-		if (rel.id < 1000) {
-			remr.setEnabled(false);
-			return;
-		}
-		remr.setText(0, re >= 0 ? "rema" : "rem");
-		remr.setForeground(re >= 0 ? Color.RED : Color.BLACK);
+		boolean re = pac.relyOn(rel.getID());
+		remr.setText(0, re ? "rema" : "rem");
+		remr.setForeground(re ? Color.RED : Color.BLACK);
 		remr.setEnabled(true);
 	}
 
 	private void updateJlr() {
 		UserPack[] rel = new UserPack[pac.desc.dependency.size()];
 		for (int i = 0; i < pac.desc.dependency.size(); i++)
-			rel[i] = Pack.map.get(pac.rely.get(i));
+			rel[i] = UserProfile.getUserPack(pac.desc.dependency.get(i));
 		jlr.setListData(rel);
 	}
 

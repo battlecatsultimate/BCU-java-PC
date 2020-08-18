@@ -7,6 +7,7 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import common.pack.PackData.UserPack;
 import common.util.stage.Recd;
 import main.MainBCU;
 import page.JTF;
@@ -21,9 +22,9 @@ public class RecdPackPage extends AbRecdPage {
 	private final JList<Recd> jlr = new JList<>();
 	private final JScrollPane jspr = new JScrollPane(jlr);
 
-	private final Pack pac;
+	private final UserPack pac;
 
-	public RecdPackPage(Page p, Pack pack) {
+	public RecdPackPage(Page p, UserPack pack) {
 		super(p, pack.editable);
 		pac = pack;
 		preini();

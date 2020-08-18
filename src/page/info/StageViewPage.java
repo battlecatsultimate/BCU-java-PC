@@ -76,9 +76,9 @@ public class StageViewPage extends StagePage {
 	private void addListeners() {
 
 		info.setLnr(x -> {
-			if (stage == null || !(stage instanceof Stage.DefStage) || ((Stage.DefStage) stage).info == null)
+			if (stage == null || stage.info == null)
 				return;
-			Opts.pop(((Stage.DefStage) stage).info.getHTML(), "stage info");
+			Opts.pop(stage.info.getHTML(), "stage info");
 		});
 
 		recd.setLnr(x -> changePanel(new StRecdPage(this, stage, false)));

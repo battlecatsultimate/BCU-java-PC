@@ -2,7 +2,6 @@ package page;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
-
 import common.util.lang.LocaleCenter.Binder;
 
 public class JL extends JLabel implements LocComp {

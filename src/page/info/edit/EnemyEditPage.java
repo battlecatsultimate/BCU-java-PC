@@ -95,7 +95,7 @@ public class EnemyEditPage extends EntityEditPage {
 		for (int i = 0; i < EABIIND.length; i++)
 			if (EABIIND[i] > 100) {
 				int id = EABIIND[i] - 100;
-				if (ce.getProc().getArr(id).get(0) == 100)
+				if (ce.getProc().getArr(id).exists())
 					imu |= 1 << id - IMUSFT;
 			}
 		eeb.setData(new int[] { ce.type, ce.abi, imu });

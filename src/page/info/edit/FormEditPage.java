@@ -126,7 +126,7 @@ public class FormEditPage extends EntityEditPage {
 		int imu = 0;
 		for (int i = 0; i < ABIIND.length; i++) {
 			int id = ABIIND[i] - 100;
-			if (cu.getProc().getArr(id).get(0) == 100)
+			if (cu.getProc().getArr(id).exists())
 				imu |= 1 << id - IMUSFT;
 		}
 		ueb.setData(new int[] { cu.type, cu.abi, imu });

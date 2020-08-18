@@ -378,7 +378,7 @@ public class StageEditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				StageMap sm = jlsm.getSelectedValue();
-				stage = new Stage.PackStage(sm);
+				stage = new Stage(sm);
 				sm.add(stage);
 				changing = true;
 				jlst.setListData(sm.list.toArray(new Stage[0]));

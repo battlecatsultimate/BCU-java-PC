@@ -14,6 +14,7 @@ import page.battle.RecdManagePage;
 import page.info.StageViewPage;
 import page.info.filter.EnemyFindPage;
 import page.info.filter.UnitFindPage;
+import page.pack.PackEditPage;
 import page.pack.ResourcePage;
 import page.view.BGViewPage;
 import page.view.CastleViewPage;
@@ -111,7 +112,7 @@ public class MainPage extends Page {
 		vuif.setLnr(() -> new UnitFindPage(this, null));
 		bass.setLnr(() -> new BasisPage(this));
 		curr.setLnr(() -> BattleInfoPage.current);
-		// FIXME pcus.setLnr(() -> new PackEditPage(this));
+		pcus.setLnr(() -> new PackEditPage(this));
 		caic.setLnr(() -> new ImgCutEditPage(this));
 		camm.setLnr(() -> new MaModelEditPage(this));
 		cama.setLnr(() -> new MaAnimEditPage(this));
