@@ -115,7 +115,7 @@ public class StageEditPage extends Page {
 		set(elim, x, y, 1600, 400, 200, 50);
 		set(recd, x, y, 1850, 400, 200, 50);
 		set(advs, x, y, 2100, 400, 200, 50);
-		set(jspjt, x, y, 900, 450, 1400, 900);
+		set(jspjt, x, y, 900, 450, 1400, 850);
 
 		set(jspsm, x, y, 0, 50, 300, 800);
 		set(cpsm, x, y, 0, 850, 300, 50);
