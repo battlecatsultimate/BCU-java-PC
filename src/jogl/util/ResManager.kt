@@ -40,12 +40,12 @@ class ResManager private constructor(gl2: GL2) {
         mem[img] = id
         g.bind(id)
         val data: TextureData = img.data
-        val w: Int = data.getWidth()
-        val h: Int = data.getHeight()
-        val pf: Int = data.getPixelFormat()
-        val pt: Int = data.getPixelType()
-        val bf: Buffer = data.getBuffer()
-        gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, data.getInternalFormat(), w, h, data.getBorder(), pf, pt, bf)
+        val w: Int = data.width
+        val h: Int = data.height
+        val pf: Int = data.pixelFormat
+        val pt: Int = data.pixelType
+        val bf: Buffer = data.buffer
+        gl.glTexImage2D(GL.GL_TEXTURE_2D, 0, data.internalFormat, w, h, data.border, pf, pt, bf)
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT)
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT)
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR)

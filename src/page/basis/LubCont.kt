@@ -39,7 +39,7 @@ abstract class LubCont protected constructor(p: Page?) : Page(p) {
     }
 
     override fun timer(t: Int) {
-        getLub().paint(getLub().getGraphics())
+        getLub().paint(getLub().graphics)
         resized()
     }
 

@@ -27,7 +27,7 @@ class BGViewPage(p: Page?, pac: String?) : Page(p), SupPage<Background?> {
     }
 
     override fun getSelected(): Background? {
-        return jlst.getSelectedValue()
+        return jlst.selectedValue
     }
 
     override fun resized(x: Int, y: Int) {
@@ -35,7 +35,7 @@ class BGViewPage(p: Page?, pac: String?) : Page(p), SupPage<Background?> {
         Page.Companion.set(back, x, y, 0, 0, 200, 50)
         Page.Companion.set(jspst, x, y, 50, 100, 300, 1100)
         Page.Companion.set(jl, x, y, 400, 50, 1800, 1100)
-        val s: Background = jlst.getSelectedValue() ?: return
+        val s: Background = jlst.selectedValue ?: return
         jl.icon = UtilPC.getBg(s, jl.width, jl.height)
     }
 
@@ -47,8 +47,8 @@ class BGViewPage(p: Page?, pac: String?) : Page(p), SupPage<Background?> {
         })
         jlst.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (arg0.getValueIsAdjusting()) return
-                val s: Background = jlst.getSelectedValue() ?: return
+                if (arg0.valueIsAdjusting) return
+                val s: Background = jlst.selectedValue ?: return
                 jl.icon = UtilPC.getBg(s, jl.width, jl.height)
             }
         })

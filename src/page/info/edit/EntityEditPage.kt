@@ -190,7 +190,7 @@ abstract class EntityEditPage(p: Page?, pac: String, e: CustomEntity, edit: Bool
         if (editable) {
             add(jcba)
             val vda: Vector<AnimCE> = Vector<AnimCE>()
-            val ac: AnimCE = ce.getPack().anim as AnimCE
+            val ac: AnimCE = ce.getPack().anim
             if (!ac.inPool()) vda.add(ac)
             vda.addAll(AnimCE.Companion.map().values)
             jcba.setModel(DefaultComboBoxModel<AnimCE>(vda))
@@ -198,18 +198,17 @@ abstract class EntityEditPage(p: Page?, pac: String, e: CustomEntity, edit: Bool
         focusTraversalPolicy = ljp
         isFocusCycleRoot = true
         addListeners()
-        atkn.setToolTipText("<html>use name \"revenge\" for attack during HB animation<br>"
+        atkn.toolTipText = ("<html>use name \"revenge\" for attack during HB animation<br>"
                 + "use name \"resurrection\" for attack during death animation</html>")
-        ftp.setToolTipText(
-                "<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
-                        + "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost</html>")
-        add.setEnabled(editable)
-        rem.setEnabled(editable)
-        copy.setEnabled(editable)
-        link.setEnabled(editable)
-        atkn.setEnabled(editable)
-        comm.setEnabled(editable)
-        jcbs.setEnabled(editable)
+        ftp.toolTipText = ("<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
+                + "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost</html>")
+        add.isEnabled = editable
+        rem.isEnabled = editable
+        copy.isEnabled = editable
+        link.isEnabled = editable
+        atkn.isEnabled = editable
+        comm.isEnabled = editable
+        jcbs.isEnabled = editable
     }
 
     override fun renew() {
@@ -279,35 +278,35 @@ abstract class EntityEditPage(p: Page?, pac: String, e: CustomEntity, edit: Bool
     }
 
     protected fun set(jl: JL) {
-        jl.setHorizontalAlignment(SwingConstants.CENTER)
+        jl.horizontalAlignment = SwingConstants.CENTER
         add(jl)
     }
 
     protected fun set(jtf: JTF) {
-        jtf.setEditable(editable)
+        jtf.isEditable = editable
         add(jtf)
         ljp.add(jtf)
         jtf.setLnr(Consumer<FocusEvent> { e: FocusEvent? ->
-            input(jtf, jtf.getText().trim { it <= ' ' })
+            input(jtf, jtf.text.trim { it <= ' ' })
             setData(ce)
         })
     }
 
     protected open fun setData(data: CustomEntity) {
         changing = true
-        fhp.setText("" + (ce.hp * getDef()) as Int)
-        fhb.setText("" + ce.hb)
-        fsp.setText("" + ce.speed)
-        fra.setText("" + ce.range)
-        fwd.setText("" + ce.width)
-        fsh.setText("" + ce.shield)
-        ftb.setText("" + ce.tba)
-        fbs.setText("" + ce.base)
-        vpst.setText("" + ce.getPost())
-        vitv.setText("" + ce.getItv())
-        ftp.setText("" + ce.touch)
-        fct.setText("" + ce.loop)
-        comm.setSelected(data.common)
+        fhp.text = "" + (ce.hp * getDef()) as Int
+        fhb.text = "" + ce.hb
+        fsp.text = "" + ce.speed
+        fra.text = "" + ce.range
+        fwd.text = "" + ce.width
+        fsh.text = "" + ce.shield
+        ftb.text = "" + ce.tba
+        fbs.text = "" + ce.base
+        vpst.text = "" + ce.getPost()
+        vitv.text = "" + ce.getItv()
+        ftp.text = "" + ce.touch
+        fct.text = "" + ce.loop
+        comm.isSelected = data.common
         mpt.setData(ce.rep.proc)
         val raw: Array<IntArray> = ce.rawAtkData()
         var pre = 0
@@ -323,15 +322,15 @@ abstract class EntityEditPage(p: Page?, pac: String, e: CustomEntity, edit: Bool
         var ix: Int = ce.atks.size
         if (ce.rev != null) ints[ix++] = ce.rev.str
         if (ce.res != null) ints[ix++] = ce.res.str
-        var ind: Int = jli.getSelectedIndex()
+        var ind: Int = jli.selectedIndex
         jli.setListData(ints)
         if (ind < 0) ind = 0
         if (ind >= ints.size) ind = ints.size - 1
         setA(ind)
-        jli.setSelectedIndex(ind)
+        jli.selectedIndex = ind
         val ene: Animable<AnimU<*>, UType> = ce.getPack()
-        if (editable) jcba.setSelectedItem(ene.anim)
-        jcbs.setSelectedItem(PackData.Identifier.Companion.get<Soul>(ce.death))
+        if (editable) jcba.selectedItem = ene.anim
+        jcbs.selectedItem = PackData.Identifier.Companion.get<Soul>(ce.death)
         vrev.setText(if (ce.rev == null) "x" else Data.Companion.KB_TIME.get(Data.Companion.INT_HB) - ce.rev.pre.toString() + "f")
         val s: Soul = PackData.Identifier.Companion.get<Soul>(ce.death)
         vres.setText(if (ce.res == null) "x" else if (s == null) "-" else s.len(SoulType.DEF) - ce.res.pre.toString() + "f")
@@ -341,23 +340,23 @@ abstract class EntityEditPage(p: Page?, pac: String, e: CustomEntity, edit: Bool
     protected fun subListener(e: JBTN, u: JBTN, a: JBTN, o: Any?) {
         e.setLnr(Consumer { x: ActionEvent? -> changePanel(EnemyFindPage(getThis(), null).also { efp = it }) })
         u.setLnr(Consumer { x: ActionEvent? -> changePanel(UnitFindPage(getThis(), null).also { ufp = it }) })
-        a.setLnr(Consumer { x: ActionEvent? -> if (editable) changePanel(DIYViewPage(getThis(), jcba.getSelectedItem() as AnimCE)) else if (o is Unit) changePanel(UnitViewPage(getThis(), o as Unit?)) else if (o is Enemy) changePanel(EnemyViewPage(getThis(), o as Enemy?)) })
-        e.setEnabled(editable)
-        u.setEnabled(editable)
+        a.setLnr(Consumer { x: ActionEvent? -> if (editable) changePanel(DIYViewPage(getThis(), jcba.selectedItem as AnimCE)) else if (o is Unit) changePanel(UnitViewPage(getThis(), o as Unit?)) else if (o is Enemy) changePanel(EnemyViewPage(getThis(), o as Enemy?)) })
+        e.isEnabled = editable
+        u.isEnabled = editable
     }
 
     private fun addListeners() {
         back.setLnr(Consumer { e: ActionEvent? -> changePanel(front) })
         comm.setLnr(Consumer { e: ActionEvent? ->
-            ce.common = comm.isSelected()
+            ce.common = comm.isSelected
             setData(ce)
         })
         jli.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(e: ListSelectionEvent?) {
-                if (changing || jli.getValueIsAdjusting()) return
+                if (changing || jli.valueIsAdjusting) return
                 changing = true
-                if (jli.getSelectedIndex() == -1) jli.setSelectedIndex(0)
-                setA(jli.getSelectedIndex())
+                if (jli.selectedIndex == -1) jli.selectedIndex = 0
+                setA(jli.selectedIndex)
                 changing = false
             }
         })
@@ -382,7 +381,7 @@ abstract class EntityEditPage(p: Page?, pac: String, e: CustomEntity, edit: Bool
         add.setLnr(Consumer { e: ActionEvent? ->
             changing = true
             val n: Int = ce.atks.size
-            var ind: Int = jli.getSelectedIndex()
+            var ind: Int = jli.selectedIndex
             if (ind >= ce.atks.size) ind = ce.atks.size - 1
             val datas: Array<AtkDataModel?> = arrayOfNulls<AtkDataModel>(n + 1)
             for (i in 0..ind) datas[i] = ce.atks.get(i)
@@ -391,44 +390,44 @@ abstract class EntityEditPage(p: Page?, pac: String, e: CustomEntity, edit: Bool
             for (i in ind until n) datas[i + 1] = ce.atks.get(i)
             ce.atks = datas
             setData(ce)
-            jli.setSelectedIndex(ind)
+            jli.selectedIndex = ind
             setA(ind)
             changing = false
         })
-        rem.setLnr(Consumer { e: ActionEvent? -> remAtk(jli.getSelectedIndex()) })
+        rem.setLnr(Consumer { e: ActionEvent? -> remAtk(jli.selectedIndex) })
         copy.setLnr(Consumer { e: ActionEvent? ->
             changing = true
             val n: Int = ce.atks.size
-            val ind: Int = jli.getSelectedIndex()
+            val ind: Int = jli.selectedIndex
             ce.atks = Arrays.copyOf(ce.atks, n + 1)
             ce.atks.get(n) = ce.atks.get(ind).clone()
             setData(ce)
-            jli.setSelectedIndex(n)
+            jli.selectedIndex = n
             setA(n)
             changing = false
         })
         link.setLnr(Consumer { e: ActionEvent? ->
             changing = true
             val n: Int = ce.atks.size
-            val ind: Int = jli.getSelectedIndex()
+            val ind: Int = jli.selectedIndex
             ce.atks = Arrays.copyOf(ce.atks, n + 1)
             ce.atks.get(n) = ce.atks.get(ind)
             setData(ce)
-            jli.setSelectedIndex(n)
+            jli.selectedIndex = n
             setA(n)
             changing = false
         })
         jcba.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
                 if (changing) return
-                ce.getPack().anim = jcba.getSelectedItem() as AnimCE
+                ce.getPack().anim = jcba.selectedItem as AnimCE
                 setData(ce)
             }
         })
         jcbs.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
                 if (changing) return
-                ce.death = (jcbs.getSelectedItem() as Soul).getID()
+                ce.death = (jcbs.selectedItem as Soul).getID()
                 setData(ce)
             }
         })
@@ -524,19 +523,19 @@ abstract class EntityEditPage(p: Page?, pac: String, e: CustomEntity, edit: Bool
         setData(ce)
         ind--
         if (ind < 0) ind = 0
-        jli.setSelectedIndex(ind)
+        jli.selectedIndex = ind
         setA(ind)
         changing = false
     }
 
     private fun setA(ind: Int) {
         val adm: AtkDataModel = get(ind)!!
-        link.setEnabled(editable && ind < ce.atks.size)
-        copy.setEnabled(editable && ind < ce.atks.size)
-        atkn.setEnabled(editable && ind < ce.atks.size)
-        atkn.setText(adm.str)
+        link.isEnabled = editable && ind < ce.atks.size
+        copy.isEnabled = editable && ind < ce.atks.size
+        atkn.isEnabled = editable && ind < ce.atks.size
+        atkn.text = adm.str
         aet.setData(adm, getAtk())
-        rem.setEnabled(editable && (ce.atks.size > 1 || ind >= ce.atks.size))
+        rem.isEnabled = editable && (ce.atks.size > 1 || ind >= ce.atks.size)
     }
 
     companion object {
@@ -551,6 +550,6 @@ abstract class EntityEditPage(p: Page?, pac: String, e: CustomEntity, edit: Bool
         mpt = MainProcTable(this, edit, !isEnemy)
         jspm = JScrollPane(mpt)
         editable = edit
-        if (!editable) jli.setDragEnabled(false)
+        if (!editable) jli.dragEnabled = false
     }
 }

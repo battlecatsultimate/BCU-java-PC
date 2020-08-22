@@ -35,11 +35,11 @@ internal class EREditTable(private val page: Page) : AbJTable(), Reorderable {
     private var rand: EneRand? = null
     override fun editCellAt(r: Int, c: Int, e: EventObject): Boolean {
         val result: Boolean = super.editCellAt(r, c, e)
-        val editor: Component = getEditorComponent()
+        val editor: Component = editorComponent
         if (editor == null || editor !is JTextComponent) return result
-        val jtf: JTextComponent = editor as JTextComponent
+        val jtf: JTextComponent = editor
         if (e is KeyEvent) jtf.selectAll()
-        if (lnk.get(c) == 0 && jtf.getText().length > 0) jtf.setText((get(r, c) as AbEnemy?).getID().toString() + "")
+        if (lnk.get(c) == 0 && jtf.text.length > 0) jtf.text = (get(r, c) as AbEnemy?).getID().toString() + ""
         return result
     }
 
@@ -95,7 +95,7 @@ internal class EREditTable(private val page: Page) : AbJTable(), Reorderable {
     @Synchronized
     fun addLine(enemy: AbEnemy?): Int {
         if (rand == null) return -1
-        var ind: Int = getSelectedRow()
+        var ind: Int = selectedRow
         if (ind == -1) ind = 0
         val er: EREnt<PackData.Identifier<AbEnemy>> = EREnt<PackData.Identifier<AbEnemy>>()
         rand.list.add(er)
@@ -112,13 +112,13 @@ internal class EREditTable(private val page: Page) : AbJTable(), Reorderable {
         val r: Int = p.y / getRowHeight()
         val er: EREnt<PackData.Identifier<AbEnemy>> = rand.list.get(r)
         val e: AbEnemy = er.ent.get()
-        if (e != null && e is Enemy) MainFrame.Companion.changePanel(EnemyInfoPage(page, e as Enemy, er.multi, er.mula))
+        if (e != null && e is Enemy) MainFrame.Companion.changePanel(EnemyInfoPage(page, e, er.multi, er.mula))
     }
 
     @Synchronized
     fun remLine(): Int {
         if (rand == null) return -1
-        var ind: Int = getSelectedRow()
+        var ind: Int = selectedRow
         if (ind >= 0) rand.list.removeAt(ind)
         if (rand.list.size > 0) {
             if (ind == 0) ind = 1
@@ -153,7 +153,7 @@ internal class EREditTable(private val page: Page) : AbJTable(), Reorderable {
     }
 
     init {
-        setTransferHandler(InTableTH(this))
+        transferHandler = InTableTH(this)
         setDefaultRenderer(Int::class.java, EnemyTCR())
     }
 }

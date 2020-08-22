@@ -65,7 +65,7 @@ class UnitListTable(private val page: Page) : SortTable<Form?>() {
         return if (c == 0) e.uid.toString() + "-" + e.fid else if (c == 1) e else if (c == 2) e.unit.prefLv else if (c == 3) (du.getHp() * mul * def) else if (c == 4) du.getHb() else if (c == 5) (du.allAtk() * mul * atk) else if (c == 6) du.getRange() else if (c == 7) du.getSpeed() else if (c == 8) (du.allAtk() * mul * atk * 30 / itv) else if (c == 9) du.rawAtkData().get(0).get(1) else if (c == 10) b.t().getFinRes(du.getRespawn()) else if (c == 11) e.getDefaultPrice(1) else if (c == 12) du.getItv() else null
     }
 
-    protected override fun getTit(): Array<String> {
+    override fun getTit(): Array<String> {
         return tit
     }
 

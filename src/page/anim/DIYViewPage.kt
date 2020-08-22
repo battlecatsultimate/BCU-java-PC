@@ -60,11 +60,11 @@ class DIYViewPage : AbViewPage, AbEditPage {
         jlu.setSelectedValue(ac, true)
     }
 
-    protected override fun enabler(b: Boolean) {
+    override fun enabler(b: Boolean) {
         super.enabler(b)
-        ics.setEnabled(ics.isSelected() || b && pause)
-        icc.setEnabled(ics.isSelected())
-        jlu.setEnabled(b)
+        ics.isEnabled = ics.isSelected || b && pause
+        icc.isEnabled = ics.isSelected
+        jlu.isEnabled = b
     }
 
     protected override fun keyPressed(ke: KeyEvent) {
@@ -77,10 +77,10 @@ class DIYViewPage : AbViewPage, AbEditPage {
 
     protected override fun renew() {
         if (aep.focus == null) jlu.setListData(Vector<AnimCE>(AnimCE.Companion.map().values)) else jlu.setListData(arrayOf<AnimCE?>(aep.focus))
-        jlu.setSelectedIndex(0)
+        jlu.selectedIndex = 0
     }
 
-    protected override fun resized(x: Int, y: Int) {
+    override fun resized(x: Int, y: Int) {
         super.resized(x, y)
         Page.Companion.set(aep, x, y, 550, 0, 1750, 50)
         Page.Companion.set(jspu, x, y, 50, 100, 300, 1100)
@@ -90,8 +90,8 @@ class DIYViewPage : AbViewPage, AbEditPage {
         Page.Companion.set(icc, x, y, 1000, 1150, 200, 50)
     }
 
-    protected override fun updateChoice() {
-        val e: AnimCE = jlu.getSelectedValue()
+    override fun updateChoice() {
+        val e: AnimCE = jlu.selectedValue
         aep.setAnim(e)
         uni.icon = if (e == null) null else UtilPC.getIcon(e.getUni())
         if (e == null) return
@@ -101,19 +101,19 @@ class DIYViewPage : AbViewPage, AbEditPage {
     private fun addListeners() {
         jlu.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (arg0.getValueIsAdjusting()) return
+                if (arg0.valueIsAdjusting) return
                 updateChoice()
             }
         })
         ics.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                enabler(!ics.isSelected())
-                ib.setBlank(ics.isSelected())
+                enabler(!ics.isSelected)
+                ib.setBlank(ics.isSelected)
             }
         })
         jcb.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                val t: Int = jcb.getSelectedIndex()
+                val t: Int = jcb.selectedIndex
                 IBConf.mode = t / 4
                 IBConf.type = t % 4
                 IBConf.glow = if (IBConf.type + IBConf.mode > 1) 1 else 0
@@ -147,9 +147,9 @@ class DIYViewPage : AbViewPage, AbEditPage {
         add(icc)
         add(jcb)
         add(uni)
-        jcb.setSelectedIndex(IBConf.type)
-        ics.setEnabled(false)
-        icc.setEnabled(false)
+        jcb.selectedIndex = IBConf.type
+        ics.isEnabled = false
+        icc.isEnabled = false
         jlu.setCellRenderer(AnimLCR())
         addListeners()
     }

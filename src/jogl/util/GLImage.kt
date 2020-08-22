@@ -28,7 +28,7 @@ class GLImage : FakeImage {
     private constructor(b: TextureData) {
         par = null
         data = b
-        rect = intArrayOf(0, 0, data.getWidth(), data.getHeight())
+        rect = intArrayOf(0, 0, data.width, data.height)
     }
 
     override fun bimg(): BufferedImage? {
@@ -45,7 +45,7 @@ class GLImage : FakeImage {
         ans[1] = P.Companion.reg((rect[1] + 0.5f) / br[3])
         ans[2] = P.Companion.reg((rect[2] - 1f) / br[2])
         ans[3] = P.Companion.reg((rect[3] - 1f) / br[3])
-        if (!data.getMustFlipVertically()) {
+        if (!data.mustFlipVertically) {
             ans[1] = 1 - ans[1]
             ans[3] *= -1
         }
@@ -85,7 +85,7 @@ class GLImage : FakeImage {
                 if (o is File) data = TextureIO.newTextureData(GLStatic.GLP, o, GLStatic.MIP, "PNG")
                 if (o is InputStream) data = TextureIO.newTextureData(GLStatic.GLP, o, GLStatic.MIP, "PNG")
                 if (o is BufferedImage) {
-                    var bimg: BufferedImage = o as BufferedImage
+                    var bimg: BufferedImage = o
                     bimg = check(bimg)
                     data = AWTTextureIO.newTextureData(GLStatic.GLP, bimg, GLStatic.MIP)
                 }
@@ -101,14 +101,14 @@ class GLImage : FakeImage {
         }
 
         private fun check(b: BufferedImage): BufferedImage {
-            var w: Int = b.getWidth()
-            var h: Int = b.getHeight()
+            var w: Int = b.width
+            var h: Int = b.height
             if (w % 4 == 0 && h % 4 == 0) return b
             if (w and 3 > 0) w = (w or 3) + 1
             if (h and 3 > 0) h = (h or 3) + 1
-            val ans = BufferedImage(w, h, b.getType())
+            val ans = BufferedImage(w, h, b.type)
             val g: Graphics2D = ans.createGraphics()
-            g.setComposite(AlphaComposite.Src)
+            g.composite = AlphaComposite.Src
             g.drawImage(b, 0, 0, null)
             g.dispose()
             Printer.p("GLImage", 23, "redraw buffer")

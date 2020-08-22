@@ -15,7 +15,7 @@ class UnitTCR(private val lnk: IntArray?) : DefaultTableCellRenderer() {
         if (lnk != null) c = lnk[c]
         if (c != 1) return comp
         val jl = comp as JLabel
-        val e = v as Form ?: return jl
+        val e = v as Form
         jl.text = e.toString()
         jl.icon = null
         jl.horizontalTextPosition = SwingConstants.RIGHT

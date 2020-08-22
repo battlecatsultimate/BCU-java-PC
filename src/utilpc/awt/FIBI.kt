@@ -80,7 +80,7 @@ internal class BIBuilder : ImageBuilder() {
 
     @Throws(IOException::class)
     override fun write(img: FakeImage, fmt: String?, o: Any?): Boolean {
-        val bimg: BufferedImage = img.bimg() as BufferedImage ?: return false
+        val bimg: BufferedImage = img.bimg() as BufferedImage
         if (o is File) {
             Data.Companion.err(Context.RunExc { Context.Companion.check(o as File?) })
             return ImageIO.write(bimg, fmt, o as File?)

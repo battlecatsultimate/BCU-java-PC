@@ -16,10 +16,10 @@ class InTableTH(jtable: JTable) : TransferHandler(), Transferable {
     private val table: JTable
     private var editing = 0
     override fun canImport(info: TransferSupport): Boolean {
-        var b = info.getComponent() === table
-        b = b and info.isDrop()
-        b = b and (info.getDataFlavors().get(0) === adf)
-        table.setCursor(if (b) DragSource.DefaultMoveDrop else DragSource.DefaultMoveNoDrop)
+        var b = info.component === table
+        b = b and info.isDrop
+        b = b and (info.dataFlavors.get(0) === adf)
+        table.cursor = if (b) DragSource.DefaultMoveDrop else DragSource.DefaultMoveNoDrop
         return b
     }
 
@@ -37,19 +37,19 @@ class InTableTH(jtable: JTable) : TransferHandler(), Transferable {
     }
 
     override fun importData(info: TransferSupport): Boolean {
-        if (!info.isDrop()) return false
-        val target: JTable = info.getComponent() as JTable
-        val dl: JTable.DropLocation = info.getDropLocation() as JTable.DropLocation
-        var fin: Int = dl.getRow()
-        val max: Int = table.getModel().getRowCount()
+        if (!info.isDrop) return false
+        val target: JTable = info.component as JTable
+        val dl: JTable.DropLocation = info.dropLocation as JTable.DropLocation
+        var fin: Int = dl.row
+        val max: Int = table.model.rowCount
         if (fin < 0 || fin > max) fin = max
-        target.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
+        target.cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
         try {
             val ori = editing
             if (ori != -1 && ori != fin) {
-                (table.getModel() as Reorderable).reorder(ori, fin)
+                (table.model as Reorderable).reorder(ori, fin)
                 if (fin > ori) fin--
-                target.getSelectionModel().addSelectionInterval(fin, fin)
+                target.selectionModel.addSelectionInterval(fin, fin)
                 return true
             }
         } catch (e: Exception) {
@@ -59,17 +59,17 @@ class InTableTH(jtable: JTable) : TransferHandler(), Transferable {
     }
 
     override fun isDataFlavorSupported(arg0: DataFlavor): Boolean {
-        return arg0.getHumanPresentableName() == adf.getHumanPresentableName()
+        return arg0.humanPresentableName == adf.humanPresentableName
     }
 
-    protected override fun createTransferable(c: JComponent): Transferable {
+    override fun createTransferable(c: JComponent): Transferable {
         assert(c === table)
-        editing = table.getSelectedRow()
+        editing = table.selectedRow
         return this
     }
 
-    protected override fun exportDone(c: JComponent, t: Transferable, act: Int) {
-        if (act == TransferHandler.MOVE || act == TransferHandler.NONE) table.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
+    override fun exportDone(c: JComponent, t: Transferable, act: Int) {
+        if (act == TransferHandler.MOVE || act == TransferHandler.NONE) table.cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
     }
 
     companion object {
@@ -79,7 +79,7 @@ class InTableTH(jtable: JTable) : TransferHandler(), Transferable {
     init {
         table = jtable
         adf = DataFlavor(Int::class.java, "")
-        table.setDragEnabled(true)
-        table.setDropMode(DropMode.INSERT_ROWS)
+        table.dragEnabled = true
+        table.dropMode = DropMode.INSERT_ROWS
     }
 }

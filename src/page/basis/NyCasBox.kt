@@ -17,8 +17,8 @@ internal class NyCasBox : Canvas() {
         val sh = 258
         val r = Math.min(1.0 * w / sw, 1.0 * h / sh)
         if (w * h == 0) return
-        val img: BufferedImage = createImage(w, h) as BufferedImage ?: return
-        BBPainter.Companion.drawNyCast(FG2D(img.getGraphics()), h, 0, r, ints)
+        val img: BufferedImage = createImage(w, h) as BufferedImage
+        BBPainter.Companion.drawNyCast(FG2D(img.graphics), h, 0, r, ints)
         g.drawImage(img, 0, 0, null)
         g.dispose()
     }

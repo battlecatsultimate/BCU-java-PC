@@ -58,21 +58,21 @@ object BCUReader : DataIO {
                     r.close()
                     val cfg: CommonStatic.Config = CommonStatic.getConfig()
                     JsonDecoder.Companion.inject<CommonStatic.Config>(je, CommonStatic.Config::class.java, cfg)
-                    val jo: JsonObject = je.getAsJsonObject()
+                    val jo: JsonObject = je.asJsonObject
                     val rect: IntArray = JsonDecoder.Companion.decode<IntArray>(jo.get("crect"), IntArray::class.java)
                     MainFrame.Companion.crect = Rectangle(rect[0], rect[1], rect[2], rect[3])
-                    MainBCU.preload = jo.get("preload").getAsBoolean()
-                    Conf.white = jo.get("transparent").getAsBoolean()
-                    MainBCU.USE_JOGL = jo.get("JOGL").getAsBoolean()
-                    MainBCU.FILTER_TYPE = jo.get("filter").getAsInt()
-                    BCMusic.play = jo.get("play_sound").getAsBoolean()
-                    BCMusic.VOL_BG = jo.get("volume_BG").getAsInt()
-                    BCMusic.VOL_SE = jo.get("volume_SE").getAsInt()
-                    MainLocale.Companion.exLang = jo.get("edit_lang").getAsBoolean()
-                    MainLocale.Companion.exTTT = jo.get("edit_tooltip").getAsBoolean()
-                    BattleInfoPage.Companion.DEF_LARGE = jo.get("large_screen").getAsBoolean()
-                    MainBCU.light = jo.get("style_light").getAsBoolean()
-                    MainBCU.nimbus = jo.get("style_nimbus").getAsBoolean()
+                    MainBCU.preload = jo.get("preload").asBoolean
+                    Conf.white = jo.get("transparent").asBoolean
+                    MainBCU.USE_JOGL = jo.get("JOGL").asBoolean
+                    MainBCU.FILTER_TYPE = jo.get("filter").asInt
+                    BCMusic.play = jo.get("play_sound").asBoolean
+                    BCMusic.VOL_BG = jo.get("volume_BG").asInt
+                    BCMusic.VOL_SE = jo.get("volume_SE").asInt
+                    MainLocale.Companion.exLang = jo.get("edit_lang").asBoolean
+                    MainLocale.Companion.exTTT = jo.get("edit_tooltip").asBoolean
+                    BattleInfoPage.Companion.DEF_LARGE = jo.get("large_screen").asBoolean
+                    MainBCU.light = jo.get("style_light").asBoolean
+                    MainBCU.nimbus = jo.get("style_nimbus").asBoolean
                     val exp: Array<String?> = JsonDecoder.Companion.decode<Array<String>>(jo.get("export_paths"), Array<String>::class.java)
                     val imp: Array<String?> = JsonDecoder.Companion.decode<Array<String>>(jo.get("import_paths"), Array<String>::class.java)
                     for (i in Exporter.Companion.curs.indices) Exporter.Companion.curs.get(i) = if (exp[i] == null) null else File(exp[i])
@@ -113,7 +113,7 @@ object BCUReader : DataIO {
                         if (idstr.length == 0 || name.length == 0) continue
                         val ids = idstr.split("-").toTypedArray()
                         val id0: Int = CommonStatic.parseIntN(ids[0])
-                        val mc: MapColc = DefMapColc.Companion.getMap(id0 * 1000).mc ?: continue
+                        val mc: MapColc = DefMapColc.Companion.getMap(id0 * 1000).mc
                         if (ids.size == 1) {
                             MultiLangCont.Companion.getStatic().MCNAME.put(ni, mc, name)
                             continue

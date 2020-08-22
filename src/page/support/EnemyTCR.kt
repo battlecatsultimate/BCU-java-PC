@@ -22,7 +22,7 @@ class EnemyTCR : DefaultTableCellRenderer() {
             return jl
         }
         jl.text = e.toString()
-        val vimg: VImg = e.getIcon() ?: return jl
+        val vimg: VImg = e.getIcon()
         jl.icon = UtilPC.getIcon(vimg)
         return jl
     }

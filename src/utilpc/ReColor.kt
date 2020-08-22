@@ -10,7 +10,7 @@ object ReColor {
     private val fs: Array<FloatArray?>
     fun transcolor(bimg: BufferedImage, coor: IntArray?, from: Int, to: Int) {
         var coor = coor
-        if (coor == null) coor = intArrayOf(0, 0, bimg.getWidth(), bimg.getHeight())
+        if (coor == null) coor = intArrayOf(0, 0, bimg.width, bimg.height)
         for (i in 0 until coor[2]) for (j in 0 until coor[3]) {
             val x = i + coor[0]
             val y = j + coor[1]

@@ -14,8 +14,8 @@ import page.battle.BattleBox.OuterBox
 open class GLBattleBox(bip: OuterBox?, bf: BattleField?, type: Int) : GLCstd(), BattleBox, GLEventListener {
     protected val bbp: BBPainter
     override fun display(drawable: GLAutoDrawable) {
-        val gl: GL2 = drawable.getGL().getGL2()
-        val g = GLGraphics(drawable.getGL().getGL2(), getWidth(), getHeight())
+        val gl: GL2 = drawable.gl.gL2
+        val g = GLGraphics(drawable.gl.gL2, width, height)
         bbp.draw(g)
         g.dispose()
         gl.glFlush()

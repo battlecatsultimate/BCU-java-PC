@@ -19,8 +19,8 @@ class Blender(private val opa: Int, private val glow: Int) : Composite, Composit
 
     override fun dispose() {}
     private fun comp3(src: Raster, dst: Raster, out: WritableRaster) {
-        val w: Int = src.getWidth()
-        val h: Int = src.getHeight()
+        val w: Int = src.width
+        val h: Int = src.height
         val srcs: IntArray = src.getPixels(0, 0, w, h, IntArray(w * h * 4))
         val dsts: IntArray = dst.getPixels(0, 0, w, h, IntArray(w * h * 3))
         for (i in 0 until w) for (j in 0 until h) {
@@ -34,8 +34,8 @@ class Blender(private val opa: Int, private val glow: Int) : Composite, Composit
     }
 
     private fun comp4(src: Raster, dst: Raster, out: WritableRaster) {
-        val w: Int = src.getWidth()
-        val h: Int = src.getHeight()
+        val w: Int = src.width
+        val h: Int = src.height
         val srcs: IntArray = src.getPixels(0, 0, w, h, IntArray(w * h * 4))
         val dsts: IntArray = dst.getPixels(0, 0, w, h, IntArray(w * h * 4))
         for (i in 0 until w) for (j in 0 until h) {

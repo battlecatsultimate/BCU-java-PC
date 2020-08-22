@@ -78,7 +78,7 @@ class MaAnimEditPage : Page, AbEditPage {
                 setD(rs[1])
             }
         })
-        val ind: Int = jlt.getSelectedIndex()
+        val ind: Int = jlt.selectedIndex
         val ac: AnimCE = maet.anim
         if (ind < 0 || ac == null) return
         val time = if (ab.ent == null) 0 else ab.ent.ind()
@@ -112,15 +112,15 @@ class MaAnimEditPage : Page, AbEditPage {
     override fun mouseWheel(e: MouseEvent) {
         if (e.source !is AnimBox) return
         val mwe: MouseWheelEvent = e as MouseWheelEvent
-        val d: Double = mwe.getPreciseWheelRotation()
+        val d: Double = mwe.preciseWheelRotation
         ab.siz *= Math.pow(res, d)
     }
 
     override fun renew() {
-        val da: AnimCE = jlu.getSelectedValue()
-        val ani: Int = jlt.getSelectedIndex()
-        val par: Int = maet.getSelectedRow()
-        val row: Int = mpet.getSelectedRow()
+        val da: AnimCE = jlu.selectedValue
+        val ani: Int = jlt.selectedIndex
+        val par: Int = maet.selectedRow
+        val row: Int = mpet.selectedRow
         val vec: Vector<AnimCE?> = Vector<AnimCE?>()
         if (aep.focus == null) vec.addAll(AnimCE.Companion.map().values) else vec.add(aep.focus)
         change(0, { x: Int? ->
@@ -174,10 +174,10 @@ class MaAnimEditPage : Page, AbEditPage {
         Page.Companion.set(advs, x, y, 1900, 550, 200, 50)
         Page.Companion.set(sort, x, y, 1900, 600, 200, 50)
         aep.componentResized(x, y)
-        maet.setRowHeight(Page.Companion.size(x, y, 50))
-        mpet.setRowHeight(Page.Companion.size(x, y, 50))
-        sb.paint(sb.getGraphics())
-        ab.paint(ab.getGraphics())
+        maet.rowHeight = Page.Companion.size(x, y, 50)
+        mpet.rowHeight = Page.Companion.size(x, y, 50)
+        sb.paint(sb.graphics)
+        ab.paint(ab.graphics)
     }
 
     override fun timer(t: Int) {
@@ -206,28 +206,28 @@ class MaAnimEditPage : Page, AbEditPage {
         })
         jlu.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (isAdj || jlu.getValueIsAdjusting()) return
-                setA(jlu.getSelectedValue())
+                if (isAdj || jlu.valueIsAdjusting) return
+                setA(jlu.selectedValue)
             }
         })
         jlt.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (isAdj || jlt.getValueIsAdjusting()) return
-                val da: AnimCE = jlu.getSelectedValue()
-                val ind: Int = jlt.getSelectedIndex()
+                if (isAdj || jlt.valueIsAdjusting) return
+                val da: AnimCE = jlu.selectedValue
+                val ind: Int = jlt.selectedIndex
                 setB(da, ind)
             }
         })
         jlp.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (isAdj || jlp.getValueIsAdjusting()) return
-                sb.sele = jlp.getSelectedIndex()
+                if (isAdj || jlp.valueIsAdjusting) return
+                sb.sele = jlp.selectedIndex
             }
         })
         jlm.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (isAdj || jlm.getValueIsAdjusting() || maet.ma == null) return
-                val ind: Int = jlm.getSelectedIndex()
+                if (isAdj || jlm.valueIsAdjusting || maet.ma == null) return
+                val ind: Int = jlm.selectedIndex
                 for (i in 0 until maet.ma.n) if (maet.ma.parts.get(i).ints.get(0) == ind) {
                     setC(i)
                     return
@@ -238,18 +238,18 @@ class MaAnimEditPage : Page, AbEditPage {
     }
 
     private fun `addListeners$1`() {
-        val lsm: ListSelectionModel = maet.getSelectionModel()
+        val lsm: ListSelectionModel = maet.selectionModel
         lsm.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(e: ListSelectionEvent?) {
-                if (isAdj || lsm.getValueIsAdjusting()) return
-                val ind: Int = maet.getSelectedRow()
+                if (isAdj || lsm.valueIsAdjusting) return
+                val ind: Int = maet.selectedRow
                 change(ind, { i: Int -> setC(i) })
             }
         })
         addp.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
                 change(0, { x: Int? ->
-                    val ind: Int = maet.getSelectedRow() + 1
+                    val ind: Int = maet.selectedRow + 1
                     val ma: MaAnim = maet.ma
                     val data: Array<Part> = ma.parts
                     ma.parts = arrayOfNulls<Part>(++ma.n)
@@ -264,7 +264,7 @@ class MaAnimEditPage : Page, AbEditPage {
                     resized()
                     lsm.setSelectionInterval(ind, ind)
                     setC(ind)
-                    val h: Int = mpet.getRowHeight()
+                    val h: Int = mpet.rowHeight
                     mpet.scrollRectToVisible(Rectangle(0, h * ind, 1, h))
                 })
             }
@@ -273,7 +273,7 @@ class MaAnimEditPage : Page, AbEditPage {
             override fun actionPerformed(arg0: ActionEvent?) {
                 change(0, { x: Int? ->
                     val ma: MaAnim = maet.ma
-                    val rows: IntArray = maet.getSelectedRows()
+                    val rows: IntArray = maet.selectedRows
                     val data: Array<Part?> = ma.parts
                     for (row in rows) data[row] = null
                     ma.n -= rows.size
@@ -292,7 +292,7 @@ class MaAnimEditPage : Page, AbEditPage {
         })
         tmul.addFocusListener(object : FocusAdapter() {
             override fun focusLost(e: FocusEvent?) {
-                val d: Double = CommonStatic.parseIntN(tmul.getText()) * 0.01
+                val d: Double = CommonStatic.parseIntN(tmul.text) * 0.01
                 if (!Opts.conf("times animation length by $d")) return
                 for (p in maet.ma.parts) {
                     for (line in p.moves) (line[0] *= d).toInt()
@@ -306,11 +306,11 @@ class MaAnimEditPage : Page, AbEditPage {
     }
 
     private fun `addListeners$2`() {
-        val lsm: ListSelectionModel = mpet.getSelectionModel()
+        val lsm: ListSelectionModel = mpet.selectionModel
         lsm.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(e: ListSelectionEvent?) {
-                if (isAdj || lsm.getValueIsAdjusting()) return
-                setD(lsm.getLeadSelectionIndex())
+                if (isAdj || lsm.valueIsAdjusting) return
+                setD(lsm.leadSelectionIndex)
             }
         })
         addl.addActionListener(object : ActionListener {
@@ -327,13 +327,13 @@ class MaAnimEditPage : Page, AbEditPage {
                 resized()
                 change(p.n - 1, { i: Int? -> lsm.setSelectionInterval(i, i) })
                 setD(p.n - 1)
-                val h: Int = mpet.getRowHeight()
+                val h: Int = mpet.rowHeight
                 mpet.scrollRectToVisible(Rectangle(0, h * (p.n - 1), 1, h))
             }
         })
         reml.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                val inds: IntArray = mpet.getSelectedRows()
+                val inds: IntArray = mpet.selectedRows
                 if (inds.size == 0) return
                 val p: Part = mpet.part
                 val l: MutableList<IntArray> = ArrayList()
@@ -356,8 +356,8 @@ class MaAnimEditPage : Page, AbEditPage {
     private fun `addListeners$3`() {
         jtb.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                pause = jtb.isSelected()
-                jtl.setEnabled(pause && ab.ent != null)
+                pause = jtb.isSelected
+                jtl.isEnabled = pause && ab.ent != null
             }
         })
         nex.addActionListener(object : ActionListener {
@@ -367,15 +367,15 @@ class MaAnimEditPage : Page, AbEditPage {
         })
         jtl.addChangeListener(ChangeListener {
             if (isAdj || !pause) return@ChangeListener
-            ab.ent.setTime(jtl.getValue())
+            ab.ent.setTime(jtl.value)
         })
-        advs.setLnr(Supplier<Page> { AdvAnimEditPage(this, maet.anim, maet.anim.types.get(jlt.getSelectedIndex())) })
+        advs.setLnr(Supplier<Page> { AdvAnimEditPage(this, maet.anim, maet.anim.types.get(jlt.selectedIndex)) })
         sort.setLnr(Consumer { x: ActionEvent? -> Arrays.sort(maet.ma.parts) })
     }
 
     private fun eupdate() {
         ab.update()
-        if (ab.ent != null) change(0, { x: Int? -> jtl.setValue(ab.ent.ind()) })
+        if (ab.ent != null) change(0, { x: Int? -> jtl.value = ab.ent.ind() })
     }
 
     private fun ini() {
@@ -411,13 +411,13 @@ class MaAnimEditPage : Page, AbEditPage {
         infv.border = BorderFactory.createEtchedBorder()
         infm.border = BorderFactory.createEtchedBorder()
         lmul.border = BorderFactory.createEtchedBorder()
-        addp.setEnabled(false)
-        remp.setEnabled(false)
-        addl.setEnabled(false)
-        reml.setEnabled(false)
-        jtl.setEnabled(false)
-        jtl.setPaintTicks(true)
-        jtl.setPaintLabels(true)
+        addp.isEnabled = false
+        remp.isEnabled = false
+        addl.isEnabled = false
+        reml.isEnabled = false
+        jtl.isEnabled = false
+        jtl.paintTicks = true
+        jtl.paintLabels = true
         addListeners()
         `addListeners$1`()
         `addListeners$2`()
@@ -434,11 +434,11 @@ class MaAnimEditPage : Page, AbEditPage {
                 setB(null, -1)
                 return@change
             }
-            var ind: Int = jlt.getSelectedIndex()
+            var ind: Int = jlt.selectedIndex
             val `val`: Array<String> = anim.names()
             jlt.setListData(`val`)
             if (ind >= `val`.size) ind = `val`.size - 1
-            jlt.setSelectedIndex(ind)
+            jlt.selectedIndex = ind
             setB(anim, ind)
             sb.setAnim(anim)
             val ic: ImgCut = anim.imgcut
@@ -455,50 +455,50 @@ class MaAnimEditPage : Page, AbEditPage {
     private fun setB(ac: AnimCE?, ind: Int) {
         change(0, { x: Int? ->
             val anim: MaAnim? = if (ac == null || ind < 0) null else ac.getMaAnim(ac.types.get(ind))
-            addp.setEnabled(anim != null)
-            tmul.setEditable(anim != null)
-            advs.setEnabled(anim != null)
-            sort.setEnabled(anim != null)
-            jtl.setEnabled(anim != null)
+            addp.isEnabled = anim != null
+            tmul.isEditable = anim != null
+            advs.isEnabled = anim != null
+            sort.isEnabled = anim != null
+            jtl.isEnabled = anim != null
             if (ac == null || ind == -1) {
                 maet.setAnim(null, null)
                 ab.setEntity(null)
                 setC(-1)
                 return@change
             }
-            var row: Int = maet.getSelectedRow()
+            var row: Int = maet.selectedRow
             maet.setAnim(ac, anim)
             ab.setEntity(ac.getEAnim(ac.types.get(ind)))
-            if (row >= maet.getRowCount()) {
+            if (row >= maet.rowCount) {
                 maet.clearSelection()
                 row = -1
             }
             setC(row)
-            jtl.setMinimum(0)
-            jtl.setMaximum(ab.ent.len())
-            jtl.setLabelTable(null)
+            jtl.minimum = 0
+            jtl.maximum = ab.ent.len()
+            jtl.labelTable = null
             if (ab.ent.len() <= 50) {
-                jtl.setMajorTickSpacing(5)
-                jtl.setMinorTickSpacing(1)
+                jtl.majorTickSpacing = 5
+                jtl.minorTickSpacing = 1
             } else if (ab.ent.len() <= 200) {
-                jtl.setMajorTickSpacing(10)
-                jtl.setMinorTickSpacing(2)
+                jtl.majorTickSpacing = 10
+                jtl.minorTickSpacing = 2
             } else if (ab.ent.len() <= 1000) {
-                jtl.setMajorTickSpacing(50)
-                jtl.setMinorTickSpacing(10)
+                jtl.majorTickSpacing = 50
+                jtl.minorTickSpacing = 10
             } else if (ab.ent.len() <= 5000) {
-                jtl.setMajorTickSpacing(250)
-                jtl.setMinorTickSpacing(50)
+                jtl.majorTickSpacing = 250
+                jtl.minorTickSpacing = 50
             } else {
-                jtl.setMajorTickSpacing(1000)
-                jtl.setMinorTickSpacing(200)
+                jtl.majorTickSpacing = 1000
+                jtl.minorTickSpacing = 200
             }
         })
     }
 
     private fun setC(ind: Int) {
-        remp.setEnabled(ind >= 0)
-        addl.setEnabled(ind >= 0)
+        remp.isEnabled = ind >= 0
+        addl.isEnabled = ind >= 0
         val p: Part? = if (ind < 0 || ind >= maet.ma.parts.size) null else maet.ma.parts.get(ind)
         change(0, { x: Int? ->
             mpet.setAnim(maet.anim, maet.ma, p)
@@ -506,28 +506,28 @@ class MaAnimEditPage : Page, AbEditPage {
             ab.setSele(p?.ints?.get(0) ?: -1)
             if (ind >= 0) {
                 val par = p!!.ints[0]
-                jlm.setSelectedIndex(par)
-                jlv.setSelectedIndex(mpet.part!!.ints.get(1))
-                if (maet.getSelectedRow() != ind) {
+                jlm.selectedIndex = par
+                jlv.selectedIndex = mpet.part!!.ints.get(1)
+                if (maet.selectedRow != ind) {
                     maet.setRowSelectionInterval(ind, ind)
                     maet.scrollRectToVisible(maet.getCellRect(ind, 0, true))
                 }
                 ab.setSele(par)
                 val ic: Int = mpet.anim.mamodel.parts.get(par).get(2)
-                jlp.setSelectedIndex(ic)
+                jlp.selectedIndex = ic
                 val r: Rectangle = jlp.getCellBounds(ic, ic)
                 if (r != null) jlp.scrollRectToVisible(r)
-                sb.sele = jlp.getSelectedIndex()
+                sb.sele = jlp.selectedIndex
             } else maet.clearSelection()
         })
         setD(-1)
     }
 
     private fun setD(ind: Int) {
-        reml.setEnabled(ind >= 0)
+        reml.isEnabled = ind >= 0
         if (ind >= 0 && mpet.part!!.ints.get(1) == 2) {
             change(mpet.part!!.moves.get(ind).get(1), Consumer { i: Int? -> jlp.setSelectedIndex(i) })
-            sb.sele = jlp.getSelectedIndex()
+            sb.sele = jlp.selectedIndex
         }
     }
 

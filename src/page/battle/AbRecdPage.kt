@@ -86,19 +86,19 @@ abstract class AbRecdPage(p: Page?, protected val editable: Boolean) : Page(p) {
 
     protected abstract fun setList()
     protected open fun setRecd(r: Recd?) {
-        rply.setEnabled(r != null && r.avail)
-        recd.setEnabled(r != null && r.avail)
-        imgs.setEnabled(r != null && r.avail)
-        seed.setEditable(editable && r != null)
-        vsta.setEnabled(r != null)
+        rply.isEnabled = r != null && r.avail
+        recd.isEnabled = r != null && r.avail
+        imgs.isEnabled = r != null && r.avail
+        seed.isEditable = editable && r != null
+        vsta.isEnabled = r != null
         ista.setText(if (r == null || r.st == null) "(unavailable)" else r.st.toString())
         imap.setText(if (r == null || r.st == null) "(unavailable)" else r.st.map.toString())
-        jlu.setEnabled(r != null)
+        jlu.isEnabled = r != null
         if (r == null) {
             len.text = ""
-            seed.setText("")
+            seed.text = ""
         } else {
-            seed.setText("seed: " + r.seed)
+            seed.text = "seed: " + r.seed
             len.text = "length: " + r.getLen() + " frame"
         }
     }
@@ -112,7 +112,7 @@ abstract class AbRecdPage(p: Page?, protected val editable: Boolean) : Page(p) {
             override fun actionPerformed(arg0: ActionEvent?) {
                 val r: Recd = getSelection()
                 var conf = 1
-                if (larg.isSelected()) conf = conf or 2
+                if (larg.isSelected) conf = conf or 2
                 changePanel(BattleInfoPage(getThis(), r, conf))
             }
         })
@@ -120,14 +120,14 @@ abstract class AbRecdPage(p: Page?, protected val editable: Boolean) : Page(p) {
             override fun actionPerformed(arg0: ActionEvent?) {
                 val r: Recd = getSelection()
                 var conf = 5
-                if (larg.isSelected()) conf = conf or 2
+                if (larg.isSelected) conf = conf or 2
                 changePanel(BattleInfoPage(getThis(), r, conf))
             }
         })
         seed.setLnr(Consumer<FocusEvent> { x: FocusEvent? ->
             if (isAdj) return@setLnr
-            val r: Recd = getSelection() ?: return@setLnr
-            r.seed = CommonStatic.parseLongN(seed.getText())
+            val r: Recd = getSelection()
+            r.seed = CommonStatic.parseLongN(seed.text)
             r.marked = true
             setRecd(r)
         })

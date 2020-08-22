@@ -24,7 +24,7 @@ class UnitFindPage(p: Page?, pack: String?) : Page(p), SupPage<Unit?> {
     }
 
     fun getForm(): Form? {
-        return if (ult.getSelectedRow() == -1) null else ult.list.get(ult.getSelectedRow())
+        return if (ult.selectedRow == -1) null else ult.list.get(ult.selectedRow)
     }
 
     fun getList(): List<Form> {
@@ -47,7 +47,7 @@ class UnitFindPage(p: Page?, pack: String?) : Page(p), SupPage<Unit?> {
         Page.Companion.set(show, x, y, 250, 0, 200, 50)
         Page.Companion.set(seatf, x, y, 550, 0, 1000, 50)
         Page.Companion.set(seabt, x, y, 1600, 0, 200, 50)
-        if (show.isSelected()) {
+        if (show.isSelected) {
             val siz: IntArray = ufb!!.getSizer()
             Page.Companion.set(ufb, x, y, 50, 100, siz[0], siz[1])
             var mx = 0
@@ -55,7 +55,7 @@ class UnitFindPage(p: Page?, pack: String?) : Page(p), SupPage<Unit?> {
             if (siz[2] == 0) mx = siz[3] else my = siz[3]
             Page.Companion.set(jsp, x, y, 50 + mx, 100 + my, 2200 - mx, 1150 - my)
         } else Page.Companion.set(jsp, x, y, 50, 100, 2200, 1150)
-        ult.setRowHeight(Page.Companion.size(x, y, 50))
+        ult.rowHeight = Page.Companion.size(x, y, 50)
     }
 
     private fun addListeners() {
@@ -66,19 +66,19 @@ class UnitFindPage(p: Page?, pack: String?) : Page(p), SupPage<Unit?> {
         })
         show.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                if (show.isSelected()) add(ufb) else remove(ufb)
+                if (show.isSelected) add(ufb) else remove(ufb)
             }
         })
         seabt.setLnr(Consumer { b: ActionEvent? ->
             if (ufb != null) {
-                ufb.name = seatf.getText()
+                ufb.name = seatf.text
                 ufb.callBack(null)
             }
         })
         seatf.addActionListener(object : ActionListener {
             override fun actionPerformed(e: ActionEvent?) {
                 if (ufb != null) {
-                    ufb.name = seatf.getText()
+                    ufb.name = seatf.text
                     ufb.callBack(null)
                 }
             }
@@ -92,7 +92,7 @@ class UnitFindPage(p: Page?, pack: String?) : Page(p), SupPage<Unit?> {
         add(jsp)
         add(seatf)
         add(seabt)
-        show.setSelected(true)
+        show.isSelected = true
         addListeners()
     }
 

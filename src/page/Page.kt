@@ -49,7 +49,7 @@ abstract class Page protected constructor(private val front: Page?) : JPanel(), 
         }
 
         init {
-            ToolTipManager.sharedInstance().setInitialDelay(100)
+            ToolTipManager.sharedInstance().initialDelay = 100
         }
     }
 
@@ -69,7 +69,7 @@ abstract class Page protected constructor(private val front: Page?) : JPanel(), 
         resizing = true
         resized(x, y)
         front?.componentResized(x, y)
-        val cs: Array<Component> = getComponents()
+        val cs: Array<Component> = components
         for (c in cs) {
             if (c is Page) c.componentResized(x, y)
             fontSetter(c)
@@ -87,7 +87,7 @@ abstract class Page protected constructor(private val front: Page?) : JPanel(), 
 
     fun getXY(): PP {
         val jrp: JRootPane = MainFrame.Companion.F.getRootPane()
-        return PP(jrp.getWidth(), jrp.getHeight())
+        return PP(jrp.width, jrp.height)
     }
 
     fun isAdj(): Boolean {
@@ -151,18 +151,18 @@ abstract class Page protected constructor(private val front: Page?) : JPanel(), 
         if (c == null) return
         c.font = MainFrame.Companion.font
         if (c is JScrollPane) {
-            val jsp: JScrollPane = c as JScrollPane
-            fontSetter(jsp.getViewport().getView())
+            val jsp: JScrollPane = c
+            fontSetter(jsp.viewport.view)
         } else if (c is JTable) {
-            val t: JTable = c as JTable
-            fontSetter(t.getTableHeader())
+            val t: JTable = c
+            fontSetter(t.tableHeader)
         } else if (c is Container) {
             for (ic in c.components) fontSetter(ic)
         }
     }
 
     init {
-        setBackground(Page.Companion.BGCOLOR)
-        setLayout(null)
+        background = Page.Companion.BGCOLOR
+        layout = null
     }
 }

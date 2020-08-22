@@ -50,8 +50,8 @@ internal open class BattleBoxDef(bip: OuterBox?, bas: BattleField?, p: Int) : Ca
         protected get() {
             val w = width
             val h = height
-            val img: BufferedImage = createImage(w, h) as BufferedImage ?: return null
-            val gra: Graphics2D = img.getGraphics() as Graphics2D
+            val img: BufferedImage = createImage(w, h) as BufferedImage
+            val gra: Graphics2D = img.graphics as Graphics2D
             val g: FakeGraphics = FG2D(gra)
             bbp.draw(g)
             gra.dispose()

@@ -21,10 +21,10 @@ class MusicPage @JvmOverloads constructor(p: Page?, mus: Collection<Music?> = Us
         jlf.setSelectedValue(id.get(), true)
     }
 
-    constructor(p: Page?, pack: String?) : this(p, UserProfile.Companion.getAll<Music>(pack, Music::class.java)) {}
+    constructor(p: Page?, pack: String?) : this(p, UserProfile.Companion.getAll<Music>(pack, Music::class.java))
 
     fun getSelected(): PackData.Identifier<Music> {
-        return jlf.getSelectedValue().getID()
+        return jlf.selectedValue.getID()
     }
 
     override fun exit() {
@@ -47,8 +47,8 @@ class MusicPage @JvmOverloads constructor(p: Page?, mus: Collection<Music?> = Us
         })
         strt.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                if (jlf.getSelectedValue() == null) return
-                BCMusic.setBG(jlf.getSelectedValue(), 0)
+                if (jlf.selectedValue == null) return
+                BCMusic.setBG(jlf.selectedValue, 0)
             }
         })
     }

@@ -154,7 +154,7 @@ class GLGraphics(gl2: GL2, wid: Int, hei: Int) : GeoAuto {
 
     override fun drawImage(bimg: FakeImage, x: Double, y: Double, w: Double, h: Double) {
         checkMode(IMG)
-        val gl: GLImage = bimg.gl() as GLImage ?: return
+        val gl: GLImage = bimg.gl() as GLImage
         compImpl()
         bind(tm!!.load(this, gl))
         g.glBegin(GL2ES3.GL_QUADS)
@@ -255,25 +255,25 @@ class GLGraphics(gl2: GL2, wid: Int, hei: Int) : GeoAuto {
         if (mode == FakeGraphics.Companion.TRANS) {
             g.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
             g.glUniform1i(tm!!.mode, 1)
-            g.glUniform1f(tm!!.para, comp.p0 * 1.0f / 256)
+            g.glUniform1f(tm.para, comp.p0 * 1.0f / 256)
         }
         if (mode == FakeGraphics.Companion.BLEND) {
             g.glUniform1f(tm!!.para, comp.p0 * 1.0f / 256)
             if (comp.p1 == 0) {
                 g.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA)
-                g.glUniform1i(tm!!.mode, 1)
+                g.glUniform1i(tm.mode, 1)
             } else if (comp.p1 == 1) { // d+s*a
                 g.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE)
-                g.glUniform1i(tm!!.mode, 1) // sA=sA*p
+                g.glUniform1i(tm.mode, 1) // sA=sA*p
             } else if (comp.p1 == 2) { // d*(1-a+s*a)
                 g.glBlendFunc(GL.GL_ZERO, GL.GL_SRC_COLOR)
-                g.glUniform1i(tm!!.mode, 2) // sA=sA*p, sC=1-sA+sC*sA
+                g.glUniform1i(tm.mode, 2) // sA=sA*p, sC=1-sA+sC*sA
             } else if (comp.p1 == 3) { // d+(1-d)*s*a
                 g.glBlendFunc(GL.GL_ONE_MINUS_DST_COLOR, GL.GL_ONE)
-                g.glUniform1i(tm!!.mode, 1) // sA=sA*p
+                g.glUniform1i(tm.mode, 1) // sA=sA*p
             } else if (comp.p1 == -1) { // d-s*a
                 g.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE)
-                g.glUniform1i(tm!!.mode, 3) // sA=-sA*p
+                g.glUniform1i(tm.mode, 3) // sA=-sA*p
             }
         }
     }

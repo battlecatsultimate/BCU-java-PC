@@ -48,13 +48,13 @@ class EnemyInfoTable(p: Page?, de: Enemy, mul: Int, mula: Int) : Page(p) {
     private fun addListeners() {
         jtf.addFocusListener(object : FocusAdapter() {
             override fun focusLost(e: FocusEvent?) {
-                val data: IntArray = CommonStatic.parseIntsN(jtf.getText().trim { it <= ' ' }.replace("%", ""))
+                val data: IntArray = CommonStatic.parseIntsN(jtf.text.trim { it <= ' ' }.replace("%", ""))
                 if (data.size == 1) {
                     if (data[0] != -1) {
                         mulatk = data[0]
                         multi = mulatk
                     }
-                    jtf.setText(CommonStatic.toArrayFormat(multi, mulatk) + "%")
+                    jtf.text = CommonStatic.toArrayFormat(multi, mulatk) + "%"
                 } else if (data.size == 2) {
                     if (data[0] != -1) {
                         multi = data[0]
@@ -62,9 +62,9 @@ class EnemyInfoTable(p: Page?, de: Enemy, mul: Int, mula: Int) : Page(p) {
                     if (data[1] != -1) {
                         mulatk = data[1]
                     }
-                    jtf.setText(CommonStatic.toArrayFormat(multi, mulatk) + "%")
+                    jtf.text = CommonStatic.toArrayFormat(multi, mulatk) + "%"
                 } else {
-                    jtf.setText(CommonStatic.toArrayFormat(multi, mulatk) + "%")
+                    jtf.text = CommonStatic.toArrayFormat(multi, mulatk) + "%"
                 }
                 reset()
             }
@@ -83,7 +83,7 @@ class EnemyInfoTable(p: Page?, de: Enemy, mul: Int, mula: Int) : Page(p) {
             if (j % 2 == 0) atks[i][j].setHorizontalAlignment(SwingConstants.CENTER)
         }
         add(jtf)
-        jtf.setText(CommonStatic.toArrayFormat(multi, mulatk) + "%")
+        jtf.text = CommonStatic.toArrayFormat(multi, mulatk) + "%"
         var itv: Int = e.de.getItv()
         main[0][0].setText("ID")
         main[0][1].setText("" + e.id)

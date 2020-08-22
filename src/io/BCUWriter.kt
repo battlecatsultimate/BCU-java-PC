@@ -200,7 +200,7 @@ object BCUWriter : DataIO {
 
     private fun writeOptions() {
         val f = File("./user/config.json")
-        val jo: JsonObject = JsonEncoder.Companion.encode(CommonStatic.getConfig()).getAsJsonObject()
+        val jo: JsonObject = JsonEncoder.Companion.encode(CommonStatic.getConfig()).asJsonObject
         val r: Rectangle = MainFrame.Companion.crect
         jo.add("crect", JsonEncoder.Companion.encode(intArrayOf(r.x, r.y, r.width, r.height)))
         jo.addProperty("preload", MainBCU.preload)

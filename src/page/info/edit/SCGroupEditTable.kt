@@ -30,9 +30,9 @@ internal class SCGroupEditTable(sc: SCDef?) : AbJTable() {
     protected val scd: SCDef?
     override fun editCellAt(r: Int, c: Int, e: EventObject): Boolean {
         val result: Boolean = super.editCellAt(r, c, e)
-        val editor: Component = getEditorComponent()
+        val editor: Component = editorComponent
         if (editor == null || editor !is JTextComponent) return result
-        val jtf: JTextComponent = editor as JTextComponent
+        val jtf: JTextComponent = editor
         if (e is KeyEvent) jtf.selectAll()
         return result
     }
@@ -77,7 +77,7 @@ internal class SCGroupEditTable(sc: SCDef?) : AbJTable() {
     @Synchronized
     fun addLine(enemy: AbEnemy?) {
         if (scd == null) return
-        var ind: Int = getSelectedRow()
+        var ind: Int = selectedRow
         if (enemy == null) return
         val eid: PackData.Identifier<AbEnemy> = enemy.getID()
         if (scd.smap.containsKey(eid)) return
@@ -89,7 +89,7 @@ internal class SCGroupEditTable(sc: SCDef?) : AbJTable() {
     @Synchronized
     fun remLine() {
         if (scd == null) return
-        var ind: Int = getSelectedRow()
+        var ind: Int = selectedRow
         if (ind == -1) return
         scd.smap.remove(scd.getSMap().get(ind).key)
         if (ind >= scd.smap.size) ind--

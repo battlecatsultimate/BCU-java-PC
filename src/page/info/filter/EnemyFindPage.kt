@@ -30,7 +30,7 @@ class EnemyFindPage(p: Page?, pack: String?) : Page(p), SupPage<AbEnemy?> {
     }
 
     override fun getSelected(): Enemy? {
-        val sel: Int = elt.getSelectedRow()
+        val sel: Int = elt.selectedRow
         return if (sel < 0) null else elt.list.get(sel)
     }
 
@@ -46,7 +46,7 @@ class EnemyFindPage(p: Page?, pack: String?) : Page(p), SupPage<AbEnemy?> {
         Page.Companion.set(show, x, y, 250, 0, 200, 50)
         Page.Companion.set(seatf, x, y, 550, 0, 1000, 50)
         Page.Companion.set(seabt, x, y, 1600, 0, 200, 50)
-        if (show.isSelected()) {
+        if (show.isSelected) {
             val siz: IntArray = efb!!.getSizer()
             Page.Companion.set(efb, x, y, 50, 100, siz[0], siz[1])
             var mx = 0
@@ -54,7 +54,7 @@ class EnemyFindPage(p: Page?, pack: String?) : Page(p), SupPage<AbEnemy?> {
             if (siz[2] == 0) mx = siz[3] else my = siz[3]
             Page.Companion.set(jsp, x, y, 50 + mx, 100 + my, 2200 - mx, 1150 - my)
         } else Page.Companion.set(jsp, x, y, 50, 100, 2200, 1150)
-        elt.setRowHeight(Page.Companion.size(x, y, 50))
+        elt.rowHeight = Page.Companion.size(x, y, 50)
     }
 
     private fun addListeners() {
@@ -65,19 +65,19 @@ class EnemyFindPage(p: Page?, pack: String?) : Page(p), SupPage<AbEnemy?> {
         })
         show.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                if (show.isSelected()) add(efb) else remove(efb)
+                if (show.isSelected) add(efb) else remove(efb)
             }
         })
         seabt.setLnr(Consumer { b: ActionEvent? ->
             if (efb != null) {
-                efb.name = seatf.getText()
+                efb.name = seatf.text
                 efb.callBack(null)
             }
         })
         seatf.addActionListener(object : ActionListener {
             override fun actionPerformed(e: ActionEvent?) {
                 if (efb != null) {
-                    efb.name = seatf.getText()
+                    efb.name = seatf.text
                     efb.callBack(null)
                 }
             }
@@ -92,7 +92,7 @@ class EnemyFindPage(p: Page?, pack: String?) : Page(p), SupPage<AbEnemy?> {
         add(source)
         add(seatf)
         add(seabt)
-        show.setSelected(true)
+        show.isSelected = true
         addListeners()
     }
 

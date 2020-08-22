@@ -39,7 +39,7 @@ class CharaGroupPage(p: Page?) : Page(p) {
 
     constructor(p: Page?, pac: PackData?, b: Boolean) : this(p) {
         jlpk.setSelectedValue(pac, true)
-        jlpk.setEnabled(b)
+        jlpk.isEnabled = b
     }
 
     override fun resized(x: Int, y: Int) {
@@ -65,18 +65,18 @@ class CharaGroupPage(p: Page?) : Page(p) {
         })
         jlpk.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (changing || jlpk.getValueIsAdjusting()) return
+                if (changing || jlpk.valueIsAdjusting) return
                 changing = true
-                pack = jlpk.getSelectedValue()
+                pack = jlpk.selectedValue
                 updatePack()
                 changing = false
             }
         })
         jlcg.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (changing || jlcg.getValueIsAdjusting()) return
+                if (changing || jlcg.valueIsAdjusting) return
                 changing = true
-                cg = jlcg.getSelectedValue()
+                cg = jlcg.selectedValue
                 updateCG()
                 changing = false
             }
@@ -90,14 +90,14 @@ class CharaGroupPage(p: Page?) : Page(p) {
         add(jspus)
         add(cgt)
         add(cglr)
-        jlus.setCellRenderer(UnitLCR())
+        jlus.cellRenderer = UnitLCR()
         updatePack()
         addListeners()
     }
 
     private fun updateCG() {
         jlcg.setSelectedValue(cg, true)
-        jlus.setEnabled(cg != null)
+        jlus.isEnabled = cg != null
         if (cg == null) jlus.setListData(arrayOfNulls<Unit>(0)) else {
             jlus.setListData(cg.set.toTypedArray())
             cgt.setText(0, if (cg.type == 0) "include" else "exclude")
@@ -105,8 +105,8 @@ class CharaGroupPage(p: Page?) : Page(p) {
     }
 
     private fun updatePack() {
-        jlcg.setEnabled(pack != null)
-        cglr.setEnabled(pack != null && pack is UserPack && (pack as UserPack).editable)
+        jlcg.isEnabled = pack != null
+        cglr.isEnabled = pack != null && pack is UserPack && (pack as UserPack).editable
         var ccg: Collection<CharaGroup?>? = null
         if (pack == null) jlcg.setListData(arrayOfNulls<CharaGroup>(0))
         ccg = pack.groups.getList()

@@ -48,7 +48,7 @@ class MainPage : Page(null) {
     private val allf: JBTN = JBTN(0, "all file")
     override fun renew() {
         Runtime.getRuntime().gc()
-        curr.setEnabled(BattleInfoPage.Companion.current != null)
+        curr.isEnabled = BattleInfoPage.Companion.current != null
         setMemo()
     }
 

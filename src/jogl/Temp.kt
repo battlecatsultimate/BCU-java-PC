@@ -64,9 +64,9 @@ class Temp : StdGLC() {
             ent = test.getEAnim(UType.ATK)
 
             // adding canvas to it
-            frame.getContentPane().add(glcanvas)
-            frame.setSize(frame.getContentPane().getPreferredSize())
-            frame.setVisible(true)
+            frame.contentPane.add(glcanvas)
+            frame.size = frame.contentPane.preferredSize
+            frame.isVisible = true
             val anim = FPSAnimator(glcanvas, 30, true)
             anim.start()
         }
@@ -79,8 +79,8 @@ abstract class StdGLC : GLEventListener {
     protected var w = 0
     protected var h = 0
     override fun display(drawable: GLAutoDrawable) {
-        val gl: GL2 = drawable.getGL().getGL2()
-        drawFake(GLGraphics(drawable.getGL().getGL2(), w, h))
+        val gl: GL2 = drawable.gl.gL2
+        drawFake(GLGraphics(drawable.gl.gL2, w, h))
         gl.glFlush()
     }
 

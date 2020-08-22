@@ -98,18 +98,18 @@ class MaModelEditPage : Page, AbEditPage {
     override fun mouseWheel(e: MouseEvent) {
         if (e.source !is ModelBox) return
         val mwe: MouseWheelEvent = e as MouseWheelEvent
-        val d: Double = mwe.getPreciseWheelRotation()
+        val d: Double = mwe.preciseWheelRotation
         mb.siz *= Math.pow(res, d)
     }
 
     override fun renew() {
         change(this, { page: MaModelEditPage? ->
-            val da: AnimCE = jlu.getSelectedValue()
+            val da: AnimCE = jlu.selectedValue
             val vec: Vector<AnimCE?> = Vector<AnimCE?>()
             if (aep.focus == null) vec.addAll(AnimCE.Companion.map().values) else vec.add(aep.focus)
             jlu.setListData(vec)
             if (da != null && vec.contains(da)) {
-                val row: Int = mmet.getSelectedRow()
+                val row: Int = mmet.selectedRow
                 setA(da)
                 jlu.setSelectedValue(da, true)
                 if (row >= 0 && row < mmet.mm.parts.size) {
@@ -138,14 +138,14 @@ class MaModelEditPage : Page, AbEditPage {
         Page.Companion.set(reml, x, y, 1900, 500, 200, 50)
         Page.Companion.set(rema, x, y, 2100, 500, 200, 50)
         aep.componentResized(x, y)
-        mmet.setRowHeight(Page.Companion.size(x, y, 50))
-        sb.paint(sb.getGraphics())
-        mb.paint(mb.getGraphics())
+        mmet.rowHeight = Page.Companion.size(x, y, 50)
+        sb.paint(sb.graphics)
+        mb.paint(mb.graphics)
     }
 
     private fun addLine() {
         change(0, { o: Int? ->
-            var ind: Int = mmet.getSelectedRow() + 1
+            var ind: Int = mmet.selectedRow + 1
             if (ind == 0) ind++
             val mm: MaModel = mmet.mm
             val inds = IntArray(mm.n)
@@ -165,7 +165,7 @@ class MaModelEditPage : Page, AbEditPage {
             resized()
             mmet.setRowSelectionInterval(ind, ind)
             setB(ind)
-            val h: Int = mmet.getRowHeight()
+            val h: Int = mmet.rowHeight
             mmet.scrollRectToVisible(Rectangle(0, h * ind, 1, h))
         })
     }
@@ -174,20 +174,20 @@ class MaModelEditPage : Page, AbEditPage {
         back.setLnr(Consumer { x: ActionEvent? -> changePanel(front) })
         jlu.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (isAdj || jlu.getValueIsAdjusting()) return
-                change<AnimCE>(jlu.getSelectedValue(), Consumer<AnimCE> { `val`: AnimCE? -> setA(`val`) })
+                if (isAdj || jlu.valueIsAdjusting) return
+                change<AnimCE>(jlu.selectedValue, Consumer<AnimCE> { `val`: AnimCE? -> setA(`val`) })
             }
         })
         jlp.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                sb.sele = jlp.getSelectedIndex()
+                sb.sele = jlp.selectedIndex
             }
         })
-        val lsm: ListSelectionModel = mmet.getSelectionModel()
+        val lsm: ListSelectionModel = mmet.selectionModel
         lsm.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (isAdj || lsm.getValueIsAdjusting()) return
-                change(lsm.getLeadSelectionIndex(), Consumer { ind: Int -> setB(ind) })
+                if (isAdj || lsm.valueIsAdjusting) return
+                change(lsm.leadSelectionIndex, Consumer { ind: Int -> setB(ind) })
             }
         })
         addl.setLnr(Consumer { x: ActionEvent? -> addLine() })
@@ -203,7 +203,7 @@ class MaModelEditPage : Page, AbEditPage {
         jtr.addTreeSelectionListener(object : TreeSelectionListener {
             override fun valueChanged(arg0: TreeSelectionEvent?) {
                 if (isAdj) return
-                val o: Any = jtr.getLastSelectedPathComponent() ?: return
+                val o: Any = jtr.lastSelectedPathComponent ?: return
                 val str = o.toString()
                 val ind: Int = CommonStatic.parseIntN(str.split(" - ").toTypedArray()[0])
                 if (ind == -1) return
@@ -249,17 +249,17 @@ class MaModelEditPage : Page, AbEditPage {
         add(sort)
         add(sb)
         add(mb)
-        jlu.setCellRenderer(AnimLCR())
-        jtr.setExpandsSelectedPaths(true)
-        reml.setForeground(Color.RED)
-        rema.setForeground(Color.RED)
+        jlu.cellRenderer = AnimLCR()
+        jtr.expandsSelectedPaths = true
+        reml.foreground = Color.RED
+        rema.foreground = Color.RED
         setA(null)
         `addListeners$0`()
         `addListeners$1`()
     }
 
     private fun removeLine() {
-        var rows: IntArray = mmet.getSelectedRows()
+        var rows: IntArray = mmet.selectedRows
         if (rows.size == 0) return
         if (rows[0] == 0) rows = Arrays.copyOfRange(rows, 1, rows.size)
         change(rows, { row: IntArray ->
@@ -288,7 +288,7 @@ class MaModelEditPage : Page, AbEditPage {
     private fun removeTree() {
         change(0, { o: Int? ->
             val mm: MaModel = mmet.mm
-            val rows: IntArray = mmet.getSelectedRows()
+            val rows: IntArray = mmet.selectedRows
             if (rows[0] == 0) return@change
             val bs = BooleanArray(mm.n)
             var total = rows.size
@@ -318,9 +318,9 @@ class MaModelEditPage : Page, AbEditPage {
     private fun setA(anim: AnimCE?) {
         aep.setAnim(anim)
         setTree(anim)
-        addl.setEnabled(anim != null)
-        sort.setEnabled(anim != null)
-        revt.setEnabled(anim != null)
+        addl.isEnabled = anim != null
+        sort.isEnabled = anim != null
+        revt.isEnabled = anim != null
         if (anim == null) {
             mmet.setMaModel(null)
             mb.setEntity(null)
@@ -342,26 +342,26 @@ class MaModelEditPage : Page, AbEditPage {
 
     private fun setB(ind: Int) {
         if (mb.getEnt() != null) mb.getEnt().sele = ind
-        reml.setEnabled(ind != -1)
-        rema.setEnabled(ind != -1)
+        reml.isEnabled = ind != -1
+        rema.isEnabled = ind != -1
         if (ind < 0 || mmet.mm == null) return
-        if (mmet.getSelectedRow() != ind) change(ind, { i: Int? ->
+        if (mmet.selectedRow != ind) change(ind, { i: Int? ->
             mmet.setRowSelectionInterval(i, i)
             mmet.scrollRectToVisible(mmet.getCellRect(i, 0, true))
         })
         if (mmt != null) change(ind, { i: Int -> mmt.select(i) })
         val `val`: Int = mmet.mm.parts.get(ind).get(2)
-        jlp.setSelectedIndex(`val`)
-        for (row in mmet.getSelectedRows()) {
-            for (ints in mmet.mm.parts) if (ints[0] == row) reml.setEnabled(false)
-            for (ma in mmet.anim.anims) for (p in ma.parts) if (p.ints[0] == row) reml.setEnabled(false)
+        jlp.selectedIndex = `val`
+        for (row in mmet.selectedRows) {
+            for (ints in mmet.mm.parts) if (ints[0] == row) reml.isEnabled = false
+            for (ma in mmet.anim.anims) for (p in ma.parts) if (p.ints[0] == row) reml.isEnabled = false
         }
     }
 
     private fun setTree(dat: AnimCE?) {
         change<AnimCE>(dat, Consumer<AnimCE> { anim: AnimCE? ->
             if (anim == null) {
-                jtr.setModel(DefaultTreeModel(null))
+                jtr.model = DefaultTreeModel(null)
                 mmt = null
                 return@change
             }

@@ -54,10 +54,10 @@ class BattleInfoPage : KeyHandler, OuterBox {
         recd = rec
         basis = SBRply(rec)
         bb = if (conf and 1 == 0) BBBuilder.Companion.def.getDef(this, basis) else BBBuilder.Companion.def.getRply(this, basis, rec.name, conf and 4 != 0)
-        jtb.setSelected(conf and 2 != 0)
-        jtb.setEnabled(conf and 1 == 0)
+        jtb.isSelected = conf and 2 != 0
+        jtb.isEnabled = conf and 1 == 0
         ct.setData(basis.sb.st)
-        if (recd.name.length > 0) jsl.setMaximum((basis as SBRply).size())
+        if (recd.name.length > 0) jsl.maximum = basis.size()
         ini()
         rply.setText(0, if (recd.name.length == 0) "save" else "start")
         resized()
@@ -81,7 +81,7 @@ class BattleInfoPage : KeyHandler, OuterBox {
         bb = BBBuilder.Companion.def.getCtrl(this, sb)
         basis = sb
         ct.setData(basis.sb.st)
-        jtb.setSelected(DEF_LARGE)
+        jtb.isSelected = DEF_LARGE
         ini()
         rply.setText(0, "rply")
         resized()
@@ -125,7 +125,7 @@ class BattleInfoPage : KeyHandler, OuterBox {
     }
 
     override fun mouseWheel(e: MouseEvent) {
-        if (e.source === bb) bb.wheeled(e.point, (e as MouseWheelEvent).getWheelRotation())
+        if (e.source === bb) bb.wheeled(e.point, (e as MouseWheelEvent).wheelRotation)
     }
 
     override fun renew() {
@@ -137,7 +137,7 @@ class BattleInfoPage : KeyHandler, OuterBox {
         setBounds(0, 0, x, y)
         Page.Companion.set(back, x, y, 0, 0, 200, 50)
         Page.Companion.set(jtb, x, y, 2100, 0, 200, 50)
-        if (jtb.isSelected()) {
+        if (jtb.isSelected) {
             Page.Companion.set(paus, x, y, 700, 0, 200, 50)
             Page.Companion.set(rply, x, y, 900, 0, 200, 50)
             Page.Companion.set(stream, x, y, 900, 0, 400, 50)
@@ -168,9 +168,9 @@ class BattleInfoPage : KeyHandler, OuterBox {
             Page.Companion.set(ucount, x, y, 1650, 50, 600, 50)
             Page.Companion.set(jsl, x, y, 700, 800, 800, 50)
         }
-        ct.setRowHeight(Page.Companion.size(x, y, 50))
-        et.setRowHeight(Page.Companion.size(x, y, 50))
-        ut.setRowHeight(Page.Companion.size(x, y, 50))
+        ct.rowHeight = Page.Companion.size(x, y, 50)
+        et.rowHeight = Page.Companion.size(x, y, 50)
+        ut.rowHeight = Page.Companion.size(x, y, 50)
     }
 
     @Synchronized
@@ -196,7 +196,7 @@ class BattleInfoPage : KeyHandler, OuterBox {
             ut.setList(lu)
             BCMusic.flush(spe < 3)
         }
-        if (basis is SBRply && recd.name.length > 0) change<SBRply>(basis as SBRply, Consumer<SBRply> { b: SBRply -> jsl.setValue(b.prog()) })
+        if (basis is SBRply && recd.name.length > 0) change<SBRply>(basis, Consumer<SBRply> { b: SBRply -> jsl.value = b.prog() })
         bb.paint()
         val eba: AbEntity = sb.ebase
         val h: Long = eba.health
@@ -218,7 +218,7 @@ class BattleInfoPage : KeyHandler, OuterBox {
             remove(bb as Canvas)
             resized()
             add(bb as Canvas)
-            DEF_LARGE = jtb.isSelected()
+            DEF_LARGE = jtb.isSelected
         })
         back.setLnr(Consumer { x: ActionEvent? ->
             BCMusic.stopAll()
@@ -234,13 +234,13 @@ class BattleInfoPage : KeyHandler, OuterBox {
             changePanel(front)
         })
         rply.setLnr(Consumer { x: ActionEvent? ->
-            if (basis is SBCtrl) changePanel(BattleInfoPage(getThis(), (basis as SBCtrl).getData(), 0))
-            if (basis is SBRply) if (recd.name.length == 0) changePanel(RecdSavePage(getThis(), recd)) else changePanel(BattleInfoPage(this, basis as SBRply))
+            if (basis is SBCtrl) changePanel(BattleInfoPage(getThis(), basis.getData(), 0))
+            if (basis is SBRply) if (recd.name.length == 0) changePanel(RecdSavePage(getThis(), recd)) else changePanel(BattleInfoPage(this, basis))
         })
         paus.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
                 pause = !pause
-                jsl.setEnabled(pause)
+                jsl.isEnabled = pause
             }
         })
         next.addActionListener(object : ActionListener {
@@ -251,8 +251,8 @@ class BattleInfoPage : KeyHandler, OuterBox {
             }
         })
         jsl.addChangeListener(ChangeListener {
-            if (jsl.getValueIsAdjusting() || isAdj || basis !is SBRply) return@ChangeListener
-            (basis as SBRply).restoreTo(jsl.getValue())
+            if (jsl.valueIsAdjusting || isAdj || basis !is SBRply) return@ChangeListener
+            basis.restoreTo(jsl.value)
             bb.reset()
         })
     }
@@ -275,7 +275,7 @@ class BattleInfoPage : KeyHandler, OuterBox {
             add(rply)
             if (recd != null && recd.name.length > 0) {
                 add(jsl)
-                jsl.setEnabled(pause)
+                jsl.isEnabled = pause
             }
         }
         addListeners()

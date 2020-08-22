@@ -9,10 +9,10 @@ import java.awt.geom.Rectangle2D
 
 @Strictfp
 class PP : P {
-    constructor(d: Dimension) : super(d.getWidth(), d.getHeight()) {}
-    constructor(d: Double, e: Double) : super(d, e) {}
-    constructor(p: Point) : super(p.getX(), p.getY()) {}
-    constructor(p: Point2D) : super(p.x, p.y) {}
+    constructor(d: Dimension) : super(d.getWidth(), d.getHeight())
+    constructor(d: Double, e: Double) : super(d, e)
+    constructor(p: Point) : super(p.getX(), p.getY())
+    constructor(p: Point2D) : super(p.x, p.y)
 
     override fun copy(): PP {
         return PP(x, y)

@@ -43,8 +43,8 @@ internal class GLIconBox : GLViewBox(IBCtrl()), IconBox {
 
     val clip: BufferedImage?
         get() {
-            val r: Rectangle = getBounds()
-            val p: Point = getLocationOnScreen()
+            val r: Rectangle = bounds
+            val p: Point = locationOnScreen
             r.x = p.x + IBConf.line.get(0)
             r.y = p.y + IBConf.line.get(1)
             r.width = IBConf.line.get(2)
@@ -58,7 +58,7 @@ internal class GLIconBox : GLViewBox(IBCtrl()), IconBox {
         }
 
     override fun getCtrl(): IBCtrl {
-        return ctrl as IBCtrl
+        return ctrl
     }
 
     override fun setBlank(selected: Boolean) {
@@ -70,7 +70,7 @@ internal class GLIconBox : GLViewBox(IBCtrl()), IconBox {
     }
 
     init {
-        setFocusable(true)
+        isFocusable = true
         IBConf.glow = 0
         changeType()
     }
@@ -111,13 +111,13 @@ internal open class GLViewBox(c: Controller) : GLCstd(), ViewBox, GLEventListene
         protected set
     private var ent: EAnimI? = null
     override fun display(drawable: GLAutoDrawable) {
-        val gl: GL2 = drawable.getGL().getGL2()
-        val w: Int = getWidth()
-        val h: Int = getHeight()
-        val g = GLGraphics(drawable.getGL().getGL2(), w, h)
+        val gl: GL2 = drawable.gl.gL2
+        val w: Int = width
+        val h: Int = height
+        val g = GLGraphics(drawable.gl.gL2, w, h)
         if (!isBlank) {
-            val c = intArrayOf(ViewBox.Companion.c0.getRed(), ViewBox.Companion.c0.getGreen(), ViewBox.Companion.c0.getBlue())
-            val f = intArrayOf(ViewBox.Companion.c1.getRed(), ViewBox.Companion.c1.getGreen(), ViewBox.Companion.c1.getBlue())
+            val c = intArrayOf(ViewBox.Companion.c0.red, ViewBox.Companion.c0.green, ViewBox.Companion.c0.blue)
+            val f = intArrayOf(ViewBox.Companion.c1.red, ViewBox.Companion.c1.green, ViewBox.Companion.c1.blue)
             g.gradRect(0, 0, w, h / 2, w / 2, 0, c, w / 2, h / 2, f)
             g.gradRect(0, h / 2, w, h / 2, w / 2, h / 2, f, w / 2, h, c)
         } else {
@@ -157,8 +157,8 @@ internal open class GLViewBox(c: Controller) : GLCstd(), ViewBox, GLEventListene
     }
 
     protected open fun draw(g: FakeGraphics) {
-        val w: Int = getWidth()
-        val h: Int = getHeight()
+        val w: Int = width
+        val h: Int = height
         g.translate(w / 2.toDouble(), h * 3 / 4.toDouble())
         g.setColor(FakeGraphics.Companion.BLACK)
         if (ent != null) ent.draw(g, ctrl.ori.copy().times(-1.0), ctrl.siz)

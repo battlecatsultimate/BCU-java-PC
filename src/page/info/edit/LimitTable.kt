@@ -44,24 +44,24 @@ class LimitTable(private val main: Page, private val par: Page, p: UserPack) : P
     private var lrp: LvRestrictPage? = null
     private var lim: Limit? = null
     fun abler(b: Boolean) {
-        jcmin.setEnabled(b)
-        jnum.setEnabled(b)
-        jcmax.setEnabled(b)
-        one.setEnabled(b)
-        cgb.setEnabled(b)
-        jcg.setEnabled(b)
-        lrb.setEnabled(b)
-        jlr.setEnabled(b)
+        jcmin.isEnabled = b
+        jnum.isEnabled = b
+        jcmax.isEnabled = b
+        one.isEnabled = b
+        cgb.isEnabled = b
+        jcg.isEnabled = b
+        lrb.isEnabled = b
+        jlr.isEnabled = b
         for (jtb in brars) jtb.setEnabled(b)
     }
 
-    public override fun renew() {
+    override fun renew() {
         if (cgp != null) {
-            jcg.setText("" + cgp.cg)
+            jcg.text = "" + cgp.cg
             input(jcg, if (cgp.cg == null) "-1" else cgp.cg.toString())
         }
         if (lrp != null) {
-            jlr.setText("" + lrp.lr)
+            jlr.text = "" + lrp.lr
             input(jlr, if (lrp.lr == null) "-1" else lrp.lr.toString())
         }
         cgp = null
@@ -86,12 +86,12 @@ class LimitTable(private val main: Page, private val par: Page, p: UserPack) : P
         lim = l
         if (l == null) {
             for (i in brars.indices) brars[i].setSelected(false)
-            jcmax.setText(limits[4] + ": ")
-            jcmin.setText(limits[3] + ": ")
-            jnum.setText(limits[1] + ": ")
-            jcg.setText("")
-            jlr.setText("")
-            one.setSelected(false)
+            jcmax.text = limits[4] + ": "
+            jcmin.text = limits[3] + ": "
+            jnum.text = limits[1] + ": "
+            jcg.text = ""
+            jlr.text = ""
+            one.isSelected = false
             abler(false)
             return
         }
@@ -101,18 +101,18 @@ class LimitTable(private val main: Page, private val par: Page, p: UserPack) : P
         } else {
             for (i in brars.indices) brars[i].setSelected(true)
         }
-        jcmax.setText(limits[4] + ": " + lim!!.max)
-        jcmin.setText(limits[3] + ": " + lim!!.min)
-        jnum.setText(limits[1] + ": " + lim!!.num)
-        jcg.setText("" + lim!!.group)
-        jlr.setText("" + lim!!.lvr)
-        one.setSelected(lim!!.line == 1)
+        jcmax.text = limits[4] + ": " + lim!!.max
+        jcmin.text = limits[3] + ": " + lim!!.min
+        jnum.text = limits[1] + ": " + lim!!.num
+        jcg.text = "" + lim!!.group
+        jlr.text = "" + lim!!.lvr
+        one.isSelected = lim!!.line == 1
     }
 
     private fun addListeners() {
         one.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                lim!!.line = if (one.isSelected()) 1 else 0
+                lim!!.line = if (one.isSelected) 1 else 0
             }
         })
         for (i in brars.indices) {
@@ -184,7 +184,7 @@ class LimitTable(private val main: Page, private val par: Page, p: UserPack) : P
         jtf.addFocusListener(object : FocusAdapter() {
             override fun focusLost(fe: FocusEvent?) {
                 if (par.isAdj) return
-                input(jtf, jtf.getText())
+                input(jtf, jtf.text)
                 par.callBack(lim)
             }
         })

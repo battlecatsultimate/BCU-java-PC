@@ -11,8 +11,8 @@ class LoadPage : Page(null), Consumer<Progress?> {
     private val jpb: JProgressBar = JProgressBar()
     private var temp: String? = null
     override fun accept(dl: Progress) {
-        jpb.setMaximum(1000)
-        jpb.setValue((dl.prog * 1000).toInt())
+        jpb.maximum = 1000
+        jpb.value = (dl.prog * 1000).toInt()
     }
 
     override fun resized(x: Int, y: Int) {
@@ -25,7 +25,7 @@ class LoadPage : Page(null), Consumer<Progress?> {
         if (temp != null) {
             jl.text = temp
             temp = null
-            jpb.setValue(0)
+            jpb.value = 0
         }
     }
 

@@ -44,15 +44,15 @@ abstract class AbViewPage protected constructor(p: Page?, box: ViewBox = BBBuild
     private var changingT = false
     private var changingtl = false
     protected open fun enabler(b: Boolean) {
-        jtb.setEnabled(b)
-        back.setEnabled(b)
-        copy.setEnabled(b)
-        jlt.setEnabled(b)
-        jst.setEnabled(b)
-        jtl.setEnabled(b && pause)
-        nex.setEnabled(b && pause)
-        gif.setEnabled(b)
-        png.setEnabled(b && pause)
+        jtb.isEnabled = b
+        back.isEnabled = b
+        copy.isEnabled = b
+        jlt.isEnabled = b
+        jst.isEnabled = b
+        jtl.isEnabled = b && pause
+        nex.isEnabled = b && pause
+        gif.isEnabled = b
+        png.isEnabled = b && pause
     }
 
     override fun exit() {
@@ -74,7 +74,7 @@ abstract class AbViewPage protected constructor(p: Page?, box: ViewBox = BBBuild
     override fun mouseWheel(e: MouseEvent) {
         if (e.source !is ViewBox) return
         val mwe: MouseWheelEvent = e as MouseWheelEvent
-        val d: Double = mwe.getPreciseWheelRotation()
+        val d: Double = mwe.preciseWheelRotation
         vb.resize(Math.pow(res, d))
     }
 
@@ -89,15 +89,15 @@ abstract class AbViewPage protected constructor(p: Page?, box: ViewBox = BBBuild
         add(nex)
         add(gif)
         add(png)
-        jst.setPaintLabels(true)
-        jst.setPaintTicks(true)
-        jst.setMajorTickSpacing(100)
-        jst.setMinorTickSpacing(25)
-        jst.setValue(Timer.Companion.p * 100 / 33)
-        jtl.setEnabled(false)
-        jtl.setPaintTicks(true)
-        jtl.setPaintLabels(true)
-        png.setEnabled(false)
+        jst.paintLabels = true
+        jst.paintTicks = true
+        jst.majorTickSpacing = 100
+        jst.minorTickSpacing = 25
+        jst.value = Timer.Companion.p * 100 / 33
+        jtl.isEnabled = false
+        jtl.paintTicks = true
+        jtl.paintLabels = true
+        png.isEnabled = false
         addListener()
     }
 
@@ -117,34 +117,34 @@ abstract class AbViewPage protected constructor(p: Page?, box: ViewBox = BBBuild
 
     protected fun <T> setAnim(a: AnimI<*, T>) where T : Enum<T>?, T : AnimType<*, T>? {
         if (!changingT) {
-            var ind: Int = jlt.getSelectedIndex()
+            var ind: Int = jlt.selectedIndex
             if (ind == -1) ind = 0
             a.anim.check()
             val strs: Array<String> = a.anim.names()
             jlt.setListData(strs)
             if (ind >= strs.size) ind = 0
-            jlt.setSelectedIndex(ind)
+            jlt.selectedIndex = ind
         }
-        if (jlt.getSelectedIndex() == -1) return
-        vb.setEntity(a.getEAnim(a.types().get(jlt.getSelectedIndex())))
-        jtl.setMinimum(0)
-        jtl.setMaximum(vb.getEnt().len())
-        jtl.setLabelTable(null)
+        if (jlt.selectedIndex == -1) return
+        vb.setEntity(a.getEAnim(a.types().get(jlt.selectedIndex)))
+        jtl.minimum = 0
+        jtl.maximum = vb.getEnt().len()
+        jtl.labelTable = null
         if (vb.getEnt().len() <= 50) {
-            jtl.setMajorTickSpacing(5)
-            jtl.setMinorTickSpacing(1)
+            jtl.majorTickSpacing = 5
+            jtl.minorTickSpacing = 1
         } else if (vb.getEnt().len() <= 200) {
-            jtl.setMajorTickSpacing(10)
-            jtl.setMinorTickSpacing(2)
+            jtl.majorTickSpacing = 10
+            jtl.minorTickSpacing = 2
         } else if (vb.getEnt().len() <= 1000) {
-            jtl.setMajorTickSpacing(50)
-            jtl.setMinorTickSpacing(10)
+            jtl.majorTickSpacing = 50
+            jtl.minorTickSpacing = 10
         } else if (vb.getEnt().len() <= 5000) {
-            jtl.setMajorTickSpacing(250)
-            jtl.setMinorTickSpacing(50)
+            jtl.majorTickSpacing = 250
+            jtl.minorTickSpacing = 50
         } else {
-            jtl.setMajorTickSpacing(1000)
-            jtl.setMinorTickSpacing(200)
+            jtl.majorTickSpacing = 1000
+            jtl.minorTickSpacing = 200
         }
     }
 
@@ -152,7 +152,7 @@ abstract class AbViewPage protected constructor(p: Page?, box: ViewBox = BBBuild
         if (!pause) eupdate()
         vb.paint()
         if (loader == null) gif.setText(0, "gif") else gif.setText(loader!!.prog)
-        if (!gif.isSelected() && gif.isEnabled()) loader = null
+        if (!gif.isSelected && gif.isEnabled) loader = null
     }
 
     protected abstract fun updateChoice()
@@ -175,23 +175,23 @@ abstract class AbViewPage protected constructor(p: Page?, box: ViewBox = BBBuild
         })
         jlt.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (arg0.getValueIsAdjusting()) return
+                if (arg0.valueIsAdjusting) return
                 changingT = true
                 updateChoice()
                 changingT = false
             }
         })
         jst.addChangeListener(ChangeListener {
-            if (jst.getValueIsAdjusting()) return@ChangeListener
-            Timer.Companion.p = jst.getValue() * 33 / 100
+            if (jst.valueIsAdjusting) return@ChangeListener
+            Timer.Companion.p = jst.value * 33 / 100
         })
         jtl.addChangeListener(ChangeListener {
             if (changingtl || !pause) return@ChangeListener
-            if (vb.getEnt() != null) vb.getEnt().setTime(jtl.getValue())
+            if (vb.getEnt() != null) vb.getEnt().setTime(jtl.value)
         })
         jtb.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                pause = jtb.isSelected()
+                pause = jtb.isSelected
                 enabler(true)
             }
         })
@@ -209,7 +209,7 @@ abstract class AbViewPage protected constructor(p: Page?, box: ViewBox = BBBuild
         })
         gif.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                if (gif.isSelected()) loader = vb.start() else vb.end(gif)
+                if (gif.isSelected) loader = vb.start() else vb.end(gif)
             }
         })
     }
@@ -217,7 +217,7 @@ abstract class AbViewPage protected constructor(p: Page?, box: ViewBox = BBBuild
     private fun eupdate() {
         vb.update()
         changingtl = true
-        if (vb.getEnt() != null) jtl.setValue(vb.getEnt().ind())
+        if (vb.getEnt() != null) jtl.value = vb.getEnt().ind()
         changingtl = false
     }
 

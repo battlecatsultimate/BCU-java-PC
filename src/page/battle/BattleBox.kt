@@ -228,7 +228,7 @@ interface BattleBox {
                     val p = getX(eac.pos)
                     val y: Double = midh - (road_h - DEP * eac.layer) * siz
                     if (eac is WaprCont) {
-                        val dx = if ((eac as WaprCont).dire == -1) -27 * siz else -24 * siz
+                        val dx = if (eac.dire == -1) -27 * siz else -24 * siz
                         eac.draw(gra, P(p + dx, y - 24 * siz), psiz)
                     } else {
                         eac.draw(gra, P(p, y), psiz)

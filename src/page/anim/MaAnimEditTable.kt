@@ -17,9 +17,9 @@ class MaAnimEditTable(private val page: Page) : AnimTable<Part?>() {
     var ma: MaAnim? = null
     override fun editCellAt(row: Int, column: Int, e: EventObject): Boolean {
         val result: Boolean = super.editCellAt(row, column, e)
-        val editor: Component = getEditorComponent()
+        val editor: Component = editorComponent
         if (editor == null || editor !is JTextComponent) return result
-        if (e is KeyEvent) (editor as JTextComponent).selectAll()
+        if (e is KeyEvent) editor.selectAll()
         return result
     }
 
@@ -40,7 +40,7 @@ class MaAnimEditTable(private val page: Page) : AnimTable<Part?>() {
     }
 
     override fun getSelected(): Array<Part?> {
-        val rows: IntArray = getSelectedRows()
+        val rows: IntArray = selectedRows
         val ps = arrayOfNulls<Part>(rows.size)
         for (i in rows.indices) ps[i] = ma.parts.get(rows[i])
         return ps
@@ -119,7 +119,7 @@ class MaAnimEditTable(private val page: Page) : AnimTable<Part?>() {
     }
 
     init {
-        selectionModel.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION)
-        setTransferHandler(AnimTableTH<Part>(this, 2))
+        selectionModel.selectionMode = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
+        transferHandler = AnimTableTH<Part>(this, 2)
     }
 }

@@ -46,9 +46,9 @@ class SpriteEditPage(p: Page?, bimg: BufferedImage?) : Page(p) {
 
     private fun addListeners() {
         back.setLnr(Consumer { e: ActionEvent? -> changePanel(front) })
-        jslh.addChangeListener(ChangeListener { setColor(jslh.getValue(), s, b) })
-        jsls.addChangeListener(ChangeListener { setColor(h, jsls.getValue(), b) })
-        jslb.addChangeListener(ChangeListener { setColor(h, s, jslb.getValue()) })
+        jslh.addChangeListener(ChangeListener { setColor(jslh.value, s, b) })
+        jsls.addChangeListener(ChangeListener { setColor(h, jsls.value, b) })
+        jslb.addChangeListener(ChangeListener { setColor(h, s, jslb.value) })
     }
 
     private fun ini() {
@@ -60,16 +60,16 @@ class SpriteEditPage(p: Page?, bimg: BufferedImage?) : Page(p) {
         add(jlh)
         add(jls)
         add(jlb)
-        disp.setBorder(BorderFactory.createEtchedBorder())
-        jslh.setMajorTickSpacing(30)
-        jslh.setMinorTickSpacing(10)
-        jslh.setPaintTicks(true)
-        jsls.setMajorTickSpacing(20)
-        jsls.setMinorTickSpacing(5)
-        jsls.setPaintTicks(true)
-        jslb.setMajorTickSpacing(20)
-        jslb.setMinorTickSpacing(5)
-        jslb.setPaintTicks(true)
+        disp.border = BorderFactory.createEtchedBorder()
+        jslh.majorTickSpacing = 30
+        jslh.minorTickSpacing = 10
+        jslh.paintTicks = true
+        jsls.majorTickSpacing = 20
+        jsls.minorTickSpacing = 5
+        jsls.paintTicks = true
+        jslb.majorTickSpacing = 20
+        jslb.minorTickSpacing = 5
+        jslb.paintTicks = true
         setColor(h, s, b)
         addListeners()
     }
@@ -79,8 +79,8 @@ class SpriteEditPage(p: Page?, bimg: BufferedImage?) : Page(p) {
         s = sval
         b = bval
         curr = Algorithm.shift(base, h / 360f.toDouble(), s / 100f.toDouble(), b / 100f.toDouble())
-        disp.setIcon(ImageIcon(curr))
-        jlh.setText("hue: $h")
+        disp.icon = ImageIcon(curr)
+        jlh.text = "hue: $h"
         jls.setText("saturation:$s")
         jlb.setText("brightness:$b")
     }

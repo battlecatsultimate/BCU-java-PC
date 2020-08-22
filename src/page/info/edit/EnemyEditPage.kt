@@ -23,7 +23,7 @@ class EnemyEditPage(p: Page?, e: Enemy) : EntityEditPage(p, e.id.pack, e.de as C
     private val eeb: EnemyEditBox
     private val ene: Enemy
     private val ce: CustomEnemy
-    protected override fun getInput(jtf: JTF, v: Int) {
+    override fun getInput(jtf: JTF, v: Int) {
         var v = v
         if (jtf === fdr) {
             val act = (v / bas.t().getDropMulti()) as Int
@@ -36,7 +36,7 @@ class EnemyEditPage(p: Page?, e: Enemy) : EntityEditPage(p, e.id.pack, e.de as C
         }
     }
 
-    protected override fun ini() {
+    override fun ini() {
         set(ldr)
         set(fdr)
         set(fsr)
@@ -50,7 +50,7 @@ class EnemyEditPage(p: Page?, e: Enemy) : EntityEditPage(p, e.id.pack, e.de as C
         subListener(impt, vuni, vene, ene)
     }
 
-    protected override fun resized(x: Int, y: Int) {
+    override fun resized(x: Int, y: Int) {
         super.resized(x, y)
         Page.Companion.set(ldr, x, y, 50, 350, 100, 50)
         Page.Companion.set(fdr, x, y, 150, 350, 200, 50)
@@ -63,10 +63,10 @@ class EnemyEditPage(p: Page?, e: Enemy) : EntityEditPage(p, e.id.pack, e.de as C
         eeb.resized()
     }
 
-    protected override fun setData(data: CustomEntity) {
+    override fun setData(data: CustomEntity) {
         super.setData(data)
-        fsr.setText("star: " + ce.star)
-        fdr.setText("" + (ce.getDrop() * bas.t().getDropMulti()) as Int)
+        fsr.text = "star: " + ce.star
+        fdr.text = "" + (ce.getDrop() * bas.t().getDropMulti()) as Int
         var imu = 0
         for (i in Interpret.EABIIND.indices) if (Interpret.EABIIND.get(i) > 100) {
             val id: Int = Interpret.EABIIND.get(i) - 100

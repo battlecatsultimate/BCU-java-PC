@@ -78,7 +78,7 @@ class AnimatedGifEncoder {
         try {
             if (!sizeSet) {
                 // use first frame's size
-                setSize(im.getWidth(), im.getHeight())
+                setSize(im.width, im.height)
             }
             image = im
             imagePixels // convert to correct format if necessary
@@ -345,7 +345,7 @@ class AnimatedGifEncoder {
                 g.drawImage(image, 0, 0, null)
                 image = temp
             }
-            pixels = (image.getRaster().getDataBuffer() as DataBufferByte).getData()
+            pixels = (image.getRaster().dataBuffer as DataBufferByte).data
         }
 
     /**

@@ -50,11 +50,11 @@ class ResourcePage(p: Page?) : Page(p) {
             override fun valueChanged(arg0: TreeSelectionEvent?) {
                 if (changing) return
                 var obj: Any? = null
-                val tp: TreePath = jls.getSelectionPath()
+                val tp: TreePath = jls.selectionPath
                 if (tp != null) {
                     obj = tp.lastPathComponent
-                    if (obj != null) obj = (obj as DefaultMutableTreeNode).getUserObject()
-                    sel = if (obj is VFile<*>) obj as VFile<*>? else null
+                    if (obj != null) obj = (obj as DefaultMutableTreeNode).userObject
+                    sel = if (obj is VFile<*>) obj else null
                 } else sel = null
                 setSele()
             }
@@ -84,17 +84,17 @@ class ResourcePage(p: Page?) : Page(p) {
     }
 
     private fun setSele() {
-        rept.setEnabled(sel != null)
+        rept.isEnabled = sel != null
     }
 
     private fun setTree(vfr: VFileRoot<*>?) {
         if (vfr == null) {
-            jls.setModel(DefaultTreeModel(null))
+            jls.model = DefaultTreeModel(null)
             return
         }
         val top = DefaultMutableTreeNode("resources/")
         addTree(top, vfr)
-        jls.setModel(DefaultTreeModel(top))
+        jls.model = DefaultTreeModel(top)
     }
 
     companion object {

@@ -52,42 +52,42 @@ internal class HeadEditTable(p: Page, pack: UserPack) : Page(p) {
         setData(sta)
     }
 
-    public override fun renew() {
+    override fun renew() {
         lt.renew()
         if (bvp != null) {
-            val `val`: PackData.Identifier<Background> = bvp.getSelected().id ?: return
-            jbg.setText(`val`.toString())
+            val `val`: PackData.Identifier<Background> = bvp.getSelected().id
+            jbg.text = `val`.toString()
             sta!!.bg = `val`
         }
         if (cvp != null) {
             val `val`: PackData.Identifier<CastleImg> = cvp.getVal() ?: return
-            jcas.setText(`val`.toString())
+            jcas.text = `val`.toString()
             sta!!.castle = `val`
         }
         if (mp != null) {
             val jtf: JTF = if (musl == 0) jm0 else jm1
             val `val`: PackData.Identifier<Music> = mp.getSelected()
-            jtf.setText("" + `val`)
+            jtf.text = "" + `val`
             if (jtf === jm0) {
                 sta!!.mus0 = `val`
                 if (sta!!.mus0 != null) {
-                    lop.setEnabled(true)
+                    lop.isEnabled = true
                     getMusTime(sta!!.mus0, lop)
                 } else {
-                    lop.setText("00:00.000")
+                    lop.text = "00:00.000"
                     sta!!.loop0 = 0
-                    lop.setEnabled(false)
+                    lop.isEnabled = false
                 }
             }
             if (jtf === jm1) {
                 sta!!.mus1 = `val`
                 if (sta!!.mus1 != null) {
-                    lop1.setEnabled(true)
+                    lop1.isEnabled = true
                     getMusTime(sta!!.mus1, lop1)
                 } else {
-                    lop1.setText("00:00.000")
+                    lop1.text = "00:00.000"
                     sta!!.loop1 = 0
-                    lop1.setEnabled(false)
+                    lop1.isEnabled = false
                 }
             }
         }
@@ -128,57 +128,57 @@ internal class HeadEditTable(p: Page, pack: UserPack) : Page(p) {
         abler(st != null)
         if (st == null) return
         change(true)
-        name.setText(st.toString())
-        jhea.setText("" + st.health)
-        jlen.setText("" + st.len)
-        jbg.setText("" + st.bg)
-        jcas.setText("" + st.castle)
-        jm0.setText("" + st.mus0)
-        jmh.setText("<" + st.mush + "% health:")
-        jm1.setText("" + st.mus1)
-        jmax.setText("" + st.max)
-        con.setSelected(!st.non_con)
+        name.text = st.toString()
+        jhea.text = "" + st.health
+        jlen.text = "" + st.len
+        jbg.text = "" + st.bg
+        jcas.text = "" + st.castle
+        jm0.text = "" + st.mus0
+        jmh.text = "<" + st.mush + "% health:"
+        jm1.text = "" + st.mus1
+        jmax.text = "" + st.max
+        con.isSelected = !st.non_con
         val str: String = Page.Companion.get(1, "star") + ": "
         for (i in 0..3) if (i < st.map.stars.size) star[i].setText(i + 1 + str + st.map.stars[i] + "%") else star[i].setText(i + 1 + str + "/")
         val lim = st.lim
         lt.setLimit(lim)
         change(false)
-        lop.setText(convertTime(sta!!.loop0))
-        lop1.setText(convertTime(sta!!.loop1))
+        lop.text = convertTime(sta!!.loop0)
+        lop1.text = convertTime(sta!!.loop1)
         if (sta!!.mus0 != null) {
-            lop.setEnabled(true)
+            lop.isEnabled = true
             getMusTime(sta!!.mus0, lop)
         } else {
-            lop.setText("00:00.000")
-            lop.setToolTipText("No music")
+            lop.text = "00:00.000"
+            lop.toolTipText = "No music"
             sta!!.loop0 = 0
-            lop.setEnabled(false)
+            lop.isEnabled = false
         }
         if (sta!!.mus1 != null) {
-            lop1.setEnabled(true)
+            lop1.isEnabled = true
             getMusTime(sta!!.mus1, lop1)
         } else {
-            lop1.setText("00:00.000")
-            lop1.setToolTipText("No music")
+            lop1.text = "00:00.000"
+            lop1.toolTipText = "No music"
             sta!!.loop1 = 0
-            lop1.setEnabled(false)
+            lop1.isEnabled = false
         }
     }
 
     private fun abler(b: Boolean) {
-        bg.setEnabled(b)
-        cas.setEnabled(b)
-        name.setEnabled(b)
-        jhea.setEnabled(b)
-        jlen.setEnabled(b)
-        jbg.setEnabled(b)
-        jcas.setEnabled(b)
-        jmax.setEnabled(b)
-        con.setEnabled(b)
-        mus.setEnabled(b)
-        jm0.setEnabled(b)
-        jmh.setEnabled(b)
-        jm1.setEnabled(b)
+        bg.isEnabled = b
+        cas.isEnabled = b
+        name.isEnabled = b
+        jhea.isEnabled = b
+        jlen.isEnabled = b
+        jbg.isEnabled = b
+        jcas.isEnabled = b
+        jmax.isEnabled = b
+        con.isEnabled = b
+        mus.isEnabled = b
+        jm0.isEnabled = b
+        jmh.isEnabled = b
+        jm1.isEnabled = b
         for (jtf in star) jtf.setEnabled(b)
         lt.abler(b)
     }
@@ -204,7 +204,7 @@ internal class HeadEditTable(p: Page, pack: UserPack) : Page(p) {
         })
         con.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                sta!!.non_con = !con.isSelected()
+                sta!!.non_con = !con.isSelected
                 setData(sta)
             }
         })
@@ -230,21 +230,21 @@ internal class HeadEditTable(p: Page, pack: UserPack) : Page(p) {
     private fun getMusTime(mus1: PackData.Identifier<Music>, jtf: JTF) {
         val f: Music? = mus1.get()
         if (f == null || f.data == null) {
-            jtf.setToolTipText("Music not found")
+            jtf.toolTipText = "Music not found"
             return
         }
         try {
             val duration: Long = CommonStatic.def.getMusicLength(f)
             if (duration == -1L) {
-                jtf.setToolTipText("Invalid Format")
+                jtf.toolTipText = "Invalid Format"
             } else if (duration == -2L) {
-                jtf.setToolTipText("Unsupported Format")
+                jtf.toolTipText = "Unsupported Format"
             } else if (duration == -3L) {
-                jtf.setToolTipText("Can't get duration")
+                jtf.toolTipText = "Can't get duration"
             } else if (duration >= 0) {
-                jtf.setToolTipText(convertTime(duration))
+                jtf.toolTipText = convertTime(duration)
             } else {
-                jtf.setToolTipText("Unknown error $duration")
+                jtf.toolTipText = "Unknown error $duration"
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -273,7 +273,7 @@ internal class HeadEditTable(p: Page, pack: UserPack) : Page(p) {
         set(lop)
         set(loop1)
         set(lop1)
-        con.setSelected(true)
+        con.isSelected = true
         for (i in 0..3) set(JTF().also { star[i] = it })
         addListeners()
         abler(false)
@@ -317,18 +317,18 @@ internal class HeadEditTable(p: Page, pack: UserPack) : Page(p) {
         }
         if (jtf === jmh) sta!!.mush = `val`
         if (jtf === lop) {
-            val tim = toMilli(jtf.getText())
+            val tim = toMilli(jtf.text)
             if (tim != -1L) {
                 sta!!.loop0 = tim
             }
-            lop.setText(convertTime(sta!!.loop0))
+            lop.text = convertTime(sta!!.loop0)
         }
         if (jtf === lop1) {
-            val tim = toMilli(jtf.getText())
+            val tim = toMilli(jtf.text)
             if (tim != -1L) {
                 sta!!.loop1 = tim
             }
-            lop1.setText(convertTime(sta!!.loop1))
+            lop1.text = convertTime(sta!!.loop1)
         }
     }
 
@@ -349,7 +349,7 @@ internal class HeadEditTable(p: Page, pack: UserPack) : Page(p) {
 
             override fun focusLost(fe: FocusEvent?) {
                 if (isAdj) return
-                input(jtf, jtf.getText())
+                input(jtf, jtf.text)
                 setData(sta)
             }
         })

@@ -59,7 +59,7 @@ abstract class ProcTable protected constructor(p: Page?, protected val inds: Int
     private var proc: Proc? = null
     override fun add(comp: Component): Component {
         val ret = super.add(comp)
-        if (comp is JTF) ljp.add(comp as JTF)
+        if (comp is JTF) ljp.add(comp)
         return ret
     }
 

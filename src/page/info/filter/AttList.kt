@@ -24,7 +24,7 @@ internal class AttList(type: Int, para: Int) : JList<String?>() {
                 var j = 0
                 if (ord[or] >= 0) Page.Companion.set(orop[ord[or]], x, y, 0, h, 200, 50)
                 while (j < sub.size) {
-                    if (sub[j].getText() != "(null)") {
+                    if (sub[j].text != "(null)") {
                         Page.Companion.set(sub[j], x, y, 250 + w % 10 * 175, h + w / 10 * 50, 175, 50)
                         w++
                     }
@@ -38,9 +38,9 @@ internal class AttList(type: Int, para: Int) : JList<String?>() {
 
     init {
         if (MainBCU.nimbus) {
-            setSelectionBackground(if (MainBCU.light) Theme.LIGHT.NIMBUS_SELECT_BG else Theme.DARK.NIMBUS_SELECT_BG)
+            selectionBackground = if (MainBCU.light) Theme.LIGHT.NIMBUS_SELECT_BG else Theme.DARK.NIMBUS_SELECT_BG
         }
-        setCellRenderer(object : DefaultListCellRenderer() {
+        cellRenderer = object : DefaultListCellRenderer() {
             private static
             val serialVersionUID = 1L
             override fun getListCellRendererComponent(l: JList<*>?, o: Any?, ind: Int, s: Boolean, f: Boolean): Component {
@@ -60,6 +60,6 @@ internal class AttList(type: Int, para: Int) : JList<String?>() {
                 jl.icon = ImageIcon(v)
                 return jl
             }
-        })
+        }
     }
 }

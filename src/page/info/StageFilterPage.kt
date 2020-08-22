@@ -10,7 +10,7 @@ import javax.swing.event.ListSelectionListener
 class StageFilterPage(p: Page?, ls: List<Stage?>) : StagePage(p) {
     private val jlst: JList<Stage> = JList<Stage>()
     private val jspst: JScrollPane = JScrollPane(jlst)
-    protected override fun resized(x: Int, y: Int) {
+    override fun resized(x: Int, y: Int) {
         super.resized(x, y)
         Page.Companion.set(jspst, x, y, 400, 550, 300, 650)
         Page.Companion.set(strt, x, y, 400, 0, 300, 50)
@@ -19,8 +19,8 @@ class StageFilterPage(p: Page?, ls: List<Stage?>) : StagePage(p) {
     private fun addListeners() {
         jlst.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (arg0.getValueIsAdjusting()) return
-                val s: Stage = jlst.getSelectedValue() ?: return
+                if (arg0.valueIsAdjusting) return
+                val s: Stage = jlst.selectedValue ?: return
                 setData(s)
             }
         })

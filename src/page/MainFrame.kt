@@ -29,10 +29,10 @@ class MainFrame(ver: String) : JFrame(Page.Companion.get(0, "title") + " Ver " +
         if (crect == null) {
             val screen = PP(Toolkit.getDefaultToolkit().screenSize)
             rect = PP(0, 0).toRectangle(P(screen.x, screen.y))
-            setBounds(rect)
-            setVisible(true)
-            val nx: Int = rect!!.width - getRootPane().getWidth()
-            val ny: Int = rect!!.height - getRootPane().getHeight()
+            bounds = rect
+            isVisible = true
+            val nx: Int = rect!!.width - getRootPane().width
+            val ny: Int = rect!!.height - getRootPane().height
             crect = rect
             if (nx != x || ny != y) {
                 x = nx
@@ -40,20 +40,20 @@ class MainFrame(ver: String) : JFrame(Page.Companion.get(0, "title") + " Ver " +
             }
         } else {
             rect = crect
-            setBounds(rect)
-            setVisible(true)
+            bounds = rect
+            isVisible = true
         }
     }
 
     private fun addListener() {
-        setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
+        defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
         addWindowListener(object : WindowAdapter() {
             override fun windowActivated(arg0: WindowEvent?) {
                 if (mainPanel != null) mainPanel!!.windowActivated()
             }
 
             override fun windowClosing(arg0: WindowEvent?) {
-                setVisible(false)
+                isVisible = false
                 if (mainPanel != null) mainPanel!!.exitAll()
                 CommonStatic.def.exit(true)
             }
@@ -64,27 +64,27 @@ class MainFrame(ver: String) : JFrame(Page.Companion.get(0, "title") + " Ver " +
         })
         Toolkit.getDefaultToolkit().addAWTEventListener(object : AWTEventListener {
             override fun eventDispatched(event: AWTEvent) {
-                if (event.getID() == KeyEvent.KEY_PRESSED && mainPanel != null) mainPanel!!.keyPressed(event as KeyEvent)
-                if (event.getID() == KeyEvent.KEY_RELEASED && mainPanel != null) mainPanel!!.keyReleased(event as KeyEvent)
-                if (event.getID() == KeyEvent.KEY_TYPED && mainPanel != null) mainPanel!!.keyTyped(event as KeyEvent)
+                if (event.id == KeyEvent.KEY_PRESSED && mainPanel != null) mainPanel!!.keyPressed(event as KeyEvent)
+                if (event.id == KeyEvent.KEY_RELEASED && mainPanel != null) mainPanel!!.keyReleased(event as KeyEvent)
+                if (event.id == KeyEvent.KEY_TYPED && mainPanel != null) mainPanel!!.keyTyped(event as KeyEvent)
             }
         }, AWTEvent.KEY_EVENT_MASK)
         Toolkit.getDefaultToolkit().addAWTEventListener(object : AWTEventListener {
             override fun eventDispatched(event: AWTEvent) {
-                if (event.getID() == MouseEvent.MOUSE_PRESSED && mainPanel != null) mainPanel!!.mousePressed(event as MouseEvent)
-                if (event.getID() == MouseEvent.MOUSE_RELEASED && mainPanel != null) mainPanel!!.mouseReleased(event as MouseEvent)
-                if (event.getID() == MouseEvent.MOUSE_CLICKED && mainPanel != null) mainPanel!!.mouseClicked(event as MouseEvent)
+                if (event.id == MouseEvent.MOUSE_PRESSED && mainPanel != null) mainPanel!!.mousePressed(event as MouseEvent)
+                if (event.id == MouseEvent.MOUSE_RELEASED && mainPanel != null) mainPanel!!.mouseReleased(event as MouseEvent)
+                if (event.id == MouseEvent.MOUSE_CLICKED && mainPanel != null) mainPanel!!.mouseClicked(event as MouseEvent)
             }
         }, AWTEvent.MOUSE_EVENT_MASK)
         Toolkit.getDefaultToolkit().addAWTEventListener(object : AWTEventListener {
             override fun eventDispatched(event: AWTEvent) {
-                if (event.getID() == MouseEvent.MOUSE_MOVED && mainPanel != null) mainPanel!!.mouseMoved(event as MouseEvent)
-                if (event.getID() == MouseEvent.MOUSE_DRAGGED && mainPanel != null) mainPanel!!.mouseDragged(event as MouseEvent)
+                if (event.id == MouseEvent.MOUSE_MOVED && mainPanel != null) mainPanel!!.mouseMoved(event as MouseEvent)
+                if (event.id == MouseEvent.MOUSE_DRAGGED && mainPanel != null) mainPanel!!.mouseDragged(event as MouseEvent)
             }
         }, AWTEvent.MOUSE_MOTION_EVENT_MASK)
         Toolkit.getDefaultToolkit().addAWTEventListener(object : AWTEventListener {
             override fun eventDispatched(event: AWTEvent) {
-                if (event.getID() == MouseEvent.MOUSE_WHEEL && mainPanel != null) mainPanel!!.mouseWheel(event as MouseEvent)
+                if (event.id == MouseEvent.MOUSE_WHEEL && mainPanel != null) mainPanel!!.mouseWheel(event as MouseEvent)
             }
         }, AWTEvent.MOUSE_WHEEL_EVENT_MASK)
         addComponentListener(object : ComponentAdapter() {
@@ -115,8 +115,8 @@ class MainFrame(ver: String) : JFrame(Page.Companion.get(0, "title") + " Ver " +
     private fun Fresized() {
         if (settingsize) return
         settingsize = true
-        val w: Int = getRootPane().getWidth()
-        val h: Int = getRootPane().getHeight()
+        val w: Int = getRootPane().width
+        val h: Int = getRootPane().height
         try {
             setFonts(Page.Companion.size(w, h, fontSize))
         } catch (cme: ConcurrentModificationException) {
@@ -128,7 +128,7 @@ class MainFrame(ver: String) : JFrame(Page.Companion.get(0, "title") + " Ver " +
 
     private fun setCrect() {
         val d = Toolkit.getDefaultToolkit().screenSize
-        val r: Rectangle = getBounds()
+        val r: Rectangle = bounds
         if (r.x + r.width >= 0 && r.y >= 0 && r.x < d.width && r.y - r.height < d.height) crect = r
     }
 
@@ -179,7 +179,7 @@ class MainFrame(ver: String) : JFrame(Page.Companion.get(0, "title") + " Ver " +
     }
 
     init {
-        setLayout(null)
+        layout = null
         addListener()
         sizer()
     }

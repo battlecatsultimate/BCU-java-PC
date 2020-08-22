@@ -24,7 +24,7 @@ class UnitInfoPage private constructor(p: Page, private val n: Node<Unit>, bas: 
     private val trea: TreaTable
     private val b: BasisSet
 
-    constructor(p: Page, de: Node<Unit>) : this(p, de, BasisSet.Companion.current()) {}
+    constructor(p: Page, de: Node<Unit>) : this(p, de, BasisSet.Companion.current())
 
     override fun callBack(newParam: Any?) {
         for (uit in info) uit!!.reset()
@@ -45,7 +45,7 @@ class UnitInfoPage private constructor(p: Page, private val n: Node<Unit>, bas: 
             info[i]!!.resized()
             h += ih + 50
         }
-        cont.setPreferredSize(Page.Companion.size(x, y, 1600, h - 50).toDimension())
+        cont.preferredSize = Page.Companion.size(x, y, 1600, h - 50).toDimension()
         Page.Companion.set(trea, x, y, 1750, 100, 400, 1200)
     }
 
@@ -91,11 +91,11 @@ class UnitInfoPage private constructor(p: Page, private val n: Node<Unit>, bas: 
         add(next)
         add(find)
         for (i in info.indices) cont.add(info[i])
-        cont.setLayout(null)
+        cont.layout = null
         add(jsp)
         add(trea)
-        prev.setEnabled(n.prev != null)
-        next.setEnabled(n.next != null)
+        prev.isEnabled = n.prev != null
+        next.isEnabled = n.next != null
         addListeners()
     }
 

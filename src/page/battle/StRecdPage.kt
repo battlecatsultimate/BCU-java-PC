@@ -23,7 +23,7 @@ class StRecdPage(p: Page?, protected val st: Stage, edit: Boolean) : AbRecdPage(
     private val jtf: JTF = JTF()
     private var rmp: RecdManagePage? = null
     override fun getSelection(): Recd {
-        return list.getSelectedValue()
+        return list.selectedValue
     }
 
     protected override fun renew() {
@@ -40,7 +40,7 @@ class StRecdPage(p: Page?, protected val st: Stage, edit: Boolean) : AbRecdPage(
         rmp = null
     }
 
-    protected override fun resized(x: Int, y: Int) {
+    override fun resized(x: Int, y: Int) {
         super.resized(x, y)
         Page.Companion.set(jsp, x, y, 50, 100, 500, 1100)
         Page.Companion.set(addr, x, y, 600, 400, 300, 50)
@@ -48,34 +48,34 @@ class StRecdPage(p: Page?, protected val st: Stage, edit: Boolean) : AbRecdPage(
         Page.Companion.set(jtf, x, y, 600, 500, 300, 50)
     }
 
-    protected override fun setList() {
+    override fun setList() {
         change(true)
-        val r: Recd = list.getSelectedValue()
+        val r: Recd = list.selectedValue
         list.setListData(st.recd.toTypedArray())
         if (st.recd.contains(r)) list.setSelectedValue(r, true)
-        setRecd(list.getSelectedValue())
-        addr.setEnabled(editable)
+        setRecd(list.selectedValue)
+        addr.isEnabled = editable
         change(false)
     }
 
-    protected override fun setRecd(r: Recd?) {
+    override fun setRecd(r: Recd?) {
         super.setRecd(r)
-        remr.setEnabled(editable && r != null)
-        jtf.setEditable(editable && r != null)
-        jtf.setText(if (r == null) "" else r.name)
+        remr.isEnabled = editable && r != null
+        jtf.isEditable = editable && r != null
+        jtf.text = if (r == null) "" else r.name
     }
 
     private fun addListeners() {
         addr.setLnr(Consumer { e: ActionEvent? -> changePanel(RecdManagePage(this).also { rmp = it }) })
         remr.setLnr(Consumer { e: ActionEvent? ->
-            val recd: Recd = list.getSelectedValue()
+            val recd: Recd = list.selectedValue
             st.recd.remove(recd)
             setList()
         })
         list.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(e: ListSelectionEvent?) {
-                if (isAdj() || list.getValueIsAdjusting()) return
-                setRecd(list.getSelectedValue())
+                if (isAdj() || list.valueIsAdjusting) return
+                setRecd(list.selectedValue)
             }
         })
         list.list = object : ReorderListener<Recd?> {
@@ -91,9 +91,9 @@ class StRecdPage(p: Page?, protected val st: Stage, edit: Boolean) : AbRecdPage(
             }
         }
         jtf.setLnr(Consumer<FocusEvent> { x: FocusEvent? ->
-            val r: Recd = list.getSelectedValue()
+            val r: Recd = list.selectedValue
             if (isAdj() || r == null) return@setLnr
-            r.name = jtf.getText()
+            r.name = jtf.text
         })
     }
 

@@ -32,13 +32,13 @@ open class StagePage(p: Page?) : Page(p) {
         Page.Companion.set(back, x, y, 0, 0, 200, 50)
         Page.Companion.set(jspinfo, x, y, 800, 50, 1400, 250)
         Page.Companion.set(jspjt, x, y, 800, 350, 1400, 850)
-        jt.setRowHeight(Page.Companion.size(x, y, 50))
+        jt.rowHeight = Page.Companion.size(x, y, 50)
         info.rowHeight = Page.Companion.size(x, y, 50)
     }
 
     protected open fun setData(st: Stage?) {
         stage = st
-        strt.setEnabled(st != null)
+        strt.isEnabled = st != null
         info.setData(st)
         jt.setData(st)
         jspjt.scrollRectToVisible(Rectangle(0, 0, 1, 1))
@@ -64,7 +64,7 @@ open class StagePage(p: Page?) : Page(p) {
         add(jspjt)
         add(jspinfo)
         add(strt)
-        strt.setEnabled(false)
+        strt.isEnabled = false
         addListeners()
     }
 

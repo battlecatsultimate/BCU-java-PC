@@ -21,7 +21,7 @@ internal open class ViewBoxDef protected constructor(c: Controller) : Canvas(), 
     private var lbimg: Queue<BufferedImage>? = null
     private var loader: ViewBox.Loader? = null
 
-    constructor() : this(Controller()) {}
+    constructor() : this(Controller())
 
     open fun draw(gra: FakeGraphics) {
         val w = width
@@ -64,8 +64,8 @@ internal open class ViewBoxDef protected constructor(c: Controller) : Canvas(), 
         val h = height
         if (Conf.white) {
             val img: BufferedImage = createImage(w, h) as BufferedImage
-            val gra: Graphics2D = img.getGraphics() as Graphics2D
-            gra.setColor(Color.WHITE)
+            val gra: Graphics2D = img.graphics as Graphics2D
+            gra.color = Color.WHITE
             gra.fillRect(0, 0, w, h)
             gra.drawImage(prev, 0, 0, null)
             g.drawImage(img, 0, 0, null)
@@ -105,16 +105,16 @@ internal open class ViewBoxDef protected constructor(c: Controller) : Canvas(), 
             val gra: Graphics2D
             if (!isBlank && Conf.white) {
                 img = BufferedImage(w, h, BufferedImage.TYPE_4BYTE_ABGR)
-                gra = img.getGraphics() as Graphics2D
+                gra = img.graphics as Graphics2D
             } else {
                 img = createImage(w, h) as BufferedImage
-                gra = img.getGraphics() as Graphics2D
+                gra = img.graphics as Graphics2D
                 if (!isBlank) {
                     val gdt = GradientPaint(w / 2, 0, ViewBox.Companion.c0, w / 2, h / 2, ViewBox.Companion.c1, true)
-                    val p: Paint = gra.getPaint()
-                    gra.setPaint(gdt)
+                    val p: Paint = gra.paint
+                    gra.paint = gdt
                     gra.fillRect(0, 0, w, h)
-                    gra.setPaint(p)
+                    gra.paint = p
                 }
             }
             draw(FG2D(gra))

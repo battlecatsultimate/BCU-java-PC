@@ -698,7 +698,7 @@ abstract class SortTable<T> protected constructor() : AbJTable() {
     protected abstract operator fun get(t: T, c: Int): Any
     protected abstract fun getTit(): Array<String>
     protected fun setHeader() {
-        for (i in 0 until getColumnCount()) getColumnModel().getColumn(i).setHeaderValue(getColumnName(i))
+        for (i in 0 until columnCount) getColumnModel().getColumn(i).headerValue = getColumnName(i)
     }
 
     companion object {

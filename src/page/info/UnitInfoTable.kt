@@ -71,9 +71,9 @@ class UnitInfoTable(p: Page?, de: Form) : Page(p) {
     private fun addListeners() {
         jtf.addFocusListener(object : FocusAdapter() {
             override fun focusLost(e: FocusEvent?) {
-                multi = f.regulateLv(CommonStatic.parseIntsN(jtf.getText()), multi)
+                multi = f.regulateLv(CommonStatic.parseIntsN(jtf.text), multi)
                 val strs: Array<String> = UtilPC.lvText(f, multi)
-                jtf.setText(strs[0])
+                jtf.text = strs[0]
                 if (pcoin != null) pcoin.setText(strs[1])
                 reset()
             }
@@ -93,7 +93,7 @@ class UnitInfoTable(p: Page?, de: Form) : Page(p) {
         }
         add(jtf)
         val strs: Array<String> = UtilPC.lvText(f, multi)
-        jtf.setText(strs[0])
+        jtf.text = strs[0]
         if (pcoin != null) {
             add(pcoin)
             pcoin.setText(strs[1])

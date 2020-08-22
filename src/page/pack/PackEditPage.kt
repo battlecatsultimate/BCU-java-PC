@@ -166,8 +166,8 @@ class PackEditPage(p: Page?) : Page(p) {
         })
         jld.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (jld.getValueIsAdjusting()) return
-                adde.setEnabled(pac != null && jld.getSelectedValue() != null && pac.editable)
+                if (jld.valueIsAdjusting) return
+                adde.isEnabled = pac != null && jld.selectedValue != null && pac.editable
             }
         })
     }
@@ -190,29 +190,29 @@ class PackEditPage(p: Page?) : Page(p) {
             override fun actionPerformed(arg0: ActionEvent?) {
                 if (!Opts.conf()) return
                 changing = true
-                var ind: Int = jlp.getSelectedIndex()
+                var ind: Int = jlp.selectedIndex
                 UserProfile.Companion.remove(pac)
                 pac.delete()
                 vpack.remove(pac)
                 jlp.setListData(vpack)
                 jlt.setListData(vpack)
                 if (ind > 0) ind--
-                jlp.setSelectedIndex(ind)
-                setPack(jlp.getSelectedValue())
+                jlp.selectedIndex = ind
+                setPack(jlp.selectedValue)
                 changing = false
             }
         })
         jlp.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (changing || jlp.getValueIsAdjusting()) return
+                if (changing || jlp.valueIsAdjusting) return
                 changing = true
-                setPack(jlp.getSelectedValue())
+                setPack(jlp.selectedValue)
                 changing = false
             }
         })
         jtfp.addFocusListener(object : FocusAdapter() {
             override fun focusLost(fe: FocusEvent?) {
-                val str: String = jtfp.getText().trim { it <= ' ' }
+                val str: String = jtfp.text.trim { it <= ' ' }
                 if (pac.desc.name == str) return
                 pac.desc.name = str
             }
@@ -221,17 +221,17 @@ class PackEditPage(p: Page?) : Page(p) {
         unpk.setLnr(Consumer { x: ActionEvent? ->
             val str: String = Opts.read("password: ") // FIXME
             Data.Companion.err<Workspace>(SupExc<Workspace> { (pac.source as ZipSource).unzip(str) })
-            unpk.setEnabled(false)
-            extr.setEnabled(true)
+            unpk.isEnabled = false
+            extr.isEnabled = true
         })
     }
 
     private fun `addListeners$2`() {
         jle.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(e: ListSelectionEvent?) {
-                if (changing || jle.getValueIsAdjusting()) return
+                if (changing || jle.valueIsAdjusting) return
                 changing = true
-                setEnemy(jle.getSelectedValue())
+                setEnemy(jle.selectedValue)
                 changing = false
             }
         })
@@ -239,7 +239,7 @@ class PackEditPage(p: Page?) : Page(p) {
             override fun actionPerformed(arg0: ActionEvent?) {
                 changing = true
                 val ce = CustomEnemy()
-                val anim: AnimCE = jld.getSelectedValue()
+                val anim: AnimCE = jld.selectedValue
                 val e = Enemy(pac.getNextID<Enemy, AbEnemy>(Enemy::class.java), anim, ce)
                 pac.enemies.add(e)
                 jle.setListData(pac.enemies.getList().toTypedArray())
@@ -252,17 +252,17 @@ class PackEditPage(p: Page?) : Page(p) {
             override fun actionPerformed(arg0: ActionEvent?) {
                 if (!Opts.conf()) return
                 changing = true
-                var ind: Int = jle.getSelectedIndex()
+                var ind: Int = jle.selectedIndex
                 pac.enemies.remove(ene)
                 jle.setListData(pac.enemies.getList().toTypedArray())
                 if (ind >= 0) ind--
-                jle.setSelectedIndex(ind)
-                setEnemy(jle.getSelectedValue())
+                jle.selectedIndex = ind
+                setEnemy(jle.selectedValue)
                 changing = false
             }
         })
         edit.setLnr(Supplier<Page> { EnemyEditPage(getThis(), ene) })
-        jtfe.setLnr(Consumer<FocusEvent> { e: FocusEvent? -> ene.name = jtfe.getText().trim { it <= ' ' } })
+        jtfe.setLnr(Consumer<FocusEvent> { e: FocusEvent? -> ene.name = jtfe.text.trim { it <= ' ' } })
         vene.setLnr(Supplier<Page> { EnemyViewPage(getThis(), pac.getID()) })
         ener.setLnr(Supplier<Page> { EREditPage(getThis(), pac) })
     }
@@ -284,9 +284,9 @@ class PackEditPage(p: Page?) : Page(p) {
         vmsc.setLnr(Supplier<Page> { if (pac.editable) MusicEditPage(getThis(), pac) else MusicPage(getThis(), pac.musics.getList()) })
         jls.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (changing || jls.getValueIsAdjusting()) return
+                if (changing || jls.valueIsAdjusting) return
                 changing = true
-                setMap(jls.getSelectedValue())
+                setMap(jls.selectedValue)
                 changing = false
             }
         })
@@ -304,7 +304,7 @@ class PackEditPage(p: Page?) : Page(p) {
                 changing = true
             }
         }
-        jtfs.setLnr(Consumer<FocusEvent> { x: FocusEvent? -> if (sm != null) sm.name = jtfs.getText().trim { it <= ' ' } })
+        jtfs.setLnr(Consumer<FocusEvent> { x: FocusEvent? -> if (sm != null) sm.name = jtfs.text.trim { it <= ' ' } })
         adds.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
                 changing = true
@@ -322,7 +322,7 @@ class PackEditPage(p: Page?) : Page(p) {
             override fun actionPerformed(arg0: ActionEvent?) {
                 if (!Opts.conf()) return
                 changing = true
-                var ind: Int = jls.getSelectedIndex()
+                var ind: Int = jls.selectedIndex
                 val n: Int = pac.mc.maps.size
                 val maps: Array<StageMap?> = arrayOfNulls<StageMap>(n - 1)
                 for (i in 0 until ind) maps[i] = pac.mc.maps.get(i)
@@ -330,8 +330,8 @@ class PackEditPage(p: Page?) : Page(p) {
                 pac.mc.maps = maps
                 jls.setListData(maps)
                 if (ind >= 0) ind--
-                jls.setSelectedIndex(ind)
-                setMap(jls.getSelectedValue())
+                jls.selectedIndex = ind
+                setMap(jls.selectedValue)
                 changing = false
             }
         })
@@ -340,22 +340,22 @@ class PackEditPage(p: Page?) : Page(p) {
     private fun `addListeners$4`() {
         jlr.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (changing || arg0.getValueIsAdjusting()) return
+                if (changing || arg0.valueIsAdjusting) return
                 changing = true
-                setRely(jlr.getSelectedValue())
+                setRely(jlr.selectedValue)
                 changing = false
             }
         })
         jlt.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (changing || arg0.getValueIsAdjusting()) return
+                if (changing || arg0.valueIsAdjusting) return
                 checkAddr()
             }
         })
         addr.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
                 changing = true
-                val rel: UserPack = jlt.getSelectedValue()
+                val rel: UserPack = jlt.selectedValue
                 pac.desc.dependency.add(rel.getID())
                 for (id in rel.desc.dependency) if (!pac.desc.dependency.contains(id)) pac.desc.dependency.add(id)
                 updateJlr()
@@ -367,14 +367,14 @@ class PackEditPage(p: Page?) : Page(p) {
         remr.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
                 changing = true
-                val ind: Int = jlr.getSelectedIndex() - 1
-                val rel: UserPack = jlr.getSelectedValue()
+                val ind: Int = jlr.selectedIndex - 1
+                val rel: UserPack = jlr.selectedValue
                 if (pac.relyOn(rel.getID())) if (Opts.conf("this action cannot be undone. Are you sure to remove "
                                 + "all elements in this pack from the selected parent?")) pac.forceRemoveParent(rel.getID())
                 pac.desc.dependency.remove(rel.getID())
                 updateJlr()
-                jlr.setSelectedIndex(ind)
-                setRely(jlr.getSelectedValue())
+                jlr.selectedIndex = ind
+                setRely(jlr.selectedValue)
                 changing = false
             }
         })
@@ -382,15 +382,15 @@ class PackEditPage(p: Page?) : Page(p) {
 
     private fun checkAddr() {
         if (pac == null) {
-            addr.setEnabled(false)
+            addr.isEnabled = false
             return
         }
-        val rel: UserPack = jlt.getSelectedValue()
+        val rel: UserPack = jlt.selectedValue
         var b: Boolean = pac.editable
         b = b and (rel != null && !pac.desc.dependency.contains(rel.getID()))
         b = b and (rel !== pac)
         if (b) for (id in rel.desc.dependency) if (id == pac.getID()) b = false
-        addr.setEnabled(b)
+        addr.isEnabled = b
     }
 
     private fun ini() {
@@ -431,7 +431,7 @@ class PackEditPage(p: Page?) : Page(p) {
         add(vmsc)
         add(unpk)
         add(recd)
-        jle.setCellRenderer(AnimLCR())
+        jle.cellRenderer = AnimLCR()
         jld.setCellRenderer(AnimLCR())
         setPack(null)
         addListeners()
@@ -444,40 +444,40 @@ class PackEditPage(p: Page?) : Page(p) {
     private fun setEnemy(e: Enemy?) {
         ene = e
         val b = e != null && pac.editable
-        edit.setEnabled(e != null && e.de is CustomEnemy)
-        jtfe.setEnabled(b)
-        reme.setEnabled(b)
+        edit.isEnabled = e != null && e.de is CustomEnemy
+        jtfe.isEnabled = b
+        reme.isEnabled = b
         if (b) {
-            jtfe.setText(e.name)
-            reme.setEnabled(e.findApp(pac.mc).size == 0)
+            jtfe.text = e.name
+            reme.isEnabled = e.findApp(pac.mc).size == 0
         }
     }
 
     private fun setMap(map: StageMap?) {
         sm = map
-        rems.setEnabled(sm != null && pac.editable)
-        jtfs.setEnabled(sm != null && pac.editable)
-        if (sm != null) jtfs.setText(map.name)
+        rems.isEnabled = sm != null && pac.editable
+        jtfs.isEnabled = sm != null && pac.editable
+        if (sm != null) jtfs.text = map.name
     }
 
     private fun setPack(pack: UserPack?) {
         pac = pack
         val b = pac != null && pac.editable
-        remp.setEnabled(pac != null)
-        jtfp.setEnabled(b)
-        adde.setEnabled(b && jld.getSelectedValue() != null)
-        adds.setEnabled(b)
-        extr.setEnabled(pac != null)
-        vcas.setEnabled(pac != null)
-        vbgr.setEnabled(pac != null)
-        vene.setEnabled(pac != null)
-        vmsc.setEnabled(pac != null)
-        recd.setEnabled(pac != null)
+        remp.isEnabled = pac != null
+        jtfp.isEnabled = b
+        adde.isEnabled = b && jld.selectedValue != null
+        adds.isEnabled = b
+        extr.isEnabled = pac != null
+        vcas.isEnabled = pac != null
+        vbgr.isEnabled = pac != null
+        vene.isEnabled = pac != null
+        vmsc.isEnabled = pac != null
+        recd.isEnabled = pac != null
         val canUnpack = pac != null && !pac.editable
         val canExport = pac != null && pac.editable
-        unpk.setEnabled(canUnpack)
-        extr.setEnabled(canExport)
-        if (b) jtfp.setText(pack.desc.name)
+        unpk.isEnabled = canUnpack
+        extr.isEnabled = canExport
+        if (b) jtfp.text = pack.desc.name
         if (pac == null) {
             jle.setListData(arrayOfNulls<Enemy>(0))
             jlr.setListData(arrayOfNulls<UserPack>(0))
@@ -489,7 +489,7 @@ class PackEditPage(p: Page?) : Page(p) {
         }
         checkAddr()
         val b0 = pac != null
-        sdiy.setEnabled(b0)
+        sdiy.isEnabled = b0
         if (b0) {
             jls.setListData(pac.mc.maps)
             jls.clearSelection()
@@ -501,13 +501,13 @@ class PackEditPage(p: Page?) : Page(p) {
 
     private fun setRely(rel: UserPack?) {
         if (pac == null || rel == null) {
-            remr.setEnabled(false)
+            remr.isEnabled = false
             return
         }
         val re: Boolean = pac.relyOn(rel.getID())
         remr.setText(0, if (re) "rema" else "rem")
-        remr.setForeground(if (re) Color.RED else Color.BLACK)
-        remr.setEnabled(true)
+        remr.foreground = if (re) Color.RED else Color.BLACK
+        remr.isEnabled = true
     }
 
     private fun updateJlr() {

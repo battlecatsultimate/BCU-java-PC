@@ -56,7 +56,7 @@ class EnemyListTable(private val page: Page) : SortTable<Enemy?>() {
         return if (c == 0) e.id else if (c == 1) e else if (c == 2) e.de.getHp() else if (c == 3) e.de.getHb() else if (c == 4) e.de.allAtk() else if (c == 5) e.de.getRange() else if (c == 6) e.de.getItv() else if (c == 7) e.de.getSpeed() else if (c == 8) (e.de.getDrop() * b.t().getDropMulti()) else if (c == 9) e.de.rawAtkData().get(0).get(1) else if (c == 10) if (e.de.allAtk() == 0) Int.MAX_VALUE else (e.de.getHp() as Long * e.de.getItv() / e.de.allAtk()) else if (c == 11) if (e.de.getHb() < 2) get(e, 10) as Int else get(e, 10) as Int / e.de.getHb() else null
     }
 
-    protected override fun getTit(): Array<String> {
+    override fun getTit(): Array<String> {
         return tit
     }
 

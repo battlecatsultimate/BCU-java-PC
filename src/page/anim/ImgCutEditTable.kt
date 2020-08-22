@@ -13,9 +13,9 @@ internal class ImgCutEditTable : AbJTable() {
     var ic: ImgCut? = null
     override fun editCellAt(row: Int, column: Int, e: EventObject): Boolean {
         val result: Boolean = super.editCellAt(row, column, e)
-        val editor: Component = getEditorComponent()
+        val editor: Component = editorComponent
         if (editor == null || editor !is JTextComponent) return result
-        if (e is KeyEvent) (editor as JTextComponent).selectAll()
+        if (e is KeyEvent) editor.selectAll()
         return result
     }
 

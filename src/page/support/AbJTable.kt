@@ -33,10 +33,10 @@ abstract class AbJTable protected constructor() : JTable(), TableModel {
     }
 
     init {
-        lnk = IntArray(getColumnCount())
+        lnk = IntArray(columnCount)
         for (i in lnk.indices) lnk[i] = i
         setColumnModel(tm)
-        setModel(this)
+        model = this
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
     }
 }

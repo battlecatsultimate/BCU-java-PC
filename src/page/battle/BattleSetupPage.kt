@@ -29,18 +29,18 @@ class BattleSetupPage(p: Page?, private val st: Stage, private vararg val conf: 
     private val jl = JLabel()
     private val jlu: JBTN = JBTN(0, "line")
     private val lub: LineUpBox = LineUpBox(this)
-    protected override fun getLub(): LineUpBox {
+    override fun getLub(): LineUpBox {
         return lub
     }
 
     protected override fun renew() {
         val b: BasisSet = BasisSet.Companion.current()
         jl.text = b.toString() + "-" + b.sele
-        if (st.lim != null && st.lim.lvr != null) strt.setEnabled(st.lim.lvr.isValid(b.sele.lu)) else tmax.setEnabled(false)
+        if (st.lim != null && st.lim.lvr != null) strt.isEnabled = st.lim.lvr.isValid(b.sele.lu) else tmax.isEnabled = false
         lub.setLU(b.sele.lu)
     }
 
-    protected override fun resized(x: Int, y: Int) {
+    override fun resized(x: Int, y: Int) {
         setBounds(0, 0, x, y)
         Page.Companion.set(back, x, y, 0, 0, 200, 50)
         Page.Companion.set(jsps, x, y, 50, 100, 200, 200)
@@ -61,8 +61,8 @@ class BattleSetupPage(p: Page?, private val st: Stage, private vararg val conf: 
         })
         jls.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (arg0.getValueIsAdjusting()) return
-                if (jls.getSelectedIndex() == -1) jls.setSelectedIndex(0)
+                if (arg0.valueIsAdjusting) return
+                if (jls.selectedIndex == -1) jls.selectedIndex = 0
             }
         })
         jlu.addActionListener(object : ActionListener {
@@ -72,10 +72,10 @@ class BattleSetupPage(p: Page?, private val st: Stage, private vararg val conf: 
         })
         strt.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                var star: Int = jls.getSelectedIndex()
+                var star: Int = jls.selectedIndex
                 val ints = IntArray(1)
-                if (rich.isSelected()) ints[0] = ints[0] or 1
-                if (snip.isSelected()) ints[0] = ints[0] or 2
+                if (rich.isSelected) ints[0] = ints[0] or 1
+                if (snip.isSelected) ints[0] = ints[0] or 2
                 var b: BasisLU = BasisSet.Companion.current().sele
                 if (conf.size == 1 && conf[0] == 0) {
                     b = RandStage.getLU(star)
@@ -113,7 +113,7 @@ class BattleSetupPage(p: Page?, private val st: Stage, private vararg val conf: 
             for (i in 0..4) tit[i] = star + (i + 1)
             jls.setListData(tit)
         }
-        jls.setSelectedIndex(0)
+        jls.selectedIndex = 0
         addListeners()
     }
 

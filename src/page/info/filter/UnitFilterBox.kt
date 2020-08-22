@@ -171,24 +171,24 @@ internal class UFBList(p: Page?, pack: String?) : UnitFilterBox(p, pack) {
             val a: Int = du.getAbi()
             var b0: Boolean = rare.isSelectedIndex(u.rarity)
             var b1: Boolean = !orop[0].isSelected()
-            for (i in trait.getSelectedIndices()) b1 = if (orop[0].isSelected()) b1 or (t shr i and 1 == 1) else b1 and (t shr i and 1 == 1)
+            for (i in trait.selectedIndices) b1 = if (orop[0].isSelected()) b1 or (t shr i and 1 == 1) else b1 and (t shr i and 1 == 1)
             var b2: Boolean = !orop[1].isSelected()
             val len: Int = Interpret.SABIS.size
-            for (i in abis.getSelectedIndices()) b2 = if (i < len) {
+            for (i in abis.selectedIndices) b2 = if (i < len) {
                 val bind = a shr i and 1 == 1
                 if (orop[1].isSelected()) b2 or bind else b2 and bind
             } else if (orop[1].isSelected()) b2 or du.getAllProc().getArr(i - len).exists() else b2 and du.getAllProc().getArr(i - len).exists()
             var b3: Boolean = !orop[2].isSelected()
-            for (i in atkt.getSelectedIndices()) b3 = if (orop[2].isSelected()) b3 or Interpret.isType(du, i) else b3 and Interpret.isType(du, i)
+            for (i in atkt.selectedIndices) b3 = if (orop[2].isSelected()) b3 or Interpret.isType(du, i) else b3 and Interpret.isType(du, i)
             var b4 = true
             var fname: String = MultiLangCont.Companion.getStatic().FNAME.getCont(f)
             if (fname == null) fname = f.name
             if (fname == null) fname = ""
             if (name != null) b4 = fname.toLowerCase().contains(name!!.toLowerCase())
-            b0 = rare.getSelectedIndex() == -1 or b0
-            b1 = trait.getSelectedIndex() == -1 or b1
-            b2 = abis.getSelectedIndex() == -1 or b2
-            b3 = atkt.getSelectedIndex() == -1 or b3
+            b0 = rare.selectedIndex == -1 or b0
+            b1 = trait.selectedIndex == -1 or b1
+            b2 = abis.selectedIndex == -1 or b2
+            b3 = atkt.selectedIndex == -1 or b3
             if (b0 and b1 and b2 and b3 and b4) ans.add(f)
         }
         front.callBack(ans)
@@ -223,7 +223,7 @@ internal class UFBList(p: Page?, pack: String?) : UnitFilterBox(p, pack) {
 
     private fun set(jl: JList<*>) {
         val m: Int = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
-        jl.setSelectionMode(m)
+        jl.selectionMode = m
         jl.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
                 confirm()

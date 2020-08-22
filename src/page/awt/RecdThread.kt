@@ -35,7 +35,7 @@ abstract class RecdThread protected constructor(list: Queue<BufferedImage?>, bip
         }
     }
 
-    private class MP4Thread internal constructor(list: Queue<BufferedImage?>, str: String, bip: RetFunc?) : RecdThread(list, bip) {
+    private class MP4Thread(list: Queue<BufferedImage?>, str: String, bip: RetFunc?) : RecdThread(list, bip) {
         val file: File
         private var encoder: AWTSequenceEncoder? = null
         override fun finish() {
@@ -69,7 +69,7 @@ abstract class RecdThread protected constructor(list: Queue<BufferedImage?>, bip
         }
     }
 
-    private class PNGThread internal constructor(list: Queue<BufferedImage?>, out: String, bip: RetFunc?) : RecdThread(list, bip) {
+    private class PNGThread(list: Queue<BufferedImage?>, out: String, bip: RetFunc?) : RecdThread(list, bip) {
         private val path: String
         private var count = 0
         override fun finish() {}

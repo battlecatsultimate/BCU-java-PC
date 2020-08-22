@@ -95,18 +95,18 @@ class ConfigPage(p: Page?) : Page(p) {
         })
         prel.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                MainBCU.preload = prel.isSelected()
+                MainBCU.preload = prel.isSelected
             }
         })
         exla.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                MainLocale.Companion.exLang = exla.isSelected()
+                MainLocale.Companion.exLang = exla.isSelected
                 Page.Companion.renewLoc(getThis())
             }
         })
         extt.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                MainLocale.Companion.exTTT = extt.isSelected()
+                MainLocale.Companion.exTTT = extt.isSelected
                 Page.Companion.renewLoc(getThis())
             }
         })
@@ -118,17 +118,17 @@ class ConfigPage(p: Page?) : Page(p) {
         })
         whit.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                Conf.white = whit.isSelected()
+                Conf.white = whit.isSelected
             }
         })
         refe.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                cfg().ref = refe.isSelected()
+                cfg().ref = refe.isSelected
             }
         })
         jogl.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                MainBCU.USE_JOGL = jogl.isSelected()
+                MainBCU.USE_JOGL = jogl.isSelected
                 if (Opts.conf("This requires restart to apply. Do you want to restart?")) CommonStatic.def.exit(true)
             }
         })
@@ -150,18 +150,18 @@ class ConfigPage(p: Page?) : Page(p) {
                 }
             })
         }
-        jsmin.addChangeListener(ChangeListener { cfg().deadOpa = jsmin.getValue() })
-        jsmax.addChangeListener(ChangeListener { cfg().fullOpa = jsmax.getValue() })
-        jsbg.addChangeListener(ChangeListener { BCMusic.setBGVol(jsbg.getValue()) })
-        jsse.addChangeListener(ChangeListener { BCMusic.setSEVol(jsse.getValue()) })
+        jsmin.addChangeListener(ChangeListener { cfg().deadOpa = jsmin.value })
+        jsmax.addChangeListener(ChangeListener { cfg().fullOpa = jsmax.value })
+        jsbg.addChangeListener(ChangeListener { BCMusic.setBGVol(jsbg.value) })
+        jsse.addChangeListener(ChangeListener { BCMusic.setSEVol(jsse.value) })
         jls.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
                 if (changing) return
                 changing = true
-                if (jls.getSelectedIndex() == -1) {
-                    jls.setSelectedIndex(cfg().lang)
+                if (jls.selectedIndex == -1) {
+                    jls.selectedIndex = cfg().lang
                 }
-                cfg().lang = jls.getSelectedIndex()
+                cfg().lang = jls.selectedIndex
                 Page.Companion.renewLoc(getThis())
                 changing = false
             }
@@ -174,7 +174,7 @@ class ConfigPage(p: Page?) : Page(p) {
         })
         musc.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                BCMusic.play = musc.isSelected()
+                BCMusic.play = musc.isSelected
             }
         })
         nimbus.setLnr(Consumer { b: ActionEvent? ->
@@ -223,11 +223,11 @@ class ConfigPage(p: Page?) : Page(p) {
         set(jsse)
         add(nimbus)
         add(theme)
-        jls.setSelectedIndex(cfg().lang)
-        jsmin.setValue(cfg().deadOpa)
-        jsmax.setValue(cfg().fullOpa)
-        jsbg.setValue(BCMusic.VOL_BG)
-        jsse.setValue(BCMusic.VOL_SE)
+        jls.selectedIndex = cfg().lang
+        jsmin.value = cfg().deadOpa
+        jsmax.value = cfg().fullOpa
+        jsbg.value = BCMusic.VOL_BG
+        jsse.value = BCMusic.VOL_SE
         for (i in 0..3) {
             left[i] = JBTN("<")
             right[i] = JBTN(">")
@@ -244,25 +244,25 @@ class ConfigPage(p: Page?) : Page(p) {
             left[i].setEnabled(cfg().ints.get(i) > 0)
             right[i].setEnabled(cfg().ints.get(i) < 2)
         }
-        exla.setSelected(MainLocale.Companion.exLang)
-        extt.setSelected(MainLocale.Companion.exTTT)
-        prel.setSelected(MainBCU.preload)
-        whit.setSelected(Conf.white)
-        refe.setSelected(cfg().ref)
-        musc.setSelected(BCMusic.play)
-        jogl.setSelected(MainBCU.USE_JOGL)
+        exla.isSelected = MainLocale.Companion.exLang
+        extt.isSelected = MainLocale.Companion.exTTT
+        prel.isSelected = MainBCU.preload
+        whit.isSelected = Conf.white
+        refe.isSelected = cfg().ref
+        musc.isSelected = BCMusic.play
+        jogl.isSelected = MainBCU.USE_JOGL
         if (!MainBCU.nimbus) {
-            theme.setEnabled(false)
+            theme.isEnabled = false
         }
         addListeners()
     }
 
     private fun set(sl: JSlider) {
         add(sl)
-        sl.setMajorTickSpacing(10)
-        sl.setMinorTickSpacing(5)
-        sl.setPaintTicks(true)
-        sl.setPaintLabels(true)
+        sl.majorTickSpacing = 10
+        sl.minorTickSpacing = 5
+        sl.paintTicks = true
+        sl.paintLabels = true
     }
 
     companion object {

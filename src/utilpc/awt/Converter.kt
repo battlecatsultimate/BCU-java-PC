@@ -18,8 +18,8 @@ class Converter(private val mode: Int) : Composite, CompositeContext {
 
     override fun dispose() {}
     private fun comp3(src: Raster, dst: Raster, out: WritableRaster) {
-        val w: Int = dst.getWidth()
-        val h: Int = dst.getHeight()
+        val w: Int = dst.width
+        val h: Int = dst.height
         val dsts: IntArray = dst.getPixels(0, 0, w, h, IntArray(w * h * 3))
         for (i in 0 until w) for (j in 0 until h) {
             val ind = i * h + j

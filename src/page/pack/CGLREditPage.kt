@@ -66,7 +66,7 @@ class CGLREditPage(p: Page?, pac: UserPack?) : Page(p) {
             for (f in ufp.getList()) if (!list.contains(f.unit)) list.add(f.unit)
             jlua.setListData(list.toTypedArray())
             jlua.clearSelection()
-            if (list.size > 0) jlua.setSelectedIndex(0)
+            if (list.size > 0) jlua.selectedIndex = 0
             changing = false
         }
     }
@@ -137,16 +137,16 @@ class CGLREditPage(p: Page?, pac: UserPack?) : Page(p) {
         })
         jlcg.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (changing || jlcg.getValueIsAdjusting()) return
+                if (changing || jlcg.valueIsAdjusting) return
                 changing = true
-                cg = jlcg.getSelectedValue()
+                cg = jlcg.selectedValue
                 updateCG()
                 changing = false
             }
         })
         addus.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                val u: List<Unit> = jlua.getSelectedValuesList()
+                val u: List<Unit> = jlua.selectedValuesList
                 if (cg == null || u.size == 0) return
                 changing = true
                 cg.set.addAll(u)
@@ -157,7 +157,7 @@ class CGLREditPage(p: Page?, pac: UserPack?) : Page(p) {
         })
         remus.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                val u: Unit = jlus.getSelectedValue()
+                val u: Unit = jlus.selectedValue
                 if (cg == null || u == null) return
                 changing = true
                 val list: MutableList<Unit> = ArrayList()
@@ -166,7 +166,7 @@ class CGLREditPage(p: Page?, pac: UserPack?) : Page(p) {
                 if (ind < 0 && list.size > 1) ind = 0
                 cg.set.remove(u)
                 updateCG()
-                jlus.setSelectedIndex(ind)
+                jlus.selectedIndex = ind
                 changing = false
             }
         })
@@ -178,7 +178,7 @@ class CGLREditPage(p: Page?, pac: UserPack?) : Page(p) {
             }
         })
         jtfna.setLnr(Consumer<FocusEvent> { x: FocusEvent? ->
-            val str: String = jtfna.getText()
+            val str: String = jtfna.text
             if (cg.name == str) return@setLnr
             cg.name = str
         })
@@ -211,9 +211,9 @@ class CGLREditPage(p: Page?, pac: UserPack?) : Page(p) {
         })
         jllr.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (changing || jllr.getValueIsAdjusting()) return
+                if (changing || jllr.valueIsAdjusting) return
                 changing = true
-                lr = jllr.getSelectedValue()
+                lr = jllr.selectedValue
                 updateLR()
                 changing = false
             }
@@ -232,27 +232,27 @@ class CGLREditPage(p: Page?, pac: UserPack?) : Page(p) {
             override fun actionPerformed(arg0: ActionEvent?) {
                 if (sb == null) return
                 changing = true
-                var ind: Int = jlsb.getSelectedIndex()
+                var ind: Int = jlsb.selectedIndex
                 lr.res.remove(sb)
                 updateLR()
                 if (lr.res.size >= ind) ind = lr.res.size - 1
-                jlsb.setSelectedIndex(ind)
-                sb = jlsb.getSelectedValue()
+                jlsb.selectedIndex = ind
+                sb = jlsb.selectedValue
                 updateSB()
                 changing = false
             }
         })
         jlsb.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (changing || jlsb.getValueIsAdjusting()) return
+                if (changing || jlsb.valueIsAdjusting) return
                 changing = true
-                sb = jlsb.getSelectedValue()
+                sb = jlsb.selectedValue
                 updateSB()
                 changing = false
             }
         })
         jtflr.setLnr(Consumer<FocusEvent> { x: FocusEvent? ->
-            val str: String = jtflr.getText()
+            val str: String = jtflr.text
             if (lr.name == str) return@setLnr
             lr.name = str
         })
@@ -280,7 +280,7 @@ class CGLREditPage(p: Page?, pac: UserPack?) : Page(p) {
         set(jtfna)
         set(jtflr)
         for (i in jtfra.indices) set(JTF().also { jtfra[i] = it })
-        jlus.setCellRenderer(UnitLCR())
+        jlus.cellRenderer = UnitLCR()
         jlua.setCellRenderer(UnitLCR())
         updateCGL()
         updateLRL()
@@ -297,7 +297,7 @@ class CGLREditPage(p: Page?, pac: UserPack?) : Page(p) {
         add(jtf)
         jtf.addFocusListener(object : FocusAdapter() {
             override fun focusLost(fe: FocusEvent?) {
-                val inp: IntArray = CommonStatic.parseIntsN(jtf.getText())
+                val inp: IntArray = CommonStatic.parseIntsN(jtf.text)
                 for (i in inp.indices) if (inp[i] < 0) inp[i] = 0
                 if (jtf === jtfal) put(lr.all, inp)
                 if (jtf === jtfsb) put(lr.res.get(sb), inp)
@@ -318,19 +318,19 @@ class CGLREditPage(p: Page?, pac: UserPack?) : Page(p) {
     }
 
     private fun updateCG() {
-        jlus.setEnabled(cg != null)
-        addus.setEnabled(cg != null)
-        remus.setEnabled(cg != null)
-        remcg.setEnabled(cg != null && !cg.used())
-        cgt.setEnabled(cg != null)
-        jtfna.setEnabled(cg != null)
+        jlus.isEnabled = cg != null
+        addus.isEnabled = cg != null
+        remus.isEnabled = cg != null
+        remcg.isEnabled = cg != null && !cg.used()
+        cgt.isEnabled = cg != null
+        jtfna.isEnabled = cg != null
         cgt.setText("")
-        jtfna.setText("")
-        addsb.setEnabled(lr != null && cg != null && !lr.res.containsKey(cg))
+        jtfna.text = ""
+        addsb.isEnabled = lr != null && cg != null && !lr.res.containsKey(cg)
         if (cg == null) jlus.setListData(arrayOfNulls<Unit>(0)) else {
             jlus.setListData(cg.set.toTypedArray())
             cgt.setText(0, if (cg.type == 0) "include" else "exclude")
-            jtfna.setText(cg.name)
+            jtfna.text = cg.name
         }
     }
 
@@ -341,18 +341,18 @@ class CGLREditPage(p: Page?, pac: UserPack?) : Page(p) {
     }
 
     private fun updateLR() {
-        remlr.setEnabled(lr != null && !lr.used())
-        jlsb.setEnabled(lr != null)
-        addsb.setEnabled(lr != null && cg != null && !lr.res.containsKey(cg))
-        jtflr.setEnabled(lr != null)
-        jtflr.setText("")
+        remlr.isEnabled = lr != null && !lr.used()
+        jlsb.isEnabled = lr != null
+        addsb.isEnabled = lr != null && cg != null && !lr.res.containsKey(cg)
+        jtflr.isEnabled = lr != null
+        jtflr.text = ""
         if (lr == null) jlsb.setListData(arrayOfNulls<CharaGroup>(0)) else {
             jlsb.setListData(lr.res.keys.toTypedArray())
-            jtflr.setText(lr.name)
+            jtflr.text = lr.name
         }
         if (lr == null || sb == null || !lr.res.containsKey(sb)) sb = null
         jlsb.setSelectedValue(sb, true)
-        jtfal.setEnabled(lr != null)
+        jtfal.isEnabled = lr != null
         for (jtf in jtfra) jtf.setEnabled(lr != null)
         updateSB()
     }
@@ -364,7 +364,7 @@ class CGLREditPage(p: Page?, pac: UserPack?) : Page(p) {
     }
 
     private fun updateSB() {
-        jtfsb.setEnabled(sb != null)
+        jtfsb.isEnabled = sb != null
         if (lr != null) {
             set(jtfal, "all: ", lr.all)
             for (i in jtfra.indices) set(jtfra[i], Interpret.RARITY.get(i).toString() + ": ", lr.rares.get(i))
@@ -373,7 +373,7 @@ class CGLREditPage(p: Page?, pac: UserPack?) : Page(p) {
             for (i in jtfra.indices) set(jtfra[i], Interpret.RARITY.get(i).toString() + ": ", null)
         }
         if (lr == null || sb == null) set(jtfsb, "group: ", null) else set(jtfsb, "group: ", lr.res.get(sb))
-        remsb.setEnabled(sb != null)
+        remsb.isEnabled = sb != null
     }
 
     companion object {

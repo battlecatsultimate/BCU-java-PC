@@ -37,12 +37,12 @@ internal class IconBoxDef : ViewBoxDef(IBCtrl()), IconBox {
             val r: Double = Math.min(1.0 * IBConf.line.get(2) / bw, 1.0 * IBConf.line.get(3) / bh)
             val clip: BufferedImage = prev.getSubimage(IBConf.line.get(0), IBConf.line.get(1), (bw * r).toInt(), (bh * r).toInt())
             val ans = BufferedImage(bw, bh, BufferedImage.TYPE_3BYTE_BGR)
-            ans.getGraphics().drawImage(clip, 0, 0, bw, bh, null)
+            ans.graphics.drawImage(clip, 0, 0, bw, bh, null)
             return ans
         }
 
     override fun getCtrl(): IBCtrl {
-        return ctrl as IBCtrl
+        return ctrl
     }
 
     override fun setBlank(selected: Boolean) {
@@ -54,7 +54,7 @@ internal class IconBoxDef : ViewBoxDef(IBCtrl()), IconBox {
     }
 
     init {
-        setFocusable(true)
+        isFocusable = true
         IBConf.glow = 0
         changeType()
     }

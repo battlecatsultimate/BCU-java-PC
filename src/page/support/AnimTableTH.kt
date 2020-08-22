@@ -14,9 +14,9 @@ class AnimTableTH<T>(jtable: AnimTable<T>, t: Int) : TransferHandler() {
     private val table: AnimTable<T>
     private var rows: IntArray
     override fun canImport(info: TransferSupport): Boolean {
-        var b = info.getComponent() === table
+        var b = info.component === table
         b = b and info.isDataFlavorSupported(AnimTransfer.Companion.DFS.get(type))
-        table.setCursor(if (b) DragSource.DefaultMoveDrop else DragSource.DefaultMoveNoDrop)
+        table.cursor = if (b) DragSource.DefaultMoveDrop else DragSource.DefaultMoveNoDrop
         return b
     }
 
@@ -27,12 +27,12 @@ class AnimTableTH<T>(jtable: AnimTable<T>, t: Int) : TransferHandler() {
     override fun importData(info: TransferSupport): Boolean {
         if (!canImport(info)) return false
         try {
-            return if (info.isDrop()) {
-                val row: Int = (info.getDropLocation() as JTable.DropLocation).getRow()
+            return if (info.isDrop) {
+                val row: Int = (info.dropLocation as JTable.DropLocation).row
                 table.reorder(row, rows)
             } else {
-                val data = info.getTransferable().getTransferData(AnimTransfer.Companion.DFS.get(type)) as Array<T>
-                val row: Int = table.getSelectedRow() + 1
+                val data = info.transferable.getTransferData(AnimTransfer.Companion.DFS.get(type)) as Array<T>
+                val row: Int = table.selectedRow + 1
                 table.insert(row, data)
             }
         } catch (e: Exception) {
@@ -41,14 +41,14 @@ class AnimTableTH<T>(jtable: AnimTable<T>, t: Int) : TransferHandler() {
         return false
     }
 
-    protected override fun createTransferable(c: JComponent): Transferable {
+    override fun createTransferable(c: JComponent): Transferable {
         assert(c === table)
-        rows = table.getSelectedRows()
+        rows = table.selectedRows
         return AnimTransfer<T>(type, table.getSelected())
     }
 
-    protected override fun exportDone(c: JComponent, t: Transferable, act: Int) {
-        table.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
+    override fun exportDone(c: JComponent, t: Transferable, act: Int) {
+        table.cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
     }
 
     companion object {
@@ -57,8 +57,8 @@ class AnimTableTH<T>(jtable: AnimTable<T>, t: Int) : TransferHandler() {
 
     init {
         table = jtable
-        table.setDragEnabled(true)
-        table.setDropMode(DropMode.INSERT_ROWS)
+        table.dragEnabled = true
+        table.dropMode = DropMode.INSERT_ROWS
         type = t
     }
 }

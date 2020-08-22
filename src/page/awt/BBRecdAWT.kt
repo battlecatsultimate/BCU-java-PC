@@ -12,7 +12,7 @@ internal class BBRecdAWT(bip: OuterBox?, bas: BattleField?, out: String, img: Bo
     private val qb: Queue<BufferedImage?> = ArrayDeque<BufferedImage?>()
     private var time = -1
     override fun end() {
-        synchronized(th!!) { th!!.end = true }
+        synchronized(th!!) { th.end = true }
     }
 
     override fun info(): String {
@@ -22,10 +22,10 @@ internal class BBRecdAWT(bip: OuterBox?, bas: BattleField?, out: String, img: Bo
     }
 
     override fun quit() {
-        synchronized(th!!) { th!!.quit = true }
+        synchronized(th!!) { th.quit = true }
     }
 
-    protected override val image: BufferedImage?
+    override val image: BufferedImage?
         protected get() {
             val bimg: BufferedImage = super.getImage()
             if (bbp.bf.sb.time > time) synchronized(qb) {

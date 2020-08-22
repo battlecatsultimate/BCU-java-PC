@@ -169,17 +169,17 @@ internal class EFBList(p: Page?, pack: String?) : EnemyFilterBox(p, pack) {
         for (e in UserProfile.Companion.getAll<Enemy>(pac, Enemy::class.java)) {
             val t: Int = e.de.getType()
             val a: Int = e.de.getAbi()
-            var b0: Boolean = Interpret.isER(e, rare.getSelectedIndex())
+            var b0: Boolean = Interpret.isER(e, rare.selectedIndex)
             var b1: Boolean = !orop[0].isSelected()
-            for (i in trait.getSelectedIndices()) b1 = if (orop[0].isSelected()) b1 or (t shr i and 1 == 1) else b1 and (t shr i and 1 == 1)
+            for (i in trait.selectedIndices) b1 = if (orop[0].isSelected()) b1 or (t shr i and 1 == 1) else b1 and (t shr i and 1 == 1)
             var b2: Boolean = !orop[1].isSelected()
             val len: Int = Interpret.EFILTER
-            for (i in abis.getSelectedIndices()) b2 = if (i < len) {
+            for (i in abis.selectedIndices) b2 = if (i < len) {
                 val bind = a shr Interpret.EABIIND.get(i) and 1 == 1
                 if (orop[1].isSelected()) b2 or bind else b2 and bind
             } else if (orop[1].isSelected()) b2 or e.de.getAllProc().getArr(i - len).exists() else b2 and e.de.getAllProc().getArr(i - len).exists()
             var b3: Boolean = !orop[2].isSelected()
-            for (i in atkt.getSelectedIndices()) b3 = if (orop[2].isSelected()) b3 or Interpret.isType(e.de, i) else b3 and Interpret.isType(e.de, i)
+            for (i in atkt.selectedIndices) b3 = if (orop[2].isSelected()) b3 or Interpret.isType(e.de, i) else b3 and Interpret.isType(e.de, i)
             var b4 = true
             var ename: String
             ename = MultiLangCont.Companion.getStatic().ENAME.getCont(e)
@@ -188,10 +188,10 @@ internal class EFBList(p: Page?, pack: String?) : EnemyFilterBox(p, pack) {
             if (name != null) {
                 b4 = ename.toLowerCase().contains(name!!.toLowerCase())
             }
-            b0 = rare.getSelectedIndex() == -1 or b0
-            b1 = trait.getSelectedIndex() == -1 or b1
-            b2 = abis.getSelectedIndex() == -1 or b2
-            b3 = atkt.getSelectedIndex() == -1 or b3
+            b0 = rare.selectedIndex == -1 or b0
+            b1 = trait.selectedIndex == -1 or b1
+            b2 = abis.selectedIndex == -1 or b2
+            b3 = atkt.selectedIndex == -1 or b3
             if (b0 and b1 and b2 and b3 and b4) ans.add(e)
         }
         front.callBack(ans)
@@ -205,11 +205,11 @@ internal class EFBList(p: Page?, pack: String?) : EnemyFilterBox(p, pack) {
         trait.setListData(vt)
         abis.setListData(va)
         atkt.setListData(Interpret.ATKCONF)
-        rare.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
+        rare.selectionMode = ListSelectionModel.SINGLE_SELECTION
         val m: Int = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
-        trait.setSelectionMode(m)
-        abis.setSelectionMode(m)
-        atkt.setSelectionMode(m)
+        trait.selectionMode = m
+        abis.selectionMode = m
+        atkt.selectionMode = m
         set(rare)
         set(trait)
         set(abis)

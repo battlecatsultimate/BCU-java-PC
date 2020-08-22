@@ -27,29 +27,29 @@ class EnemyViewPage(p: Page?, pac: String?) : AbViewPage(p) {
         jlu.setSelectedValue(e, true)
     }
 
-    protected override fun resized(x: Int, y: Int) {
+    override fun resized(x: Int, y: Int) {
         super.resized(x, y)
         Page.Companion.set(jspu, x, y, 50, 100, 300, 1100)
         Page.Companion.set(stat, x, y, 400, 1000, 300, 50)
         Page.Companion.set(source, x, y, 0, 50, 600, 50)
-        jlu.setFixedCellHeight(Page.Companion.size(x, y, 50))
+        jlu.fixedCellHeight = Page.Companion.size(x, y, 50)
     }
 
-    protected override fun updateChoice() {
-        val u: Enemy = jlu.getSelectedValue() ?: return
+    override fun updateChoice() {
+        val u: Enemy = jlu.selectedValue ?: return
         setAnim<UType>(u.anim)
     }
 
     private fun addListeners() {
         jlu.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (arg0.getValueIsAdjusting()) return
+                if (arg0.valueIsAdjusting) return
                 updateChoice()
             }
         })
         stat.addActionListener(object : ActionListener {
             override fun actionPerformed(e: ActionEvent?) {
-                val ene: Enemy = jlu.getSelectedValue() ?: return
+                val ene: Enemy = jlu.selectedValue ?: return
                 if (ene.de is CustomEnemy) {
                     changePanel(EnemyEditPage(getThis(), ene))
                 } else changePanel(EnemyInfoPage(getThis(), ene))

@@ -30,7 +30,7 @@ class RecdSavePage(p: Page?, rec: Recd) : Page(p) {
         })
         jtf.addFocusListener(object : FocusAdapter() {
             override fun focusLost(arg0: FocusEvent?) {
-                var str: String = jtf.getText().trim { it <= ' ' }
+                var str: String = jtf.text.trim { it <= ' ' }
                 str = MainBCU.validate(str)
                 if (str.length == 0) str = "new record"
                 str = Recd.Companion.getAvailable(str)
@@ -50,7 +50,7 @@ class RecdSavePage(p: Page?, rec: Recd) : Page(p) {
         add(back)
         add(jtf)
         add(save)
-        jtf.setText(Recd.Companion.getAvailable("new record"))
+        jtf.text = Recd.Companion.getAvailable("new record")
         addListeners()
     }
 

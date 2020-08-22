@@ -17,7 +17,7 @@ internal class ComboList : JList<Combo?>() {
     }
 
     init {
-        setCellRenderer(object : DefaultListCellRenderer() {
+        cellRenderer = object : DefaultListCellRenderer() {
             private static
             val serialVersionUID = 1L
             override fun getListCellRendererComponent(l: JList<*>?, o: Any?, ind: Int, s: Boolean, f: Boolean): Component {
@@ -26,6 +26,6 @@ internal class ComboList : JList<Combo?>() {
                 jl.text = Interpret.comboInfo(c)
                 return jl
             }
-        })
+        }
     }
 }

@@ -30,15 +30,15 @@ class Importer(str: String?) : JFileChooser() {
 
     init {
         val t = IMP_IMG
-        setDialogTitle(str)
+        dialogTitle = str
         val filter = FileNameExtensionFilter("PNG Images", "png")
-        setCurrentDirectory(curs[t])
-        setFileFilter(filter)
-        setDragEnabled(true)
+        currentDirectory = curs[t]
+        fileFilter = filter
+        dragEnabled = true
         val returnVal: Int = showOpenDialog(null)
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            file = getSelectedFile()
-            curs[t] = getCurrentDirectory()
+            file = selectedFile
+            curs[t] = currentDirectory
         }
     }
 }

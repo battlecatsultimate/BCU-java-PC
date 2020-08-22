@@ -47,7 +47,7 @@ class LvRestrictPage(p: Page?) : Page(p) {
 
     constructor(p: Page?, pac: UserPack?, b: Boolean) : this(p) {
         jlpk.setSelectedValue(pac, true)
-        jlpk.setEnabled(b)
+        jlpk.isEnabled = b
     }
 
     override fun resized(x: Int, y: Int) {
@@ -76,27 +76,27 @@ class LvRestrictPage(p: Page?) : Page(p) {
         })
         jlpk.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (changing || jlpk.getValueIsAdjusting()) return
+                if (changing || jlpk.valueIsAdjusting) return
                 changing = true
-                pack = jlpk.getSelectedValue()
+                pack = jlpk.selectedValue
                 updatePack()
                 changing = false
             }
         })
         jllr.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (changing || jllr.getValueIsAdjusting()) return
+                if (changing || jllr.valueIsAdjusting) return
                 changing = true
-                lr = jllr.getSelectedValue()
+                lr = jllr.selectedValue
                 updateLR()
                 changing = false
             }
         })
         jlcg.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (changing || jlcg.getValueIsAdjusting()) return
+                if (changing || jlcg.valueIsAdjusting) return
                 changing = true
-                cg = jlcg.getSelectedValue()
+                cg = jlcg.selectedValue
                 updateCG()
                 changing = false
             }
@@ -118,7 +118,7 @@ class LvRestrictPage(p: Page?) : Page(p) {
             add(JLabel().also { lra[i] = it })
             lra[i]!!.border = BorderFactory.createEtchedBorder()
         }
-        jlus.setCellRenderer(UnitLCR())
+        jlus.cellRenderer = UnitLCR()
         updatePack()
         addListeners()
     }
@@ -134,7 +134,7 @@ class LvRestrictPage(p: Page?) : Page(p) {
     }
 
     private fun updateCG() {
-        jlus.setEnabled(lr != null)
+        jlus.isEnabled = lr != null
         if (cg == null) {
             set(lsb, "group: ", null)
             jlus.setListData(arrayOfNulls<Unit>(0))
@@ -146,7 +146,7 @@ class LvRestrictPage(p: Page?) : Page(p) {
 
     private fun updateLR() {
         jllr.setSelectedValue(lr, true)
-        jlus.setEnabled(lr != null)
+        jlus.isEnabled = lr != null
         if (lr == null) {
             set(lal, "all: ", null)
             for (i in lra.indices) set(lra[i], Interpret.RARITY.get(i).toString() + ": ", null)
@@ -163,8 +163,8 @@ class LvRestrictPage(p: Page?) : Page(p) {
     }
 
     private fun updatePack() {
-        jllr.setEnabled(pack != null)
-        cglr.setEnabled(pack != null && pack.editable)
+        jllr.isEnabled = pack != null
+        cglr.isEnabled = pack != null && pack.editable
         var clr: Collection<LvRestrict?>? = null
         if (pack == null) jllr.setListData(arrayOfNulls<LvRestrict>(0)) else clr = pack.lvrs.getList()
         if (clr != null) {

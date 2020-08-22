@@ -24,7 +24,7 @@ class EditHead(private var cur: Page, private var `val`: Int) : Page(cur.front),
     private var changing = false
     var anim: AnimCE? = null
     override fun review() {
-        undo.setEnabled(anim != null && anim.history.size > 1)
+        undo.isEnabled = anim != null && anim.history.size > 1
         cur.callBack("review")
         if (anim != null) undo.setToolTipText(anim.getUndo())
     }

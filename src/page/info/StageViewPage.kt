@@ -36,7 +36,7 @@ class StageViewPage(p: Page?, collection: Collection<MapColc?>?) : StagePage(p) 
         jlst.setSelectedValue(st, true)
     }
 
-    protected override fun resized(x: Int, y: Int) {
+    override fun resized(x: Int, y: Int) {
         super.resized(x, y)
         Page.Companion.set(jspsm, x, y, 0, 50, 400, 1150)
         Page.Companion.set(jspmc, x, y, 400, 50, 400, 500)
@@ -49,10 +49,10 @@ class StageViewPage(p: Page?, collection: Collection<MapColc?>?) : StagePage(p) 
         Page.Companion.set(info, x, y, 1600, 300, 200, 50)
     }
 
-    protected override fun setData(st: Stage?) {
+    override fun setData(st: Stage?) {
         super.setData(st)
-        cpst.setEnabled(st != null)
-        recd.setEnabled(st != null)
+        cpst.isEnabled = st != null
+        recd.isEnabled = st != null
     }
 
     private fun addListeners() {
@@ -63,35 +63,35 @@ class StageViewPage(p: Page?, collection: Collection<MapColc?>?) : StagePage(p) 
         recd.setLnr(Consumer { x: ActionEvent? -> changePanel(StRecdPage(this, stage, false)) })
         jlmc.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (arg0.getValueIsAdjusting()) return
-                val mc: MapColc = jlmc.getSelectedValue() ?: return
+                if (arg0.valueIsAdjusting) return
+                val mc: MapColc = jlmc.selectedValue ?: return
                 jlsm.setListData(mc.maps)
-                jlsm.setSelectedIndex(0)
+                jlsm.selectedIndex = 0
             }
         })
         jlsm.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (arg0.getValueIsAdjusting()) return
-                val sm: StageMap = jlsm.getSelectedValue()
-                cpsm.setEnabled(false)
+                if (arg0.valueIsAdjusting) return
+                val sm: StageMap = jlsm.selectedValue
+                cpsm.isEnabled = false
                 if (sm == null) return
-                cpsm.setEnabled(true)
+                cpsm.isEnabled = true
                 jlst.setListData(Vector<Stage>(sm.list))
-                jlst.setSelectedIndex(0)
+                jlst.selectedIndex = 0
             }
         })
         jlst.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (arg0.getValueIsAdjusting()) return
-                val s: Stage = jlst.getSelectedValue()
-                cpst.setEnabled(false)
+                if (arg0.valueIsAdjusting) return
+                val s: Stage = jlst.selectedValue
+                cpst.isEnabled = false
                 if (s == null) return
                 setData(s)
             }
         })
         cpsm.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                val sm: StageMap = jlsm.getSelectedValue() ?: return
+                val sm: StageMap = jlsm.selectedValue ?: return
                 val mc: MapColc = Stage.Companion.CLIPMC
                 val copy: StageMap = sm.copy(mc)
                 mc.maps = Arrays.copyOf(mc.maps, mc.maps.size + 1)
@@ -100,7 +100,7 @@ class StageViewPage(p: Page?, collection: Collection<MapColc?>?) : StagePage(p) 
         })
         cpst.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                val stage: Stage = jlst.getSelectedValue() ?: return
+                val stage: Stage = jlst.selectedValue ?: return
                 Stage.Companion.CLIPSM.add(stage.copy(Stage.Companion.CLIPSM))
             }
         })
@@ -116,9 +116,9 @@ class StageViewPage(p: Page?, collection: Collection<MapColc?>?) : StagePage(p) 
         add(cpst)
         add(dgen)
         add(info)
-        cpsm.setEnabled(false)
-        cpst.setEnabled(false)
-        recd.setEnabled(false)
+        cpsm.isEnabled = false
+        cpst.isEnabled = false
+        recd.isEnabled = false
         addListeners()
     }
 

@@ -45,7 +45,7 @@ object UtilPC {
         val fh = (510 * r).toInt()
         bg.check()
         val temp = BufferedImage(w, h, BufferedImage.TYPE_INT_RGB)
-        val g: Graphics2D = temp.getGraphics() as Graphics2D
+        val g: Graphics2D = temp.graphics as Graphics2D
         val fg = FG2D(g)
         if (bg.top && bg.parts.size > Background.Companion.TOP) {
             var i = 0

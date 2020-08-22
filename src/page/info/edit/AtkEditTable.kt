@@ -68,7 +68,7 @@ internal class AtkEditTable(p: Page?, edit: Boolean, unit: Boolean) : Page(p) {
         Page.Companion.set(fab, x, y, 200, 350, 200, 50)
         Page.Companion.set(fmv, x, y, 200, 400, 200, 50)
         Page.Companion.set(isr, x, y, 200, 450, 200, 50)
-        apt.setPreferredSize(Page.Companion.size(x, y, 750, 2100).toDimension())
+        apt.preferredSize = Page.Companion.size(x, y, 750, 2100).toDimension()
         apt.resized(x, y)
         Page.Companion.set(jsp, x, y, 450, 0, 800, 950)
     }
@@ -76,15 +76,15 @@ internal class AtkEditTable(p: Page?, edit: Boolean, unit: Boolean) : Page(p) {
     fun setData(data: AtkDataModel?, multi: Double) {
         adm = data
         mul = multi
-        fatk.setText("" + (adm.atk * mul) as Int)
-        fpre.setText("" + adm.pre)
-        fp0.setText("" + adm.ld0)
-        fp1.setText("" + adm.ld1)
-        ftp.setText("" + adm.targ)
+        fatk.text = "" + (adm.atk * mul) as Int
+        fpre.text = "" + adm.pre
+        fp0.text = "" + adm.ld0
+        fp1.text = "" + adm.ld1
+        ftp.text = "" + adm.targ
         apt.setData(if (adm.ce.common) adm.ce.rep.proc else adm.proc)
-        fdr.setText("" + adm.dire)
-        fct.setText("" + adm.count)
-        fmv.setText("" + adm.move)
+        fdr.text = "" + adm.dire
+        fct.text = "" + adm.count
+        fmv.text = "" + adm.move
         var alt: Int = adm.getAltAbi()
         var i = 0
         var str = "{"
@@ -96,8 +96,8 @@ internal class AtkEditTable(p: Page?, edit: Boolean, unit: Boolean) : Page(p) {
             alt = alt shr 1
             i++
         }
-        fab.setText("$str}")
-        isr.setSelected(adm.range)
+        fab.text = "$str}"
+        isr.isSelected = adm.range
     }
 
     private fun ini() {
@@ -120,23 +120,21 @@ internal class AtkEditTable(p: Page?, edit: Boolean, unit: Boolean) : Page(p) {
         set(fab)
         set(fmv)
         add(isr)
-        ftp.setToolTipText(
-                "<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
-                        + "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost</html>")
-        fdr.setToolTipText("direction, 1 means attack enemies, 0 means not an attack, -1 means assist allies")
-        fpre.setToolTipText(
-                "<html>use 0 for random attack attaching to previous one.<br>pre=0 for first attack will invalidate it</html>")
+        ftp.toolTipText = ("<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
+                + "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost</html>")
+        fdr.toolTipText = "direction, 1 means attack enemies, 0 means not an attack, -1 means assist allies"
+        fpre.toolTipText = "<html>use 0 for random attack attaching to previous one.<br>pre=0 for first attack will invalidate it</html>"
         var ttt = ("<html>enter ID of abilities separated by comma or space.<br>" + "it changes the ability state"
                 + "(has to hot has, not has to has)<br>"
                 + "it won't change back until you make another attack to change it<br>")
         for (i in Interpret.SABIS.indices) ttt += i.toString() + ": " + Interpret.SABIS.get(i) + "<br>"
-        fab.setToolTipText("$ttt</html>")
+        fab.toolTipText = "$ttt</html>"
         add(jsp)
-        isr.setEnabled(editable)
-        jsp.getVerticalScrollBar().setUnitIncrement(10)
+        isr.isEnabled = editable
+        jsp.verticalScrollBar.unitIncrement = 10
         focusTraversalPolicy = ljp
         isFocusCycleRoot = true
-        isr.setLnr(Consumer { x: ActionEvent? -> adm.range = isr.isSelected() })
+        isr.setLnr(Consumer { x: ActionEvent? -> adm.range = isr.isSelected })
     }
 
     private fun input(jtf: JTF, text: String) {
@@ -189,13 +187,13 @@ internal class AtkEditTable(p: Page?, edit: Boolean, unit: Boolean) : Page(p) {
     }
 
     private fun set(jtf: JTF) {
-        jtf.setEditable(editable)
+        jtf.isEditable = editable
         add(jtf)
         ljp.add(jtf)
         jtf.addFocusListener(object : FocusAdapter() {
             override fun focusLost(fe: FocusEvent?) {
                 if (changing) return
-                input(jtf, jtf.getText())
+                input(jtf, jtf.text)
                 callBack(null)
             }
         })

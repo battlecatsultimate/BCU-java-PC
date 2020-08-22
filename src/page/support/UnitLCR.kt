@@ -22,7 +22,7 @@ class UnitLCR : DefaultListCellRenderer() {
         val v = form.anim.edi ?: return jl
         jl.icon = UtilPC.getIcon(v)
         if (s && MainBCU.nimbus) {
-            jl.setBackground(if (MainBCU.light) Theme.LIGHT.NIMBUS_SELECT_BG else Theme.DARK.NIMBUS_SELECT_BG)
+            jl.background = if (MainBCU.light) Theme.LIGHT.NIMBUS_SELECT_BG else Theme.DARK.NIMBUS_SELECT_BG
         }
         return jl
     }

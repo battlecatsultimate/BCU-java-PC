@@ -64,7 +64,7 @@ class LevelEditPage(private val p: Page, private val lv: Level, private val f: F
         bck.setLnr(Consumer { x: ActionEvent? -> changePanel(front) })
         levels.addFocusListener(object : FocusAdapter() {
             override fun focusLost(e: FocusEvent?) {
-                val lvs: IntArray = CommonStatic.parseIntsN(levels.getText())
+                val lvs: IntArray = CommonStatic.parseIntsN(levels.text)
                 setLvOrb(lvs, generateOrb())
             }
         })
@@ -73,20 +73,20 @@ class LevelEditPage(private val p: Page, private val lv: Level, private val f: F
                 if (updating) {
                     return
                 }
-                rem.setEnabled(valid())
-                type.setEnabled(valid())
-                trait.setEnabled(valid())
-                grade.setEnabled(valid())
-                if (orbList.getSelectedIndex() != -1) {
-                    orbb.changeOrb(orbs[orbList.getSelectedIndex()])
-                    initializeDrops(orbs[orbList.getSelectedIndex()])
+                rem.isEnabled = valid()
+                type.isEnabled = valid()
+                trait.isEnabled = valid()
+                grade.isEnabled = valid()
+                if (orbList.selectedIndex != -1) {
+                    orbb.changeOrb(orbs[orbList.selectedIndex])
+                    initializeDrops(orbs[orbList.selectedIndex])
                 } else {
                     orbb.changeOrb(intArrayOf())
                 }
             }
         })
         rem.setLnr(Consumer { x: ActionEvent? ->
-            val index: Int = orbList.getSelectedIndex()
+            val index: Int = orbList.selectedIndex
             if (index != -1 && index < orbs.size) {
                 orbs.removeAt(index)
             }
@@ -104,21 +104,21 @@ class LevelEditPage(private val p: Page, private val lv: Level, private val f: F
                 if (updating) {
                     return
                 }
-                if (orbList.getSelectedIndex() != -1 && orbList.getSelectedIndex() < orbs.size) {
-                    var data = orbs[orbList.getSelectedIndex()]
+                if (orbList.selectedIndex != -1 && orbList.selectedIndex < orbs.size) {
+                    var data = orbs[orbList.selectedIndex]
                     if (f!!.orbs != null && f.orbs.slots != -1) {
-                        if (type.getSelectedIndex() == 0) {
+                        if (type.selectedIndex == 0) {
                             data = intArrayOf()
                         } else {
                             if (data.size == 0) {
                                 data = intArrayOf(0, 0, 0)
                             }
-                            data[0] = type.getSelectedIndex() - 1
+                            data[0] = type.selectedIndex - 1
                         }
                     } else {
-                        data[0] = type.getSelectedIndex()
+                        data[0] = type.selectedIndex
                     }
-                    orbs[orbList.getSelectedIndex()] = data
+                    orbs[orbList.selectedIndex] = data
                     initializeDrops(data)
                     orbb.changeOrb(data)
                     setLvOrb(lv.lvs, generateOrb())
@@ -130,10 +130,10 @@ class LevelEditPage(private val p: Page, private val lv: Level, private val f: F
                 if (updating) {
                     return
                 }
-                if (orbList.getSelectedIndex() != -1 && orbList.getSelectedIndex() < orbs.size) {
-                    val data = orbs[orbList.getSelectedIndex()]
-                    data[1] = traitData[trait.getSelectedIndex()]
-                    orbs[orbList.getSelectedIndex()] = data
+                if (orbList.selectedIndex != -1 && orbList.selectedIndex < orbs.size) {
+                    val data = orbs[orbList.selectedIndex]
+                    data[1] = traitData[trait.selectedIndex]
+                    orbs[orbList.selectedIndex] = data
                     initializeDrops(data)
                     orbb.changeOrb(data)
                     setLvOrb(lv.lvs, generateOrb())
@@ -145,10 +145,10 @@ class LevelEditPage(private val p: Page, private val lv: Level, private val f: F
                 if (updating) {
                     return
                 }
-                if (orbList.getSelectedIndex() != -1 && orbList.getSelectedIndex() < orbs.size) {
-                    val data = orbs[orbList.getSelectedIndex()]
-                    data[2] = gradeData[grade.getSelectedIndex()]
-                    orbs[orbList.getSelectedIndex()] = data
+                if (orbList.selectedIndex != -1 && orbList.selectedIndex < orbs.size) {
+                    val data = orbs[orbList.selectedIndex]
+                    data[2] = gradeData[grade.selectedIndex]
+                    orbs[orbList.selectedIndex] = data
                     initializeDrops(data)
                     orbb.changeOrb(data)
                     setLvOrb(lv.lvs, generateOrb())
@@ -244,15 +244,15 @@ class LevelEditPage(private val p: Page, private val lv: Level, private val f: F
         }
         add(clear)
         val strs: Array<String> = UtilPC.lvText(f, lu().getLv(f.unit).getLvs())
-        levels.setText(strs[0])
+        levels.text = strs[0]
         pcoin.text = strs[1]
         addListeners()
         orbList.setListData(generateNames())
-        orbList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
-        rem.setEnabled(valid())
-        type.setEnabled(valid())
-        trait.setEnabled(valid())
-        grade.setEnabled(valid())
+        orbList.selectionMode = ListSelectionModel.SINGLE_SELECTION
+        rem.isEnabled = valid()
+        type.isEnabled = valid()
+        trait.isEnabled = valid()
+        grade.isEnabled = valid()
     }
 
     private fun initializeDrops(data: IntArray) {
@@ -268,19 +268,19 @@ class LevelEditPage(private val p: Page, private val lv: Level, private val f: F
         }
         if (f.orbs.slots != -1 && data.size == 0) {
             type.setModel(DefaultComboBoxModel<String>(types))
-            type.setSelectedIndex(0)
-            trait.setEnabled(false)
-            grade.setEnabled(false)
+            type.selectedIndex = 0
+            trait.isEnabled = false
+            grade.isEnabled = false
             if (valid()) {
-                val index: Int = orbList.getSelectedIndex()
+                val index: Int = orbList.selectedIndex
                 orbList.setListData(generateNames())
-                orbList.setSelectedIndex(index)
+                orbList.selectedIndex = index
             }
             updating = false
             return
         }
-        trait.setEnabled(true)
-        grade.setEnabled(true)
+        trait.isEnabled = true
+        grade.isEnabled = true
         val traits: Array<String?>
         val grades: Array<String?>
         if (data[0] == Data.Companion.ORB_ATK) {
@@ -326,13 +326,13 @@ class LevelEditPage(private val p: Page, private val lv: Level, private val f: F
         } else {
             type.setSelectedIndex(data[0])
         }
-        trait.setSelectedIndex(traitData.indexOf(data[1]))
-        grade.setSelectedIndex(gradeData.indexOf(data[2]))
+        trait.selectedIndex = traitData.indexOf(data[1])
+        grade.selectedIndex = gradeData.indexOf(data[2])
         if (valid()) {
-            val index: Int = orbList.getSelectedIndex()
+            val index: Int = orbList.selectedIndex
             orbs[index] = data
             orbList.setListData(generateNames())
-            orbList.setSelectedIndex(index)
+            orbList.selectedIndex = index
         }
         updating = false
     }
@@ -347,7 +347,7 @@ class LevelEditPage(private val p: Page, private val lv: Level, private val f: F
     }
 
     private fun valid(): Boolean {
-        return orbList.getSelectedIndex() != -1 && orbs.size != 0
+        return orbList.selectedIndex != -1 && orbs.size != 0
     }
 
     companion object {

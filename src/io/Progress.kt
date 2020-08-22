@@ -12,14 +12,14 @@ class Progress(private val c: Consumer<Progress>?) : MediaHttpDownloaderProgress
     var tot: Long = 0
     var cur: Long = 0
     override fun progressChanged(downloader: MediaHttpDownloader) {
-        when (downloader.getDownloadState()) {
+        when (downloader.downloadState) {
             DownloadState.MEDIA_COMPLETE -> state = Progress.Companion.DONE
             DownloadState.MEDIA_IN_PROGRESS -> state = Progress.Companion.CURR
             else -> {
             }
         }
-        prog = downloader.getProgress()
-        cur = downloader.getNumBytesDownloaded()
+        prog = downloader.progress
+        cur = downloader.numBytesDownloaded
         tot = if (prog == 0.0) -1 else (cur / prog).toLong()
         update()
     }

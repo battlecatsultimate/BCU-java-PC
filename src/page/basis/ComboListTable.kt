@@ -64,7 +64,7 @@ class ComboListTable(private val fr: Page, line: LineUp) : SortTable<Combo?>() {
         return if (t.units.size > c - 3) UserProfile.Companion.getBCData().units.get(t.units.get(c - 3).get(0)).forms.get(t.units.get(c - 3).get(1)) else null
     }
 
-    protected override fun getTit(): Array<String> {
+    override fun getTit(): Array<String> {
         return tit
     }
 

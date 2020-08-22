@@ -25,7 +25,7 @@ class LimitEditPage(p: Page?, private val st: Stage?) : Page(p) {
     private val reml: JBTN = JBTN(0, "rem")
     private val lt: LimitTable
     override fun callBack(o: Any?) {
-        setLimit(jll.getSelectedValue())
+        setLimit(jll.selectedValue)
     }
 
     override fun renew() {
@@ -47,8 +47,8 @@ class LimitEditPage(p: Page?, private val st: Stage?) : Page(p) {
         back.setLnr(Consumer { e: ActionEvent? -> changePanel(front) })
         star.setLnr(Consumer<FocusEvent> { e: FocusEvent? ->
             if (isAdj) return@setLnr
-            val l: Limit = jll.getSelectedValue()
-            var n: Int = CommonStatic.parseIntN(star.getText()) - 1
+            val l: Limit = jll.selectedValue
+            var n: Int = CommonStatic.parseIntN(star.text) - 1
             if (n < 0) n = -1
             if (n > 3) n = 0
             if (l != null) l.star = n
@@ -56,8 +56,8 @@ class LimitEditPage(p: Page?, private val st: Stage?) : Page(p) {
         })
         stag.setLnr(Consumer<FocusEvent> { e: FocusEvent? ->
             if (isAdj) return@setLnr
-            val l: Limit = jll.getSelectedValue()
-            var n: Int = CommonStatic.parseIntN(stag.getText())
+            val l: Limit = jll.selectedValue
+            var n: Int = CommonStatic.parseIntN(stag.text)
             if (n < 0) n = -1
             if (n >= st!!.map.list.size) n = 0
             if (l != null) l.sid = n
@@ -68,13 +68,13 @@ class LimitEditPage(p: Page?, private val st: Stage?) : Page(p) {
             setListL()
         })
         reml.setLnr(Consumer { e: ActionEvent? ->
-            st!!.map.lim.remove(jll.getSelectedValue())
+            st!!.map.lim.remove(jll.selectedValue)
             setListL()
         })
         jll.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(e: ListSelectionEvent?) {
-                if (isAdj || jll.getValueIsAdjusting()) return
-                setLimit(jll.getSelectedValue())
+                if (isAdj || jll.valueIsAdjusting) return
+                setLimit(jll.selectedValue)
             }
         })
     }
@@ -92,16 +92,16 @@ class LimitEditPage(p: Page?, private val st: Stage?) : Page(p) {
     }
 
     private fun setLimit(l: Limit?) {
-        reml.setEnabled(l != null)
-        star.setEditable(l != null)
-        stag.setEditable(l != null)
-        star.setText(if (l == null) "" else if (l.star == -1) "all stars" else (l.star + 1).toString() + " star")
-        stag.setText(if (l == null) "" else if (l.sid == -1) "all stages" else l.sid.toString() + " - " + st!!.map.list[l.sid])
+        reml.isEnabled = l != null
+        star.isEditable = l != null
+        stag.isEditable = l != null
+        star.text = if (l == null) "" else if (l.star == -1) "all stars" else (l.star + 1).toString() + " star"
+        stag.text = if (l == null) "" else if (l.sid == -1) "all stages" else l.sid.toString() + " - " + st!!.map.list[l.sid]
         lt.setLimit(l)
     }
 
     private fun setListL() {
-        var l: Limit? = jll.getSelectedValue()
+        var l: Limit? = jll.selectedValue
         change<Array<Limit>>(st!!.map.lim.toTypedArray(), Consumer<Array<Limit?>> { x: Array<Limit?>? -> jll.setListData(x) })
         if (!st.map.lim.contains(l)) l = null
         setLimit(l)

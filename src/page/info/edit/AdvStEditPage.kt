@@ -44,15 +44,15 @@ class AdvStEditPage(p: Page?, private val st: Stage?) : Page(p) {
         Page.Companion.set(jspt, x, y, 750, 150, 400, 800)
         Page.Companion.set(addt, x, y, 750, 100, 200, 50)
         Page.Companion.set(remt, x, y, 950, 100, 200, 50)
-        sget.setRowHeight(Page.Companion.size(x, y, 50))
+        sget.rowHeight = Page.Companion.size(x, y, 50)
     }
 
     private fun `addListeners$0`() {
         back.setLnr(Consumer { e: ActionEvent? -> changePanel(front) })
         jls.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (isAdj || jls.getValueIsAdjusting()) return
-                setSCG(jls.getSelectedValue())
+                if (isAdj || jls.valueIsAdjusting) return
+                setSCG(jls.selectedValue)
             }
         })
         addg.setLnr(Consumer { e: ActionEvent? ->
@@ -63,27 +63,27 @@ class AdvStEditPage(p: Page?, private val st: Stage?) : Page(p) {
             setSCG(scg)
         })
         remg.setLnr(Consumer { e: ActionEvent? ->
-            var ind: Int = jls.getSelectedIndex()
-            data.sub.remove(jls.getSelectedValue())
+            var ind: Int = jls.selectedIndex
+            data.sub.remove(jls.selectedValue)
             if (ind > data.sub.size()) ind--
             setListG()
             jls.setSelectedIndex(ind)
         })
         smax.setLnr(Consumer<FocusEvent> { e: FocusEvent? ->
-            val `val`: Int = CommonStatic.parseIntN(smax.getText())
-            val scg: SCGroup = jls.getSelectedValue()
+            val `val`: Int = CommonStatic.parseIntN(smax.text)
+            val scg: SCGroup = jls.selectedValue
             if (`val` > 0) scg.setMax(`val`, -1)
             setSCG(scg)
         })
         sdef.setLnr(Consumer<FocusEvent> { e: FocusEvent? ->
-            val i: Int = CommonStatic.parseIntN(sdef.getText())
+            val i: Int = CommonStatic.parseIntN(sdef.text)
             if (i >= 0) data.sdef = i
             setListG()
         })
     }
 
     private fun `addListeners$1`() {
-        addt.setLnr(Consumer { e: ActionEvent? -> sget.addLine(jle.getSelectedValue()) })
+        addt.setLnr(Consumer { e: ActionEvent? -> sget.addLine(jle.selectedValue) })
         remt.setLnr(Consumer { e: ActionEvent? -> sget.remLine() })
     }
 
@@ -101,31 +101,31 @@ class AdvStEditPage(p: Page?, private val st: Stage?) : Page(p) {
             add(addt)
             add(remt)
         }
-        jle.setCellRenderer(AnimLCR())
+        jle.cellRenderer = AnimLCR()
         jle.setListData(aes)
-        sdef.setText("default: " + data.sdef)
+        sdef.text = "default: " + data.sdef
         setListG()
         `addListeners$0`()
         `addListeners$1`()
     }
 
     private fun setListG() {
-        var scg: SCGroup? = jls.getSelectedValue()
+        var scg: SCGroup? = jls.selectedValue
         val l: List<SCGroup> = data.sub.getList()
         change(0, { n: Int? ->
             jls.clearSelection()
             jls.setListData(l.toTypedArray())
         })
-        sdef.setText("default: " + data.sdef)
+        sdef.text = "default: " + data.sdef
         if (scg != null && !l.contains(scg)) scg = null
         setSCG(scg)
     }
 
     private fun setSCG(scg: SCGroup?) {
-        if (jls.getSelectedValue() !== scg) change<SCGroup>(scg, Consumer<SCGroup> { s: SCGroup? -> jls.setSelectedValue(s, true) })
-        remg.setEnabled(scg != null)
-        smax.setEnabled(scg != null)
-        smax.setText(if (scg != null) "max: " + scg.getMax(0) else "")
+        if (jls.selectedValue !== scg) change<SCGroup>(scg, Consumer<SCGroup> { s: SCGroup? -> jls.setSelectedValue(s, true) })
+        remg.isEnabled = scg != null
+        smax.isEnabled = scg != null
+        smax.text = if (scg != null) "max: " + scg.getMax(0) else ""
     }
 
     companion object {

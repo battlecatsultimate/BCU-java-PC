@@ -13,7 +13,7 @@ object DriveDownload {
     fun main(args: Array<String>) {
         val service: Drive = DriveUtil.getDriveService()
         val flist: FileList = service.files().list().execute()
-        val files: List<File> = flist.getFiles()
+        val files: List<File> = flist.files
         if (files == null || files.size == 0) {
             println("No Files Found")
         } else {
@@ -23,9 +23,9 @@ object DriveDownload {
             for (f in files) {
                 if (f.name == "Description.txt") {
                     println("Found")
-                    val `is`: InputStream = service.getRequestFactory()
+                    val `is`: InputStream = service.requestFactory
                             .buildDeleteRequest(service.files().get(f.id).buildHttpRequestUrl()).execute()
-                            .getContent()
+                            .content
                     val bis = BufferedInputStream(`is`)
                     val buffer = ByteArray(4096)
                     while (bis.read(buffer) != -1) {
@@ -45,12 +45,12 @@ object DriveDownload {
                 f.createNewFile()
             }
             val os: OutputStream = FileOutputStream(f)
-            val d: MediaHttpDownloader = service.files().get(id).getMediaHttpDownloader()
+            val d: MediaHttpDownloader = service.files().get(id).mediaHttpDownloader
             d.download(service.files().get(id).buildHttpRequestUrl(), os)
-            while (d.getDownloadState() != MediaHttpDownloader.DownloadState.MEDIA_COMPLETE) {
-                println("Download : " + d.getProgress() * 1000)
+            while (d.downloadState != MediaHttpDownloader.DownloadState.MEDIA_COMPLETE) {
+                println("Download : " + d.progress * 1000)
             }
-            println(d.getProgress())
+            println(d.progress)
             println("END??")
         }
     }

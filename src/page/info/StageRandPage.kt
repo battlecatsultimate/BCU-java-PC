@@ -29,12 +29,12 @@ class StageRandPage(p: Page?) : Page(p) {
         back.setLnr(Consumer { e: ActionEvent? -> changePanel(front) })
         jls.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(e: ListSelectionEvent?) {
-                if (jls.getValueIsAdjusting()) return
-                if (jls.getSelectedValue() == null) jls.setSelectedIndex(0)
+                if (jls.valueIsAdjusting) return
+                if (jls.selectedValue == null) jls.selectedIndex = 0
             }
         })
         strt.setLnr(Consumer { x: ActionEvent? ->
-            val s: Int = jls.getSelectedIndex()
+            val s: Int = jls.selectedIndex
             val sta: Stage = RandStage.getStage(s)
             changePanel(BattleSetupPage(getThis(), sta, 0))
         })
@@ -49,8 +49,8 @@ class StageRandPage(p: Page?) : Page(p) {
         jls.setListData(`as`)
         val ts = arrayOfNulls<String>(5)
         for (i in 0..4) ts[i] = "attempt " + (i + 1)
-        jls.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
-        jls.setSelectedIndex(0)
+        jls.selectionMode = ListSelectionModel.SINGLE_SELECTION
+        jls.selectedIndex = 0
         addListeners()
     }
 

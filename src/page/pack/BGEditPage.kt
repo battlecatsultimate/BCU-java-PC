@@ -116,8 +116,8 @@ class BGEditPage(p: Page?, ac: UserPack) : Page(p) {
         })
         jlst.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (changing || jlst.getValueIsAdjusting()) return
-                setBG(jlst.getSelectedValue())
+                if (changing || jlst.valueIsAdjusting) return
+                setBG(jlst.selectedValue)
             }
         })
     }
@@ -125,7 +125,7 @@ class BGEditPage(p: Page?, ac: UserPack) : Page(p) {
     private fun `addListeners$1`() {
         top.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                bgr!!.top = top.isSelected()
+                bgr!!.top = top.isSelected
                 bgr!!.ic = 1
                 bgr!!.load()
                 cs[0].setEnabled(!bgr!!.top)
@@ -146,7 +146,7 @@ class BGEditPage(p: Page?, ac: UserPack) : Page(p) {
     private fun getFile(str: String, bgr: Background?) {
         var bgr = bgr
         val bimg: BufferedImage = Importer(str).getImg() ?: return
-        if (bimg.getWidth() != 1024 && bimg.getHeight() != 1024) {
+        if (bimg.width != 1024 && bimg.height != 1024) {
             getFile("Wrong img size. Img size: w=1024, h=1024", bgr)
             return
         }
@@ -187,27 +187,27 @@ class BGEditPage(p: Page?, ac: UserPack) : Page(p) {
 
     private fun setBG(bg: Background?) {
         bgr = bg
-        if (jlst.getSelectedValue() !== bg) {
+        if (jlst.selectedValue !== bg) {
             val boo = changing
             changing = true
             jlst.setSelectedValue(bg, true)
             changing = boo
         }
         val b = bgr != null
-        remc.setEnabled(b)
-        impc.setEnabled(b)
-        expc.setEnabled(b)
-        top.setEnabled(b)
+        remc.isEnabled = b
+        impc.isEnabled = b
+        expc.isEnabled = b
+        top.isEnabled = b
         for (i in 0..3) cs[i].setEnabled(b)
         if (bgr != null) {
-            top.setSelected(bgr!!.top)
+            top.isSelected = bgr!!.top
             for (i in 0..3) setCSText(i)
             if (bgr!!.top) {
                 cs[0].setEnabled(false)
                 cs[1].setEnabled(false)
             }
         } else {
-            top.setSelected(false)
+            top.isSelected = false
             for (i in 0..3) cs[i].setText("")
         }
     }
@@ -220,14 +220,14 @@ class BGEditPage(p: Page?, ac: UserPack) : Page(p) {
 
     private fun setList(bcgr: Background?) {
         bgr = bcgr
-        var ind: Int = jlst.getSelectedIndex()
+        var ind: Int = jlst.selectedIndex
         val arr: Array<Background> = pack.bgs.getList().toTypedArray()
         if (ind < 0) ind = 0
         if (ind >= arr.size) ind = arr.size - 1
         val boo = changing
         changing = true
         jlst.setListData(arr)
-        jlst.setSelectedIndex(ind)
+        jlst.selectedIndex = ind
         changing = boo
         setBG(bgr)
     }

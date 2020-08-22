@@ -35,7 +35,7 @@ class UnitFLUPage(p: Page?) : LubCont(p) {
         return ult.list
     }
 
-    protected override fun getLub(): LineUpBox {
+    override fun getLub(): LineUpBox {
         return lub
     }
 
@@ -48,14 +48,14 @@ class UnitFLUPage(p: Page?) : LubCont(p) {
         lub.setLU(BasisSet.Companion.current().sele.lu)
     }
 
-    protected override fun resized(x: Int, y: Int) {
+    override fun resized(x: Int, y: Int) {
         setBounds(0, 0, x, y)
         Page.Companion.set(back, x, y, 0, 0, 200, 50)
         Page.Companion.set(show, x, y, 250, 0, 200, 50)
         Page.Companion.set(seatf, x, y, 550, 0, 1000, 50)
         Page.Companion.set(seabt, x, y, 1600, 0, 200, 50)
         val end = intArrayOf(650, 350)
-        if (show.isSelected()) {
+        if (show.isSelected) {
             val siz: IntArray = ufb.getSizer()
             Page.Companion.set(ufb, x, y, 50, 100, siz[0], siz[1])
             var mx = 50
@@ -74,7 +74,7 @@ class UnitFLUPage(p: Page?) : LubCont(p) {
             Page.Companion.set(jsp, x, y, mx, my, ax, ay)
         } else Page.Companion.set(jsp, x, y, 50, 100, 1550, 1150)
         Page.Companion.set(lub, x, y, 1650, 950, 600, 300)
-        ult.setRowHeight(Page.Companion.size(x, y, 50))
+        ult.rowHeight = Page.Companion.size(x, y, 50)
     }
 
     private fun addListeners() {
@@ -85,15 +85,15 @@ class UnitFLUPage(p: Page?) : LubCont(p) {
         })
         show.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                if (show.isSelected()) add(ufb) else remove(ufb)
+                if (show.isSelected) add(ufb) else remove(ufb)
             }
         })
-        val lsm: ListSelectionModel = ult.getSelectionModel()
-        lsm.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
+        val lsm: ListSelectionModel = ult.selectionModel
+        lsm.selectionMode = ListSelectionModel.SINGLE_SELECTION
         lsm.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(e: ListSelectionEvent?) {
-                if (lsm.getValueIsAdjusting()) return
-                val ind: Int = lsm.getAnchorSelectionIndex()
+                if (lsm.valueIsAdjusting) return
+                val ind: Int = lsm.anchorSelectionIndex
                 if (ind < 0) return
                 val f: Form = ult.list.get(ind)
                 lub.select(f)
@@ -101,14 +101,14 @@ class UnitFLUPage(p: Page?) : LubCont(p) {
         })
         seabt.setLnr(Consumer { b: ActionEvent? ->
             if (ufb != null) {
-                ufb.name = seatf.getText()
+                ufb.name = seatf.text
                 ufb.callBack(null)
             }
         })
         seatf.addActionListener(object : ActionListener {
             override fun actionPerformed(e: ActionEvent?) {
                 if (ufb != null) {
-                    ufb.name = seatf.getText()
+                    ufb.name = seatf.text
                     ufb.callBack(null)
                 }
             }
@@ -123,7 +123,7 @@ class UnitFLUPage(p: Page?) : LubCont(p) {
         add(lub)
         add(seatf)
         add(seabt)
-        show.setSelected(true)
+        show.isSelected = true
         addListeners()
     }
 

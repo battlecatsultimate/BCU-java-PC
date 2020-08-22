@@ -57,8 +57,8 @@ object Algorithm {
         }
 
         fun shift(bimg: BufferedImage, h: Double, s: Double, b: Double): BufferedImage {
-            val ans = BufferedImage(bimg.getWidth(), bimg.getHeight(), bimg.getType())
-            for (i in 0 until bimg.getWidth()) for (j in 0 until bimg.getHeight()) {
+            val ans = BufferedImage(bimg.width, bimg.height, bimg.type)
+            for (i in 0 until bimg.width) for (j in 0 until bimg.height) {
                 val p0: Int = bimg.getRGB(i, j)
                 val p1 = proc(p0, h, s, b)
                 ans.setRGB(i, j, p1)
@@ -188,7 +188,7 @@ object Algorithm {
         private fun detRep(ans: Array<IntArray?>, i: Int): Boolean {
             if (!rawRep(i)) return false
             if (ans[i - 1] == null) return true
-            return if (ans[i - 1]!![1] > ans[i]!![1]) true else false
+            return ans[i - 1]!![1] > ans[i]!![1]
         }
 
         private fun operate(ans: Array<IntArray?>, dots: Algorithm.StackRect.Dot) {

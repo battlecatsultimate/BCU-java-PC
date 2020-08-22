@@ -35,16 +35,16 @@ internal class SpriteBox(private val page: Page) : Canvas() {
         protected get() {
             val w = width
             val h = height
-            val img: BufferedImage = createImage(w, h) as BufferedImage ?: return null
-            val gra: Graphics2D = img.getGraphics() as Graphics2D
+            val img: BufferedImage = createImage(w, h) as BufferedImage
+            val gra: Graphics2D = img.graphics as Graphics2D
             if (anim != null) {
                 val spr: BufferedImage = anim.getNum().bimg() as BufferedImage
-                val aw: Int = spr.getWidth()
-                val ah: Int = spr.getHeight()
+                val aw: Int = spr.width
+                val ah: Int = spr.height
                 val r = Math.min(1.0 * w / aw, 1.0 * h / ah)
                 val rw = (r * aw).toInt()
                 val rh = (r * ah).toInt()
-                gra.setColor(Color.LIGHT_GRAY)
+                gra.color = Color.LIGHT_GRAY
                 run {
                     var i = 0
                     while (i < rw) {
@@ -65,13 +65,13 @@ internal class SpriteBox(private val page: Page) : Canvas() {
                     val sw = (`val`[2] * r + 2).toInt()
                     val sh = (`val`[3] * r + 2).toInt()
                     if (i == sele) {
-                        gra.setColor(Color.RED)
+                        gra.color = Color.RED
                         gra.fillRect(sx - 5, sy - 5, sw + 5, 5)
                         gra.fillRect(sx - 5, sy, 5, sh + 5)
                         gra.fillRect(sx + sw, sy - 5, 5, sh + 5)
                         gra.fillRect(sx, sy + sh, sw + 5, 5)
                     } else {
-                        gra.setColor(Color.BLACK)
+                        gra.color = Color.BLACK
                         gra.drawRect(sx, sy, sw, sh)
                     }
                 }
@@ -132,8 +132,8 @@ internal class SpriteBox(private val page: Page) : Canvas() {
         val w = width
         val h = height
         val spr: BufferedImage = anim.getNum().bimg() as BufferedImage
-        val aw: Int = spr.getWidth()
-        val ah: Int = spr.getHeight()
+        val aw: Int = spr.width
+        val ah: Int = spr.height
         val r = Math.min(1.0 * w / aw, 1.0 * h / ah)
         val ic: ImgCut = anim.imgcut
         var ski = skip
@@ -154,8 +154,8 @@ internal class SpriteBox(private val page: Page) : Canvas() {
         val w = width
         val h = height
         val spr: BufferedImage = anim.getNum().bimg() as BufferedImage
-        val aw: Int = spr.getWidth()
-        val ah: Int = spr.getHeight()
+        val aw: Int = spr.width
+        val ah: Int = spr.height
         val r = Math.min(1.0 * w / aw, 1.0 * h / ah)
         return Point((p!!.x / r).toInt(), (p.y / r).toInt())
     }

@@ -21,45 +21,45 @@ class RecdManagePage(p: Page?) : AbRecdPage(p, true) {
     private val jlr: JList<Recd> = JList<Recd>()
     private val jspr: JScrollPane = JScrollPane(jlr)
     override fun getSelection(): Recd {
-        return jlr.getSelectedValue()
+        return jlr.selectedValue
     }
 
-    protected override fun resized(x: Int, y: Int) {
+    override fun resized(x: Int, y: Int) {
         super.resized(x, y)
         Page.Companion.set(jspr, x, y, 50, 100, 500, 1100)
         Page.Companion.set(dele, x, y, 600, 400, 300, 50)
         Page.Companion.set(rena, x, y, 600, 500, 300, 50)
     }
 
-    protected override fun setList() {
+    override fun setList() {
         change(true)
-        val r: Recd = jlr.getSelectedValue()
+        val r: Recd = jlr.selectedValue
         jlr.setListData(Recd.Companion.map.values.toTypedArray())
         jlr.setSelectedValue(r, true)
         setRecd(r)
         change(false)
     }
 
-    protected override fun setRecd(r: Recd?) {
+    override fun setRecd(r: Recd?) {
         super.setRecd(r)
-        dele.setEnabled(r != null)
-        rena.setEditable(r != null)
-        rena.setText(if (r == null) "" else r.name)
+        dele.isEnabled = r != null
+        rena.isEditable = r != null
+        rena.text = if (r == null) "" else r.name
     }
 
     private fun addListeners() {
         jlr.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (isAdj() || jlr.getValueIsAdjusting()) return
-                setRecd(jlr.getSelectedValue())
+                if (isAdj() || jlr.valueIsAdjusting) return
+                setRecd(jlr.selectedValue)
             }
         })
         rena.setLnr(Consumer<FocusEvent> { x: FocusEvent? ->
-            if (isAdj() || jlr.getValueIsAdjusting()) return@setLnr
-            val r: Recd = jlr.getSelectedValue() ?: return@setLnr
+            if (isAdj() || jlr.valueIsAdjusting) return@setLnr
+            val r: Recd = jlr.selectedValue ?: return@setLnr
             val f = File("./replay/" + r.name + ".replay")
             if (f.exists()) {
-                var str: String = MainBCU.validate(rena.getText().trim { it <= ' ' })
+                var str: String = MainBCU.validate(rena.text.trim { it <= ' ' })
                 str = Recd.Companion.getAvailable(str)
                 if (f.renameTo(File("./replay/$str.replay"))) {
                     Recd.Companion.map.remove(r.name)
@@ -67,11 +67,11 @@ class RecdManagePage(p: Page?) : AbRecdPage(p, true) {
                     Recd.Companion.map.put(r.name, r)
                 }
             }
-            rena.setText(r.name)
+            rena.text = r.name
         })
         dele.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                val r: Recd = jlr.getSelectedValue()
+                val r: Recd = jlr.selectedValue
                 val f = File("./replay/" + r.name + ".replay")
                 if (f.exists()) f.delete()
                 if (!f.exists()) {

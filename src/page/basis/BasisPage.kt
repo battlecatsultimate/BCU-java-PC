@@ -78,13 +78,13 @@ class BasisPage(p: Page?) : LubCont(p) {
             outside = true
             changing = true
             jlc.setList(lc)
-            jlc.getSelectionModel().setSelectionInterval(0, 0)
+            jlc.selectionModel.setSelectionInterval(0, 0)
             setC(0)
             changing = false
         }
     }
 
-    protected override fun getLub(): LineUpBox {
+    override fun getLub(): LineUpBox {
         return lub
     }
 
@@ -109,7 +109,7 @@ class BasisPage(p: Page?) : LubCont(p) {
         }
     }
 
-    protected override fun resized(x: Int, y: Int) {
+    override fun resized(x: Int, y: Int) {
         setBounds(0, 0, x, y)
         Page.Companion.set(back, x, y, 0, 0, 200, 50)
         Page.Companion.set(jspbs, x, y, 50, 100, 200, 300)
@@ -136,8 +136,8 @@ class BasisPage(p: Page?) : LubCont(p) {
         Page.Companion.set(lvorb, x, y, 1350, 50, 250, 50)
         Page.Companion.set(setc, x, y, 1050, 700, 200, 50)
         for (i in 0..2) Page.Companion.set(jbcs[i], x, y, 750, 1100 + 50 * i, 200, 50)
-        jlc.setRowHeight(85)
-        jlc.getColumnModel().getColumn(1).setPreferredWidth(Page.Companion.size(x, y, 300))
+        jlc.rowHeight = 85
+        jlc.columnModel.getColumn(1).preferredWidth = Page.Companion.size(x, y, 300)
     }
 
     protected override fun timer(t: Int) {
@@ -160,7 +160,7 @@ class BasisPage(p: Page?) : LubCont(p) {
         ul.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(e: ListSelectionEvent?) {
                 changing = true
-                lub.select(ul.getSelectedValue())
+                lub.select(ul.selectedValue)
                 changing = false
             }
         })
@@ -172,7 +172,7 @@ class BasisPage(p: Page?) : LubCont(p) {
         })
         lvjtf.addFocusListener(object : FocusAdapter() {
             override fun focusLost(arg0: FocusEvent?) {
-                val lv: IntArray = CommonStatic.parseIntsN(lvjtf.getText())
+                val lv: IntArray = CommonStatic.parseIntsN(lvjtf.text)
                 lub.setLv(lv)
                 if (lub.sf != null) setLvs(lub.sf)
             }
@@ -195,17 +195,17 @@ class BasisPage(p: Page?) : LubCont(p) {
     private fun `addListeners$1`() {
         jlbs.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(e: ListSelectionEvent?) {
-                if (jlb.getValueIsAdjusting() || changing) return
+                if (jlb.valueIsAdjusting || changing) return
                 changing = true
-                if (jlbs.getSelectedValue() == null) jlbs.setSelectedValue(BasisSet.Companion.current(), true) else setBS(jlbs.getSelectedValue())
+                if (jlbs.selectedValue == null) jlbs.setSelectedValue(BasisSet.Companion.current(), true) else setBS(jlbs.selectedValue)
                 changing = false
             }
         })
         jlb.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(e: ListSelectionEvent?) {
-                if (jlb.getValueIsAdjusting() || changing) return
+                if (jlb.valueIsAdjusting || changing) return
                 changing = true
-                if (jlb.getSelectedValue() == null) jlb.setSelectedValue(BasisSet.Companion.current().sele, true) else setB(jlb.getSelectedValue())
+                if (jlb.selectedValue == null) jlb.setSelectedValue(BasisSet.Companion.current().sele, true) else setB(jlb.selectedValue)
                 changing = false
             }
         })
@@ -301,17 +301,17 @@ class BasisPage(p: Page?) : LubCont(p) {
         })
         bsjtf.addFocusListener(object : FocusAdapter() {
             override fun focusLost(arg0: FocusEvent?) {
-                val str: String = bsjtf.getText().trim { it <= ' ' }
+                val str: String = bsjtf.text.trim { it <= ' ' }
                 if (str.length > 0) BasisSet.Companion.current().name = str
-                bsjtf.setText(BasisSet.Companion.current().name)
+                bsjtf.text = BasisSet.Companion.current().name
                 jlbs.repaint()
             }
         })
         bjtf.addFocusListener(object : FocusAdapter() {
             override fun focusLost(arg0: FocusEvent?) {
-                val str: String = bjtf.getText().trim { it <= ' ' }
+                val str: String = bjtf.text.trim { it <= ' ' }
                 if (str.length > 0) BasisSet.Companion.current().sele.name = str
-                bjtf.setText(BasisSet.Companion.current().sele.name)
+                bjtf.text = BasisSet.Companion.current().sele.name
                 jlb.repaint()
             }
         })
@@ -320,40 +320,40 @@ class BasisPage(p: Page?) : LubCont(p) {
     private fun `addListeners$2`() {
         jlcs.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(e: ListSelectionEvent) {
-                if (changing || e.getValueIsAdjusting()) return
+                if (changing || e.valueIsAdjusting) return
                 changing = true
-                if (jlcs.getSelectedValue() == null) jlcs.setSelectedIndex(0)
-                setCS(jlcs.getSelectedIndex())
+                if (jlcs.selectedValue == null) jlcs.selectedIndex = 0
+                setCS(jlcs.selectedIndex)
                 changing = false
             }
         })
         jlcl.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(e: ListSelectionEvent) {
-                if (changing || e.getValueIsAdjusting()) return
+                if (changing || e.valueIsAdjusting) return
                 changing = true
-                setCL(jlcs.getSelectedIndex())
+                setCL(jlcs.selectedIndex)
                 changing = false
             }
         })
         jlcn.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(e: ListSelectionEvent) {
-                if (changing || e.getValueIsAdjusting()) return
+                if (changing || e.valueIsAdjusting) return
                 changing = true
                 setCN()
                 changing = false
             }
         })
-        jlc.getSelectionModel().addListSelectionListener(object : ListSelectionListener {
+        jlc.selectionModel.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (changing || arg0.getValueIsAdjusting()) return
+                if (changing || arg0.valueIsAdjusting) return
                 changing = true
-                setC(jlc.getSelectedRow())
+                setC(jlc.selectedRow)
                 changing = false
             }
         })
         setc.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                lu().set(jlc.list.get(jlc.getSelectedRow()).units)
+                lu().set(jlc.list.get(jlc.selectedRow).units)
                 changeLU()
             }
         })
@@ -398,27 +398,27 @@ class BasisPage(p: Page?) : LubCont(p) {
         add(JBTN(0, "ctop").also { jbcs[0] = it })
         add(JBTN(0, "cmid").also { jbcs[1] = it })
         add(JBTN(0, "cbas").also { jbcs[2] = it })
-        ul.setCellRenderer(UnitLCR())
+        ul.cellRenderer = UnitLCR()
         val m0: Int = ListSelectionModel.SINGLE_SELECTION
         val m1: Int = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
         jlbs.setSelectedValue(BasisSet.Companion.current(), true)
-        jlcs.setSelectedIndex(0)
-        jlbs.setSelectionMode(m0)
-        jlb.setSelectionMode(m0)
-        jlcs.setSelectionMode(m0)
-        jlcl.setSelectionMode(m1)
-        jlcn.setSelectionMode(m0)
-        jlc.getSelectionModel().setSelectionMode(m0)
+        jlcs.selectedIndex = 0
+        jlbs.selectionMode = m0
+        jlb.selectionMode = m0
+        jlcs.selectionMode = m0
+        jlcl.selectionMode = m1
+        jlcn.selectionMode = m0
+        jlc.selectionModel.selectionMode = m0
         setCS(0)
         setBS(BasisSet.Companion.current())
         lub.setLU(lu())
-        bsjtf.setText(BasisSet.Companion.current().name)
-        bjtf.setText(BasisSet.Companion.current().sele.name)
+        bsjtf.text = BasisSet.Companion.current().name
+        bjtf.text = BasisSet.Companion.current().sele.name
         changeLU()
         `addListeners$0`()
         `addListeners$1`()
         `addListeners$2`()
-        lvorb.setEnabled(lub.sf != null)
+        lvorb.isEnabled = lub.sf != null
     }
 
     private fun lu(): LineUp {
@@ -428,8 +428,8 @@ class BasisPage(p: Page?) : LubCont(p) {
     private fun setB(b: BasisLU) {
         BasisSet.Companion.current().sele = b
         lub.setLU(if (b == null) null else b.lu)
-        brem.setEnabled(BasisSet.Companion.current().lb.size > 1)
-        bjtf.setText(BasisSet.Companion.current().sele.name)
+        brem.isEnabled = BasisSet.Companion.current().lb.size > 1
+        bjtf.text = BasisSet.Companion.current().sele.name
         ncb.set(b.nyc)
         changeLU()
         callBack(lub.sf)
@@ -443,17 +443,17 @@ class BasisPage(p: Page?) : LubCont(p) {
         val b: BasisLU = bs.sele
         jlb.setSelectedValue(b, true)
         trea.setBasis(bs)
-        bsjtf.setText(BasisSet.Companion.current().name)
-        bsrem.setEnabled(BasisSet.Companion.current() !== BasisSet.Companion.def())
+        bsjtf.text = BasisSet.Companion.current().name
+        bsrem.isEnabled = BasisSet.Companion.current() !== BasisSet.Companion.def()
         setB(b)
     }
 
     private fun setC(c: Int) {
         if (outside) {
-            jlcs.setSelectedIndex(0)
+            jlcs.selectedIndex = 0
             jlcl.setListData(Interpret.getComboFilter(0))
             val row: Int = jlc.list.get(c).type
-            jlcl.setSelectedIndex(row)
+            jlcl.selectedIndex = row
             val p: Point = jlcl.indexToLocation(row)
             val h: Int = jlcl.indexToLocation(1).y - jlcl.indexToLocation(0).y
             if (p != null) jlcl.scrollRectToVisible(Rectangle(p.x, p.y, 1, h))
@@ -462,7 +462,7 @@ class BasisPage(p: Page?) : LubCont(p) {
     }
 
     private fun setCL(cs: Int) {
-        val cls: IntArray = jlcl.getSelectedIndices()
+        val cls: IntArray = jlcl.selectedIndices
         if (cls.size == 0) {
             val lc: MutableList<Combo> = ArrayList<Combo>()
             for (i in 0 until CommonStatic.getBCAssets().filter.get(cs).length) for (c in CommonStatic.getBCAssets().combos.get(CommonStatic.getBCAssets().filter.get(cs).get(i))) lc.add(c)
@@ -472,40 +472,40 @@ class BasisPage(p: Page?) : LubCont(p) {
             for (`val` in cls) for (c in CommonStatic.getBCAssets().combos.get(CommonStatic.getBCAssets().filter.get(cs).get(`val`))) lc.add(c)
             jlc.setList(lc)
         }
-        jlc.getSelectionModel().setSelectionInterval(0, 0)
+        jlc.selectionModel.setSelectionInterval(0, 0)
         outside = false
         setC(0)
     }
 
     private fun setCN() {
-        lub.select(jlcn.getSelectedValue())
+        lub.select(jlcn.selectedValue)
     }
 
     private fun setCS(cs: Int) {
         jlcl.setListData(Interpret.getComboFilter(cs))
-        jlcl.setSelectedIndex(0)
+        jlcl.selectedIndex = 0
         setCL(cs)
     }
 
     private fun setLvs(f: Form?) {
-        lvorb.setEnabled(f != null)
+        lvorb.isEnabled = f != null
         if (f == null) {
-            lvjtf.setText("")
+            lvjtf.text = ""
             pcoin.text = ""
             return
         }
-        lvorb.setVisible(f.orbs != null)
+        lvorb.isVisible = f.orbs != null
         val strs: Array<String> = UtilPC.lvText(f, lu().getLv(f.unit).getLvs())
-        lvjtf.setText(strs[0])
+        lvjtf.text = strs[0]
         pcoin.text = strs[1]
     }
 
     private fun updateSetC() {
-        val com: Combo? = if (jlc.list.size > 0) jlc.list.get(jlc.getSelectedRow()) else null
-        setc.setEnabled(com != null && !lu().contains(com))
+        val com: Combo? = if (jlc.list.size > 0) jlc.list.get(jlc.selectedRow) else null
+        setc.isEnabled = com != null && !lu().contains(com)
         var b = false
         if (com != null) b = lu().willRem(com)
-        setc.setForeground(if (b) Color.RED else Color.BLACK)
+        setc.foreground = if (b) Color.RED else Color.BLACK
         setc.setText(0, "set" + if (b) "1" else "0")
     }
 

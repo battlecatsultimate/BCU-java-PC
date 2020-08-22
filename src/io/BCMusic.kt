@@ -282,7 +282,7 @@ object BCMusic : Data {
     private fun openFile(data: ByteArray): Clip {
         val `is` = ByteArrayInputStream(data)
         val raw: AudioInputStream = AudioSystem.getAudioInputStream(`is`)
-        val rf: AudioFormat = raw.getFormat()
+        val rf: AudioFormat = raw.format
         val ch = rf.channels
         val rate = rf.sampleRate
         val format = AudioFormat(AudioFormat.Encoding.PCM_SIGNED, rate, 16, ch, ch * 2, rate, false)
@@ -298,7 +298,7 @@ object BCMusic : Data {
     @Throws(Exception::class)
     private fun openFile(file: Music): Clip {
         val raw: AudioInputStream = AudioSystem.getAudioInputStream(file.data.getStream())
-        val rf: AudioFormat = raw.getFormat()
+        val rf: AudioFormat = raw.format
         val ch = rf.channels
         val rate = rf.sampleRate
         val format = AudioFormat(AudioFormat.Encoding.PCM_SIGNED, rate, 16, ch, ch * 2, rate, false)

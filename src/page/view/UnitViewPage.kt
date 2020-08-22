@@ -28,38 +28,38 @@ class UnitViewPage(p: Page?, private val pac: String) : AbViewPage(p) {
         jlu.setSelectedValue(u, true)
     }
 
-    protected override fun resized(x: Int, y: Int) {
+    override fun resized(x: Int, y: Int) {
         super.resized(x, y)
         Page.Companion.set(jspu, x, y, 50, 100, 300, 1100)
         Page.Companion.set(jspf, x, y, 400, 100, 300, 400)
         Page.Companion.set(stat, x, y, 400, 1000, 300, 50)
     }
 
-    protected override fun updateChoice() {
-        val f: Form = jlf.getSelectedValue() ?: return
+    override fun updateChoice() {
+        val f: Form = jlf.selectedValue ?: return
         setAnim<UType>(f.anim)
     }
 
     private fun addListeners() {
         jlu.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (arg0.getValueIsAdjusting()) return
-                val u: Unit = jlu.getSelectedValue() ?: return
-                var ind: Int = jlf.getSelectedIndex()
+                if (arg0.valueIsAdjusting) return
+                val u: Unit = jlu.selectedValue ?: return
+                var ind: Int = jlf.selectedIndex
                 if (ind == -1) ind = 0
                 jlf.setListData(u.forms)
-                jlf.setSelectedIndex(if (ind < u.forms.size) ind else 0)
+                jlf.selectedIndex = if (ind < u.forms.size) ind else 0
             }
         })
         jlf.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (arg0.getValueIsAdjusting()) return
+                if (arg0.valueIsAdjusting) return
                 updateChoice()
             }
         })
         stat.addActionListener(object : ActionListener {
             override fun actionPerformed(e: ActionEvent?) {
-                val u: Unit = jlu.getSelectedValue() ?: return
+                val u: Unit = jlu.selectedValue ?: return
                 val n: Node<Unit> = Node.Companion.getList<Unit>(UserProfile.Companion.getAll<Unit>(pac, Unit::class.java), u)
                 changePanel(UnitInfoPage(getThis(), n))
             }

@@ -12,36 +12,36 @@ class Exporter : JFileChooser {
 
     constructor(bimg: BufferedImage?, t: Int) {
         val filter = FileNameExtensionFilter("PNG Images", "png")
-        setCurrentDirectory(curs[t])
-        setFileFilter(filter)
-        setDragEnabled(true)
+        currentDirectory = curs[t]
+        fileFilter = filter
+        dragEnabled = true
         val returnVal: Int = showSaveDialog(null)
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            file = getSelectedFile()
-            curs[t] = getCurrentDirectory()
+            file = selectedFile
+            curs[t] = currentDirectory
             BCUWriter.writeImage(bimg, file)
         }
     }
 
     constructor(t: Int) {
-        setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY)
-        setCurrentDirectory(curs[t])
-        setDragEnabled(true)
+        fileSelectionMode = JFileChooser.DIRECTORIES_ONLY
+        currentDirectory = curs[t]
+        dragEnabled = true
         val returnVal: Int = showSaveDialog(null)
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            file = getSelectedFile()
-            curs[t] = getCurrentDirectory()
+            file = selectedFile
+            curs[t] = currentDirectory
             if (!file!!.isDirectory) file = file!!.parentFile
         }
     }
 
     constructor(os: OutStream?, t: Int) {
-        setDragEnabled(true)
-        setCurrentDirectory(curs[t])
+        dragEnabled = true
+        currentDirectory = curs[t]
         val returnVal: Int = showSaveDialog(null)
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            file = getSelectedFile()
-            curs[t] = getCurrentDirectory()
+            file = selectedFile
+            curs[t] = currentDirectory
             BCUWriter.writeBytes(os, file!!.path)
         }
     }

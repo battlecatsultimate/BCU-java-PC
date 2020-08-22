@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage
 
 abstract class GLCstd protected constructor() : GLCanvas(GLStatic.GLC), GLEventListener {
     override fun dispose(drawable: GLAutoDrawable) {
-        ResManager.Companion.get(drawable.getGL().getGL2()).dispose()
+        ResManager.Companion.get(drawable.gl.gL2).dispose()
     }
 
     val screen: BufferedImage?

@@ -83,8 +83,8 @@ class ImgCutEditPage : Page, AbEditPage {
     override fun callBack(o: Any?) {
         changing = true
         if (sb.sele >= 0) {
-            icet.getSelectionModel().setSelectionInterval(sb.sele, sb.sele)
-            val h: Int = icet.getRowHeight()
+            icet.selectionModel.setSelectionInterval(sb.sele, sb.sele)
+            val h: Int = icet.rowHeight
             icet.scrollRectToVisible(Rectangle(0, h * sb.sele, 1, h))
         } else icet.clearSelection()
         setB(sb.sele)
@@ -160,8 +160,8 @@ class ImgCutEditPage : Page, AbEditPage {
         Page.Companion.set(ico, x, y, 1650, 1050, 200, 50)
         Page.Companion.set(icon, x, y, 1650, 1100, 400, 100)
         aep.componentResized(x, y)
-        icet.setRowHeight(Page.Companion.size(x, y, 50))
-        sb.paint(sb.getGraphics())
+        icet.rowHeight = Page.Companion.size(x, y, 50)
+        sb.paint(sb.graphics)
     }
 
     private fun `addListeners$0`() {
@@ -212,19 +212,19 @@ class ImgCutEditPage : Page, AbEditPage {
         })
         jlu.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (changing || jlu.getValueIsAdjusting()) return
+                if (changing || jlu.valueIsAdjusting) return
                 changing = true
-                setA(jlu.getSelectedValue())
+                setA(jlu.selectedValue)
                 changing = false
             }
         })
         jtf.addFocusListener(object : FocusAdapter() {
             override fun focusLost(arg0: FocusEvent?) {
                 changing = true
-                var str: String = jtf.getText().trim { it <= ' ' }
+                var str: String = jtf.text.trim { it <= ' ' }
                 str = MainBCU.validate(str)
                 if (str.length == 0 || icet.anim == null || icet.anim.id.id == str) {
-                    if (icet.anim != null) jtf.setText(icet.anim.id.id)
+                    if (icet.anim != null) jtf.text = icet.anim.id.id
                     return
                 }
                 val rep: AnimCE = AnimCE.Companion.map().get(str)
@@ -239,7 +239,7 @@ class ImgCutEditPage : Page, AbEditPage {
                 } else {
                     str = AnimCE.Companion.getAvailable(str)
                     icet.anim.renameTo(str)
-                    jtf.setText(str)
+                    jtf.text = str
                 }
                 changing = false
             }
@@ -262,13 +262,13 @@ class ImgCutEditPage : Page, AbEditPage {
         rem.setLnr(Consumer { x: ActionEvent? ->
             if (!Opts.conf()) return@setLnr
             changing = true
-            var ind: Int = jlu.getSelectedIndex()
+            var ind: Int = jlu.selectedIndex
             val ac: AnimCE = icet.anim
             ac.delete()
             val v: Vector<AnimCE> = Vector<AnimCE>(AnimCE.Companion.map().values)
             jlu.setListData(v)
             if (ind >= v.size) ind--
-            jlu.setSelectedIndex(ind)
+            jlu.selectedIndex = ind
             setA(if (ind < 0) null else v[ind])
             changing = false
         }
@@ -276,14 +276,14 @@ class ImgCutEditPage : Page, AbEditPage {
         loca.setLnr(Consumer { x: ActionEvent? ->
             if (!Opts.conf()) return@setLnr
             changing = true
-            var ind: Int = jlu.getSelectedIndex()
+            var ind: Int = jlu.selectedIndex
             val ac: AnimCE = icet.anim
             ac.check()
             ac.delete()
             val v: Vector<AnimCE> = Vector<AnimCE>(AnimCE.Companion.map().values)
             jlu.setListData(v)
             if (ind >= v.size) ind--
-            jlu.setSelectedIndex(ind)
+            jlu.selectedIndex = ind
             setA(v[ind])
             changing = false
         }
@@ -311,12 +311,12 @@ class ImgCutEditPage : Page, AbEditPage {
     }
 
     private fun `addListeners$1`() {
-        val lsm: ListSelectionModel = icet.getSelectionModel()
+        val lsm: ListSelectionModel = icet.selectionModel
         lsm.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (changing || lsm.getValueIsAdjusting()) return
+                if (changing || lsm.valueIsAdjusting) return
                 changing = true
-                setB(lsm.getLeadSelectionIndex())
+                setB(lsm.leadSelectionIndex)
                 changing = false
             }
         })
@@ -332,13 +332,13 @@ class ImgCutEditPage : Page, AbEditPage {
                     ic.cuts.get(i) = data[i]
                     ic.strs.get(i) = name[i]
                 }
-                val ind: Int = icet.getSelectedRow()
+                val ind: Int = icet.selectedRow
                 if (ind >= 0) ic.cuts.get(ic.n - 1) = ic.cuts.get(ind).clone() else ic.cuts.get(ic.n - 1) = intArrayOf(0, 0, 1, 1)
                 ic.strs.get(ic.n - 1) = ""
                 icet.anim.unSave("imgcut add line")
                 resized()
                 lsm.setSelectionInterval(ic.n - 1, ic.n - 1)
-                val h: Int = icet.getRowHeight()
+                val h: Int = icet.rowHeight
                 icet.scrollRectToVisible(Rectangle(0, h * (ic.n - 1), 1, h))
                 setB(ic.n - 1)
                 changing = false
@@ -379,36 +379,36 @@ class ImgCutEditPage : Page, AbEditPage {
                     val ic: ImgCut = icet.ic
                     data = ic.cuts.get(ind)
                 }
-                ReColor.transcolor(icet.anim.getNum().bimg() as BufferedImage, data, jlf.getSelectedIndex(),
-                        jlt.getSelectedIndex())
+                ReColor.transcolor(icet.anim.getNum().bimg() as BufferedImage, data, jlf.selectedIndex,
+                        jlt.selectedIndex)
                 icet.anim.getNum().mark(Marker.RECOLORED)
                 icet.anim.ICedited()
             }
         })
         jlf.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (jlf.getSelectedIndex() == -1) jlf.setSelectedIndex(0)
+                if (jlf.selectedIndex == -1) jlf.selectedIndex = 0
             }
         })
         jlt.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (jlt.getSelectedIndex() == -1) jlt.setSelectedIndex(0)
+                if (jlt.selectedIndex == -1) jlt.selectedIndex = 0
             }
         })
         resz.setLnr(Consumer<FocusEvent> { x: FocusEvent? ->
-            val d: Double = CommonStatic.parseIntN(resz.getText()) * 0.01
+            val d: Double = CommonStatic.parseIntN(resz.text) * 0.01
             if (Opts.conf("do you want to resize sprite to $d%?")) {
                 icet.anim.resize(d)
                 icet.anim.ICedited()
                 icet.anim.unSave("resized")
             }
-            resz.setText("resize to: _%")
+            resz.text = "resize to: _%"
         })
         merg.addActionListener(object : ActionListener {
             override fun actionPerformed(e: ActionEvent?) {
                 changing = true
                 val str: String = AnimCE.Companion.getAvailable("merged")
-                val list: Array<AnimCE> = jlu.getSelectedValuesList().toTypedArray()
+                val list: Array<AnimCE> = jlu.selectedValuesList.toTypedArray()
                 val rect = Array(list.size) { IntArray(2) }
                 for (i in list.indices) {
                     rect[i][0] = list[i].getNum().getWidth()
@@ -418,7 +418,7 @@ class ImgCutEditPage : Page, AbEditPage {
                 val cen: AnimCE = list[ans.center]
                 val ac = AnimCE(str, cen)
                 val bimg = BufferedImage(ans.w, ans.h, BufferedImage.TYPE_INT_ARGB)
-                val g: Graphics = bimg.getGraphics()
+                val g: Graphics = bimg.graphics
                 for (i in list.indices) {
                     val b: BufferedImage = list[i].getNum().bimg() as BufferedImage
                     val x: Int = ans.pos.get(i).get(0)
@@ -469,14 +469,14 @@ class ImgCutEditPage : Page, AbEditPage {
         add(ico)
         add(merg)
         add(spri)
-        add.setEnabled(aep.focus == null)
-        jtf.setEnabled(aep.focus == null)
-        relo.setEnabled(aep.focus == null)
-        swcl.setEnabled(aep.focus == null)
-        jlu.setCellRenderer(AnimLCR())
+        add.isEnabled = aep.focus == null
+        jtf.isEnabled = aep.focus == null
+        relo.isEnabled = aep.focus == null
+        swcl.isEnabled = aep.focus == null
+        jlu.cellRenderer = AnimLCR()
         setA(null)
-        jlf.setSelectedIndex(0)
-        jlt.setSelectedIndex(1)
+        jlf.selectedIndex = 0
+        jlt.selectedIndex = 1
         `addListeners$0`()
         `addListeners$1`()
     }
@@ -485,34 +485,34 @@ class ImgCutEditPage : Page, AbEditPage {
         val boo = changing
         changing = true
         aep.setAnim(anim)
-        addl.setEnabled(anim != null)
-        swcl.setEnabled(anim != null)
-        save.setEnabled(anim != null)
-        resz.setEditable(anim != null)
+        addl.isEnabled = anim != null
+        swcl.isEnabled = anim != null
+        save.isEnabled = anim != null
+        resz.isEditable = anim != null
         icet.setCut(anim)
         sb.setAnim(anim)
         if (sb.sele == -1) icet.clearSelection()
-        jtf.setEnabled(anim != null)
-        jtf.setText(if (anim == null) "" else anim.id.id)
+        jtf.isEnabled = anim != null
+        jtf.text = if (anim == null) "" else anim.id.id
         val del = anim != null && anim.deletable()
-        rem.setEnabled(aep.focus == null && anim != null && del)
-        loca.setEnabled(aep.focus == null && anim != null && !del && !anim.inPool())
-        copy.setEnabled(aep.focus == null && anim != null)
-        impt.setEnabled(anim != null)
-        expt.setEnabled(anim != null)
-        spri.setEnabled(anim != null)
-        merg.setEnabled(jlu.getSelectedValuesList().size > 1)
+        rem.isEnabled = aep.focus == null && anim != null && del
+        loca.isEnabled = aep.focus == null && anim != null && !del && !anim.inPool()
+        copy.isEnabled = aep.focus == null && anim != null
+        impt.isEnabled = anim != null
+        expt.isEnabled = anim != null
+        spri.isEnabled = anim != null
+        merg.isEnabled = jlu.selectedValuesList.size > 1
         if (anim != null && anim.getEdi() != null) icon.icon = UtilPC.getIcon(anim.getEdi())
         setB(sb.sele)
         changing = boo
     }
 
     private fun setB(row: Int) {
-        sb.sele = icet.getSelectedRow()
-        reml.setEnabled(sb.sele != -1)
+        sb.sele = icet.selectedRow
+        reml.isEnabled = sb.sele != -1
         if (sb.sele >= 0) {
-            for (ints in icet.anim.mamodel.parts) if (ints[2] == sb.sele) reml.setEnabled(false)
-            for (ma in icet.anim.anims) for (part in ma.parts) if (part.ints[1] == 2) for (ints in part.moves) if (ints[1] == sb.sele) reml.setEnabled(false)
+            for (ints in icet.anim.mamodel.parts) if (ints[2] == sb.sele) reml.isEnabled = false
+            for (ma in icet.anim.anims) for (part in ma.parts) if (part.ints[1] == 2) for (ints in part.moves) if (ints[1] == sb.sele) reml.isEnabled = false
         }
     }
 

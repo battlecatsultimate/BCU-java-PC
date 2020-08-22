@@ -40,7 +40,7 @@ object DrvieInit {
                     .setApplicationName(APPLICATION_NAME).build()
             val result: FileList = service.files().list().setPageSize(10).setFields("nextPageToken,files(id,name)")
                     .execute()
-            val files: List<File> = result.getFiles()
+            val files: List<File> = result.files
             if (files == null || files.isEmpty()) {
                 println("No files found...")
             } else {

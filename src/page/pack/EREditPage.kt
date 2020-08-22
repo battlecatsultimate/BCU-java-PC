@@ -65,8 +65,8 @@ class EREditPage(p: Page?, pac: UserPack?) : Page(p) {
         for (i in 0..2) Page.Companion.set(type[i], x, y, 1550 + 250 * i, 250, 200, 50)
         Page.Companion.set(addl, x, y, 1800, 350, 200, 50)
         Page.Companion.set(reml, x, y, 2050, 350, 200, 50)
-        jt.setRowHeight(Page.Companion.size(x, y, 50))
-        jle.setFixedCellHeight(Page.Companion.size(x, y, 50))
+        jt.rowHeight = Page.Companion.size(x, y, 50)
+        jle.fixedCellHeight = Page.Companion.size(x, y, 50)
     }
 
     private fun addListeners() {
@@ -77,7 +77,7 @@ class EREditPage(p: Page?, pac: UserPack?) : Page(p) {
         })
         addl.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                val ind: Int = jt.addLine(jle.getSelectedValue())
+                val ind: Int = jt.addLine(jle.selectedValue)
                 setER(rand)
                 if (ind < 0) jt.clearSelection() else jt.addRowSelectionInterval(ind, ind)
             }
@@ -97,8 +97,8 @@ class EREditPage(p: Page?, pac: UserPack?) : Page(p) {
         })
         jlst.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (isAdj || arg0.getValueIsAdjusting()) return
-                setER(jlst.getSelectedValue())
+                if (isAdj || arg0.valueIsAdjusting) return
+                setER(jlst.selectedValue)
             }
         })
         adds.addActionListener(object : ActionListener {
@@ -115,21 +115,21 @@ class EREditPage(p: Page?, pac: UserPack?) : Page(p) {
         rems.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
                 if (!Opts.conf()) return
-                var ind: Int = jlst.getSelectedIndex() - 1
+                var ind: Int = jlst.selectedIndex - 1
                 if (ind < 0) ind = -1
                 pack.randEnemies.remove(rand)
                 change(ind, { IND: Int ->
                     val l: List<EneRand> = pack.randEnemies.getList()
                     jlst.setListData(l.toTypedArray())
                     if (IND < l.size) jlst.setSelectedIndex(IND) else jlst.setSelectedIndex(l.size - 1)
-                    setER(jlst.getSelectedValue())
+                    setER(jlst.selectedValue)
                 })
             }
         })
         name.addFocusListener(object : FocusAdapter() {
             override fun focusLost(fe: FocusEvent?) {
                 if (rand == null) return
-                rand.name = name.getText().trim { it <= ' ' }
+                rand.name = name.text.trim { it <= ' ' }
                 setER(rand)
             }
         })
@@ -157,22 +157,22 @@ class EREditPage(p: Page?, pac: UserPack?) : Page(p) {
         add(name)
         for (i in 0..2) add(JTG(1, "ert$i").also { type[i] = it })
         setES()
-        jle.setCellRenderer(AnimLCR())
+        jle.cellRenderer = AnimLCR()
         addListeners()
     }
 
     private fun setER(er: EneRand?) {
         change<EneRand>(er, Consumer<EneRand> { st: EneRand? ->
             val b = st != null && pack.editable
-            rems.setEnabled(b)
-            addl.setEnabled(b)
-            reml.setEnabled(b)
-            name.setEnabled(b)
-            jt.setEnabled(b)
+            rems.isEnabled = b
+            addl.isEnabled = b
+            reml.isEnabled = b
+            name.isEnabled = b
+            jt.isEnabled = b
             for (btn in type) btn.setEnabled(b)
             rand = st
             jt.setData(st)
-            name.setText(if (st == null) "" else rand.name)
+            name.text = if (st == null) "" else rand.name
             val t = if (st == null) -1 else st.type
             for (i in 0..2) type[i].setSelected(i == t)
             jspjt.scrollRectToVisible(Rectangle(0, 0, 1, 1))
@@ -184,10 +184,10 @@ class EREditPage(p: Page?, pac: UserPack?) : Page(p) {
         if (pack == null) {
             jlst.setListData(arrayOfNulls<EneRand>(0))
             setER(null)
-            adds.setEnabled(false)
+            adds.isEnabled = false
             return
         }
-        adds.setEnabled(pack.editable)
+        adds.isEnabled = pack.editable
         val l: List<EneRand> = pack.randEnemies.getList()
         jlst.setListData(l.toTypedArray())
         if (l.size == 0) {
@@ -195,7 +195,7 @@ class EREditPage(p: Page?, pac: UserPack?) : Page(p) {
             setER(null)
             return
         }
-        jlst.setSelectedIndex(0)
+        jlst.selectedIndex = 0
         setER(pack.randEnemies.getList().get(0))
     }
 

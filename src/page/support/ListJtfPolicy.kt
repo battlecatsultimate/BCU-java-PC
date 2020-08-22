@@ -685,7 +685,7 @@ class ListJtfPolicy : FocusTraversalPolicy() {
         if (ind == -1) return list[0]
         if (ind + 1 >= list.size) ind = 0 else ind++
         val jtf: JTF = list[ind]
-        return if (jtf.isEnabled()) jtf else getComponentAfter(cont, jtf)
+        return if (jtf.isEnabled) jtf else getComponentAfter(cont, jtf)
     }
 
     override fun getComponentBefore(cont: Container, comp: Component): Component {
@@ -693,7 +693,7 @@ class ListJtfPolicy : FocusTraversalPolicy() {
         if (ind == -1) return list[0]
         if (ind == 0) ind = list.size - 1 else ind--
         val jtf: JTF = list[ind]
-        return if (jtf.isEnabled()) jtf else getComponentAfter(cont, jtf)
+        return if (jtf.isEnabled) jtf else getComponentAfter(cont, jtf)
     }
 
     override fun getDefaultComponent(cont: Container): Component {

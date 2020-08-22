@@ -12,7 +12,7 @@ class FG2D(graphics: Graphics) : FakeGraphics {
     override fun colRect(x: Int, y: Int, w: Int, h: Int, r: Int, gr: Int, b: Int, a: Int) {
         val al = if (a >= 0) a else 255
         val c = Color(r, gr, b, al)
-        g.setColor(c)
+        g.color = c
         g.fillRect(x, y, w, h)
     }
 
@@ -45,11 +45,11 @@ class FG2D(graphics: Graphics) : FakeGraphics {
     }
 
     override fun getTransform(): FakeTransform {
-        return FTAT(g.getTransform())
+        return FTAT(g.transform)
     }
 
     override fun gradRect(x: Int, y: Int, w: Int, h: Int, a: Int, b: Int, c: IntArray, d: Int, e: Int, f: IntArray) {
-        g.setPaint(GradientPaint(a, b, Color(c[0], c[1], c[2]), d, e, Color(f[0], f[1], f[2])))
+        g.paint = GradientPaint(a, b, Color(c[0], c[1], c[2]), d, e, Color(f[0], f[1], f[2]))
         g.fillRect(x, y, w, h)
     }
 
@@ -62,18 +62,18 @@ class FG2D(graphics: Graphics) : FakeGraphics {
     }
 
     override fun setColor(c: Int) {
-        if (c == FakeGraphics.Companion.RED) g.setColor(Color.RED)
-        if (c == FakeGraphics.Companion.YELLOW) g.setColor(Color.YELLOW)
-        if (c == FakeGraphics.Companion.BLACK) g.setColor(Color.BLACK)
-        if (c == FakeGraphics.Companion.MAGENTA) g.setColor(Color.MAGENTA)
-        if (c == FakeGraphics.Companion.BLUE) g.setColor(Color.BLUE)
-        if (c == FakeGraphics.Companion.CYAN) g.setColor(Color.CYAN)
-        if (c == FakeGraphics.Companion.WHITE) g.setColor(Color.WHITE)
+        if (c == FakeGraphics.Companion.RED) g.color = Color.RED
+        if (c == FakeGraphics.Companion.YELLOW) g.color = Color.YELLOW
+        if (c == FakeGraphics.Companion.BLACK) g.color = Color.BLACK
+        if (c == FakeGraphics.Companion.MAGENTA) g.color = Color.MAGENTA
+        if (c == FakeGraphics.Companion.BLUE) g.color = Color.BLUE
+        if (c == FakeGraphics.Companion.CYAN) g.color = Color.CYAN
+        if (c == FakeGraphics.Companion.WHITE) g.color = Color.WHITE
     }
 
     override fun setComposite(mode: Int, p0: Int, p1: Int) {
-        if (mode == FakeGraphics.Companion.DEF) g.setComposite(comp)
-        if (mode == FakeGraphics.Companion.TRANS) g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (p0 / 256.0).toFloat()))
+        if (mode == FakeGraphics.Companion.DEF) g.composite = comp
+        if (mode == FakeGraphics.Companion.TRANS) g.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (p0 / 256.0).toFloat())
         if (mode == FakeGraphics.Companion.BLEND) g.setComposite(Blender(p0, p1))
         if (mode == FakeGraphics.Companion.GRAY) g.setComposite(Converter(p0))
     }
@@ -83,7 +83,7 @@ class FG2D(graphics: Graphics) : FakeGraphics {
     }
 
     override fun setTransform(at: FakeTransform) {
-        g.setTransform(at.getAT() as AffineTransform)
+        g.transform = at.getAT() as AffineTransform
     }
 
     override fun translate(x: Double, y: Double) {
@@ -113,6 +113,6 @@ class FG2D(graphics: Graphics) : FakeGraphics {
 
     init {
         g = graphics as Graphics2D
-        comp = g.getComposite()
+        comp = g.composite
     }
 }

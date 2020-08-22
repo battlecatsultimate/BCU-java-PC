@@ -81,8 +81,8 @@ internal class LSCPop(private val lsc: LocSubComp) : MouseAdapter() {
         if (arg0.button == MouseEvent.BUTTON3 && lsc.page != null) {
             val panel = JPanel()
             val size: PP = PP(lsc.page!!.getRootPage().size).times(0.25)
-            panel.setPreferredSize(size.toDimension())
-            panel.setLayout(BorderLayout())
+            panel.preferredSize = size.toDimension()
+            panel.layout = BorderLayout()
             val top = JPanel(GridLayout(2, 2))
             val id1 = JL(lsc.binder!!.tooltipID)
             val id0 = JL(lsc.binder!!.nameID)
@@ -94,21 +94,21 @@ internal class LSCPop(private val lsc: LocSubComp) : MouseAdapter() {
             val jtf = JTF(lsc.binder!!.nameValue)
             panel.add(jtf, BorderLayout.PAGE_END)
             val jta = JTextPane()
-            jta.setText(lsc.binder!!.toolTipValue)
+            jta.text = lsc.binder!!.toolTipValue
             panel.add(JScrollPane(jta), BorderLayout.CENTER)
             if (lsc.binder!!.nameID == null) {
                 id0.setEnabled(false)
-                jtf.setEnabled(false)
+                jtf.isEnabled = false
             }
             if (lsc.binder!!.tooltipID == null) {
                 id1.setEnabled(false)
-                jta.setEnabled(false)
+                jta.isEnabled = false
             }
             val type: Int = JOptionPane.OK_CANCEL_OPTION
             val ok: Int = JOptionPane.OK_OPTION
             val res: Int = JOptionPane.showConfirmDialog(null, panel, "", type)
-            val str: String = jtf.getText()
-            val ttt: String = jta.getText()
+            val str: String = jtf.text
+            val ttt: String = jta.text
             if (res == ok && str != null && str != lsc.binder!!.nameValue) {
                 lsc.binder!!.nameValue = str
                 Page.Companion.renewLoc(lsc.page)

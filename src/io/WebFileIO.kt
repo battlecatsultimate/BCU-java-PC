@@ -37,8 +37,8 @@ open class WebFileIO {
                 val out: OutputStream = FileOutputStream(file)
                 val gurl = GenericUrl(url)
                 val downloader = MediaHttpDownloader(transport, io.Handler())
-                downloader.setChunkSize(size)
-                downloader.setProgressListener(Progress(c))
+                downloader.chunkSize = size
+                downloader.progressListener = Progress(c)
                 downloader.download(gurl, out)
                 out.close()
                 Printer.p("WebFileIO", 55, "download success: $url")
@@ -67,7 +67,7 @@ open class WebFileIO {
             builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE)
             builder.addPart("catFile", fileBody)
             val reqEntity: HttpEntity = builder.build()
-            post.setEntity(reqEntity)
+            post.entity = reqEntity
             val response: HttpResponse = client.execute(post)
             val statusCode = response.statusLine.statusCode
             if (statusCode == 200) return true

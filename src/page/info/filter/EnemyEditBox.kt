@@ -47,20 +47,20 @@ class EnemyEditBox(p: Page?, private val editable: Boolean) : Page(p) {
         trait.setListData(vt)
         abis.setListData(va)
         val m: Int = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION
-        trait.setSelectionMode(m)
-        abis.setSelectionMode(m)
+        trait.selectionMode = m
+        abis.selectionMode = m
         set(trait)
         set(abis)
         add(jt)
         add(jab)
-        trait.setEnabled(editable)
-        abis.setEnabled(editable)
+        trait.isEnabled = editable
+        abis.isEnabled = editable
     }
 
     private fun set(jl: JList<*>) {
         jl.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (!changing && !jl.getValueIsAdjusting()) confirm()
+                if (!changing && !jl.valueIsAdjusting) confirm()
             }
         })
     }

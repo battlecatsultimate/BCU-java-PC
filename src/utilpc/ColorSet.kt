@@ -25,8 +25,8 @@ class ColorSet internal constructor(val CONTROL: Color, val INFO: Color, val NIM
         UIManager.put("Table.textForeground", NIMBUS_TEXT)
         try {
             for (info in UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus" == info.getName()) {
-                    UIManager.setLookAndFeel(info.getClassName())
+                if ("Nimbus" == info.name) {
+                    UIManager.setLookAndFeel(info.className)
                     break
                 }
             }

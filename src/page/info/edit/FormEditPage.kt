@@ -24,19 +24,19 @@ class FormEditPage(p: Page?, pac: UserPack, private val form: Form) : EntityEdit
     private val ueb: UnitEditBox
     private val cu: CustomUnit
     private var lv: Int
-    protected override fun getAtk(): Double {
+    override fun getAtk(): Double {
         val mul = form.unit.lv.getMult(lv)
         val atk: Double = bas.t().getAtkMulti()
         return mul * atk
     }
 
-    protected override fun getDef(): Double {
+    override fun getDef(): Double {
         val mul = form.unit.lv.getMult(lv)
         val def: Double = bas.t().getDefMulti()
         return mul * def
     }
 
-    protected override fun getInput(jtf: JTF, v: Int) {
+    override fun getInput(jtf: JTF, v: Int) {
         var v = v
         if (jtf === fdr) cu.price = (v / 1.5).toInt()
         if (jtf === flv) {
@@ -49,7 +49,7 @@ class FormEditPage(p: Page?, pac: UserPack, private val form: Form) : EntityEdit
         }
     }
 
-    protected override fun ini() {
+    override fun ini() {
         set(ldr)
         set(llv)
         set(lrs)
@@ -66,7 +66,7 @@ class FormEditPage(p: Page?, pac: UserPack, private val form: Form) : EntityEdit
         subListener(vene, impt, vuni, form.unit)
     }
 
-    protected override fun resized(x: Int, y: Int) {
+    override fun resized(x: Int, y: Int) {
         super.resized(x, y)
         Page.Companion.set(llv, x, y, 50, 50, 100, 50)
         Page.Companion.set(flv, x, y, 150, 50, 200, 50)
@@ -83,11 +83,11 @@ class FormEditPage(p: Page?, pac: UserPack, private val form: Form) : EntityEdit
         ueb.resized()
     }
 
-    protected override fun setData(data: CustomEntity) {
+    override fun setData(data: CustomEntity) {
         super.setData(data)
-        flv.setText("" + lv)
-        frs.setText("" + bas.t().getFinRes(cu.getRespawn()))
-        fdr.setText("" + (cu.getPrice() * 1.5) as Int)
+        flv.text = "" + lv
+        frs.text = "" + bas.t().getFinRes(cu.getRespawn())
+        fdr.text = "" + (cu.getPrice() * 1.5) as Int
         var imu = 0
         for (i in Interpret.ABIIND.indices) {
             val id: Int = Interpret.ABIIND.get(i) - 100

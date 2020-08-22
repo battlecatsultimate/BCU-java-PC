@@ -34,7 +34,7 @@ class CastleViewPage @JvmOverloads constructor(p: Page?, list: Collection<Castle
     }
 
     fun getVal(): PackData.Identifier<CastleImg>? {
-        val img: CastleImg = jlst.getSelectedValue()
+        val img: CastleImg = jlst.selectedValue
         return if (img == null) null else img.getID()
     }
 
@@ -54,16 +54,16 @@ class CastleViewPage @JvmOverloads constructor(p: Page?, list: Collection<Castle
         })
         jlsm.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (arg0.getValueIsAdjusting()) return
-                val sm: CastleList = jlsm.getSelectedValue() ?: return
+                if (arg0.valueIsAdjusting) return
+                val sm: CastleList = jlsm.selectedValue ?: return
                 jlst.setListData(Vector<CastleImg>(sm.getList()))
-                jlst.setSelectedIndex(0)
+                jlst.selectedIndex = 0
             }
         })
         jlst.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (arg0.getValueIsAdjusting()) return
-                val s: CastleImg = jlst.getSelectedValue()
+                if (arg0.valueIsAdjusting) return
+                val s: CastleImg = jlst.selectedValue
                 if (s == null) jl.icon = null else jl.icon = UtilPC.getIcon(s.img)
             }
         })

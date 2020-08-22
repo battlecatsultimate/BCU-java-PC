@@ -13,20 +13,20 @@ import javax.swing.event.ListSelectionListener
 class EffectViewPage(p: Page?) : AbViewPage(p) {
     private val jlu: JList<AnimI<*, *>> = JList<AnimI<*, *>>()
     private val jspu: JScrollPane = JScrollPane(jlu)
-    protected override fun resized(x: Int, y: Int) {
+    override fun resized(x: Int, y: Int) {
         super.resized(x, y)
         Page.Companion.set(jspu, x, y, 50, 100, 300, 1100)
     }
 
-    protected override fun updateChoice() {
-        val u: AnimI<*, *> = jlu.getSelectedValue() ?: return
+    override fun updateChoice() {
+        val u: AnimI<*, *> = jlu.selectedValue ?: return
         setAnim(u)
     }
 
     private fun addListeners() {
         jlu.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (arg0.getValueIsAdjusting()) return
+                if (arg0.valueIsAdjusting) return
                 updateChoice()
             }
         })

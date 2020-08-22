@@ -68,8 +68,8 @@ class MusicEditPage(p: Page?, ac: UserPack?) : Page(p) {
         })
         jlst.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (isAdj || arg0.getValueIsAdjusting()) return
-                sele = jlst.getSelectedValue()
+                if (isAdj || arg0.valueIsAdjusting) return
+                sele = jlst.selectedValue
             }
         })
     }
@@ -86,12 +86,12 @@ class MusicEditPage(p: Page?, ac: UserPack?) : Page(p) {
 
     private fun setList() {
         change(this, { p: MusicEditPage? ->
-            var ind: Int = jlst.getSelectedIndex()
+            var ind: Int = jlst.selectedIndex
             val arr: Array<Music> = pack.musics.getList().toTypedArray()
             jlst.setListData(arr)
             if (ind < 0) ind = 0
             if (ind >= arr.size) ind = arr.size - 1
-            jlst.setSelectedIndex(ind)
+            jlst.selectedIndex = ind
             if (ind >= 0) sele = arr[ind]
         })
     }

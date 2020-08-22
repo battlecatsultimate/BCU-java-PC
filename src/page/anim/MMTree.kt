@@ -18,7 +18,7 @@ internal class MMTree(protected val tc: TreeCont?, am: AnimCE?, tree: JTree) : T
     private var data: Array<DefaultMutableTreeNode?>
     private var adj = false
     override fun treeCollapsed(arg0: TreeExpansionEvent) {
-        val n: Any = arg0.getPath().getLastPathComponent()
+        val n: Any = arg0.path.lastPathComponent
         val i = indexOf(n)
         if (i < 0) return
         mm.status.put(mm.parts.get(i), 1)
@@ -27,7 +27,7 @@ internal class MMTree(protected val tc: TreeCont?, am: AnimCE?, tree: JTree) : T
     }
 
     override fun treeExpanded(arg0: TreeExpansionEvent) {
-        val n: Any = arg0.getPath().getLastPathComponent()
+        val n: Any = arg0.path.lastPathComponent
         val i = indexOf(n)
         if (i < 0) return
         mm.status.put(mm.parts.get(i), 1)
@@ -57,7 +57,7 @@ internal class MMTree(protected val tc: TreeCont?, am: AnimCE?, tree: JTree) : T
                 c++
             }
         }
-        jtr.setModel(DefaultTreeModel(top))
+        jtr.model = DefaultTreeModel(top)
         nav(-1, IntPredicate { i: Int ->
             val s: Int = mm.status.get(mm.parts.get(i))
             val tp = TreePath(data[i].getPath())
@@ -74,7 +74,7 @@ internal class MMTree(protected val tc: TreeCont?, am: AnimCE?, tree: JTree) : T
     fun select(i: Int) {
         if (adj || i >= data.size || i < 0) return
         val tp = TreePath(data[i].getPath())
-        jtr.setSelectionPath(tp)
+        jtr.selectionPath = tp
         jtr.scrollPathToVisible(tp)
     }
 

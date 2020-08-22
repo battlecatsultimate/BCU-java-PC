@@ -117,17 +117,17 @@ class UnitManagePage(p: Page?, pack: UserPack?) : Page(p) {
         })
         jld.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (jld.getValueIsAdjusting()) return
-                val edi = pac != null && pac.editable && jld.getSelectedValue() != null
-                addu.setEnabled(edi)
-                addf.setEnabled(edi && uni != null)
+                if (jld.valueIsAdjusting) return
+                val edi = pac != null && pac.editable && jld.selectedValue != null
+                addu.isEnabled = edi
+                addf.isEnabled = edi && uni != null
             }
         })
         jlp.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (changing || jlp.getValueIsAdjusting()) return
+                if (changing || jlp.valueIsAdjusting) return
                 changing = true
-                setPack(jlp.getSelectedValue())
+                setPack(jlp.selectedValue)
                 changing = false
             }
         })
@@ -153,9 +153,9 @@ class UnitManagePage(p: Page?, pack: UserPack?) : Page(p) {
     private fun `addListeners$1`() {
         jlu.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(e: ListSelectionEvent?) {
-                if (changing || jlu.getValueIsAdjusting()) return
+                if (changing || jlu.valueIsAdjusting) return
                 changing = true
-                setUnit(jlu.getSelectedValue())
+                setUnit(jlu.selectedValue)
                 changing = false
             }
         })
@@ -163,7 +163,7 @@ class UnitManagePage(p: Page?, pack: UserPack?) : Page(p) {
             override fun actionPerformed(arg0: ActionEvent?) {
                 changing = true
                 val cu = CustomUnit()
-                val u = Unit(pac.getNextID<Unit, Unit>(Unit::class.java), jld.getSelectedValue(), cu)
+                val u = Unit(pac.getNextID<Unit, Unit>(Unit::class.java), jld.selectedValue, cu)
                 pac.units.add(u)
                 jlu.setListData(pac.units.getList().toTypedArray())
                 jlu.setSelectedValue(u, true)
@@ -175,42 +175,42 @@ class UnitManagePage(p: Page?, pack: UserPack?) : Page(p) {
             override fun actionPerformed(arg0: ActionEvent?) {
                 if (!Opts.conf()) return
                 changing = true
-                var ind: Int = jlu.getSelectedIndex()
+                var ind: Int = jlu.selectedIndex
                 pac.units.remove(uni)
                 uni!!.lv.units.remove(uni)
                 jlu.setListData(pac.units.getList().toTypedArray())
                 if (ind >= 0) ind--
-                jlu.setSelectedIndex(ind)
-                setUnit(jlu.getSelectedValue())
+                jlu.selectedIndex = ind
+                setUnit(jlu.selectedValue)
                 changing = false
             }
         })
         maxl.addFocusListener(object : FocusAdapter() {
             override fun focusLost(fe: FocusEvent?) {
                 if (changing || uni == null) return
-                val lv: Int = CommonStatic.parseIntN(maxl.getText())
+                val lv: Int = CommonStatic.parseIntN(maxl.text)
                 if (lv > 0) uni!!.max = lv
-                maxl.setText("" + uni!!.max)
+                maxl.text = "" + uni!!.max
             }
         })
         maxp.addFocusListener(object : FocusAdapter() {
             override fun focusLost(fe: FocusEvent?) {
                 if (changing || uni == null) return
-                val lv: Int = CommonStatic.parseIntN(maxp.getText())
+                val lv: Int = CommonStatic.parseIntN(maxp.text)
                 if (lv >= 0) uni!!.maxp = lv
-                maxp.setText("" + uni!!.maxp)
+                maxp.text = "" + uni!!.maxp
             }
         })
         rar.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
                 if (changing) return
-                uni!!.rarity = rar.getSelectedIndex()
+                uni!!.rarity = rar.selectedIndex
             }
         })
         cbl.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
                 if (changing || uni == null) return
-                val sel: UnitLevel = cbl.getSelectedItem() as UnitLevel
+                val sel: UnitLevel = cbl.selectedItem as UnitLevel
                 uni!!.lv.units.remove(uni)
                 uni!!.lv = sel
                 sel.units.add(uni)
@@ -223,9 +223,9 @@ class UnitManagePage(p: Page?, pack: UserPack?) : Page(p) {
     private fun `addListeners$2`() {
         jlf.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(e: ListSelectionEvent?) {
-                if (changing || jlf.getValueIsAdjusting()) return
+                if (changing || jlf.valueIsAdjusting) return
                 changing = true
-                setForm(jlf.getSelectedValue())
+                setForm(jlf.selectedValue)
                 changing = false
             }
         })
@@ -233,7 +233,7 @@ class UnitManagePage(p: Page?, pack: UserPack?) : Page(p) {
             override fun actionPerformed(arg0: ActionEvent?) {
                 changing = true
                 val cu = CustomUnit()
-                val ac: AnimCE = jld.getSelectedValue()
+                val ac: AnimCE = jld.selectedValue
                 frm = Form(uni, uni!!.forms.size, "new form", ac, cu)
                 uni!!.forms = Arrays.copyOf(uni!!.forms, uni!!.forms.size + 1)
                 uni!!.forms[uni!!.forms.size - 1] = frm
@@ -245,7 +245,7 @@ class UnitManagePage(p: Page?, pack: UserPack?) : Page(p) {
             override fun actionPerformed(arg0: ActionEvent?) {
                 if (!Opts.conf()) return
                 changing = true
-                var ind: Int = jlf.getSelectedIndex()
+                var ind: Int = jlf.selectedIndex
                 val fs = arrayOfNulls<Form>(uni!!.forms.size - 1)
                 var x = 0
                 for (i in uni!!.forms.indices) if (i != ind) fs[x++] = uni!!.forms[i]
@@ -253,14 +253,14 @@ class UnitManagePage(p: Page?, pack: UserPack?) : Page(p) {
                 for (i in uni!!.forms.indices) uni!!.forms[i]!!.fid = i
                 setUnit(uni)
                 if (ind >= 0) ind--
-                jlf.setSelectedIndex(ind)
-                setForm(jlf.getSelectedValue())
+                jlf.selectedIndex = ind
+                setForm(jlf.selectedValue)
                 changing = false
             }
         })
         jtff.addFocusListener(object : FocusAdapter() {
             override fun focusLost(fe: FocusEvent?) {
-                frm!!.name = jtff.getText().trim { it <= ' ' }
+                frm!!.name = jtff.text.trim { it <= ' ' }
             }
         })
         edit.addActionListener(object : ActionListener {
@@ -273,8 +273,8 @@ class UnitManagePage(p: Page?, pack: UserPack?) : Page(p) {
     private fun `addListeners$3`() {
         jll.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent?) {
-                if (changing || jll.getValueIsAdjusting()) return
-                setLevel(jll.getSelectedValue())
+                if (changing || jll.valueIsAdjusting) return
+                setLevel(jll.selectedValue)
             }
         })
         addl.addActionListener(object : ActionListener {
@@ -289,21 +289,21 @@ class UnitManagePage(p: Page?, pack: UserPack?) : Page(p) {
         reml.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
                 changing = true
-                var ind: Int = jll.getSelectedIndex()
-                val ul: UnitLevel = jll.getSelectedValue()
+                var ind: Int = jll.selectedIndex
+                val ul: UnitLevel = jll.selectedValue
                 pac.unitLevels.remove(ul)
                 setPack(pac)
                 if (ind >= pac.unitLevels.size()) ind--
-                jll.setSelectedIndex(ind)
-                setLevel(jll.getSelectedValue())
+                jll.selectedIndex = ind
+                setLevel(jll.selectedValue)
                 changing = false
             }
         })
         jtfl.addFocusListener(object : FocusAdapter() {
             override fun focusLost(fe: FocusEvent?) {
-                val lvs: IntArray = CommonStatic.parseIntsN(jtfl.getText())
+                val lvs: IntArray = CommonStatic.parseIntsN(jtfl.text)
                 for (i in lvs.indices) if (lvs[i] > 0 && (i == 0 || lvs[i] >= ul.lvs.get(i - 1))) ul.lvs.get(i) = lvs[i]
-                jtfl.setText(ul.toString())
+                jtfl.text = ul.toString()
             }
         })
     }
@@ -337,8 +337,8 @@ class UnitManagePage(p: Page?, pack: UserPack?) : Page(p) {
         add(addl)
         add(reml)
         add(jtfl)
-        jlu.setCellRenderer(UnitLCR())
-        jlf.setCellRenderer(AnimLCR())
+        jlu.cellRenderer = UnitLCR()
+        jlf.cellRenderer = AnimLCR()
         jld.setCellRenderer(AnimLCR())
         setPack(pac)
         addListeners()
@@ -349,50 +349,50 @@ class UnitManagePage(p: Page?, pack: UserPack?) : Page(p) {
 
     private fun setForm(f: Form?) {
         frm = f
-        if (jlf.getSelectedValue() !== frm) {
+        if (jlf.selectedValue !== frm) {
             val boo = changing
             changing = true
             jlf.setSelectedValue(frm, true)
             changing = boo
         }
         val b = frm != null && pac.editable
-        edit.setEnabled(frm != null && frm!!.du is CustomUnit)
-        remf.setEnabled(b && frm!!.fid > 0)
-        jtff.setEnabled(b)
+        edit.isEnabled = frm != null && frm!!.du is CustomUnit
+        remf.isEnabled = b && frm!!.fid > 0
+        jtff.isEnabled = b
         if (frm != null) {
-            jtff.setText(f!!.name)
+            jtff.text = f!!.name
         } else {
-            jtff.setText("")
+            jtff.text = ""
         }
     }
 
     private fun setLevel(ulv: UnitLevel?) {
         ul = ulv
-        if (jll.getSelectedValue() !== ul) {
+        if (jll.selectedValue !== ul) {
             val boo = changing
             changing = true
             jll.setSelectedValue(ul, true)
             changing = boo
         }
         val b = ul != null && pac.editable
-        jtfl.setEnabled(b)
-        if (ul != null) jtfl.setText(ul.toString()) else jtfl.setText("")
-        reml.setEnabled(b && ul.units.size == 0)
+        jtfl.isEnabled = b
+        if (ul != null) jtfl.text = ul.toString() else jtfl.text = ""
+        reml.isEnabled = b && ul.units.size == 0
     }
 
     private fun setPack(pack: UserPack?) {
         pac = pack
-        if (jlp.getSelectedValue() !== pack) {
+        if (jlp.selectedValue !== pack) {
             val boo = changing
             changing = true
             jlp.setSelectedValue(pac, true)
             changing = boo
         }
         val b = pac != null && pac.editable
-        addu.setEnabled(b && jld.getSelectedValue() != null)
-        edit.setEnabled(b)
-        addl.setEnabled(b)
-        vuni.setEnabled(pac != null)
+        addu.isEnabled = b && jld.selectedValue != null
+        edit.isEnabled = b
+        addl.isEnabled = b
+        vuni.isEnabled = pac != null
         val boo = changing
         changing = true
         if (pac == null) {
@@ -403,7 +403,7 @@ class UnitManagePage(p: Page?, pack: UserPack?) : Page(p) {
             jlu.setListData(pac.units.getList().toTypedArray())
             jlu.clearSelection()
             jll.setListData(pac.unitLevels.getList().toTypedArray())
-            setLevel(jll.getSelectedValue())
+            setLevel(jll.selectedValue)
             val l: List<UnitLevel> = pac.unitLevels.getList()
             cbl.setModel(DefaultComboBoxModel<UnitLevel>(l.toTypedArray()))
         }
@@ -416,31 +416,31 @@ class UnitManagePage(p: Page?, pack: UserPack?) : Page(p) {
 
     private fun setUnit(unit: Unit?) {
         uni = unit
-        if (jlu.getSelectedValue() !== uni) {
+        if (jlu.selectedValue !== uni) {
             val boo = changing
             changing = true
             jlu.setSelectedValue(uni, true)
             changing = boo
         }
         val b = unit != null && pac.editable
-        remu.setEnabled(b)
-        rar.setEnabled(b)
-        cbl.setEnabled(b)
-        addf.setEnabled(b && jld.getSelectedValue() != null && unit!!.forms.size < 3)
-        maxl.setEditable(b)
-        maxp.setEditable(b)
+        remu.isEnabled = b
+        rar.isEnabled = b
+        cbl.isEnabled = b
+        addf.isEnabled = b && jld.selectedValue != null && unit!!.forms.size < 3
+        maxl.isEditable = b
+        maxp.isEditable = b
         val boo = changing
         changing = true
         if (unit == null) {
             jlf.setListData(arrayOfNulls<Form>(0))
-            maxl.setText("")
-            maxp.setText("")
+            maxl.text = ""
+            maxp.text = ""
             rar.setSelectedItem(null)
             cbl.setSelectedItem(null)
         } else {
             jlf.setListData(unit.forms)
-            maxl.setText("" + uni!!.max)
-            maxp.setText("" + uni!!.maxp)
+            maxl.text = "" + uni!!.max
+            maxp.text = "" + uni!!.maxp
             rar.setSelectedIndex(uni!!.rarity)
             cbl.setSelectedItem(uni!!.lv)
         }

@@ -55,8 +55,8 @@ class CastleEditPage(p: Page?, ac: UserPack) : Page(p) {
         })
         jlst.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (changing || arg0.getValueIsAdjusting()) return
-                val img: CastleImg = jlst.getSelectedValue()
+                if (changing || arg0.valueIsAdjusting) return
+                val img: CastleImg = jlst.selectedValue
                 var ic: ImageIcon? = null
                 if (img != null) {
                     val s: VImg = img.img
@@ -72,13 +72,13 @@ class CastleEditPage(p: Page?, ac: UserPack) : Page(p) {
         })
         impc.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                val img: CastleImg = jlst.getSelectedValue()
+                val img: CastleImg = jlst.selectedValue
                 if (img != null) getFile("Choose your file", img)
             }
         })
         expc.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                val img: CastleImg = jlst.getSelectedValue()
+                val img: CastleImg = jlst.selectedValue
                 if (img != null) {
                     val s: VImg = img.img
                     if (s != null) Exporter(s.getImg().bimg() as BufferedImage, Exporter.Companion.EXP_IMG)
@@ -87,7 +87,7 @@ class CastleEditPage(p: Page?, ac: UserPack) : Page(p) {
         })
         remc.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                val img: CastleImg = jlst.getSelectedValue()
+                val img: CastleImg = jlst.selectedValue
                 if (img != null) {
                     cas.remove(img)
                     (pack.source as Workspace).getCasFile(img.getID()).delete()
@@ -102,7 +102,7 @@ class CastleEditPage(p: Page?, ac: UserPack) : Page(p) {
     private fun getFile(str: String, vimg: CastleImg?) {
         var vimg: CastleImg? = vimg
         val bimg: BufferedImage = Importer(str).getImg() ?: return
-        if (bimg.getWidth() != 128 && bimg.getHeight() != 256) {
+        if (bimg.width != 128 && bimg.height != 256) {
             getFile("Wrong img size. Img size: w=128, h=256", vimg)
             return
         }
@@ -134,12 +134,12 @@ class CastleEditPage(p: Page?, ac: UserPack) : Page(p) {
     }
 
     private fun setList() {
-        var ind: Int = jlst.getSelectedIndex()
+        var ind: Int = jlst.selectedIndex
         jlst.setListData(cas.getList().toTypedArray())
         if (ind < 0) ind = 0
         if (ind >= cas.size()) ind = cas.size() - 1
-        jlst.setSelectedIndex(ind)
-        val img: CastleImg = jlst.getSelectedValue()
+        jlst.selectedIndex = ind
+        val img: CastleImg = jlst.selectedValue
         jl.icon = if (img == null) null else UtilPC.getIcon(img.img)
     }
 

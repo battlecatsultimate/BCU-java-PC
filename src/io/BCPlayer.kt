@@ -32,9 +32,9 @@ class BCPlayer : LineListener {
         master = c.getControl(FloatControl.Type.MASTER_GAIN) as FloatControl
         this.loop = loop
         isLooping = looping
-        if (loop > 0 && loop * 1000 < c.getMicrosecondLength()) {
+        if (loop > 0 && loop * 1000 < c.microsecondLength) {
             c.setLoopPoints(milliToFrame(loop), -1)
-        } else if (loop * 1000 >= c.getMicrosecondLength()) {
+        } else if (loop * 1000 >= c.microsecondLength) {
             c.loop(0)
         }
     }
@@ -47,13 +47,13 @@ class BCPlayer : LineListener {
     }
 
     override fun update(event: LineEvent) {
-        if (event.getType() === LineEvent.Type.STOP) {
+        if (event.type === LineEvent.Type.STOP) {
             isPlaying = false
             stop()
             if (ind >= 0 && ind != 20 && ind != 21 && ind != 22) {
                 synchronized(BCMusic::class.java) {
                     val players: ArrayDeque<BCPlayer> = BCMusic.sounds.get(ind)
-                    players?.push(this)
+                    players.push(this)
                 }
             } else if (isLooping && loop >= c.getMicrosecondLength()) {
                 return
@@ -100,7 +100,7 @@ class BCPlayer : LineListener {
     }
 
     private fun milliToFrame(milli: Long): Int {
-        val rate = c.getFormat().getFrameRate() as Long
+        val rate = c.getFormat().frameRate as Long
         return (milli / 1000.0).toInt() * rate.toInt()
     }
 

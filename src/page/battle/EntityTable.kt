@@ -34,7 +34,7 @@ internal class EntityTable(private val dir: Int) : SortTable<Entity?>() {
         return if (c == 0) t.health else if (c == 1) t.data.pack else if (c == 2) t.atk.toLong() else null
     }
 
-    protected override fun getTit(): Array<String> {
+    override fun getTit(): Array<String> {
         return title
     }
 

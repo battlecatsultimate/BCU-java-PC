@@ -17,10 +17,10 @@ class GLIB : ImageBuilder() {
     @Throws(IOException::class)
     override fun build(o: Any?): FakeImage? {
         if (o == null) return null
-        if (o is FakeImage) return o as FakeImage?
+        if (o is FakeImage) return o
         if (CommonStatic.getConfig().icon) return FIBI.Companion.builder.build(o)
         if (o is FileData) return AmbImage(Supplier { o.stream })
-        if (o is VFile<*>) return AmbImage(Supplier<InputStream> { (o as VFile<*>).getData().getStream() })
+        if (o is VFile<*>) return AmbImage(Supplier<InputStream> { o.getData().getStream() })
         if (o is ByteArray) return AmbImage(Supplier<InputStream> { ByteArrayInputStream(o as ByteArray?) })
         if (o is Supplier<*>) return AmbImage(o as Supplier<InputStream?>?)
         if (o is BufferedImage) return AmbImage(o as BufferedImage?)

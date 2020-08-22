@@ -99,7 +99,7 @@ class StageEditPage(p: Page?, map: MapColc, pac: UserPack) : Page(p) {
         Page.Companion.set(jlpst, x, y, 300, 1000, 300, 300)
         Page.Companion.set(veif, x, y, 600, 0, 300, 50)
         Page.Companion.set(jspe, x, y, 600, 50, 300, 1250)
-        jt.setRowHeight(Page.Companion.size(x, y, 50))
+        jt.rowHeight = Page.Companion.size(x, y, 50)
     }
 
     private fun `addListeners$0`() {
@@ -110,7 +110,7 @@ class StageEditPage(p: Page?, map: MapColc, pac: UserPack) : Page(p) {
         elim.setLnr(Consumer { x: ActionEvent? -> changePanel(LimitEditPage(getThis(), stage)) })
         addl.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                val ind: Int = jt.addLine(jle.getSelectedValue())
+                val ind: Int = jt.addLine(jle.selectedValue)
                 setData(stage)
                 if (ind < 0) jt.clearSelection() else jt.addRowSelectionInterval(ind, ind)
             }
@@ -128,17 +128,17 @@ class StageEditPage(p: Page?, map: MapColc, pac: UserPack) : Page(p) {
     private fun `addListeners$1`() {
         jlsm.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (changing || arg0.getValueIsAdjusting()) return
+                if (changing || arg0.valueIsAdjusting) return
                 changing = true
-                setAA(jlsm.getSelectedValue())
+                setAA(jlsm.selectedValue)
                 changing = false
             }
         })
         jlst.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (changing || arg0.getValueIsAdjusting()) return
+                if (changing || arg0.valueIsAdjusting) return
                 changing = true
-                setAB(jlst.getSelectedValue())
+                setAB(jlst.selectedValue)
                 changing = false
             }
         })
@@ -170,17 +170,17 @@ class StageEditPage(p: Page?, map: MapColc, pac: UserPack) : Page(p) {
         }
         lpsm.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (changing || arg0.getValueIsAdjusting()) return
+                if (changing || arg0.valueIsAdjusting) return
                 changing = true
-                setBA(lpsm.getSelectedValue())
+                setBA(lpsm.selectedValue)
                 changing = false
             }
         })
         lpst.addListSelectionListener(object : ListSelectionListener {
             override fun valueChanged(arg0: ListSelectionEvent) {
-                if (changing || arg0.getValueIsAdjusting()) return
+                if (changing || arg0.valueIsAdjusting) return
                 changing = true
-                setBB(lpst.getSelectedValue())
+                setBB(lpst.selectedValue)
                 changing = false
             }
         })
@@ -189,7 +189,7 @@ class StageEditPage(p: Page?, map: MapColc, pac: UserPack) : Page(p) {
     private fun `addListeners$2`() {
         cpsm.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                val sm: StageMap = jlsm.getSelectedValue()
+                val sm: StageMap = jlsm.selectedValue
                 val col: MapColc = Stage.Companion.CLIPMC
                 val copy: StageMap = sm.copy(col)
                 val n: Int = col.maps.size
@@ -209,14 +209,14 @@ class StageEditPage(p: Page?, map: MapColc, pac: UserPack) : Page(p) {
                 changing = true
                 lpst.setListData(Vector<Stage>(Stage.Companion.CLIPSM.list))
                 lpst.setSelectedValue(copy, true)
-                lpsm.setSelectedIndex(0)
+                lpsm.selectedIndex = 0
                 setBB(copy)
                 changing = false
             }
         })
         ptsm.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                val sm: StageMap = lpsm.getSelectedValue()
+                val sm: StageMap = lpsm.selectedValue
                 val ni: StageMap = sm.copy(mc)
                 val n: Int = mc.maps.size
                 mc.maps = Arrays.copyOf(mc.maps, n + 1)
@@ -230,8 +230,8 @@ class StageEditPage(p: Page?, map: MapColc, pac: UserPack) : Page(p) {
         })
         ptst.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                val sm: StageMap = jlsm.getSelectedValue()
-                stage = lpst.getSelectedValue().copy(sm)
+                val sm: StageMap = jlsm.selectedValue
+                stage = lpst.selectedValue.copy(sm)
                 sm.add(stage)
                 changing = true
                 jlst.setListData(sm.list.toTypedArray())
@@ -242,7 +242,7 @@ class StageEditPage(p: Page?, map: MapColc, pac: UserPack) : Page(p) {
         })
         rmsm.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                val ind: Int = lpsm.getSelectedIndex()
+                val ind: Int = lpsm.selectedIndex
                 val col: MapColc = Stage.Companion.CLIPMC
                 val sms: Array<StageMap?> = arrayOfNulls<StageMap>(col.maps.size - 1)
                 for (i in 0 until ind) sms[i] = col.maps.get(i)
@@ -250,27 +250,27 @@ class StageEditPage(p: Page?, map: MapColc, pac: UserPack) : Page(p) {
                 col.maps = sms
                 changing = true
                 lpsm.setListData(sms)
-                lpsm.setSelectedIndex(ind - 1)
-                setBA(lpsm.getSelectedValue())
+                lpsm.selectedIndex = ind - 1
+                setBA(lpsm.selectedValue)
                 changing = false
             }
         })
         rmst.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                val sm: StageMap = lpsm.getSelectedValue()
-                val st: Stage = lpst.getSelectedValue()
-                val ind: Int = lpst.getSelectedIndex()
+                val sm: StageMap = lpsm.selectedValue
+                val st: Stage = lpst.selectedValue
+                val ind: Int = lpst.selectedIndex
                 sm.list.remove(st)
                 changing = true
                 lpst.setListData(Vector<Stage>(sm.list))
-                lpst.setSelectedIndex(ind - 1)
-                setBB(lpst.getSelectedValue())
+                lpst.selectedIndex = ind - 1
+                setBB(lpst.selectedValue)
                 changing = false
             }
         })
         adds.addActionListener(object : ActionListener {
             override fun actionPerformed(arg0: ActionEvent?) {
-                val sm: StageMap = jlsm.getSelectedValue()
+                val sm: StageMap = jlsm.selectedValue
                 stage = Stage(sm)
                 sm.add(stage)
                 changing = true
@@ -282,34 +282,34 @@ class StageEditPage(p: Page?, map: MapColc, pac: UserPack) : Page(p) {
         })
         rems.setLnr(Consumer { x: ActionEvent? ->
             if (!Opts.conf()) return@setLnr
-            val sm: StageMap = jlsm.getSelectedValue()
-            var ind: Int = jlst.getSelectedIndex() - 1
+            val sm: StageMap = jlsm.selectedValue
+            var ind: Int = jlst.selectedIndex - 1
             sm.list.remove(stage)
             changing = true
             jlst.setListData(Vector<Stage>(sm.list))
             if (ind < 0) ind = -1
             if (ind < sm.list.size) jlst.setSelectedIndex(ind) else jlst.setSelectedIndex(sm.list.size - 1)
-            setAB(jlst.getSelectedValue())
+            setAB(jlst.selectedValue)
             changing = false
         })
     }
 
     private fun checkPtsm() {
-        val sm: StageMap = lpsm.getSelectedValue()
+        val sm: StageMap = lpsm.selectedValue
         if (sm == null) {
-            ptsm.setEnabled(false)
+            ptsm.isEnabled = false
             return
         }
         var b = true
         for (st in sm.list) b = b and st.isSuitable(pack)
-        ptsm.setEnabled(b)
+        ptsm.isEnabled = b
     }
 
     private fun checkPtst() {
-        val st: Stage = lpst.getSelectedValue()
-        val sm: StageMap = jlsm.getSelectedValue()
-        if (st == null || sm == null) ptst.setEnabled(false) else ptst.setEnabled(st.isSuitable(pack))
-        rmst.setEnabled(st != null)
+        val st: Stage = lpst.selectedValue
+        val sm: StageMap = jlsm.selectedValue
+        if (st == null || sm == null) ptst.isEnabled = false else ptst.isEnabled = st.isSuitable(pack)
+        rmst.isEnabled = st != null
     }
 
     private fun ini() {
@@ -338,7 +338,7 @@ class StageEditPage(p: Page?, map: MapColc, pac: UserPack) : Page(p) {
         add(elim)
         setAA(null)
         setBA(null)
-        jle.setCellRenderer(AnimLCR())
+        jle.cellRenderer = AnimLCR()
         `addListeners$0`()
         `addListeners$1`()
         `addListeners$2`()
@@ -348,36 +348,36 @@ class StageEditPage(p: Page?, map: MapColc, pac: UserPack) : Page(p) {
         if (sm == null) {
             jlst.setListData(arrayOfNulls<Stage>(0))
             setAB(null)
-            cpsm.setEnabled(false)
-            ptst.setEnabled(false)
-            adds.setEnabled(false)
+            cpsm.isEnabled = false
+            ptst.isEnabled = false
+            adds.isEnabled = false
             return
         }
         jlst.setListData(Vector<Stage>(sm.list))
         if (sm.list.size == 0) {
             jlst.clearSelection()
-            cpsm.setEnabled(false)
-            adds.setEnabled(true)
+            cpsm.isEnabled = false
+            adds.isEnabled = true
             checkPtst()
             setAB(null)
             return
         }
-        jlst.setSelectedIndex(0)
-        cpsm.setEnabled(true)
-        adds.setEnabled(true)
+        jlst.selectedIndex = 0
+        cpsm.isEnabled = true
+        adds.isEnabled = true
         checkPtst()
         setAB(sm.list.get(0))
     }
 
     private fun setAB(st: Stage?) {
         if (st == null) {
-            setData(lpst.getSelectedValue())
-            cpst.setEnabled(false)
-            rems.setEnabled(false)
+            setData(lpst.selectedValue)
+            cpst.isEnabled = false
+            rems.isEnabled = false
             return
         }
-        cpst.setEnabled(true)
-        rems.setEnabled(true)
+        cpst.isEnabled = true
+        rems.isEnabled = true
         lpst.clearSelection()
         checkPtst()
         setData(st)
@@ -386,32 +386,32 @@ class StageEditPage(p: Page?, map: MapColc, pac: UserPack) : Page(p) {
     private fun setBA(sm: StageMap?) {
         if (sm == null) {
             lpst.setListData(arrayOfNulls<Stage>(0))
-            ptsm.setEnabled(false)
-            rmsm.setEnabled(false)
+            ptsm.isEnabled = false
+            rmsm.isEnabled = false
             setBB(null)
             return
         }
         lpst.setListData(Vector<Stage>(sm.list))
-        rmsm.setEnabled(sm !== Stage.Companion.CLIPSM)
+        rmsm.isEnabled = sm !== Stage.Companion.CLIPSM
         if (sm.list.size == 0) {
             lpst.clearSelection()
-            ptsm.setEnabled(false)
+            ptsm.isEnabled = false
             setBB(null)
             return
         }
-        lpst.setSelectedIndex(0)
+        lpst.selectedIndex = 0
         setBB(sm.list.get(0))
         checkPtsm()
     }
 
     private fun setBB(st: Stage?) {
         if (st == null) {
-            setData(jlst.getSelectedValue())
-            ptst.setEnabled(false)
-            rmst.setEnabled(false)
+            setData(jlst.selectedValue)
+            ptst.isEnabled = false
+            rmst.isEnabled = false
             return
         }
-        cpst.setEnabled(false)
+        cpst.isEnabled = false
         checkPtst()
         jlst.clearSelection()
         setData(st)
@@ -421,10 +421,10 @@ class StageEditPage(p: Page?, map: MapColc, pac: UserPack) : Page(p) {
         stage = st
         info.setData(st)
         jt.setData(st)
-        strt.setEnabled(st != null)
-        recd.setEnabled(st != null)
-        advs.setEnabled(st != null)
-        elim.setEnabled(st != null)
+        strt.isEnabled = st != null
+        recd.isEnabled = st != null
+        advs.isEnabled = st != null
+        elim.isEnabled = st != null
         jspjt.scrollRectToVisible(Rectangle(0, 0, 1, 1))
         resized()
     }

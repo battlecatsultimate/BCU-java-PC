@@ -9,7 +9,7 @@ class PCIB : ImageBuilder() {
     @Throws(IOException::class)
     override fun build(o: Any?): FakeImage? {
         if (o == null) return null
-        return if (o is FakeImage) o as FakeImage? else FIBI.Companion.builder.build(o)
+        return if (o is FakeImage) o else FIBI.Companion.builder.build(o)
     }
 
     @Throws(IOException::class)

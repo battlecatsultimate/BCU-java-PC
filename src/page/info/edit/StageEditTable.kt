@@ -42,11 +42,11 @@ internal class StageEditTable(private val page: Page, pac: UserPack) : AbJTable(
     private var changing = false
     override fun editCellAt(r: Int, c: Int, e: EventObject): Boolean {
         val result: Boolean = super.editCellAt(r, c, e)
-        val editor: Component = getEditorComponent()
+        val editor: Component = editorComponent
         if (editor == null || editor !is JTextComponent) return result
-        val jtf: JTextComponent = editor as JTextComponent
+        val jtf: JTextComponent = editor
         if (e is KeyEvent) jtf.selectAll()
-        if (lnk.get(c) == 1 && jtf.getText().length > 0) jtf.setText((get(r, c) as AbEnemy?).getID().toString() + "")
+        if (lnk.get(c) == 1 && jtf.text.length > 0) jtf.text = (get(r, c) as AbEnemy?).getID().toString() + ""
         return result
     }
 
@@ -101,7 +101,7 @@ internal class StageEditTable(private val page: Page, pac: UserPack) : AbJTable(
     override fun setValueAt(arg0: Any, r: Int, c: Int) {
         var c = c
         if (stage == null) return
-        if (r >= getRowCount()) return
+        if (r >= rowCount) return
         c = lnk.get(c)
         if (c > 3) {
             val `is`: IntArray = CommonStatic.parseIntsN(arg0 as String)
@@ -128,7 +128,7 @@ internal class StageEditTable(private val page: Page, pac: UserPack) : AbJTable(
     @Synchronized
     fun addLine(enemy: AbEnemy?): Int {
         if (stage == null) return -1
-        var ind: Int = getSelectedRow()
+        var ind: Int = selectedRow
         if (ind == -1) ind = 0
         val info = stage.datas
         val len = info.size
@@ -138,7 +138,7 @@ internal class StageEditTable(private val page: Page, pac: UserPack) : AbJTable(
             for (i in 0 until sind) ans[i] = info[i]
             for (i in sind + 1 until len + 1) ans[i] = info[i - 1]
         } else sind = 0
-        if (enemy == null && sind < info.size && getSelectedRow() >= 0) ans[sind] = info[sind].clone() else {
+        if (enemy == null && sind < info.size && selectedRow >= 0) ans[sind] = info[sind].clone() else {
             ans[sind] = SCDef.Line()
             ans[sind]!!.enemy = if (enemy == null) null else enemy.getID()
             ans[sind]!!.number = 1
@@ -162,7 +162,7 @@ internal class StageEditTable(private val page: Page, pac: UserPack) : AbJTable(
         val r: Int = p.y / getRowHeight()
         val info = stage.datas
         val len = info.size
-        if (r < 0 || r >= getRowCount() || c != 1) return
+        if (r < 0 || r >= rowCount || c != 1) return
         val ind = len - r - 1
         if (info[ind] == null) return
         val e: AbEnemy? = info[ind]!!.enemy.get()
@@ -173,7 +173,7 @@ internal class StageEditTable(private val page: Page, pac: UserPack) : AbJTable(
     @Synchronized
     fun remLine(): Int {
         if (stage == null) return -1
-        var ind: Int = getSelectedRow()
+        var ind: Int = selectedRow
         val info = stage.datas
         if (info.size == 0) return -1
         if (ind == -1) ind = 0
@@ -254,7 +254,7 @@ internal class StageEditTable(private val page: Page, pac: UserPack) : AbJTable(
 
     init {
         pack = pac
-        setTransferHandler(InTableTH(this))
+        transferHandler = InTableTH(this)
         setDefaultRenderer(Int::class.java, EnemyTCR())
     }
 }

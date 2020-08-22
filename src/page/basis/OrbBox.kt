@@ -22,7 +22,7 @@ class OrbBox(private var orbs: IntArray) : Canvas() {
         val w = width.toDouble()
         val h = height.toDouble()
         val img: BufferedImage = createImage(a.toInt(), a.toInt()) as BufferedImage
-        val f = FG2D(img.getGraphics())
+        val f = FG2D(img.graphics)
         f.drawImage(CommonStatic.getBCAssets().TRAITS.get(Orb.Companion.reverse(orbs[1])), 0.0, 0.0, a, a)
         f.setComposite(FakeGraphics.Companion.TRANS, 204, 0)
         f.drawImage(CommonStatic.getBCAssets().TYPES.get(orbs[0]), 0.0, 0.0, a, a)

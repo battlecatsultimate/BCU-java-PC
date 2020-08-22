@@ -15,7 +15,7 @@ class ReorderList<T> : JList<T>, Reorderable {
         model = DefaultListModel<T>()
         setModel(model)
         try {
-            setTransferHandler(InListTH<T>(this))
+            transferHandler = InListTH<T>(this)
             setDragEnabled(true)
         } catch (e: Exception) {
             Printer.e("ReorderList", 24, "cannot drag row")
@@ -34,8 +34,8 @@ class ReorderList<T> : JList<T>, Reorderable {
         model = DefaultListModel<T>()
         setModel(model)
         try {
-            setTransferHandler(InListTH<T>(this, cls, str))
-            setDragEnabled(true)
+            transferHandler = InListTH<T>(this, cls, str)
+            dragEnabled = true
             copable = true
         } catch (e: Exception) {
             Printer.e("ReorderList", 24, "cannot drag row")

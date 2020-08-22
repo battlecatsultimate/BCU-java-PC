@@ -19,7 +19,7 @@ class JBTN() : JButton(), LocComp {
         lsc.init(i, str)
     }
 
-    constructor(str: String) : this(-1, str) {}
+    constructor(str: String) : this(-1, str)
 
     override fun getLSC(): LocSubComp {
         return lsc

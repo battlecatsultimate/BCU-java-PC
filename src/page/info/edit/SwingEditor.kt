@@ -37,8 +37,8 @@ abstract class SwingEditor(par: EditorGroup?, field: EdiField?, f: String?, var 
 
         override fun setData() {
             field.setData(par.obj)
-            Data.Companion.err(Context.RunExc { input.setSelected(field.obj != null && field.getBoolean()) })
-            input.setEnabled(field.obj != null)
+            Data.Companion.err(Context.RunExc { input.isSelected = field.obj != null && field.getBoolean() })
+            input.isEnabled = field.obj != null
         }
 
         protected override fun add(con: Consumer<JComponent?>) {
@@ -46,7 +46,7 @@ abstract class SwingEditor(par: EditorGroup?, field: EdiField?, f: String?, var 
         }
 
         private fun edit(fe: ActionEvent) {
-            Data.Companion.err(Context.RunExc { field.setBoolean(input.isSelected()) })
+            Data.Companion.err(Context.RunExc { field.setBoolean(input.isSelected) })
             update()
         }
 
@@ -105,8 +105,8 @@ abstract class SwingEditor(par: EditorGroup?, field: EdiField?, f: String?, var 
 
         protected override fun setData() {
             field.setData(par.obj)
-            jl.setText("" + field.get())
-            input.setEnabled(edit && field.obj != null)
+            jl.text = "" + field.get()
+            input.isEnabled = edit && field.obj != null
         }
 
         private fun edit(fe: ActionEvent) {
@@ -134,8 +134,8 @@ abstract class SwingEditor(par: EditorGroup?, field: EdiField?, f: String?, var 
 
         override fun setData() {
             field.setData(par.obj)
-            if (field.obj == null) input.setText("") else input.setText("" + field.getInt())
-            input.setEnabled(edit && field.obj != null)
+            if (field.obj == null) input.text = "" else input.text = "" + field.getInt()
+            input.isEnabled = edit && field.obj != null
         }
 
         protected override fun add(con: Consumer<JComponent?>) {
@@ -144,7 +144,7 @@ abstract class SwingEditor(par: EditorGroup?, field: EdiField?, f: String?, var 
         }
 
         private fun edit(fe: FocusEvent) {
-            val `val`: Any = Data.Companion.ignore<Int>(SupExc<Int> { input.getText().toInt() })
+            val `val`: Any = Data.Companion.ignore<Int>(SupExc<Int> { input.text.toInt() })
             if (`val` != null) Data.Companion.err(Context.RunExc { field.set(`val`) })
             update()
         }
@@ -166,7 +166,7 @@ abstract class SwingEditor(par: EditorGroup?, field: EdiField?, f: String?, var 
         init {
             jlm = JL(this.getItem(ctx))
             val v: BufferedImage = UtilPC.getIcon(1, ind)
-            if (v != null) jlm.setIcon(ImageIcon(v))
+            if (v != null) jlm.icon = ImageIcon(v)
         }
     }
 

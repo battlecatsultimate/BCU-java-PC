@@ -20,10 +20,10 @@ class AnimLCR : DefaultListCellRenderer() {
         jl.icon = null
         jl.horizontalTextPosition = SwingConstants.RIGHT
         if (s && MainBCU.nimbus) {
-            jl.setBackground(if (MainBCU.light) Theme.LIGHT.NIMBUS_SELECT_BG else Theme.DARK.NIMBUS_SELECT_BG)
+            jl.background = if (MainBCU.light) Theme.LIGHT.NIMBUS_SELECT_BG else Theme.DARK.NIMBUS_SELECT_BG
         }
         val v: VImg?
-        v = if (o is Animable<*, *>) (o as Animable<out AnimU<*>?, *>).anim.getEdi() else if (o is AbEnemy) (o as AbEnemy).getIcon() else null
+        v = if (o is Animable<*, *>) (o as Animable<out AnimU<*>?, *>).anim.getEdi() else if (o is AbEnemy) o.getIcon() else null
         if (v == null) return jl
         jl.icon = UtilPC.getIcon(v)
         return jl

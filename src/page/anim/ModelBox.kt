@@ -27,13 +27,13 @@ internal class ModelBox : Canvas() {
         protected get() {
             val w = width
             val h = height
-            val img: BufferedImage = createImage(w, h) as BufferedImage ?: return null
-            val gra: Graphics2D = img.getGraphics() as Graphics2D
+            val img: BufferedImage = createImage(w, h) as BufferedImage
+            val gra: Graphics2D = img.graphics as Graphics2D
             val gdt = GradientPaint(w / 2, 0, c0, w / 2, h / 2, c1, true)
-            val p: Paint = gra.getPaint()
-            gra.setPaint(gdt)
+            val p: Paint = gra.paint
+            gra.paint = gdt
             gra.fillRect(0, 0, w, h)
-            gra.setPaint(p)
+            gra.paint = p
             gra.translate(w / 2, h * 3 / 4)
             if (ent != null) ent.draw(FG2D(gra), ori.copy().times(-1.0), siz)
             gra.dispose()
