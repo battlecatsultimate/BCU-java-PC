@@ -1,20 +1,5 @@
 package page;
 
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.BorderFactory;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
-import javax.swing.JSlider;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
 import common.CommonStatic;
 import common.CommonStatic.Config;
 import common.util.ImgCore;
@@ -25,330 +10,339 @@ import main.Opts;
 import page.view.ViewBox;
 import utilpc.Theme;
 
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 public class ConfigPage extends Page {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private static Config cfg() {
-		return CommonStatic.getConfig();
-	}
+    private static Config cfg() {
+        return CommonStatic.getConfig();
+    }
 
-	private final JBTN back = new JBTN(0, "back");
-	private final JBTN filt = new JBTN(0, "filter" + MainBCU.FILTER_TYPE);
-	private final JBTN rlla = new JBTN(0, "rllang");
-	private final JTG prel = new JTG(0, "preload");
-	private final JTG whit = new JTG(0, "white");
-	private final JTG refe = new JTG(0, "axis");
-	private final JTG jogl = new JTG(0, "JOGL");
-	private final JTG musc = new JTG(0, "musc");
-	private final JTG exla = new JTG(0, "exlang");
-	private final JTG extt = new JTG(0, "extip");
-	private final JBTN[] left = new JBTN[4];
-	private final JBTN[] right = new JBTN[4];
-	private final JL[] name = new JL[4];
-	private final JL[] vals = new JL[4];
-	private final JL jlmin = new JL(0, "opamin");
-	private final JL jlmax = new JL(0, "opamax");
-	private final JL jlbg = new JL(0, "BGvol");
-	private final JL jlse = new JL(0, "SEvol");
-	private final JBTN theme = new JBTN(0, MainBCU.light ? "themel" : "themed");
-	private final JBTN nimbus = new JBTN(0, MainBCU.nimbus ? "nimbus" : "tdefault");
-	private final JSlider jsmin = new JSlider(0, 100);
-	private final JSlider jsmax = new JSlider(0, 100);
-	private final JSlider jsbg = new JSlider(0, 100);
-	private final JSlider jsse = new JSlider(0, 100);
-	private final JList<String> jls = new JList<>(MainLocale.LOC_NAME);
+    private final JBTN back = new JBTN(0, "back");
+    private final JBTN filt = new JBTN(0, "filter" + MainBCU.FILTER_TYPE);
+    private final JBTN rlla = new JBTN(0, "rllang");
+    private final JTG prel = new JTG(0, "preload");
+    private final JTG whit = new JTG(0, "white");
+    private final JTG refe = new JTG(0, "axis");
+    private final JTG jogl = new JTG(0, "JOGL");
+    private final JTG musc = new JTG(0, "musc");
+    private final JTG exla = new JTG(0, "exlang");
+    private final JTG extt = new JTG(0, "extip");
+    private final JBTN[] left = new JBTN[4];
+    private final JBTN[] right = new JBTN[4];
+    private final JL[] name = new JL[4];
+    private final JL[] vals = new JL[4];
+    private final JL jlmin = new JL(0, "opamin");
+    private final JL jlmax = new JL(0, "opamax");
+    private final JL jlbg = new JL(0, "BGvol");
+    private final JL jlse = new JL(0, "SEvol");
+    private final JBTN theme = new JBTN(0, MainBCU.light ? "themel" : "themed");
+    private final JBTN nimbus = new JBTN(0, MainBCU.nimbus ? "nimbus" : "tdefault");
+    private final JSlider jsmin = new JSlider(0, 100);
+    private final JSlider jsmax = new JSlider(0, 100);
+    private final JSlider jsbg = new JSlider(0, 100);
+    private final JSlider jsse = new JSlider(0, 100);
+    private final JList<String> jls = new JList<>(MainLocale.LOC_NAME);
 
-	private final JScrollPane jsps = new JScrollPane(jls);
+    private final JScrollPane jsps = new JScrollPane(jls);
 
-	private boolean changing = false;
+    private boolean changing = false;
 
-	protected ConfigPage(Page p) {
-		super(p);
+    protected ConfigPage(Page p) {
+        super(p);
 
-		ini();
-		resized();
-	}
+        ini();
+        resized();
+    }
 
-	@Override
-	protected void renew() {
-		jlmin.setText(0, "opamin");
-		jlmax.setText(0, "opamax");
-		for (int i = 0; i < 4; i++) {
-			name[i].setText(0, ImgCore.NAME[i]);
-			vals[i].setText(0, ImgCore.VAL[cfg().ints[i]]);
-		}
-	}
+    @Override
+    protected void renew() {
+        jlmin.setText(0, "opamin");
+        jlmax.setText(0, "opamax");
+        for (int i = 0; i < 4; i++) {
+            name[i].setText(0, ImgCore.NAME[i]);
+            vals[i].setText(0, ImgCore.VAL[cfg().ints[i]]);
+        }
+    }
 
-	@Override
-	protected void resized(int x, int y) {
-		setBounds(0, 0, x, y);
-		set(back, x, y, 0, 0, 200, 50);
-		set(jogl, x, y, 50, 100, 200, 50);
-		set(prel, x, y, 50, 200, 200, 50);
-		set(whit, x, y, 50, 300, 200, 50);
-		set(refe, x, y, 50, 400, 200, 50);
-		for (int i = 0; i < 4; i++) {
-			set(name[i], x, y, 300, 100 + i * 100, 200, 50);
-			set(left[i], x, y, 550, 100 + i * 100, 100, 50);
-			set(vals[i], x, y, 650, 100 + i * 100, 200, 50);
-			set(right[i], x, y, 850, 100 + i * 100, 100, 50);
-		}
-		set(jsps, x, y, 1100, 100, 200, 400);
-		set(jlmin, x, y, 50, 500, 400, 50);
-		set(jsmin, x, y, 50, 550, 1000, 100);
-		set(jlmax, x, y, 50, 650, 400, 50);
-		set(jsmax, x, y, 50, 700, 1000, 100);
-		set(jlbg, x, y, 50, 800, 400, 50);
-		set(jsbg, x, y, 50, 850, 1000, 100);
-		set(jlse, x, y, 50, 950, 400, 50);
-		set(jsse, x, y, 50, 1000, 1000, 100);
-		set(filt, x, y, 1100, 550, 200, 50);
-		set(musc, x, y, 1350, 550, 200, 50);
-		set(exla, x, y, 1100, 650, 450, 50);
-		set(extt, x, y, 1100, 750, 450, 50);
-		set(rlla, x, y, 1100, 850, 450, 50);
-		set(nimbus, x, y, 1100, 950, 200, 50);
-		set(theme, x, y, 1350, 950, 200, 50);
-	}
+    @Override
+    protected void resized(int x, int y) {
+        setBounds(0, 0, x, y);
+        set(back, x, y, 0, 0, 200, 50);
+        set(jogl, x, y, 50, 100, 200, 50);
+        set(prel, x, y, 50, 200, 200, 50);
+        set(whit, x, y, 50, 300, 200, 50);
+        set(refe, x, y, 50, 400, 200, 50);
+        for (int i = 0; i < 4; i++) {
+            set(name[i], x, y, 300, 100 + i * 100, 200, 50);
+            set(left[i], x, y, 550, 100 + i * 100, 100, 50);
+            set(vals[i], x, y, 650, 100 + i * 100, 200, 50);
+            set(right[i], x, y, 850, 100 + i * 100, 100, 50);
+        }
+        set(jsps, x, y, 1100, 100, 200, 400);
+        set(jlmin, x, y, 50, 500, 400, 50);
+        set(jsmin, x, y, 50, 550, 1000, 100);
+        set(jlmax, x, y, 50, 650, 400, 50);
+        set(jsmax, x, y, 50, 700, 1000, 100);
+        set(jlbg, x, y, 50, 800, 400, 50);
+        set(jsbg, x, y, 50, 850, 1000, 100);
+        set(jlse, x, y, 50, 950, 400, 50);
+        set(jsse, x, y, 50, 1000, 1000, 100);
+        set(filt, x, y, 1100, 550, 200, 50);
+        set(musc, x, y, 1350, 550, 200, 50);
+        set(exla, x, y, 1100, 650, 450, 50);
+        set(extt, x, y, 1100, 750, 450, 50);
+        set(rlla, x, y, 1100, 850, 450, 50);
+        set(nimbus, x, y, 1100, 950, 200, 50);
+        set(theme, x, y, 1350, 950, 200, 50);
+    }
 
-	private void addListeners() {
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
-		});
+    private void addListeners() {
+        back.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                changePanel(getFront());
+            }
+        });
 
-		prel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				MainBCU.preload = prel.isSelected();
-			}
-		});
+        prel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                MainBCU.preload = prel.isSelected();
+            }
+        });
 
-		exla.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				MainLocale.exLang = exla.isSelected();
-				Page.renewLoc(getThis());
-			}
-		});
+        exla.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                MainLocale.exLang = exla.isSelected();
+                Page.renewLoc(getThis());
+            }
+        });
 
-		extt.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				MainLocale.exTTT = extt.isSelected();
-				Page.renewLoc(getThis());
-			}
-		});
+        extt.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                MainLocale.exTTT = extt.isSelected();
+                Page.renewLoc(getThis());
+            }
+        });
 
-		rlla.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				BCUReader.readLang();
-				Page.renewLoc(getThis());
-			}
-		});
+        rlla.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                BCUReader.readLang();
+                Page.renewLoc(getThis());
+            }
+        });
 
-		whit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				ViewBox.Conf.white = whit.isSelected();
-			}
-		});
+        whit.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                ViewBox.Conf.white = whit.isSelected();
+            }
+        });
 
-		refe.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				cfg().ref = refe.isSelected();
-			}
-		});
+        refe.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                cfg().ref = refe.isSelected();
+            }
+        });
 
-		jogl.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				MainBCU.USE_JOGL = jogl.isSelected();
-				if (Opts.conf("This requires restart to apply. Do you want to restart?"))
-					CommonStatic.def.exit(true);
-			}
-		});
+        jogl.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                MainBCU.USE_JOGL = jogl.isSelected();
+                if (Opts.conf("This requires restart to apply. Do you want to restart?"))
+                    CommonStatic.def.exit(true);
+            }
+        });
 
-		for (int i = 0; i < 4; i++) {
-			int I = i;
+        for (int i = 0; i < 4; i++) {
+            int I = i;
 
-			left[i].addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					cfg().ints[I]--;
-					vals[I].setText(0, ImgCore.VAL[cfg().ints[I]]);
-					left[I].setEnabled(cfg().ints[I] > 0);
-					right[I].setEnabled(cfg().ints[I] < 2);
-				}
+            left[i].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent arg0) {
+                    cfg().ints[I]--;
+                    vals[I].setText(0, ImgCore.VAL[cfg().ints[I]]);
+                    left[I].setEnabled(cfg().ints[I] > 0);
+                    right[I].setEnabled(cfg().ints[I] < 2);
+                }
 
-			});
+            });
 
-			right[i].addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					cfg().ints[I]++;
-					vals[I].setText(0, ImgCore.VAL[cfg().ints[I]]);
-					left[I].setEnabled(cfg().ints[I] > 0);
-					right[I].setEnabled(cfg().ints[I] < 2);
-				}
+            right[i].addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent arg0) {
+                    cfg().ints[I]++;
+                    vals[I].setText(0, ImgCore.VAL[cfg().ints[I]]);
+                    left[I].setEnabled(cfg().ints[I] > 0);
+                    right[I].setEnabled(cfg().ints[I] < 2);
+                }
 
-			});
+            });
 
-		}
+        }
 
-		jsmin.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				cfg().deadOpa = jsmin.getValue();
-			}
-		});
+        jsmin.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent arg0) {
+                cfg().deadOpa = jsmin.getValue();
+            }
+        });
 
-		jsmax.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				cfg().fullOpa = jsmax.getValue();
-			}
-		});
+        jsmax.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent arg0) {
+                cfg().fullOpa = jsmax.getValue();
+            }
+        });
 
-		jsbg.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				BCMusic.setBGVol(jsbg.getValue());
-			}
-		});
+        jsbg.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent arg0) {
+                BCMusic.setBGVol(jsbg.getValue());
+            }
+        });
 
-		jsse.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				BCMusic.setSEVol(jsse.getValue());
-			}
-		});
+        jsse.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent arg0) {
+                BCMusic.setSEVol(jsse.getValue());
+            }
+        });
 
-		jls.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (changing)
-					return;
-				changing = true;
-				if (jls.getSelectedIndex() == -1) {
-					jls.setSelectedIndex(cfg().lang);
-				}
-				cfg().lang = jls.getSelectedIndex();
-				Page.renewLoc(getThis());
-				changing = false;
-			}
-		});
+        jls.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent arg0) {
+                if (changing)
+                    return;
+                changing = true;
+                if (jls.getSelectedIndex() == -1) {
+                    jls.setSelectedIndex(cfg().lang);
+                }
+                cfg().lang = jls.getSelectedIndex();
+                Page.renewLoc(getThis());
+                changing = false;
+            }
+        });
 
-		filt.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				MainBCU.FILTER_TYPE = 1 - MainBCU.FILTER_TYPE;
-				filt.setText(0, "filter" + MainBCU.FILTER_TYPE);
-			}
-		});
+        filt.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MainBCU.FILTER_TYPE = 1 - MainBCU.FILTER_TYPE;
+                filt.setText(0, "filter" + MainBCU.FILTER_TYPE);
+            }
+        });
 
-		musc.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				BCMusic.play = musc.isSelected();
-			}
-		});
+        musc.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                BCMusic.play = musc.isSelected();
+            }
+        });
 
-		nimbus.setLnr((b) -> {
-			MainBCU.nimbus = !MainBCU.nimbus;
+        nimbus.setLnr((b) -> {
+            MainBCU.nimbus = !MainBCU.nimbus;
 
-			if (Opts.conf("This requires restart to apply. Do you want to restart?"))
-				CommonStatic.def.exit(true);
-		});
+            if (Opts.conf("This requires restart to apply. Do you want to restart?"))
+                CommonStatic.def.exit(true);
+        });
 
-		theme.setLnr((b) -> {
-			MainBCU.light = !MainBCU.light;
+        theme.setLnr((b) -> {
+            MainBCU.light = !MainBCU.light;
 
-			if (MainBCU.light) {
-				theme.setText(MainLocale.getLoc(0, "themel"));
-				Theme.LIGHT.setTheme();
-				Page.BGCOLOR = new Color(255, 255, 255);
-				setBackground(BGCOLOR);
-				SwingUtilities.updateComponentTreeUI(this);
-				theme.setToolTipText(MainLocale.getLoc(0, "themel"));
-			} else {
-				theme.setText(MainLocale.getLoc(0, "themed"));
-				Theme.DARK.setTheme();
-				Page.BGCOLOR = new Color(40, 40, 40);
-				setBackground(BGCOLOR);
-				SwingUtilities.updateComponentTreeUI(this);
-				theme.setToolTipText(MainLocale.getLoc(0, "themed"));
-			}
-		});
-	}
+            if (MainBCU.light) {
+                theme.setText(MainLocale.getLoc(0, "themel"));
+                Theme.LIGHT.setTheme();
+                Page.BGCOLOR = new Color(255, 255, 255);
+                setBackground(BGCOLOR);
+                SwingUtilities.updateComponentTreeUI(this);
+                theme.setToolTipText(MainLocale.getLoc(0, "themel"));
+            } else {
+                theme.setText(MainLocale.getLoc(0, "themed"));
+                Theme.DARK.setTheme();
+                Page.BGCOLOR = new Color(40, 40, 40);
+                setBackground(BGCOLOR);
+                SwingUtilities.updateComponentTreeUI(this);
+                theme.setToolTipText(MainLocale.getLoc(0, "themed"));
+            }
+        });
+    }
 
-	private void ini() {
-		add(back);
-		add(jogl);
-		add(prel);
-		add(refe);
-		add(whit);
-		add(jsps);
-		set(jsmin);
-		set(jsmax);
-		add(jlmin);
-		add(jlmax);
-		add(filt);
-		add(musc);
-		add(rlla);
-		add(exla);
-		add(extt);
-		add(jlbg);
-		add(jlse);
-		set(jsbg);
-		set(jsse);
-		add(nimbus);
-		add(theme);
-		jls.setSelectedIndex(cfg().lang);
-		jsmin.setValue(cfg().deadOpa);
-		jsmax.setValue(cfg().fullOpa);
-		jsbg.setValue(BCMusic.VOL_BG);
-		jsse.setValue(BCMusic.VOL_SE);
-		for (int i = 0; i < 4; i++) {
-			left[i] = new JBTN("<");
-			right[i] = new JBTN(">");
-			name[i] = new JL(0, ImgCore.NAME[i]);
-			vals[i] = new JL(0, ImgCore.VAL[cfg().ints[i]]);
-			add(left[i]);
-			add(right[i]);
-			add(name[i]);
-			add(vals[i]);
-			name[i].setHorizontalAlignment(SwingConstants.CENTER);
-			vals[i].setHorizontalAlignment(SwingConstants.CENTER);
-			name[i].setBorder(BorderFactory.createEtchedBorder());
-			vals[i].setBorder(BorderFactory.createEtchedBorder());
-			left[i].setEnabled(cfg().ints[i] > 0);
-			right[i].setEnabled(cfg().ints[i] < 2);
-		}
-		exla.setSelected(MainLocale.exLang);
-		extt.setSelected(MainLocale.exTTT);
-		prel.setSelected(MainBCU.preload);
-		whit.setSelected(ViewBox.Conf.white);
-		refe.setSelected(cfg().ref);
-		musc.setSelected(BCMusic.play);
-		jogl.setSelected(MainBCU.USE_JOGL);
-		if (!MainBCU.nimbus) {
-			theme.setEnabled(false);
-		}
-		addListeners();
-	}
+    private void ini() {
+        add(back);
+        add(jogl);
+        add(prel);
+        add(refe);
+        add(whit);
+        add(jsps);
+        set(jsmin);
+        set(jsmax);
+        add(jlmin);
+        add(jlmax);
+        add(filt);
+        add(musc);
+        add(rlla);
+        add(exla);
+        add(extt);
+        add(jlbg);
+        add(jlse);
+        set(jsbg);
+        set(jsse);
+        add(nimbus);
+        add(theme);
+        jls.setSelectedIndex(cfg().lang);
+        jsmin.setValue(cfg().deadOpa);
+        jsmax.setValue(cfg().fullOpa);
+        jsbg.setValue(BCMusic.VOL_BG);
+        jsse.setValue(BCMusic.VOL_SE);
+        for (int i = 0; i < 4; i++) {
+            left[i] = new JBTN("<");
+            right[i] = new JBTN(">");
+            name[i] = new JL(0, ImgCore.NAME[i]);
+            vals[i] = new JL(0, ImgCore.VAL[cfg().ints[i]]);
+            add(left[i]);
+            add(right[i]);
+            add(name[i]);
+            add(vals[i]);
+            name[i].setHorizontalAlignment(SwingConstants.CENTER);
+            vals[i].setHorizontalAlignment(SwingConstants.CENTER);
+            name[i].setBorder(BorderFactory.createEtchedBorder());
+            vals[i].setBorder(BorderFactory.createEtchedBorder());
+            left[i].setEnabled(cfg().ints[i] > 0);
+            right[i].setEnabled(cfg().ints[i] < 2);
+        }
+        exla.setSelected(MainLocale.exLang);
+        extt.setSelected(MainLocale.exTTT);
+        prel.setSelected(MainBCU.preload);
+        whit.setSelected(ViewBox.Conf.white);
+        refe.setSelected(cfg().ref);
+        musc.setSelected(BCMusic.play);
+        jogl.setSelected(MainBCU.USE_JOGL);
+        if (!MainBCU.nimbus) {
+            theme.setEnabled(false);
+        }
+        addListeners();
+    }
 
-	private void set(JSlider sl) {
-		add(sl);
-		sl.setMajorTickSpacing(10);
-		sl.setMinorTickSpacing(5);
-		sl.setPaintTicks(true);
-		sl.setPaintLabels(true);
-	}
+    private void set(JSlider sl) {
+        add(sl);
+        sl.setMajorTickSpacing(10);
+        sl.setMinorTickSpacing(5);
+        sl.setPaintTicks(true);
+        sl.setPaintLabels(true);
+    }
 
 }

@@ -1,211 +1,220 @@
 package page.info.edit;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusEvent;
-import java.lang.reflect.Field;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
-import javax.swing.JComponent;
-
 import common.CommonStatic;
 import common.pack.Context.ErrType;
+import common.pack.Identifier;
 import common.pack.IndexContainer;
-import common.pack.PackData.Identifier;
 import common.util.Data;
+import common.util.lang.Editors;
 import common.util.lang.Editors.EditControl;
 import common.util.lang.Editors.Editor;
 import common.util.lang.Editors.EditorGroup;
 import common.util.lang.Editors.EditorSupplier;
+import common.util.lang.Formatter;
 import common.util.lang.ProcLang;
-import common.util.pack.Background;
-import common.util.unit.AbEnemy;
-import common.util.unit.Unit;
-import page.JBTN;
-import page.JL;
-import page.JTF;
-import page.JTG;
-import page.MainFrame;
-import page.Page;
-import page.SupPage;
+import page.*;
+import utilpc.UtilPC;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.image.BufferedImage;
+import java.util.function.Consumer;
 
 public abstract class SwingEditor extends Editor {
 
-	public static class BoolEditor extends SwingEditor {
+    public static class BoolEditor extends SwingEditor {
 
-		public final JTG input;
+        public final JTG input;
 
-		public BoolEditor(EditorGroup eg, Field field, String f) throws Exception {
-			super(eg, field, f);
-			input = new JTG(ProcLang.get().get(eg.proc).get(f));
-			input.setLnr(this::edit);
-		}
+        public BoolEditor(EditorGroup eg, Editors.EdiField field, String f, boolean edit) throws Exception {
+            super(eg, field, f, edit);
+            input = new JTG(ProcLang.get().get(eg.proc).get(f));
+            input.setLnr(this::edit);
+        }
 
-		@Override
-		public void resize(int x, int y, int x0, int y0, int w0, int h0) {
-			Page.set(input, x, y, x0, y0, w0, h0);
-		}
+        @Override
+        public void resize(int x, int y, int x0, int y0, int w0, int h0) {
+            Page.set(input, x, y, x0, y0, w0, h0);
+        }
 
-		@Override
-		public void setData() {
-			Object obj = par.obj;
-			Data.err(() -> input.setSelected(obj != null && field.getBoolean(obj)));
-			input.setEnabled(obj != null);
-		}
+        @Override
+        public void setData() {
+            field.setData(par.obj);
+            input.setSelected(field.obj != null && field.getBoolean());
+            input.setEnabled(edit && field.obj != null);
+        }
 
-		@Override
-		protected void add(Consumer<JComponent> con) {
-			con.accept(input);
-		}
+        @Override
+        protected void add(Consumer<JComponent> con) {
+            con.accept(input);
+        }
 
-		private final void edit(ActionEvent fe) {
-			Data.err(() -> field.set(par.obj, input.isSelected()));
-			update();
-		}
+        private final void edit(ActionEvent fe) {
+            field.set(input.isSelected());
+            update();
+        }
 
-	}
+    }
 
-	public static class EditCtrl implements EditorSupplier {
+    public static class EditCtrl implements EditorSupplier {
 
-		private final boolean isEnemy;
-		private final Supplier<SupPage<Background>> bgsup;
-		private final Supplier<SupPage<AbEnemy>> esup;
-		private final Supplier<SupPage<Unit>> usup;
+        private final boolean isEnemy;
+        private final EntityEditPage table;
 
-		public EditCtrl(boolean isEnemy, Supplier<SupPage<Background>> bgsup, Supplier<SupPage<AbEnemy>> esup,
-				Supplier<SupPage<Unit>> usup) {
-			this.isEnemy = isEnemy;
-			this.bgsup = bgsup;
-			this.esup = esup;
-			this.usup = usup;
-		}
+        public EditCtrl(boolean isEnemy, EntityEditPage table) {
+            this.isEnemy = isEnemy;
+            this.table = table;
+        }
 
-		@Override
-		public Editor getEditor(EditControl<?> ctrl, EditorGroup group, String f, boolean edit) {
-			try {
-				Field field = ctrl.getField(f);
-				Class<?> fc = field.getType();
-				if (fc == int.class) {
-					return new IntEditor(group, field, f, edit);
-				}
-				if (fc == boolean.class)
-					return new BoolEditor(group, field, f);
-				if (fc == Identifier.class) {
-					if (f.equals("THEME"))
-						return new IdEditor<>(group, field, f, bgsup);
-					else if (f.equals("SUMMON"))
-						if (isEnemy)
-							return new IdEditor<>(group, field, f, esup);
-						else
-							return new IdEditor<>(group, field, f, usup);
+        @Override
+        public Editor getEditor(EditControl<?> ctrl, EditorGroup group, String f, boolean edit) {
+            try {
+                Editors.EdiField field = ctrl.getField(f);
+                Class<?> fc = field.getType();
+                if (fc == int.class) {
+                    return new IntEditor(group, field, f, edit);
+                }
+                if (fc == boolean.class)
+                    return new BoolEditor(group, field, f, edit);
+                if (fc == Identifier.class) {
+                    if (group.proc.equals("THEME"))
+                        return new IdEditor<>(group, field, f, table::getBGSup, edit);
+                    else if (group.proc.equals("SUMMON"))
+                        if (isEnemy)
+                            return new IdEditor<>(group, field, f, table::getEnemySup, edit);
+                        else
+                            return new IdEditor<>(group, field, f, table::getUnitSup, edit);
 
-				}
-				throw new Exception("unexpected class " + fc);
-			} catch (Exception e) {
-				CommonStatic.ctx.noticeErr(e, ErrType.ERROR, "failed to generate editor");
-			}
-			return null;
-		}
+                }
+                throw new Exception("unexpected class " + fc);
+            } catch (Exception e) {
+                CommonStatic.ctx.noticeErr(e, ErrType.ERROR, "failed to generate editor");
+            }
+            return null;
+        }
 
-	}
+    }
 
-	public static class IdEditor<T extends IndexContainer.Indexable<?, T>> extends SwingEditor {
+    public interface PageSup<T extends IndexContainer.Indexable<?, T>> {
 
-		private final Supplier<SupPage<T>> page;
+        SupPage<T> get(IdEditor<T> editor);
 
-		public final JBTN input;
-		public final JL jl;
+    }
 
-		public IdEditor(EditorGroup par, Field field, String f, Supplier<SupPage<T>> page) throws Exception {
-			super(par, field, f);
-			this.page = page;
-			input = new JBTN(ProcLang.get().get(par.proc).get(f));
-			jl = new JL("");
-			input.setLnr(this::edit);
-		}
+    public static class IdEditor<T extends IndexContainer.Indexable<?, T>> extends SwingEditor {
 
-		public final void callback(Identifier<T> id) {
+        private final PageSup<T> page;
 
-			Data.err(() -> field.set(par.obj, id));
-			update();
-		}
+        public final JBTN input;
+        public final JL jl;
 
-		@Override
-		public void resize(int x, int y, int x0, int y0, int w0, int h0) {
-			Page.set(input, x, y, x0, y0, 150, h0);
-			Page.set(jl, x, y, x0 + 150, y0, w0 - 150, h0);
-		}
+        public IdEditor(EditorGroup par, Editors.EdiField field, String f, PageSup<T> page, boolean edit)
+                throws Exception {
+            super(par, field, f, edit);
+            this.page = page;
+            input = new JBTN(ProcLang.get().get(par.proc).get(f));
+            jl = new JL("");
+            input.setLnr(this::edit);
+        }
 
-		@Override
-		protected void add(Consumer<JComponent> con) {
-			con.accept(input);
-			con.accept(jl);
-		}
+        public final void callback(Identifier<T> id) {
+            field.set(id);
+            update();
+        }
 
-		@Override
-		protected void setData() {
-			Object obj = par.obj;
-			Data.err(() -> jl.setText("" + field.get(obj)));
-			input.setEnabled(obj != null);
-		}
+        @Override
+        public void resize(int x, int y, int x0, int y0, int w0, int h0) {
+            Page.set(input, x, y, x0, y0, 150, h0);
+            Page.set(jl, x, y, x0 + 150, y0, w0 - 150, h0);
+        }
 
-		private final void edit(ActionEvent fe) {
-			MainFrame.changePanel(page.get().getThis());
-		}
+        @Override
+        protected void add(Consumer<JComponent> con) {
+            con.accept(input);
+            con.accept(jl);
+        }
 
-	}
+        @Override
+        protected void setData() {
+            field.setData(par.obj);
+            jl.setText("" + field.get());
+            input.setEnabled(edit && field.obj != null);
+        }
 
-	public static class IntEditor extends SwingEditor {
+        private final void edit(ActionEvent fe) {
+            MainFrame.changePanel(page.get(this).getThisPage());
+        }
 
-		private final boolean edit;
-		public final JL label;
-		public final JTF input = new JTF();
+    }
 
-		public IntEditor(EditorGroup eg, Field field, String f, boolean edit) throws Exception {
-			super(eg, field, f);
-			this.edit = edit;
-			label = new JL(ProcLang.get().get(eg.proc).get(f));
-			input.setLnr(this::edit);
-		}
+    public static class IntEditor extends SwingEditor {
 
-		@Override
-		public void resize(int x, int y, int x0, int y0, int w0, int h0) {
-			Page.set(label, x, y, x0, y0, 150, h0);
-			Page.set(input, x, y, x0 + 150, y0, w0 - 150, h0);
-		}
+        public final JL label;
+        public final JTF input = new JTF();
 
-		@Override
-		public void setData() {
-			Object obj = par.obj;
-			if (obj == null)
-				input.setText("");
-			else
-				Data.err(() -> input.setText("" + field.getInt(obj)));
-			input.setEnabled(edit && obj != null);
-			update();
-		}
+        public IntEditor(EditorGroup eg, Editors.EdiField field, String f, boolean edit) throws Exception {
+            super(eg, field, f, edit);
+            label = new JL(ProcLang.get().get(eg.proc).get(f));
+            input.setLnr(this::edit);
+        }
 
-		@Override
-		protected void add(Consumer<JComponent> con) {
-			con.accept(label);
-			con.accept(input);
-		}
+        @Override
+        public void resize(int x, int y, int x0, int y0, int w0, int h0) {
+            Page.set(label, x, y, x0, y0, 150, h0);
+            Page.set(input, x, y, x0 + 150, y0, w0 - 150, h0);
+        }
 
-		private final void edit(FocusEvent fe) {
-			Object val = Data.ignore(() -> Integer.parseInt(input.getText()));
-			if (val != null)
-				Data.err(() -> field.set(par.obj, val));
-			update();
-		}
+        @Override
+        public void setData() {
+            field.setData(par.obj);
+            if (field.obj == null)
+                input.setText("");
+            else
+                input.setText("" + field.getInt());
+            input.setEnabled(edit && field.obj != null);
+        }
 
-	}
+        @Override
+        protected void add(Consumer<JComponent> con) {
+            con.accept(label);
+            con.accept(input);
+        }
 
-	public SwingEditor(EditorGroup par, Field field, String f) throws Exception {
-		super(par, field, f);
-	}
+        private final void edit(FocusEvent fe) {
+            field.setInt(Data.ignore(() -> Integer.parseInt(input.getText())));
+            update();
+        }
 
-	public abstract void resize(int x, int y, int x0, int y0, int w0, int h0);
+    }
 
-	protected abstract void add(Consumer<JComponent> con);
+    public static class SwingEG extends EditorGroup {
+
+        public final JL jlm;
+
+        public SwingEG(int ind, boolean edit, Runnable cb, Formatter.Context ctx) {
+            super(Data.Proc.getName(ind), edit, cb);
+            jlm = new JL(getItem(ctx));
+            BufferedImage v = UtilPC.getIcon(1, ind);
+            if (v != null)
+                jlm.setIcon(new ImageIcon(v));
+        }
+
+        public void setData(Object obj) {
+            super.setData(obj);
+            jlm.getLSC().update();
+        }
+    }
+
+    public boolean edit;
+
+    public SwingEditor(EditorGroup par, Editors.EdiField field, String f, boolean edit) throws Exception {
+        super(par, field, f);
+        this.edit = edit;
+    }
+
+    public abstract void resize(int x, int y, int x0, int y0, int w0, int h0);
+
+    protected abstract void add(Consumer<JComponent> con);
 
 }

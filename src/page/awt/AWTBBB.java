@@ -9,34 +9,34 @@ import page.view.ViewBox;
 
 public class AWTBBB extends BBBuilder {
 
-	public static final AWTBBB INS = new AWTBBB();
+    public static final AWTBBB INS = new AWTBBB();
 
-	private AWTBBB() {
-	}
+    private AWTBBB() {
+    }
 
-	@Override
-	public BattleBox getCtrl(OuterBox bip, SBCtrl bf) {
-		return new BattleBoxDef(bip, bf, 1);
-	}
+    @Override
+    public BattleBox getCtrl(OuterBox bip, SBCtrl bf) {
+        return new BattleBoxDef(bip, bf, 1);
+    }
 
-	@Override
-	public BattleBox getDef(OuterBox bip, BattleField bf) {
-		return new BattleBoxDef(bip, bf, 0);
-	}
+    @Override
+    public BattleBox getDef(OuterBox bip, BattleField bf) {
+        return new BattleBoxDef(bip, bf, 0);
+    }
 
-	@Override
-	public IconBox getIconBox() {
-		return new IconBoxDef();
-	}
+    @Override
+    public IconBox getIconBox() {
+        return new IconBoxDef();
+    }
 
-	@Override
-	public BattleBox getRply(OuterBox bip, BattleField bf, String str, boolean t) {
-		return new BBRecdAWT(bip, bf, str, t);
-	}
+    @Override
+    public BattleBox getRply(OuterBox bip, BattleField bf, String str, boolean t) {
+        return new BBRecdAWT(bip, bf, str, t);
+    }
 
-	@Override
-	public ViewBox getViewBox() {
-		return new ViewBoxDef();
-	}
+    @Override
+    public ViewBox getViewBox() {
+        return new ViewBoxDef();
+    }
 
 }

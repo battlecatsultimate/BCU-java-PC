@@ -1,20 +1,20 @@
 package utilpc.awt;
 
-import java.awt.geom.AffineTransform;
-
 import common.system.fake.FakeTransform;
+
+import java.awt.geom.AffineTransform;
 
 public class FTAT implements FakeTransform {
 
-	protected final AffineTransform t;
+    protected final AffineTransform t;
 
-	protected FTAT(AffineTransform at) {
-		t = at;
-	}
+    protected FTAT(AffineTransform at) {
+        t = at;
+    }
 
-	@Override
-	public AffineTransform getAT() {
-		return t;
-	}
+    @Override
+    public AffineTransform getAT() {
+        return t;
+    }
 
 }
