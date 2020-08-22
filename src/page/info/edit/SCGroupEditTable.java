@@ -133,7 +133,7 @@ class SCGroupEditTable extends AbJTable {
         if (r >= info.length)
             return null;
         if (c == 0)
-            return info[r].getKey().get();
+            return Identifier.get(info[r].getKey());
         else if (c == 1) {
             int g = info[r].getValue();
             SCGroup scg = scd.sub.get(g);

@@ -139,7 +139,7 @@ class EREditTable extends AbJTable implements Reorderable {
             return;
         int r = p.y / getRowHeight();
         EREnt<Identifier<AbEnemy>> er = rand.list.get(r);
-        AbEnemy e = er.ent.get();
+        AbEnemy e = Identifier.get(er.ent);
         if (e != null && e instanceof Enemy)
             MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, er.multi, er.mula));
     }
@@ -170,7 +170,7 @@ class EREditTable extends AbJTable implements Reorderable {
             return null;
         EREnt<Identifier<AbEnemy>> er = rand.list.get(r);
         if (c == 0)
-            return er.ent.get();
+            return Identifier.get(er.ent);
         else if (c == 1)
             return CommonStatic.toArrayFormat(er.multi, er.mula) + "%";
         else if (c == 2)

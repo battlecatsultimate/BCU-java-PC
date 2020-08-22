@@ -1,6 +1,7 @@
 package page.info.edit;
 
 import common.CommonStatic;
+import common.pack.Identifier;
 import common.pack.PackData.UserPack;
 import common.util.Data;
 import common.util.stage.SCDef;
@@ -214,7 +215,7 @@ class StageEditTable extends AbJTable implements Reorderable {
         int ind = len - r - 1;
         if (info[ind] == null)
             return;
-        AbEnemy e = info[ind].enemy.get();
+        AbEnemy e = Identifier.get(info[ind].enemy);
         if (e != null && e instanceof Enemy)
             MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, info[ind].multiple, info[ind].mult_atk));
         if (e != null && e instanceof EneRand)
@@ -265,7 +266,7 @@ class StageEditTable extends AbJTable implements Reorderable {
         if (c == 0)
             return data.boss == 1 ? "boss" : "";
         else if (c == 1)
-            return data.enemy == null ? null : data.enemy.get();
+            return Identifier.get(data.enemy);
         else if (c == 2)
             return CommonStatic.toArrayFormat(data.multiple, data.mult_atk) + "%";
         else if (c == 3)

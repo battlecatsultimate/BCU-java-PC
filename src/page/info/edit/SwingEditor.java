@@ -200,7 +200,8 @@ public abstract class SwingEditor extends Editor {
                 jlm.setIcon(new ImageIcon(v));
         }
 
-        public void setData(Object obj) {
+        @Override
+		public void setData(Object obj) {
             super.setData(obj);
             jlm.getLSC().update();
         }

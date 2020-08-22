@@ -33,7 +33,7 @@ public class BGViewPage extends Page implements SupPage<Background> {
 
     public BGViewPage(Page front, String pac, Identifier<Background> bg) {
         this(front, pac);
-        jlst.setSelectedValue(bg.get(), false);
+        jlst.setSelectedValue(Identifier.get(bg), false);
     }
 
     @Override

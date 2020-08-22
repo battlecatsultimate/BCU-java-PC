@@ -270,7 +270,7 @@ class HeadEditTable extends Page {
     }
 
     private void getMusTime(Identifier<Music> mus1, JTF jtf) {
-        Music f = mus1.get();
+        Music f = Identifier.get(mus1);
         if (f == null || f.data == null) {
             jtf.setToolTipText("Music not found");
             return;

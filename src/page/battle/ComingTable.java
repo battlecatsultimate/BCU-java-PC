@@ -1,6 +1,7 @@
 package page.battle;
 
 import common.CommonStatic;
+import common.pack.Identifier;
 import common.util.stage.EStage;
 import common.util.stage.SCDef.Line;
 import common.util.stage.Stage;
@@ -98,7 +99,7 @@ class ComingTable extends AbJTable {
         for (int i = 0; i < info.length; i++) {
             int ind = info.length - i - 1;
             link[i] = ind;
-            data[link[i]][1] = info[i].enemy.get();
+            data[link[i]][1] = Identifier.getOr(info[i].enemy);
             data[link[i]][0] = info[i].boss == 1 ? "boss" : "";
             data[link[i]][2] = CommonStatic.toArrayFormat(info[i].multiple, info[i].mult_atk);
             data[link[i]][3] = info[i].number == 0 ? "infinite" : info[i].number;
