@@ -326,28 +326,17 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 
     private void addLnr$Anim() {
 
-        jtb.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                pause = jtb.isSelected();
-                jtl.setEnabled(pause && ab.ent != null);
-            }
+        jtb.setLnr(arg0 -> {
+            pause = jtb.isSelected();
+            jtl.setEnabled(pause && ab.ent != null);
         });
 
-        nex.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                eupdate();
-            }
-        });
+        nex.setLnr(e->eupdate());
 
-        jtl.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent arg0) {
-                if (isAdj() || !pause)
-                    return;
-                ab.ent.setTime(jtl.getValue());
-            }
+        jtl.addChangeListener(arg0 -> {
+            if (isAdj() || !pause)
+                return;
+            ab.ent.setTime(jtl.getValue());
         });
 
     }
@@ -355,77 +344,62 @@ public class AdvAnimEditPage extends Page implements TreeCont {
     private void addLnr$C() {
         ListSelectionModel lsm = maet.getSelectionModel();
 
-        lsm.addListSelectionListener(new ListSelectionListener() {
-
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (isAdj() || lsm.getValueIsAdjusting())
-                    return;
-                int[] inds = maet.getSelectedRows();
-                List<Integer> l = new ArrayList<>();
-                for (int i : inds)
-                    l.add(i);
-                setCs(l);
-            }
-
+        lsm.addListSelectionListener(e -> {
+            if (isAdj() || lsm.getValueIsAdjusting())
+                return;
+            int[] inds = maet.getSelectedRows();
+            List<Integer> l = new ArrayList<>();
+            for (int i : inds)
+                l.add(i);
+            setCs(l);
         });
 
-        addp.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                change(true);
-                int ind = maet.getSelectedRow() + 1;
-                MaAnim ma = maet.ma;
-                Part[] data = ma.parts;
-                ma.parts = new Part[++ma.n];
-                for (int i = 0; i < ind; i++)
-                    ma.parts[i] = data[i];
-                for (int i = ind; i < data.length; i++)
-                    ma.parts[i + 1] = data[i];
-                Part np = new Part();
-                np.validate();
-                ma.parts[ind] = np;
-                ma.validate();
-                maet.anim.unSave("maanim add part");
-                callBack(null);
-                resized();
-                lsm.setSelectionInterval(ind, ind);
-                setC(ind);
-                int h = mpet.getRowHeight();
-                mpet.scrollRectToVisible(new Rectangle(0, h * ind, 1, h));
-                change(false);
-            }
-
+        addp.addActionListener(arg0 -> {
+            change(true);
+            int ind = maet.getSelectedRow() + 1;
+            MaAnim ma = maet.ma;
+            Part[] data = ma.parts;
+            ma.parts = new Part[++ma.n];
+            for (int i = 0; i < ind; i++)
+                ma.parts[i] = data[i];
+            for (int i = ind; i < data.length; i++)
+                ma.parts[i + 1] = data[i];
+            Part np = new Part();
+            np.validate();
+            ma.parts[ind] = np;
+            ma.validate();
+            maet.anim.unSave("maanim add part");
+            callBack(null);
+            resized();
+            lsm.setSelectionInterval(ind, ind);
+            setC(ind);
+            int h = mpet.getRowHeight();
+            mpet.scrollRectToVisible(new Rectangle(0, h * ind, 1, h));
+            change(false);
         });
 
-        remp.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                change(true);
-                MaAnim ma = maet.ma;
-                int[] rows = maet.getSelectedRows();
-                Part[] data = ma.parts;
-                for (int row : rows)
-                    data[row] = null;
-                ma.n -= rows.length;
-                ma.parts = new Part[ma.n];
-                int ind = 0;
-                for (int i = 0; i < data.length; i++)
-                    if (data[i] != null)
-                        ma.parts[ind++] = data[i];
-                ind = rows[rows.length - 1];
-                ma.validate();
-                maet.anim.unSave("maanim remove part");
-                callBack(null);
-                if (ind >= ma.n)
-                    ind = ma.n - 1;
-                lsm.setSelectionInterval(ind, ind);
-                setC(ind);
-                change(false);
-            }
-
+        remp.addActionListener(arg0 -> {
+            change(true);
+            MaAnim ma = maet.ma;
+            int[] rows = maet.getSelectedRows();
+            Part[] data = ma.parts;
+            for (int row : rows)
+                data[row] = null;
+            ma.n -= rows.length;
+            ma.parts = new Part[ma.n];
+            int ind = 0;
+            for (int i = 0; i < data.length; i++)
+                if (data[i] != null)
+                    ma.parts[ind++] = data[i];
+            ind = rows[rows.length - 1];
+            ma.validate();
+            maet.anim.unSave("maanim remove part");
+            callBack(null);
+            if (ind >= ma.n)
+                ind = ma.n - 1;
+            lsm.setSelectionInterval(ind, ind);
+            setC(ind);
+            change(false);
         });
 
     }

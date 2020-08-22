@@ -241,7 +241,7 @@ public interface BattleBox {
             int posx = (int) ((800 * ratio + off) * siz + pos);
             if (!drawCast) {
                 Identifier<CastleImg> cind = sb.st.castle;
-                VImg cast = Identifier.getOr(cind).img;
+                VImg cast = Identifier.getOr(cind,CastleImg.class).img;
                 FakeImage bimg = cast.getImg();
                 int bw = (int) (bimg.getWidth() * siz);
                 int bh = (int) (bimg.getHeight() * siz);

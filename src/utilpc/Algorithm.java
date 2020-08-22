@@ -220,7 +220,7 @@ public class Algorithm {
             int[][] ans = new int[rects.length][3];
             for (int i = 0; i < rects.length; i++)
                 ans[i] = new int[]{res[i][0], res[i][1], rs[i][2]};
-            Arrays.sort(ans, (o0, o1) -> Integer.compare(o0[2], o1[2]));
+            Arrays.sort(ans, Comparator.comparingInt(o0 -> o0[2]));
             return new SRResult(ans, dim(res));
         }
 
