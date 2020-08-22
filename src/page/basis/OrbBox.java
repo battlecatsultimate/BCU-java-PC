@@ -9,41 +9,41 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class OrbBox extends Canvas {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private int[] orbs;
+	private int[] orbs;
 
-    public OrbBox(int[] orbs) {
-        this.orbs = orbs;
+	public OrbBox(int[] orbs) {
+		this.orbs = orbs;
 
-        setIgnoreRepaint(true);
-    }
+		setIgnoreRepaint(true);
+	}
 
-    public void changeOrb(int[] orbs) {
-        this.orbs = orbs;
-    }
+	public void changeOrb(int[] orbs) {
+		this.orbs = orbs;
+	}
 
-    @Override
-    public synchronized void paint(Graphics g) {
-        if (orbs.length == 0) {
-            g.clearRect(0, 0, getWidth(), getHeight());
-            return;
-        }
+	@Override
+	public synchronized void paint(Graphics g) {
+		if (orbs.length == 0) {
+			g.clearRect(0, 0, getWidth(), getHeight());
+			return;
+		}
 
-        double a = Math.min(getWidth(), getHeight());
-        double w = getWidth(), h = getHeight();
+		double a = Math.min(getWidth(), getHeight());
+		double w = getWidth(), h = getHeight();
 
-        BufferedImage img = (BufferedImage) createImage((int) a, (int) a);
+		BufferedImage img = (BufferedImage) createImage((int) a, (int) a);
 
-        FG2D f = new FG2D(img.getGraphics());
+		FG2D f = new FG2D(img.getGraphics());
 
-        f.drawImage(CommonStatic.getBCAssets().TRAITS[Orb.reverse(orbs[1])], 0, 0, a, a);
-        f.setComposite(FakeGraphics.TRANS, 204, 0);
-        f.drawImage(CommonStatic.getBCAssets().TYPES[orbs[0]], 0, 0, a, a);
-        f.setComposite(FakeGraphics.DEF, 0, 0);
-        f.drawImage(CommonStatic.getBCAssets().GRADES[orbs[2]], 0, 0, a, a);
+		f.drawImage(CommonStatic.getBCAssets().TRAITS[Orb.reverse(orbs[1])], 0, 0, a, a);
+		f.setComposite(FakeGraphics.TRANS, 204, 0);
+		f.drawImage(CommonStatic.getBCAssets().TYPES[orbs[0]], 0, 0, a, a);
+		f.setComposite(FakeGraphics.DEF, 0, 0);
+		f.drawImage(CommonStatic.getBCAssets().GRADES[orbs[2]], 0, 0, a, a);
 
-        g.drawImage(img, (int) ((w - a) / 2), (int) ((h - a) / 2), null);
-        g.dispose();
-    }
+		g.drawImage(img, (int) ((w - a) / 2), (int) ((h - a) / 2), null);
+		g.dispose();
+	}
 }

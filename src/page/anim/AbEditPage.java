@@ -4,6 +4,6 @@ import common.util.anim.AnimCE;
 
 public interface AbEditPage {
 
-    void setSelection(AnimCE ac);
+	void setSelection(AnimCE ac);
 
 }

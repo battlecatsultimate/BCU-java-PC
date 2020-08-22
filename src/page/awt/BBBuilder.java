@@ -9,16 +9,16 @@ import page.view.ViewBox;
 
 public abstract class BBBuilder {
 
-    public static BBBuilder def;
+	public static BBBuilder def;
 
-    public abstract BattleBox getCtrl(OuterBox bip, SBCtrl bf);
+	public abstract BattleBox getCtrl(OuterBox bip, SBCtrl bf);
 
-    public abstract BattleBox getDef(OuterBox bip, BattleField bf);
+	public abstract BattleBox getDef(OuterBox bip, BattleField bf);
 
-    public abstract IconBox getIconBox();
+	public abstract IconBox getIconBox();
 
-    public abstract BattleBox getRply(OuterBox bip, BattleField bf, String str, boolean t);
+	public abstract BattleBox getRply(OuterBox bip, BattleField bf, String str, boolean t);
 
-    public abstract ViewBox getViewBox();
+	public abstract ViewBox getViewBox();
 
 }

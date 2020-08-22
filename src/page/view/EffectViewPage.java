@@ -12,60 +12,60 @@ import java.util.Vector;
 
 public class EffectViewPage extends AbViewPage {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private final JList<AnimI<?, ?>> jlu = new JList<>();
-    private final JScrollPane jspu = new JScrollPane(jlu);
+	private final JList<AnimI<?, ?>> jlu = new JList<>();
+	private final JScrollPane jspu = new JScrollPane(jlu);
 
-    public EffectViewPage(Page p) {
-        super(p);
+	public EffectViewPage(Page p) {
+		super(p);
 
-        Vector<AnimI<?, ?>> va = new Vector<>();
-        for (AnimI<?, ?> a : CommonStatic.getBCAssets().effas.values())
-            va.add(a);
-        for (AnimI<?, ?> a : CommonStatic.getBCAssets().atks)
-            va.add(a);
-        va.addAll(UserProfile.getBCData().souls.getList());
-        jlu.setListData(va);
-        ini();
-        resized();
-    }
+		Vector<AnimI<?, ?>> va = new Vector<>();
+		for (AnimI<?, ?> a : CommonStatic.getBCAssets().effas.values())
+			va.add(a);
+		for (AnimI<?, ?> a : CommonStatic.getBCAssets().atks)
+			va.add(a);
+		va.addAll(UserProfile.getBCData().souls.getList());
+		jlu.setListData(va);
+		ini();
+		resized();
+	}
 
-    @Override
-    protected void resized(int x, int y) {
-        super.resized(x, y);
-        set(jspu, x, y, 50, 100, 300, 1100);
+	@Override
+	protected void resized(int x, int y) {
+		super.resized(x, y);
+		set(jspu, x, y, 50, 100, 300, 1100);
 
-    }
+	}
 
-    @Override
-    protected void updateChoice() {
-        AnimI<?, ?> u = jlu.getSelectedValue();
-        if (u == null)
-            return;
-        setAnim(u);
-    }
+	@Override
+	protected void updateChoice() {
+		AnimI<?, ?> u = jlu.getSelectedValue();
+		if (u == null)
+			return;
+		setAnim(u);
+	}
 
-    private void addListeners() {
+	private void addListeners() {
 
-        jlu.addListSelectionListener(new ListSelectionListener() {
+		jlu.addListSelectionListener(new ListSelectionListener() {
 
-            @Override
-            public void valueChanged(ListSelectionEvent arg0) {
-                if (arg0.getValueIsAdjusting())
-                    return;
-                updateChoice();
-            }
+			@Override
+			public void valueChanged(ListSelectionEvent arg0) {
+				if (arg0.getValueIsAdjusting())
+					return;
+				updateChoice();
+			}
 
-        });
+		});
 
-    }
+	}
 
-    private void ini() {
-        preini();
-        add(jspu);
-        addListeners();
+	private void ini() {
+		preini();
+		add(jspu);
+		addListeners();
 
-    }
+	}
 
 }

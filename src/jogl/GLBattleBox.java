@@ -13,46 +13,46 @@ import page.battle.BattleBox;
 
 public class GLBattleBox extends GLCstd implements BattleBox, GLEventListener {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    protected final BBPainter bbp;
+	protected final BBPainter bbp;
 
-    public GLBattleBox(OuterBox bip, BattleField bf, int type) {
-        bbp = type == 0 ? new BBPainter(bip, bf, this) : new BBCtrl(bip, (SBCtrl) bf, this);
-        for (Form[] fs : bbp.bf.sb.b.lu.fs)
-            for (Form f : fs)
-                if (f != null)
-                    f.anim.check();
-        for (Enemy e : bbp.bf.sb.st.data.getAllEnemy())
-            e.anim.check();
-    }
+	public GLBattleBox(OuterBox bip, BattleField bf, int type) {
+		bbp = type == 0 ? new BBPainter(bip, bf, this) : new BBCtrl(bip, (SBCtrl) bf, this);
+		for (Form[] fs : bbp.bf.sb.b.lu.fs)
+			for (Form f : fs)
+				if (f != null)
+					f.anim.check();
+		for (Enemy e : bbp.bf.sb.st.data.getAllEnemy())
+			e.anim.check();
+	}
 
-    @Override
-    public void display(GLAutoDrawable drawable) {
-        GL2 gl = drawable.getGL().getGL2();
-        GLGraphics g = new GLGraphics(drawable.getGL().getGL2(), getWidth(), getHeight());
-        bbp.draw(g);
-        g.dispose();
-        gl.glFlush();
-    }
+	@Override
+	public void display(GLAutoDrawable drawable) {
+		GL2 gl = drawable.getGL().getGL2();
+		GLGraphics g = new GLGraphics(drawable.getGL().getGL2(), getWidth(), getHeight());
+		bbp.draw(g);
+		g.dispose();
+		gl.glFlush();
+	}
 
-    @Override
-    public BBPainter getPainter() {
-        return bbp;
-    }
+	@Override
+	public BBPainter getPainter() {
+		return bbp;
+	}
 
-    @Override
-    public void paint() {
-        display();
-    }
+	@Override
+	public void paint() {
+		display();
+	}
 
-    @Override
-    public void reset() {
-    }
+	@Override
+	public void reset() {
+	}
 
-    @Override
-    public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-        bbp.reset();
-    }
+	@Override
+	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+		bbp.reset();
+	}
 
 }

@@ -13,68 +13,68 @@ import page.support.UnitTCR;
 
 class EntityTable extends SortTable<Entity> {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private static String[] title;
+	private static String[] title;
 
-    static {
-        redefine();
-    }
+	static {
+		redefine();
+	}
 
-    protected static void redefine() {
-        title = MainLocale.getLoc(1, "u", 3);
-    }
+	protected static void redefine() {
+		title = MainLocale.getLoc(1, "u", 3);
+	}
 
-    private final int dir;
+	private final int dir;
 
-    protected EntityTable(int dire) {
-        dir = dire;
-        if (dire == 1)
-            setDefaultRenderer(Enemy.class, new EnemyTCR());
-        else
-            setDefaultRenderer(Form.class, new UnitTCR(lnk));
-        sign = -1;
-    }
+	protected EntityTable(int dire) {
+		dir = dire;
+		if (dire == 1)
+			setDefaultRenderer(Enemy.class, new EnemyTCR());
+		else
+			setDefaultRenderer(Form.class, new UnitTCR(lnk));
+		sign = -1;
+	}
 
-    @Override
-    public Class<?> getColumnClass(int c) {
-        if (lnk[c] == 1)
-            return dir == 1 ? Enemy.class : Form.class;
-        else
-            return Object.class;
-    }
+	@Override
+	public Class<?> getColumnClass(int c) {
+		if (lnk[c] == 1)
+			return dir == 1 ? Enemy.class : Form.class;
+		else
+			return Object.class;
+	}
 
-    @Override
-    protected int compare(Entity e0, Entity e1, int c) {
-        if (c == 1)
-            return getID(e0).compareTo(getID(e1));
-        else
-            return Long.compare((long) get(e0, c), (long) get(e1, c));
-    }
+	@Override
+	protected int compare(Entity e0, Entity e1, int c) {
+		if (c == 1)
+			return getID(e0).compareTo(getID(e1));
+		else
+			return Long.compare((long) get(e0, c), (long) get(e1, c));
+	}
 
-    @Override
-    protected Object get(Entity t, int c) {
-        if (c == 0)
-            return t.health;
-        else if (c == 1)
-            return t.data.getPack();
-        else if (c == 2)
-            return (long) t.getAtk();
-        else
-            return null;
-    }
+	@Override
+	protected Object get(Entity t, int c) {
+		if (c == 0)
+			return t.health;
+		else if (c == 1)
+			return t.data.getPack();
+		else if (c == 2)
+			return (long) t.getAtk();
+		else
+			return null;
+	}
 
-    @Override
-    protected String[] getTit() {
-        return title;
-    }
+	@Override
+	protected String[] getTit() {
+		return title;
+	}
 
-    private Identifier<?> getID(Entity e) {
-        if (e.data instanceof MaskUnit)
-            return ((MaskUnit) e.data).getPack().uid;
-        if (e.data instanceof MaskEnemy)
-            return ((MaskEnemy) e.data).getPack().id;
-        return null;
-    }
+	private Identifier<?> getID(Entity e) {
+		if (e.data instanceof MaskUnit)
+			return ((MaskUnit) e.data).getPack().uid;
+		if (e.data instanceof MaskEnemy)
+			return ((MaskEnemy) e.data).getPack().id;
+		return null;
+	}
 
 }

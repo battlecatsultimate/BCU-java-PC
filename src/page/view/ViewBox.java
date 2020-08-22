@@ -13,131 +13,131 @@ import java.util.Queue;
 
 public interface ViewBox {
 
-    class Conf {
+	class Conf {
 
-        public static boolean white;
+		public static boolean white;
 
-    }
+	}
 
-    class Controller {
+	class Controller {
 
-        public final P ori = new P(0, 0);
-        public double siz = 0.5;
-        protected Point p = null;
-        protected ViewBox cont;
+		public final P ori = new P(0, 0);
+		public double siz = 0.5;
+		protected Point p = null;
+		protected ViewBox cont;
 
-        public synchronized void mouseDragged(MouseEvent e) {
-            if (p == null)
-                return;
-            ori.x += p.x - e.getX();
-            ori.y += p.y - e.getY();
-            p = e.getPoint();
-        }
+		public synchronized void mouseDragged(MouseEvent e) {
+			if (p == null)
+				return;
+			ori.x += p.x - e.getX();
+			ori.y += p.y - e.getY();
+			p = e.getPoint();
+		}
 
-        public synchronized void mousePressed(MouseEvent e) {
-            p = e.getPoint();
-        }
+		public synchronized void mousePressed(MouseEvent e) {
+			p = e.getPoint();
+		}
 
-        public synchronized void mouseReleased(MouseEvent e) {
-            p = null;
-        }
+		public synchronized void mouseReleased(MouseEvent e) {
+			p = null;
+		}
 
-        public void resize(double pow) {
-            siz *= pow;
-        }
+		public void resize(double pow) {
+			siz *= pow;
+		}
 
-        public void setCont(ViewBox vb) {
-            cont = vb;
-        }
+		public void setCont(ViewBox vb) {
+			cont = vb;
+		}
 
-    }
+	}
 
-    class Loader implements RetFunc {
+	class Loader implements RetFunc {
 
-        public final RecdThread thr;
+		public final RecdThread thr;
 
-        private JTG jtb;
+		private JTG jtb;
 
-        public Loader(Queue<BufferedImage> list) {
-            thr = RecdThread.getIns(this, list, null, RecdThread.GIF);
-        }
+		public Loader(Queue<BufferedImage> list) {
+			thr = RecdThread.getIns(this, list, null, RecdThread.GIF);
+		}
 
-        @Override
-        public void callBack(Object o) {
-            jtb.setEnabled(true);
-        }
+		@Override
+		public void callBack(Object o) {
+			jtb.setEnabled(true);
+		}
 
-        public void finish(JTG btn) {
-            jtb = btn;
-            jtb.setEnabled(false);
-        }
+		public void finish(JTG btn) {
+			jtb = btn;
+			jtb.setEnabled(false);
+		}
 
-        public String getProg() {
-            return "remain: " + thr.remain();
-        }
+		public String getProg() {
+			return "remain: " + thr.remain();
+		}
 
-        public void start() {
-            thr.start();
-        }
+		public void start() {
+			thr.start();
+		}
 
-    }
+	}
 
-    interface VBExporter {
+	interface VBExporter {
 
-        void end(JTG btn);
+		void end(JTG btn);
 
-        BufferedImage getPrev();
+		BufferedImage getPrev();
 
-        Loader start();
+		Loader start();
 
-    }
+	}
 
-    Color c0 = new Color(70, 140, 160), c1 = new Color(85, 185, 205);
+	Color c0 = new Color(70, 140, 160), c1 = new Color(85, 185, 205);
 
-    default void end(JTG btn) {
-        if (getExp() != null)
-            getExp().end(btn);
-    }
+	default void end(JTG btn) {
+		if (getExp() != null)
+			getExp().end(btn);
+	}
 
-    Controller getCtrl();
+	Controller getCtrl();
 
-    EAnimI getEnt();
+	EAnimI getEnt();
 
-    VBExporter getExp();
+	VBExporter getExp();
 
-    default BufferedImage getPrev() {
-        if (getExp() != null)
-            return getExp().getPrev();
-        return null;
-    }
+	default BufferedImage getPrev() {
+		if (getExp() != null)
+			return getExp().getPrev();
+		return null;
+	}
 
-    boolean isBlank();
+	boolean isBlank();
 
-    default void mouseDragged(MouseEvent e) {
-        getCtrl().mouseDragged(e);
-    }
+	default void mouseDragged(MouseEvent e) {
+		getCtrl().mouseDragged(e);
+	}
 
-    default void mousePressed(MouseEvent e) {
-        getCtrl().mousePressed(e);
-    }
+	default void mousePressed(MouseEvent e) {
+		getCtrl().mousePressed(e);
+	}
 
-    default void mouseReleased(MouseEvent e) {
-        getCtrl().mouseReleased(e);
-    }
+	default void mouseReleased(MouseEvent e) {
+		getCtrl().mouseReleased(e);
+	}
 
-    void paint();
+	void paint();
 
-    default void resize(double pow) {
-        getCtrl().resize(pow);
-    }
+	default void resize(double pow) {
+		getCtrl().resize(pow);
+	}
 
-    void setEntity(EAnimI ieAnim);
+	void setEntity(EAnimI ieAnim);
 
-    default Loader start() {
-        if (getExp() != null)
-            return getExp().start();
-        return null;
-    }
+	default Loader start() {
+		if (getExp() != null)
+			return getExp().start();
+		return null;
+	}
 
-    void update();
+	void update();
 }

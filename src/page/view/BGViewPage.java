@@ -17,72 +17,72 @@ import java.util.Vector;
 
 public class BGViewPage extends Page implements SupPage<Background> {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private final JBTN back = new JBTN(0, "back");
-    private final JList<Background> jlst = new JList<>();
-    private final JScrollPane jspst = new JScrollPane(jlst);
-    private final JLabel jl = new JLabel();
+	private final JBTN back = new JBTN(0, "back");
+	private final JList<Background> jlst = new JList<>();
+	private final JScrollPane jspst = new JScrollPane(jlst);
+	private final JLabel jl = new JLabel();
 
-    public BGViewPage(Page p, String pac) {
-        super(p);
-        jlst.setListData(new Vector<>(UserProfile.getAll(pac, Background.class)));
-        ini();
-        resized();
-    }
+	public BGViewPage(Page p, String pac) {
+		super(p);
+		jlst.setListData(new Vector<>(UserProfile.getAll(pac, Background.class)));
+		ini();
+		resized();
+	}
 
-    public BGViewPage(Page front, String pac, Identifier<Background> bg) {
-        this(front, pac);
-        jlst.setSelectedValue(Identifier.get(bg), false);
-    }
+	public BGViewPage(Page front, String pac, Identifier<Background> bg) {
+		this(front, pac);
+		jlst.setSelectedValue(Identifier.get(bg), false);
+	}
 
-    @Override
-    public Background getSelected() {
-        return jlst.getSelectedValue();
-    }
+	@Override
+	public Background getSelected() {
+		return jlst.getSelectedValue();
+	}
 
-    @Override
-    protected void resized(int x, int y) {
-        setBounds(0, 0, x, y);
-        set(back, x, y, 0, 0, 200, 50);
-        set(jspst, x, y, 50, 100, 300, 1100);
-        set(jl, x, y, 400, 50, 1800, 1100);
-        Background s = jlst.getSelectedValue();
-        if (s == null)
-            return;
-        jl.setIcon(UtilPC.getBg(s, jl.getWidth(), jl.getHeight()));
-    }
+	@Override
+	protected void resized(int x, int y) {
+		setBounds(0, 0, x, y);
+		set(back, x, y, 0, 0, 200, 50);
+		set(jspst, x, y, 50, 100, 300, 1100);
+		set(jl, x, y, 400, 50, 1800, 1100);
+		Background s = jlst.getSelectedValue();
+		if (s == null)
+			return;
+		jl.setIcon(UtilPC.getBg(s, jl.getWidth(), jl.getHeight()));
+	}
 
-    private void addListeners() {
-        back.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                changePanel(getFront());
-            }
-        });
+	private void addListeners() {
+		back.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				changePanel(getFront());
+			}
+		});
 
-        jlst.addListSelectionListener(new ListSelectionListener() {
+		jlst.addListSelectionListener(new ListSelectionListener() {
 
-            @Override
-            public void valueChanged(ListSelectionEvent arg0) {
-                if (arg0.getValueIsAdjusting())
-                    return;
-                Background s = jlst.getSelectedValue();
-                if (s == null)
-                    return;
-                jl.setIcon(UtilPC.getBg(s, jl.getWidth(), jl.getHeight()));
-            }
+			@Override
+			public void valueChanged(ListSelectionEvent arg0) {
+				if (arg0.getValueIsAdjusting())
+					return;
+				Background s = jlst.getSelectedValue();
+				if (s == null)
+					return;
+				jl.setIcon(UtilPC.getBg(s, jl.getWidth(), jl.getHeight()));
+			}
 
-        });
+		});
 
-    }
+	}
 
-    private void ini() {
-        add(back);
-        add(jspst);
-        add(jl);
-        addListeners();
+	private void ini() {
+		add(back);
+		add(jspst);
+		add(jl);
+		addListeners();
 
-    }
+	}
 
 }

@@ -10,37 +10,37 @@ import java.awt.image.BufferedImage;
 
 public abstract class GLCstd extends GLCanvas implements GLEventListener {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    protected GLCstd() {
-        super(GLStatic.GLC);
-        addGLEventListener(this);
-    }
+	protected GLCstd() {
+		super(GLStatic.GLC);
+		addGLEventListener(this);
+	}
 
-    @Override
-    public void dispose(GLAutoDrawable drawable) {
-        ResManager.get(drawable.getGL().getGL2()).dispose();
-    }
+	@Override
+	public void dispose(GLAutoDrawable drawable) {
+		ResManager.get(drawable.getGL().getGL2()).dispose();
+	}
 
-    public BufferedImage getScreen() {
-        try {
-            Rectangle r = getBounds();
-            Point p = getLocationOnScreen();
-            r.x = p.x;
-            r.y = p.y;
-            return new Robot().createScreenCapture(r);
-        } catch (AWTException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+	public BufferedImage getScreen() {
+		try {
+			Rectangle r = getBounds();
+			Point p = getLocationOnScreen();
+			r.x = p.x;
+			r.y = p.y;
+			return new Robot().createScreenCapture(r);
+		} catch (AWTException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
-    @Override
-    public void init(GLAutoDrawable drawable) {
-    }
+	@Override
+	public void init(GLAutoDrawable drawable) {
+	}
 
-    @Override
-    public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-    }
+	@Override
+	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+	}
 
 }

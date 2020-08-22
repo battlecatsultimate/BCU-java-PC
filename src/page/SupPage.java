@@ -4,10 +4,10 @@ import common.pack.IndexContainer;
 
 public interface SupPage<T extends IndexContainer.Indexable<?, T>> {
 
-    T getSelected();
+	T getSelected();
 
-    default Page getThisPage() {
-        return (Page) this;
-    }
+	default Page getThisPage() {
+		return (Page) this;
+	}
 
 }

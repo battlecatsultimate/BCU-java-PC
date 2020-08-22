@@ -2,6 +2,6 @@ package page;
 
 public interface RetFunc {
 
-    void callBack(Object o);
+	void callBack(Object o);
 
 }

@@ -2,10 +2,10 @@ package page.battle;
 
 public interface BBRecd extends BattleBox {
 
-    void end();
+	void end();
 
-    String info();
+	String info();
 
-    void quit();
+	void quit();
 
 }

@@ -10,46 +10,46 @@ import java.util.function.Supplier;
 
 public class JBTN extends JButton implements LocComp {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private final LocSubComp lsc;
+	private final LocSubComp lsc;
 
-    public JBTN() {
-        lsc = new LocSubComp(this);
-    }
+	public JBTN() {
+		lsc = new LocSubComp(this);
+	}
 
-    public JBTN(Binder binder) {
-        this();
-        lsc.init(binder);
-    }
+	public JBTN(Binder binder) {
+		this();
+		lsc.init(binder);
+	}
 
-    public JBTN(int i, String str) {
-        this();
-        lsc.init(i, str);
-    }
+	public JBTN(int i, String str) {
+		this();
+		lsc.init(i, str);
+	}
 
-    public JBTN(String str) {
-        this(-1, str);
-    }
+	public JBTN(String str) {
+		this(-1, str);
+	}
 
-    @Override
-    public LocSubComp getLSC() {
-        return lsc;
-    }
+	@Override
+	public LocSubComp getLSC() {
+		return lsc;
+	}
 
-    public void setLnr(Consumer<ActionEvent> c) {
-        addActionListener(new ActionListener() {
+	public void setLnr(Consumer<ActionEvent> c) {
+		addActionListener(new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                c.accept(e);
-            }
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				c.accept(e);
+			}
 
-        });
-    }
+		});
+	}
 
-    public void setLnr(Supplier<Page> s) {
-        setLnr((e) -> MainFrame.changePanel(s.get()));
-    }
+	public void setLnr(Supplier<Page> s) {
+		setLnr((e) -> MainFrame.changePanel(s.get()));
+	}
 
 }
