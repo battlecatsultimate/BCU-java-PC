@@ -1,6 +1,5 @@
 package page.info;
 
-import common.system.BasedCopable;
 import common.util.stage.MapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
@@ -14,7 +13,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Vector;
 
@@ -46,8 +44,8 @@ public class StageViewPage extends StagePage {
 		this(p, col);
 		if (st == null)
 			return;
-		jlmc.setSelectedValue(BasedCopable.map.mc, true);
-		jlsm.setSelectedValue(BasedCopable.map, true);
+		jlmc.setSelectedValue(st.getCont().getCont(), true);
+		jlsm.setSelectedValue(st.getCont(), true);
 		jlst.setSelectedValue(st, true);
 	}
 
@@ -91,7 +89,7 @@ public class StageViewPage extends StagePage {
 				MapColc mc = jlmc.getSelectedValue();
 				if (mc == null)
 					return;
-				jlsm.setListData(mc.maps);
+				jlsm.setListData(mc.maps.toArray());
 				jlsm.setSelectedIndex(0);
 			}
 
@@ -108,7 +106,7 @@ public class StageViewPage extends StagePage {
 				if (sm == null)
 					return;
 				cpsm.setEnabled(true);
-				jlst.setListData(new Vector<>(sm.list));
+				jlst.setListData(sm.list.toArray());
 				jlst.setSelectedIndex(0);
 			}
 
@@ -137,8 +135,7 @@ public class StageViewPage extends StagePage {
 					return;
 				MapColc mc = Stage.CLIPMC;
 				StageMap copy = sm.copy(mc);
-				mc.maps = Arrays.copyOf(mc.maps, mc.maps.length + 1);
-				mc.maps[mc.maps.length - 1] = copy;
+				mc.maps.add(copy);
 			}
 		});
 

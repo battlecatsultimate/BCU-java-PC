@@ -1,6 +1,5 @@
 package page.info;
 
-import common.system.BasedCopable;
 import common.util.stage.*;
 import page.MainFrame;
 import page.MainLocale;
@@ -97,10 +96,10 @@ public class HeadTable extends AbJTable {
 		rar = lstr[3];
 		reg = lstr[4];
 		tit[0] = "ID:";
-		tit[1] = BasedCopable.map.id + "-" + st.id();
+		tit[1] = st.getCont().id + "-" + st.id();
 		String star = Page.get(1, "star");
-		for (int i = 0; i < BasedCopable.map.stars.length; i++)
-			tit[2 + i] = (i + 1) + star + ": " + BasedCopable.map.stars[i] + "%";
+		for (int i = 0; i < st.getCont().stars.length; i++)
+			tit[2 + i] = (i + 1) + star + ": " + st.getCont().stars[i] + "%";
 		bas[0] = infs[0];
 		bas[1] = st.health;
 		bas[2] = infs[1] + ": " + st.len;

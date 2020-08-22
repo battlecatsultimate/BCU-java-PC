@@ -18,8 +18,7 @@ import page.info.StageViewPage;
 import page.info.edit.EnemyEditPage;
 import page.info.edit.StageEditPage;
 import page.support.AnimLCR;
-import page.support.ReorderList;
-import page.support.ReorderListener;
+import page.support.RLFIM;
 import page.view.BGViewPage;
 import page.view.CastleViewPage;
 import page.view.EnemyViewPage;
@@ -33,7 +32,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
@@ -50,7 +48,8 @@ public class PackEditPage extends Page {
 	private final JScrollPane jspe = new JScrollPane(jle);
 	private final JList<AnimCE> jld = new JList<>(new Vector<>(AnimCE.map().values()));
 	private final JScrollPane jspd = new JScrollPane(jld);
-	private final ReorderList<StageMap> jls = new ReorderList<>();
+	private final RLFIM<StageMap> jls = new RLFIM<>(() -> this.changing = true, () -> changing = false, this::setMap,
+			StageMap::new);
 	private final JScrollPane jsps = new JScrollPane(jls);
 	private final JList<UserPack> jlr = new JList<>();
 	private final JScrollPane jspr = new JScrollPane(jlr);
@@ -401,69 +400,13 @@ public class PackEditPage extends Page {
 
 		});
 
-		jls.list = new ReorderListener<StageMap>() {
+		adds.setLnr(jls::addItem);
 
-			@Override
-			public void reordered(int ori, int fin) {
-				List<StageMap> lsm = new ArrayList<>();
-				for (StageMap sm : pac.mc.maps)
-					lsm.add(sm);
-				StageMap sm = lsm.remove(ori);
-				lsm.add(fin, sm);
-				pac.mc.maps = lsm.toArray(new StageMap[0]);
-				changing = false;
-			}
-
-			@Override
-			public void reordering() {
-				changing = true;
-			}
-
-		};
+		rems.setLnr(jls::deleteItem);
 
 		jtfs.setLnr(x -> {
 			if (sm != null)
 				sm.name = jtfs.getText().trim();
-		});
-
-		adds.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				StageMap map = new StageMap(pac.mc);
-				StageMap[] maps = pac.mc.maps;
-				pac.mc.maps = Arrays.copyOf(maps, maps.length + 1);
-				pac.mc.maps[maps.length] = map;
-				jls.setListData(pac.mc.maps);
-				jls.setSelectedValue(map, true);
-				setMap(map);
-				changing = false;
-			}
-
-		});
-
-		rems.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (!Opts.conf())
-					return;
-				changing = true;
-				int ind = jls.getSelectedIndex();
-				int n = pac.mc.maps.length;
-				StageMap[] maps = new StageMap[n - 1];
-				for (int i = 0; i < ind; i++)
-					maps[i] = pac.mc.maps[i];
-				for (int i = ind + 1; i < n; i++)
-					maps[i - 1] = pac.mc.maps[i];
-				pac.mc.maps = maps;
-				jls.setListData(maps);
-				if (ind >= 0)
-					ind--;
-				jls.setSelectedIndex(ind);
-				setMap(jls.getSelectedValue());
-				changing = false;
-			}
-
 		});
 
 	}
@@ -650,10 +593,10 @@ public class PackEditPage extends Page {
 		boolean b0 = pac != null;
 		sdiy.setEnabled(b0);
 		if (b0) {
-			jls.setListData(pac.mc.maps.toArray());
+			jls.setListData(pac.mc, pac.mc.maps);
 			jls.clearSelection();
 		} else
-			jls.setListData(new StageMap[0]);
+			jls.setListData(null, null);
 		setRely(null);
 		setMap(null);
 		setEnemy(null);

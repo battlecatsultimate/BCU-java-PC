@@ -82,8 +82,9 @@ public class ReorderList<T> extends JList<T> implements Reorderable {
 	@Override
 	public void setListData(T[] data) {
 		model.clear();
-		for (T t : data)
-			model.addElement(t);
+		if (data != null)
+			for (T t : data)
+				model.addElement(t);
 	}
 
 	@Override
