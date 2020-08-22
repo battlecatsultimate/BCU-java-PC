@@ -1,11 +1,16 @@
 package page.anim
 
+import common.CommonStatic
+import common.system.P
+import common.util.anim.EAnimD
+import common.util.anim.EAnimU
 import main.Timer
+import utilpc.awt.FG2D
+import java.awt.*
 import java.awt.Canvasimport
+import java.awt.image.BufferedImage
 
-import java.awt.Color
-import java.awt.Graphics
-import java.awt.Paint com.google.api.client.json.jackson2.JacksonFactory
+com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.services.drive.DriveScopes
 import com.google.api.client.util.store.FileDataStoreFactory
 import com.google.api.client.http.HttpTransport
