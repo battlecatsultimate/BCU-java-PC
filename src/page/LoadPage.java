@@ -1,8 +1,9 @@
 package page;
 
-import io.Progress;
-
 import javax.swing.*;
+
+import common.io.Progress;
+
 import java.util.function.Consumer;
 
 public class LoadPage extends Page implements Consumer<Progress> {

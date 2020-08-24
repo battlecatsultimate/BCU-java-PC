@@ -29,7 +29,7 @@ public class Algorithm {
 
 	private static class ColorShift {
 
-		private static final int method = 0;
+		private static int method = 0;
 
 		private static float mid(float x, double t) {
 			if (method == 0)
