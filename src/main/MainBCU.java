@@ -76,7 +76,8 @@ public class MainBCU {
 			BasisSet.read();
 			LoadPage.prog("read local animations");
 			Workspace.loadAnimations(null);
-			// UserProfile.loadPacks(); TODO
+			LoadPage.prog("read packs");
+			UserProfile.loadPacks();
 			LoadPage.prog("finish reading");
 		}
 

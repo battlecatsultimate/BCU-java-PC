@@ -141,7 +141,8 @@ public class CharaGroupPage extends Page {
 		Collection<CharaGroup> ccg = null;
 		if (pack == null)
 			jlcg.setListData(new CharaGroup[0]);
-		ccg = pack.groups.getList();
+		else
+			ccg = pack.groups.getList();
 		if (ccg != null) {
 			jlcg.setListData(ccg.toArray(new CharaGroup[0]));
 			if (cg != null && !ccg.contains(cg))
