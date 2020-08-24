@@ -26,6 +26,8 @@ import utilpc.awt.PCIB;
 
 import java.awt.*;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -45,8 +47,8 @@ public class MainBCU {
 		}
 
 		@Override
-		public File getLangFile(String file) {
-			return new File("./assets/lang/en/" + file);
+		public InputStream getLangFile(String file) {
+			return Data.err(() -> new FileInputStream(new File("./assets/lang/en/" + file)));
 		}
 
 		@Override

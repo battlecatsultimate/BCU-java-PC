@@ -46,9 +46,11 @@ public class CastleViewPage extends Page {
 
 	public CastleViewPage(Page p, Collection<CastleList> defcas, Identifier<CastleImg> id) {
 		this(p, defcas);
-		CastleList abcas = CastleList.map().get(id.pack);
-		jlsm.setSelectedValue(abcas, true);
-		jlst.setSelectedValue(abcas.get(id.id), true);
+		if (id != null) {
+			CastleList abcas = (CastleList) id.getCont();
+			jlsm.setSelectedValue(abcas, true);
+			jlst.setSelectedValue(id.get(), true);
+		}
 	}
 
 	public Identifier<CastleImg> getVal() {
