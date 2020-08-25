@@ -72,11 +72,11 @@ public class LimitTable extends Page {
 	protected void renew() {
 		if (cgp != null) {
 			jcg.setText("" + cgp.cg);
-			input(jcg, cgp.cg == null ? "-1" : cgp.cg.toString());
+			lim.group = cgp.cg;
 		}
 		if (lrp != null) {
 			jlr.setText("" + lrp.lr);
-			input(jlr, lrp.lr == null ? "-1" : lrp.lr.toString());
+			lim.lvr = lrp.lr;
 		}
 
 		cgp = null;
@@ -205,11 +205,6 @@ public class LimitTable extends Page {
 				return;
 			lim.num = val;
 		}
-		if (jtf == jcg)
-			lim.group = pac.groups.get(val);
-		if (jtf == jlr)
-			lim.lvr = pac.lvrs.get(val);
-
 	}
 
 	private void set(JLabel jl) {

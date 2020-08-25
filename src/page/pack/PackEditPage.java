@@ -282,7 +282,7 @@ public class PackEditPage extends Page {
 			@Override
 			public void focusLost(FocusEvent fe) {
 				String str = jtfp.getText().trim();
-				if (pac.desc.name.equals(str))
+				if (pac.desc.name != null && pac.desc.name.equals(str))
 					return;
 				pac.desc.name = str;
 			}
