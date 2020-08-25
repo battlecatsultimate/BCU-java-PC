@@ -388,7 +388,7 @@ public class UnitManagePage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
-				ul = new UnitLevel(pac.getNextID(UnitLevel.class), UnitLevel.def);
+				ul = new UnitLevel(pac.getNextID(UnitLevel.class), CommonStatic.getBCAssets().defLv);
 				pac.unitLevels.add(ul);
 				setPack(pac);
 				changing = false;
