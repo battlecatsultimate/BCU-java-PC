@@ -50,8 +50,10 @@ public class MainBCU {
 		@Override
 		public InputStream getLangFile(String file) {
 			File f = new File("./assets/lang/en/" + file);
-			if (!f.exists())
-				return null;
+			if (!f.exists()) {
+				String path = (MainBCU.WRITE ? "src/" : "") + "common/util/lang/assets/" + file;
+				return ClassLoader.getSystemResourceAsStream(path);
+			}
 			return Data.err(() -> new FileInputStream(f));
 		}
 
@@ -99,6 +101,8 @@ public class MainBCU {
 		@Override
 		public void printErr(ErrType t, String str) {
 			(t == ErrType.INFO ? System.out : System.err).println(str);
+			if (t != ErrType.INFO)
+				Opts.pop(str, "ERROR");
 		}
 
 	}

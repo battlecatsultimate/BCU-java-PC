@@ -3,6 +3,7 @@ package page;
 import common.CommonStatic;
 import common.CommonStatic.Config;
 import common.util.ImgCore;
+import common.util.lang.ProcLang;
 import io.BCMusic;
 import io.BCUReader;
 import main.MainBCU;
@@ -141,6 +142,7 @@ public class ConfigPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				BCUReader.readLang();
+				ProcLang.clear();
 				Page.renewLoc(getThis());
 			}
 		});
