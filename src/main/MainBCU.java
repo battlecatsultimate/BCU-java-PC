@@ -49,7 +49,8 @@ public class MainBCU {
 
 		@Override
 		public InputStream getLangFile(String file) {
-			File f = new File("./assets/lang/en/" + file);
+			File f = new File(
+					"./assets/lang/" + CommonStatic.Lang.LOC_CODE[CommonStatic.getConfig().lang] + "/" + file);
 			if (!f.exists()) {
 				String path = (MainBCU.WRITE ? "src/" : "") + "common/util/lang/assets/" + file;
 				return ClassLoader.getSystemResourceAsStream(path);
@@ -111,7 +112,7 @@ public class MainBCU {
 
 	public static int FILTER_TYPE = 0;
 	public static final boolean WRITE = !new File("./.project").exists();
-	public static boolean preload = false, trueRun = true, loaded = false, USE_JOGL = true;
+	public static boolean preload = false, trueRun = true, loaded = false, USE_JOGL = false;
 	public static boolean light = false, nimbus = true;
 
 	public static String getTime() {

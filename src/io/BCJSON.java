@@ -19,8 +19,8 @@ public class BCJSON {
 		try {
 			libs = UpdateCheck.checkPCLibs(json);
 			assets = UpdateCheck.checkAsset(json, "pc");
-			if (json != null)
-				musics = UpdateCheck.checkMusic(json.music);
+			int music = json != null ? json.music : Data.SE_ALL[Data.SE_ALL.length - 1] + 1;
+			musics = UpdateCheck.checkMusic(music);
 		} catch (Exception e) {
 			Opts.pop(e.getMessage(), "FATAL ERROR");
 			e.printStackTrace();

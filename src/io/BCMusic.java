@@ -136,7 +136,7 @@ public class BCMusic extends Data {
 
 	public static synchronized void play(Identifier<Music> mus1, long loop) {
 		music = mus1;
-		Music f = music.get();
+		Music f = Identifier.get(music);
 		if (f != null)
 			setBG(f, loop);
 	}

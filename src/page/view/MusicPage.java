@@ -44,7 +44,7 @@ public class MusicPage extends Page {
 	}
 
 	public Identifier<Music> getSelected() {
-		return jlf.getSelectedValue().getID();
+		return jlf.getSelectedValue() == null ? null : jlf.getSelectedValue().getID();
 	}
 
 	@Override
