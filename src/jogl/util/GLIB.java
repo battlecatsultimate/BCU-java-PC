@@ -27,8 +27,8 @@ public class GLIB extends ImageBuilder {
 			return FIBI.builder.build(o);
 		if (o instanceof FileData)
 			return new AmbImage(((FileData) o)::getStream);
-		if (o instanceof VFile<?>)
-			return new AmbImage(((VFile<?>) o).getData()::getStream);
+		if (o instanceof VFile)
+			return new AmbImage(((VFile) o).getData()::getStream);
 		if (o instanceof byte[])
 			return new AmbImage(() -> new ByteArrayInputStream((byte[]) o));
 		if (o instanceof Supplier)

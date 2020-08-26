@@ -526,7 +526,8 @@ public class UnitManagePage extends Page {
 			jlu.clearSelection();
 			jll.setListData(pac.unitLevels.toArray());
 			setLevel(jll.getSelectedValue());
-			cbl.setModel(new DefaultComboBoxModel<>(pac.unitLevels.toArray()));
+			List<UnitLevel> ulist = UserProfile.getAll(pac.getSID(), UnitLevel.class);
+			cbl.setModel(new DefaultComboBoxModel<>(ulist.toArray(new UnitLevel[0])));
 		}
 		changing = boo;
 		if (pac == null || !pac.units.contains(uni))

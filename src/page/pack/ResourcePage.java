@@ -27,7 +27,7 @@ public class ResourcePage extends Page {
 	private final JTree jls = new JTree();
 	private final JScrollPane jsps = new JScrollPane(jls);
 
-	private VFile<?> sel;
+	private VFile sel;
 	private boolean changing;
 
 	public ResourcePage(Page p) {
@@ -78,7 +78,7 @@ public class ResourcePage extends Page {
 					obj = tp.getLastPathComponent();
 					if (obj != null)
 						obj = ((DefaultMutableTreeNode) obj).getUserObject();
-					sel = obj instanceof VFile ? (VFile<?>) obj : null;
+					sel = obj instanceof VFile ? (VFile) obj : null;
 				} else
 					sel = null;
 				setSele();
@@ -88,8 +88,8 @@ public class ResourcePage extends Page {
 
 	}
 
-	private void addTree(DefaultMutableTreeNode par, VFile<?> vf) {
-		for (VFile<?> c : vf.list()) {
+	private void addTree(DefaultMutableTreeNode par, VFile vf) {
+		for (VFile c : vf.list()) {
 			DefaultMutableTreeNode cur = new DefaultMutableTreeNode(c);
 			par.add(cur);
 			if (c.list() != null)
@@ -97,9 +97,9 @@ public class ResourcePage extends Page {
 		}
 	}
 
-	private void filemove(String dst, VFile<?> src) {
+	private void filemove(String dst, VFile src) {
 		if (src.list() != null)
-			for (VFile<?> c : src.list())
+			for (VFile c : src.list())
 				filemove(dst + src.getName() + "/", c);
 		else
 			BCUWriter.writeBytes(src.getData().getBytes(), dst + src.getName());
@@ -119,7 +119,7 @@ public class ResourcePage extends Page {
 		rept.setEnabled(sel != null);
 	}
 
-	private void setTree(VFileRoot<?> vfr) {
+	private void setTree(VFileRoot vfr) {
 		if (vfr == null) {
 			jls.setModel(new DefaultTreeModel(null));
 			return;
