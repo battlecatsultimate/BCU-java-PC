@@ -2,7 +2,9 @@ package page.info.filter;
 
 import common.battle.data.MaskUnit;
 import common.pack.UserProfile;
+import common.util.Data;
 import common.util.lang.MultiLangCont;
+import common.util.lang.ProcLang;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import main.MainBCU;
@@ -55,7 +57,7 @@ class UFBButton extends UnitFilterBox {
 	private final JTG[] rare = new JTG[RARITY.length];
 	private final JTG[] trait = new JTG[9];
 	private final JTG[] abis = new JTG[SABIS.length];
-	private final JTG[] proc = new JTG[SPROC.length];
+	private final JTG[] proc = new JTG[Data.PROC_TOT];
 	private final JTG[] atkt = new JTG[ATKCONF.length];
 
 	protected UFBButton(Page p, String pack) {
@@ -161,7 +163,7 @@ class UFBButton extends UnitFilterBox {
 			abis[i].setIcon(new ImageIcon(v));
 		}
 		for (int i = 0; i < proc.length; i++) {
-			set(proc[i] = new JTG(SPROC[i]));
+			set(proc[i] = new JTG(ProcLang.get().get(i).abbr_name));
 			BufferedImage v = UtilPC.getIcon(1, i);
 			if (v == null)
 				continue;
@@ -307,8 +309,8 @@ class UFBList extends UnitFilterBox {
 			vt.add(TRAIT[i]);
 		for (int i = 0; i < SABIS.length; i++)
 			va.add(SABIS[i]);
-		for (int i = 0; i < SPROC.length; i++)
-			va.add(SPROC[i]);
+		for (int i = 0; i < Data.PROC_TOT; i++)
+			va.add(ProcLang.get().get(i).abbr_name);
 		trait.setListData(vt);
 		abis.setListData(va);
 		atkt.setListData(ATKCONF);

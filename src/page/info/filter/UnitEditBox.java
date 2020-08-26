@@ -5,6 +5,9 @@ import page.Page;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import common.util.lang.ProcLang;
+
 import java.util.Vector;
 
 import static utilpc.Interpret.*;
@@ -78,7 +81,7 @@ public class UnitEditBox extends Page {
 		for (int i = 0; i < SABIS.length; i++)
 			va.add(SABIS[i]);
 		for (int i = 0; i < ABIIND.length; i++)
-			va.add(SPROC[ABIIND[i] - 100]);
+			va.add(ProcLang.get().get(ABIIND[i] - 100).abbr_name);
 		trait.setListData(vt);
 		abis.setListData(va);
 		int m = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;

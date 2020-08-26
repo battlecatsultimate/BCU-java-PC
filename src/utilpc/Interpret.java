@@ -52,8 +52,6 @@ public class Interpret extends Data {
 	public static String[] EABI;
 
 	public static String[] SABIS;
-	public static String[] PROC;
-	public static String[] SPROC;
 	public static String[] TREA;
 	public static String[] TEXT;
 	public static String[] ATKCONF;
@@ -78,16 +76,6 @@ public class Interpret extends Data {
 	 */
 	private static final int[] TMAX = { 30, 30, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 600, 1500, 100,
 			100, 100, 30, 30, 30, 30, 30, 10, 300, 300, 600, 600, 600, 20, 30, 30, 30, 20, 20, 20, 20 };
-
-	/**
-	 * proc data formatter
-	 */
-	private static final int[][] CMP = { { 0, -1 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, 2, -1 },
-			{ 0, -1, 3, 1 }, { 0, -1 }, { 0, -1, 1, 4 }, { 0, -1, 1 }, { 5, -1, 7 }, { 0, -1 }, { -1, 4, 6 },
-			{ -1, 1, 5, 6 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { -1, 7 }, { 0, -1 },
-			{ 0, -1, 1 }, { 0, -1, 1 }, { 0, -1, 4 }, { 0, -1, 1 }, { 0, -1, 1 }, { 0, -1 }, { 0, -1 }, { -1 },
-			{ 0, -1, 7 }, { 0, -1, 1 }, { 0, -1, 7 }, { 0, -1, 4, 8, 1 }, { -1 }, { -1 }, { 0, -1, 1, 3 },
-			{ 0, -1, 1 } };
 
 	/**
 	 * combo string component
@@ -222,7 +210,7 @@ public class Interpret extends Data {
 		Formatter.Context ctx = new Formatter.Context(true, false);
 		List<String> l = new ArrayList<>();
 		MaskAtk ma = de.getRepAtk();
-		for (int i = 0; i < PROC.length; i++) {
+		for (int i = 0; i < Data.PROC_TOT; i++) {
 			ProcItem item = ma.getProc().getArr(i);
 			if (!item.exists())
 				continue;
@@ -238,7 +226,7 @@ public class Interpret extends Data {
 		List<String> l = new ArrayList<>();
 		Formatter.Context ctx = new Formatter.Context(false, false);
 		MaskAtk ma = du.getRepAtk();
-		for (int i = 0; i < PROC.length; i++) {
+		for (int i = 0; i < Data.PROC_TOT; i++) {
 			ProcItem item = ma.getProc().getArr(i);
 			if (!item.exists())
 				continue;
@@ -386,8 +374,6 @@ public class Interpret extends Data {
 		ABIS = Page.get(3, "a", 22);
 		SABIS = Page.get(3, "sa", 22);
 		ATKCONF = Page.get(3, "aa", 6);
-		PROC = Page.get(3, "p", CMP.length);
-		SPROC = Page.get(3, "sp", CMP.length);
 		TREA = Page.get(3, "t", 37);
 		TEXT = Page.get(3, "d", 9);
 		COMF = Page.get(3, "na", 6);
@@ -399,7 +385,7 @@ public class Interpret extends Data {
 			if (EABIIND[i] < 100)
 				EABI[i] = SABIS[EABIIND[i]];
 			else
-				EABI[i] = SPROC[EABIIND[i] - 100];
+				EABI[i] = ProcLang.get().get(EABIIND[i] - 100).abbr_name;
 		}
 	}
 

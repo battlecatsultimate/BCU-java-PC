@@ -1,7 +1,9 @@
 package page.info.filter;
 
 import common.pack.UserProfile;
+import common.util.Data;
 import common.util.lang.MultiLangCont;
+import common.util.lang.ProcLang;
 import common.util.unit.Enemy;
 import main.MainBCU;
 import page.JTG;
@@ -53,7 +55,7 @@ class EFBButton extends EnemyFilterBox {
 	private final JTG[] rare = new JTG[ERARE.length];
 	private final JTG[] trait = new JTG[TRAIT.length];
 	private final JTG[] abis = new JTG[EFILTER];
-	private final JTG[] proc = new JTG[SPROC.length];
+	private final JTG[] proc = new JTG[Data.PROC_TOT];
 	private final JTG[] atkt = new JTG[ATKCONF.length];
 
 	protected EFBButton(Page p, String pack) {
@@ -162,8 +164,9 @@ class EFBButton extends EnemyFilterBox {
 				continue;
 			abis[i].setIcon(new ImageIcon(v));
 		}
+		ProcLang proclang = ProcLang.get();
 		for (int i = 0; i < proc.length; i++) {
-			set(proc[i] = new JTG(SPROC[i]));
+			set(proc[i] = new JTG(proclang.get(i).abbr_name));
 			BufferedImage v = UtilPC.getIcon(1, i);
 			if (v == null)
 				continue;
@@ -310,8 +313,9 @@ class EFBList extends EnemyFilterBox {
 			vt.add(TRAIT[i]);
 		for (int i = 0; i < EFILTER; i++)
 			va.add(EABI[i]);
-		for (int i = 0; i < SPROC.length; i++)
-			va.add(SPROC[i]);
+		ProcLang proclang = ProcLang.get();
+		for (int i = 0; i < Data.PROC_TOT; i++)
+			va.add(proclang.get(i).abbr_name);
 		trait.setListData(vt);
 		abis.setListData(va);
 		atkt.setListData(ATKCONF);
