@@ -39,7 +39,7 @@ public class MainBCU {
 
 		@Override
 		public boolean confirmDelete() {
-			System.out.println("skip delete confirmation");
+			System.out.println("skip delete confirmation");// FIXME
 			return true;
 		}
 
@@ -77,15 +77,15 @@ public class MainBCU {
 		@Override
 		public void initProfile() {
 			LoadPage.prog("read assets");
-			AssetLoader.load();
+			AssetLoader.load(LoadPage::prog);
 			LoadPage.prog("read BC data");
-			UserProfile.getBCData().load(LoadPage::prog);
+			UserProfile.getBCData().load(LoadPage::prog, LoadPage::prog);
 			LoadPage.prog("read basis");
 			BasisSet.read();
 			LoadPage.prog("read local animations");
 			Workspace.loadAnimations(null);
 			LoadPage.prog("read packs");
-			UserProfile.loadPacks();
+			UserProfile.loadPacks(LoadPage::prog);
 			LoadPage.prog("finish reading");
 		}
 

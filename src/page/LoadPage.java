@@ -12,6 +12,11 @@ public class LoadPage extends Page implements Consumer<Progress> {
 
 	public static LoadPage lp;
 
+	public static void prog(double i) {
+		lp.jpb.setMaximum(1000);
+		lp.jpb.setValue((int) (i * 1000));
+	}
+
 	public static void prog(String str) {
 		if (lp != null)
 			lp.set(str);
