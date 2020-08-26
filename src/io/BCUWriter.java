@@ -222,6 +222,7 @@ public class BCUWriter extends DataIO {
 
 	private static void writeOptions() {
 		File f = new File("./user/config.json");
+		Data.err(() -> Context.check(f));
 		JsonObject jo = JsonEncoder.encode(CommonStatic.getConfig()).getAsJsonObject();
 		Rectangle r = MainFrame.crect;
 		jo.add("crect", JsonEncoder.encode(new int[] { r.x, r.y, r.width, r.height }));

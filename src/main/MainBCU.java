@@ -10,6 +10,7 @@ import common.pack.Source.Workspace;
 import common.pack.UserProfile;
 import common.system.fake.ImageBuilder;
 import common.util.Data;
+import io.BCJSON;
 import io.BCUReader;
 import io.BCUWriter;
 import jogl.GLBBB;
@@ -48,7 +49,10 @@ public class MainBCU {
 
 		@Override
 		public InputStream getLangFile(String file) {
-			return Data.err(() -> new FileInputStream(new File("./assets/lang/en/" + file)));
+			File f = new File("./assets/lang/en/" + file);
+			if (!f.exists())
+				return null;
+			return Data.err(() -> new FileInputStream(f));
 		}
 
 		@Override
@@ -144,9 +148,8 @@ public class MainBCU {
 		new MainFrame(Data.revVer(MainBCU.ver)).initialize();
 		new Timer().start();
 
+		BCJSON.check();
 		CommonStatic.ctx.initProfile();
-		// AssetLoader.previewAssets();
-		// BCJSON.checkDownload();
 
 		BCUReader.getData$1();
 		loaded = true;
