@@ -285,8 +285,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 					return;
 				}
 				AnimCE rep = AnimCE.map().get(str);
-				if (rep != null && Opts.conf(
-						"Do you want to replace animation? This action cannot be undone. The animation which originally keeps this name will be replaced by selected animation.")) {
+				if (rep != null) {
 					icet.anim.renameTo(str);
 					for (UserPack pack : UserProfile.getUserPacks())
 						for (Enemy e : pack.enemies.getList())
@@ -294,8 +293,8 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 								e.anim = icet.anim;
 					Vector<AnimCE> v = new Vector<>(AnimCE.map().values());
 					jlu.setListData(v);
-					jlu.setSelectedValue(rep, true);
-					setA(rep);
+					jlu.setSelectedValue(icet.anim, true);
+					setA(icet.anim);
 				} else {
 					str = AnimCE.getAvailable(str);
 					icet.anim.renameTo(str);

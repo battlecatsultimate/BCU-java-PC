@@ -2,6 +2,7 @@ package page.pack;
 
 import common.battle.data.CustomEnemy;
 import common.pack.PackData.UserPack;
+import common.pack.Source.Workspace;
 import common.pack.Source.ZipSource;
 import common.pack.UserProfile;
 import common.util.Data;
@@ -233,7 +234,7 @@ public class PackEditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
-				String str = Opts.read("pack ID = "); // FIXME
+				String str = Workspace.validateWorkspace(Opts.read("pack ID = "));
 				pac = Data.err(() -> UserProfile.initJsonPack(str));
 				vpack.add(pac);
 				jlp.setListData(vpack);
