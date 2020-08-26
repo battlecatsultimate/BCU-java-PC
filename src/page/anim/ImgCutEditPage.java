@@ -12,7 +12,6 @@ import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.Part;
 import common.util.unit.Enemy;
-import main.MainBCU;
 import main.Opts;
 import page.JBTN;
 import page.JTF;
@@ -278,7 +277,6 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			public void focusLost(FocusEvent arg0) {
 				changing = true;
 				String str = jtf.getText().trim();
-				str = MainBCU.validate(str);
 				if (str.length() == 0 || icet.anim == null || icet.anim.id.id.equals(str)) {
 					if (icet.anim != null)
 						jtf.setText(icet.anim.id.id);

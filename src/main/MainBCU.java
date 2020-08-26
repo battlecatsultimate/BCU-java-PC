@@ -8,6 +8,7 @@ import common.io.assets.AssetLoader;
 import common.pack.Context;
 import common.pack.Source.Workspace;
 import common.pack.UserProfile;
+import common.pack.Context.ErrType;
 import common.system.fake.ImageBuilder;
 import common.util.Data;
 import io.BCJSON;
@@ -113,23 +114,18 @@ public class MainBCU {
 	public static int FILTER_TYPE = 0;
 	public static final boolean WRITE = !new File("./.project").exists();
 	public static boolean preload = false, trueRun = true, loaded = false, USE_JOGL = false;
-	public static boolean light = false, nimbus = true;
+	public static boolean light = true, nimbus = false;
 
 	public static String getTime() {
 		return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 	}
 
 	public static void main(String[] args) {
+		Thread.setDefaultUncaughtExceptionHandler(MainBCU::noticeErr);
 		trueRun = true;
-		long mem = Runtime.getRuntime().maxMemory();
-		if (mem >> 28 == 0) {
-			Opts.pop(Opts.MEMORY, "" + (mem >> 20));
-			System.exit(0);
-		}
-
 		UserProfile.profile();
-		CommonStatic.def = new UtilPC.PCItr();
 		CommonStatic.ctx = new AdminContext();
+		CommonStatic.def = new UtilPC.PCItr();
 
 		BCUWriter.logPrepare();
 		BCUWriter.logSetup();
@@ -166,6 +162,13 @@ public class MainBCU {
 		for (char c : chs)
 			str = str.replace(c, '#');
 		return str;
+	}
+
+	private static void noticeErr(Thread t, Throwable e) {
+		String msg = e.getMessage() + " in " + t.getName();
+		if (CommonStatic.ctx != null)
+			CommonStatic.ctx.noticeErr(new Exception(msg, e), ErrType.ERROR, msg);
+		e.printStackTrace();
 	}
 
 }
