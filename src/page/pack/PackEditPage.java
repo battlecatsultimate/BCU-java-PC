@@ -291,12 +291,19 @@ public class PackEditPage extends Page {
 		});
 
 		extr.setLnr(x -> {
-			// FIXME packup
+			if (pac.editable) {
+				String pass = Opts.read("Unpack password: ");
+				if (pass == null)
+					pass = "";
+				((Workspace) pac.source).export(pac, pass, (d) -> {
+				});
+			}
 		});
 
 		unpk.setLnr(x -> {
 			String str = Opts.read("password: "); // FIXME
-			Data.err(() -> ((ZipSource) pac.source).unzip(str));
+			Data.err(() -> ((ZipSource) pac.source).unzip(str, (d) -> {
+			}));
 			unpk.setEnabled(false);
 			extr.setEnabled(true);
 		});

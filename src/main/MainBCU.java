@@ -49,6 +49,11 @@ public class MainBCU {
 		}
 
 		@Override
+		public File getAuxFile(String path) {
+			return new File(path);
+		}
+
+		@Override
 		public InputStream getLangFile(String file) {
 			File f = new File(
 					"./assets/lang/" + CommonStatic.Lang.LOC_CODE[CommonStatic.getConfig().lang] + "/" + file);
@@ -61,7 +66,7 @@ public class MainBCU {
 
 		@Override
 		public File getPackFolder() {
-			return new File("./packs");
+			return new File("./packs/");
 		}
 
 		@Override
@@ -91,8 +96,8 @@ public class MainBCU {
 
 		@Override
 		public void noticeErr(Exception e, ErrType t, String str) {
-			printErr(t, str);
 			e.printStackTrace(t == ErrType.INFO ? System.out : System.err);
+			printErr(t, str);
 		}
 
 		@Override
@@ -102,9 +107,13 @@ public class MainBCU {
 
 		@Override
 		public void printErr(ErrType t, String str) {
+			if (t == ErrType.DEBUG && !MainBCU.WRITE)
+				return;
 			(t == ErrType.INFO ? System.out : System.err).println(str);
 			if (t != ErrType.INFO)
 				Opts.pop(str, "ERROR");
+			if (t == ErrType.FATAL)
+				CommonStatic.def.exit(false);
 		}
 
 	}
@@ -166,8 +175,9 @@ public class MainBCU {
 
 	private static void noticeErr(Thread t, Throwable e) {
 		String msg = e.getMessage() + " in " + t.getName();
+		Exception exc = (e instanceof Exception) ? (Exception) e : new Exception(msg, e);
 		if (CommonStatic.ctx != null)
-			CommonStatic.ctx.noticeErr(new Exception(msg, e), ErrType.ERROR, msg);
+			CommonStatic.ctx.noticeErr(exc, ErrType.FATAL, msg);
 		e.printStackTrace();
 	}
 

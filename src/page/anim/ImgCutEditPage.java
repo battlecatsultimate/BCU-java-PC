@@ -345,8 +345,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			changing = true;
 			int ind = jlu.getSelectedIndex();
 			AnimCE ac = icet.anim;
-			ac.check();
-			ac.delete();
+			ac.localize();
 			Vector<AnimCE> v = new Vector<>(AnimCE.map().values());
 			jlu.setListData(v);
 			if (ind >= v.size())
