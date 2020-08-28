@@ -96,6 +96,8 @@ public class MainBCU {
 
 		@Override
 		public void noticeErr(Exception e, ErrType t, String str) {
+			if (t == ErrType.DEBUG && !MainBCU.WRITE)
+				return;
 			e.printStackTrace(t == ErrType.INFO ? System.out : System.err);
 			printErr(t, str);
 		}
