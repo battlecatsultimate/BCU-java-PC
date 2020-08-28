@@ -1,6 +1,8 @@
 package page.battle;
 
-import common.util.stage.Recd;
+import common.pack.Source;
+import common.pack.Source.Workspace;
+import common.util.stage.Replay;
 import common.util.stage.Stage;
 import main.Opts;
 import page.JBTN;
@@ -18,7 +20,7 @@ public class StRecdPage extends AbRecdPage {
 
 	private static final long serialVersionUID = 1L;
 
-	private final ReorderList<Recd> list = new ReorderList<>();
+	private final ReorderList<Replay> list = new ReorderList<>();
 	private final JScrollPane jsp = new JScrollPane(list);
 	private final JBTN addr = new JBTN(0, "add");
 	private final JBTN remr = new JBTN(0, "rem");
@@ -37,7 +39,7 @@ public class StRecdPage extends AbRecdPage {
 	}
 
 	@Override
-	public Recd getSelection() {
+	public Replay getSelection() {
 		return list.getSelectedValue();
 	}
 
@@ -45,7 +47,7 @@ public class StRecdPage extends AbRecdPage {
 	protected void renew() {
 		super.renew();
 		if (rmp != null) {
-			Recd recd = rmp.getSelection();
+			Replay recd = rmp.getSelection();
 			if (recd != null) {
 				if (recd.st == st || Opts.conf("stage mismatch. Do you really want to add?")) {
 					st.recd.add(recd);
@@ -68,8 +70,8 @@ public class StRecdPage extends AbRecdPage {
 	@Override
 	protected void setList() {
 		change(true);
-		Recd r = list.getSelectedValue();
-		list.setListData(st.recd.toArray(new Recd[0]));
+		Replay r = list.getSelectedValue();
+		list.setListData(st.recd.toArray(new Replay[0]));
 		if (st.recd.contains(r))
 			list.setSelectedValue(r, true);
 		setRecd(list.getSelectedValue());
@@ -78,11 +80,11 @@ public class StRecdPage extends AbRecdPage {
 	}
 
 	@Override
-	protected void setRecd(Recd r) {
+	protected void setRecd(Replay r) {
 		super.setRecd(r);
 		remr.setEnabled(editable && r != null);
 		jtf.setEditable(editable && r != null);
-		jtf.setText(r == null ? "" : r.name);
+		jtf.setText(r == null ? "" : r.rl.toString());
 	}
 
 	private void addListeners() {
@@ -90,7 +92,7 @@ public class StRecdPage extends AbRecdPage {
 		addr.setLnr(e -> changePanel(rmp = new RecdManagePage(this)));
 
 		remr.setLnr(e -> {
-			Recd recd = list.getSelectedValue();
+			Replay recd = list.getSelectedValue();
 			st.recd.remove(recd);
 			setList();
 		});
@@ -106,13 +108,13 @@ public class StRecdPage extends AbRecdPage {
 
 		});
 
-		list.list = new ReorderListener<Recd>() {
+		list.list = new ReorderListener<Replay>() {
 
 			@Override
 			public void reordered(int ori, int fin) {
 				change(false);
-				List<Recd> l = st.recd;
-				Recd sta = l.remove(ori);
+				List<Replay> l = st.recd;
+				Replay sta = l.remove(ori);
 				l.add(fin, sta);
 			}
 
@@ -124,10 +126,11 @@ public class StRecdPage extends AbRecdPage {
 		};
 
 		jtf.setLnr(x -> {
-			Recd r = list.getSelectedValue();
+			Replay r = list.getSelectedValue();
 			if (isAdj() || r == null)
 				return;
-			r.name = jtf.getText();
+			r.rl.id = jtf.getText();
+			Workspace.validate(Source.REPLAY, r.rl);
 		});
 
 	}

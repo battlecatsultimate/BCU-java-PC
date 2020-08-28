@@ -4,7 +4,7 @@ import common.CommonStatic;
 import common.battle.BasisSet;
 import common.system.BasedCopable;
 import common.util.stage.MapColc;
-import common.util.stage.Recd;
+import common.util.stage.Replay;
 import common.util.stage.Stage;
 import main.Opts;
 import page.*;
@@ -42,7 +42,7 @@ public abstract class AbRecdPage extends Page {
 		editable = edit;
 	}
 
-	public abstract Recd getSelection();
+	public abstract Replay getSelection();
 
 	protected void preini() {
 		add(back);
@@ -64,7 +64,7 @@ public abstract class AbRecdPage extends Page {
 	protected void renew() {
 		setList();
 		if (editable && svp != null) {
-			Recd r = getSelection();
+			Replay r = getSelection();
 			Stage ns = svp.getStage();
 			if (r != null && ns != null && ns != r.st && Opts.conf("are you sure to change stage?")) {
 				r.st = svp.getStage();
@@ -73,7 +73,7 @@ public abstract class AbRecdPage extends Page {
 			}
 		}
 		if (editable && bp != null) {
-			Recd r = getSelection();
+			Replay r = getSelection();
 			if (r != null && Opts.conf("are you sure to change lineup?")) {
 				r.lu = BasisSet.current().sele.copy();
 				r.marked = true;
@@ -101,7 +101,7 @@ public abstract class AbRecdPage extends Page {
 
 	protected abstract void setList();
 
-	protected void setRecd(Recd r) {
+	protected void setRecd(Replay r) {
 		rply.setEnabled(r != null && r.avail);
 		recd.setEnabled(r != null && r.avail);
 		imgs.setEnabled(r != null && r.avail);
@@ -131,7 +131,7 @@ public abstract class AbRecdPage extends Page {
 		recd.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Recd r = getSelection();
+				Replay r = getSelection();
 				int conf = 1;
 				if (larg.isSelected())
 					conf |= 2;
@@ -142,7 +142,7 @@ public abstract class AbRecdPage extends Page {
 		imgs.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Recd r = getSelection();
+				Replay r = getSelection();
 				int conf = 5;
 				if (larg.isSelected())
 					conf |= 2;
@@ -153,7 +153,7 @@ public abstract class AbRecdPage extends Page {
 		seed.setLnr(x -> {
 			if (isAdj())
 				return;
-			Recd r = getSelection();
+			Replay r = getSelection();
 			if (r == null)
 				return;
 			r.seed = CommonStatic.parseLongN(seed.getText());

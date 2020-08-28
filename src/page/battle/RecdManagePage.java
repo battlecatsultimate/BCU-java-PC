@@ -1,7 +1,9 @@
 package page.battle;
 
-import common.util.stage.Recd;
-import main.MainBCU;
+import common.CommonStatic;
+import common.pack.Source;
+import common.pack.Source.Workspace;
+import common.util.stage.Replay;
 import page.JBTN;
 import page.JTF;
 import page.Page;
@@ -19,7 +21,7 @@ public class RecdManagePage extends AbRecdPage {
 
 	private final JBTN dele = new JBTN(0, "rem");
 	private final JTF rena = new JTF();
-	private final JList<Recd> jlr = new JList<>();
+	private final JList<Replay> jlr = new JList<>();
 	private final JScrollPane jspr = new JScrollPane(jlr);
 
 	public RecdManagePage(Page p) {
@@ -30,7 +32,7 @@ public class RecdManagePage extends AbRecdPage {
 	}
 
 	@Override
-	public Recd getSelection() {
+	public Replay getSelection() {
 		return jlr.getSelectedValue();
 	}
 
@@ -45,19 +47,19 @@ public class RecdManagePage extends AbRecdPage {
 	@Override
 	protected void setList() {
 		change(true);
-		Recd r = jlr.getSelectedValue();
-		jlr.setListData(Recd.map.values().toArray(new Recd[0]));
+		Replay r = jlr.getSelectedValue();
+		jlr.setListData(Replay.getMap().values().toArray(new Replay[0]));
 		jlr.setSelectedValue(r, true);
 		setRecd(r);
 		change(false);
 	}
 
 	@Override
-	protected void setRecd(Recd r) {
+	protected void setRecd(Replay r) {
 		super.setRecd(r);
 		dele.setEnabled(r != null);
 		rena.setEditable(r != null);
-		rena.setText(r == null ? "" : r.name);
+		rena.setText(r == null ? "" : r.rl == null ? "" : r.rl.id);
 	}
 
 	private void addListeners() {
@@ -76,31 +78,30 @@ public class RecdManagePage extends AbRecdPage {
 		rena.setLnr(x -> {
 			if (isAdj() || jlr.getValueIsAdjusting())
 				return;
-			Recd r = jlr.getSelectedValue();
+			Replay r = jlr.getSelectedValue();
 			if (r == null)
 				return;
-			File f = new File("./replay/" + r.name + ".replay");
+			File f = CommonStatic.ctx.getWorkspaceFile(r.rl.getPath(Source.REPLAY) + ".replay");
 			if (f.exists()) {
-				String str = MainBCU.validate(rena.getText().trim());
-				str = Recd.getAvailable(str);
-				if (f.renameTo(new File("./replay/" + str + ".replay"))) {
-					Recd.map.remove(r.name);
-					r.name = str;
-					Recd.map.put(r.name, r);
+				r.rl.id = rena.getText().trim();
+				Workspace.validate(Source.REPLAY, r.rl);
+				if (f.renameTo(new File("./replays/" + r.rl.id + ".replay"))) {
+					Replay.getMap().remove(r.rl.id);
+					Replay.getMap().put(r.rl.id, r);
 				}
 			}
-			rena.setText(r.name);
+			rena.setText(r.rl.id);
 		});
 
 		dele.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				Recd r = jlr.getSelectedValue();
-				File f = new File("./replay/" + r.name + ".replay");
+				Replay r = jlr.getSelectedValue();
+				File f = CommonStatic.ctx.getWorkspaceFile(r.rl.getPath(Source.REPLAY) + ".replay");
 				if (f.exists())
 					f.delete();
 				if (!f.exists()) {
-					Recd.map.remove(r.name);
+					Replay.getMap().remove(r.rl.id);
 					setList();
 				}
 				setRecd(null);

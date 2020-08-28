@@ -331,9 +331,6 @@ class HeadEditTable extends Page {
 			str = str.trim();
 			if (str.length() > 0)
 				sta.name = str;
-			for (Recd r : Recd.map.values())
-				if (r.st == sta)
-					r.marked = true;
 			return;
 		}
 		int val = CommonStatic.parseIntN(str);

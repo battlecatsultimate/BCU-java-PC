@@ -1,6 +1,9 @@
 package page.battle;
 
-import common.util.stage.Recd;
+import common.pack.Source;
+import common.pack.Source.ResourceLocation;
+import common.pack.Source.Workspace;
+import common.util.stage.Replay;
 import main.MainBCU;
 import page.JBTN;
 import page.JTF;
@@ -19,9 +22,9 @@ public class RecdSavePage extends Page {
 	private final JBTN save = new JBTN(0, "save");
 	private final JTF jtf = new JTF();
 
-	private final Recd recd;
+	private final Replay recd;
 
-	protected RecdSavePage(Page p, Recd rec) {
+	protected RecdSavePage(Page p, Replay rec) {
 		super(p);
 		recd = rec;
 
@@ -51,9 +54,10 @@ public class RecdSavePage extends Page {
 				String str = jtf.getText().trim();
 				str = MainBCU.validate(str);
 				if (str.length() == 0)
-					str = "new record";
-				str = Recd.getAvailable(str);
-				recd.name = str;
+					str = "new replay for stage " + recd.st.toString();
+				recd.rl = new ResourceLocation(ResourceLocation.LOCAL, str);
+				Workspace.validate(Source.REPLAY, recd.rl);
+
 			}
 		});
 
@@ -61,7 +65,7 @@ public class RecdSavePage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				recd.write();
-				Recd.map.put(recd.name, recd);
+				Replay.getMap().put(recd.rl.id, recd);
 				changePanel(new RecdManagePage(getRootPage()));
 			}
 		});
@@ -72,7 +76,7 @@ public class RecdSavePage extends Page {
 		add(back);
 		add(jtf);
 		add(save);
-		jtf.setText(Recd.getAvailable("new record"));
+		jtf.setText("new replay for stage " + recd.st.toString());
 		addListeners();
 	}
 

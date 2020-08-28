@@ -3,7 +3,7 @@ package page.battle;
 import common.battle.*;
 import common.battle.entity.AbEntity;
 import common.battle.entity.Entity;
-import common.util.stage.Recd;
+import common.util.stage.Replay;
 import common.util.stage.Stage;
 import io.BCMusic;
 import main.Opts;
@@ -58,26 +58,26 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	private final BattleField basis;
 
 	private boolean pause = false;
-	private Recd recd;
+	private Replay recd;
 
 	private int spe = 0, upd = 0;
 
-	public BattleInfoPage(Page p, Recd rec, int conf) {
+	public BattleInfoPage(Page p, Replay rec, int conf) {
 		super(p);
 		recd = rec;
 		basis = new SBRply(rec);
 		if ((conf & 1) == 0)
 			bb = BBBuilder.def.getDef(this, basis);
 		else
-			bb = BBBuilder.def.getRply(this, basis, rec.name, (conf & 4) != 0);
+			bb = BBBuilder.def.getRply(this, basis, rec.rl.id, (conf & 4) != 0);
 		jtb.setSelected((conf & 2) != 0);
 		jtb.setEnabled((conf & 1) == 0);
 		ct.setData(basis.sb.st);
 
-		if (recd.name.length() > 0)
+		if (recd.rl != null)
 			jsl.setMaximum(((SBRply) basis).size());
 		ini();
-		rply.setText(0, recd.name.length() == 0 ? "save" : "start");
+		rply.setText(0, recd.rl == null ? "save" : "start");
 		resized();
 	}
 
@@ -231,7 +231,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			ut.setList(lu);
 			BCMusic.flush(spe < 3);
 		}
-		if (basis instanceof SBRply && recd.name.length() > 0)
+		if (basis instanceof SBRply && recd.rl != null)
 			change((SBRply) basis, b -> jsl.setValue(b.prog()));
 		bb.paint();
 		AbEntity eba = sb.ebase;
@@ -278,7 +278,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			if (basis instanceof SBCtrl)
 				changePanel(new BattleInfoPage(getThis(), ((SBCtrl) basis).getData(), 0));
 			if (basis instanceof SBRply)
-				if (recd.name.length() == 0)
+				if (recd.rl == null)
 					changePanel(new RecdSavePage(getThis(), recd));
 				else
 					changePanel(new BattleInfoPage(this, (SBRply) basis));
@@ -333,7 +333,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			add(stream);
 		else {
 			add(rply);
-			if (recd != null && recd.name.length() > 0) {
+			if (recd != null && recd.rl != null) {
 				add(jsl);
 				jsl.setEnabled(pause);
 			}
