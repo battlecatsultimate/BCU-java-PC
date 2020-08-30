@@ -13,6 +13,10 @@ import page.LoadPage;
 
 public class BCJSON {
 
+	public static final String[] PC_LANG_CODES = { "en", "jp", "kr", "zh" };
+	public static final String[] PC_LANG_FILES = { "util.properties", "page.properties", "info.properties",
+			"StageName.txt", "UnitName.txt", "EnemyName.txt", "proc.json", "animation_type.json" };
+
 	public static void check() {
 		LoadPage.prog("checking update information");
 		UpdateJson json = Data.ignore(UpdateCheck::checkUpdate);
@@ -27,7 +31,11 @@ public class BCJSON {
 		}
 		int music = json != null ? json.music : Data.SE_ALL[Data.SE_ALL.length - 1] + 1;
 		musics = UpdateCheck.checkMusic(music);
-		lang = Data.ignore(UpdateCheck.checkLang(UpdateCheck.PC_LANG_CODES, UpdateCheck.PC_LANG_FILES));
+		String[] langs = new String[PC_LANG_CODES.length * PC_LANG_FILES.length];
+		for (int i = 0; i < PC_LANG_CODES.length; i++)
+			for (int j = 0; j < PC_LANG_FILES.length; j++)
+				langs[i * PC_LANG_FILES.length + j] = PC_LANG_CODES[i] + "/" + PC_LANG_FILES[j];
+		lang = Data.err(UpdateCheck.checkLang(langs));
 		clearList(libs, true);
 		clearList(assets, true);
 		clearList(musics, false);
