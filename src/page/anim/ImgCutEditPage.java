@@ -2,7 +2,9 @@ package page.anim;
 
 import common.CommonStatic;
 import common.pack.PackData.UserPack;
+import common.pack.Source.ResourceLocation;
 import common.pack.Source.Workspace;
+import common.pack.Source;
 import common.pack.UserProfile;
 import common.system.VImg;
 import common.system.fake.FakeImage;
@@ -212,8 +214,9 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				if (bimg == null)
 					return;
 				changing = true;
-				String str = AnimCE.getAvailable("new anim");
-				AnimCE ac = new AnimCE(str);
+				ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, "new anim");
+				Workspace.validate(Source.ANIM, rl);
+				AnimCE ac = new AnimCE(rl);
 				try {
 					ac.setNum(FakeImage.read(bimg));
 				} catch (IOException e) {
@@ -307,9 +310,9 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
-				String str = icet.anim.id.id;
-				str = AnimCE.getAvailable(str);
-				AnimCE ac = new AnimCE(str, icet.anim);
+				ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, icet.anim.id.id);
+				Workspace.validate(Source.ANIM, rl);
+				AnimCE ac = new AnimCE(rl, icet.anim);
 				ac.setEdi(icet.anim.getEdi());
 				ac.setUni(icet.anim.getUni());
 				Vector<AnimCE> v = new Vector<>(AnimCE.map().values());
@@ -535,7 +538,8 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				changing = true;
-				String str = AnimCE.getAvailable("merged");
+				ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, "merged");
+				Workspace.validate(Source.ANIM, rl);
 				AnimCE[] list = jlu.getSelectedValuesList().toArray(new AnimCE[0]);
 				int[][] rect = new int[list.length][2];
 				for (int i = 0; i < list.length; i++) {
@@ -544,7 +548,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				}
 				SRResult ans = Algorithm.stackRect(rect);
 				AnimCE cen = list[ans.center];
-				AnimCE ac = new AnimCE(str, cen);
+				AnimCE ac = new AnimCE(rl, cen);
 				BufferedImage bimg = new BufferedImage(ans.w, ans.h, BufferedImage.TYPE_INT_ARGB);
 				Graphics g = bimg.getGraphics();
 				for (int i = 0; i < list.length; i++) {

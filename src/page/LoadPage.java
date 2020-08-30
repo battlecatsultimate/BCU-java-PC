@@ -2,11 +2,7 @@ package page;
 
 import javax.swing.*;
 
-import common.io.Progress;
-
-import java.util.function.Consumer;
-
-public class LoadPage extends Page implements Consumer<Progress> {
+public class LoadPage extends Page {
 
 	private static final long serialVersionUID = 1L;
 
@@ -36,10 +32,9 @@ public class LoadPage extends Page implements Consumer<Progress> {
 		resized();
 	}
 
-	@Override
-	public void accept(Progress dl) {
+	public void accept(double dl) {
 		jpb.setMaximum(1000);
-		jpb.setValue((int) (dl.prog * 1000));
+		jpb.setValue((int) (dl * 1000));
 	}
 
 	@Override

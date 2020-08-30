@@ -32,7 +32,7 @@ public class EnemyViewPage extends AbViewPage {
 
 	public EnemyViewPage(Page p, String pac) {
 		super(p);
-		jlu.setListData(new Vector<>(UserProfile.getAll(pac, Enemy.class)));
+		jlu.setListData(new Vector<>(UserProfile.getPack(pac).enemies.getList()));
 		ini();
 		resized();
 	}

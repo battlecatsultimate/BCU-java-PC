@@ -1,5 +1,8 @@
 package page.view;
 
+import common.pack.Source;
+import common.pack.Source.ResourceLocation;
+import common.pack.Source.Workspace;
 import common.util.anim.AnimCE;
 import common.util.anim.AnimD;
 import common.util.anim.AnimI;
@@ -207,9 +210,9 @@ public abstract class AbViewPage extends Page {
 				if (ei == null || !(ei.anim() instanceof AnimD))
 					return;
 				AnimD<?, ?> eau = (AnimD<?, ?>) ei.anim();
-				String str = "new anim";
-				str = AnimCE.getAvailable(str);
-				new AnimCE(str, eau);
+				ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, "new anim");
+				Workspace.validate(Source.ANIM, rl);
+				new AnimCE(rl, eau);
 				changePanel(new ImgCutEditPage(getThis()));
 			}
 		});
