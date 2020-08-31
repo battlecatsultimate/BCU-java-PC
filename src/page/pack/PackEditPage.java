@@ -1,10 +1,12 @@
 package page.pack;
 
+import common.CommonStatic;
 import common.battle.data.CustomEnemy;
 import common.pack.PackData.UserPack;
 import common.pack.Source.Workspace;
 import common.pack.Source.ZipSource;
 import common.pack.UserProfile;
+import common.pack.Context.ErrType;
 import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.stage.MapColc;
@@ -295,8 +297,10 @@ public class PackEditPage extends Page {
 				String pass = Opts.read("Unpack password: ");
 				if (pass == null)
 					pass = "";
-				((Workspace) pac.source).export(pac, pass, (d) -> {
-				});
+				String key = pass;
+				CommonStatic.ctx.noticeErr(() -> ((Workspace) pac.source).export(pac, key, (d) -> {
+				}), ErrType.WARN, "failed to export pack");
+
 			}
 		});
 
