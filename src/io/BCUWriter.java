@@ -146,9 +146,8 @@ public class BCUWriter extends DataIO {
 	}
 
 	public static void writeData() {
-		// FIXME write data
-		Source.Workspace.saveLocalAnimations();
 		BasisSet.write();
+		Source.Workspace.saveLocalAnimations();
 		Source.Workspace.saveWorkspace();
 		writeOptions();
 	}

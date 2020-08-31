@@ -1,5 +1,6 @@
 package page;
 
+import common.pack.Identifier;
 import common.util.stage.MapColc;
 import io.BCUWriter;
 import page.anim.DIYViewPage;
@@ -95,8 +96,8 @@ public class MainPage extends Page {
 	}
 
 	private void addListeners() {
-		vuni.setLnr(() -> new UnitViewPage(this, (String) null));
-		vene.setLnr(() -> new EnemyViewPage(this, (String) null));
+		vuni.setLnr(() -> new UnitViewPage(this, Identifier.DEF));
+		vene.setLnr(() -> new EnemyViewPage(this, Identifier.DEF));
 		vsta.setLnr(() -> new StageViewPage(this, MapColc.values()));
 		vdiy.setLnr(() -> new DIYViewPage(this));
 		conf.setLnr(() -> new ConfigPage(this));

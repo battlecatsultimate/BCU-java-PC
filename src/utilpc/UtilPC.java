@@ -6,16 +6,13 @@ import common.CommonStatic.ImgReader;
 import common.CommonStatic.Itf;
 import common.battle.data.PCoin;
 import common.io.InStream;
-import common.io.OutStream;
 import common.pack.Context;
-import common.pack.Context.ErrType;
 import common.pack.Source;
 import common.pack.Source.ResourceLocation;
 import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
 import common.system.files.FDByte;
-import common.system.files.VFile;
 import common.util.Data;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
@@ -26,24 +23,21 @@ import common.util.unit.Form;
 import io.BCMusic;
 import io.BCUReader;
 import io.BCUWriter;
-import main.MainBCU;
-import page.LoadPage;
 import utilpc.awt.FG2D;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Queue;
-import java.util.function.Function;
 
+@SuppressWarnings("deprecation")
 public class UtilPC {
 
 	public static class PCItr implements Itf {
 
+		@Deprecated
 		private static class MusicReader implements ImgReader {
 
 			private final int pid, mid;
@@ -54,6 +48,7 @@ public class UtilPC {
 			}
 
 			@Override
+			@Deprecated
 			public File readFile(InStream is) {
 				byte[] bs = is.subStream().nextBytesI();
 				String path = "./pack/music/" + Data.hex(pid) + "/" + Data.trio(mid) + ".ogg";
@@ -79,6 +74,7 @@ public class UtilPC {
 
 		}
 
+		@Deprecated
 		private static class PCAL implements Source.AnimLoader {
 
 			private String name;
@@ -189,48 +185,31 @@ public class UtilPC {
 		}
 
 		@Override
+		@Deprecated
 		public ImgReader getMusicReader(int pid, int mid) {
 			return new MusicReader(pid, mid);
 		}
 
 		@Override
+		@Deprecated
 		public ImgReader getReader(File f) {
 			return null;
 		}
 
 		@Override
+		@Deprecated
 		public Source.AnimLoader loadAnim(InStream is, ImgReader r) {
 			return r == null ? new PCAL(is) : new PCAL(is, r);
 		}
 
 		@Override
-		public void prog(String str) {
-			LoadPage.prog(str);
-
-		}
-
-		@Override
+		@Deprecated
 		public InStream readBytes(File fi) {
 			return BCUReader.readBytes(fi);
 		}
 
 		@Override
-		public VImg readReal(File fi) {
-			try {
-				return new VImg(MainBCU.builder.build(ImageIO.read(fi)));
-			} catch (IOException e) {
-				e.printStackTrace();
-				return null;
-			}
-		}
-
-		@Override
-		public <T> T readSave(String path, Function<Queue<String>, T> func) {
-			return CommonStatic.ctx.noticeErr(() -> func.apply(VFile.getFile(path).getData().readLine()), ErrType.ERROR,
-					"failed to read " + path);
-		}
-
-		@Override
+		@Deprecated
 		public File route(String path) {
 			return new File(path);
 		}
@@ -238,15 +217,6 @@ public class UtilPC {
 		@Override
 		public void setSE(int ind) {
 			BCMusic.setSE(ind);
-		}
-
-		@Override
-		public boolean writeBytes(OutStream os, String path) {
-			return BCUWriter.writeBytes(os, path);
-		}
-
-		@Override
-		public void writeErrorLog(Exception e) {
 		}
 
 	}
