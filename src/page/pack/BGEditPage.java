@@ -5,9 +5,9 @@ import common.pack.Context;
 import common.pack.Context.ErrType;
 import common.pack.PackData.UserPack;
 import common.pack.Source.Workspace;
-import common.system.VImg;
 import common.system.fake.FakeImage;
 import common.util.pack.Background;
+import main.MainBCU;
 import page.JBTN;
 import page.JTF;
 import page.JTG;
@@ -199,10 +199,10 @@ public class BGEditPage extends Page {
 			return;
 		}
 		if (bgr == null) {
-			bgr = new Background(pack.getNextID(Background.class), new VImg(bimg));
+			bgr = new Background(pack.getNextID(Background.class), MainBCU.builder.toVImg(bimg));
 			pack.bgs.add(bgr);
 		} else {
-			bgr.img.setImg(bimg);
+			bgr.img.setImg(MainBCU.builder.build(bimg));
 			bgr.load();
 		}
 		try {

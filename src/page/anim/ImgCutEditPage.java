@@ -6,14 +6,13 @@ import common.pack.Source.ResourceLocation;
 import common.pack.Source.Workspace;
 import common.pack.Source;
 import common.pack.UserProfile;
-import common.system.VImg;
-import common.system.fake.FakeImage;
 import common.system.fake.FakeImage.Marker;
 import common.util.anim.AnimCE;
 import common.util.anim.ImgCut;
 import common.util.anim.MaAnim;
 import common.util.anim.Part;
 import common.util.unit.Enemy;
+import main.MainBCU;
 import main.Opts;
 import page.JBTN;
 import page.JTF;
@@ -32,7 +31,6 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.Vector;
 
 public class ImgCutEditPage extends Page implements AbEditPage {
@@ -154,14 +152,11 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 	@Override
 	protected void renew() {
-		if (sep != null && Opts.conf("Do you want to save edited sprite?"))
-			try {
-				icet.anim.setNum(FakeImage.read(sep.getEdit()));
-				icet.anim.saveImg();
-				icet.anim.reloImg();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		if (sep != null && Opts.conf("Do you want to save edited sprite?")) {
+			icet.anim.setNum(MainBCU.builder.build(sep.getEdit()));
+			icet.anim.saveImg();
+			icet.anim.reloImg();
+		}
 		sep = null;
 	}
 
@@ -217,11 +212,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, "new anim");
 				Workspace.validate(Source.ANIM, rl);
 				AnimCE ac = new AnimCE(rl);
-				try {
-					ac.setNum(FakeImage.read(bimg));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				ac.setNum(MainBCU.builder.build(bimg));
 				ac.saveImg();
 				ac.createNew();
 				Vector<AnimCE> v = new Vector<>(AnimCE.map().values());
@@ -240,13 +231,9 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				BufferedImage bimg = new Importer("Update your sprite").getImg();
 				if (bimg != null) {
 					AnimCE ac = icet.anim;
-					try {
-						ac.setNum(FakeImage.read(bimg));
-						ac.saveImg();
-						ac.reloImg();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+					ac.setNum(MainBCU.builder.build(bimg));
+					ac.saveImg();
+					ac.reloImg();
 				}
 			}
 
@@ -388,7 +375,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				BufferedImage bimg = new Importer("select enemy icon").getImg();
 				if (bimg == null)
 					return;
-				icet.anim.setEdi(new VImg(bimg));
+				icet.anim.setEdi(MainBCU.builder.toVImg(bimg));
 				icet.anim.saveIcon();
 				if (icet.anim.getEdi() != null)
 					icon.setIcon(UtilPC.getIcon(icet.anim.getEdi()));
@@ -559,11 +546,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 					if (i != ans.center)
 						ac.merge(list[i], x, y);
 				}
-				try {
-					ac.setNum(FakeImage.read(bimg));
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+				ac.setNum(MainBCU.builder.build(bimg));
 				ac.saveImg();
 				ac.reloImg();
 				ac.unSave("merge");

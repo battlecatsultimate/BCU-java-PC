@@ -2,6 +2,7 @@ package page.anim;
 
 import common.system.VImg;
 import common.util.anim.AnimCE;
+import main.MainBCU;
 import main.Opts;
 import page.JBTN;
 import page.JTG;
@@ -154,7 +155,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		});
 
 		icc.setLnr(x -> {
-			VImg clip = new VImg(ib.getClip());
+			VImg clip = MainBCU.builder.toVImg(ib.getClip());
 			if (IconBox.IBConf.mode == 0
 					&& Opts.conf("are you sure to replace display icon? This action cannot be undone")) {
 				AnimCE ac = aep.anim;
@@ -165,7 +166,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 			if (IconBox.IBConf.mode == 1
 					&& Opts.conf("are you sure to replace battle icon? This action cannot be undone")) {
 				AnimCE ac = aep.anim;
-				ac.setUni(new VImg(ib.getClip()));
+				ac.setUni(MainBCU.builder.toVImg(ib.getClip()));
 				ac.saveUni();
 				uni.setIcon(UtilPC.getIcon(ac.getUni()));
 			}

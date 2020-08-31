@@ -6,6 +6,7 @@ import common.system.VImg;
 import common.util.Data;
 import common.util.stage.CastleImg;
 import common.util.stage.CastleList;
+import main.MainBCU;
 import page.JBTN;
 import page.Page;
 import page.support.Exporter;
@@ -143,9 +144,9 @@ public class CastleEditPage extends Page {
 			return;
 		}
 		if (vimg == null)
-			cas.add(vimg = new CastleImg(pack.getNextID(CastleImg.class), new VImg(bimg)));
+			cas.add(vimg = new CastleImg(pack.getNextID(CastleImg.class), MainBCU.builder.toVImg(bimg)));
 		else
-			vimg.img.setImg(bimg);
+			vimg.img.setImg(MainBCU.builder.build(bimg));
 		try {
 			OutputStream os = ((Workspace) pack.source).writeFile("castles/" + Data.trio(vimg.id.id) + ".png");
 			ImageIO.write(bimg, "PNG", os);

@@ -13,6 +13,7 @@ import common.pack.Source;
 import common.pack.Source.ResourceLocation;
 import common.system.VImg;
 import common.system.fake.FakeImage;
+import common.system.fake.ImageBuilder;
 import common.system.files.FDByte;
 import common.system.files.VFile;
 import common.util.Data;
@@ -25,6 +26,7 @@ import common.util.unit.Form;
 import io.BCMusic;
 import io.BCUReader;
 import io.BCUWriter;
+import main.MainBCU;
 import page.LoadPage;
 import utilpc.awt.FG2D;
 
@@ -88,12 +90,7 @@ public class UtilPC {
 
 			private PCAL(InStream is) {
 				name = "local animation";
-
-				try {
-					num = FakeImage.read(is.nextBytesI());
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				num = FakeImage.read(is.nextBytesI());
 				imgcut = ImgCut.newIns(new FDByte(is.nextBytesI()));
 				mamodel = MaModel.newIns(new FDByte(is.nextBytesI()));
 				int n = is.nextInt();
@@ -101,14 +98,14 @@ public class UtilPC {
 				for (int i = 0; i < n; i++)
 					anims[i] = MaAnim.newIns(new FDByte(is.nextBytesI()));
 				if (!is.end()) {
-					VImg vimg = new VImg(is.nextBytesI());
+					VImg vimg = ImageBuilder.toVImg(is.nextBytesI());
 					if (vimg.getImg().getHeight() == 32)
 						edi = vimg;
 					else
 						uni = vimg;
 				}
 				if (!is.end())
-					uni = new VImg(is.nextBytesI());
+					uni = ImageBuilder.toVImg(is.nextBytesI());
 			}
 
 			private PCAL(InStream is, ImgReader r) {
@@ -220,7 +217,7 @@ public class UtilPC {
 		@Override
 		public VImg readReal(File fi) {
 			try {
-				return new VImg(ImageIO.read(fi));
+				return new VImg(MainBCU.builder.build(ImageIO.read(fi)));
 			} catch (IOException e) {
 				e.printStackTrace();
 				return null;

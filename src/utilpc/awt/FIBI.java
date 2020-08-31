@@ -1,27 +1,15 @@
 package utilpc.awt;
 
-import common.pack.Context;
 import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
-import common.system.files.FileData;
-import common.util.Data;
-
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.function.Supplier;
 
 public class FIBI implements FakeImage {
 
-	public static final ImageBuilder builder = new BIBuilder();
+	public static final ImageBuilder<BufferedImage> builder = new PCIB();
 
 	public static FakeImage build(BufferedImage bimg2) {
-		try {
-			return builder.build(bimg2);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
+		return builder.build(bimg2);
 	}
 
 	private final BufferedImage bimg;
@@ -47,12 +35,7 @@ public class FIBI implements FakeImage {
 
 	@Override
 	public FIBI getSubimage(int i, int j, int k, int l) {
-		try {
-			return (FIBI) builder.build(bimg.getSubimage(i, j, k, l));
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
+		return (FIBI) builder.build(bimg.getSubimage(i, j, k, l));
 	}
 
 	@Override
@@ -80,43 +63,4 @@ public class FIBI implements FakeImage {
 
 	}
 
-}
-
-class BIBuilder extends ImageBuilder {
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public FIBI build(Object o) throws IOException {
-		if (o == null)
-			return null;
-		if (o instanceof BufferedImage)
-			return new FIBI((BufferedImage) o);
-		BufferedImage b = null;
-		if (o instanceof File)
-			b = ImageIO.read((File) o);
-		else if (o instanceof FileData)
-			b = ImageIO.read(((FileData) o).getStream());
-		else if (o instanceof byte[])
-			b = ImageIO.read(new ByteArrayInputStream((byte[]) o));
-		else if (o instanceof Supplier)
-			b = ImageIO.read(((Supplier<InputStream>) o).get());
-		else
-			throw new IOException("unknown class type " + o.getClass());
-		if (b == null)
-			return null;
-		return new FIBI(b);
-	}
-
-	@Override
-	public boolean write(FakeImage img, String fmt, Object o) throws IOException {
-		BufferedImage bimg = (BufferedImage) img.bimg();
-		if (bimg == null)
-			return false;
-		if (o instanceof File) {
-			Data.err(() -> Context.check((File) o));
-			return ImageIO.write(bimg, fmt, (File) o);
-		} else if (o instanceof OutputStream)
-			return ImageIO.write(bimg, fmt, (OutputStream) o);
-		return false;
-	}
 }

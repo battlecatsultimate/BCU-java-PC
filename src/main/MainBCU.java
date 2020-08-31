@@ -24,9 +24,9 @@ import page.awt.AWTBBB;
 import page.awt.BBBuilder;
 import utilpc.Theme;
 import utilpc.UtilPC;
-import utilpc.awt.PCIB;
-
+import utilpc.awt.FIBI;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -126,6 +126,7 @@ public class MainBCU {
 	public static final boolean WRITE = !new File("./.project").exists();
 	public static boolean preload = false, trueRun = true, loaded = false, USE_JOGL = false;
 	public static boolean light = true, nimbus = false;
+	public static ImageBuilder<BufferedImage> builder;
 
 	public static String getTime() {
 		return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
@@ -142,7 +143,7 @@ public class MainBCU {
 		BCUWriter.logSetup();
 		BCUReader.readInfo();
 
-		ImageBuilder.builder = USE_JOGL ? new GLIB() : new PCIB();
+		ImageBuilder.builder = builder = USE_JOGL ? new GLIB() : FIBI.builder;
 		BBBuilder.def = USE_JOGL ? new GLBBB() : AWTBBB.INS;
 
 		if (nimbus) {
