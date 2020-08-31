@@ -56,6 +56,7 @@ public class RecdSavePage extends Page {
 				if (str.length() == 0)
 					str = "new replay for stage " + recd.st.toString();
 				recd.rl = new ResourceLocation(ResourceLocation.LOCAL, str);
+				// FIXME set replay name
 				Workspace.validate(Source.REPLAY, recd.rl);
 
 			}

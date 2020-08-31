@@ -51,6 +51,7 @@ public class StRecdPage extends AbRecdPage {
 			if (recd != null) {
 				if (recd.st == st || Opts.conf("stage mismatch. Do you really want to add?")) {
 					st.recd.add(recd);
+					// FIXME localize replay
 					setList();
 				}
 			}
@@ -130,6 +131,7 @@ public class StRecdPage extends AbRecdPage {
 			if (isAdj() || r == null)
 				return;
 			r.rl.id = jtf.getText();
+			// FIXME rename replay
 			Workspace.validate(Source.REPLAY, r.rl);
 		});
 

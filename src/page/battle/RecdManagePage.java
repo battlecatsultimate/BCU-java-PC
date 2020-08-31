@@ -83,6 +83,7 @@ public class RecdManagePage extends AbRecdPage {
 				return;
 			File f = CommonStatic.ctx.getWorkspaceFile(r.rl.getPath(Source.REPLAY) + ".replay");
 			if (f.exists()) {
+				// FIXME rename replay
 				r.rl.id = rena.getText().trim();
 				Workspace.validate(Source.REPLAY, r.rl);
 				if (f.renameTo(new File("./replays/" + r.rl.id + ".replay"))) {

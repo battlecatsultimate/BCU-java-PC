@@ -48,7 +48,7 @@ public class RecdPackPage extends AbRecdPage {
 	protected void setList() {
 		change(true);
 		Replay r = jlr.getSelectedValue();
-		jlr.setListData(pac.getReplays().toArray(new Replay[0]));
+		jlr.setListData(pac.source.getReplays().values().toArray(new Replay[0]));
 		jlr.setSelectedValue(r, true);
 		setRecd(r);
 		change(false);
@@ -83,6 +83,7 @@ public class RecdPackPage extends AbRecdPage {
 			File f = CommonStatic.ctx.getWorkspaceFile(r.rl.getPath(Source.REPLAY) + ".replay");
 			if (f.exists()) {
 				r.rl.id = rena.getText().trim();
+				// FIXME rename replay
 				Workspace.validate(Source.REPLAY, r.rl);
 				File f1 = CommonStatic.ctx.getWorkspaceFile(r.rl.getPath(Source.REPLAY) + ".replay");
 				if (f.renameTo(f1)) {
