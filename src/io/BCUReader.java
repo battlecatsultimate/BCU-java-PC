@@ -46,14 +46,7 @@ public class BCUReader extends DataIO {
 	}
 
 	public static InStream readBytes(File file) {
-		try {
-			byte[] bs = Files.readAllBytes(file.toPath());
-			return InStream.getIns(bs);
-		} catch (IOException e) {
-			Opts.ioErr("failed to read file " + file);
-			e.printStackTrace();
-		}
-		return null;
+		return InStream.getIns(file);
 	}
 
 	public static void readInfo() {

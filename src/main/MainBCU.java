@@ -85,12 +85,12 @@ public class MainBCU {
 			AssetLoader.load(LoadPage::prog);
 			LoadPage.prog("read BC data");
 			UserProfile.getBCData().load(LoadPage::prog, LoadPage::prog);
-			LoadPage.prog("read basis");
-			BasisSet.read();
 			LoadPage.prog("read local animations");
 			Workspace.loadAnimations(null);
 			LoadPage.prog("read packs");
 			UserProfile.loadPacks(LoadPage::prog);
+			LoadPage.prog("read basis");
+			BasisSet.read();
 			LoadPage.prog("finish reading");
 		}
 
