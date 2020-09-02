@@ -2,7 +2,6 @@ package page.battle;
 
 import common.CommonStatic;
 import common.pack.Source;
-import common.pack.Source.Workspace;
 import common.util.stage.Replay;
 import page.JBTN;
 import page.JTF;
@@ -81,16 +80,7 @@ public class RecdManagePage extends AbRecdPage {
 			Replay r = jlr.getSelectedValue();
 			if (r == null)
 				return;
-			File f = CommonStatic.ctx.getWorkspaceFile(r.rl.getPath(Source.REPLAY) + ".replay");
-			if (f.exists()) {
-				// FIXME rename replay
-				r.rl.id = rena.getText().trim();
-				Workspace.validate(Source.REPLAY, r.rl);
-				if (f.renameTo(new File("./replays/" + r.rl.id + ".replay"))) {
-					Replay.getMap().remove(r.rl.id);
-					Replay.getMap().put(r.rl.id, r);
-				}
-			}
+			r.rename(rena.getText().trim());
 			rena.setText(r.rl.id);
 		});
 

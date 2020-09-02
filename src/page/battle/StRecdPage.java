@@ -1,7 +1,5 @@
 package page.battle;
 
-import common.pack.Source;
-import common.pack.Source.Workspace;
 import common.util.stage.Replay;
 import common.util.stage.Stage;
 import main.Opts;
@@ -51,7 +49,7 @@ public class StRecdPage extends AbRecdPage {
 			if (recd != null) {
 				if (recd.st == st || Opts.conf("stage mismatch. Do you really want to add?")) {
 					st.recd.add(recd);
-					// FIXME localize replay
+					recd.localize(st.getCont().getCont().getSID());
 					setList();
 				}
 			}
@@ -130,9 +128,7 @@ public class StRecdPage extends AbRecdPage {
 			Replay r = list.getSelectedValue();
 			if (isAdj() || r == null)
 				return;
-			r.rl.id = jtf.getText();
-			// FIXME rename replay
-			Workspace.validate(Source.REPLAY, r.rl);
+			r.rename(jtf.getText());
 		});
 
 	}

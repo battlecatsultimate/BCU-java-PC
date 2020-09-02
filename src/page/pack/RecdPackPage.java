@@ -1,9 +1,6 @@
 package page.pack;
 
-import common.CommonStatic;
-import common.pack.Source;
 import common.pack.PackData.UserPack;
-import common.pack.Source.Workspace;
 import common.util.stage.Replay;
 import page.JTF;
 import page.Page;
@@ -12,7 +9,6 @@ import page.battle.AbRecdPage;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.io.File;
 
 public class RecdPackPage extends AbRecdPage {
 
@@ -80,17 +76,7 @@ public class RecdPackPage extends AbRecdPage {
 			Replay r = jlr.getSelectedValue();
 			if (r == null)
 				return;
-			File f = CommonStatic.ctx.getWorkspaceFile(r.rl.getPath(Source.REPLAY) + ".replay");
-			if (f.exists()) {
-				r.rl.id = rena.getText().trim();
-				// FIXME rename replay
-				Workspace.validate(Source.REPLAY, r.rl);
-				File f1 = CommonStatic.ctx.getWorkspaceFile(r.rl.getPath(Source.REPLAY) + ".replay");
-				if (f.renameTo(f1)) {
-					Replay.getMap().remove(r.rl.id);
-					Replay.getMap().put(r.rl.id, r);
-				}
-			}
+			r.rename(rena.getText().trim());
 			rena.setText(r.rl.id);
 		});
 

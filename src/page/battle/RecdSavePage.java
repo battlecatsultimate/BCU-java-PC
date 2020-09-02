@@ -1,8 +1,5 @@
 package page.battle;
 
-import common.pack.Source;
-import common.pack.Source.ResourceLocation;
-import common.pack.Source.Workspace;
 import common.util.stage.Replay;
 import main.MainBCU;
 import page.JBTN;
@@ -55,9 +52,7 @@ public class RecdSavePage extends Page {
 				str = MainBCU.validate(str);
 				if (str.length() == 0)
 					str = "new replay for stage " + recd.st.toString();
-				recd.rl = new ResourceLocation(ResourceLocation.LOCAL, str);
-				// FIXME set replay name
-				Workspace.validate(Source.REPLAY, recd.rl);
+				recd.rename(str);
 
 			}
 		});

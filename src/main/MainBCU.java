@@ -65,11 +65,6 @@ public class MainBCU {
 		}
 
 		@Override
-		public File getPackFolder() {
-			return new File("./packs/");
-		}
-
-		@Override
 		public File getUserFile(String string) {
 			return new File("./user/" + string);
 		}
