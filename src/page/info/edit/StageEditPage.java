@@ -20,6 +20,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class StageEditPage extends Page {
 
@@ -332,10 +334,12 @@ public class StageEditPage extends Page {
 			ptsm.setEnabled(false);
 			return;
 		}
-		boolean b = true;
+		Set<String> set = new TreeSet<>();
 		for (Stage st : sm.list)
-			b &= st.isSuitable(pack);
-		ptsm.setEnabled(b);
+			set.addAll(st.isSuitable(pack));
+		ptsm.setEnabled(set.size() == 0);
+		if (set.size() > 0)
+			ptsm.setToolTipText("requires: " + set);
 
 	}
 
@@ -344,8 +348,12 @@ public class StageEditPage extends Page {
 		StageMap sm = jlsm.getSelectedValue();
 		if (st == null || sm == null)
 			ptst.setEnabled(false);
-		else
-			ptst.setEnabled(st.isSuitable(pack));
+		else {
+			Set<String> set = st.isSuitable(pack);
+			ptst.setEnabled(set.size() == 0);
+			if (set.size() > 0)
+				ptst.setToolTipText("requires: " + set);
+		}
 		rmst.setEnabled(st != null);
 	}
 

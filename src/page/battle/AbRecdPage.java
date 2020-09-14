@@ -2,7 +2,7 @@ package page.battle;
 
 import common.CommonStatic;
 import common.battle.BasisSet;
-import common.system.BasedCopable;
+import common.pack.Identifier;
 import common.util.stage.MapColc;
 import common.util.stage.Replay;
 import common.util.stage.Stage;
@@ -66,9 +66,8 @@ public abstract class AbRecdPage extends Page {
 		if (editable && svp != null) {
 			Replay r = getSelection();
 			Stage ns = svp.getStage();
-			if (r != null && ns != null && ns != r.st && Opts.conf("are you sure to change stage?")) {
-				r.st = svp.getStage();
-				r.avail = true;
+			if (r != null && ns != null && ns != r.st.get() && Opts.conf("are you sure to change stage?")) {
+				r.st = svp.getStage().id;
 				r.marked = true;
 			}
 		}
@@ -102,13 +101,14 @@ public abstract class AbRecdPage extends Page {
 	protected abstract void setList();
 
 	protected void setRecd(Replay r) {
-		rply.setEnabled(r != null && r.avail);
-		recd.setEnabled(r != null && r.avail);
-		imgs.setEnabled(r != null && r.avail);
+		rply.setEnabled(r != null && r.isAvail());
+		recd.setEnabled(r != null && r.isAvail());
+		imgs.setEnabled(r != null && r.isAvail());
 		seed.setEditable(editable && r != null);
 		vsta.setEnabled(r != null);
-		ista.setText(r == null || r.st == null ? "(unavailable)" : r.st.toString());
-		imap.setText(r == null || r.st == null ? "(unavailable)" : BasedCopable.map.toString());
+		Stage st = r == null ? null : Identifier.getOr(r.st, Stage.class);
+		ista.setText(st == null ? "(unavailable)" : st.toString());
+		imap.setText(st == null ? "(unavailable)" : st.getCont().toString());
 		jlu.setEnabled(r != null);
 		if (r == null) {
 			len.setText("");
@@ -122,7 +122,7 @@ public abstract class AbRecdPage extends Page {
 	private void addListeners() {
 		back.setLnr(x -> changePanel(getFront()));
 
-		vsta.setLnr(x -> changePanel(svp = new StageViewPage(getThis(), MapColc.values(), getSelection().st)));
+		vsta.setLnr(x -> changePanel(svp = new StageViewPage(getThis(), MapColc.values(), getSelection().st.get())));
 
 		jlu.setLnr(x -> changePanel(bp = new BasisPage(getThis())));
 

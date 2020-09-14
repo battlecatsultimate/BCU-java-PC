@@ -474,14 +474,18 @@ public class PackEditPage extends Page {
 				changing = true;
 				int ind = jlr.getSelectedIndex() - 1;
 				UserPack rel = jlr.getSelectedValue();
-				if (pac.relyOn(rel.getSID()))
-					if (Opts.conf("this action cannot be undone. Are you sure to remove "
-							+ "all elements in this pack from the selected parent?"))
-						pac.forceRemoveParent(rel.getSID());
-				pac.desc.dependency.remove(rel.getSID());
-				updateJlr();
-				jlr.setSelectedIndex(ind);
-				setRely(jlr.getSelectedValue());
+				if (pac.relyOn(rel.getSID())) {
+					StringBuilder sb = new StringBuilder();
+					List<String> list = pac.foreignList(rel.getSID());
+					for (String str : list)
+						sb.append(str + "\n");
+					Opts.pop(sb.toString(), "list of dependency");
+				} else {
+					pac.desc.dependency.remove(rel.getSID());
+					updateJlr();
+					jlr.setSelectedIndex(ind);
+					setRely(jlr.getSelectedValue());
+				}
 				changing = false;
 			}
 

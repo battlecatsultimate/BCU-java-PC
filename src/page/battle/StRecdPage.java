@@ -47,7 +47,7 @@ public class StRecdPage extends AbRecdPage {
 		if (rmp != null) {
 			Replay recd = rmp.getSelection();
 			if (recd != null) {
-				if (recd.st == st || Opts.conf("stage mismatch. Do you really want to add?")) {
+				if (recd.st.get() == st || Opts.conf("stage mismatch. Do you really want to add?")) {
 					st.recd.add(recd);
 					recd.localize(st.getCont().getCont().getSID());
 					setList();
