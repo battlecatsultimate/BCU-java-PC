@@ -58,7 +58,7 @@ public class MainBCU {
 			File f = new File(
 					"./assets/lang/" + CommonStatic.Lang.LOC_CODE[CommonStatic.getConfig().lang] + "/" + file);
 			if (!f.exists()) {
-				String path = (MainBCU.WRITE ? "src/" : "") + "common/util/lang/assets/" + file;
+				String path = "common/util/lang/assets/" + file;
 				return ClassLoader.getSystemResourceAsStream(path);
 			}
 			return Data.err(() -> new FileInputStream(f));
@@ -91,8 +91,10 @@ public class MainBCU {
 
 		@Override
 		public void noticeErr(Exception e, ErrType t, String str) {
-			if (t == ErrType.DEBUG && !MainBCU.WRITE)
+			if (noNeedToShow(t)) {
+				System.out.println(str);
 				return;
+			}
 			e.printStackTrace(t == ErrType.INFO ? System.out : System.err);
 			printErr(t, str);
 		}
@@ -104,8 +106,11 @@ public class MainBCU {
 
 		@Override
 		public void printErr(ErrType t, String str) {
-			if (t == ErrType.DEBUG && !MainBCU.WRITE)
+			if (noNeedToShow(t)) {
+				System.out.println(str);
 				return;
+			}
+
 			(t == ErrType.INFO ? System.out : System.err).println(str);
 			if (t != ErrType.INFO)
 				Opts.pop(str, "ERROR");
@@ -113,11 +118,17 @@ public class MainBCU {
 				CommonStatic.def.exit(false);
 		}
 
+		private boolean noNeedToShow(ErrType t) {
+			if(t == ErrType.DEBUG)
+				return true;
+			else
+				return !MainBCU.WRITE;
+		}
 	}
 
 	public static final int ver = 50000;
 
-	public static int FILTER_TYPE = 0;
+	public static int FILTER_TYPE = 1;
 	public static final boolean WRITE = !new File("./.project").exists();
 	public static boolean preload = false, trueRun = true, loaded = false, USE_JOGL = false;
 	public static boolean light = true, nimbus = false;

@@ -23,6 +23,7 @@ import common.util.unit.Form;
 import io.BCMusic;
 import io.BCUReader;
 import io.BCUWriter;
+import page.Page;
 import utilpc.awt.FG2D;
 
 import javax.swing.*;
@@ -262,11 +263,19 @@ public class UtilPC {
 		if (pc == null)
 			return new String[] { "Lv." + lvs[0], "" };
 		else {
-			String lab = Interpret.PCTX[pc.info[0][0]];
+			String lab;
+
+			if(pc.isRelicSlow(0))
+				lab = Page.get(3, "rslow");
+			else if(pc.isRelicWeak(0))
+				lab = Page.get(3, "rweak");
+			else
+				lab = Interpret.PCTX[pc.info[0][0]];
+
 			String str = "Lv." + lvs[0] + ", {";
 			for (int i = 1; i < 5; i++) {
 				str += lvs[i] + ",";
-				lab += ", " + Interpret.PCTX[pc.info[i][0]];
+				lab += ", " + (pc.isRelicSlow(i) ? Page.get(3, "rslow") : pc.isRelicWeak(i) ? Page.get(3, "rweak") : Interpret.PCTX[pc.info[i][0]]);
 			}
 			str += lvs[5] + "}";
 			return new String[] { str, lab };
