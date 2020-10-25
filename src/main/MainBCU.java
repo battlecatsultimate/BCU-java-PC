@@ -93,6 +93,7 @@ public class MainBCU {
 		public void noticeErr(Exception e, ErrType t, String str) {
 			if (noNeedToShow(t)) {
 				System.out.println(str);
+				e.printStackTrace();
 				return;
 			}
 			e.printStackTrace(t == ErrType.INFO ? System.out : System.err);
@@ -122,7 +123,7 @@ public class MainBCU {
 			if(t == ErrType.DEBUG)
 				return true;
 			else
-				return !MainBCU.WRITE;
+				return t == ErrType.CORRUPT || t == ErrType.ERROR || t == ErrType.FATAL || t == ErrType.WARN || !MainBCU.WRITE;
 		}
 	}
 
