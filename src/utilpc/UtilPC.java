@@ -252,10 +252,10 @@ public class UtilPC {
 	}
 
 	public static ImageIcon getIcon(VImg v) {
-		v.check();
-		if (v.bimg == null || v.bimg.bimg() == null)
+		FakeImage img = v.getImg();
+		if (img == null)
 			return null;
-		return new ImageIcon((Image) v.bimg.bimg());
+		return new ImageIcon((Image) img.bimg());
 	}
 
 	public static String[] lvText(Form f, int[] lvs) {

@@ -144,7 +144,7 @@ public class CastleEditPage extends Page {
 			return;
 		}
 		if (vimg == null)
-			cas.add(vimg = new CastleImg(pack.getNextID(CastleImg.class), MainBCU.builder.toVImg(bimg)));
+			cas.add(vimg = new CastleImg(cas.getNextID(CastleImg.class), MainBCU.builder.toVImg(bimg)));
 		else
 			vimg.img.setImg(MainBCU.builder.build(bimg));
 		try {
