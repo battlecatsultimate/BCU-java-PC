@@ -135,7 +135,7 @@ public class EREditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (efp == null)
-					efp = new EnemyFindPage(getThis(), pack.desc.id);
+					efp = new EnemyFindPage(getThis());
 				changePanel(efp);
 			}
 		});

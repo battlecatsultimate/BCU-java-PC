@@ -1,6 +1,7 @@
 package page.view;
 
 import common.battle.data.CustomEnemy;
+import common.pack.PackData;
 import common.pack.UserProfile;
 import common.util.unit.Enemy;
 import page.JBTN;
@@ -33,6 +34,20 @@ public class EnemyViewPage extends AbViewPage {
 	public EnemyViewPage(Page p, String pac) {
 		super(p);
 		jlu.setListData(new Vector<>(UserProfile.getPack(pac).enemies.getList()));
+		ini();
+		resized();
+	}
+
+	public EnemyViewPage(Page p) {
+		super(p);
+		Vector<Enemy> v = new Vector<>();
+
+		for(PackData pack : UserProfile.getAllPacks()) {
+			v.addAll(pack.enemies.getList());
+		}
+
+		jlu.setListData(v);
+
 		ini();
 		resized();
 	}

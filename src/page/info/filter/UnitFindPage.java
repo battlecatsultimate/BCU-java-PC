@@ -22,10 +22,10 @@ public class UnitFindPage extends Page implements SupPage<Unit> {
 	private final JTF seatf = new JTF();
 	private final JBTN seabt = new JBTN(0, "search");
 
-	public UnitFindPage(Page p, String pack) {
+	public UnitFindPage(Page p) {
 		super(p);
 
-		ufb = UnitFilterBox.getNew(this, pack);
+		ufb = UnitFilterBox.getNew(this);
 		ini();
 		resized();
 	}

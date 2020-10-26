@@ -33,7 +33,7 @@ public class UnitFLUPage extends LubCont {
 	public UnitFLUPage(Page p) {
 		super(p);
 
-		ufb = UnitFilterBox.getNew(this, null);
+		ufb = UnitFilterBox.getNew(this);
 		ini();
 		resized();
 	}

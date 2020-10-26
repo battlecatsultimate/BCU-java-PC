@@ -83,7 +83,7 @@ public class StageEditPage extends Page {
 		info = new HeadEditTable(this, pac);
 		jlsm.setListData(mc, mc.maps);
 		jle.setListData(UserProfile.getAll(pack, Enemy.class).toArray(new Enemy[0]));
-		efp = new EnemyFindPage(getThis(), pack);
+		efp = new EnemyFindPage(getThis());
 		ini();
 	}
 

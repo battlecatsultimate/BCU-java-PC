@@ -1,6 +1,7 @@
 package page.info.filter;
 
 import common.battle.data.MaskUnit;
+import common.pack.PackData;
 import common.pack.UserProfile;
 import common.util.Data;
 import common.util.lang.MultiLangCont;
@@ -28,21 +29,18 @@ public abstract class UnitFilterBox extends Page {
 
 	private static final long serialVersionUID = 1L;
 
-	public static UnitFilterBox getNew(Page p, String pack) {
+	public static UnitFilterBox getNew(Page p) {
 		if (MainBCU.FILTER_TYPE == 0)
-			return new UFBButton(p, pack);
+			return new UFBButton(p);
 		if (MainBCU.FILTER_TYPE == 1)
-			return new UFBList(p, pack);
+			return new UFBList(p);
 		return null;
 	}
 
-	protected String pac;
-
 	public String name = "";
 
-	protected UnitFilterBox(Page p, String pack) {
+	protected UnitFilterBox(Page p) {
 		super(p);
-		pac = pack;
 	}
 
 	public abstract int[] getSizer();
@@ -60,8 +58,8 @@ class UFBButton extends UnitFilterBox {
 	private final JTG[] proc = new JTG[Data.PROC_TOT];
 	private final JTG[] atkt = new JTG[ATKCONF.length];
 
-	protected UFBButton(Page p, String pack) {
-		super(p, pack);
+	protected UFBButton(Page p) {
+		super(p);
 
 		ini();
 		confirm();
@@ -85,61 +83,63 @@ class UFBButton extends UnitFilterBox {
 
 	private void confirm() {
 		List<Form> ans = new ArrayList<>();
-		for (Unit u : UserProfile.getAll(pac, Unit.class))
-			for (Form f : u.forms) {
-				MaskUnit du = f.maxu();
-				int t = du.getType();
-				int a = du.getAbi();
-				boolean b0 = rare[u.rarity].isSelected();
-				boolean b1 = !orop[0].isSelected();
-				for (int i = 0; i < trait.length; i++)
-					if (trait[i].isSelected())
-						if (orop[0].isSelected())
-							b1 |= ((t >> i) & 1) == 1;
-						else
-							b1 &= ((t >> i) & 1) == 1;
-				boolean b2 = !orop[1].isSelected();
-				for (int i = 0; i < abis.length; i++)
-					if (abis[i].isSelected()) {
-						boolean bind = ((a >> i) & 1) == 1;
-						if (orop[1].isSelected())
-							b2 |= bind;
-						else
-							b2 &= bind;
-					}
-				for (int i = 0; i < proc.length; i++)
-					if (proc[i].isSelected())
-						if (orop[1].isSelected())
-							b2 |= du.getAllProc().getArr(i).exists();
-						else
-							b2 &= du.getAllProc().getArr(i).exists();
-				boolean b3 = !orop[2].isSelected();
-				for (int i = 0; i < atkt.length; i++)
-					if (atkt[i].isSelected())
-						if (orop[2].isSelected())
-							b3 |= isType(du, i);
-						else
-							b3 &= isType(du, i);
-				boolean b4 = true;
+		for(PackData p : UserProfile.getAllPacks()) {
+			for (Unit u : p.units.getList())
+				for (Form f : u.forms) {
+					MaskUnit du = f.maxu();
+					int t = du.getType();
+					int a = du.getAbi();
+					boolean b0 = rare[u.rarity].isSelected();
+					boolean b1 = !orop[0].isSelected();
+					for (int i = 0; i < trait.length; i++)
+						if (trait[i].isSelected())
+							if (orop[0].isSelected())
+								b1 |= ((t >> i) & 1) == 1;
+							else
+								b1 &= ((t >> i) & 1) == 1;
+					boolean b2 = !orop[1].isSelected();
+					for (int i = 0; i < abis.length; i++)
+						if (abis[i].isSelected()) {
+							boolean bind = ((a >> i) & 1) == 1;
+							if (orop[1].isSelected())
+								b2 |= bind;
+							else
+								b2 &= bind;
+						}
+					for (int i = 0; i < proc.length; i++)
+						if (proc[i].isSelected())
+							if (orop[1].isSelected())
+								b2 |= du.getAllProc().getArr(i).exists();
+							else
+								b2 &= du.getAllProc().getArr(i).exists();
+					boolean b3 = !orop[2].isSelected();
+					for (int i = 0; i < atkt.length; i++)
+						if (atkt[i].isSelected())
+							if (orop[2].isSelected())
+								b3 |= isType(du, i);
+							else
+								b3 &= isType(du, i);
+					boolean b4 = true;
 
-				String fname = MultiLangCont.getStatic().FNAME.getCont(f);
+					String fname = MultiLangCont.getStatic().FNAME.getCont(f);
 
-				if (fname == null)
-					fname = f.name;
+					if (fname == null)
+						fname = f.name;
 
-				if (fname == null)
-					fname = "";
+					if (fname == null)
+						fname = "";
 
-				if (name != null)
-					b4 = fname.toLowerCase().contains(name.toLowerCase());
+					if (name != null)
+						b4 = fname.toLowerCase().contains(name.toLowerCase());
 
-				b0 = nonSele(rare) | b0;
-				b1 = nonSele(trait) | b1;
-				b2 = nonSele(abis) & nonSele(proc) | b2;
-				b3 = nonSele(atkt) | b3;
-				if (b0 & b1 & b2 & b3 & b4)
-					ans.add(f);
-			}
+					b0 = nonSele(rare) | b0;
+					b1 = nonSele(trait) | b1;
+					b2 = nonSele(abis) & nonSele(proc) | b2;
+					b3 = nonSele(atkt) | b3;
+					if (b0 & b1 & b2 & b3 & b4)
+						ans.add(f);
+				}
+		}
 		getFront().callBack(ans);
 	}
 
@@ -216,8 +216,8 @@ class UFBList extends UnitFilterBox {
 	private final JScrollPane jab = new JScrollPane(abis);
 	private final JScrollPane jat = new JScrollPane(atkt);
 
-	protected UFBList(Page p, String pack) {
-		super(p, pack);
+	protected UFBList(Page p) {
+		super(p);
 
 		ini();
 		confirm();
@@ -247,58 +247,60 @@ class UFBList extends UnitFilterBox {
 
 	private void confirm() {
 		List<Form> ans = new ArrayList<>();
-		for (Unit u : UserProfile.getAll(pac, Unit.class))
-			for (Form f : u.forms) {
-				MaskUnit du = f.maxu();
-				int t = du.getType();
-				int a = du.getAbi();
-				boolean b0 = rare.isSelectedIndex(u.rarity);
-				boolean b1 = !orop[0].isSelected();
-				for (int i : trait.getSelectedIndices())
-					if (orop[0].isSelected())
-						b1 |= ((t >> i) & 1) == 1;
-					else
-						b1 &= ((t >> i) & 1) == 1;
-				boolean b2 = !orop[1].isSelected();
-				int len = SABIS.length;
-				for (int i : abis.getSelectedIndices())
-					if (i < len) {
-						boolean bind = ((a >> i) & 1) == 1;
-						if (orop[1].isSelected())
-							b2 |= bind;
+		for(PackData p : UserProfile.getAllPacks()) {
+			for (Unit u : p.units.getList())
+				for (Form f : u.forms) {
+					MaskUnit du = f.maxu();
+					int t = du.getType();
+					int a = du.getAbi();
+					boolean b0 = rare.isSelectedIndex(u.rarity);
+					boolean b1 = !orop[0].isSelected();
+					for (int i : trait.getSelectedIndices())
+						if (orop[0].isSelected())
+							b1 |= ((t >> i) & 1) == 1;
 						else
-							b2 &= bind;
-					} else if (orop[1].isSelected())
-						b2 |= du.getAllProc().getArr(i - len).exists();
-					else
-						b2 &= du.getAllProc().getArr(i - len).exists();
-				boolean b3 = !orop[2].isSelected();
-				for (int i : atkt.getSelectedIndices())
-					if (orop[2].isSelected())
-						b3 |= isType(du, i);
-					else
-						b3 &= isType(du, i);
+							b1 &= ((t >> i) & 1) == 1;
+					boolean b2 = !orop[1].isSelected();
+					int len = SABIS.length;
+					for (int i : abis.getSelectedIndices())
+						if (i < len) {
+							boolean bind = ((a >> i) & 1) == 1;
+							if (orop[1].isSelected())
+								b2 |= bind;
+							else
+								b2 &= bind;
+						} else if (orop[1].isSelected())
+							b2 |= du.getAllProc().getArr(i - len).exists();
+						else
+							b2 &= du.getAllProc().getArr(i - len).exists();
+					boolean b3 = !orop[2].isSelected();
+					for (int i : atkt.getSelectedIndices())
+						if (orop[2].isSelected())
+							b3 |= isType(du, i);
+						else
+							b3 &= isType(du, i);
 
-				boolean b4 = true;
+					boolean b4 = true;
 
-				String fname = MultiLangCont.getStatic().FNAME.getCont(f);
+					String fname = MultiLangCont.getStatic().FNAME.getCont(f);
 
-				if (fname == null)
-					fname = f.name;
+					if (fname == null)
+						fname = f.name;
 
-				if (fname == null)
-					fname = "";
+					if (fname == null)
+						fname = "";
 
-				if (name != null)
-					b4 = fname.toLowerCase().contains(name.toLowerCase());
+					if (name != null)
+						b4 = fname.toLowerCase().contains(name.toLowerCase());
 
-				b0 = rare.getSelectedIndex() == -1 | b0;
-				b1 = trait.getSelectedIndex() == -1 | b1;
-				b2 = abis.getSelectedIndex() == -1 | b2;
-				b3 = atkt.getSelectedIndex() == -1 | b3;
-				if (b0 & b1 & b2 & b3 & b4)
-					ans.add(f);
-			}
+					b0 = rare.getSelectedIndex() == -1 | b0;
+					b1 = trait.getSelectedIndex() == -1 | b1;
+					b2 = abis.getSelectedIndex() == -1 | b2;
+					b3 = atkt.getSelectedIndex() == -1 | b3;
+					if (b0 & b1 & b2 & b3 & b4)
+						ans.add(f);
+				}
+		}
 		getFront().callBack(ans);
 	}
 

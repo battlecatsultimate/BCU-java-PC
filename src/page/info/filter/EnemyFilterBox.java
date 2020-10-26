@@ -1,5 +1,6 @@
 package page.info.filter;
 
+import common.pack.PackData;
 import common.pack.UserProfile;
 import common.util.Data;
 import common.util.lang.MultiLangCont;
@@ -26,21 +27,18 @@ public abstract class EnemyFilterBox extends Page {
 
 	private static final long serialVersionUID = 1L;
 
-	public static EnemyFilterBox getNew(Page p, String pack) {
+	public static EnemyFilterBox getNew(Page p) {
 		if (MainBCU.FILTER_TYPE == 0)
-			return new EFBButton(p, pack);
+			return new EFBButton(p);
 		if (MainBCU.FILTER_TYPE == 1)
-			return new EFBList(p, pack);
+			return new EFBList(p);
 		return null;
 	}
 
-	protected String pac;
-
 	protected String name = "";
 
-	protected EnemyFilterBox(Page p, String pack) {
+	protected EnemyFilterBox(Page p) {
 		super(p);
-		pac = pack;
 	}
 
 	protected abstract int[] getSizer();
@@ -58,8 +56,8 @@ class EFBButton extends EnemyFilterBox {
 	private final JTG[] proc = new JTG[Data.PROC_TOT];
 	private final JTG[] atkt = new JTG[ATKCONF.length];
 
-	protected EFBButton(Page p, String pack) {
-		super(p, pack);
+	protected EFBButton(Page p) {
+		super(p);
 
 		ini();
 		confirm();
@@ -83,64 +81,66 @@ class EFBButton extends EnemyFilterBox {
 
 	private void confirm() {
 		List<Enemy> ans = new ArrayList<>();
-		for (Enemy e : UserProfile.getAll(pac, Enemy.class)) {
-			int t = e.de.getType();
-			int a = e.de.getAbi();
-			boolean b0 = false;
-			for (int i = 0; i < rare.length; i++)
-				if (rare[i].isSelected())
-					b0 |= isER(e, i);
-			boolean b1 = !orop[0].isSelected();
-			for (int i = 0; i < trait.length; i++)
-				if (trait[i].isSelected())
-					if (orop[0].isSelected())
-						b1 |= ((t >> i) & 1) == 1;
-					else
-						b1 &= ((t >> i) & 1) == 1;
-			boolean b2 = !orop[1].isSelected();
-			for (int i = 0; i < abis.length; i++)
-				if (abis[i].isSelected()) {
-					boolean bind = ((a >> EABIIND[i]) & 1) == 1;
-					if (orop[1].isSelected())
-						b2 |= bind;
-					else
-						b2 &= bind;
+		for(PackData p : UserProfile.getAllPacks()) {
+			for (Enemy e : p.enemies.getList()) {
+				int t = e.de.getType();
+				int a = e.de.getAbi();
+				boolean b0 = false;
+				for (int i = 0; i < rare.length; i++)
+					if (rare[i].isSelected())
+						b0 |= isER(e, i);
+				boolean b1 = !orop[0].isSelected();
+				for (int i = 0; i < trait.length; i++)
+					if (trait[i].isSelected())
+						if (orop[0].isSelected())
+							b1 |= ((t >> i) & 1) == 1;
+						else
+							b1 &= ((t >> i) & 1) == 1;
+				boolean b2 = !orop[1].isSelected();
+				for (int i = 0; i < abis.length; i++)
+					if (abis[i].isSelected()) {
+						boolean bind = ((a >> EABIIND[i]) & 1) == 1;
+						if (orop[1].isSelected())
+							b2 |= bind;
+						else
+							b2 &= bind;
+					}
+				for (int i = 0; i < proc.length; i++)
+					if (proc[i].isSelected())
+						if (orop[1].isSelected())
+							b2 |= e.de.getAllProc().getArr(i).exists();
+						else
+							b2 &= e.de.getAllProc().getArr(i).exists();
+				boolean b3 = !orop[2].isSelected();
+				for (int i = 0; i < atkt.length; i++)
+					if (atkt[i].isSelected())
+						if (orop[2].isSelected())
+							b3 |= isType(e.de, i);
+						else
+							b3 &= isType(e.de, i);
+				boolean b4 = true;
+
+				String ename;
+
+				ename = MultiLangCont.getStatic().ENAME.getCont(e);
+
+				if (ename == null)
+					ename = e.name;
+
+				if (ename == null)
+					ename = "";
+
+				if (name != null) {
+					b4 = ename.toLowerCase().contains(name.toLowerCase());
 				}
-			for (int i = 0; i < proc.length; i++)
-				if (proc[i].isSelected())
-					if (orop[1].isSelected())
-						b2 |= e.de.getAllProc().getArr(i).exists();
-					else
-						b2 &= e.de.getAllProc().getArr(i).exists();
-			boolean b3 = !orop[2].isSelected();
-			for (int i = 0; i < atkt.length; i++)
-				if (atkt[i].isSelected())
-					if (orop[2].isSelected())
-						b3 |= isType(e.de, i);
-					else
-						b3 &= isType(e.de, i);
-			boolean b4 = true;
 
-			String ename;
-
-			ename = MultiLangCont.getStatic().ENAME.getCont(e);
-
-			if (ename == null)
-				ename = e.name;
-
-			if (ename == null)
-				ename = "";
-
-			if (name != null) {
-				b4 = ename.toLowerCase().contains(name.toLowerCase());
+				b0 = nonSele(rare) | b0;
+				b1 = nonSele(trait) | b1;
+				b2 = nonSele(abis) & nonSele(proc) | b2;
+				b3 = nonSele(atkt) | b3;
+				if (b0 & b1 & b2 & b3 & b4)
+					ans.add(e);
 			}
-
-			b0 = nonSele(rare) | b0;
-			b1 = nonSele(trait) | b1;
-			b2 = nonSele(abis) & nonSele(proc) | b2;
-			b3 = nonSele(atkt) | b3;
-			if (b0 & b1 & b2 & b3 & b4)
-				ans.add(e);
 		}
 		getFront().callBack(ans);
 	}
@@ -219,8 +219,8 @@ class EFBList extends EnemyFilterBox {
 	private final JScrollPane jab = new JScrollPane(abis);
 	private final JScrollPane jat = new JScrollPane(atkt);
 
-	protected EFBList(Page p, String pack) {
-		super(p, pack);
+	protected EFBList(Page p) {
+		super(p);
 
 		ini();
 		confirm();
@@ -250,58 +250,60 @@ class EFBList extends EnemyFilterBox {
 
 	private void confirm() {
 		List<Enemy> ans = new ArrayList<>();
-		for (Enemy e : UserProfile.getAll(pac, Enemy.class)) {
-			int t = e.de.getType();
-			int a = e.de.getAbi();
-			boolean b0 = isER(e, rare.getSelectedIndex());
-			boolean b1 = !orop[0].isSelected();
-			for (int i : trait.getSelectedIndices())
-				if (orop[0].isSelected())
-					b1 |= ((t >> i) & 1) == 1;
-				else
-					b1 &= ((t >> i) & 1) == 1;
-			boolean b2 = !orop[1].isSelected();
-			int len = EFILTER;
-			for (int i : abis.getSelectedIndices())
-				if (i < len) {
-					boolean bind = ((a >> EABIIND[i]) & 1) == 1;
-					if (orop[1].isSelected())
-						b2 |= bind;
+		for(PackData p : UserProfile.getAllPacks()) {
+			for (Enemy e : p.enemies.getList()) {
+				int t = e.de.getType();
+				int a = e.de.getAbi();
+				boolean b0 = isER(e, rare.getSelectedIndex());
+				boolean b1 = !orop[0].isSelected();
+				for (int i : trait.getSelectedIndices())
+					if (orop[0].isSelected())
+						b1 |= ((t >> i) & 1) == 1;
 					else
-						b2 &= bind;
-				} else if (orop[1].isSelected())
-					b2 |= e.de.getAllProc().getArr(i - len).exists();
-				else
-					b2 &= e.de.getAllProc().getArr(i - len).exists();
-			boolean b3 = !orop[2].isSelected();
-			for (int i : atkt.getSelectedIndices())
-				if (orop[2].isSelected())
-					b3 |= isType(e.de, i);
-				else
-					b3 &= isType(e.de, i);
+						b1 &= ((t >> i) & 1) == 1;
+				boolean b2 = !orop[1].isSelected();
+				int len = EFILTER;
+				for (int i : abis.getSelectedIndices())
+					if (i < len) {
+						boolean bind = ((a >> EABIIND[i]) & 1) == 1;
+						if (orop[1].isSelected())
+							b2 |= bind;
+						else
+							b2 &= bind;
+					} else if (orop[1].isSelected())
+						b2 |= e.de.getAllProc().getArr(i - len).exists();
+					else
+						b2 &= e.de.getAllProc().getArr(i - len).exists();
+				boolean b3 = !orop[2].isSelected();
+				for (int i : atkt.getSelectedIndices())
+					if (orop[2].isSelected())
+						b3 |= isType(e.de, i);
+					else
+						b3 &= isType(e.de, i);
 
-			boolean b4 = true;
+				boolean b4 = true;
 
-			String ename;
+				String ename;
 
-			ename = MultiLangCont.getStatic().ENAME.getCont(e);
+				ename = MultiLangCont.getStatic().ENAME.getCont(e);
 
-			if (ename == null)
-				ename = e.name;
+				if (ename == null)
+					ename = e.name;
 
-			if (ename == null)
-				ename = "";
+				if (ename == null)
+					ename = "";
 
-			if (name != null) {
-				b4 = ename.toLowerCase().contains(name.toLowerCase());
+				if (name != null) {
+					b4 = ename.toLowerCase().contains(name.toLowerCase());
+				}
+
+				b0 = rare.getSelectedIndex() == -1 | b0;
+				b1 = trait.getSelectedIndex() == -1 | b1;
+				b2 = abis.getSelectedIndex() == -1 | b2;
+				b3 = atkt.getSelectedIndex() == -1 | b3;
+				if (b0 & b1 & b2 & b3 & b4)
+					ans.add(e);
 			}
-
-			b0 = rare.getSelectedIndex() == -1 | b0;
-			b1 = trait.getSelectedIndex() == -1 | b1;
-			b2 = abis.getSelectedIndex() == -1 | b2;
-			b3 = atkt.getSelectedIndex() == -1 | b3;
-			if (b0 & b1 & b2 & b3 & b4)
-				ans.add(e);
 		}
 		getFront().callBack(ans);
 	}

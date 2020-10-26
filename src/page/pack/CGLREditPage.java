@@ -138,7 +138,7 @@ public class CGLREditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (ufp == null)
-					ufp = new UnitFindPage(getThis(), pack.desc.id);
+					ufp = new UnitFindPage(getThis());
 				changePanel(ufp);
 			}
 		});

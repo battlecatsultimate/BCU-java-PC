@@ -18,6 +18,7 @@ import page.support.AnimLCR;
 import page.support.ReorderList;
 import page.support.ReorderListener;
 import page.support.UnitLCR;
+import page.view.UnitViewPage;
 import utilpc.Interpret;
 
 import javax.swing.*;
@@ -425,6 +426,9 @@ public class UnitManagePage extends Page {
 
 		});
 
+		vuni.setLnr((e) -> {
+			changePanel(new UnitViewPage(this, pac.getSID()));
+		});
 	}
 
 	private void ini() {

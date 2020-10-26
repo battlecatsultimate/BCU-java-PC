@@ -1,5 +1,7 @@
 package page.view;
 
+import common.pack.Identifier;
+import common.pack.PackData;
 import common.pack.UserProfile;
 import common.system.Node;
 import common.util.unit.Form;
@@ -32,6 +34,21 @@ public class UnitViewPage extends AbViewPage {
 		super(p);
 		pac = pack;
 		jlu.setListData(new Vector<>(UserProfile.getPack(pack).units.getList()));
+		ini();
+		resized();
+	}
+
+	public UnitViewPage(Page p) {
+		super(p);
+		pac = null;
+		Vector<Unit> v = new Vector<>();
+
+		for(PackData pack : UserProfile.getAllPacks()) {
+			v.addAll(pack.units.getList());
+		}
+
+		jlu.setListData(v);
+
 		ini();
 		resized();
 	}
@@ -95,7 +112,14 @@ public class UnitViewPage extends AbViewPage {
 				Unit u = jlu.getSelectedValue();
 				if (u == null)
 					return;
-				Node<Unit> n = Node.getList(UserProfile.getAll(pac, Unit.class), u);
+				Node<Unit> n;
+
+				if(pac == null) {
+					n = Node.getList(UserProfile.getAll(u.id.pack, Unit.class), u);
+				} else {
+					n = Node.getList(UserProfile.getAll(pac, Unit.class), u);
+				}
+
 				changePanel(new UnitInfoPage(getThis(), n));
 			}
 

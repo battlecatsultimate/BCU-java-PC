@@ -152,14 +152,14 @@ public abstract class EntityEditPage extends Page {
 
 	public SupPage<AbEnemy> getEnemySup(IdEditor<AbEnemy> edi) {
 		editor = edi;
-		SupPage<AbEnemy> ans = new EnemyFindPage(this, pack);
+		SupPage<AbEnemy> ans = new EnemyFindPage(this);
 		sup = ans;
 		return ans; // FIXME
 	}
 
 	public SupPage<Unit> getUnitSup(IdEditor<Unit> edi) {
 		editor = edi;
-		SupPage<Unit> ans = new UnitFindPage(this, pack);
+		SupPage<Unit> ans = new UnitFindPage(this);
 		sup = ans;
 		return ans;
 	}
@@ -396,9 +396,9 @@ public abstract class EntityEditPage extends Page {
 	}
 
 	protected void subListener(JBTN e, JBTN u, JBTN a, Object o) {
-		e.setLnr(x -> changePanel(efp = new EnemyFindPage(getThis(), null)));
+		e.setLnr(x -> changePanel(efp = new EnemyFindPage(getThis())));
 
-		u.setLnr(x -> changePanel(ufp = new UnitFindPage(getThis(), null)));
+		u.setLnr(x -> changePanel(ufp = new UnitFindPage(getThis())));
 
 		a.setLnr(x -> {
 			if (editable)

@@ -23,10 +23,10 @@ public class EnemyFindPage extends Page implements SupPage<AbEnemy> {
 	private final JTF seatf = new JTF();
 	private final JBTN seabt = new JBTN(0, "search");
 
-	public EnemyFindPage(Page p, String pack) {
+	public EnemyFindPage(Page p) {
 		super(p);
 
-		efb = EnemyFilterBox.getNew(this, pack);
+		efb = EnemyFilterBox.getNew(this);
 		ini();
 		resized();
 	}

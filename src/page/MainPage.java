@@ -96,16 +96,16 @@ public class MainPage extends Page {
 	}
 
 	private void addListeners() {
-		vuni.setLnr(() -> new UnitViewPage(this, Identifier.DEF));
-		vene.setLnr(() -> new EnemyViewPage(this, Identifier.DEF));
+		vuni.setLnr(() -> new UnitViewPage(this));
+		vene.setLnr(() -> new EnemyViewPage(this));
 		vsta.setLnr(() -> new StageViewPage(this, MapColc.values()));
 		vdiy.setLnr(() -> new DIYViewPage(this));
 		conf.setLnr(() -> new ConfigPage(this));
 		veff.setLnr(() -> new EffectViewPage(this));
 		vcas.setLnr(() -> new CastleViewPage(this));
 		vbgr.setLnr(() -> new BGViewPage(this, null));
-		veif.setLnr(() -> new EnemyFindPage(this, null));
-		vuif.setLnr(() -> new UnitFindPage(this, null));
+		veif.setLnr(() -> new EnemyFindPage(this));
+		vuif.setLnr(() -> new UnitFindPage(this));
 		bass.setLnr(() -> new BasisPage(this));
 		curr.setLnr(() -> BattleInfoPage.current);
 		pcus.setLnr(() -> new PackEditPage(this));
