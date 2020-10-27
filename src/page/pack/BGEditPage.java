@@ -286,6 +286,9 @@ public class BGEditPage extends Page {
 		changing = true;
 		jlst.setListData(arr);
 		jlst.setSelectedIndex(ind);
+		if(bcgr == null && arr.length > 0) {
+			bgr = arr[0];
+		}
 		changing = boo;
 		setBG(bgr);
 	}

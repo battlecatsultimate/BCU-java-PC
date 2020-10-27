@@ -1,7 +1,7 @@
 <component name="ArtifactManager">
-  <artifact type="jar" name="BCU-java-PC:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/BCU_java_PC_jar</output-path>
-    <root id="archive" name="BCU-java-PC.jar">
+  <artifact type="jar" name="BCU-Installer:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/BCU_Installer_jar</output-path>
+    <root id="archive" name="BCU-Installer.jar">
       <element id="module-output" name="BCU-java-PC" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jogamp/gluegen/gluegen-rt/2.3.2/gluegen-rt-2.3.2-natives-solaris-amd64.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/jogamp/gluegen/gluegen-rt/2.3.2/gluegen-rt-2.3.2-natives-linux-amd64.jar" path-in-jar="/" />
