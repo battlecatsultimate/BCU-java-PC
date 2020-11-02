@@ -1,5 +1,8 @@
 package page.support;
 
+import common.pack.PackData;
+import common.pack.Source;
+import common.pack.UserProfile;
 import common.system.VImg;
 import common.util.unit.Form;
 import common.util.unit.Unit;
@@ -25,6 +28,13 @@ public class UnitLCR extends DefaultListCellRenderer {
 		jl.setText(o.toString());
 		jl.setIcon(null);
 		jl.setHorizontalTextPosition(SwingConstants.RIGHT);
+
+		if(form.anim == null) {
+			jl.setEnabled(false);
+			jl.setText(o.toString() + " (Error - Corrupted)");
+			return jl;
+		}
+
 		VImg v = form.anim.getEdi();
 		if (v == null)
 			return jl;

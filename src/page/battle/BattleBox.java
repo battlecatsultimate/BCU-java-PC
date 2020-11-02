@@ -25,6 +25,7 @@ import page.RetFunc;
 import utilpc.PP;
 
 import java.awt.*;
+import java.text.DecimalFormat;
 
 public interface BattleBox {
 
@@ -38,6 +39,7 @@ public interface BattleBox {
 		private static final int c0y = -130, c1y = -130, c2y = -258;
 		private static final int[] cany = new int[] { -134, -134, -134, -250, -250, -134, -134, -134 };
 		private static final int[] canx = new int[] { 0, 0, 0, 64, 64, 0, 0, 0 };
+		private static final DecimalFormat df = new DecimalFormat("00.00");
 
 		public static void drawNyCast(FakeGraphics gra, int y, int x, double siz, int[] inf) {
 			BCAuxAssets aux = CommonStatic.getBCAssets();
@@ -107,6 +109,9 @@ public interface BattleBox {
 			drawEntity(g);
 			drawBtm(g);
 			drawTop(g);
+			if(bf.sb.st.timeLimit != 0) {
+				drawTime(g);
+			}
 			sb = null;
 		}
 
@@ -353,6 +358,66 @@ public interface BattleBox {
 			bimg = aux.battle[2][page.getSpeed() > 0 ? 0 : 3].getImg();
 			for (int i = 0; i < Math.abs(page.getSpeed()); i++)
 				g.drawImage(bimg, w - cw * (i + 1 + n), ih);
+		}
+
+		private void drawTime(FakeGraphics g) {
+			P p = P.newP(box.getHeight() * 0.01, box.getHeight() * 0.01);
+			double ratio = box.getHeight() * 0.1 / aux.timer[0].getImg().getHeight();
+
+			double timeLeft = bf.sb.st.timeLimit * 60.0 - bf.sb.time / 30.0;
+
+			int min = (int) timeLeft / 60;
+
+			timeLeft -= min * 60.0;
+
+			FakeImage separator = aux.timer[10].getImg();
+			FakeImage zero = aux.timer[0].getImg();
+
+			if(timeLeft < 0) {
+				for(int i = 0; i < 3; i ++) {
+					g.drawImage(zero, p.x, p.y, zero.getWidth() * ratio, zero.getHeight() * ratio);
+					p.x += zero.getWidth() * ratio;
+					g.drawImage(zero, p.x, p.y, zero.getWidth() * ratio, zero.getHeight() * ratio);
+					p.x += zero.getWidth() * ratio;
+					if(i != 2) {
+						g.drawImage(separator, p.x, p.y, separator.getWidth() * ratio, separator.getHeight() * ratio);
+						p.x += separator.getWidth() * ratio;
+					}
+				}
+
+				return;
+			}
+
+			if(min < 10) {
+				FakeImage m = aux.timer[min].getImg();
+
+				g.drawImage(zero, p.x, p.y, zero.getWidth() * ratio, zero.getHeight() * ratio);
+				p.x += zero.getWidth() * ratio;
+
+				g.drawImage(m, p.x, p.y, m.getWidth()*ratio, m.getHeight()*ratio);
+				p.x += m.getWidth() * ratio;
+			}
+
+			g.drawImage(separator, p.x, p.y, separator.getWidth() * ratio, separator.getHeight() * ratio);
+			p.x += separator.getWidth() * ratio;
+
+			FakeImage m;
+
+			String time = df.format(timeLeft);
+
+			for(int i = 0; i < time.length(); i++) {
+				if((time.charAt(i)) == '.') {
+					g.drawImage(separator, p.x, p.y, separator.getWidth() * ratio, separator.getHeight() * ratio);
+					p.x += separator.getWidth() * ratio;
+				} else {
+					m = aux.timer[Character.getNumericValue(time.charAt(i))].getImg();
+
+					g.drawImage(m, p.x, p.y, m.getWidth()*ratio, m.getHeight()*ratio);
+					p.x += m.getWidth() * ratio;
+				}
+			}
+
+			P.delete(p);
 		}
 
 		private synchronized void press(Point p) {
