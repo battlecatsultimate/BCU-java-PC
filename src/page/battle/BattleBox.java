@@ -256,11 +256,11 @@ public interface BattleBox {
 			gra.setTransform(at);
 			posx -= castw * siz / 2;
 			posy -= casth * siz;
-			Res.getBase(sb.ebase, new SymCoord(gra, siz, posx, posy, 0));
+			Res.getBase(sb.ebase, new SymCoord(gra, siz, posx, posy, 0), bf.sb.st.trail);
 			posx = (int) (((sb.st.len - 800) * ratio + off) * siz + pos);
 			drawNyCast(gra, (int) (midh - road_h * siz), posx, siz, sb.nyc);
 			posx += castw * siz / 2;
-			Res.getBase(sb.ubase, new SymCoord(gra, siz, posx, posy, 1));
+			Res.getBase(sb.ubase, new SymCoord(gra, siz, posx, posy, 1), false);
 		}
 
 		private void drawEntity(FakeGraphics gra) {
