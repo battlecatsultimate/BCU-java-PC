@@ -154,8 +154,14 @@ class StageEditTable extends AbJTable implements Reorderable {
 			if (data.length == 0) {
 				return;
 			} else if (data.length == 1) {
+				if(data[0] == 0)
+					return;
+
 				set(r, c, data[0], -1);
 			} else {
+				if(data[0] == 0)
+					return;
+
 				set(r, c, data[0], data[1]);
 			}
 		} else {
