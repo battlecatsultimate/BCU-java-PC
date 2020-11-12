@@ -238,7 +238,7 @@ public class UtilPC {
 		}
 		for (int i = 0; i * fw < w; i++)
 			fg.drawImage(bg.parts[Background.BG], fw * i, fh, fw, fh);
-		fg.gradRect(0, fh * 2, w, h - fh * 2, 0, fh * 2, bg.cs[2], 0, fh * 3, bg.cs[3]);
+		fg.gradRect(0, fh * 2, w, h - fh * 2, 0, fh * 2, bg.cs[2], 0, h, bg.cs[3]);
 		g.dispose();
 		return new ImageIcon(temp);
 	}
