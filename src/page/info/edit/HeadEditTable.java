@@ -68,7 +68,7 @@ class HeadEditTable extends Page {
 	@Override
 	protected void renew() {
 		lt.renew();
-		if (bvp != null) {
+		if (bvp != null && bvp.getSelected() != null) {
 			Identifier<Background> val = bvp.getSelected().id;
 			if (val == null)
 				return;
