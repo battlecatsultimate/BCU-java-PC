@@ -11,22 +11,18 @@ import io.BCUWriter;
 import main.Timer;
 import page.JBTN;
 import page.JTG;
+import page.MainLocale;
 import page.Page;
 import page.anim.ImgCutEditPage;
 import page.awt.BBBuilder;
 import page.view.ViewBox.Loader;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.io.File;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -45,6 +41,7 @@ public abstract class AbViewPage extends Page {
 	private final JBTN nex = new JBTN(0, "nextf");
 	private final JTG gif = new JTG(0, "gif");
 	private final JBTN png = new JBTN(0, "png");
+	private final JLabel scale = new JLabel(MainLocale.getLoc(0, "zoom"));
 
 	protected final ViewBox vb;
 
@@ -52,6 +49,7 @@ public abstract class AbViewPage extends Page {
 	protected boolean pause;
 	private boolean changingT;
 	private boolean changingtl;
+	private final DecimalFormat df = new DecimalFormat("#.##");
 
 	protected AbViewPage(Page p) {
 		this(p, BBBuilder.def.getViewBox());
@@ -117,6 +115,7 @@ public abstract class AbViewPage extends Page {
 		add(nex);
 		add(gif);
 		add(png);
+		add(scale);
 		jst.setPaintLabels(true);
 		jst.setPaintTicks(true);
 		jst.setMajorTickSpacing(100);
@@ -142,6 +141,7 @@ public abstract class AbViewPage extends Page {
 		set(nex, x, y, 1600, 1050, 200, 50);
 		set(png, x, y, 1300, 1150, 200, 50);
 		set(gif, x, y, 1600, 1150, 400, 50);
+		set(scale, x, y, 1000, 50, 200, 50);
 	}
 
 	protected <T extends Enum<T> & AnimI.AnimType<?, T>> void setAnim(AnimI<?, T> a) {
@@ -191,96 +191,65 @@ public abstract class AbViewPage extends Page {
 			gif.setText(loader.getProg());
 		if (!gif.isSelected() && gif.isEnabled())
 			loader = null;
+		scale.setText(MainLocale.getLoc(0, "zoom").replace("-", df.format(vb.getCtrl().siz * 100.0)));
 	}
 
 	protected abstract void updateChoice();
 
 	private void addListener() {
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
+		back.addActionListener(arg0 -> changePanel(getFront()));
+
+		copy.addActionListener(arg0 -> {
+			EAnimI ei = vb.getEnt();
+			if (ei == null || !(ei.anim() instanceof AnimD))
+				return;
+			AnimD<?, ?> eau = (AnimD<?, ?>) ei.anim();
+			ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, "new anim");
+			Workspace.validate(Source.ANIM, rl);
+			new AnimCE(rl, eau);
+			changePanel(new ImgCutEditPage(getThis()));
 		});
 
-		copy.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				EAnimI ei = vb.getEnt();
-				if (ei == null || !(ei.anim() instanceof AnimD))
-					return;
-				AnimD<?, ?> eau = (AnimD<?, ?>) ei.anim();
-				ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, "new anim");
-				Workspace.validate(Source.ANIM, rl);
-				new AnimCE(rl, eau);
-				changePanel(new ImgCutEditPage(getThis()));
-			}
+		jlt.addListSelectionListener(arg0 -> {
+			if (arg0.getValueIsAdjusting())
+				return;
+			changingT = true;
+			updateChoice();
+			changingT = false;
 		});
 
-		jlt.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (arg0.getValueIsAdjusting())
-					return;
-				changingT = true;
-				updateChoice();
-				changingT = false;
-			}
+		jst.addChangeListener(arg0 -> {
+			if (jst.getValueIsAdjusting())
+				return;
+			Timer.p = jst.getValue() * 33 / 100;
+		});
+
+		jtl.addChangeListener(arg0 -> {
+			if (changingtl || !pause)
+				return;
+			if (vb.getEnt() != null)
+				vb.getEnt().setTime(jtl.getValue());
 
 		});
 
-		jst.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				if (jst.getValueIsAdjusting())
-					return;
-				Timer.p = jst.getValue() * 33 / 100;
-			}
+		jtb.addActionListener(arg0 -> {
+			pause = jtb.isSelected();
+			enabler(true);
 		});
 
-		jtl.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				if (changingtl || !pause)
-					return;
-				if (vb.getEnt() != null)
-					vb.getEnt().setTime(jtl.getValue());
+		nex.addActionListener(arg0 -> eupdate());
 
-			}
+		png.addActionListener(arg0 -> {
+			String str = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+			File f = new File("./img/" + str + ".png");
+			BCUWriter.writeImage(vb.getPrev(), f);
 		});
 
-		jtb.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				pause = jtb.isSelected();
-				enabler(true);
-			}
-		});
-
-		nex.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				eupdate();
-			}
-		});
-
-		png.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				String str = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-				File f = new File("./img/" + str + ".png");
-				BCUWriter.writeImage(vb.getPrev(), f);
-			}
-		});
-
-		gif.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (gif.isSelected())
-					loader = vb.start();
-				else
-					vb.end(gif);
-			}
+		gif.addActionListener(arg0 -> {
+			if (gif.isSelected())
+				loader = vb.start();
+			else
+				vb.end(gif);
 		});
 
 	}

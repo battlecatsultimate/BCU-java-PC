@@ -15,13 +15,10 @@ import utilpc.Interpret;
 import utilpc.UtilPC;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class LevelEditPage extends Page {
@@ -47,8 +44,8 @@ public class LevelEditPage extends Page {
 	private final JComboBox<String> trait = new JComboBox<>();
 	private final JComboBox<String> grade = new JComboBox<>();
 
-	private List<Integer> traitData = new ArrayList<Integer>();
-	private List<Integer> gradeData = new ArrayList<Integer>();
+	private List<Integer> traitData = new ArrayList<>();
+	private List<Integer> gradeData = new ArrayList<>();
 
 	private boolean updating = false;
 
@@ -66,9 +63,7 @@ public class LevelEditPage extends Page {
 					}
 				}
 			} else {
-				for (int i = 0; i < lv.getOrbs().length; i++) {
-					orbs.add(lv.getOrbs()[i]);
-				}
+				orbs.addAll(Arrays.asList(lv.getOrbs()));
 			}
 		}
 
@@ -99,9 +94,7 @@ public class LevelEditPage extends Page {
 	}
 
 	private void addListeners() {
-		bck.setLnr(x -> {
-			changePanel(getFront());
-		});
+		bck.setLnr(x -> changePanel(getFront()));
 
 		levels.addFocusListener(new FocusAdapter() {
 			@Override
@@ -112,28 +105,23 @@ public class LevelEditPage extends Page {
 			}
 		});
 
-		orbList.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (updating) {
-					return;
-				}
-
-				rem.setEnabled(valid());
-				type.setEnabled(valid());
-				trait.setEnabled(valid());
-				grade.setEnabled(valid());
-
-				if (orbList.getSelectedIndex() != -1) {
-					orbb.changeOrb(orbs.get(orbList.getSelectedIndex()));
-
-					initializeDrops(orbs.get(orbList.getSelectedIndex()));
-				} else {
-					orbb.changeOrb(new int[] {});
-				}
+		orbList.addListSelectionListener(e -> {
+			if (updating) {
+				return;
 			}
 
+			rem.setEnabled(valid());
+			type.setEnabled(valid());
+			trait.setEnabled(valid());
+			grade.setEnabled(valid());
+
+			if (orbList.getSelectedIndex() != -1) {
+				orbb.changeOrb(orbs.get(orbList.getSelectedIndex()));
+
+				initializeDrops(orbs.get(orbList.getSelectedIndex()));
+			} else {
+				orbb.changeOrb(new int[] {});
+			}
 		});
 
 		rem.setLnr(x -> {
@@ -158,87 +146,75 @@ public class LevelEditPage extends Page {
 			setLvOrb(lv.getLvs(), generateOrb());
 		});
 
-		type.addActionListener(new ActionListener() {
+		type.addActionListener(arg0 -> {
+			if (updating) {
+				return;
+			}
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (updating) {
-					return;
-				}
+			if (orbList.getSelectedIndex() != -1 && orbList.getSelectedIndex() < orbs.size()) {
+				int[] data = orbs.get(orbList.getSelectedIndex());
 
-				if (orbList.getSelectedIndex() != -1 && orbList.getSelectedIndex() < orbs.size()) {
-					int[] data = orbs.get(orbList.getSelectedIndex());
-
-					if (f.orbs != null && f.orbs.getSlots() != -1) {
-						if (type.getSelectedIndex() == 0) {
-							data = new int[] {};
-						} else {
-							if (data.length == 0) {
-								data = new int[] { 0, 0, 0 };
-							}
-
-							data[0] = type.getSelectedIndex() - 1;
-						}
+				if (f.orbs != null && f.orbs.getSlots() != -1) {
+					if (type.getSelectedIndex() == 0) {
+						data = new int[] {};
 					} else {
-						data[0] = type.getSelectedIndex();
+						if (data.length == 0) {
+							data = new int[] { 0, 0, 0 };
+						}
+
+						data[0] = type.getSelectedIndex() - 1;
 					}
-
-					orbs.set(orbList.getSelectedIndex(), data);
-
-					initializeDrops(data);
-
-					orbb.changeOrb(data);
-
-					setLvOrb(lv.getLvs(), generateOrb());
+				} else {
+					data[0] = type.getSelectedIndex();
 				}
+
+				orbs.set(orbList.getSelectedIndex(), data);
+
+				initializeDrops(data);
+
+				orbb.changeOrb(data);
+
+				setLvOrb(lv.getLvs(), generateOrb());
 			}
 		});
 
-		trait.addActionListener(new ActionListener() {
+		trait.addActionListener(arg0 -> {
+			if (updating) {
+				return;
+			}
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (updating) {
-					return;
-				}
+			if (orbList.getSelectedIndex() != -1 && orbList.getSelectedIndex() < orbs.size()) {
+				int[] data = orbs.get(orbList.getSelectedIndex());
 
-				if (orbList.getSelectedIndex() != -1 && orbList.getSelectedIndex() < orbs.size()) {
-					int[] data = orbs.get(orbList.getSelectedIndex());
+				data[1] = traitData.get(trait.getSelectedIndex());
 
-					data[1] = traitData.get(trait.getSelectedIndex());
+				orbs.set(orbList.getSelectedIndex(), data);
 
-					orbs.set(orbList.getSelectedIndex(), data);
+				initializeDrops(data);
 
-					initializeDrops(data);
+				orbb.changeOrb(data);
 
-					orbb.changeOrb(data);
-
-					setLvOrb(lv.getLvs(), generateOrb());
-				}
+				setLvOrb(lv.getLvs(), generateOrb());
 			}
 		});
 
-		grade.addActionListener(new ActionListener() {
+		grade.addActionListener(arg0 -> {
+			if (updating) {
+				return;
+			}
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (updating) {
-					return;
-				}
+			if (orbList.getSelectedIndex() != -1 && orbList.getSelectedIndex() < orbs.size()) {
+				int[] data = orbs.get(orbList.getSelectedIndex());
 
-				if (orbList.getSelectedIndex() != -1 && orbList.getSelectedIndex() < orbs.size()) {
-					int[] data = orbs.get(orbList.getSelectedIndex());
+				data[2] = gradeData.get(grade.getSelectedIndex());
 
-					data[2] = gradeData.get(grade.getSelectedIndex());
+				orbs.set(orbList.getSelectedIndex(), data);
 
-					orbs.set(orbList.getSelectedIndex(), data);
+				initializeDrops(data);
 
-					initializeDrops(data);
+				orbb.changeOrb(data);
 
-					orbb.changeOrb(data);
-
-					setLvOrb(lv.getLvs(), generateOrb());
-				}
+				setLvOrb(lv.getLvs(), generateOrb());
 			}
 		});
 
@@ -311,18 +287,18 @@ public class LevelEditPage extends Page {
 	}
 
 	private String getTrait(int trait) {
-		String res = "";
+		StringBuilder res = new StringBuilder();
 
 		for (int i = 0; i < Interpret.TRAIT.length; i++) {
 			if (((trait >> i) & 1) > 0) {
-				res += Interpret.TRAIT[i] + "/ ";
+				res.append(Interpret.TRAIT[i]).append("/ ");
 			}
 		}
 
-		if (res.endsWith("/ "))
-			res = res.substring(0, res.length() - 2);
+		if (res.toString().endsWith("/ "))
+			res = new StringBuilder(res.substring(0, res.length() - 2));
 
-		return res;
+		return res.toString();
 	}
 
 	private String getType(int type) {
@@ -386,7 +362,7 @@ public class LevelEditPage extends Page {
 		}
 
 		if (f.orbs.getSlots() != -1 && data.length == 0) {
-			type.setModel(new DefaultComboBoxModel<String>(types));
+			type.setModel(new DefaultComboBoxModel<>(types));
 
 			type.setSelectedIndex(0);
 
@@ -433,9 +409,6 @@ public class LevelEditPage extends Page {
 				grades[i] = getGrade(gradeData.get(i));
 			}
 
-			if (!gradeData.contains(data[2])) {
-				data[2] = gradeData.get(2);
-			}
 		} else {
 			traitData = new ArrayList<>(CommonStatic.getBCAssets().RESORB.keySet());
 
@@ -456,15 +429,15 @@ public class LevelEditPage extends Page {
 			for (int i = 0; i < grades.length; i++) {
 				grades[i] = getGrade(gradeData.get(i));
 			}
-
-			if (!gradeData.contains(data[2])) {
-				data[2] = gradeData.get(2);
-			}
 		}
 
-		type.setModel(new DefaultComboBoxModel<String>(types));
-		trait.setModel(new DefaultComboBoxModel<String>(traits));
-		grade.setModel(new DefaultComboBoxModel<String>(grades));
+		if (!gradeData.contains(data[2])) {
+			data[2] = gradeData.get(2);
+		}
+
+		type.setModel(new DefaultComboBoxModel<>(types));
+		trait.setModel(new DefaultComboBoxModel<>(traits));
+		grade.setModel(new DefaultComboBoxModel<>(grades));
 
 		if (f.orbs.getSlots() != -1) {
 			type.setSelectedIndex(data[0] + 1);
