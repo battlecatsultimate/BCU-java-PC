@@ -19,6 +19,7 @@ class SpriteBox extends Canvas {
 	private boolean ctrl, drag;
 	private final Page page;
 	protected int sele = -1;
+	protected boolean white = true;
 
 	protected SpriteBox(Page p) {
 		page = p;
@@ -58,6 +59,12 @@ class SpriteBox extends Canvas {
 			double r = Math.min(1.0 * w / aw, 1.0 * h / ah);
 			int rw = (int) (r * aw);
 			int rh = (int) (r * ah);
+
+			int bw = rw % 20 != 0 ? 20 * (1 + rw / 20) : rw;
+			int bh = rh % 20 != 0 ? 20 * (1 + rh / 20) : rh;
+
+			gra.setColor(white ? Color.WHITE : new Color(64, 64, 64));
+			gra.fillRect(0, 0, bw, bh);
 
 			gra.setColor(Color.LIGHT_GRAY);
 			for (int i = 0; i < rw; i += 20)
@@ -131,6 +138,10 @@ class SpriteBox extends Canvas {
 			sele = findSprite(c = p);
 			page.callBack(null);
 		}
+	}
+
+	protected boolean isAnimValid() {
+		return anim != null;
 	}
 
 	private int findSprite(Point p) {

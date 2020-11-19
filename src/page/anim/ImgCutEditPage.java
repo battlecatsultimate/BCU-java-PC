@@ -16,6 +16,7 @@ import main.MainBCU;
 import main.Opts;
 import page.JBTN;
 import page.JTF;
+import page.MainLocale;
 import page.Page;
 import page.support.AnimLCR;
 import page.support.Exporter;
@@ -54,6 +55,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	private final JBTN loca = new JBTN(0, "localize");
 	private final JBTN merg = new JBTN(0, "merge");
 	private final JBTN spri = new JBTN(0, "sprite");
+	private final JBTN white = new JBTN(0, "whiteBG");
 	private final JLabel icon = new JLabel();
 	private final JList<AnimCE> jlu = new JList<>();
 	private final JScrollPane jspu = new JScrollPane(jlu);
@@ -187,6 +189,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		set(save, x, y, 1400, 1150, 200, 50);
 		set(ico, x, y, 1650, 1050, 200, 50);
 		set(icon, x, y, 1650, 1100, 400, 100);
+		set(white, x, y, 2100, 1050, 200, 50);
 		aep.componentResized(x, y);
 		icet.setRowHeight(size(x, y, 50));
 		sb.paint(sb.getGraphics());
@@ -383,6 +386,14 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 		});
 
+		white.setLnr(e -> {
+			if(!sb.isAnimValid())
+				return;
+
+			white.setText(MainLocale.getLoc(0, sb.white ? "blackBG" : "whiteBG"));
+
+			sb.white = !sb.white;
+		});
 	}
 
 	private void addListeners$1() {
@@ -588,6 +599,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		add(ico);
 		add(merg);
 		add(spri);
+		add(white);
 		add.setEnabled(aep.focus == null);
 		jtf.setEnabled(aep.focus == null);
 		relo.setEnabled(aep.focus == null);
