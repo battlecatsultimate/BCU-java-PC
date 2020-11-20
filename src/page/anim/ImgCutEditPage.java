@@ -27,8 +27,6 @@ import utilpc.ReColor;
 import utilpc.UtilPC;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -104,7 +102,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			icet.scrollRectToVisible(new Rectangle(0, h * sb.sele, 1, h));
 		} else
 			icet.clearSelection();
-		setB(sb.sele);
+		setB();
 		changing = false;
 	}
 
@@ -153,6 +151,12 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	}
 
 	@Override
+	protected void mouseWheel(MouseEvent e) {
+		if(e.getSource() == sb)
+			sb.mouseWheel(e);
+	}
+
+	@Override
 	protected void renew() {
 		if (sep != null && Opts.conf("Do you want to save edited sprite?")) {
 			icet.anim.setNum(MainBCU.builder.build(sep.getEdit()));
@@ -197,71 +201,44 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 	private void addListeners$0() {
 
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
+		back.addActionListener(arg0 -> changePanel(getFront()));
+
+		add.addActionListener(arg0 -> {
+			BufferedImage bimg = new Importer("Add your sprite").getImg();
+			if (bimg == null)
+				return;
+			changing = true;
+			ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, "new anim");
+			Workspace.validate(Source.ANIM, rl);
+			AnimCE ac = new AnimCE(rl);
+			ac.setNum(MainBCU.builder.build(bimg));
+			ac.saveImg();
+			ac.createNew();
+			Vector<AnimCE> v = new Vector<>(AnimCE.map().values());
+			jlu.setListData(v);
+			jlu.setSelectedValue(ac, true);
+			setA(ac);
+			changing = false;
 		});
 
-		add.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				BufferedImage bimg = new Importer("Add your sprite").getImg();
-				if (bimg == null)
-					return;
-				changing = true;
-				ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, "new anim");
-				Workspace.validate(Source.ANIM, rl);
-				AnimCE ac = new AnimCE(rl);
+		impt.addActionListener(arg0 -> {
+			BufferedImage bimg = new Importer("Update your sprite").getImg();
+			if (bimg != null) {
+				AnimCE ac = icet.anim;
 				ac.setNum(MainBCU.builder.build(bimg));
 				ac.saveImg();
-				ac.createNew();
-				Vector<AnimCE> v = new Vector<>(AnimCE.map().values());
-				jlu.setListData(v);
-				jlu.setSelectedValue(ac, true);
-				setA(ac);
-				changing = false;
+				ac.reloImg();
 			}
-
 		});
 
-		impt.addActionListener(new ActionListener() {
+		expt.addActionListener(arg0 -> new Exporter((BufferedImage) icet.anim.getNum().bimg(), Exporter.EXP_IMG));
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				BufferedImage bimg = new Importer("Update your sprite").getImg();
-				if (bimg != null) {
-					AnimCE ac = icet.anim;
-					ac.setNum(MainBCU.builder.build(bimg));
-					ac.saveImg();
-					ac.reloImg();
-				}
-			}
-
-		});
-
-		expt.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				new Exporter((BufferedImage) icet.anim.getNum().bimg(), Exporter.EXP_IMG);
-			}
-
-		});
-
-		jlu.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (changing || jlu.getValueIsAdjusting())
-					return;
-				changing = true;
-				setA(jlu.getSelectedValue());
-				changing = false;
-
-			}
+		jlu.addListSelectionListener(arg0 -> {
+			if (changing || jlu.getValueIsAdjusting())
+				return;
+			changing = true;
+			setA(jlu.getSelectedValue());
+			changing = false;
 
 		});
 
@@ -295,23 +272,18 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			}
 		});
 
-		copy.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, icet.anim.id.id);
-				Workspace.validate(Source.ANIM, rl);
-				AnimCE ac = new AnimCE(rl, icet.anim);
-				ac.setEdi(icet.anim.getEdi());
-				ac.setUni(icet.anim.getUni());
-				Vector<AnimCE> v = new Vector<>(AnimCE.map().values());
-				jlu.setListData(v);
-				jlu.setSelectedValue(ac, true);
-				setA(ac);
-				changing = false;
-			}
-
+		copy.addActionListener(arg0 -> {
+			changing = true;
+			ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, icet.anim.id.id);
+			Workspace.validate(Source.ANIM, rl);
+			AnimCE ac = new AnimCE(rl, icet.anim);
+			ac.setEdi(icet.anim.getEdi());
+			ac.setUni(icet.anim.getUni());
+			Vector<AnimCE> v = new Vector<>(AnimCE.map().values());
+			jlu.setListData(v);
+			jlu.setSelectedValue(ac, true);
+			setA(ac);
+			changing = false;
 		});
 
 		rem.setLnr(x -> {
@@ -350,40 +322,23 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 		);
 
-		relo.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (icet.anim == null)
-					return;
-				icet.anim.reloImg();
-				icet.anim.ICedited();
-			}
-
+		relo.addActionListener(arg0 -> {
+			if (icet.anim == null)
+				return;
+			icet.anim.reloImg();
+			icet.anim.ICedited();
 		});
 
-		save.addActionListener(new ActionListener() {
+		save.addActionListener(arg0 -> icet.anim.saveImg());
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				icet.anim.saveImg();
-			}
-
-		});
-
-		ico.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				BufferedImage bimg = new Importer("select enemy icon").getImg();
-				if (bimg == null)
-					return;
-				icet.anim.setEdi(MainBCU.builder.toVImg(bimg));
-				icet.anim.saveIcon();
-				if (icet.anim.getEdi() != null)
-					icon.setIcon(UtilPC.getIcon(icet.anim.getEdi()));
-			}
-
+		ico.addActionListener(arg0 -> {
+			BufferedImage bimg = new Importer("select enemy icon").getImg();
+			if (bimg == null)
+				return;
+			icet.anim.setEdi(MainBCU.builder.toVImg(bimg));
+			icet.anim.saveIcon();
+			if (icet.anim.getEdi() != null)
+				icon.setIcon(UtilPC.getIcon(icet.anim.getEdi()));
 		});
 
 		white.setLnr(e -> {
@@ -400,125 +355,95 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 		ListSelectionModel lsm = icet.getSelectionModel();
 
-		lsm.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (changing || lsm.getValueIsAdjusting())
-					return;
-				changing = true;
-				setB(lsm.getLeadSelectionIndex());
-				changing = false;
-			}
-
+		lsm.addListSelectionListener(arg0 -> {
+			if (changing || lsm.getValueIsAdjusting())
+				return;
+			changing = true;
+			setB();
+			changing = false;
 		});
 
-		addl.addActionListener(new ActionListener() {
+		addl.addActionListener(arg0 -> {
+			changing = true;
+			ImgCut ic = icet.ic;
+			int[][] data = ic.cuts;
+			String[] name = ic.strs;
+			ic.cuts = new int[++ic.n][];
+			ic.strs = new String[ic.n];
+			for (int i = 0; i < data.length; i++) {
+				ic.cuts[i] = data[i];
+				ic.strs[i] = name[i];
+			}
+			int ind = icet.getSelectedRow();
+			if (ind >= 0)
+				ic.cuts[ic.n - 1] = ic.cuts[ind].clone();
+			else
+				ic.cuts[ic.n - 1] = new int[] { 0, 0, 1, 1 };
+			ic.strs[ic.n - 1] = "";
+			icet.anim.unSave("imgcut add line");
+			resized();
+			lsm.setSelectionInterval(ic.n - 1, ic.n - 1);
+			int h = icet.getRowHeight();
+			icet.scrollRectToVisible(new Rectangle(0, h * (ic.n - 1), 1, h));
+			setB();
+			changing = false;
+		});
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
+		reml.addActionListener(arg0 -> {
+			changing = true;
+			ImgCut ic = icet.ic;
+			int ind = sb.sele;
+			int[][] data = ic.cuts;
+			String[] name = ic.strs;
+			ic.cuts = new int[--ic.n][];
+			ic.strs = new String[ic.n];
+			for (int i = 0; i < ind; i++) {
+				ic.cuts[i] = data[i];
+				ic.strs[i] = name[i];
+			}
+			for (int i = ind + 1; i < data.length; i++) {
+				ic.cuts[i - 1] = data[i];
+				ic.strs[i - 1] = name[i];
+			}
+			for (int[] ints : icet.anim.mamodel.parts)
+				if (ints[2] > ind)
+					ints[2]--;
+			for (MaAnim ma : icet.anim.anims)
+				for (Part part : ma.parts)
+					if (part.ints[1] == 2)
+						for (int[] ints : part.moves)
+							if (ints[1] > ind)
+								ints[1]--;
+			icet.anim.ICedited();
+			icet.anim.unSave("imgcut remove line");
+			if (ind >= ic.n)
+				ind--;
+			lsm.setSelectionInterval(ind, ind);
+			setB();
+			changing = false;
+		});
+
+		swcl.addActionListener(arg0 -> {
+			int ind = sb.sele;
+			int[] data = null;
+			if (ind >= 0) {
 				ImgCut ic = icet.ic;
-				int[][] data = ic.cuts;
-				String[] name = ic.strs;
-				ic.cuts = new int[++ic.n][];
-				ic.strs = new String[ic.n];
-				for (int i = 0; i < data.length; i++) {
-					ic.cuts[i] = data[i];
-					ic.strs[i] = name[i];
-				}
-				int ind = icet.getSelectedRow();
-				if (ind >= 0)
-					ic.cuts[ic.n - 1] = ic.cuts[ind].clone();
-				else
-					ic.cuts[ic.n - 1] = new int[] { 0, 0, 1, 1 };
-				ic.strs[ic.n - 1] = "";
-				icet.anim.unSave("imgcut add line");
-				resized();
-				lsm.setSelectionInterval(ic.n - 1, ic.n - 1);
-				int h = icet.getRowHeight();
-				icet.scrollRectToVisible(new Rectangle(0, h * (ic.n - 1), 1, h));
-				setB(ic.n - 1);
-				changing = false;
+				data = ic.cuts[ind];
 			}
-
+			ReColor.transcolor((BufferedImage) icet.anim.getNum().bimg(), data, jlf.getSelectedIndex(),
+					jlt.getSelectedIndex());
+			icet.anim.getNum().mark(Marker.RECOLORED);
+			icet.anim.ICedited();
 		});
 
-		reml.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				ImgCut ic = icet.ic;
-				int ind = sb.sele;
-				int[][] data = ic.cuts;
-				String[] name = ic.strs;
-				ic.cuts = new int[--ic.n][];
-				ic.strs = new String[ic.n];
-				for (int i = 0; i < ind; i++) {
-					ic.cuts[i] = data[i];
-					ic.strs[i] = name[i];
-				}
-				for (int i = ind + 1; i < data.length; i++) {
-					ic.cuts[i - 1] = data[i];
-					ic.strs[i - 1] = name[i];
-				}
-				for (int[] ints : icet.anim.mamodel.parts)
-					if (ints[2] > ind)
-						ints[2]--;
-				for (MaAnim ma : icet.anim.anims)
-					for (Part part : ma.parts)
-						if (part.ints[1] == 2)
-							for (int[] ints : part.moves)
-								if (ints[1] > ind)
-									ints[1]--;
-				icet.anim.ICedited();
-				icet.anim.unSave("imgcut remove line");
-				if (ind >= ic.n)
-					ind--;
-				lsm.setSelectionInterval(ind, ind);
-				setB(ind);
-				changing = false;
-			}
-
+		jlf.addListSelectionListener(arg0 -> {
+			if (jlf.getSelectedIndex() == -1)
+				jlf.setSelectedIndex(0);
 		});
 
-		swcl.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				int ind = sb.sele;
-				int[] data = null;
-				if (ind >= 0) {
-					ImgCut ic = icet.ic;
-					data = ic.cuts[ind];
-				}
-				ReColor.transcolor((BufferedImage) icet.anim.getNum().bimg(), data, jlf.getSelectedIndex(),
-						jlt.getSelectedIndex());
-				icet.anim.getNum().mark(Marker.RECOLORED);
-				icet.anim.ICedited();
-			}
-
-		});
-
-		jlf.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (jlf.getSelectedIndex() == -1)
-					jlf.setSelectedIndex(0);
-			}
-
-		});
-
-		jlt.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (jlt.getSelectedIndex() == -1)
-					jlt.setSelectedIndex(0);
-			}
-
+		jlt.addListSelectionListener(arg0 -> {
+			if (jlt.getSelectedIndex() == -1)
+				jlt.setSelectedIndex(0);
 		});
 
 		resz.setLnr(x -> {
@@ -531,43 +456,38 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			resz.setText("resize to: _%");
 		});
 
-		merg.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				changing = true;
-				ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, "merged");
-				Workspace.validate(Source.ANIM, rl);
-				AnimCE[] list = jlu.getSelectedValuesList().toArray(new AnimCE[0]);
-				int[][] rect = new int[list.length][2];
-				for (int i = 0; i < list.length; i++) {
-					rect[i][0] = list[i].getNum().getWidth();
-					rect[i][1] = list[i].getNum().getHeight();
-				}
-				SRResult ans = Algorithm.stackRect(rect);
-				AnimCE cen = list[ans.center];
-				AnimCE ac = new AnimCE(rl, cen);
-				BufferedImage bimg = new BufferedImage(ans.w, ans.h, BufferedImage.TYPE_INT_ARGB);
-				Graphics g = bimg.getGraphics();
-				for (int i = 0; i < list.length; i++) {
-					BufferedImage b = (BufferedImage) list[i].getNum().bimg();
-					int x = ans.pos[i][0];
-					int y = ans.pos[i][1];
-					g.drawImage(b, x, y, null);
-					if (i != ans.center)
-						ac.merge(list[i], x, y);
-				}
-				ac.setNum(MainBCU.builder.build(bimg));
-				ac.saveImg();
-				ac.reloImg();
-				ac.unSave("merge");
-				Vector<AnimCE> v = new Vector<>(AnimCE.map().values());
-				jlu.setListData(v);
-				jlu.setSelectedValue(ac, true);
-				setA(ac);
-				changing = false;
+		merg.addActionListener(e -> {
+			changing = true;
+			ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, "merged");
+			Workspace.validate(Source.ANIM, rl);
+			AnimCE[] list = jlu.getSelectedValuesList().toArray(new AnimCE[0]);
+			int[][] rect = new int[list.length][2];
+			for (int i = 0; i < list.length; i++) {
+				rect[i][0] = list[i].getNum().getWidth();
+				rect[i][1] = list[i].getNum().getHeight();
 			}
-
+			SRResult ans = Algorithm.stackRect(rect);
+			AnimCE cen = list[ans.center];
+			AnimCE ac = new AnimCE(rl, cen);
+			BufferedImage bimg = new BufferedImage(ans.w, ans.h, BufferedImage.TYPE_INT_ARGB);
+			Graphics g = bimg.getGraphics();
+			for (int i = 0; i < list.length; i++) {
+				BufferedImage b = (BufferedImage) list[i].getNum().bimg();
+				int x = ans.pos[i][0];
+				int y = ans.pos[i][1];
+				g.drawImage(b, x, y, null);
+				if (i != ans.center)
+					ac.merge(list[i], x, y);
+			}
+			ac.setNum(MainBCU.builder.build(bimg));
+			ac.saveImg();
+			ac.reloImg();
+			ac.unSave("merge");
+			Vector<AnimCE> v = new Vector<>(AnimCE.map().values());
+			jlu.setListData(v);
+			jlu.setSelectedValue(ac, true);
+			setA(ac);
+			changing = false;
 		});
 
 		spri.setLnr(x -> changePanel(sep = new SpriteEditPage(this, (BufferedImage) icet.anim.getNum().bimg())));
@@ -636,11 +556,11 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		merg.setEnabled(jlu.getSelectedValuesList().size() > 1);
 		if (anim != null && anim.getEdi() != null)
 			icon.setIcon(UtilPC.getIcon(anim.getEdi()));
-		setB(sb.sele);
+		setB();
 		changing = boo;
 	}
 
-	private void setB(int row) {
+	private void setB() {
 		sb.sele = icet.getSelectedRow();
 		reml.setEnabled(sb.sele != -1);
 		if (sb.sele >= 0) {
