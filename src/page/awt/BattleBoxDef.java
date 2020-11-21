@@ -41,10 +41,12 @@ class BattleBoxDef extends Canvas implements BattleBox {
 			int h = getHeight();
 			if (w * h == 0)
 				return;
-			if (bbp.pt < bbp.bf.sb.time || prev == null) {
+			if (bbp.pt < bbp.bf.sb.time) {
 				bbp.pt = bbp.bf.sb.time;
-				prev = getImage();
 			}
+
+			prev = getImage();
+
 			if (prev == null)
 				return;
 			g.drawImage(prev, 0, 0, null);
