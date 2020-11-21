@@ -12,13 +12,7 @@ import page.view.ViewBox;
 import utilpc.Theme;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class ConfigPage extends Page {
 
@@ -46,12 +40,14 @@ public class ConfigPage extends Page {
 	private final JL jlmax = new JL(0, "opamax");
 	private final JL jlbg = new JL(0, "BGvol");
 	private final JL jlse = new JL(0, "SEvol");
+	private final JL jlui = new JL(0, "UIvol");
 	private final JBTN theme = new JBTN(0, MainBCU.light ? "themel" : "themed");
 	private final JBTN nimbus = new JBTN(0, MainBCU.nimbus ? "nimbus" : "tdefault");
 	private final JSlider jsmin = new JSlider(0, 100);
 	private final JSlider jsmax = new JSlider(0, 100);
 	private final JSlider jsbg = new JSlider(0, 100);
 	private final JSlider jsse = new JSlider(0, 100);
+	private final JSlider jsui = new JSlider(0, 100);
 	private final JList<String> jls = new JList<>(MainLocale.LOC_NAME);
 
 	private final JScrollPane jsps = new JScrollPane(jls);
@@ -98,6 +94,8 @@ public class ConfigPage extends Page {
 		set(jsbg, x, y, 50, 850, 1000, 100);
 		set(jlse, x, y, 50, 950, 400, 50);
 		set(jsse, x, y, 50, 1000, 1000, 100);
+		set(jlui, x, y, 50, 1100, 400, 50);
+		set(jsui, x, y, 50, 1150, 1000, 100);
 		set(filt, x, y, 1100, 550, 200, 50);
 		set(musc, x, y, 1350, 550, 200, 50);
 		set(exla, x, y, 1100, 650, 450, 50);
@@ -108,152 +106,83 @@ public class ConfigPage extends Page {
 	}
 
 	private void addListeners() {
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
+		back.addActionListener(arg0 -> changePanel(getFront()));
+
+		prel.addActionListener(arg0 -> MainBCU.preload = prel.isSelected());
+
+		exla.addActionListener(arg0 -> {
+			MainLocale.exLang = exla.isSelected();
+			Page.renewLoc(getThis());
 		});
 
-		prel.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				MainBCU.preload = prel.isSelected();
-			}
+		extt.addActionListener(arg0 -> {
+			MainLocale.exTTT = extt.isSelected();
+			Page.renewLoc(getThis());
 		});
 
-		exla.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				MainLocale.exLang = exla.isSelected();
-				Page.renewLoc(getThis());
-			}
+		rlla.addActionListener(arg0 -> {
+			MultiLangCont.getStatic().clear();
+			BCUReader.readLang();
+			Page.renewLoc(getThis());
 		});
 
-		extt.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				MainLocale.exTTT = extt.isSelected();
-				Page.renewLoc(getThis());
-			}
-		});
+		whit.addActionListener(arg0 -> ViewBox.Conf.white = whit.isSelected());
 
-		rlla.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				MultiLangCont.getStatic().clear();
-				BCUReader.readLang();
-				Page.renewLoc(getThis());
-			}
-		});
+		refe.addActionListener(arg0 -> cfg().ref = refe.isSelected());
 
-		whit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				ViewBox.Conf.white = whit.isSelected();
-			}
-		});
-
-		refe.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				cfg().ref = refe.isSelected();
-			}
-		});
-
-		jogl.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				MainBCU.USE_JOGL = jogl.isSelected();
-				if (Opts.conf("This requires restart to apply. Do you want to restart?"))
-					CommonStatic.def.exit(true);
-			}
+		jogl.addActionListener(arg0 -> {
+			MainBCU.USE_JOGL = jogl.isSelected();
+			if (Opts.conf("This requires restart to apply. Do you want to restart?"))
+				CommonStatic.def.exit(true);
 		});
 
 		for (int i = 0; i < 4; i++) {
 			int I = i;
 
-			left[i].addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					cfg().ints[I]--;
-					vals[I].setText(0, ImgCore.VAL[cfg().ints[I]]);
-					left[I].setEnabled(cfg().ints[I] > 0);
-					right[I].setEnabled(cfg().ints[I] < 2);
-				}
-
+			left[i].addActionListener(arg0 -> {
+				cfg().ints[I]--;
+				vals[I].setText(0, ImgCore.VAL[cfg().ints[I]]);
+				left[I].setEnabled(cfg().ints[I] > 0);
+				right[I].setEnabled(cfg().ints[I] < 2);
 			});
 
-			right[i].addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					cfg().ints[I]++;
-					vals[I].setText(0, ImgCore.VAL[cfg().ints[I]]);
-					left[I].setEnabled(cfg().ints[I] > 0);
-					right[I].setEnabled(cfg().ints[I] < 2);
-				}
-
+			right[i].addActionListener(arg0 -> {
+				cfg().ints[I]++;
+				vals[I].setText(0, ImgCore.VAL[cfg().ints[I]]);
+				left[I].setEnabled(cfg().ints[I] > 0);
+				right[I].setEnabled(cfg().ints[I] < 2);
 			});
 
 		}
 
-		jsmin.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				cfg().deadOpa = jsmin.getValue();
+		jsmin.addChangeListener(arg0 -> cfg().deadOpa = jsmin.getValue());
+
+		jsmax.addChangeListener(arg0 -> cfg().fullOpa = jsmax.getValue());
+
+		jsbg.addChangeListener(arg0 -> BCMusic.setBGVol(jsbg.getValue()));
+
+		jsse.addChangeListener(arg0 -> BCMusic.setSEVol(jsse.getValue()));
+
+		jsui.addChangeListener(arg0 -> BCMusic.setUIVol(jsui.getValue()));
+
+		jls.addListSelectionListener(arg0 -> {
+			if (changing)
+				return;
+			changing = true;
+			if (jls.getSelectedIndex() == -1) {
+				jls.setSelectedIndex(cfg().lang);
 			}
+			cfg().lang = jls.getSelectedIndex();
+			Page.renewLoc(getThis());
+			changing = false;
 		});
 
-		jsmax.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				cfg().fullOpa = jsmax.getValue();
-			}
+		filt.addActionListener(e -> {
+			MainBCU.FILTER_TYPE = 1 - MainBCU.FILTER_TYPE;
+			filt.setText(0, "filter" + MainBCU.FILTER_TYPE);
 		});
 
-		jsbg.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				BCMusic.setBGVol(jsbg.getValue());
-			}
-		});
-
-		jsse.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				BCMusic.setSEVol(jsse.getValue());
-			}
-		});
-
-		jls.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (changing)
-					return;
-				changing = true;
-				if (jls.getSelectedIndex() == -1) {
-					jls.setSelectedIndex(cfg().lang);
-				}
-				cfg().lang = jls.getSelectedIndex();
-				Page.renewLoc(getThis());
-				changing = false;
-			}
-		});
-
-		filt.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				MainBCU.FILTER_TYPE = 1 - MainBCU.FILTER_TYPE;
-				filt.setText(0, "filter" + MainBCU.FILTER_TYPE);
-			}
-		});
-
-		musc.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				BCMusic.play = musc.isSelected();
-			}
-		});
+		musc.addActionListener(arg0 -> BCMusic.play = musc.isSelected());
 
 		nimbus.setLnr((b) -> {
 			MainBCU.nimbus = !MainBCU.nimbus;
@@ -301,8 +230,10 @@ public class ConfigPage extends Page {
 		add(extt);
 		add(jlbg);
 		add(jlse);
+		add(jlui);
 		set(jsbg);
 		set(jsse);
+		set(jsui);
 		add(nimbus);
 		add(theme);
 		jls.setSelectedIndex(cfg().lang);
@@ -310,6 +241,7 @@ public class ConfigPage extends Page {
 		jsmax.setValue(cfg().fullOpa);
 		jsbg.setValue(BCMusic.VOL_BG);
 		jsse.setValue(BCMusic.VOL_SE);
+		jsui.setValue(BCMusic.VOL_UI);
 		for (int i = 0; i < 4; i++) {
 			left[i] = new JBTN("<");
 			right[i] = new JBTN(">");

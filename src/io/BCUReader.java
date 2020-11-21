@@ -67,6 +67,9 @@ public class BCUReader extends DataIO {
 				BCMusic.play = jo.get("play_sound").getAsBoolean();
 				BCMusic.VOL_BG = jo.get("volume_BG").getAsInt();
 				BCMusic.VOL_SE = jo.get("volume_SE").getAsInt();
+				if(jo.has("volume_UI")) {
+					BCMusic.VOL_UI = jo.get("volume_UI").getAsInt();
+				}
 				MainLocale.exLang = jo.get("edit_lang").getAsBoolean();
 				MainLocale.exTTT = jo.get("edit_tooltip").getAsBoolean();
 				BattleInfoPage.DEF_LARGE = jo.get("large_screen").getAsBoolean();

@@ -75,7 +75,7 @@ public class BCUWriter extends DataIO {
 				}
 			}
 			ph.createNewFile();
-		} catch (IOException e) {
+		} catch (IOException ignored) {
 		}
 	}
 
@@ -211,9 +211,7 @@ public class BCUWriter extends DataIO {
 			byte[] cont = Files.readAllBytes(f.toPath());
 			byte[] nmd = MessageDigest.getInstance("MD5").digest(cont);
 			suc &= Arrays.equals(md5, nmd);
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (NoSuchAlgorithmException | IOException e) {
 			e.printStackTrace();
 		}
 		return suc;
@@ -232,6 +230,7 @@ public class BCUWriter extends DataIO {
 		jo.addProperty("play_sound", BCMusic.play);
 		jo.addProperty("volume_BG", BCMusic.VOL_BG);
 		jo.addProperty("volume_SE", BCMusic.VOL_SE);
+		jo.addProperty("volume_UI",BCMusic.VOL_UI);
 		jo.addProperty("edit_lang", MainLocale.exLang);
 		jo.addProperty("edit_tooltip", MainLocale.exTTT);
 		jo.addProperty("large_screen", BattleInfoPage.DEF_LARGE);
@@ -247,7 +246,6 @@ public class BCUWriter extends DataIO {
 		jo.add("import_paths", JsonEncoder.encode(imp));
 		try (java.io.Writer w = new FileWriter(f)) {
 			w.write(jo.toString());
-			w.close();
 		} catch (Exception e) {
 			CommonStatic.ctx.noticeErr(e, ErrType.ERROR, "failed to write config");
 		}
