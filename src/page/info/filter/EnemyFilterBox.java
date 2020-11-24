@@ -1,5 +1,6 @@
 package page.info.filter;
 
+import common.pack.Identifier;
 import common.pack.PackData;
 import common.pack.UserProfile;
 import common.util.Data;
@@ -12,14 +13,8 @@ import page.Page;
 import utilpc.UtilPC;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 import static utilpc.Interpret.*;
 
@@ -35,10 +30,30 @@ public abstract class EnemyFilterBox extends Page {
 		return null;
 	}
 
+	public static EnemyFilterBox getNew(Page p, String... parents) {
+		if (MainBCU.FILTER_TYPE == 0) {
+			return new EFBButton(p, parents);
+		} else if(MainBCU.FILTER_TYPE == 1) {
+			return new EFBList(p, parents);
+		}
+
+		return null;
+	}
+
 	protected String name = "";
+	protected final List<String> parents;
 
 	protected EnemyFilterBox(Page p) {
 		super(p);
+
+		parents = null;
+	}
+
+	protected EnemyFilterBox(Page p, String... parent) {
+		super(p);
+
+		parents = new ArrayList<>();
+		parents.addAll(Arrays.asList(parent));
 	}
 
 	protected abstract int[] getSizer();
@@ -58,6 +73,13 @@ class EFBButton extends EnemyFilterBox {
 
 	protected EFBButton(Page p) {
 		super(p);
+
+		ini();
+		confirm();
+	}
+
+	protected EFBButton(Page p, String... parents) {
+		super(p, parents);
 
 		ini();
 		confirm();
@@ -134,11 +156,19 @@ class EFBButton extends EnemyFilterBox {
 					b4 = ename.toLowerCase().contains(name.toLowerCase());
 				}
 
+				boolean b5;
+
+				if(parents == null)
+					b5 = true;
+				else {
+					b5 = e.id.pack.equals(Identifier.DEF) || parents.contains(e.id.pack);
+				}
+
 				b0 = nonSele(rare) | b0;
 				b1 = nonSele(trait) | b1;
 				b2 = nonSele(abis) & nonSele(proc) | b2;
 				b3 = nonSele(atkt) | b3;
-				if (b0 & b1 & b2 & b3 & b4)
+				if (b0 & b1 & b2 & b3 & b4 && b5)
 					ans.add(e);
 			}
 		}
@@ -183,22 +213,15 @@ class EFBButton extends EnemyFilterBox {
 
 	private boolean nonSele(JTG[] jtbs) {
 		int n = 0;
-		for (int i = 0; i < jtbs.length; i++)
-			if (jtbs[i].isSelected())
+		for (JTG jtb : jtbs)
+			if (jtb.isSelected())
 				n++;
 		return n == 0;
 	}
 
 	private void set(AbstractButton b) {
 		add(b);
-		b.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				confirm();
-			}
-
-		});
+		b.addActionListener(arg0 -> confirm());
 	}
 
 }
@@ -221,6 +244,13 @@ class EFBList extends EnemyFilterBox {
 
 	protected EFBList(Page p) {
 		super(p);
+
+		ini();
+		confirm();
+	}
+
+	protected EFBList(Page p, String... parent) {
+		super(p, parent);
 
 		ini();
 		confirm();
@@ -297,11 +327,19 @@ class EFBList extends EnemyFilterBox {
 					b4 = ename.toLowerCase().contains(name.toLowerCase());
 				}
 
+				boolean b5;
+
+				if(parents == null)
+					b5 = true;
+				else {
+					b5 = e.id.pack.equals(Identifier.DEF) || parents.contains(e.id.pack);
+				}
+
 				b0 = rare.getSelectedIndex() == -1 | b0;
 				b1 = trait.getSelectedIndex() == -1 | b1;
 				b2 = abis.getSelectedIndex() == -1 | b2;
 				b3 = atkt.getSelectedIndex() == -1 | b3;
-				if (b0 & b1 & b2 & b3 & b4)
+				if (b0 & b1 & b2 & b3 & b4 & b5)
 					ans.add(e);
 			}
 		}
@@ -311,10 +349,8 @@ class EFBList extends EnemyFilterBox {
 	private void ini() {
 		for (int i = 0; i < orop.length; i++)
 			set(orop[i] = new JTG(get(0, "orop")));
-		for (int i = 0; i < TRAIT.length; i++)
-			vt.add(TRAIT[i]);
-		for (int i = 0; i < EFILTER; i++)
-			va.add(EABI[i]);
+		Collections.addAll(vt, TRAIT);
+		va.addAll(Arrays.asList(EABI).subList(0, EFILTER));
 		ProcLang proclang = ProcLang.get();
 		for (int i = 0; i < Data.PROC_TOT; i++)
 			va.add(proclang.get(i).abbr_name);
@@ -338,26 +374,12 @@ class EFBList extends EnemyFilterBox {
 
 	private void set(AbstractButton b) {
 		add(b);
-		b.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				confirm();
-			}
-
-		});
+		b.addActionListener(arg0 -> confirm());
 	}
 
 	private void set(JList<?> jl) {
 
-		jl.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				confirm();
-			}
-
-		});
+		jl.addListSelectionListener(arg0 -> confirm());
 	}
 
 }

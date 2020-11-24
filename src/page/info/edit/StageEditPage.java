@@ -13,12 +13,9 @@ import page.battle.StRecdPage;
 import page.info.filter.EnemyFindPage;
 import page.support.AnimLCR;
 import page.support.RLFIM;
+
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.Set;
 import java.util.TreeSet;
@@ -83,7 +80,7 @@ public class StageEditPage extends Page {
 		info = new HeadEditTable(this, pac);
 		jlsm.setListData(mc, mc.maps);
 		jle.setListData(UserProfile.getAll(pack, Enemy.class).toArray(new Enemy[0]));
-		efp = new EnemyFindPage(getThis());
+		efp = new EnemyFindPage(getThis(), pac.desc.dependency.toArray(new String[0]));
 		ini();
 	}
 
@@ -144,30 +141,22 @@ public class StageEditPage extends Page {
 
 		elim.setLnr(x -> changePanel(new LimitEditPage(getThis(), stage)));
 
-		addl.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				int ind = jt.addLine(jle.getSelectedValue());
-				setData(stage);
-				if (ind < 0)
-					jt.clearSelection();
-				else
-					jt.addRowSelectionInterval(ind, ind);
-			}
+		addl.addActionListener(arg0 -> {
+			int ind = jt.addLine(jle.getSelectedValue());
+			setData(stage);
+			if (ind < 0)
+				jt.clearSelection();
+			else
+				jt.addRowSelectionInterval(ind, ind);
 		});
 
-		reml.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				int ind = jt.remLine();
-				setData(stage);
-				if (ind < 0)
-					jt.clearSelection();
-				else
-					jt.addRowSelectionInterval(ind, ind);
-			}
+		reml.addActionListener(arg0 -> {
+			int ind = jt.remLine();
+			setData(stage);
+			if (ind < 0)
+				jt.clearSelection();
+			else
+				jt.addRowSelectionInterval(ind, ind);
 		});
 
 		veif.setLnr(x -> changePanel(efp));
@@ -176,150 +165,108 @@ public class StageEditPage extends Page {
 
 	private void addListeners$1() {
 
-		jlsm.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (changing || arg0.getValueIsAdjusting())
-					return;
-				changing = true;
-				setAA(jlsm.getSelectedValue());
-				changing = false;
-			}
-
+		jlsm.addListSelectionListener(arg0 -> {
+			if (changing || arg0.getValueIsAdjusting())
+				return;
+			changing = true;
+			setAA(jlsm.getSelectedValue());
+			changing = false;
 		});
 
-		jlst.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (changing || arg0.getValueIsAdjusting())
-					return;
-				changing = true;
-				setAB(jlst.getSelectedValue());
-				changing = false;
-			}
-
+		jlst.addListSelectionListener(arg0 -> {
+			if (changing || arg0.getValueIsAdjusting())
+				return;
+			changing = true;
+			setAB(jlst.getSelectedValue());
+			changing = false;
 		});
 
-		lpsm.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (changing || arg0.getValueIsAdjusting())
-					return;
-				changing = true;
-				setBA(lpsm.getSelectedValue());
-				changing = false;
-			}
-
+		lpsm.addListSelectionListener(arg0 -> {
+			if (changing || arg0.getValueIsAdjusting())
+				return;
+			changing = true;
+			setBA(lpsm.getSelectedValue());
+			changing = false;
 		});
 
-		lpst.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (changing || arg0.getValueIsAdjusting())
-					return;
-				changing = true;
-				setBB(lpst.getSelectedValue());
-				changing = false;
-			}
-
+		lpst.addListSelectionListener(arg0 -> {
+			if (changing || arg0.getValueIsAdjusting())
+				return;
+			changing = true;
+			setBB(lpst.getSelectedValue());
+			changing = false;
 		});
 
 	}
 
 	private void addListeners$2() {
 
-		cpsm.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				StageMap sm = jlsm.getSelectedValue();
-				MapColc col = Stage.CLIPMC;
-				StageMap copy = sm.copy(col);
-				col.maps.add(copy);
-				changing = true;
-				lpsm.setListData(col.maps.toArray());
-				lpsm.setSelectedValue(copy, true);
-				setBA(copy);
-				changing = false;
-			}
+		cpsm.addActionListener(arg0 -> {
+			StageMap sm = jlsm.getSelectedValue();
+			MapColc col = Stage.CLIPMC;
+			StageMap copy = sm.copy(col);
+			col.maps.add(copy);
+			changing = true;
+			lpsm.setListData(col.maps.toArray());
+			lpsm.setSelectedValue(copy, true);
+			setBA(copy);
+			changing = false;
 		});
 
-		cpst.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Stage copy = stage.copy(Stage.CLIPSM);
-				Stage.CLIPSM.add(copy);
-				changing = true;
-				lpst.setListData(Stage.CLIPSM.list.toArray());
-				lpst.setSelectedValue(copy, true);
-				lpsm.setSelectedIndex(0);
-				setBB(copy);
-				changing = false;
-			}
+		cpst.addActionListener(arg0 -> {
+			Stage copy = stage.copy(Stage.CLIPSM);
+			Stage.CLIPSM.add(copy);
+			changing = true;
+			lpst.setListData(Stage.CLIPSM.list.toArray());
+			lpst.setSelectedValue(copy, true);
+			lpsm.setSelectedIndex(0);
+			setBB(copy);
+			changing = false;
 		});
 
-		ptsm.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				StageMap sm = lpsm.getSelectedValue();
-				StageMap ni = sm.copy(mc);
-				mc.maps.add(ni);
-				changing = true;
-				jlsm.setListData(mc, mc.maps);
-				jlsm.setSelectedValue(ni, true);
-				setBA(ni);
-				changing = false;
-			}
-
+		ptsm.addActionListener(arg0 -> {
+			StageMap sm = lpsm.getSelectedValue();
+			StageMap ni = sm.copy(mc);
+			mc.maps.add(ni);
+			changing = true;
+			jlsm.setListData(mc, mc.maps);
+			jlsm.setSelectedValue(ni, true);
+			setBA(ni);
+			changing = false;
 		});
 
-		ptst.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				StageMap sm = jlsm.getSelectedValue();
-				stage = lpst.getSelectedValue().copy(sm);
-				sm.add(stage);
-				changing = true;
-				jlst.setListData(sm, sm.list);
-				jlst.setSelectedValue(stage, true);
-				setBB(stage);
-				changing = false;
-			}
-
+		ptst.addActionListener(arg0 -> {
+			StageMap sm = jlsm.getSelectedValue();
+			stage = lpst.getSelectedValue().copy(sm);
+			sm.add(stage);
+			changing = true;
+			jlst.setListData(sm, sm.list);
+			jlst.setSelectedValue(stage, true);
+			setBB(stage);
+			changing = false;
 		});
 
-		rmsm.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				int ind = lpsm.getSelectedIndex();
-				MapColc col = Stage.CLIPMC;
-				col.maps.remove(lpsm.getSelectedValue());
-				changing = true;
-				lpsm.setListData(col.maps.toArray());
-				lpsm.setSelectedIndex(ind - 1);
-				setBA(lpsm.getSelectedValue());
-				changing = false;
-			}
+		rmsm.addActionListener(arg0 -> {
+			int ind = lpsm.getSelectedIndex();
+			MapColc col = Stage.CLIPMC;
+			col.maps.remove(lpsm.getSelectedValue());
+			changing = true;
+			lpsm.setListData(col.maps.toArray());
+			lpsm.setSelectedIndex(ind - 1);
+			setBA(lpsm.getSelectedValue());
+			changing = false;
 		});
 
-		rmst.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				StageMap sm = lpsm.getSelectedValue();
-				Stage st = lpst.getSelectedValue();
-				int ind = lpst.getSelectedIndex();
-				sm.list.remove(st);
-				changing = true;
-				lpst.setListData(sm.list.toArray());
-				lpst.setSelectedIndex(ind - 1);
-				setBB(lpst.getSelectedValue());
-				changing = false;
-			}
+		rmst.addActionListener(arg0 -> {
+			StageMap sm = lpsm.getSelectedValue();
+			Stage st = lpst.getSelectedValue();
+			int ind = lpst.getSelectedIndex();
+			sm.list.remove(st);
+			changing = true;
+			lpst.setListData(sm.list.toArray());
+			lpst.setSelectedIndex(ind - 1);
+			setBB(lpst.getSelectedValue());
+			changing = false;
 		});
 
 		adds.setLnr(jlst::addItem);

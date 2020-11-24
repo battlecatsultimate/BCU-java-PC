@@ -5,8 +5,6 @@ import common.util.unit.Enemy;
 import page.*;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
@@ -27,6 +25,14 @@ public class EnemyFindPage extends Page implements SupPage<AbEnemy> {
 		super(p);
 
 		efb = EnemyFilterBox.getNew(this);
+		ini();
+		resized();
+	}
+
+	public EnemyFindPage(Page p, String... parents) {
+		super(p);
+
+		efb = EnemyFilterBox.getNew(this, parents);
 		ini();
 		resized();
 	}
@@ -81,21 +87,13 @@ public class EnemyFindPage extends Page implements SupPage<AbEnemy> {
 	}
 
 	private void addListeners() {
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
-		});
+		back.addActionListener(arg0 -> changePanel(getFront()));
 
-		show.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (show.isSelected())
-					add(efb);
-				else
-					remove(efb);
-			}
+		show.addActionListener(arg0 -> {
+			if (show.isSelected())
+				add(efb);
+			else
+				remove(efb);
 		});
 
 		seabt.setLnr((b) -> {
@@ -106,15 +104,11 @@ public class EnemyFindPage extends Page implements SupPage<AbEnemy> {
 			}
 		});
 
-		seatf.addActionListener(new ActionListener() {
+		seatf.addActionListener(e -> {
+			if (efb != null) {
+				efb.name = seatf.getText();
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (efb != null) {
-					efb.name = seatf.getText();
-
-					efb.callBack(null);
-				}
+				efb.callBack(null);
 			}
 		});
 	}
