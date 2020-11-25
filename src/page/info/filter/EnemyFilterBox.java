@@ -30,11 +30,11 @@ public abstract class EnemyFilterBox extends Page {
 		return null;
 	}
 
-	public static EnemyFilterBox getNew(Page p, String... parents) {
+	public static EnemyFilterBox getNew(Page p, String pack, String... parents) {
 		if (MainBCU.FILTER_TYPE == 0) {
-			return new EFBButton(p, parents);
+			return new EFBButton(p, pack, parents);
 		} else if(MainBCU.FILTER_TYPE == 1) {
-			return new EFBList(p, parents);
+			return new EFBList(p, pack, parents);
 		}
 
 		return null;
@@ -42,16 +42,19 @@ public abstract class EnemyFilterBox extends Page {
 
 	protected String name = "";
 	protected final List<String> parents;
+	protected final String pack;
 
 	protected EnemyFilterBox(Page p) {
 		super(p);
 
+		pack = null;
 		parents = null;
 	}
 
-	protected EnemyFilterBox(Page p, String... parent) {
+	protected EnemyFilterBox(Page p, String pack, String... parent) {
 		super(p);
 
+		this.pack = pack;
 		parents = new ArrayList<>();
 		parents.addAll(Arrays.asList(parent));
 	}
@@ -78,8 +81,8 @@ class EFBButton extends EnemyFilterBox {
 		confirm();
 	}
 
-	protected EFBButton(Page p, String... parents) {
-		super(p, parents);
+	protected EFBButton(Page p, String pack, String... parents) {
+		super(p, pack, parents);
 
 		ini();
 		confirm();
@@ -158,10 +161,10 @@ class EFBButton extends EnemyFilterBox {
 
 				boolean b5;
 
-				if(parents == null)
+				if(pack == null)
 					b5 = true;
 				else {
-					b5 = e.id.pack.equals(Identifier.DEF) || parents.contains(e.id.pack);
+					b5 = e.id.pack.equals(Identifier.DEF) || e.id.pack.equals(pack) || parents.contains(e.id.pack);
 				}
 
 				b0 = nonSele(rare) | b0;
@@ -249,8 +252,8 @@ class EFBList extends EnemyFilterBox {
 		confirm();
 	}
 
-	protected EFBList(Page p, String... parent) {
-		super(p, parent);
+	protected EFBList(Page p, String pack, String... parent) {
+		super(p, pack, parent);
 
 		ini();
 		confirm();
@@ -329,10 +332,10 @@ class EFBList extends EnemyFilterBox {
 
 				boolean b5;
 
-				if(parents == null)
+				if(pack == null)
 					b5 = true;
 				else {
-					b5 = e.id.pack.equals(Identifier.DEF) || parents.contains(e.id.pack);
+					b5 = e.id.pack.equals(Identifier.DEF) || e.id.pack.equals(pack) || parents.contains(e.id.pack);
 				}
 
 				b0 = rare.getSelectedIndex() == -1 | b0;

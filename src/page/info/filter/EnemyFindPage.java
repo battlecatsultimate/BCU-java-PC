@@ -29,10 +29,10 @@ public class EnemyFindPage extends Page implements SupPage<AbEnemy> {
 		resized();
 	}
 
-	public EnemyFindPage(Page p, String... parents) {
+	public EnemyFindPage(Page p, String pack, String... parents) {
 		super(p);
 
-		efb = EnemyFilterBox.getNew(this, parents);
+		efb = EnemyFilterBox.getNew(this, pack, parents);
 		ini();
 		resized();
 	}
