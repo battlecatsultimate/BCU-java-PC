@@ -3,6 +3,7 @@ package page.battle;
 import common.battle.*;
 import common.battle.entity.AbEntity;
 import common.battle.entity.Entity;
+import common.util.Data;
 import common.util.stage.Replay;
 import common.util.stage.Stage;
 import io.BCMusic;
@@ -19,9 +20,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
+import java.util.Timer;
 
 public class BattleInfoPage extends KeyHandler implements OuterBox {
 
@@ -61,6 +62,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	private Replay recd;
 
 	private int spe = 0, upd = 0;
+	private boolean musicChanged = false;
 
 	public BattleInfoPage(Page p, Replay rec, int conf) {
 		super(p);
@@ -163,7 +165,17 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	@Override
 	protected void renew() {
 		if (basis.sb.getEBHP() * 100 < basis.sb.st.mush)
-			BCMusic.play(basis.sb.st.mus1, basis.sb.st.loop1);
+			if(basis.sb.st.mush == 0 || basis.sb.st.mush == 100)
+				BCMusic.play(basis.sb.st.mus1, basis.sb.st.loop1);
+			else {
+				BCMusic.BG.stop();
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						BCMusic.play(basis.sb.st.mus1, basis.sb.st.loop1);
+					}
+				}, 2000);
+			}
 		else
 			BCMusic.play(basis.sb.st.mus0, basis.sb.st.loop0);
 	}
@@ -244,7 +256,23 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		ucount.setText(sb.entityCount(-1) + "/" + sb.max_num);
 		resized();
 		if (sb.getEBHP() * 100 <= sb.st.mush && BCMusic.music != sb.st.mus1)
-			BCMusic.play(sb.st.mus1, sb.st.loop1);
+			if(basis.sb.st.mush == 0 || basis.sb.st.mush == 100)
+				BCMusic.play(basis.sb.st.mus1, basis.sb.st.loop1);
+			else {
+				if(!musicChanged) {
+					BCMusic.BG.stop();
+					new Thread(() -> {
+						try {
+							Thread.sleep(Data.MUSIC_DELAY);
+							BCMusic.play(basis.sb.st.mus1, basis.sb.st.loop1);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}).start();
+
+					musicChanged = true;
+				}
+			}
 		if (bb instanceof BBRecd) {
 			BBRecd bbr = (BBRecd) bb;
 			stream.setText("frame left: " + bbr.info());
