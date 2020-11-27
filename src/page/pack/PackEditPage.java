@@ -236,7 +236,7 @@ public class PackEditPage extends Page {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				changing = true;
-				String str = Workspace.validateWorkspace(Opts.read("pack ID = "));
+				String str = Workspace.validateWorkspace(Workspace.generateMD5ID());
 				pac = Data.err(() -> UserProfile.initJsonPack(str));
 				vpack.add(pac);
 				jlp.setListData(vpack);
@@ -254,6 +254,7 @@ public class PackEditPage extends Page {
 					return;
 				changing = true;
 				int ind = jlp.getSelectedIndex();
+				UserProfile.unloadPack(pac);
 				UserProfile.remove(pac);
 				pac.delete();
 				vpack.remove(pac);

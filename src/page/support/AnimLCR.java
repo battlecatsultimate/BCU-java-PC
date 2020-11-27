@@ -29,7 +29,7 @@ public class AnimLCR extends DefaultListCellRenderer {
 
 		VImg v;
 		if (o instanceof Animable<?, ?>)
-			v = ((Animable<? extends AnimU<?>, ?>) o).anim.getEdi();
+			v = ((Animable<? extends AnimU<?>, ?>) o).anim == null ? null : ((Animable<? extends  AnimU<?>, ?>) o).anim.getEdi();
 		else if (o instanceof AbEnemy)
 			v = ((AbEnemy) o).getIcon();
 		else
