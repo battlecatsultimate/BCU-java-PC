@@ -11,10 +11,6 @@ import page.info.edit.EnemyEditPage;
 import page.support.AnimLCR;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Vector;
 
 public class EnemyViewPage extends AbViewPage {
@@ -33,7 +29,10 @@ public class EnemyViewPage extends AbViewPage {
 
 	public EnemyViewPage(Page p, String pac) {
 		super(p);
-		jlu.setListData(new Vector<>(UserProfile.getPack(pac).enemies.getList()));
+		PackData pack = UserProfile.getPack(pac);
+		if(pack != null) {
+			jlu.setListData(new Vector<>(pack.enemies.getList()));
+		}
 		ini();
 		resized();
 	}
@@ -71,30 +70,20 @@ public class EnemyViewPage extends AbViewPage {
 
 	private void addListeners() {
 
-		jlu.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (arg0.getValueIsAdjusting())
-					return;
-				updateChoice();
-			}
-
+		jlu.addListSelectionListener(arg0 -> {
+			if (arg0.getValueIsAdjusting())
+				return;
+			updateChoice();
 		});
 
-		stat.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Enemy ene = jlu.getSelectedValue();
-				if (ene == null)
-					return;
-				if (ene.de instanceof CustomEnemy) {
-					changePanel(new EnemyEditPage(getThis(), ene));
-				} else
-					changePanel(new EnemyInfoPage(getThis(), ene));
-			}
-
+		stat.addActionListener(e -> {
+			Enemy ene = jlu.getSelectedValue();
+			if (ene == null)
+				return;
+			if (ene.de instanceof CustomEnemy) {
+				changePanel(new EnemyEditPage(getThis(), ene));
+			} else
+				changePanel(new EnemyInfoPage(getThis(), ene));
 		});
 
 	}

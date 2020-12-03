@@ -6,8 +6,7 @@ import common.util.anim.AnimI;
 import page.Page;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import java.util.Collections;
 import java.util.Vector;
 
 public class EffectViewPage extends AbViewPage {
@@ -21,10 +20,8 @@ public class EffectViewPage extends AbViewPage {
 		super(p);
 
 		Vector<AnimI<?, ?>> va = new Vector<>();
-		for (AnimI<?, ?> a : CommonStatic.getBCAssets().effas.values())
-			va.add(a);
-		for (AnimI<?, ?> a : CommonStatic.getBCAssets().atks)
-			va.add(a);
+		Collections.addAll(va, CommonStatic.getBCAssets().effas.values());
+		Collections.addAll(va, CommonStatic.getBCAssets().atks);
 		va.addAll(UserProfile.getBCData().souls.getList());
 		jlu.setListData(va);
 		ini();
@@ -48,15 +45,10 @@ public class EffectViewPage extends AbViewPage {
 
 	private void addListeners() {
 
-		jlu.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (arg0.getValueIsAdjusting())
-					return;
-				updateChoice();
-			}
-
+		jlu.addListSelectionListener(arg0 -> {
+			if (arg0.getValueIsAdjusting())
+				return;
+			updateChoice();
 		});
 
 	}

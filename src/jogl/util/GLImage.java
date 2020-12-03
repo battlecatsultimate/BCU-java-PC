@@ -74,7 +74,7 @@ public class GLImage implements FakeImage {
 		rect = r;
 	}
 
-	private GLImage(TextureData b) throws IOException {
+	private GLImage(TextureData b) {
 		par = null;
 		data = b;
 		rect = new int[] { 0, 0, data.getWidth(), data.getHeight() };
@@ -137,6 +137,21 @@ public class GLImage implements FakeImage {
 	@Override
 	public void unload() {
 
+	}
+
+	@Override
+	public FakeImage cloneImage() {
+		GLImage copy;
+
+		if(par != null)
+			copy = new GLImage(par, rect);
+		else if(data != null && rect != null) {
+			copy = new GLImage(data);
+		} else {
+			copy = null;
+		}
+
+		return copy;
 	}
 
 	protected GLImage root() {

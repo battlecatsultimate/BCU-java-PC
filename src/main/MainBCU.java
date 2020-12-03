@@ -59,6 +59,7 @@ public class MainBCU {
 					"./assets/lang/" + CommonStatic.Lang.LOC_CODE[CommonStatic.getConfig().lang] + "/" + file);
 			if (!f.exists()) {
 				String path = "common/util/lang/assets/" + file;
+				System.out.println(path);
 				return ClassLoader.getSystemResourceAsStream(path);
 			}
 			return Data.err(() -> new FileInputStream(f));

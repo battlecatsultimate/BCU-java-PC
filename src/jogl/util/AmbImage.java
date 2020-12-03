@@ -6,6 +6,8 @@ import utilpc.awt.FIBI;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.io.*;
 import java.util.function.Supplier;
 
@@ -130,6 +132,31 @@ public class AmbImage implements FakeImage {
 	@Override
 	public void unload() {
 
+	}
+
+	@Override
+	public FakeImage cloneImage() {
+		AmbImage copy;
+
+		if(bimg != null) {
+			BufferedImage ori = bimg.bimg();
+
+			ColorModel cm = ori.getColorModel();
+			boolean alphaMulti = ori.isAlphaPremultiplied();
+			WritableRaster wr = ori.copyData(null);
+
+			copy = new AmbImage(new BufferedImage(cm, wr, alphaMulti, null));
+		} else if(file != null) {
+			copy = new AmbImage(file);
+		} else if(stream != null) {
+			copy = new AmbImage(stream);
+		} else if(par != null && cs != null) {
+			copy = new AmbImage(par, cs.clone());
+		} else {
+			copy = null;
+		}
+
+		return copy;
 	}
 
 	private void check() {

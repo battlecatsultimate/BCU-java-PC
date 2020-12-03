@@ -16,7 +16,7 @@ public abstract class ProcTable extends Page {
 
 		private static final int SEC = 16;
 		private static final int[] INDS = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 20, 27, 29, 31, 32, 21, 22, 23, 24, 25,
-				26, 35, 36 };
+				26, 30, 35, 36, 37 };
 
 		protected AtkProcTable(Page p, boolean edit, boolean unit) {
 			super(p, INDS, edit, unit);

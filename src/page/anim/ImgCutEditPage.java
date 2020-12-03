@@ -89,6 +89,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			jlu.setListData(new Vector<>(Workspace.loadAnimations(null)));
 		else
 			jlu.setListData(new AnimCE[] { aep.focus });
+
 		ini();
 		resized();
 	}

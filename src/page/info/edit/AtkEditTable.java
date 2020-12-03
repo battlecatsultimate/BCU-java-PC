@@ -81,7 +81,7 @@ class AtkEditTable extends Page {
 		set(fab, x, y, 200, 350, 200, 50);
 		set(fmv, x, y, 200, 400, 200, 50);
 		set(isr, x, y, 200, 450, 200, 50);
-		apt.setPreferredSize(size(x, y, 750, 2200).toDimension());
+		apt.setPreferredSize(size(x, y, 750, 2500).toDimension());
 		apt.resized(x, y);
 		set(jsp, x, y, 450, 0, 800, 950);
 	}

@@ -2,7 +2,11 @@ package utilpc.awt;
 
 import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
+import jogl.util.AmbImage;
+
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 
 public class FIBI implements FakeImage {
 
@@ -61,6 +65,25 @@ public class FIBI implements FakeImage {
 	@Override
 	public void unload() {
 
+	}
+
+	@Override
+	public FakeImage cloneImage() {
+		FIBI copy;
+
+		if(bimg != null) {
+			BufferedImage ori = bimg;
+
+			ColorModel cm = ori.getColorModel();
+			boolean alphaMulti = ori.isAlphaPremultiplied();
+			WritableRaster wr = ori.copyData(null);
+
+			copy = new FIBI(new BufferedImage(cm, wr, alphaMulti, null));
+		} else {
+			copy = new FIBI(null);
+		}
+
+		return copy;
 	}
 
 }
