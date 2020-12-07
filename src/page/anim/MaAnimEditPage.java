@@ -10,12 +10,11 @@ import page.Page;
 import page.support.AnimLCR;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,7 +49,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 	private final JBTN nex = new JBTN(0, "nextf");
 	private final JSlider jtl = new JSlider();
 	private final SpriteBox sb = new SpriteBox(this);
-	private final AnimBox ab = new AnimBox();
+	private final AnimBox ab = AnimBox.getInstance();
 	private final JBTN addp = new JBTN(0, "add");
 	private final JBTN remp = new JBTN(0, "rem");
 	private final JBTN addl = new JBTN(0, "addl");
@@ -86,7 +85,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 	@Override
 	public void callBack(Object o) {
-		if (o != null && o instanceof int[])
+		if (o instanceof int[])
 			change((int[]) o, rs -> {
 				if (rs[0] == 0) {
 					maet.setRowSelectionInterval(rs[1], rs[2]);
@@ -100,9 +99,9 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		AnimCE ac = maet.anim;
 		if (ind < 0 || ac == null)
 			return;
-		int time = ab.ent == null ? 0 : ab.ent.ind();
+		int time = ab.getEntity() == null ? 0 : ab.getEntity().ind();
 		ab.setEntity(ac.getEAnim(ac.types[ind]));
-		ab.ent.setTime(time);
+		ab.getEntity().setTime(time);
 	}
 
 	@Override
@@ -140,7 +139,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			return;
 		MouseWheelEvent mwe = (MouseWheelEvent) e;
 		double d = mwe.getPreciseWheelRotation();
-		ab.siz *= Math.pow(res, d);
+		ab.setSiz(ab.getSiz() * Math.pow(res, d));
 	}
 
 	@Override
@@ -193,7 +192,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		set(jspu, x, y, 0, 50, 300, 400);
 		set(jspt, x, y, 0, 450, 300, 300);
 		set(jspm, x, y, 0, 750, 300, 550);
-		set(ab, x, y, 300, 50, 700, 500);
+		set((Canvas) ab, x, y, 300, 50, 700, 500);
 		set(jspp, x, y, 1000, 50, 300, 500);
 		set(sb, x, y, 1300, 50, 1000, 500);
 		set(addl, x, y, 2100, 550, 200, 50);
@@ -211,17 +210,17 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		maet.setRowHeight(size(x, y, 50));
 		mpet.setRowHeight(size(x, y, 50));
 		sb.paint(sb.getGraphics());
-		ab.paint(ab.getGraphics());
+		ab.draw();
 	}
 
 	@Override
 	protected void timer(int t) {
 		if (!pause)
 			eupdate();
-		if (ab.ent != null && mpet.part != null) {
+		if (ab.getEntity() != null && mpet.part != null) {
 			Part p = mpet.part;
-			EPart ep = ab.ent.ent[p.ints[0]];
-			inft.setText("frame: " + ab.ent.ind());
+			EPart ep = ab.getEntity().ent[p.ints[0]];
+			inft.setText("frame: " + ab.getEntity().ind());
 			inff.setText("part frame: " + (p.frame - p.off));
 			infv.setText("actual value: " + ep.getVal(p.ints[1]));
 			infm.setText("part value: " + p.vd);
@@ -236,63 +235,38 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 	private void addListeners() {
 
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
+		back.addActionListener(arg0 -> changePanel(getFront()));
+
+		jlu.addListSelectionListener(arg0 -> {
+			if (isAdj() || jlu.getValueIsAdjusting())
+				return;
+			setA(jlu.getSelectedValue());
 		});
 
-		jlu.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (isAdj() || jlu.getValueIsAdjusting())
-					return;
-				setA(jlu.getSelectedValue());
-			}
-
+		jlt.addListSelectionListener(arg0 -> {
+			if (isAdj() || jlt.getValueIsAdjusting())
+				return;
+			AnimCE da = jlu.getSelectedValue();
+			int ind = jlt.getSelectedIndex();
+			setB(da, ind);
 		});
 
-		jlt.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (isAdj() || jlt.getValueIsAdjusting())
-					return;
-				AnimCE da = jlu.getSelectedValue();
-				int ind = jlt.getSelectedIndex();
-				setB(da, ind);
-			}
-
+		jlp.addListSelectionListener(arg0 -> {
+			if (isAdj() || jlp.getValueIsAdjusting())
+				return;
+			sb.sele = jlp.getSelectedIndex();
 		});
 
-		jlp.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (isAdj() || jlp.getValueIsAdjusting())
+		jlm.addListSelectionListener(arg0 -> {
+			if (isAdj() || jlm.getValueIsAdjusting() || maet.ma == null)
+				return;
+			int ind = jlm.getSelectedIndex();
+			for (int i = 0; i < maet.ma.n; i++)
+				if (maet.ma.parts[i].ints[0] == ind) {
+					setC(i);
 					return;
-				sb.sele = jlp.getSelectedIndex();
-			}
-
-		});
-
-		jlm.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (isAdj() || jlm.getValueIsAdjusting() || maet.ma == null)
-					return;
-				int ind = jlm.getSelectedIndex();
-				for (int i = 0; i < maet.ma.n; i++)
-					if (maet.ma.parts[i].ints[0] == ind) {
-						setC(i);
-						return;
-					}
-				setC(-1);
-			}
-
+				}
+			setC(-1);
 		});
 
 	}
@@ -300,75 +274,56 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 	private void addListeners$1() {
 		ListSelectionModel lsm = maet.getSelectionModel();
 
-		lsm.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (isAdj() || lsm.getValueIsAdjusting())
-					return;
-				int ind = maet.getSelectedRow();
-				change(ind, i -> setC(i));
-			}
-
+		lsm.addListSelectionListener(e -> {
+			if (isAdj() || lsm.getValueIsAdjusting())
+				return;
+			int ind = maet.getSelectedRow();
+			change(ind, this::setC);
 		});
 
-		addp.addActionListener(new ActionListener() {
+		addp.addActionListener(arg0 -> change(0, x -> {
+			int ind = maet.getSelectedRow() + 1;
+			MaAnim ma = maet.ma;
+			Part[] data = ma.parts;
+			ma.parts = new Part[++ma.n];
+			if (ind >= 0)
+				System.arraycopy(data, 0, ma.parts, 0, ind);
+			if (data.length - ind >= 0)
+				System.arraycopy(data, ind, ma.parts, ind + 1, data.length - ind);
+			Part np = new Part();
+			np.validate();
+			ma.parts[ind] = np;
+			ma.validate();
+			maet.anim.unSave("maanim add part");
+			callBack(null);
+			resized();
+			lsm.setSelectionInterval(ind, ind);
+			setC(ind);
+			int h = mpet.getRowHeight();
+			mpet.scrollRectToVisible(new Rectangle(0, h * ind, 1, h));
+		}));
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				change(0, x -> {
-					int ind = maet.getSelectedRow() + 1;
-					MaAnim ma = maet.ma;
-					Part[] data = ma.parts;
-					ma.parts = new Part[++ma.n];
-					for (int i = 0; i < ind; i++)
-						ma.parts[i] = data[i];
-					for (int i = ind; i < data.length; i++)
-						ma.parts[i + 1] = data[i];
-					Part np = new Part();
-					np.validate();
-					ma.parts[ind] = np;
-					ma.validate();
-					maet.anim.unSave("maanim add part");
-					callBack(null);
-					resized();
-					lsm.setSelectionInterval(ind, ind);
-					setC(ind);
-					int h = mpet.getRowHeight();
-					mpet.scrollRectToVisible(new Rectangle(0, h * ind, 1, h));
-				});
-			}
-
-		});
-
-		remp.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				change(0, x -> {
-					MaAnim ma = maet.ma;
-					int[] rows = maet.getSelectedRows();
-					Part[] data = ma.parts;
-					for (int row : rows)
-						data[row] = null;
-					ma.n -= rows.length;
-					ma.parts = new Part[ma.n];
-					int ind = 0;
-					for (int i = 0; i < data.length; i++)
-						if (data[i] != null)
-							ma.parts[ind++] = data[i];
-					ind = rows[rows.length - 1];
-					ma.validate();
-					maet.anim.unSave("maanim remove part");
-					callBack(null);
-					if (ind >= ma.n)
-						ind = ma.n - 1;
-					lsm.setSelectionInterval(ind, ind);
-					setC(ind);
-				});
-			}
-
-		});
+		remp.addActionListener(arg0 -> change(0, x -> {
+			MaAnim ma = maet.ma;
+			int[] rows = maet.getSelectedRows();
+			Part[] data = ma.parts;
+			for (int row : rows)
+				data[row] = null;
+			ma.n -= rows.length;
+			ma.parts = new Part[ma.n];
+			int ind = 0;
+			for (Part datum : data)
+				if (datum != null)
+					ma.parts[ind++] = datum;
+			ind = rows[rows.length - 1];
+			ma.validate();
+			maet.anim.unSave("maanim remove part");
+			callBack(null);
+			if (ind >= ma.n)
+				ind = ma.n - 1;
+			lsm.setSelectionInterval(ind, ind);
+			setC(ind);
+		}));
 
 		tmul.addFocusListener(new FocusAdapter() {
 
@@ -394,95 +349,68 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 	private void addListeners$2() {
 		ListSelectionModel lsm = mpet.getSelectionModel();
 
-		lsm.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (isAdj() || lsm.getValueIsAdjusting())
-					return;
-				setD(lsm.getLeadSelectionIndex());
-			}
-
+		lsm.addListSelectionListener(e -> {
+			if (isAdj() || lsm.getValueIsAdjusting())
+				return;
+			setD(lsm.getLeadSelectionIndex());
 		});
 
-		addl.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Part p = mpet.part;
-				int[][] data = p.moves;
-				p.moves = new int[++p.n][];
-				for (int i = 0; i < data.length; i++)
-					p.moves[i] = data[i];
-				p.moves[p.n - 1] = new int[4];
-				p.validate();
-				maet.ma.validate();
-				callBack(null);
-				maet.anim.unSave("maanim add line");
-				resized();
-				change(p.n - 1, i -> lsm.setSelectionInterval(i, i));
-				setD(p.n - 1);
-				int h = mpet.getRowHeight();
-				mpet.scrollRectToVisible(new Rectangle(0, h * (p.n - 1), 1, h));
-			}
-
+		addl.addActionListener(arg0 -> {
+			Part p = mpet.part;
+			int[][] data = p.moves;
+			p.moves = new int[++p.n][];
+			System.arraycopy(data, 0, p.moves, 0, data.length);
+			p.moves[p.n - 1] = new int[4];
+			p.validate();
+			maet.ma.validate();
+			callBack(null);
+			maet.anim.unSave("maanim add line");
+			resized();
+			change(p.n - 1, i -> lsm.setSelectionInterval(i, i));
+			setD(p.n - 1);
+			int h = mpet.getRowHeight();
+			mpet.scrollRectToVisible(new Rectangle(0, h * (p.n - 1), 1, h));
 		});
 
-		reml.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				int[] inds = mpet.getSelectedRows();
-				if (inds.length == 0)
-					return;
-				Part p = mpet.part;
-				List<int[]> l = new ArrayList<>();
-				int j = 0;
-				for (int i = 0; i < p.n; i++)
-					if (j >= inds.length || i != inds[j])
-						l.add(p.moves[i]);
-					else
-						j++;
-				p.moves = l.toArray(new int[0][]);
-				p.n = l.size();
-				p.validate();
-				maet.ma.validate();
-				callBack(null);
-				maet.anim.unSave("maanim remove line");
-				int ind = inds[0];
-				if (ind >= p.n)
-					ind--;
-				change(ind, i -> lsm.setSelectionInterval(i, i));
-				setD(ind);
-			}
-
+		reml.addActionListener(arg0 -> {
+			int[] inds = mpet.getSelectedRows();
+			if (inds.length == 0)
+				return;
+			Part p = mpet.part;
+			List<int[]> l = new ArrayList<>();
+			int j = 0;
+			for (int i = 0; i < p.n; i++)
+				if (j >= inds.length || i != inds[j])
+					l.add(p.moves[i]);
+				else
+					j++;
+			p.moves = l.toArray(new int[0][]);
+			p.n = l.size();
+			p.validate();
+			maet.ma.validate();
+			callBack(null);
+			maet.anim.unSave("maanim remove line");
+			int ind = inds[0];
+			if (ind >= p.n)
+				ind--;
+			change(ind, i -> lsm.setSelectionInterval(i, i));
+			setD(ind);
 		});
 	}
 
 	private void addListeners$3() {
 
-		jtb.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				pause = jtb.isSelected();
-				jtl.setEnabled(pause && ab.ent != null);
-			}
+		jtb.addActionListener(arg0 -> {
+			pause = jtb.isSelected();
+			jtl.setEnabled(pause && ab.getEntity() != null);
 		});
 
-		nex.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				eupdate();
-			}
-		});
+		nex.addActionListener(arg0 -> eupdate());
 
-		jtl.addChangeListener(new ChangeListener() {
-			@Override
-			public void stateChanged(ChangeEvent arg0) {
-				if (isAdj() || !pause)
-					return;
-				ab.ent.setTime(jtl.getValue());
-			}
+		jtl.addChangeListener(arg0 -> {
+			if (isAdj() || !pause)
+				return;
+			ab.getEntity().setTime(jtl.getValue());
 		});
 
 		advs.setLnr(() -> new AdvAnimEditPage(this, maet.anim, maet.anim.types[jlt.getSelectedIndex()]));
@@ -493,8 +421,8 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 	private void eupdate() {
 		ab.update();
-		if (ab.ent != null)
-			change(0, x -> jtl.setValue(ab.ent.ind()));
+		if (ab.getEntity() != null)
+			change(0, x -> jtl.setValue(ab.getEntity().ind()));
 	}
 
 	private void ini() {
@@ -515,7 +443,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		add(jtl);
 		add(nex);
 		add(sb);
-		add(ab);
+		add((Canvas) ab);
 		add(inft);
 		add(inff);
 		add(infv);
@@ -598,18 +526,18 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			setC(row);
 
 			jtl.setMinimum(0);
-			jtl.setMaximum(ab.ent.len());
+			jtl.setMaximum(ab.getEntity().len());
 			jtl.setLabelTable(null);
-			if (ab.ent.len() <= 50) {
+			if (ab.getEntity().len() <= 50) {
 				jtl.setMajorTickSpacing(5);
 				jtl.setMinorTickSpacing(1);
-			} else if (ab.ent.len() <= 200) {
+			} else if (ab.getEntity().len() <= 200) {
 				jtl.setMajorTickSpacing(10);
 				jtl.setMinorTickSpacing(2);
-			} else if (ab.ent.len() <= 1000) {
+			} else if (ab.getEntity().len() <= 1000) {
 				jtl.setMajorTickSpacing(50);
 				jtl.setMinorTickSpacing(10);
-			} else if (ab.ent.len() <= 5000) {
+			} else if (ab.getEntity().len() <= 5000) {
 				jtl.setMajorTickSpacing(250);
 				jtl.setMinorTickSpacing(50);
 			} else {
@@ -629,20 +557,22 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			ab.setSele(p == null ? -1 : p.ints[0]);
 
 			if (ind >= 0) {
-				int par = p.ints[0];
-				jlm.setSelectedIndex(par);
-				jlv.setSelectedIndex(mpet.part.ints[1]);
-				if (maet.getSelectedRow() != ind) {
-					maet.setRowSelectionInterval(ind, ind);
-					maet.scrollRectToVisible(maet.getCellRect(ind, 0, true));
+				if(p != null) {
+					int par = p.ints[0];
+					jlm.setSelectedIndex(par);
+					jlv.setSelectedIndex(mpet.part.ints[1]);
+					if (maet.getSelectedRow() != ind) {
+						maet.setRowSelectionInterval(ind, ind);
+						maet.scrollRectToVisible(maet.getCellRect(ind, 0, true));
+					}
+					ab.setSele(par);
+					int ic = mpet.anim.mamodel.parts[par][2];
+					jlp.setSelectedIndex(ic);
+					Rectangle r = jlp.getCellBounds(ic, ic);
+					if (r != null)
+						jlp.scrollRectToVisible(r);
+					sb.sele = jlp.getSelectedIndex();
 				}
-				ab.setSele(par);
-				int ic = mpet.anim.mamodel.parts[par][2];
-				jlp.setSelectedIndex(ic);
-				Rectangle r = jlp.getCellBounds(ic, ic);
-				if (r != null)
-					jlp.scrollRectToVisible(r);
-				sb.sele = jlp.getSelectedIndex();
 			} else
 				maet.clearSelection();
 		});
@@ -652,7 +582,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 	private void setD(int ind) {
 		reml.setEnabled(ind >= 0);
 		if (ind >= 0 && mpet.part.ints[1] == 2) {
-			change(mpet.part.moves[ind][1], i -> jlp.setSelectedIndex(i));
+			change(mpet.part.moves[ind][1], jlp::setSelectedIndex);
 			sb.sele = jlp.getSelectedIndex();
 		}
 	}

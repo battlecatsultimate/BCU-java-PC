@@ -7,10 +7,6 @@ import page.Page;
 import page.support.AnimLCR;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -36,7 +32,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	private final MaModelEditTable mmet = new MaModelEditTable(this);
 	private final JScrollPane jspmm = new JScrollPane(mmet);
 	private final SpriteBox sb = new SpriteBox(this);
-	private final ModelBox mb = new ModelBox();
+	private final ModelBox mb = ModelBox.getInstance();
 	private final JBTN revt = new JBTN(0, "revt");
 	private final JBTN addl = new JBTN(0, "addl");
 	private final JBTN reml = new JBTN(0, "reml");
@@ -65,13 +61,13 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	@Override
 	public void callBack(Object obj) {
 		change(obj, o -> {
-			if (o != null && o instanceof int[]) {
+			if (o instanceof int[]) {
 				int[] rs = (int[]) o;
 				mmet.setRowSelectionInterval(rs[0], rs[1]);
 				setB(rs[0]);
 			}
-			if (mb.getEnt() != null)
-				mb.getEnt().organize();
+			if (mb.getEntity() != null)
+				mb.getEntity().organize();
 			setTree(mmet.anim);
 		});
 
@@ -112,7 +108,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			return;
 		MouseWheelEvent mwe = (MouseWheelEvent) e;
 		double d = mwe.getPreciseWheelRotation();
-		mb.siz *= Math.pow(res, d);
+		mb.setSiz(mb.getSiz() * Math.pow(res, d));
 	}
 
 	@Override
@@ -147,7 +143,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		set(jsptr, x, y, 0, 550, 300, 750);
 		set(jspmm, x, y, 300, 550, 2000, 750);
 		set(jspu, x, y, 0, 50, 300, 500);
-		set(mb, x, y, 300, 50, 700, 500);
+		set((Canvas) mb, x, y, 300, 50, 700, 500);
 		set(jspp, x, y, 1000, 50, 300, 500);
 		set(sb, x, y, 1300, 50, 950, 400);
 		set(sort, x, y, 1300, 500, 200, 50);
@@ -158,7 +154,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		aep.componentResized(x, y);
 		mmet.setRowHeight(size(x, y, 50));
 		sb.paint(sb.getGraphics());
-		mb.paint(mb.getGraphics());
+		mb.draw();
 	}
 
 	private void addLine() {
@@ -193,37 +189,20 @@ public class MaModelEditPage extends Page implements AbEditPage {
 
 		back.setLnr(x -> changePanel(getFront()));
 
-		jlu.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (isAdj() || jlu.getValueIsAdjusting())
-					return;
-				change(jlu.getSelectedValue(), val -> setA(val));
-			}
-
+		jlu.addListSelectionListener(arg0 -> {
+			if (isAdj() || jlu.getValueIsAdjusting())
+				return;
+			change(jlu.getSelectedValue(), this::setA);
 		});
 
-		jlp.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				sb.sele = jlp.getSelectedIndex();
-			}
-
-		});
+		jlp.addListSelectionListener(arg0 -> sb.sele = jlp.getSelectedIndex());
 
 		ListSelectionModel lsm = mmet.getSelectionModel();
 
-		lsm.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (isAdj() || lsm.getValueIsAdjusting())
-					return;
-				change(lsm.getLeadSelectionIndex(), ind -> setB(ind));
-			}
-
+		lsm.addListSelectionListener(arg0 -> {
+			if (isAdj() || lsm.getValueIsAdjusting())
+				return;
+			change(lsm.getLeadSelectionIndex(), this::setB);
 		});
 
 		addl.setLnr(x -> addLine());
@@ -241,22 +220,17 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			callBack(null);
 		});
 
-		jtr.addTreeSelectionListener(new TreeSelectionListener() {
-
-			@Override
-			public void valueChanged(TreeSelectionEvent arg0) {
-				if (isAdj())
-					return;
-				Object o = jtr.getLastSelectedPathComponent();
-				if (o == null)
-					return;
-				String str = o.toString();
-				int ind = CommonStatic.parseIntN(str.split(" - ")[0]);
-				if (ind == -1)
-					return;
-				setB(ind);
-			}
-
+		jtr.addTreeSelectionListener(arg0 -> {
+			if (isAdj())
+				return;
+			Object o = jtr.getLastSelectedPathComponent();
+			if (o == null)
+				return;
+			String str = o.toString();
+			int ind = CommonStatic.parseIntN(str.split(" - ")[0]);
+			if (ind == -1)
+				return;
+			setB(ind);
 		});
 
 		sort.addActionListener(new ActionListener() {
@@ -305,7 +279,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		add(jsptr);
 		add(sort);
 		add(sb);
-		add(mb);
+		add((Canvas) mb);
 		jlu.setCellRenderer(new AnimLCR());
 		jtr.setExpandsSelectedPaths(true);
 		reml.setForeground(Color.RED);
@@ -327,8 +301,8 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			mm.n -= row.length;
 			int[] inds = new int[data.length];
 			int[] move = new int[mm.n];
-			for (int i = 0; i < row.length; i++)
-				data[row[i]] = null;
+			for (int j : row)
+				data[j] = null;
 			int ind = 0;
 			for (int i = 0; i < data.length; i++)
 				if (data[i] != null) {
@@ -412,8 +386,8 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	}
 
 	private void setB(int ind) {
-		if (mb.getEnt() != null)
-			mb.getEnt().sele = ind;
+		if (mb.getEntity() != null)
+			mb.getEntity().sele = ind;
 		reml.setEnabled(ind != -1);
 		rema.setEnabled(ind != -1);
 		if (ind < 0 || mmet.mm == null)

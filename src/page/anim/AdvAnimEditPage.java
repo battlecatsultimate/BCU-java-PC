@@ -10,10 +10,7 @@ import main.Opts;
 import page.*;
 
 import javax.swing.*;
-import javax.swing.event.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
@@ -42,7 +39,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 	private final JTG jtb = new JTG(0, "pause");
 	private final JBTN nex = new JBTN(0, "nextf");
 	private final JSlider jtl = new JSlider();
-	private final AnimBox ab = new AnimBox();
+	private final AnimBox ab = AnimBox.getInstance();
 	private final JBTN addp = new JBTN(0, "add");
 	private final JBTN remp = new JBTN(0, "rem");
 	private final JBTN addl = new JBTN(0, "addl");
@@ -79,7 +76,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 
 	@Override
 	public void callBack(Object o) {
-		if (o != null && o instanceof int[])
+		if (o instanceof int[])
 			change((int[]) o, rs -> {
 				if (rs[0] == 0) {
 					maet.setRowSelectionInterval(rs[1], rs[2]);
@@ -89,9 +86,9 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 					setD(rs[1]);
 				}
 			});
-		int time = ab.ent == null ? 0 : ab.ent.ind();
+		int time = ab.getEntity() == null ? 0 : ab.getEntity().ind();
 		ab.setEntity(ac.getEAnim(animID));
-		ab.ent.setTime(time);
+		ab.getEntity().setTime(time);
 	}
 
 	@Override
@@ -162,7 +159,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 			return;
 		MouseWheelEvent mwe = (MouseWheelEvent) e;
 		double d = mwe.getPreciseWheelRotation();
-		ab.siz *= Math.pow(res, d);
+		ab.setSiz(ab.getSiz() * Math.pow(res, d));
 	}
 
 	@Override
@@ -178,7 +175,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 		set(jspma, x, y, 500, 650, 900, 650);
 		set(jspmp, x, y, 1400, 650, 900, 650);
 		set(jspm, x, y, 0, 50, 300, 1250);
-		set(ab, x, y, 300, 50, 700, 500);
+		set((Canvas) ab, x, y, 300, 50, 700, 500);
 		set(addl, x, y, 2100, 550, 200, 50);
 		set(reml, x, y, 2100, 600, 200, 50);
 		set(jtl, x, y, 300, 550, 900, 100);
@@ -200,17 +197,17 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 
 		maet.setRowHeight(size(x, y, 50));
 		mpet.setRowHeight(size(x, y, 50));
-		ab.paint(ab.getGraphics());
+		ab.draw();
 	}
 
 	@Override
 	protected void timer(int t) {
 		if (!pause)
 			eupdate();
-		if (ab.ent != null && mpet.part != null) {
+		if (ab.getEntity() != null && mpet.part != null) {
 			Part p = mpet.part;
-			EPart ep = ab.ent.ent[p.ints[0]];
-			inft.setText("frame: " + ab.ent.ind());
+			EPart ep = ab.getEntity().ent[p.ints[0]];
+			inft.setText("frame: " + ab.getEntity().ind());
 			inff.setText("part frame: " + (p.frame - p.off));
 			infv.setText("actual value: " + ep.getVal(p.ints[1]));
 			infm.setText("part value: " + p.vd);
@@ -227,23 +224,9 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 
 		back.setLnr(x -> changePanel(getFront()));
 
-		jlm.addTreeSelectionListener(new TreeSelectionListener() {
+		jlm.addTreeSelectionListener(arg0 -> selectTree(false));
 
-			@Override
-			public void valueChanged(TreeSelectionEvent arg0) {
-				selectTree(false);
-			}
-
-		});
-
-		jlv.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				selectTree(true);
-			}
-
-		});
+		jlv.addListSelectionListener(arg0 -> selectTree(true));
 
 	}
 
@@ -274,9 +257,13 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 
 		time.setLnr(x -> {
 			int[] times = getTimeLine(maet.getSelected());
-			String str = "";
+
+			if(times == null)
+				return;
+
+			StringBuilder str = new StringBuilder();
 			for (int i : times)
-				str += i == 0 ? "-" : "X";
+				str.append(i == 0 ? "-" : "X");
 			System.out.println(str);// TODO
 		});
 	}
@@ -328,7 +315,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 
 		jtb.setLnr(arg0 -> {
 			pause = jtb.isSelected();
-			jtl.setEnabled(pause && ab.ent != null);
+			jtl.setEnabled(pause && ab.getEntity() != null);
 		});
 
 		nex.setLnr(e -> eupdate());
@@ -336,7 +323,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 		jtl.addChangeListener(arg0 -> {
 			if (isAdj() || !pause)
 				return;
-			ab.ent.setTime(jtl.getValue());
+			ab.getEntity().setTime(jtl.getValue());
 		});
 
 	}
@@ -360,10 +347,10 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 			MaAnim ma = maet.ma;
 			Part[] data = ma.parts;
 			ma.parts = new Part[++ma.n];
-			for (int i = 0; i < ind; i++)
-				ma.parts[i] = data[i];
-			for (int i = ind; i < data.length; i++)
-				ma.parts[i + 1] = data[i];
+			if (ind >= 0)
+				System.arraycopy(data, 0, ma.parts, 0, ind);
+			if (data.length - ind >= 0)
+				System.arraycopy(data, ind, ma.parts, ind + 1, data.length - ind);
 			Part np = new Part();
 			np.validate();
 			ma.parts[ind] = np;
@@ -388,9 +375,9 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 			ma.n -= rows.length;
 			ma.parts = new Part[ma.n];
 			int ind = 0;
-			for (int i = 0; i < data.length; i++)
-				if (data[i] != null)
-					ma.parts[ind++] = data[i];
+			for (Part datum : data)
+				if (datum != null)
+					ma.parts[ind++] = datum;
 			ind = rows[rows.length - 1];
 			ma.validate();
 			maet.anim.unSave("maanim remove part");
@@ -407,68 +394,52 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 	private void addLnr$D() {
 		ListSelectionModel lsm = mpet.getSelectionModel();
 
-		lsm.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (isAdj() || lsm.getValueIsAdjusting())
-					return;
-				setD(lsm.getLeadSelectionIndex());
-			}
-
+		lsm.addListSelectionListener(e -> {
+			if (isAdj() || lsm.getValueIsAdjusting())
+				return;
+			setD(lsm.getLeadSelectionIndex());
 		});
 
-		addl.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Part p = mpet.part;
-				int[][] data = p.moves;
-				p.moves = new int[++p.n][];
-				for (int i = 0; i < data.length; i++)
-					p.moves[i] = data[i];
-				p.moves[p.n - 1] = new int[4];
-				p.validate();
-				maet.ma.validate();
-				callBack(null);
-				maet.anim.unSave("maanim add line");
-				resized();
-				change(p.n - 1, i -> lsm.setSelectionInterval(i, i));
-				setD(p.n - 1);
-				int h = mpet.getRowHeight();
-				mpet.scrollRectToVisible(new Rectangle(0, h * (p.n - 1), 1, h));
-			}
-
+		addl.addActionListener(arg0 -> {
+			Part p = mpet.part;
+			int[][] data = p.moves;
+			p.moves = new int[++p.n][];
+			System.arraycopy(data, 0, p.moves, 0, data.length);
+			p.moves[p.n - 1] = new int[4];
+			p.validate();
+			maet.ma.validate();
+			callBack(null);
+			maet.anim.unSave("maanim add line");
+			resized();
+			change(p.n - 1, i -> lsm.setSelectionInterval(i, i));
+			setD(p.n - 1);
+			int h = mpet.getRowHeight();
+			mpet.scrollRectToVisible(new Rectangle(0, h * (p.n - 1), 1, h));
 		});
 
-		reml.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				int[] inds = mpet.getSelectedRows();
-				if (inds.length == 0)
-					return;
-				Part p = mpet.part;
-				List<int[]> l = new ArrayList<>();
-				int j = 0;
-				for (int i = 0; i < p.n; i++)
-					if (j >= inds.length || i != inds[j])
-						l.add(p.moves[i]);
-					else
-						j++;
-				p.moves = l.toArray(new int[0][]);
-				p.n = l.size();
-				p.validate();
-				maet.ma.validate();
-				callBack(null);
-				maet.anim.unSave("maanim remove line");
-				int ind = inds[0];
-				if (ind >= p.n)
-					ind--;
-				change(ind, i -> lsm.setSelectionInterval(i, i));
-				setD(ind);
-			}
-
+		reml.addActionListener(arg0 -> {
+			int[] inds = mpet.getSelectedRows();
+			if (inds.length == 0)
+				return;
+			Part p = mpet.part;
+			List<int[]> l = new ArrayList<>();
+			int j = 0;
+			for (int i = 0; i < p.n; i++)
+				if (j >= inds.length || i != inds[j])
+					l.add(p.moves[i]);
+				else
+					j++;
+			p.moves = l.toArray(new int[0][]);
+			p.n = l.size();
+			p.validate();
+			maet.ma.validate();
+			callBack(null);
+			maet.anim.unSave("maanim remove line");
+			int ind = inds[0];
+			if (ind >= p.n)
+				ind--;
+			change(ind, i -> lsm.setSelectionInterval(i, i));
+			setD(ind);
 		});
 	}
 
@@ -478,10 +449,10 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 		for (int i = 2; i < p.n - 1; i++) {
 			boolean suc = true;
 			for (int j = 0; j < p.n; j++) {
-				boolean mat = true;
+				boolean mat;
 				int[] i0 = p.moves[j];
 				int[] i1 = p.moves[j % i];
-				mat &= i0[1] == i1[1];
+				mat = i0[1] == i1[1];
 				mat &= i0[2] == i1[2];
 				mat &= i0[3] == i1[3];
 				if (j > 0)
@@ -502,8 +473,8 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 
 	private void eupdate() {
 		ab.update();
-		if (ab.ent != null)
-			change(0, x -> jtl.setValue(ab.ent.ind()));
+		if (ab.getEntity() != null)
+			change(0, x -> jtl.setValue(ab.getEntity().ind()));
 	}
 
 	private List<Integer> findRep(Part p) {
@@ -518,13 +489,13 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 				continue;
 			if (p.n != pi.n)
 				continue;
-			if (p.ints[2] != pi.ints[2])
-				continue;
 			boolean pass = true;
 			for (int j = 0; j < p.n; j++)
 				for (int k = 0; k < 4; k++)
-					if (p.moves[j][k] != pi.moves[j][k])
+					if (p.moves[j][k] != pi.moves[j][k]) {
 						pass = false;
+						break;
+					}
 			if (pass)
 				ans.add(i);
 		}
@@ -559,7 +530,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 		add(jtb);
 		add(jtl);
 		add(nex);
-		add(ab);
+		add((Canvas) ab);
 		add(inft);
 		add(inff);
 		add(infv);
@@ -597,18 +568,18 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 		jtl.setPaintTicks(true);
 		jtl.setPaintLabels(true);
 		jtl.setMinimum(0);
-		jtl.setMaximum(ab.ent.len());
+		jtl.setMaximum(ab.getEntity().len());
 		jtl.setLabelTable(null);
-		if (ab.ent.len() <= 50) {
+		if (ab.getEntity().len() <= 50) {
 			jtl.setMajorTickSpacing(5);
 			jtl.setMinorTickSpacing(1);
-		} else if (ab.ent.len() <= 200) {
+		} else if (ab.getEntity().len() <= 200) {
 			jtl.setMajorTickSpacing(10);
 			jtl.setMinorTickSpacing(2);
-		} else if (ab.ent.len() <= 1000) {
+		} else if (ab.getEntity().len() <= 1000) {
 			jtl.setMajorTickSpacing(50);
 			jtl.setMinorTickSpacing(10);
-		} else if (ab.ent.len() <= 5000) {
+		} else if (ab.getEntity().len() <= 5000) {
 			jtl.setMajorTickSpacing(250);
 			jtl.setMinorTickSpacing(50);
 		} else {
@@ -630,14 +601,16 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 		mpet.setAnim(maet.anim, maet.ma, p);
 		mpet.clearSelection();
 		if (ind >= 0) {
-			int par = p.ints[0];
-			mmt.select(par);
-			jlv.setSelectedIndex(mpet.part.ints[1]);
-			if (maet.getSelectedRow() != ind) {
-				maet.setRowSelectionInterval(ind, ind);
-				maet.scrollRectToVisible(maet.getCellRect(ind, 0, true));
+			if(p != null) {
+				int par = p.ints[0];
+				mmt.select(par);
+				jlv.setSelectedIndex(mpet.part.ints[1]);
+				if (maet.getSelectedRow() != ind) {
+					maet.setRowSelectionInterval(ind, ind);
+					maet.scrollRectToVisible(maet.getCellRect(ind, 0, true));
+				}
+				ab.setSele(par);
 			}
-			ab.setSele(par);
 		} else
 			maet.clearSelection();
 		change(false);

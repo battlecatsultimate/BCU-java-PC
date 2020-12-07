@@ -1,30 +1,64 @@
 package page.anim;
 
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
 import common.CommonStatic;
 import common.system.P;
+import common.system.fake.FakeGraphics;
 import common.util.anim.EAnimD;
 import common.util.anim.EAnimU;
+import jogl.GLCstd;
+import jogl.util.GLGraphics;
+import main.MainBCU;
 import main.Timer;
 import utilpc.awt.FG2D;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-class AnimBox extends Canvas {
+interface AnimBox {
+	static AnimBox getInstance() {
+		if(MainBCU.USE_JOGL)
+			return new GLAnimBox();
+		else
+			return new BufferedAnim();
+	}
+
+	P ori = new P(0, 0);
+
+	EAnimD<?> getEntity();
+
+	void setEntity(EAnimU ieAnim);
+
+	void setSele(int val);
+
+	void update();
+
+	void setSiz(double siz);
+
+	double getSiz();
+
+	void draw();
+}
+
+class BufferedAnim extends Canvas implements AnimBox {
 
 	private static final long serialVersionUID = 1L;
-
 	private static final Color c0 = new Color(70, 140, 160), c1 = new Color(85, 185, 205);
 
 	public BufferedImage prev = null;
 
-	protected final P ori = new P(0, 0);
-	protected double siz = 0.5;
+	private EAnimD<?> ent;
 
-	protected EAnimD<?> ent;
+	private double siz = 0.5;
 
-	protected AnimBox() {
+	protected BufferedAnim() {
 		setIgnoreRepaint(true);
+	}
+
+	@Override
+	public void draw() {
+		paint(getGraphics());
 	}
 
 	@Override
@@ -45,9 +79,9 @@ class AnimBox extends Canvas {
 		int h = getHeight();
 		BufferedImage img = (BufferedImage) createImage(w, h);
 		if (img == null)
-			return img;
+			return null;
 		Graphics2D gra = (Graphics2D) img.getGraphics();
-		GradientPaint gdt = new GradientPaint(w / 2, 0, c0, w / 2, h / 2, c1, true);
+		GradientPaint gdt = new GradientPaint(w / 2f, 0, c0, w / 2f, h / 2f, c1, true);
 		Paint p = gra.getPaint();
 		gra.setPaint(gdt);
 		gra.fillRect(0, 0, w, h);
@@ -59,18 +93,110 @@ class AnimBox extends Canvas {
 		return img;
 	}
 
-	protected void setEntity(EAnimU ieAnim) {
+	@Override
+	public EAnimD<?> getEntity() {
+		return ent;
+	}
+
+	@Override
+	public void setEntity(EAnimU ieAnim) {
 		ent = ieAnim;
 	}
 
-	protected void setSele(int val) {
+	@Override
+	public void setSele(int val) {
 		if (ent != null)
 			ent.sele = val;
 	}
 
-	protected synchronized void update() {
+	@Override
+	public synchronized void update() {
 		if (ent != null)
 			ent.update(true);
 	}
 
+	@Override
+	public void setSiz(double siz) {
+		this.siz = siz;
+	}
+
+	@Override
+	public double getSiz() {
+		return siz;
+	}
+}
+
+class GLAnimBox extends GLCstd implements AnimBox {
+
+	private static final long serialVersionUID = 1L;
+
+	int[] c = new int[] { 70, 140, 160 };
+	int[] f = new int[] { 85, 185, 205 };
+
+	private double siz = 0.5;
+
+	private EAnimD<?> ent;
+
+	@Override
+	public void display(GLAutoDrawable drawable) {
+		GL2 gl = drawable.getGL().getGL2();
+		int w = getWidth();
+		int h = getHeight();
+		GLGraphics g = new GLGraphics(drawable.getGL().getGL2(), w, h);
+
+		g.gradRect(0, 0, w, h / 2, w / 2, 0, c, w / 2, h / 2, f);
+		g.gradRect(0, h / 2, w, h / 2, w / 2, h / 2, f, w / 2, h, c);
+
+		drawAnim(g);
+
+		g.dispose();
+		gl.glFlush();
+	}
+
+	private void drawAnim(FakeGraphics g) {
+		int w = getWidth();
+		int h = getHeight();
+
+		g.translate(w/2f, h*3/4f);
+		g.setColor(FakeGraphics.BLACK);
+		if(ent != null)
+			ent.draw(g, ori.copy().times(-1), siz);
+	}
+
+	@Override
+	public EAnimD<?> getEntity() {
+		return ent;
+	}
+
+	@Override
+	public void setEntity(EAnimU ieAnim) {
+		ent = ieAnim;
+	}
+
+	@Override
+	public void setSele(int val) {
+		if (ent != null)
+			ent.sele = val;
+	}
+
+	@Override
+	public void update() {
+		if (ent != null)
+			ent.update(true);
+	}
+
+	@Override
+	public void setSiz(double siz) {
+		this.siz = siz;
+	}
+
+	@Override
+	public double getSiz() {
+		return siz;
+	}
+
+	@Override
+	public void draw() {
+		display();
+	}
 }
