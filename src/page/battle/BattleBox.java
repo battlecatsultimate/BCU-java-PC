@@ -35,11 +35,12 @@ public interface BattleBox {
 		private static final int road_h = 156; // in p
 		private static final int off = 200;
 		private static final int DEP = 4;
-		private static final int bar = 8, wave = 28, castw = 128, casth = 256;
+		private static final int wave = 28, castw = 128, casth = 256;
 		private static final int c0y = -130, c1y = -130, c2y = -258;
 		private static final int[] cany = new int[] { -134, -134, -134, -250, -250, -134, -134, -134 };
 		private static final int[] canx = new int[] { 0, 0, 0, 64, 64, 0, 0, 0 };
 		private static final DecimalFormat df = new DecimalFormat("00.00");
+		private static final double bar = 8;
 
 		public static void drawNyCast(FakeGraphics gra, int y, int x, double siz, int[] inf) {
 			BCAuxAssets aux = CommonStatic.getBCAssets();
@@ -71,11 +72,36 @@ public interface BattleBox {
 
 		private StageBasis sb;
 		private final int maxW;
-		private final int maxH;
-		private final int minH; // in p
+		private final int maxH = 510 * 3;
+		private final int minH = 510; // in p
 		private int pos, midh, prew, preh; // in pix
 
+		private double minSiz = -1;
+		private double maxSiz = -1;
+
+		private double groundHeight = -1;
+
 		private P mouse; // in pix
+
+		//This section is for lineup changing, detecting dragging up
+		/**
+		 * Initial point where drag started and ended
+		 */
+		private Point dragInit, dragEnd;
+		/**
+		 * Dragged time for calculating velocity of cursor
+		 */
+		public int dragFrame = 0;
+		/**
+		 * Boolean which tells mouse is dragging or not
+		 */
+		public boolean dragging = false;
+		/**
+		 * Boolean which tells dragging up/down is performed or not
+		 */
+		private boolean performed = false;
+
+		private boolean up = false;
 
 		private final BCAuxAssets aux = CommonStatic.getBCAssets();
 
@@ -84,8 +110,6 @@ public interface BattleBox {
 			bf = bas;
 			box = bb;
 			maxW = (int) (bas.sb.st.len * ratio + off * 2);
-			maxH = 510 * 3;
-			minH = 510;
 		}
 
 		public void click(Point p, int button) {
@@ -94,6 +118,9 @@ public interface BattleBox {
 		public void draw(FakeGraphics g) {
 			int w = box.getWidth();
 			int h = box.getHeight();
+
+			calculateSiz(w, h);
+
 			sb = bf.sb;
 			if (prew != w || preh != h) {
 				clear();
@@ -106,6 +133,9 @@ public interface BattleBox {
 			P rect = new P(box.getWidth(), box.getHeight());
 			sb.bg.draw(g, rect, pos, midh, siz);
 			drawCastle(g);
+			if(sb.can == sb.max_can && sb.canon.id == 0) {
+				drawCannonRange(g);
+			}
 			drawEntity(g);
 			drawBtm(g);
 			drawTop(g);
@@ -119,20 +149,39 @@ public interface BattleBox {
 			return (x * ratio + off) * siz + pos;
 		}
 
-		public void regulate() {
-			int w = box.getWidth();
-			int h = box.getHeight();
-			if (siz * minH > h * bar / 10)
-				siz = 1.0 * h * bar / 10 / minH;
+		public void calculateSiz(int w, int h) {
+			minSiz = 0;
+			maxSiz = Double.MAX_VALUE;
+
+			minSiz = getReulatedSiz(minSiz, w, h);
+			maxSiz = getReulatedSiz(maxSiz, w, h);
+
+			groundHeight = (h * (10 - bar) / 10.0) * (maxSiz - minSiz);
+		}
+
+		private double getReulatedSiz(double siz, int w, int h) {
+			if (siz * minH > h)
+				siz = 1.0 * h / minH;
 			if (siz * maxH < h)
 				siz = 1.0 * h / maxH;
 			if (siz * maxW < w)
 				siz = 1.0 * w / maxW;
+
+			return siz;
+		}
+
+		public void regulate() {
+			int w = box.getWidth();
+			int h = box.getHeight();
+			if (siz < minSiz)
+				siz = minSiz;
+			if (siz >= maxSiz)
+				siz = maxSiz;
 			if (pos > 0)
 				pos = 0;
 			if (maxW * siz + pos < w)
 				pos = (int) (w - maxW * siz);
-			midh = h * bar / 10;
+			midh = h + (int) (groundHeight * (siz - maxSiz) / (maxSiz - minSiz)) + (int) (h * (10 - bar) / 10.0 * 0.675 * 0.15 / aux.slot[0].getImg().getHeight());
 			if (midh > siz * minH * 2)
 				midh = (int) (siz * minH * 2);
 
@@ -155,15 +204,6 @@ public interface BattleBox {
 			midh = 0;
 		}
 
-		private synchronized void drag(Point p) {
-			if (mouse != null) {
-				P temp = new PP(p);
-				adjust((int) (temp.x - mouse.x), 0);
-				mouse.setTo(temp);
-				reset();
-			}
-		}
-
 		private void drawBtm(FakeGraphics g) {
 			int w = box.getWidth();
 			int h = box.getHeight();
@@ -179,7 +219,7 @@ public interface BattleBox {
 			cw += right.getWidth();
 			cw += aux.slot[0].getImg().getWidth() * 5;
 			double r = 1.0 * w / cw;
-			double avah = h * (10 - bar) / 10;
+			double avah = h * (10 - bar) / 10.0;
 			double hr = avah / left.getHeight();
 			corr = hr = Math.min(r, hr);
 			int ih = (int) (hr * left.getHeight());
@@ -205,38 +245,117 @@ public interface BattleBox {
 					hi -= ih;
 					g.drawImage(img, w - iw, hi, iw, ih);
 				}
-			hr = avah / 2 / aux.slot[0].getImg().getHeight();
-			hr = Math.min(r, hr);
-			for (int i = 0; i < 10; i++) {
-				Form f = sb.b.lu.fs[i / 5][i % 5];
+			if(sb.can == sb.max_can) {
+				FakeImage fire = aux.battle[1][getFireLang()+ctype].getImg();
+
+				int fw = (int) (hr * fire.getWidth());
+				int fh = (int) (hr * fire.getHeight());
+
+				g.drawImage(fire, w - fw - 4 * hr, h - fh - 4 * hr, fw, fh);
+			}
+			//Decide lineup icon's size, 0.675 is guessed value by comparing BC and BCU
+			hr = avah * 0.675 / aux.slot[0].getImg().getHeight();
+			//Make lineup won't cover cannon button and money upgrade button
+			hr = Math.min(hr, (box.getWidth()-iw*2.0)/aux.slot[0].getImg().getWidth()/5.9);
+			double term = hr * aux.slot[0].getImg().getWidth() * 0.2;
+
+			if(sb.isOneLineup) {
+				drawLineup(g, w, h, hr, term, false, 0);
+			} else {
+				drawLineup(g, w, h, hr, term, true, 1-sb.frontLineup);
+				drawLineup(g, w, h, hr, term, false, sb.frontLineup);
+			}
+
+			unir = hr;
+		}
+
+		private int getFireLang() {
+			switch (CommonStatic.getConfig().lang) {
+				case 1:
+					return 18;
+				case 2:
+					return 16;
+				case 3:
+					return 12;
+				default:
+					return 14;
+			}
+		}
+
+		private void drawLineup(FakeGraphics g, int w, int h, double hr, double term, boolean isBehind, int index) {
+			int iw;
+			int ih;
+			for (int i = 0; i < 5; i++) {
+				Form f = sb.b.lu.fs[index][i];
 				FakeImage img = f == null ? aux.slot[0].getImg() : f.anim.getUni().getImg();
 				iw = (int) (hr * img.getWidth());
 				ih = (int) (hr * img.getHeight());
-				int x = (w - iw * 5) / 2 + iw * (i % 5);
-				int y = h - ih * (2 - i / 5);
+				int x = (w - iw * 5) / 2 + iw * (i % 5) + (int) (term * ((i % 5) - 2) + (index == 0 ? 0 : (term / 2)));
+				int y = h - ih - (isBehind ? 0 : (int) (ih * 0.1));
+
+				//Check if lineup is changing
+				if(sb.changeFrame != -1) {
+					if(sb.changeFrame >= sb.changeDivision) {
+						double dis = isBehind ? ih * 0.5 : up ? ih * 0.4 : ih * 0.6;
+
+						y += (dis / sb.changeDivision) * (sb.changeDivision * 2 - sb.changeFrame) * (isBehind ? 1 : -1) * (up ? 1 : -1);
+					} else {
+						double dis = isBehind ? ih * 0.5 : up ? ih * 0.6 : ih * 0.4;
+
+						y +=  (dis - (dis / sb.changeDivision) * (sb.changeDivision - sb.changeFrame)) * (isBehind ? -1 : 1) * (up ? 1 : -1);
+					}
+				}
+
 				g.drawImage(img, x, y, iw, ih);
 				if (f == null)
 					continue;
-				int pri = sb.elu.price[i / 5][i % 5];
+				int pri = sb.elu.price[index][i % 5];
 				if (pri == -1)
 					g.colRect(x, y, iw, ih, 255, 0, 0, 100);
-				int cool = sb.elu.cool[i / 5][i % 5];
-				boolean b = pri > sb.mon || cool > 0;
+				int cool = sb.elu.cool[index][i % 5];
+				boolean b = isBehind || pri > sb.mon || cool > 0;
 				if (b)
 					g.colRect(x, y, iw, ih, 0, 0, 0, 100);
-				if (sb.locks[i / 5][i % 5])
+				if (sb.locks[index][i % 5])
 					g.colRect(x, y, iw, ih, 0, 255, 0, 100);
-				if (cool > 0) {
-					int dw = (int) (hr * 10);
-					int dh = (int) (hr * 12);
-					double cd = 1.0 * cool / sb.elu.maxC[i / 5][i % 5];
-					int xw = (int) (cd * (iw - dw * 2));
-					g.colRect(x + iw - dw - xw, y + ih - dh * 2, xw, dh, 0, 0, 0, -1);
-					g.colRect(x + dw, y + ih - dh * 2, iw - dw * 2 - xw, dh, 100, 212, 255, -1);
-				} else
-					Res.getCost(pri, !b, new SymCoord(g, hr, x += iw, y += ih, 3));
+				if(!isBehind) {
+					if (cool > 0) {
+						int dw = (int) (hr * 10);
+						int dh = (int) (hr * 12);
+						double cd = 1.0 * cool / sb.elu.maxC[index][i % 5];
+						int xw = (int) (cd * (iw - dw * 2));
+						g.colRect(x + iw - dw - xw, y + ih - dh * 2, xw, dh, 0, 0, 0, -1);
+						g.colRect(x + dw, y + ih - dh * 2, iw - dw * 2 - xw, dh, 100, 212, 255, -1);
+					} else
+						Res.getCost(pri, !b, new SymCoord(g, hr, x + iw, y + ih, 3));
+				}
 			}
-			unir = hr;
+		}
+
+		private void drawCannonRange(FakeGraphics g) {
+			FakeImage range = aux.battle[1][20].getImg();
+			FakeImage cann = aux.battle[1][21].getImg();
+
+			double rang = sb.ubase.pos + 100 + 56 * 4;
+
+			for(int i = 0; i < sb.b.t().tech[Data.LV_CRG]+2; i++) {
+				rang -= 405;
+			}
+
+			rang = getX(rang);
+
+			double rw = range.getWidth() * 0.75 * siz;
+			double rh = range.getHeight()  * 0.85 * siz;
+
+			//102 is guessed value, making range indicator on ground
+			g.drawImage(range, rang, midh - rh - 102 * siz, rw, rh);
+
+			int rtime = (int) (sb.time / 1.5) % 4;
+
+			double canw = cann.getWidth() * 0.75 * siz;
+			double canh = cann.getHeight() * 0.75 * siz;
+
+			g.drawImage(cann, rang + rw / 2.0 - canw / 2.0, midh - canh - rh - 102 * siz - Math.abs(rtime - 2) * 8 * siz, canw, canh);
 		}
 
 		private void drawCastle(FakeGraphics gra) {
@@ -340,12 +459,12 @@ public interface BattleBox {
 
 		private void drawTop(FakeGraphics g) {
 			int w = box.getWidth();
-			P p = Res.getMoney((int) sb.mon, sb.max_mon, new SymCoord(g, 1, w, 0, 1));
-			int ih = (int) p.y;
+			P p = Res.getMoney((int) sb.mon, sb.max_mon, g, w);
+			int ih = (int) p.y + (int) (aux.num[0][0].getImg().getHeight()*0.2);
 			int n = 0;
 			FakeImage bimg = aux.battle[2][1].getImg();
 			int cw = bimg.getWidth();
-			if ((sb.conf[0] & 2) > 0) {
+			if ((sb.conf[0] & 2) > 0 && sb.sniper != null) {
 				bimg = aux.battle[2][sb.sniper.enabled ? 2 : 4].getImg();
 				g.drawImage(bimg, w - cw, ih);
 				n++;
@@ -420,11 +539,66 @@ public interface BattleBox {
 			P.delete(p);
 		}
 
+		private synchronized void drag(Point p) {
+			if(!dragging) {
+				dragInit = p;
+			}
+
+			dragging = true;
+
+			dragEnd = p;
+
+			if (mouse != null) {
+				P temp = new PP(p);
+				adjust((int) (temp.x - mouse.x), 0);
+				mouse.setTo(temp);
+				reset();
+			}
+
+			checkDragUpDown();
+		}
+
+		private void checkDragUpDown() {
+			if(bf.sb.isOneLineup || bf.sb.ubase.health == 0 || dragInit == null || dragEnd == null || dragFrame == 0 || performed)
+				return;
+
+			final double MINIMUM_DISTANCE = box.getHeight() * 0.2;
+			final double MINIMUM_VELOCITY = MINIMUM_DISTANCE / 30; //px/f cursor must be dragged in 1 sec
+
+			if(isInDragRange(MINIMUM_DISTANCE)) {
+				double dy = dragEnd.y - dragInit.y;
+				double velocity = dy / dragFrame;
+
+				if(Math.abs(velocity) >= MINIMUM_VELOCITY && Math.abs(dy) >= MINIMUM_DISTANCE) {
+					//Notice program dragging up/down is already performed
+					//Won't process dragging up/down until drag is reset (mouse released)
+					performed = true;
+
+					bf.sb.lineupChanging = true;
+
+					bf.sb.changeFrame = 10;
+					bf.sb.changeDivision = bf.sb.changeFrame / 2;
+
+					up = velocity < 0;
+				}
+			}
+		}
+
+		private boolean isInDragRange(double minD) {
+			double dx = dragEnd.x - dragInit.x;
+
+			//Drag up down, dx shouldn't exceed minimum off path
+			return minD >= Math.abs(dx);
+		}
+
 		private synchronized void press(Point p) {
 			mouse = new PP(p);
 		}
 
-		private synchronized void release(Point p) {
+		private synchronized void release() {
+			dragging = false;
+			performed = false;
+			dragFrame = 0;
 			mouse = null;
 		}
 
@@ -432,7 +606,7 @@ public interface BattleBox {
 			int w = box.getWidth();
 			int h = box.getHeight();
 			double psiz = siz * Math.pow(exp, ind);
-			if (psiz * minH > h * bar / 10 || psiz * maxH < h || psiz * maxW < w)
+			if (psiz * minH > h || psiz * maxH < h || psiz * maxW < w)
 				return;
 			int dif = -(int) ((p.x - pos) * (Math.pow(exp, ind) - 1));
 			adjust(dif, ind);
@@ -467,8 +641,8 @@ public interface BattleBox {
 		getPainter().press(p);
 	}
 
-	default void release(Point p) {
-		getPainter().release(p);
+	default void release() {
+		getPainter().release();
 	}
 
 	void reset();

@@ -16,13 +16,13 @@ import page.awt.BBBuilder;
 import page.battle.BattleBox.OuterBox;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.util.List;
 import java.util.Timer;
+import java.util.*;
 
 public class BattleInfoPage extends KeyHandler implements OuterBox {
 
@@ -153,7 +153,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	@Override
 	protected void mouseReleased(MouseEvent e) {
 		if (e.getSource() == bb)
-			bb.release(e.getPoint());
+			bb.release();
 	}
 
 	@Override
@@ -277,6 +277,8 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			BBRecd bbr = (BBRecd) bb;
 			stream.setText("frame left: " + bbr.info());
 		}
+		if(bb.getPainter().dragging)
+			bb.getPainter().dragFrame++;
 	}
 
 	private void addListeners() {
@@ -312,33 +314,22 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 					changePanel(new BattleInfoPage(this, (SBRply) basis));
 		});
 
-		paus.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				pause = !pause;
-				jsl.setEnabled(pause);
-			}
+		paus.addActionListener(arg0 -> {
+			pause = !pause;
+			jsl.setEnabled(pause);
 		});
 
-		next.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				pause = false;
-				timer(0);
-				pause = true;
-			}
+		next.addActionListener(arg0 -> {
+			pause = false;
+			timer(0);
+			pause = true;
 		});
 
-		jsl.addChangeListener(new ChangeListener() {
-
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				if (jsl.getValueIsAdjusting() || isAdj() || !(basis instanceof SBRply))
-					return;
-				((SBRply) basis).restoreTo(jsl.getValue());
-				bb.reset();
-			}
-
+		jsl.addChangeListener(e -> {
+			if (jsl.getValueIsAdjusting() || isAdj() || !(basis instanceof SBRply))
+				return;
+			((SBRply) basis).restoreTo(jsl.getValue());
+			bb.reset();
 		});
 
 	}
