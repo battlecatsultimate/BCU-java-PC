@@ -30,10 +30,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
-@SuppressWarnings("deprecation")
 public class UtilPC {
 
 	public static class PCItr implements Itf {
@@ -176,9 +174,6 @@ public class UtilPC {
 				OggTimeReader otr = new OggTimeReader(f);
 
 				return otr.getTime();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				return -1;
 			} catch (Exception e) {
 				e.printStackTrace();
 				return -1;
@@ -263,23 +258,38 @@ public class UtilPC {
 		if (pc == null)
 			return new String[] { "Lv." + lvs[0], "" };
 		else {
-			String lab;
+			StringBuilder lab;
 
 			if(pc.isRelicSlow(0))
-				lab = Page.get(3, "rslow");
+				lab = new StringBuilder(Page.get(3, "rslow"));
 			else if(pc.isRelicWeak(0))
-				lab = Page.get(3, "rweak");
+				lab = new StringBuilder(Page.get(3, "rweak"));
+			else if(pc.isZombieKB(0))
+				lab = new StringBuilder(Page.get(3, "zkb"));
 			else
-				lab = Interpret.PCTX[pc.info[0][0]];
+				lab = new StringBuilder(Interpret.PCTX[pc.info[0][0]]);
 
-			String str = "Lv." + lvs[0] + ", {";
+			StringBuilder str = new StringBuilder("Lv." + lvs[0] + ", {");
 			for (int i = 1; i < 5; i++) {
-				str += lvs[i] + ",";
-				lab += ", " + (pc.isRelicSlow(i) ? Page.get(3, "rslow") : pc.isRelicWeak(i) ? Page.get(3, "rweak") : Interpret.PCTX[pc.info[i][0]]);
+				str.append(lvs[i]).append(",");
+				lab.append(", ").append(getPCoinAbilityText(pc, i));
 			}
-			str += lvs[5] + "}";
-			return new String[] { str, lab };
+			str.append(lvs[5]).append("}");
+			return new String[] {str.toString(), lab.toString()};
 		}
 	}
 
+	public static String getPCoinAbilityText(PCoin pc, int index) {
+		if(index < 0 || index >= pc.info.length)
+			return null;
+
+		if(pc.isRelicSlow(index))
+			return Page.get(3, "rslow");
+		else if(pc.isRelicWeak(index))
+			return Page.get(3, "rweak");
+		else if(pc.isZombieKB(index))
+			return Page.get(3, "zkb");
+		else
+			return Interpret.PCTX[pc.info[index][0]];
+	}
 }
