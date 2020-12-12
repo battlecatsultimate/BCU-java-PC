@@ -122,7 +122,7 @@ class GLModelBox extends GLCstd implements ModelBox {
 
 	@Override
 	public EAnimS getEntity() {
-		return null;
+		return ent;
 	}
 
 	@Override
