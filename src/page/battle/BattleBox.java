@@ -156,7 +156,7 @@ public interface BattleBox {
 			minSiz = getReulatedSiz(minSiz, w, h);
 			maxSiz = getReulatedSiz(maxSiz, w, h);
 
-			groundHeight = (h * (10 - bar) / 10.0) * (maxSiz - minSiz);
+			groundHeight = (h * 2 / 10.0) * (maxSiz - minSiz);
 		}
 
 		private double getReulatedSiz(double siz, int w, int h) {
@@ -181,9 +181,7 @@ public interface BattleBox {
 				pos = 0;
 			if (maxW * siz + pos < w)
 				pos = (int) (w - maxW * siz);
-			midh = h + (int) (groundHeight * (siz - maxSiz) / (maxSiz - minSiz)) + (int) (h * (10 - bar) / 10.0 * 0.675 * 0.15 / aux.slot[0].getImg().getHeight());
-			if (midh > siz * minH * 2)
-				midh = (int) (siz * minH * 2);
+			midh = h + (int) (groundHeight * (siz - maxSiz) / (maxSiz - minSiz));
 
 		}
 
@@ -459,7 +457,8 @@ public interface BattleBox {
 
 		private void drawTop(FakeGraphics g) {
 			int w = box.getWidth();
-			P p = Res.getMoney((int) sb.mon, sb.max_mon, g, w);
+			SymCoord sym = new SymCoord(g, 1, w-aux.num[0][0].getImg().getHeight()*0.2, aux.num[0][0].getImg().getHeight()*0.2, 1);
+			P p = Res.getMoney((int) sb.mon, sb.max_mon, sym);
 			int ih = (int) p.y + (int) (aux.num[0][0].getImg().getHeight()*0.2);
 			int n = 0;
 			FakeImage bimg = aux.battle[2][1].getImg();
@@ -576,7 +575,7 @@ public interface BattleBox {
 
 					bf.sb.lineupChanging = true;
 
-					bf.sb.changeFrame = 10;
+					bf.sb.changeFrame = Data.LINEUP_CHANGE_TIME;
 					bf.sb.changeDivision = bf.sb.changeFrame / 2;
 
 					up = velocity < 0;
