@@ -11,12 +11,12 @@ import page.view.CastleViewPage;
 import page.view.MusicPage;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Arrays;
+import java.util.Locale;
 
 class HeadEditTable extends Page {
 
@@ -218,36 +218,24 @@ class HeadEditTable extends Page {
 
 	private void addListeners() {
 
-		bg.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				bvp = new BGViewPage(getFront(), pac.desc.id, sta.bg);
-				changePanel(bvp);
-			}
+		bg.addActionListener(arg0 -> {
+			bvp = new BGViewPage(getFront(), pac.desc.id, sta.bg);
+			changePanel(bvp);
 		});
 
-		cas.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				cvp = new CastleViewPage(getFront(), CastleList.from(sta), sta.castle);
-				changePanel(cvp);
-			}
+		cas.addActionListener(arg0 -> {
+			cvp = new CastleViewPage(getFront(), CastleList.from(sta), sta.castle);
+			changePanel(cvp);
 		});
 
-		mus.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				mp = new MusicPage(getFront(), pac.desc.id);
-				changePanel(mp);
-			}
+		mus.addActionListener(arg0 -> {
+			mp = new MusicPage(getFront(), pac.desc.id);
+			changePanel(mp);
 		});
 
-		con.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				sta.non_con = !con.isSelected();
-				setData(sta);
-			}
+		con.addActionListener(arg0 -> {
+			sta.non_con = !con.isSelected();
+			setData(sta);
 		});
 
 	}
@@ -256,7 +244,11 @@ class HeadEditTable extends Page {
 		long min = milli / 60 / 1000;
 		double time = milli - (double) min * 60000;
 		time /= 1000;
-		DecimalFormat df = new DecimalFormat("#.###");
+		NumberFormat nf = NumberFormat.getInstance(Locale.US);
+
+		DecimalFormat df = (DecimalFormat) nf;
+
+		df.applyPattern("#.###");
 		double s = Double.parseDouble(df.format(time));
 		if (s >= 60) {
 			s -= 60;
