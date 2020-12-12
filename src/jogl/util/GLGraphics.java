@@ -3,6 +3,7 @@ package jogl.util;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GL2ES3;
+import com.jogamp.opengl.GL2GL3;
 import common.system.P;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
@@ -53,11 +54,28 @@ public class GLGraphics implements GeoAuto {
 
 		}
 
-		protected void drawOval(int i, int j, int k, int l) {
-			// checkMode();
-			// setColor();
-			// TODO circular
 
+		protected void drawOval(int i, int j, int k, int l) {
+			checkMode();
+			setColor();
+
+			int endX = i+k;
+
+			//Formula : (x-i-k/2)^2/(k/2)^2 + (y-j-l/2)^2/(l/2)^2 = 1
+
+			g.glBegin(GL_LINE_LOOP);
+
+			//y > 0
+			for(int s = i; s < endX; s++) {
+				addP(s, (int) ((l /2)*Math.sqrt(1-Math.pow((s- i -(k /2.0))/(k /2.0), 2))+ j + l /2));
+			}
+
+			//y < 0
+			for(int s = endX; s >= i; s--) {
+				addP(s, - (int) ((l /2)*Math.sqrt(1-Math.pow((s- i -(k /2.0))/(k /2.0), 2))+ j + l /2));
+			}
+
+			g.glEnd();
 		}
 
 		protected void drawRect(int x, int y, int w, int h) {
@@ -72,10 +90,26 @@ public class GLGraphics implements GeoAuto {
 		}
 
 		protected void fillOval(int i, int j, int k, int l) {
-			// checkMode();
-			// setColor();
-			// TODO circular
+			checkMode();
+			setColor();
 
+			int endX = i+k;
+
+			//Formula : (x-i-k/2)^2/(k/2)^2 + (y-j-l/2)^2/(l/2)^2 = 1
+
+			g.glBegin(GL2.GL_POLYGON);
+
+			//y > 0
+			for(int s = i; s < endX; s++) {
+				addP(s, (int) ((l /2)*Math.sqrt(1-Math.pow((s- i -(k /2.0))/(k /2.0), 2))+ j + l /2));
+			}
+
+			//y < 0
+			for(int s = endX; s >= i; s--) {
+				addP(s, - (int) ((l /2)*Math.sqrt(1-Math.pow((s- i -(k /2.0))/(k /2.0), 2))+ j + l /2));
+			}
+
+			g.glEnd();
 		}
 
 		protected void fillRect(int x, int y, int w, int h) {
