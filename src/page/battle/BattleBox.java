@@ -131,7 +131,7 @@ public interface BattleBox {
 
 			ImgCore.set(g);
 			P rect = new P(box.getWidth(), box.getHeight());
-			sb.bg.draw(g, rect, pos, midh, siz);
+			sb.bg.draw(g, rect, pos, midh, siz, (int) groundHeight);
 			drawCastle(g);
 			if(sb.can == sb.max_can && sb.canon.id == 0) {
 				drawCannonRange(g);
@@ -156,7 +156,7 @@ public interface BattleBox {
 			minSiz = getReulatedSiz(minSiz, w, h);
 			maxSiz = getReulatedSiz(maxSiz, w, h);
 
-			groundHeight = (h * 2 / 10.0) * (maxSiz - minSiz);
+			groundHeight = (h * 2 / 10.0) * (1 - minSiz/maxSiz);
 		}
 
 		private double getReulatedSiz(double siz, int w, int h) {
