@@ -83,11 +83,6 @@ public interface BattleBox {
 
 		private P mouse; // in pix
 
-		//This section is for lineup changing, detecting dragging up
-		/**
-		 * Initial point where drag started and ended
-		 */
-		private Point dragInit, dragEnd;
 		/**
 		 * Dragged time for calculating velocity of cursor
 		 */
@@ -96,14 +91,11 @@ public interface BattleBox {
 		 * Boolean which tells mouse is dragging or not
 		 */
 		public boolean dragging = false;
-		/**
-		 * Boolean which tells dragging up/down is performed or not
-		 */
-		private boolean performed = false;
-
-		private boolean up = false;
 
 		private final BCAuxAssets aux = CommonStatic.getBCAssets();
+
+		private final SymCoord sym = new SymCoord(null, 0, 0, 0, 0);
+		private final P p = new P(0, 0);
 
 		public BBPainter(OuterBox bip, BattleField bas, BattleBox bb) {
 			page = bip;
@@ -130,7 +122,7 @@ public interface BattleBox {
 			regulate();
 
 			ImgCore.set(g);
-			P rect = new P(box.getWidth(), box.getHeight());
+			P rect = setP(box.getWidth(), box.getHeight());
 			sb.bg.draw(g, rect, pos, midh, siz, (int) groundHeight);
 			drawCastle(g);
 			if(sb.can == sb.max_can && sb.canon.id == 0) {
@@ -202,6 +194,23 @@ public interface BattleBox {
 			midh = 0;
 		}
 
+		private SymCoord setSym(FakeGraphics g, double r, double x, double y, int t) {
+			sym.g = g;
+			sym.r = r;
+			sym.x = x;
+			sym.y = y;
+			sym.type = t;
+
+			return sym;
+		}
+
+		private P setP(double x, double y) {
+			p.x = x;
+			p.y = y;
+
+			return p;
+		}
+
 		private void drawBtm(FakeGraphics g) {
 			int w = box.getWidth();
 			int h = box.getHeight();
@@ -226,8 +235,8 @@ public interface BattleBox {
 			iw = (int) (hr * right.getWidth());
 			ih = (int) (hr * right.getHeight());
 			g.drawImage(right, w - iw, h - ih, iw, ih);
-			Res.getCost(sb.next_lv, mtype > 0, new SymCoord(g, hr, hr * 5, h - hr * 5, 2));
-			Res.getWorkerLv(sb.work_lv, mtype > 0, new SymCoord(g, hr, hr * 5, h - hr * 130, 0));
+			Res.getCost(sb.next_lv, mtype > 0, setSym(g, hr, hr * 5, h - hr * 5, 2));
+			Res.getWorkerLv(sb.work_lv, mtype > 0, setSym(g, hr, hr * 5, h - hr * 130, 0));
 			int hi = h;
 			double marg = 0;
 			if (ctype == 0)
@@ -294,13 +303,13 @@ public interface BattleBox {
 				//Check if lineup is changing
 				if(sb.changeFrame != -1) {
 					if(sb.changeFrame >= sb.changeDivision) {
-						double dis = isBehind ? ih * 0.5 : up ? ih * 0.4 : ih * 0.6;
+						double dis = isBehind ? ih * 0.5 : sb.goingUp ? ih * 0.4 : ih * 0.6;
 
-						y += (dis / sb.changeDivision) * (sb.changeDivision * 2 - sb.changeFrame) * (isBehind ? 1 : -1) * (up ? 1 : -1);
+						y += (dis / sb.changeDivision) * (sb.changeDivision * 2 - sb.changeFrame) * (isBehind ? 1 : -1) * (sb.goingUp ? 1 : -1);
 					} else {
-						double dis = isBehind ? ih * 0.5 : up ? ih * 0.6 : ih * 0.4;
+						double dis = isBehind ? ih * 0.5 : sb.goingUp ? ih * 0.6 : ih * 0.4;
 
-						y +=  (dis - (dis / sb.changeDivision) * (sb.changeDivision - sb.changeFrame)) * (isBehind ? -1 : 1) * (up ? 1 : -1);
+						y +=  (dis - (dis / sb.changeDivision) * (sb.changeDivision - sb.changeFrame)) * (isBehind ? -1 : 1) * (sb.goingUp ? 1 : -1);
 					}
 				}
 
@@ -325,7 +334,7 @@ public interface BattleBox {
 						g.colRect(x + iw - dw - xw, y + ih - dh * 2, xw, dh, 0, 0, 0, -1);
 						g.colRect(x + dw, y + ih - dh * 2, iw - dw * 2 - xw, dh, 100, 212, 255, -1);
 					} else
-						Res.getCost(pri, !b, new SymCoord(g, hr, x + iw, y + ih, 3));
+						Res.getCost(pri, !b, setSym(g, hr, x + iw, y + ih, 3));
 				}
 			}
 		}
@@ -369,15 +378,15 @@ public interface BattleBox {
 				int bh = (int) (bimg.getHeight() * siz);
 				gra.drawImage(bimg, posx - bw, posy - bh, bw, bh);
 			} else
-				((Entity) sb.ebase).anim.draw(gra, new P(posx, posy), siz * sprite);
+				((Entity) sb.ebase).anim.draw(gra, setP(posx, posy), siz * sprite);
 			gra.setTransform(at);
 			posx -= castw * siz / 2;
 			posy -= casth * siz;
-			Res.getBase(sb.ebase, new SymCoord(gra, siz, posx, posy, 0), bf.sb.st.trail);
+			Res.getBase(sb.ebase, setSym(gra, siz, posx, posy, 0), bf.sb.st.trail);
 			posx = (int) (((sb.st.len - 800) * ratio + off) * siz + pos);
 			drawNyCast(gra, (int) (midh - road_h * siz), posx, siz, sb.nyc);
 			posx += castw * siz / 2;
-			Res.getBase(sb.ubase, new SymCoord(gra, siz, posx, posy, 1), false);
+			Res.getBase(sb.ubase, setSym(gra, siz, posx, posy, 1), false);
 		}
 
 		private void drawEntity(FakeGraphics gra) {
@@ -393,16 +402,16 @@ public interface BattleBox {
 						gra.setTransform(at);
 						double p = getX(e.pos);
 						double y = midh - (road_h - dep) * siz;
-						e.anim.draw(gra, new P(p, y), psiz);
+						e.anim.draw(gra, setP(p, y), psiz);
 						gra.setTransform(at);
-						e.anim.drawEff(gra, new P(p, y), siz);
+						e.anim.drawEff(gra, setP(p, y), siz);
 					}
 				for (ContAb wc : sb.lw)
 					if (wc.layer == i) {
 						gra.setTransform(at);
 						double p = (wc.pos * ratio + off - wave) * siz + pos;
 						double y = midh - (road_h - DEP * wc.layer) * siz;
-						wc.draw(gra, new P(p, y), psiz);
+						wc.draw(gra, setP(p, y), psiz);
 					}
 				for (EAnimCont eac : sb.lea)
 					if (eac.layer == i) {
@@ -412,9 +421,9 @@ public interface BattleBox {
 
 						if (eac instanceof WaprCont) {
 							double dx = ((WaprCont) eac).dire == -1 ? -27 * siz : -24 * siz;
-							eac.draw(gra, new P(p + dx, y - 24 * siz), psiz);
+							eac.draw(gra, setP(p + dx, y - 24 * siz), psiz);
 						} else {
-							eac.draw(gra, new P(p, y), psiz);
+							eac.draw(gra, setP(p, y), psiz);
 						}
 
 					}
@@ -423,14 +432,14 @@ public interface BattleBox {
 			gra.setTransform(at);
 			int can = cany[sb.canon.id];
 			int disp = canx[sb.canon.id];
-			P ori = new P(getX(sb.ubase.pos) + disp * siz, midh + (can - road_h) * siz);
+			P ori = setP(getX(sb.ubase.pos) + disp * siz, midh + (can - road_h) * siz);
 			sb.canon.drawBase(gra, ori, psiz);
 			gra.setTransform(at);
-			ori = new P(getX(sb.canon.pos), midh - road_h * siz);
+			ori = setP(getX(sb.canon.pos), midh - road_h * siz);
 			sb.canon.drawAtk(gra, ori, psiz);
 			gra.setTransform(at);
 			if (sb.sniper != null && sb.sniper.enabled) {
-				ori = new P(getX(sb.sniper.getPos()), midh - road_h * siz);
+				ori = setP(getX(sb.sniper.getPos()), midh - road_h * siz);
 				sb.sniper.drawBase(gra, ori, psiz);
 				gra.setTransform(at);
 			}
@@ -445,9 +454,9 @@ public interface BattleBox {
 							gra.setTransform(at);
 							double p = getX(e.pos);
 							double y = midh - (road_h - dep) * siz;
-							e.anim.draw(gra, new P(p, y), psiz);
+							e.anim.draw(gra, setP(p, y), psiz);
 							gra.setTransform(at);
-							e.anim.drawEff(gra, new P(p, y), siz);
+							e.anim.drawEff(gra, setP(p, y), siz);
 						}
 				}
 			}
@@ -457,7 +466,7 @@ public interface BattleBox {
 
 		private void drawTop(FakeGraphics g) {
 			int w = box.getWidth();
-			SymCoord sym = new SymCoord(g, 1, w-aux.num[0][0].getImg().getHeight()*0.2, aux.num[0][0].getImg().getHeight()*0.2, 1);
+			SymCoord sym = setSym(g, 1, w-aux.num[0][0].getImg().getHeight()*0.2, aux.num[0][0].getImg().getHeight()*0.2, 1);
 			P p = Res.getMoney((int) sb.mon, sb.max_mon, sym);
 			int ih = (int) p.y + (int) (aux.num[0][0].getImg().getHeight()*0.2);
 			int n = 0;
@@ -538,65 +547,21 @@ public interface BattleBox {
 			P.delete(p);
 		}
 
-		private synchronized void drag(Point p) {
-			if(!dragging) {
-				dragInit = p;
-			}
-
-			dragging = true;
-
-			dragEnd = p;
-
+		protected synchronized void drag(Point p) {
 			if (mouse != null) {
 				P temp = new PP(p);
 				adjust((int) (temp.x - mouse.x), 0);
 				mouse.setTo(temp);
 				reset();
 			}
-
-			checkDragUpDown();
-		}
-
-		private void checkDragUpDown() {
-			if(bf.sb.isOneLineup || bf.sb.ubase.health == 0 || dragInit == null || dragEnd == null || dragFrame == 0 || performed)
-				return;
-
-			final double MINIMUM_DISTANCE = box.getHeight() * 0.2;
-			final double MINIMUM_VELOCITY = MINIMUM_DISTANCE / 30; //px/f cursor must be dragged in 1 sec
-
-			if(isInDragRange(MINIMUM_DISTANCE)) {
-				double dy = dragEnd.y - dragInit.y;
-				double velocity = dy / dragFrame;
-
-				if(Math.abs(velocity) >= MINIMUM_VELOCITY && Math.abs(dy) >= MINIMUM_DISTANCE) {
-					//Notice program dragging up/down is already performed
-					//Won't process dragging up/down until drag is reset (mouse released)
-					performed = true;
-
-					bf.sb.lineupChanging = true;
-
-					bf.sb.changeFrame = Data.LINEUP_CHANGE_TIME;
-					bf.sb.changeDivision = bf.sb.changeFrame / 2;
-
-					up = velocity < 0;
-				}
-			}
-		}
-
-		private boolean isInDragRange(double minD) {
-			double dx = dragEnd.x - dragInit.x;
-
-			//Drag up down, dx shouldn't exceed minimum off path
-			return minD >= Math.abs(dx);
 		}
 
 		private synchronized void press(Point p) {
 			mouse = new PP(p);
 		}
 
-		private synchronized void release() {
+		protected synchronized void release() {
 			dragging = false;
-			performed = false;
 			dragFrame = 0;
 			mouse = null;
 		}

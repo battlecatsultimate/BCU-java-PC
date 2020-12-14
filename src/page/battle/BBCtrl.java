@@ -17,6 +17,17 @@ public class BBCtrl extends BBPainter {
 
 	private final SBCtrl sbc;
 
+	//This section is for lineup changing, detecting dragging up
+	/**
+	 * Initial point where drag started and ended
+	 */
+	private Point dragInit, dragEnd;
+
+	/**
+	 * Boolean which tells dragging up/down is performed or not
+	 */
+	protected boolean performed = false;
+
 	public BBCtrl(OuterBox bip, SBCtrl bas, BattleBox bb) {
 		super(bip, bas, bb);
 		sbc = bas;
@@ -64,4 +75,57 @@ public class BBCtrl extends BBPainter {
 		reset();
 	}
 
+	@Override
+	protected synchronized void release() {
+		super.release();
+		performed = false;
+		dragInit = null;
+		dragEnd = null;
+	}
+
+	@Override
+	protected synchronized void drag(Point p) {
+		if(!dragging) {
+			dragInit = p;
+		}
+
+		dragging = true;
+
+		dragEnd = p;
+
+		super.drag(p);
+
+		checkDragUpDown();
+	}
+
+	private void checkDragUpDown() {
+		if(bf.sb.isOneLineup || bf.sb.ubase.health == 0 || dragInit == null || dragEnd == null || dragFrame == 0 || performed)
+			return;
+
+		final double MINIMUM_DISTANCE = box.getHeight() * 0.2;
+		final double MINIMUM_VELOCITY = MINIMUM_DISTANCE / 30; //px/f cursor must be dragged in 1 sec
+
+		if(isInDragRange(MINIMUM_DISTANCE)) {
+			double dy = dragEnd.y - dragInit.y;
+			double velocity = dy / dragFrame;
+
+			if(Math.abs(velocity) >= MINIMUM_VELOCITY && Math.abs(dy) >= MINIMUM_DISTANCE) {
+				//Notice program dragging up/down is already performed
+				//Won't process dragging up/down until drag is reset (mouse released)
+				performed = true;
+
+				if(velocity < 0)
+					sbc.action.add(-4);
+				else
+					sbc.action.add(-5);
+			}
+		}
+	}
+
+	private boolean isInDragRange(double minD) {
+		double dx = dragEnd.x - dragInit.x;
+
+		//Drag up down, dx shouldn't exceed minimum off path
+		return minD >= Math.abs(dx);
+	}
 }
