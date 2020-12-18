@@ -260,7 +260,8 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 				BCMusic.play(basis.sb.st.mus1, basis.sb.st.loop1);
 			else {
 				if(!musicChanged) {
-					BCMusic.BG.stop();
+					if(BCMusic.BG != null)
+						BCMusic.BG.stop();
 					new Thread(() -> {
 						try {
 							Thread.sleep(Data.MUSIC_DELAY);
