@@ -60,7 +60,21 @@ class GLIconBox extends GLViewBox implements IconBox {
 		r.width = line[2];
 		r.height = line[3];
 		try {
-			return new Robot().createScreenCapture(r);
+			BufferedImage clip = new Robot().createScreenCapture(r);
+			FakeImage img = CommonStatic.getBCAssets().ico[mode][type].getImg();
+
+			int bw = img.getWidth();
+			int bh = img.getHeight();
+
+			double a = Math.min(1.0 * line[2] / bw, 1.0 * line[3] / bh);
+
+			Image tmp = clip.getScaledInstance((int) (line[2] / a), (int) (line[3] /a), Image.SCALE_SMOOTH);
+
+			BufferedImage res = new BufferedImage(bw, bh, BufferedImage.TYPE_3BYTE_BGR);
+			res.getGraphics().drawImage(tmp, 0, 0, null);
+
+			return res;
+
 		} catch (AWTException e) {
 			e.printStackTrace();
 			return null;
@@ -202,7 +216,7 @@ class GLViewBox extends GLCstd implements ViewBox, GLEventListener {
 	protected void draw(FakeGraphics g) {
 		int w = getWidth();
 		int h = getHeight();
-		g.translate(w / 2, h * 3 / 4);
+		g.translate(w / 2.0, h * 3 / 4.0);
 		g.setColor(FakeGraphics.BLACK);
 		if (ent != null)
 			ent.draw(g, ctrl.ori.copy().times(-1), ctrl.siz);
