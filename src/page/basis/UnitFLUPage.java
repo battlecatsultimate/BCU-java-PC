@@ -10,10 +10,6 @@ import page.info.filter.UnitFilterBox;
 import page.info.filter.UnitListTable;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
@@ -28,7 +24,7 @@ public class UnitFLUPage extends LubCont {
 	private final JScrollPane jsp = new JScrollPane(ult);
 	private final UnitFilterBox ufb;
 	private final JTF seatf = new JTF();
-	private final JBTN seabt = new JBTN();
+	private final JBTN seabt = new JBTN(0, "search");
 
 	public UnitFLUPage(Page p) {
 		super(p);
@@ -96,39 +92,26 @@ public class UnitFLUPage extends LubCont {
 	}
 
 	private void addListeners() {
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
-		});
+		back.addActionListener(arg0 -> changePanel(getFront()));
 
-		show.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (show.isSelected())
-					add(ufb);
-				else
-					remove(ufb);
-			}
+		show.addActionListener(arg0 -> {
+			if (show.isSelected())
+				add(ufb);
+			else
+				remove(ufb);
 		});
 
 		ListSelectionModel lsm = ult.getSelectionModel();
 		lsm.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-		lsm.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (lsm.getValueIsAdjusting())
-					return;
-				int ind = lsm.getAnchorSelectionIndex();
-				if (ind < 0)
-					return;
-				Form f = ult.list.get(ind);
-				lub.select(f);
-			}
-
+		lsm.addListSelectionListener(e -> {
+			if (lsm.getValueIsAdjusting())
+				return;
+			int ind = lsm.getAnchorSelectionIndex();
+			if (ind < 0)
+				return;
+			Form f = ult.list.get(ind);
+			lub.select(f);
 		});
 
 		seabt.setLnr((b) -> {
@@ -139,14 +122,11 @@ public class UnitFLUPage extends LubCont {
 			}
 		});
 
-		seatf.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (ufb != null) {
-					ufb.name = seatf.getText();
+		seatf.addActionListener(e -> {
+			if (ufb != null) {
+				ufb.name = seatf.getText();
 
-					ufb.callBack(null);
-				}
+				ufb.callBack(null);
 			}
 		});
 
