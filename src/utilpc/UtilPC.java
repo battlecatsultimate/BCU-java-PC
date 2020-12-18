@@ -250,6 +250,8 @@ public class UtilPC {
 		FakeImage img = v.getImg();
 		if (img == null)
 			return null;
+		if (img.bimg() == null)
+			return null;
 		return new ImageIcon((Image) img.bimg());
 	}
 
