@@ -3,15 +3,12 @@ package page.pack;
 import common.pack.PackData.UserPack;
 import common.util.stage.Music;
 import io.BCMusic;
+import main.Opts;
 import page.JBTN;
 import page.Page;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -48,57 +45,47 @@ public class MusicEditPage extends Page {
 	}
 
 	private void addListeners() {
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (BCMusic.BG != null && BCMusic.BG.isPlaying()) {
-					BCMusic.BG.stop();
-					BCMusic.clear();
-				}
-
-				changePanel(getFront());
+		back.addActionListener(arg0 -> {
+			if (BCMusic.BG != null && BCMusic.BG.isPlaying()) {
+				BCMusic.BG.stop();
+				BCMusic.clear();
 			}
+
+			changePanel(getFront());
 		});
 
-		relo.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				pack.loadMusics();
-				setList();
-			}
+		relo.addActionListener(arg0 -> {
+			pack.loadMusics();
+			setList();
 		});
 
-		show.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				File f = new File("./res/img/" + pack + "/music/");
-				f.mkdirs();
-				try {
-					Desktop.getDesktop().open(f);
-				} catch (IOException e) {
-					e.printStackTrace();
+		show.addActionListener(arg0 -> {
+			File f = new File("./workspace/" + pack.desc.id + "/musics/");
+			if(!f.exists()) {
+				boolean result = f.mkdirs();
+
+				if(!result) {
+					Opts.pop("Couldn't create folder "+f.getAbsolutePath(), "IO Error");
+					return;
 				}
 			}
-		});
-
-		play.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (sele == null)
-					return;
-				BCMusic.setBG(sele, 0);
+			try {
+				Desktop.getDesktop().open(f);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		});
 
-		jlst.addListSelectionListener(new ListSelectionListener() {
+		play.addActionListener(arg0 -> {
+			if (sele == null)
+				return;
+			BCMusic.setBG(sele, 0);
+		});
 
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (isAdj() || arg0.getValueIsAdjusting())
-					return;
-				sele = jlst.getSelectedValue();
-			}
-
+		jlst.addListSelectionListener(arg0 -> {
+			if (isAdj() || arg0.getValueIsAdjusting())
+				return;
+			sele = jlst.getSelectedValue();
 		});
 	}
 
