@@ -432,15 +432,15 @@ public interface BattleBox {
 			gra.setTransform(at);
 			int can = cany[sb.canon.id];
 			int disp = canx[sb.canon.id];
-			P ori = setP(getX(sb.ubase.pos) + disp * siz, midh + (can - road_h) * siz);
-			sb.canon.drawBase(gra, ori, psiz);
+			setP(getX(sb.ubase.pos) + disp * siz, midh + (can - road_h) * siz);
+			sb.canon.drawBase(gra, p, psiz);
 			gra.setTransform(at);
-			ori = setP(getX(sb.canon.pos), midh - road_h * siz);
-			sb.canon.drawAtk(gra, ori, psiz);
+			setP(getX(sb.canon.pos), midh - road_h * siz);
+			sb.canon.drawAtk(gra, p, psiz);
 			gra.setTransform(at);
 			if (sb.sniper != null && sb.sniper.enabled) {
-				ori = setP(getX(sb.sniper.getPos()), midh - road_h * siz);
-				sb.sniper.drawBase(gra, ori, psiz);
+				setP(getX(sb.sniper.getPos()), midh - road_h * siz);
+				sb.sniper.drawBase(gra, p, psiz);
 				gra.setTransform(at);
 			}
 
