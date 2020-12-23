@@ -2,11 +2,11 @@ package page.pack;
 
 import common.CommonStatic;
 import common.battle.data.CustomEnemy;
+import common.pack.Context.ErrType;
 import common.pack.PackData.UserPack;
 import common.pack.Source.Workspace;
 import common.pack.Source.ZipSource;
 import common.pack.UserProfile;
-import common.pack.Context.ErrType;
 import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.stage.MapColc;
@@ -28,11 +28,7 @@ import page.view.EnemyViewPage;
 import page.view.MusicPage;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.Arrays;
@@ -177,108 +173,80 @@ public class PackEditPage extends Page {
 
 		recd.setLnr(x -> changePanel(new RecdPackPage(this, pac)));
 
-		vcas.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (pac != null && pac.editable)
-					changePanel(new CastleEditPage(getThis(), pac));
-				else if (pac != null)
-					changePanel(new CastleViewPage(getThis(), pac.castles));
-			}
+		vcas.addActionListener(arg0 -> {
+			if (pac != null && pac.editable)
+				changePanel(new CastleEditPage(getThis(), pac));
+			else if (pac != null)
+				changePanel(new CastleViewPage(getThis(), pac.castles));
 		});
 
-		vbgr.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (pac != null && pac.editable)
-					changePanel(new BGEditPage(getThis(), pac));
-				else if (pac != null)
-					changePanel(new BGViewPage(getThis(), pac.getSID()));
-			}
+		vbgr.addActionListener(arg0 -> {
+			if (pac != null && pac.editable)
+				changePanel(new BGEditPage(getThis(), pac));
+			else if (pac != null)
+				changePanel(new BGViewPage(getThis(), pac.getSID()));
 		});
 
-		vrcg.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (pac != null && pac.editable)
-					changePanel(new CGLREditPage(getThis(), pac));
-				else
-					changePanel(new CharaGroupPage(getThis(), pac, true));
-			}
+		vrcg.addActionListener(arg0 -> {
+			if (pac != null && pac.editable)
+				changePanel(new CGLREditPage(getThis(), pac));
+			else
+				changePanel(new CharaGroupPage(getThis(), pac, true));
 		});
 
-		vrlr.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (pac != null && pac.editable)
-					changePanel(new CGLREditPage(getThis(), pac));
-				else
-					changePanel(new LvRestrictPage(getThis(), pac, true));
-			}
+		vrlr.addActionListener(arg0 -> {
+			if (pac != null && pac.editable)
+				changePanel(new CGLREditPage(getThis(), pac));
+			else
+				changePanel(new LvRestrictPage(getThis(), pac, true));
 		});
 
-		jld.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (jld.getValueIsAdjusting())
-					return;
-				adde.setEnabled(pac != null && jld.getSelectedValue() != null && pac.editable);
-			}
-
+		jld.addListSelectionListener(arg0 -> {
+			if (jld.getValueIsAdjusting())
+				return;
+			adde.setEnabled(pac != null && jld.getSelectedValue() != null && pac.editable);
 		});
 
 	}
 
 	private void addListeners$1() {
 
-		addp.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				String str = Workspace.validateWorkspace(Workspace.generateMD5ID());
-				pac = Data.err(() -> UserProfile.initJsonPack(str));
-				vpack.add(pac);
-				jlp.setListData(vpack);
-				jlt.setListData(vpack);
-				jlp.setSelectedValue(pac, true);
-				setPack(pac);
-				changing = false;
-			}
+		addp.addActionListener(arg0 -> {
+			changing = true;
+			String str = Workspace.validateWorkspace(Workspace.generateMD5ID());
+			pac = Data.err(() -> UserProfile.initJsonPack(str));
+			vpack.add(pac);
+			jlp.setListData(vpack);
+			jlt.setListData(vpack);
+			jlp.setSelectedValue(pac, true);
+			setPack(pac);
+			changing = false;
 		});
 
-		remp.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (!Opts.conf())
-					return;
-				changing = true;
-				int ind = jlp.getSelectedIndex();
-				UserProfile.unloadPack(pac);
-				UserProfile.remove(pac);
-				pac.delete();
-				vpack.remove(pac);
-				jlp.setListData(vpack);
-				jlt.setListData(vpack);
-				if (ind > 0)
-					ind--;
-				jlp.setSelectedIndex(ind);
-				setPack(jlp.getSelectedValue());
-				changing = false;
-			}
+		remp.addActionListener(arg0 -> {
+			if (!Opts.conf())
+				return;
+			changing = true;
+			int ind = jlp.getSelectedIndex();
+			UserProfile.unloadPack(pac);
+			UserProfile.remove(pac);
+			pac.delete();
+			vpack.remove(pac);
+			jlp.setListData(vpack);
+			jlt.setListData(vpack);
+			if (ind > 0)
+				ind--;
+			jlp.setSelectedIndex(ind);
+			setPack(jlp.getSelectedValue());
+			changing = false;
 		});
 
-		jlp.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (changing || jlp.getValueIsAdjusting())
-					return;
-				changing = true;
-				setPack(jlp.getSelectedValue());
-				changing = false;
-			}
-
+		jlp.addListSelectionListener(arg0 -> {
+			if (changing || jlp.getValueIsAdjusting())
+				return;
+			changing = true;
+			setPack(jlp.getSelectedValue());
+			changing = false;
 		});
 
 		jtfp.addFocusListener(new FocusAdapter() {
@@ -317,51 +285,38 @@ public class PackEditPage extends Page {
 
 	private void addListeners$2() {
 
-		jle.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (changing || jle.getValueIsAdjusting())
-					return;
-				changing = true;
-				setEnemy(jle.getSelectedValue());
-				changing = false;
-			}
-
+		jle.addListSelectionListener(e -> {
+			if (changing || jle.getValueIsAdjusting())
+				return;
+			changing = true;
+			setEnemy(jle.getSelectedValue());
+			changing = false;
 		});
 
-		adde.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				CustomEnemy ce = new CustomEnemy();
-				AnimCE anim = jld.getSelectedValue();
-				Enemy e = new Enemy(pac.getNextID(Enemy.class), anim, ce);
-				pac.enemies.add(e);
-				jle.setListData(pac.enemies.toArray());
-				jle.setSelectedValue(e, true);
-				setEnemy(e);
-				changing = false;
-			}
-
+		adde.addActionListener(arg0 -> {
+			changing = true;
+			CustomEnemy ce = new CustomEnemy();
+			AnimCE anim = jld.getSelectedValue();
+			Enemy e = new Enemy(pac.getNextID(Enemy.class), anim, ce);
+			pac.enemies.add(e);
+			jle.setListData(pac.enemies.toArray());
+			jle.setSelectedValue(e, true);
+			setEnemy(e);
+			changing = false;
 		});
 
-		reme.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
+		reme.addActionListener(arg0 -> {
 				if (!Opts.conf())
-					return;
-				changing = true;
-				int ind = jle.getSelectedIndex();
-				pac.enemies.remove(ene);
-				jle.setListData(pac.enemies.toArray());
-				if (ind >= 0)
-					ind--;
-				jle.setSelectedIndex(ind);
-				setEnemy(jle.getSelectedValue());
-				changing = false;
-			}
-
+				return;
+			changing = true;
+			int ind = jle.getSelectedIndex();
+			pac.enemies.remove(ene);
+			jle.setListData(pac.enemies.toArray());
+			if (ind >= 0)
+				ind--;
+			jle.setSelectedIndex(ind);
+			setEnemy(jle.getSelectedValue());
+			changing = false;
 		});
 
 		edit.setLnr(() -> new EnemyEditPage(getThis(), ene));
@@ -376,41 +331,26 @@ public class PackEditPage extends Page {
 
 	private void addListeners$3() {
 
-		sdiy.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (pac.editable)
-					changePanel(new StageEditPage(getThis(), pac.mc, pac));
-				else {
-					List<MapColc> lmc = Arrays.asList(new MapColc[] { pac.mc });
-					changePanel(new StageViewPage(getThis(), lmc));
-				}
+		sdiy.addActionListener(arg0 -> {
+			if (pac.editable)
+				changePanel(new StageEditPage(getThis(), pac.mc, pac));
+			else {
+				List<MapColc> lmc = Arrays.asList(new MapColc[] { pac.mc });
+				changePanel(new StageViewPage(getThis(), lmc));
 			}
 		});
 
-		cunt.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new UnitManagePage(getThis(), pac));
-			}
-
-		});
+		cunt.addActionListener(arg0 -> changePanel(new UnitManagePage(getThis(), pac)));
 
 		vmsc.setLnr(() -> pac.editable ? new MusicEditPage(getThis(), pac)
 				: new MusicPage(getThis(), pac.musics.getList()));
 
-		jls.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (changing || jls.getValueIsAdjusting())
-					return;
-				changing = true;
-				setMap(jls.getSelectedValue());
-				changing = false;
-			}
-
+		jls.addListSelectionListener(arg0 -> {
+			if (changing || jls.getValueIsAdjusting())
+				return;
+			changing = true;
+			setMap(jls.getSelectedValue());
+			changing = false;
 		});
 
 		adds.setLnr(jls::addItem);
@@ -426,70 +366,50 @@ public class PackEditPage extends Page {
 
 	private void addListeners$4() {
 
-		jlr.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (changing || arg0.getValueIsAdjusting())
-					return;
-				changing = true;
-				setRely(jlr.getSelectedValue());
-				changing = false;
-			}
-
+		jlr.addListSelectionListener(arg0 -> {
+			if (changing || arg0.getValueIsAdjusting())
+				return;
+			changing = true;
+			setRely(jlr.getSelectedValue());
+			changing = false;
 		});
 
-		jlt.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (changing || arg0.getValueIsAdjusting())
-					return;
-				checkAddr();
-			}
-
+		jlt.addListSelectionListener(arg0 -> {
+			if (changing || arg0.getValueIsAdjusting())
+				return;
+			checkAddr();
 		});
 
-		addr.addActionListener(new ActionListener() {
+		addr.addActionListener(arg0 -> {
+			changing = true;
+			UserPack rel = jlt.getSelectedValue();
+			pac.desc.dependency.add(rel.getSID());
+			for (String id : rel.desc.dependency)
+				if (!pac.desc.dependency.contains(id))
+					pac.desc.dependency.add(id);
+			updateJlr();
+			jlr.setSelectedValue(rel, true);
+			setRely(rel);
+			changing = false;
+		});
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				UserPack rel = jlt.getSelectedValue();
-				pac.desc.dependency.add(rel.getSID());
-				for (String id : rel.desc.dependency)
-					if (!pac.desc.dependency.contains(id))
-						pac.desc.dependency.add(id);
+		remr.addActionListener(arg0 -> {
+			changing = true;
+			int ind = jlr.getSelectedIndex() - 1;
+			UserPack rel = jlr.getSelectedValue();
+			if (pac.relyOn(rel.getSID())) {
+				StringBuilder sb = new StringBuilder();
+				List<String> list = pac.foreignList(rel.getSID());
+				for (String str : list)
+					sb.append(str).append("\n");
+				Opts.pop(sb.toString(), "list of dependency");
+			} else {
+				pac.desc.dependency.remove(rel.getSID());
 				updateJlr();
-				jlr.setSelectedValue(rel, true);
-				setRely(rel);
-				changing = false;
+				jlr.setSelectedIndex(ind);
+				setRely(jlr.getSelectedValue());
 			}
-
-		});
-
-		remr.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				int ind = jlr.getSelectedIndex() - 1;
-				UserPack rel = jlr.getSelectedValue();
-				if (pac.relyOn(rel.getSID())) {
-					StringBuilder sb = new StringBuilder();
-					List<String> list = pac.foreignList(rel.getSID());
-					for (String str : list)
-						sb.append(str + "\n");
-					Opts.pop(sb.toString(), "list of dependency");
-				} else {
-					pac.desc.dependency.remove(rel.getSID());
-					updateJlr();
-					jlr.setSelectedIndex(ind);
-					setRely(jlr.getSelectedValue());
-				}
-				changing = false;
-			}
-
+			changing = false;
 		});
 
 	}
@@ -575,7 +495,7 @@ public class PackEditPage extends Page {
 		rems.setEnabled(sm != null && pac.editable);
 		jtfs.setEnabled(sm != null && pac.editable);
 		if (sm != null)
-			jtfs.setText(map.name);
+			jtfs.setText(sm.name);
 	}
 
 	private void setPack(UserPack pack) {
