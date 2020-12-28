@@ -16,6 +16,6 @@ public class Theme {
 			new Color(98, 117, 127), new Color(174, 213, 129), new Color(98, 117, 127), new Color(64, 64, 64), // Panel
 			// BG
 			new Color(255, 204, 128), new Color(239, 154, 154), new Color(245, 245, 245), // Text Color
-			new Color(98, 117, 127), new Color(245, 245, 245) // Text Color
+			new Color(98, 117, 127, 127), new Color(245, 245, 245) // Text Color
 	);
 }
