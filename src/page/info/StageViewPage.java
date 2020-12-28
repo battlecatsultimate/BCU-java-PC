@@ -59,8 +59,8 @@ public class StageViewPage extends StagePage {
 		set(cpst, x, y, 450, 1200, 300, 50);
 		set(dgen, x, y, 600, 0, 200, 50);
 		set(strt, x, y, 400, 0, 200, 50);
-		set(recd, x, y, 1850, 300, 200, 50);
-		set(info, x, y, 1600, 300, 200, 50);
+		set(recd, x, y, 1850, 350, 200, 50);
+		set(info, x, y, 1600, 350, 200, 50);
 	}
 
 	@Override
@@ -80,73 +80,52 @@ public class StageViewPage extends StagePage {
 
 		recd.setLnr(x -> changePanel(new StRecdPage(this, stage, false)));
 
-		jlmc.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (arg0.getValueIsAdjusting())
-					return;
-				MapColc mc = jlmc.getSelectedValue();
-				if (mc == null)
-					return;
-				jlsm.setListData(mc.maps.toArray());
-				jlsm.setSelectedIndex(0);
-			}
-
+		jlmc.addListSelectionListener(arg0 -> {
+			if (arg0.getValueIsAdjusting())
+				return;
+			MapColc mc = jlmc.getSelectedValue();
+			if (mc == null)
+				return;
+			jlsm.setListData(mc.maps.toArray());
+			jlsm.setSelectedIndex(0);
 		});
 
-		jlsm.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (arg0.getValueIsAdjusting())
-					return;
-				StageMap sm = jlsm.getSelectedValue();
-				cpsm.setEnabled(false);
-				if (sm == null)
-					return;
-				cpsm.setEnabled(true);
-				jlst.setListData(sm.list.toArray());
-				jlst.setSelectedIndex(0);
-			}
-
+		jlsm.addListSelectionListener(arg0 -> {
+			if (arg0.getValueIsAdjusting())
+				return;
+			StageMap sm = jlsm.getSelectedValue();
+			cpsm.setEnabled(false);
+			if (sm == null)
+				return;
+			cpsm.setEnabled(true);
+			jlst.setListData(sm.list.toArray());
+			jlst.setSelectedIndex(0);
 		});
 
-		jlst.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (arg0.getValueIsAdjusting())
-					return;
-				Stage s = jlst.getSelectedValue();
-				cpst.setEnabled(false);
-				if (s == null)
-					return;
-				setData(s);
-			}
-
+		jlst.addListSelectionListener(arg0 -> {
+			if (arg0.getValueIsAdjusting())
+				return;
+			Stage s = jlst.getSelectedValue();
+			cpst.setEnabled(false);
+			if (s == null)
+				return;
+			setData(s);
 		});
 
-		cpsm.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				StageMap sm = jlsm.getSelectedValue();
-				if (sm == null)
-					return;
-				MapColc mc = Stage.CLIPMC;
-				StageMap copy = sm.copy(mc);
-				mc.maps.add(copy);
-			}
+		cpsm.addActionListener(arg0 -> {
+			StageMap sm = jlsm.getSelectedValue();
+			if (sm == null)
+				return;
+			MapColc mc = Stage.CLIPMC;
+			StageMap copy = sm.copy(mc);
+			mc.maps.add(copy);
 		});
 
-		cpst.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Stage stage = jlst.getSelectedValue();
-				if (stage == null)
-					return;
-				Stage.CLIPSM.add(stage.copy(Stage.CLIPSM));
-			}
+		cpst.addActionListener(arg0 -> {
+			Stage stage = jlst.getSelectedValue();
+			if (stage == null)
+				return;
+			Stage.CLIPSM.add(stage.copy(Stage.CLIPSM));
 		});
 
 		dgen.setLnr(x -> changePanel(new StageRandPage(getThis())));

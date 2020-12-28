@@ -88,13 +88,14 @@ public class HeadTable extends AbJTable {
 
 	protected void setData(Stage st) {
 		sta = st;
-		Object[][] lstr = new Object[5][8];
-		Object[] tit, bas, img, rar, reg;
+		Object[][] lstr = new Object[6][8];
+		Object[] tit, bas, bas2, img, rar, reg;
 		tit = lstr[0];
 		bas = lstr[1];
-		img = lstr[2];
-		rar = lstr[3];
-		reg = lstr[4];
+		bas2 = lstr[2];
+		img = lstr[3];
+		rar = lstr[4];
+		reg = lstr[5];
 		tit[0] = "ID:";
 		tit[1] = st.getCont().id + "-" + st.id();
 		String star = Page.get(1, "star");
@@ -107,6 +108,14 @@ public class HeadTable extends AbJTable {
 		bas[4] = Page.get(1, "mus") + ":";
 		bas[5] = st.mus0;
 		bas[6] = "<" + st.mush + "%:";
+		bas2[0] = Page.get(1, "minspawn");
+		bas2[1] = st.minSpawn;
+		bas2[2] = Page.get(1, "maxspawn");
+		bas2[3] = st.maxSpawn;
+		if(st.timeLimit != 0) {
+			bas2[4] = Page.get(1, "time");
+			bas2[5] = st.timeLimit +" min";
+		}
 		bas[7] = st.mus1;
 		img[0] = infs[4];
 		img[1] = st.bg;

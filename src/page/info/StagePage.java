@@ -7,8 +7,6 @@ import page.battle.BattleSetupPage;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 
 public class StagePage extends Page {
@@ -46,8 +44,8 @@ public class StagePage extends Page {
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);
-		set(jspinfo, x, y, 800, 50, 1400, 250);
-		set(jspjt, x, y, 800, 350, 1400, 850);
+		set(jspinfo, x, y, 800, 50, 1400, 300);
+		set(jspjt, x, y, 800, 400, 1400, 800);
 		jt.setRowHeight(size(x, y, 50));
 		info.setRowHeight(size(x, y, 50));
 	}
@@ -55,27 +53,21 @@ public class StagePage extends Page {
 	protected void setData(Stage st) {
 		stage = st;
 		strt.setEnabled(st != null);
-		info.setData(st);
-		jt.setData(st);
+		if(st != null) {
+			info.setData(st);
+			jt.setData(st);
+		}
 		jspjt.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
 		resized();
 	}
 
 	private void addListeners() {
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
-		});
+		back.addActionListener(arg0 -> changePanel(getFront()));
 
-		strt.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (stage == null)
-					return;
-				changePanel(new BattleSetupPage(getThis(), stage));
-			}
+		strt.addActionListener(arg0 -> {
+			if (stage == null)
+				return;
+			changePanel(new BattleSetupPage(getThis(), stage));
 		});
 
 	}
