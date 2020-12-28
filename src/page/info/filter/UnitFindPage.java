@@ -5,8 +5,6 @@ import common.util.unit.Unit;
 import page.*;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
@@ -26,6 +24,14 @@ public class UnitFindPage extends Page implements SupPage<Unit> {
 		super(p);
 
 		ufb = UnitFilterBox.getNew(this);
+		ini();
+		resized();
+	}
+
+	public UnitFindPage(Page p, String pack, String... parent) {
+		super(p);
+
+		ufb = UnitFilterBox.getNew(this, pack, parent);
 		ini();
 		resized();
 	}
@@ -82,21 +88,13 @@ public class UnitFindPage extends Page implements SupPage<Unit> {
 	}
 
 	private void addListeners() {
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
-		});
+		back.addActionListener(arg0 -> changePanel(getFront()));
 
-		show.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (show.isSelected())
-					add(ufb);
-				else
-					remove(ufb);
-			}
+		show.addActionListener(arg0 -> {
+			if (show.isSelected())
+				add(ufb);
+			else
+				remove(ufb);
 		});
 
 		seabt.setLnr((b) -> {
@@ -107,14 +105,11 @@ public class UnitFindPage extends Page implements SupPage<Unit> {
 			}
 		});
 
-		seatf.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (ufb != null) {
-					ufb.name = seatf.getText();
+		seatf.addActionListener(e -> {
+			if (ufb != null) {
+				ufb.name = seatf.getText();
 
-					ufb.callBack(null);
-				}
+				ufb.callBack(null);
 			}
 		});
 	}

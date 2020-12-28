@@ -75,6 +75,9 @@ public class BCUReader extends DataIO {
 				BattleInfoPage.DEF_LARGE = jo.get("large_screen").getAsBoolean();
 				MainBCU.light = jo.get("style_light").getAsBoolean();
 				MainBCU.nimbus = jo.get("style_nimbus").getAsBoolean();
+				if(jo.has("author")) {
+					MainBCU.author = jo.get("author").getAsString();
+				}
 				String[] exp = JsonDecoder.decode(jo.get("export_paths"), String[].class);
 				String[] imp = JsonDecoder.decode(jo.get("import_paths"), String[].class);
 				for (int i = 0; i < Exporter.curs.length; i++)
@@ -92,101 +95,119 @@ public class BCUReader extends DataIO {
 		File f = new File("./assets/lang/");
 		if (!f.exists())
 			return;
-		for (File fi : f.listFiles()) {
-			String ni = fi.getName();
-			if (!fi.isDirectory())
-				continue;
-			if (ni.length() != 2)
-				continue;
-			for (File fl : fi.listFiles())
-				try {
-					String nl = fl.getName();
 
-					if (nl.equals("tutorial.txt")) {
-						Queue<String> qs = readLines(fl);
-						for (String line : qs) {
-							String[] strs = line.trim().split("\t");
-							if (strs.length != 3)
+		File[] fis = f.listFiles();
+
+		if(fis != null) {
+			for (File fi : fis) {
+				String ni = fi.getName();
+				if (!fi.isDirectory())
+					continue;
+				if (ni.length() != 2)
+					continue;
+
+				File[] fls = fi.listFiles();
+
+				if(fls != null) {
+					for (File fl : fls)
+						try {
+							String nl = fl.getName();
+
+							if (nl.equals("tutorial.txt")) {
+								Queue<String> qs = readLines(fl);
+								if(qs != null)
+									for (String line : qs) {
+										String[] strs = line.trim().split("\t");
+										if (strs.length != 3)
+											continue;
+										MainLocale.addTTT(ni, strs[0].trim(), strs[1].trim(), strs[2].trim());
+									}
 								continue;
-							MainLocale.addTTT(ni, strs[0].trim(), strs[1].trim(), strs[2].trim());
-						}
-						continue;
-					}
-					if (nl.equals("StageName.txt")) {
-						Queue<String> qs = readLines(fl);
-						if (qs != null)
-							for (String str : qs) {
-								String[] strs = str.trim().split("\t");
-								if (strs.length == 1)
-									continue;
-								String idstr = strs[0].trim();
-								String name = strs[strs.length - 1].trim();
-								if (idstr.length() == 0 || name.length() == 0)
-									continue;
-								String[] ids = idstr.split("-");
-								int id0 = CommonStatic.parseIntN(ids[0]);
-								MapColc mc = DefMapColc.getMap(id0 * 1000).getCont();
-								if (mc == null)
-									continue;
-								if (ids.length == 1) {
-									MultiLangCont.getStatic().MCNAME.put(ni, mc, name);
-									continue;
-								}
-								int id1 = CommonStatic.parseIntN(ids[1]);
-								if (id1 >= mc.maps.size() || id1 < 0)
-									continue;
-								StageMap sm = mc.maps.get(id1);
-								if (sm == null)
-									continue;
-								if (ids.length == 2) {
-									MultiLangCont.getStatic().SMNAME.put(ni, sm, name);
-									continue;
-								}
-								int id2 = CommonStatic.parseIntN(ids[2]);
-								if (id2 >= sm.list.size() || id2 < 0)
-									continue;
-								Stage st = sm.list.get(id2);
-								MultiLangCont.getStatic().STNAME.put(ni, st, name);
 							}
-						continue;
-					}
-					if (nl.equals("UnitName.txt")) {
-						Queue<String> qs = readLines(fl);
-						for (String str : qs) {
-							String[] strs = str.trim().split("\t");
-							Unit u = UserProfile.getBCData().units.get(CommonStatic.parseIntN(strs[0]));
-							if (u == null)
-								continue;
-							for (int i = 0; i < Math.min(u.forms.length, strs.length - 1); i++)
-								MultiLangCont.getStatic().FNAME.put(ni, u.forms[i], strs[i + 1].trim());
-						}
-						continue;
-					}
-					if (nl.equals("EnemyName.txt")) {
-						Queue<String> qs = readLines(fl);
-						for (String str : qs) {
-							String[] strs = str.trim().split("\t");
-							Enemy e = UserProfile.getBCData().enemies.get(CommonStatic.parseIntN(strs[0]));
-							if (e == null || strs.length < 2)
-								continue;
-							MultiLangCont.getStatic().ENAME.put(ni, e, strs[1].trim());
-						}
-						continue;
-					}
-					if (!nl.endsWith(".properties"))
-						continue;
-					MainLocale ml = new MainLocale(nl.split("\\.")[0] + "_" + ni);
-					Queue<String> qs = readLines(fl);
-					for (String line : qs) {
-						String[] strs = line.split("=|\t", 2);
-						if (strs.length < 2)
-							continue;
-						ml.res.put(strs[0], strs[1]);
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+							if (nl.equals("StageName.txt")) {
+								Queue<String> qs = readLines(fl);
+								if (qs != null)
+									for (String str : qs) {
+										String[] strs = str.trim().split("\t");
+										if (strs.length == 1)
+											continue;
+										String idstr = strs[0].trim();
+										String name = strs[strs.length - 1].trim();
+										if (idstr.length() == 0 || name.length() == 0)
+											continue;
+										String[] ids = idstr.split("-");
+										int id0 = CommonStatic.parseIntN(ids[0]);
 
+										StageMap stm = DefMapColc.getMap(id0 * 1000);
+
+										if(stm != null) {
+											MapColc mc = stm.getCont();
+											if (mc == null)
+												continue;
+											if (ids.length == 1) {
+												MultiLangCont.getStatic().MCNAME.put(ni, mc, name);
+												continue;
+											}
+											int id1 = CommonStatic.parseIntN(ids[1]);
+											if (id1 >= mc.maps.size() || id1 < 0)
+												continue;
+											StageMap sm = mc.maps.get(id1);
+											if (sm == null)
+												continue;
+											if (ids.length == 2) {
+												MultiLangCont.getStatic().SMNAME.put(ni, sm, name);
+												continue;
+											}
+											int id2 = CommonStatic.parseIntN(ids[2]);
+											if (id2 >= sm.list.size() || id2 < 0)
+												continue;
+											Stage st = sm.list.get(id2);
+											MultiLangCont.getStatic().STNAME.put(ni, st, name);
+										}
+									}
+								continue;
+							}
+							if (nl.equals("UnitName.txt")) {
+								Queue<String> qs = readLines(fl);
+								if(qs != null)
+									for (String str : qs) {
+										String[] strs = str.trim().split("\t");
+										Unit u = UserProfile.getBCData().units.get(CommonStatic.parseIntN(strs[0]));
+										if (u == null)
+											continue;
+										for (int i = 0; i < Math.min(u.forms.length, strs.length - 1); i++)
+											MultiLangCont.getStatic().FNAME.put(ni, u.forms[i], strs[i + 1].trim());
+									}
+								continue;
+							}
+							if (nl.equals("EnemyName.txt")) {
+								Queue<String> qs = readLines(fl);
+								if(qs != null)
+									for (String str : qs) {
+										String[] strs = str.trim().split("\t");
+										Enemy e = UserProfile.getBCData().enemies.get(CommonStatic.parseIntN(strs[0]));
+										if (e == null || strs.length < 2)
+											continue;
+										MultiLangCont.getStatic().ENAME.put(ni, e, strs[1].trim());
+									}
+								continue;
+							}
+							if (!nl.endsWith(".properties"))
+								continue;
+							MainLocale ml = new MainLocale(nl.split("\\.")[0] + "_" + ni);
+							Queue<String> qs = readLines(fl);
+							if(qs != null)
+								for (String line : qs) {
+									String[] strs = line.split("[=\t]", 2);
+									if (strs.length < 2)
+										continue;
+									ml.res.put(strs[0], strs[1]);
+								}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+				}
+			}
 		}
 	}
 

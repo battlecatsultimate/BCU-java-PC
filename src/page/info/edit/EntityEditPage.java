@@ -7,9 +7,9 @@ import common.battle.data.AtkDataModel;
 import common.battle.data.CustomEntity;
 import common.pack.Identifier;
 import common.pack.IndexContainer.Indexable;
+import common.pack.PackData;
 import common.pack.UserProfile;
 import common.util.Animable;
-import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.anim.AnimU;
 import common.util.anim.AnimU.UType;
@@ -36,14 +36,7 @@ import page.view.EnemyViewPage;
 import page.view.UnitViewPage;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 import static common.util.Data.*;
 import static utilpc.Interpret.ABIIND;
@@ -130,12 +123,12 @@ public abstract class EntityEditPage extends Page {
 			if (vals.length == 3) {
 				ce.type = vals[0];
 				ce.abi = vals[1];
-				for (int i = 0; i < ABIIND.length; i++) {
-					int id = ABIIND[i] - 100;
+				for (int j : ABIIND) {
+					int id = j - 100;
 					if ((vals[2] & (1 << id - IMUSFT)) > 0)
-						((Data.Proc.IMU) ce.getProc().getArr(id)).mult = 100;
+						((Proc.IMU) ce.getProc().getArr(id)).mult = 100;
 					else
-						((Data.Proc.IMU) ce.getProc().getArr(id)).mult = 0;
+						((Proc.IMU) ce.getProc().getArr(id)).mult = 0;
 				}
 				ce.loop = (ce.abi & AB_GLASS) > 0 ? 1 : -1;
 			}
@@ -152,14 +145,35 @@ public abstract class EntityEditPage extends Page {
 
 	public SupPage<AbEnemy> getEnemySup(IdEditor<AbEnemy> edi) {
 		editor = edi;
-		SupPage<AbEnemy> ans = new EnemyFindPage(this);
+
+		PackData.UserPack p = UserProfile.getUserPack(pack);
+
+		SupPage<AbEnemy> ans;
+
+		if(p != null) {
+			ans = new EnemyFindPage(this, pack, p.desc.dependency.toArray(new String[0]));
+		} else {
+			ans = new EnemyFindPage(this);
+		}
+
 		sup = ans;
+
 		return ans; // FIXME
 	}
 
 	public SupPage<Unit> getUnitSup(IdEditor<Unit> edi) {
 		editor = edi;
-		SupPage<Unit> ans = new UnitFindPage(this);
+
+		PackData.UserPack p = UserProfile.getUserPack(pack);
+
+		SupPage<Unit> ans;
+
+		if(p != null) {
+			ans = new UnitFindPage(this, pack, p.desc.dependency.toArray(new String[0]));
+		} else {
+			ans = new UnitFindPage(this);
+		}
+
 		sup = ans;
 		return ans;
 	}
@@ -215,7 +229,7 @@ public abstract class EntityEditPage extends Page {
 		set(vres);
 		add(comm);
 		add(jcbs);
-		Vector<Soul> vec = new Vector<Soul>();
+		Vector<Soul> vec = new Vector<>();
 		vec.add(null);
 		vec.addAll(UserProfile.getAll(pack, Soul.class));
 		jcbs.setModel(new DefaultComboBoxModel<>(vec));
@@ -376,7 +390,7 @@ public abstract class EntityEditPage extends Page {
 		if (ce.rev != null)
 			ints[ix++] = ce.rev.str;
 		if (ce.res != null)
-			ints[ix++] = ce.res.str;
+			ints[ix] = ce.res.str;
 		int ind = jli.getSelectedIndex();
 		jli.setListData(ints);
 		if (ind < 0)
@@ -401,9 +415,12 @@ public abstract class EntityEditPage extends Page {
 		u.setLnr(x -> changePanel(ufp = new UnitFindPage(getThis())));
 
 		a.setLnr(x -> {
-			if (editable)
-				changePanel(new DIYViewPage(getThis(), (AnimCE) jcba.getSelectedItem()));
-			else if (o instanceof Unit)
+			if (editable) {
+				AnimCE anim = (AnimCE) jcba.getSelectedItem();
+
+				if(anim != null)
+					changePanel(new DIYViewPage(getThis(), anim));
+			} else if (o instanceof Unit)
 				changePanel(new UnitViewPage(getThis(), (Unit) o));
 			else if (o instanceof Enemy)
 				changePanel(new EnemyViewPage(getThis(), (Enemy) o));
@@ -422,19 +439,14 @@ public abstract class EntityEditPage extends Page {
 			setData(ce);
 		});
 
-		jli.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (changing || jli.getValueIsAdjusting())
-					return;
-				changing = true;
-				if (jli.getSelectedIndex() == -1)
-					jli.setSelectedIndex(0);
-				setA(jli.getSelectedIndex());
-				changing = false;
-			}
-
+		jli.addListSelectionListener(e -> {
+			if (changing || jli.getValueIsAdjusting())
+				return;
+			changing = true;
+			if (jli.getSelectedIndex() == -1)
+				jli.setSelectedIndex(0);
+			setA(jli.getSelectedIndex());
+			changing = false;
 		});
 
 		jli.list = new ReorderListener<String>() {
@@ -445,8 +457,7 @@ public abstract class EntityEditPage extends Page {
 					if (fin >= ce.atks.length)
 						fin = ce.atks.length - 1;
 					List<AtkDataModel> l = new ArrayList<>();
-					for (AtkDataModel adm : ce.atks)
-						l.add(adm);
+					Collections.addAll(l, ce.atks);
 					l.add(fin, l.remove(ori));
 					ce.atks = l.toArray(new AtkDataModel[0]);
 				}
@@ -468,12 +479,12 @@ public abstract class EntityEditPage extends Page {
 			if (ind >= ce.atks.length)
 				ind = ce.atks.length - 1;
 			AtkDataModel[] datas = new AtkDataModel[n + 1];
-			for (int i = 0; i <= ind; i++)
-				datas[i] = ce.atks[i];
+			if (ind + 1 >= 0)
+				System.arraycopy(ce.atks, 0, datas, 0, ind + 1);
 			ind++;
 			datas[ind] = new AtkDataModel(ce);
-			for (int i = ind; i < n; i++)
-				datas[i + 1] = ce.atks[i];
+			if (n - ind >= 0)
+				System.arraycopy(ce.atks, ind, datas, ind + 1, n - ind);
 			ce.atks = datas;
 			setData(ce);
 			jli.setSelectedIndex(ind);
@@ -507,30 +518,24 @@ public abstract class EntityEditPage extends Page {
 			changing = false;
 		});
 
-		jcba.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (changing)
-					return;
-				ce.getPack().anim = (AnimCE) jcba.getSelectedItem();
-				setData(ce);
-
-			}
+		jcba.addActionListener(arg0 -> {
+			if (changing)
+				return;
+			ce.getPack().anim = (AnimCE) jcba.getSelectedItem();
+			setData(ce);
 
 		});
 
-		jcbs.addActionListener(new ActionListener() {
+		jcbs.addActionListener(arg0 -> {
+			if (changing)
+				return;
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (changing)
-					return;
-				ce.death = ((Soul) jcbs.getSelectedItem()).getID();
+			Soul s = (Soul) jcbs.getSelectedItem();
+
+			if(s != null) {
+				ce.death = s.getID();
 				setData(ce);
-
 			}
-
 		});
 
 	}
@@ -643,10 +648,10 @@ public abstract class EntityEditPage extends Page {
 				ce.res = null;
 		} else if (n > 1) {
 			AtkDataModel[] datas = new AtkDataModel[n - 1];
-			for (int i = 0; i < ind; i++)
-				datas[i] = ce.atks[i];
-			for (int i = ind + 1; i < n; i++)
-				datas[i - 1] = ce.atks[i];
+			if (ind >= 0)
+				System.arraycopy(ce.atks, 0, datas, 0, ind);
+			if (n - (ind + 1) >= 0)
+				System.arraycopy(ce.atks, ind + 1, datas, ind + 1 - 1, n - (ind + 1));
 			ce.atks = datas;
 		}
 		setData(ce);

@@ -1,6 +1,7 @@
 package page.info.filter;
 
 import common.battle.data.MaskUnit;
+import common.pack.Identifier;
 import common.pack.PackData;
 import common.pack.UserProfile;
 import common.util.Data;
@@ -14,14 +15,8 @@ import page.Page;
 import utilpc.UtilPC;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 import static utilpc.Interpret.*;
 
@@ -37,10 +32,32 @@ public abstract class UnitFilterBox extends Page {
 		return null;
 	}
 
+	public static UnitFilterBox getNew(Page p, String pack, String... parent) {
+		if(MainBCU.FILTER_TYPE == 0) {
+			return new UFBButton(p, pack, parent);
+		} else if(MainBCU.FILTER_TYPE == 1) {
+			return new UFBList(p, pack, parent);
+		}
+
+		return null;
+	}
+
 	public String name = "";
+	protected final List<String> parents;
+	protected final String pack;
 
 	protected UnitFilterBox(Page p) {
 		super(p);
+
+		pack = null;
+		parents = null;
+	}
+
+	protected UnitFilterBox(Page p, String pack, String... parent) {
+		super(p);
+
+		this.pack = pack;
+		this.parents = Arrays.asList(parent);
 	}
 
 	public abstract int[] getSizer();
@@ -60,6 +77,13 @@ class UFBButton extends UnitFilterBox {
 
 	protected UFBButton(Page p) {
 		super(p);
+
+		ini();
+		confirm();
+	}
+
+	protected UFBButton(Page p, String pack, String... parent) {
+		super(p, pack, parent);
 
 		ini();
 		confirm();
@@ -132,11 +156,19 @@ class UFBButton extends UnitFilterBox {
 					if (name != null)
 						b4 = fname.toLowerCase().contains(name.toLowerCase());
 
+					boolean b5;
+
+					if(pack == null)
+						b5 = true;
+					else {
+						b5 = u.id.pack.equals(Identifier.DEF) || u.id.pack.equals(pack) || parents.contains(u.id.pack);
+					}
+
 					b0 = nonSele(rare) | b0;
 					b1 = nonSele(trait) | b1;
 					b2 = nonSele(abis) & nonSele(proc) | b2;
 					b3 = nonSele(atkt) | b3;
-					if (b0 & b1 & b2 & b3 & b4)
+					if (b0 & b1 & b2 & b3 & b4 & b5)
 						ans.add(f);
 				}
 		}
@@ -180,22 +212,15 @@ class UFBButton extends UnitFilterBox {
 
 	private boolean nonSele(JTG[] jtbs) {
 		int n = 0;
-		for (int i = 0; i < jtbs.length; i++)
-			if (jtbs[i].isSelected())
+		for (JTG jtb : jtbs)
+			if (jtb.isSelected())
 				n++;
 		return n == 0;
 	}
 
 	private void set(AbstractButton b) {
 		add(b);
-		b.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				confirm();
-			}
-
-		});
+		b.addActionListener(arg0 -> confirm());
 	}
 
 }
@@ -218,6 +243,13 @@ class UFBList extends UnitFilterBox {
 
 	protected UFBList(Page p) {
 		super(p);
+
+		ini();
+		confirm();
+	}
+
+	protected UFBList(Page p, String pack, String... parent) {
+		super(p, pack, parent);
 
 		ini();
 		confirm();
@@ -293,11 +325,19 @@ class UFBList extends UnitFilterBox {
 					if (name != null)
 						b4 = fname.toLowerCase().contains(name.toLowerCase());
 
+					boolean b5;
+
+					if(pack == null)
+						b5 = true;
+					else {
+						b5 = u.id.pack.equals(Identifier.DEF) || u.id.pack.equals(pack) || parents.contains(u.id.pack);
+					}
+
 					b0 = rare.getSelectedIndex() == -1 | b0;
 					b1 = trait.getSelectedIndex() == -1 | b1;
 					b2 = abis.getSelectedIndex() == -1 | b2;
 					b3 = atkt.getSelectedIndex() == -1 | b3;
-					if (b0 & b1 & b2 & b3 & b4)
+					if (b0 & b1 & b2 & b3 & b4 & b5)
 						ans.add(f);
 				}
 		}
@@ -307,10 +347,8 @@ class UFBList extends UnitFilterBox {
 	private void ini() {
 		for (int i = 0; i < orop.length; i++)
 			set(orop[i] = new JTG(get(0, "orop")));
-		for (int i = 0; i < 9; i++)
-			vt.add(TRAIT[i]);
-		for (int i = 0; i < SABIS.length; i++)
-			va.add(SABIS[i]);
+		vt.addAll(Arrays.asList(TRAIT).subList(0, 9));
+		Collections.addAll(va, SABIS);
 		for (int i = 0; i < Data.PROC_TOT; i++)
 			va.add(ProcLang.get().get(i).abbr_name);
 		trait.setListData(vt);
@@ -328,28 +366,14 @@ class UFBList extends UnitFilterBox {
 
 	private void set(AbstractButton b) {
 		add(b);
-		b.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				confirm();
-			}
-
-		});
+		b.addActionListener(arg0 -> confirm());
 	}
 
 	private void set(JList<?> jl) {
 		int m = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
 		jl.setSelectionMode(m);
 
-		jl.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				confirm();
-			}
-
-		});
+		jl.addListSelectionListener(arg0 -> confirm());
 	}
 
 }

@@ -133,6 +133,7 @@ public class MainBCU {
 	public static final boolean WRITE = !new File("./.project").exists();
 	public static boolean preload = false, trueRun = true, loaded = false, USE_JOGL = false;
 	public static boolean light = true, nimbus = false;
+	public static String author = "";
 	public static ImageBuilder<BufferedImage> builder;
 
 	public static String getTime() {

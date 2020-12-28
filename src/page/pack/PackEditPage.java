@@ -12,6 +12,7 @@ import common.util.anim.AnimCE;
 import common.util.stage.MapColc;
 import common.util.stage.StageMap;
 import common.util.unit.Enemy;
+import main.MainBCU;
 import main.Opts;
 import page.JBTN;
 import page.JL;
@@ -86,6 +87,8 @@ public class PackEditPage extends Page {
 	private final JL lbs = new JL(0, "stage");
 	private final JL lbr = new JL(0, "parent");
 	private final JL lbt = new JL(0, "selepar");
+	private final JLabel pid = new JLabel();
+	private final JLabel pauth = new JLabel();
 
 	private UserPack pac;
 	private Enemy ene;
@@ -117,6 +120,8 @@ public class PackEditPage extends Page {
 		set(jtfp, x, y, w, 850, 400, 50);
 		set(extr, x, y, w, 950, 200, 50);
 		set(unpk, x, y, w + 200, 950, 200, 50);
+		set(pid, x, y, w, 1050, 400, 50);
+		set(pauth, x, y, w, 1100, 400, 50);
 
 		w += 450;
 
@@ -215,6 +220,7 @@ public class PackEditPage extends Page {
 			changing = true;
 			String str = Workspace.validateWorkspace(Workspace.generateMD5ID());
 			pac = Data.err(() -> UserProfile.initJsonPack(str));
+			pac.desc.author = MainBCU.author;
 			vpack.add(pac);
 			jlp.setListData(vpack);
 			jlt.setListData(vpack);
@@ -468,6 +474,8 @@ public class PackEditPage extends Page {
 		add(vmsc);
 		add(unpk);
 		add(recd);
+		add(pid);
+		add(pauth);
 		jle.setCellRenderer(new AnimLCR());
 		jld.setCellRenderer(new AnimLCR());
 		setPack(null);
@@ -537,6 +545,17 @@ public class PackEditPage extends Page {
 		setRely(null);
 		setMap(null);
 		setEnemy(null);
+		pid.setVisible(pack != null);
+		pauth.setVisible(pack != null);
+
+		if(pack != null) {
+			pid.setText("ID : "+pack.desc.id);
+			if(pack.desc.author == null || pack.desc.author.isEmpty()) {
+				pauth.setText("Author : (None)");
+			} else {
+				pauth.setText("Author : "+pack.desc.author);
+			}
+		}
 	}
 
 	private void setRely(UserPack rel) {

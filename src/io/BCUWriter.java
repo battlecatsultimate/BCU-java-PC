@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
+@SuppressWarnings("UnusedReturnValue")
 public class BCUWriter extends DataIO {
 
 	private static File log, ph;
@@ -56,11 +57,26 @@ public class BCUWriter extends DataIO {
 		log = new File("./logs/" + str + ".log");
 		ph = new File("./logs/placeholder");
 
-		if (!log.getParentFile().exists())
-			log.getParentFile().mkdirs();
+		if (!log.getParentFile().exists()) {
+			boolean res = log.getParentFile().mkdirs();
+
+			if(!res) {
+				System.out.println("Can't create folder " + log.getParentFile().getAbsolutePath());
+				return;
+			}
+		}
+
 		try {
-			if (!log.exists())
-				log.createNewFile();
+			if (!log.exists()) {
+				boolean res = log.createNewFile();
+
+				if(!res) {
+					System.out.println("Can't create file " + log.getParentFile().getAbsolutePath());
+					return;
+				}
+			}
+
+
 			ps = new WriteStream(log);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -74,7 +90,12 @@ public class BCUWriter extends DataIO {
 					System.exit(0);
 				}
 			}
-			ph.createNewFile();
+
+			boolean res = ph.createNewFile();
+
+			if(!res) {
+				Opts.ioErr("Can't create file "+ph.getAbsolutePath());
+			}
 		} catch (IOException ignored) {
 		}
 	}
@@ -156,8 +177,14 @@ public class BCUWriter extends DataIO {
 		if (path == null)
 			path = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 		File f = new File("./img/" + path + ".gif");
-		if (!f.getParentFile().exists())
-			f.getParentFile().mkdirs();
+		if (!f.getParentFile().exists()) {
+			boolean res = f.getParentFile().mkdirs();
+
+			if(!res) {
+				Opts.ioErr("Can't create folder "+f.getParentFile().getAbsolutePath());
+				return;
+			}
+		}
 		age.start("./img/" + path + ".gif");
 	}
 
@@ -236,6 +263,7 @@ public class BCUWriter extends DataIO {
 		jo.addProperty("large_screen", BattleInfoPage.DEF_LARGE);
 		jo.addProperty("style_light", MainBCU.light);
 		jo.addProperty("style_nimbus", MainBCU.nimbus);
+		jo.addProperty("author", MainBCU.author);
 		String[] exp = new String[Exporter.curs.length];
 		for (int i = 0; i < exp.length; i++)
 			exp[i] = Exporter.curs[i] == null ? null : Exporter.curs[i].toString();

@@ -1,8 +1,11 @@
 package page;
 
-import common.pack.Identifier;
+import common.pack.PackData;
+import common.pack.UserProfile;
 import common.util.stage.MapColc;
 import io.BCUWriter;
+import main.MainBCU;
+import main.Opts;
 import page.anim.DIYViewPage;
 import page.anim.ImgCutEditPage;
 import page.anim.MaAnimEditPage;
@@ -26,6 +29,7 @@ public class MainPage extends Page {
 	private final JLabel memo = new JLabel();
 	private final JLabel seicon = new JLabel("Source of enemy icon: battlecats-db.com");
 	private final JLabel sgifau = new JLabel("Author of GIF exporter: Kevin Weiner, FM Software");
+	private final JLabel welcome = new JLabel("Welcome "+MainBCU.author+"!");
 	private final JBTN vuni = new JBTN(0, "vuni");
 	private final JBTN vene = new JBTN(0, "vene");
 	private final JBTN vsta = new JBTN(0, "vsta");
@@ -47,6 +51,7 @@ public class MainPage extends Page {
 	private final JBTN save = new JBTN(0, "save");
 	private final JBTN bckp = new JBTN(0, "backup");
 	private final JBTN allf = new JBTN(0, "all file");
+	private final JBTN auth = new JBTN(0, "author");
 
 	public MainPage() {
 		super(null);
@@ -68,6 +73,7 @@ public class MainPage extends Page {
 		set(memo, x, y, 50, 30, 500, 50);
 		set(seicon, x, y, 50, 60, 500, 50);
 		set(sgifau, x, y, 50, 90, 800, 50);
+		set(welcome, x, y, 50, 120, 500, 50);
 
 		set(vuni, x, y, 600, 200, 200, 50);
 		set(vene, x, y, 600, 300, 200, 50);
@@ -82,6 +88,7 @@ public class MainPage extends Page {
 		set(bass, x, y, 900, 400, 200, 50);
 		set(bckp, x, y, 900, 500, 200, 50);
 		set(curr, x, y, 900, 600, 200, 50);
+		set(auth, x, y, 900, 700, 200, 50);
 
 		set(vsta, x, y, 1200, 200, 200, 50);
 		set(veif, x, y, 1200, 300, 200, 50);
@@ -116,7 +123,29 @@ public class MainPage extends Page {
 		vmsc.setLnr(() -> new MusicPage(this));
 		rply.setLnr(() -> new RecdManagePage(this));
 		allf.setLnr(() -> new ResourcePage(this));
+		auth.setLnr(e -> {
+			String author = Opts.read("Decide your author name");
 
+			if(author == null)
+				author = "";
+
+			author = author.trim();
+
+			for(PackData.UserPack p : UserProfile.getUserPacks()) {
+				if(p.editable) {
+					p.desc.author = author;
+				}
+			}
+
+			MainBCU.author = author;
+
+			if(!author.isEmpty()) {
+				welcome.setVisible(true);
+				welcome.setText("Welcome " + MainBCU.author + "!");
+			} else {
+				welcome.setVisible(false);
+			}
+		});
 	}
 
 	private void ini() {
@@ -141,9 +170,14 @@ public class MainPage extends Page {
 		add(save);
 		add(seicon);
 		add(sgifau);
+		add(welcome);
 		add(rply);
 		add(bckp);
 		add(allf);
+		add(auth);
+
+		welcome.setVisible(!MainBCU.author.isEmpty());
+
 		setMemo();
 		addListeners();
 	}
