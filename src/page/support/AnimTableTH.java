@@ -67,7 +67,6 @@ public class AnimTableTH<T> extends TransferHandler {
 	@Override
 	protected void exportDone(JComponent c, Transferable t, int act) {
 		table.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-
 	}
 
 }

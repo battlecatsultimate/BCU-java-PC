@@ -35,7 +35,7 @@ class MaModelEditTable extends AnimTable<int[]> {
 	public boolean editCellAt(int row, int column, EventObject e) {
 		boolean result = super.editCellAt(row, column, e);
 		final Component editor = getEditorComponent();
-		if (editor == null || !(editor instanceof JTextComponent))
+		if (!(editor instanceof JTextComponent))
 			return result;
 		JTextComponent jtc = (JTextComponent) editor;
 		if (e instanceof KeyEvent)
@@ -147,9 +147,9 @@ class MaModelEditTable extends AnimTable<int[]> {
 		for (int i = 0; i <= mm.n; i++) {
 			if (i == dst) {
 				fin = ind;
-				for (int j = 0; j < ori.length; j++) {
-					move[ind] = ori[j];
-					inds[ori[j]] = ind;
+				for (int k : ori) {
+					move[ind] = k;
+					inds[k] = ind;
 					ind++;
 				}
 			}
