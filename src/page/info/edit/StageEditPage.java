@@ -359,7 +359,7 @@ public class StageEditPage extends Page {
 		cpsm.setEnabled(true);
 		adds.setEnabled(true);
 		checkPtst();
-		setAB(sm.list.get(0));
+		setAB(sm.list.getList().get(0));
 	}
 
 	private void setAB(Stage st) {
@@ -393,7 +393,7 @@ public class StageEditPage extends Page {
 			return;
 		}
 		lpst.setSelectedIndex(0);
-		setBB(sm.list.get(0));
+		setBB(sm.list.getList().get(0));
 		checkPtsm();
 
 	}
