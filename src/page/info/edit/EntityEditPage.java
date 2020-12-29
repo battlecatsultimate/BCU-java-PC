@@ -276,9 +276,10 @@ public abstract class EntityEditPage extends Page {
 			setData(ce);
 		}
 		if (sup != null && editor != null) {
-			Identifier val = sup.getSelected().getID();
-			editor.callback(val);
-
+			if(sup.getSelected() != null) {
+				Identifier val = sup.getSelected().getID();
+				editor.callback(val);
+			}
 		}
 		sup = null;
 		editor = null;
