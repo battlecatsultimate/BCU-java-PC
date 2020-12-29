@@ -15,7 +15,7 @@ public class OggTimeReader {
 
 	public int time;
 
-	public OggTimeReader(Music mus) throws Exception {
+	public OggTimeReader(Music mus) {
 		this.mus = mus;
 		this.fis = mus.data.getStream();
 		canUse = fis != null;
@@ -102,10 +102,10 @@ public class OggTimeReader {
 		}
 		skip(13);
 		int bitNormal = getNextInt();
-		if (bitNormal > 500000 || bitNormal < 0) {
-			return -1;
+		if (bitNormal > MAX_VORBIS_BITRATE || bitNormal < 0) {
+			return -3;
 		}
-		return mus.data.size() * 8 * 1000 / bitNormal;
+		return (long) mus.data.size() * 8 * 1000 / bitNormal;
 	}
 
 	public long getTimeWithInfo() {
@@ -164,10 +164,10 @@ public class OggTimeReader {
 		System.out.println("Normal Bitrate : " + bitNormal + "bps");
 		int bitMin = getNextInt();
 		System.out.println("Min Bitrate : " + bitMin + "bps");
-		if (bitNormal > 500000 || bitNormal < 0) {
+		if (bitNormal > MAX_VORBIS_BITRATE || bitNormal < 0) {
 			return -3;
 		}
-		return mus.data.size() * 8 * 1000 / bitNormal;
+		return (long) mus.data.size() * 8 * 1000 / bitNormal;
 	}
 
 	public void skip(int len) {
