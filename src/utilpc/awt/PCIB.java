@@ -28,7 +28,13 @@ public class PCIB extends ImageBuilder<BufferedImage> {
 
 	@Override
 	public FakeImage build(Supplier<InputStream> sup) throws IOException {
-		return build(ImageIO.read(sup.get()));
+		InputStream stream = sup.get();
+
+		BufferedImage img = ImageIO.read(stream);
+
+		stream.close();
+
+		return build(img);
 	}
 
 	@Override

@@ -131,7 +131,6 @@ public class AmbImage implements FakeImage {
 
 	@Override
 	public void unload() {
-
 	}
 
 	@Override
