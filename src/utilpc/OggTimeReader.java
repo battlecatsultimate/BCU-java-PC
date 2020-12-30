@@ -5,6 +5,7 @@ import common.util.stage.Music;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 public class OggTimeReader {
 	public static final int MAX_VORBIS_BITRATE = 500000;
@@ -66,7 +67,7 @@ public class OggTimeReader {
 			e.printStackTrace();
 			return null;
 		}
-		return new String(res);
+		return new String(res, StandardCharsets.UTF_8);
 	}
 
 	public long getTime() {
