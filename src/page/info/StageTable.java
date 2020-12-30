@@ -2,13 +2,17 @@ package page.info;
 
 import common.CommonStatic;
 import common.pack.Identifier;
+import common.pack.PackData;
+import common.pack.UserProfile;
 import common.util.Data;
 import common.util.stage.SCDef.Line;
 import common.util.stage.SCGroup;
 import common.util.stage.Stage;
+import common.util.unit.EneRand;
 import common.util.unit.Enemy;
 import page.MainFrame;
 import page.Page;
+import page.pack.EREditPage;
 import page.support.AbJTable;
 import page.support.EnemyTCR;
 
@@ -90,14 +94,25 @@ public class StageTable extends AbJTable {
 		int r = p.y / getRowHeight();
 		if (r < 0 || r >= data.length || c != 1)
 			return;
-		Enemy e = (Enemy) data[r][c];
 
-		if (!(data[r][2] instanceof String))
-			return;
+		if(data[r][c] instanceof Enemy) {
+			Enemy e = (Enemy) data[r][c];
 
-		int[] d = CommonStatic.parseIntsN((String) data[r][2]);
+			if (!(data[r][2] instanceof String))
+				return;
 
-		MainFrame.changePanel(new EnemyInfoPage(page, e, d[0], d[1]));
+			int[] d = CommonStatic.parseIntsN((String) data[r][2]);
+
+			MainFrame.changePanel(new EnemyInfoPage(page, e, d[0], d[1]));
+		} else if(data[r][c] instanceof EneRand) {
+			EneRand e = (EneRand) data[r][c];
+
+			PackData.UserPack pac = UserProfile.getUserPack(e.id.pack);
+
+			if (pac != null) {
+				MainFrame.changePanel(new EREditPage(page, pac));
+			}
+		}
 	}
 
 	protected void setData(Stage st) {

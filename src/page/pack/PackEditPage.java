@@ -11,6 +11,7 @@ import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.stage.MapColc;
 import common.util.stage.StageMap;
+import common.util.unit.EneRand;
 import common.util.unit.Enemy;
 import main.MainBCU;
 import main.Opts;
@@ -218,7 +219,7 @@ public class PackEditPage extends Page {
 
 		addp.addActionListener(arg0 -> {
 			changing = true;
-			String str = Workspace.validateWorkspace(Workspace.generateMD5ID());
+			String str = Workspace.validateWorkspace(Workspace.generatePackID());
 			pac = Data.err(() -> UserProfile.initJsonPack(str));
 			pac.desc.author = MainBCU.author;
 			vpack.add(pac);
@@ -494,7 +495,15 @@ public class PackEditPage extends Page {
 		reme.setEnabled(b);
 		if (b) {
 			jtfe.setText(e.name);
-			reme.setEnabled(e.findApp(pac.mc).size() == 0);
+			boolean cont = false;
+
+			for(EneRand rand : pac.randEnemies.getList()) {
+				if(rand != null) {
+					cont = cont || rand.contains(e.id, rand.id);
+				}
+			}
+
+			reme.setEnabled(e.findApp(pac.mc).size() == 0 && !cont);
 		}
 	}
 

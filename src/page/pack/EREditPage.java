@@ -4,7 +4,6 @@ import common.pack.PackData.UserPack;
 import common.pack.UserProfile;
 import common.util.unit.AbEnemy;
 import common.util.unit.EneRand;
-import common.util.unit.Enemy;
 import main.Opts;
 import page.JBTN;
 import page.JTF;
@@ -14,11 +13,13 @@ import page.info.filter.EnemyFindPage;
 import page.support.AnimLCR;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class EREditPage extends Page {
 
@@ -30,8 +31,8 @@ public class EREditPage extends Page {
 
 	private final JBTN back = new JBTN(0, "back");
 	private final JBTN veif = new JBTN(0, "veif");
-	private final EREditTable jt = new EREditTable(this);
-	private final JScrollPane jspjt = new JScrollPane(jt);
+	private final EREditTable jt;
+	private final JScrollPane jspjt;
 	private final JList<EneRand> jlst = new JList<>();
 	private final JScrollPane jspst = new JScrollPane(jlst);
 	private final JBTN adds = new JBTN(0, "add");
@@ -53,6 +54,8 @@ public class EREditPage extends Page {
 		super(p);
 		pack = pac;
 		jle.setListData(UserProfile.getAll(pack.desc.id, AbEnemy.class).toArray(new AbEnemy[0]));
+		jt = new EREditTable(this, pac);
+		jspjt = new JScrollPane(jt);
 		ini();
 		resized();
 	}
@@ -70,8 +73,25 @@ public class EREditPage extends Page {
 
 	@Override
 	protected void renew() {
-		if (efp != null && efp.getList() != null)
-			jle.setListData(efp.getList().toArray(new Enemy[0]));
+		if (efp != null && efp.getList() != null) {
+			Vector<AbEnemy> v = new Vector<>(efp.getList());
+
+			if(pack != null) {
+				ArrayList<EneRand> rands = new ArrayList<>(pack.randEnemies.getList());
+
+				for(String str : pack.desc.dependency) {
+					UserPack p = UserProfile.getUserPack(str);
+
+					if(p != null) {
+						rands.addAll(pack.randEnemies.getList());
+					}
+				}
+
+				v.addAll(rands);
+			}
+
+			jle.setListData(v);
+		}
 	}
 
 	@Override
@@ -97,98 +117,66 @@ public class EREditPage extends Page {
 
 	private void addListeners() {
 
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
+		back.addActionListener(arg0 -> changePanel(getFront()));
+
+		addl.addActionListener(arg0 -> {
+			int ind = jt.addLine(jle.getSelectedValue());
+			setER(rand);
+			if (ind < 0)
+				jt.clearSelection();
+			else
+				jt.addRowSelectionInterval(ind, ind);
 		});
 
-		addl.addActionListener(new ActionListener() {
+		reml.addActionListener(arg0 -> {
+			int ind = jt.remLine();
+			setER(rand);
+			if (ind < 0)
+				jt.clearSelection();
+			else
+				jt.addRowSelectionInterval(ind, ind);
+		});
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				int ind = jt.addLine(jle.getSelectedValue());
+		veif.addActionListener(arg0 -> {
+			if (efp == null)
+				efp = new EnemyFindPage(getThis());
+			changePanel(efp);
+		});
+
+		jlst.addListSelectionListener(arg0 -> {
+			if (isAdj() || arg0.getValueIsAdjusting())
+				return;
+			setER(jlst.getSelectedValue());
+		});
+
+		adds.addActionListener(arg0 -> {
+			rand = new EneRand(pack.getNextID(EneRand.class));
+			pack.randEnemies.add(rand);
+			change(null, p -> {
+				jlst.setListData(pack.randEnemies.toArray());
+				jlst.setSelectedValue(rand, true);
 				setER(rand);
-				if (ind < 0)
-					jt.clearSelection();
+			});
+
+		});
+
+		rems.addActionListener(arg0 -> {
+			if (!Opts.conf())
+				return;
+			int ind = jlst.getSelectedIndex() - 1;
+			if (ind < 0)
+				ind = -1;
+			pack.randEnemies.remove(rand);
+			change(ind, IND -> {
+				List<EneRand> l = pack.randEnemies.getList();
+				jlst.setListData(l.toArray(new EneRand[0]));
+
+				if (IND < l.size())
+					jlst.setSelectedIndex(IND);
 				else
-					jt.addRowSelectionInterval(ind, ind);
-			}
-		});
-
-		reml.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				int ind = jt.remLine();
-				setER(rand);
-				if (ind < 0)
-					jt.clearSelection();
-				else
-					jt.addRowSelectionInterval(ind, ind);
-			}
-		});
-
-		veif.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (efp == null)
-					efp = new EnemyFindPage(getThis());
-				changePanel(efp);
-			}
-		});
-
-		jlst.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (isAdj() || arg0.getValueIsAdjusting())
-					return;
+					jlst.setSelectedIndex(l.size() - 1);
 				setER(jlst.getSelectedValue());
-			}
-
-		});
-
-		adds.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				rand = new EneRand(pack.getNextID(EneRand.class));
-				pack.randEnemies.add(rand);
-				change(null, p -> {
-					jlst.setListData(pack.randEnemies.toArray());
-					jlst.setSelectedValue(rand, true);
-					setER(rand);
-				});
-
-			}
-
-		});
-
-		rems.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (!Opts.conf())
-					return;
-				int ind = jlst.getSelectedIndex() - 1;
-				if (ind < 0)
-					ind = -1;
-				pack.randEnemies.remove(rand);
-				change(ind, IND -> {
-					List<EneRand> l = pack.randEnemies.getList();
-					jlst.setListData(l.toArray(new EneRand[0]));
-
-					if (IND < l.size())
-						jlst.setSelectedIndex(IND);
-					else
-						jlst.setSelectedIndex(l.size() - 1);
-					setER(jlst.getSelectedValue());
-				});
-			}
-
+			});
 		});
 
 		name.addFocusListener(new FocusAdapter() {
@@ -205,16 +193,11 @@ public class EREditPage extends Page {
 
 		for (int i = 0; i < 3; i++) {
 			int I = i;
-			type[i].addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					if (isAdj() || rand == null)
-						return;
-					rand.type = I;
-					setER(rand);
-				}
-
+			type[i].addActionListener(arg0 -> {
+				if (isAdj() || rand == null)
+					return;
+				rand.type = I;
+				setER(rand);
 			});
 		}
 

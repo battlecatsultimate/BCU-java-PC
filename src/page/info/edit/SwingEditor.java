@@ -12,6 +12,7 @@ import common.util.lang.Editors.EditorGroup;
 import common.util.lang.Editors.EditorSupplier;
 import common.util.lang.Formatter;
 import common.util.lang.ProcLang;
+import common.util.unit.EneRand;
 import page.*;
 import utilpc.UtilPC;
 
@@ -50,7 +51,7 @@ public abstract class SwingEditor extends Editor {
 			con.accept(input);
 		}
 
-		private final void edit(ActionEvent fe) {
+		private void edit(ActionEvent fe) {
 			field.set(input.isSelected());
 			update();
 		}
@@ -132,11 +133,24 @@ public abstract class SwingEditor extends Editor {
 		@Override
 		protected void setData() {
 			field.setData(par.obj);
-			jl.setText("" + field.get());
+
+			Object obj = field.get();
+
+			if(obj != null)
+				System.out.println(field.get().getClass().getName());
+
+			if(obj instanceof Identifier<?>)
+				if(((Identifier<?>) obj).cls == EneRand.class)
+					jl.setText("" + field.get() + " [Random]");
+				else
+					jl.setText("" + field.get());
+			else
+				jl.setText("" + field.get());
+
 			input.setEnabled(edit && field.obj != null);
 		}
 
-		private final void edit(ActionEvent fe) {
+		private void edit(ActionEvent fe) {
 			MainFrame.changePanel(page.get(this).getThisPage());
 		}
 
@@ -175,7 +189,8 @@ public abstract class SwingEditor extends Editor {
 			con.accept(input);
 		}
 
-		private final void edit(FocusEvent fe) {
+		@SuppressWarnings("ConstantConditions")
+		private void edit(FocusEvent fe) {
 			field.setInt(Data.ignore(() -> Integer.parseInt(input.getText())));
 			update();
 		}

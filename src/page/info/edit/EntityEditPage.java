@@ -26,6 +26,7 @@ import page.*;
 import page.anim.DIYViewPage;
 import page.info.edit.SwingEditor.EditCtrl;
 import page.info.edit.SwingEditor.IdEditor;
+import page.info.filter.AbEnemyFindPage;
 import page.info.filter.EnemyFindPage;
 import page.info.filter.UnitFindPage;
 import page.support.ListJtfPolicy;
@@ -151,9 +152,9 @@ public abstract class EntityEditPage extends Page {
 		SupPage<AbEnemy> ans;
 
 		if(p != null) {
-			ans = new EnemyFindPage(this, pack, p.desc.dependency.toArray(new String[0]));
+			ans = new AbEnemyFindPage(this, pack, p.desc.dependency.toArray(new String[0]));
 		} else {
-			ans = new EnemyFindPage(this);
+			ans = new AbEnemyFindPage(this);
 		}
 
 		sup = ans;

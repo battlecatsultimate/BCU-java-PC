@@ -2,6 +2,8 @@ package page.pack;
 
 import common.CommonStatic;
 import common.pack.Identifier;
+import common.pack.PackData;
+import common.pack.UserProfile;
 import common.util.EREnt;
 import common.util.unit.AbEnemy;
 import common.util.unit.EneRand;
@@ -35,24 +37,33 @@ class EREditTable extends AbJTable implements Reorderable {
 
 	private EneRand rand;
 	private final Page page;
+	private final String pack;
 
-	protected EREditTable(Page p) {
+	protected EREditTable(Page p, PackData.UserPack pack) {
 		page = p;
 		setTransferHandler(new InTableTH(this));
 		setDefaultRenderer(Integer.class, new EnemyTCR());
+		this.pack = pack == null ? null : pack.desc.id;
 	}
 
 	@Override
 	public boolean editCellAt(int r, int c, EventObject e) {
 		boolean result = super.editCellAt(r, c, e);
 		Component editor = getEditorComponent();
-		if (editor == null || !(editor instanceof JTextComponent))
+		if (!(editor instanceof JTextComponent))
 			return result;
 		JTextComponent jtf = ((JTextComponent) editor);
 		if (e instanceof KeyEvent)
 			jtf.selectAll();
-		if (lnk[c] == 0 && jtf.getText().length() > 0)
-			jtf.setText(((AbEnemy) get(r, c)).getID() + "");
+		if (lnk[c] == 0 && jtf.getText().length() > 0) {
+			AbEnemy enemy = (AbEnemy) get(r, c);
+
+			if(enemy != null) {
+				jtf.setText(enemy.getID() + "");
+			} else {
+				jtf.setText("NULL");
+			}
+		}
 		return result;
 	}
 
@@ -140,8 +151,10 @@ class EREditTable extends AbJTable implements Reorderable {
 		int r = p.y / getRowHeight();
 		EREnt<Identifier<AbEnemy>> er = rand.list.get(r);
 		AbEnemy e = Identifier.get(er.ent);
-		if (e != null && e instanceof Enemy)
+		if (e instanceof Enemy)
 			MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, er.multi, er.mula));
+		else if(e instanceof EneRand && pack != null && !e.getID().pack.equals(pack))
+			MainFrame.changePanel(new EREditPage(page, UserProfile.getUserPack(((EneRand) e).id.pack)));
 	}
 
 	protected synchronized int remLine() {

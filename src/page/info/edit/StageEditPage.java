@@ -5,6 +5,8 @@ import common.pack.UserProfile;
 import common.util.stage.MapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
+import common.util.unit.AbEnemy;
+import common.util.unit.EneRand;
 import common.util.unit.Enemy;
 import page.JBTN;
 import page.Page;
@@ -17,8 +19,10 @@ import page.support.RLFIM;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Vector;
 
 public class StageEditPage extends Page {
 
@@ -58,7 +62,7 @@ public class StageEditPage extends Page {
 	private final JBTN addl = new JBTN(0, "addl");
 	private final JBTN reml = new JBTN(0, "reml");
 	private final JBTN advs = new JBTN(0, "advance");
-	private final JList<Enemy> jle = new JList<>();
+	private final JList<AbEnemy> jle = new JList<>();
 	private final JScrollPane jspe = new JScrollPane(jle);
 
 	private final HeadEditTable info;
@@ -93,8 +97,29 @@ public class StageEditPage extends Page {
 	@Override
 	protected void renew() {
 		info.renew();
+
+		Vector<AbEnemy> v = new Vector<>();
+
 		if (efp != null && efp.getList() != null)
-			jle.setListData(efp.getList().toArray(new Enemy[0]));
+			v.addAll(efp.getList());
+
+		UserPack p = UserProfile.getUserPack(pack);
+
+		if(p != null) {
+			ArrayList<EneRand> rands = new ArrayList<>(p.randEnemies.getList());
+
+			for(String str : p.desc.dependency) {
+				UserPack parent = UserProfile.getUserPack(str);
+
+				if(parent != null) {
+					rands.addAll(parent.randEnemies.getList());
+				}
+			}
+
+			v.addAll(rands);
+		}
+
+		jle.setListData(v);
 	}
 
 	@Override
