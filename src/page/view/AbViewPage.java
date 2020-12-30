@@ -32,7 +32,7 @@ public abstract class AbViewPage extends Page {
 	private static final double res = 0.95;
 
 	private final JBTN back = new JBTN(0, "back");
-	private final JBTN copy = new JBTN(0, "copy");
+	protected final JBTN copy = new JBTN(0, "copy");
 	private final JList<String> jlt = new JList<>();
 	private final JScrollPane jspt = new JScrollPane(jlt);
 	private final JSlider jst = new JSlider(100, 900);

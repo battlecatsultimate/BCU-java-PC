@@ -2,12 +2,19 @@ package page.view;
 
 import common.pack.Identifier;
 import common.pack.PackData;
+import common.pack.Source;
 import common.pack.UserProfile;
 import common.system.Node;
+import common.util.anim.AnimCE;
+import common.util.anim.AnimD;
+import common.util.anim.EAnimI;
+import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
+import main.Opts;
 import page.JBTN;
 import page.Page;
+import page.anim.ImgCutEditPage;
 import page.info.UnitInfoPage;
 import page.support.UnitLCR;
 
@@ -33,7 +40,12 @@ public class UnitViewPage extends AbViewPage {
 	public UnitViewPage(Page p, String pack) {
 		super(p);
 		pac = pack;
-		jlu.setListData(new Vector<>(UserProfile.getPack(pack).units.getList()));
+
+		PackData.UserPack pac = UserProfile.getUserPack(pack);
+
+		if(pac != null)
+			jlu.setListData(new Vector<>(pac.units.getList()));
+		
 		ini();
 		resized();
 	}
@@ -76,55 +88,74 @@ public class UnitViewPage extends AbViewPage {
 
 	private void addListeners() {
 
-		jlu.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (arg0.getValueIsAdjusting())
-					return;
-				Unit u = jlu.getSelectedValue();
-				if (u == null)
-					return;
-				int ind = jlf.getSelectedIndex();
-				if (ind == -1)
-					ind = 0;
-				jlf.setListData(u.forms);
-				jlf.setSelectedIndex(ind < u.forms.length ? ind : 0);
-			}
-
+		jlu.addListSelectionListener(arg0 -> {
+			if (arg0.getValueIsAdjusting())
+				return;
+			Unit u = jlu.getSelectedValue();
+			if (u == null)
+				return;
+			int ind = jlf.getSelectedIndex();
+			if (ind == -1)
+				ind = 0;
+			jlf.setListData(u.forms);
+			jlf.setSelectedIndex(ind < u.forms.length ? ind : 0);
 		});
 
-		jlf.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (arg0.getValueIsAdjusting())
-					return;
-				updateChoice();
-			}
-
+		jlf.addListSelectionListener(arg0 -> {
+			if (arg0.getValueIsAdjusting())
+				return;
+			updateChoice();
 		});
 
-		stat.addActionListener(new ActionListener() {
+		stat.addActionListener(e -> {
+			Unit u = jlu.getSelectedValue();
+			if (u == null)
+				return;
+			Node<Unit> n;
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				Unit u = jlu.getSelectedValue();
-				if (u == null)
-					return;
-				Node<Unit> n;
+			if(pac == null) {
+				n = Node.getList(UserProfile.getAll(u.id.pack, Unit.class), u);
+			} else {
+				n = Node.getList(UserProfile.getAll(pac, Unit.class), u);
+			}
 
-				if(pac == null) {
-					n = Node.getList(UserProfile.getAll(u.id.pack, Unit.class), u);
-				} else {
-					n = Node.getList(UserProfile.getAll(pac, Unit.class), u);
+			changePanel(new UnitInfoPage(getThis(), n));
+		});
+
+		ActionListener[] listeners = copy.getActionListeners();
+
+		for(ActionListener listener : listeners)
+			copy.removeActionListener(listener);
+
+		copy.addActionListener(e -> {
+			{
+				Unit ene = jlu.getSelectedValue();
+
+				if(ene != null) {
+					PackData pack = ene.getCont();
+
+					if(pack != null)
+						if(pack instanceof PackData.DefPack)
+							copyAnim();
+						else if(pack instanceof PackData.UserPack) {
+							if(((PackData.UserPack) pack).editable)
+								copyAnim();
+							else {
+								String pass = Opts.read("Enter the password : ");
+
+								if(pass == null)
+									pass = "";
+
+								if(((Source.ZipSource) ((PackData.UserPack) pack).source).zip.matchKey(pass)) {
+									copyAnim();
+								} else {
+									Opts.pop("You typed incorrect password", "Incorrect password");
+								}
+							}
+						}
 				}
-
-				changePanel(new UnitInfoPage(getThis(), n));
 			}
-
 		});
-
 	}
 
 	private void ini() {
@@ -138,4 +169,14 @@ public class UnitViewPage extends AbViewPage {
 
 	}
 
+	private void copyAnim() {
+		EAnimI ei = vb.getEnt();
+		if (ei == null || !(ei.anim() instanceof AnimD))
+			return;
+		AnimD<?, ?> eau = (AnimD<?, ?>) ei.anim();
+		Source.ResourceLocation rl = new Source.ResourceLocation(Source.ResourceLocation.LOCAL, "new anim");
+		Source.Workspace.validate(Source.ANIM, rl);
+		new AnimCE(rl, eau);
+		changePanel(new ImgCutEditPage(getThis()));
+	}
 }

@@ -2,15 +2,22 @@ package page.view;
 
 import common.battle.data.CustomEnemy;
 import common.pack.PackData;
+import common.pack.Source;
 import common.pack.UserProfile;
+import common.util.anim.AnimCE;
+import common.util.anim.AnimD;
+import common.util.anim.EAnimI;
 import common.util.unit.Enemy;
+import main.Opts;
 import page.JBTN;
 import page.Page;
+import page.anim.ImgCutEditPage;
 import page.info.EnemyInfoPage;
 import page.info.edit.EnemyEditPage;
 import page.support.AnimLCR;
 
 import javax.swing.*;
+import java.awt.event.ActionListener;
 import java.util.Vector;
 
 public class EnemyViewPage extends AbViewPage {
@@ -86,6 +93,40 @@ public class EnemyViewPage extends AbViewPage {
 				changePanel(new EnemyInfoPage(getThis(), ene));
 		});
 
+		ActionListener[] listeners = copy.getActionListeners();
+
+		for(ActionListener listener : listeners)
+			copy.removeActionListener(listener);
+
+		copy.addActionListener(e -> {
+			{
+				Enemy ene = jlu.getSelectedValue();
+
+				if(ene != null) {
+					PackData pack = ene.getCont();
+
+					if(pack != null)
+						if(pack instanceof PackData.DefPack)
+							copyAnim();
+						else if(pack instanceof PackData.UserPack) {
+							if(((PackData.UserPack) pack).editable)
+								copyAnim();
+							else {
+								String pass = Opts.read("Enter the password : ");
+
+								if(pass == null)
+									pass = "";
+
+								if(((Source.ZipSource) ((PackData.UserPack) pack).source).zip.matchKey(pass)) {
+									copyAnim();
+								} else {
+									Opts.pop("You typed incorrect password", "Incorrect password");
+								}
+							}
+						}
+				}
+			}
+		});
 	}
 
 	private void ini() {
@@ -99,4 +140,14 @@ public class EnemyViewPage extends AbViewPage {
 
 	}
 
+	private void copyAnim() {
+		EAnimI ei = vb.getEnt();
+		if (ei == null || !(ei.anim() instanceof AnimD))
+			return;
+		AnimD<?, ?> eau = (AnimD<?, ?>) ei.anim();
+		Source.ResourceLocation rl = new Source.ResourceLocation(Source.ResourceLocation.LOCAL, "new anim");
+		Source.Workspace.validate(Source.ANIM, rl);
+		new AnimCE(rl, eau);
+		changePanel(new ImgCutEditPage(getThis()));
+	}
 }
