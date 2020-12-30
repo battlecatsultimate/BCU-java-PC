@@ -45,7 +45,7 @@ public class UnitViewPage extends AbViewPage {
 
 		if(pac != null)
 			jlu.setListData(new Vector<>(pac.units.getList()));
-		
+
 		ini();
 		resized();
 	}
