@@ -1,6 +1,5 @@
 package page.view;
 
-import common.pack.Identifier;
 import common.pack.PackData;
 import common.pack.Source;
 import common.pack.UserProfile;
@@ -8,7 +7,6 @@ import common.system.Node;
 import common.util.anim.AnimCE;
 import common.util.anim.AnimD;
 import common.util.anim.EAnimI;
-import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import main.Opts;
@@ -19,9 +17,6 @@ import page.info.UnitInfoPage;
 import page.support.UnitLCR;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
