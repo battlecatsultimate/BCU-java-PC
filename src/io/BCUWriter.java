@@ -89,12 +89,12 @@ public class BCUWriter extends DataIO {
 						+ "<br> Are you sure to run? It might damage your save.</html>")) {
 					System.exit(0);
 				}
-			}
+			} else {
+				boolean res = ph.createNewFile();
 
-			boolean res = ph.createNewFile();
-
-			if(!res) {
-				Opts.ioErr("Can't create file "+ph.getAbsolutePath());
+				if(!res) {
+					Opts.ioErr("Can't create file "+ph.getAbsolutePath());
+				}
 			}
 		} catch (IOException ignored) {
 		}

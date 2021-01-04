@@ -262,14 +262,17 @@ public class UtilPC {
 		else {
 			StringBuilder lab;
 
-			if(pc.isRelicSlow(0))
-				lab = new StringBuilder(Page.get(3, "rslow"));
-			else if(pc.isRelicWeak(0))
-				lab = new StringBuilder(Page.get(3, "rweak"));
-			else if(pc.isZombieKB(0))
-				lab = new StringBuilder(Page.get(3, "zkb"));
-			else
-				lab = new StringBuilder(Interpret.PCTX[pc.info[0][0]]);
+			if(pc.flagRelic(0)) {
+				lab = new StringBuilder(Page.get(3, "flagr")).append(' ');
+			} else if(pc.flagZombie(0)) {
+				lab = new StringBuilder(Page.get(3, "flagz")).append(' ');
+			} else if(pc.flagMetal(0)) {
+				lab = new StringBuilder(Page.get(3, "flagm")).append(' ');
+			} else {
+				lab = new StringBuilder();
+			}
+
+			lab.append(Interpret.PCTX[pc.info[0][0]]);
 
 			StringBuilder str = new StringBuilder("Lv." + lvs[0] + ", {");
 			for (int i = 1; i < 5; i++) {
@@ -285,13 +288,16 @@ public class UtilPC {
 		if(index < 0 || index >= pc.info.length)
 			return null;
 
-		if(pc.isRelicSlow(index))
-			return Page.get(3, "rslow");
-		else if(pc.isRelicWeak(index))
-			return Page.get(3, "rweak");
-		else if(pc.isZombieKB(index))
-			return Page.get(3, "zkb");
-		else
-			return Interpret.PCTX[pc.info[index][0]];
+		String res = "";
+
+		if(pc.flagRelic(index))
+			res += Page.get(3, "flagr") + " ";
+		else if(pc.flagZombie(index))
+			res += Page.get(3, "flagz") + " ";
+		else if(pc.flagMetal(index))
+			res += Page.get(3, "flagm") + " ";
+
+
+		return res + Interpret.PCTX[pc.info[index][0]];
 	}
 }

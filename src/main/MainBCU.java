@@ -11,6 +11,7 @@ import common.pack.UserProfile;
 import common.pack.Context.ErrType;
 import common.system.fake.ImageBuilder;
 import common.util.Data;
+import common.util.stage.Replay;
 import io.BCJSON;
 import io.BCUReader;
 import io.BCUWriter;
@@ -86,6 +87,8 @@ public class MainBCU {
 			UserProfile.loadPacks(LoadPage::prog);
 			LoadPage.prog("read basis");
 			BasisSet.read();
+//			LoadPage.prog("read replays");
+//			Replay.read();
 			LoadPage.prog("finish reading");
 		}
 

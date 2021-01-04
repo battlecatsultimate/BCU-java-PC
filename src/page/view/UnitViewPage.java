@@ -36,7 +36,7 @@ public class UnitViewPage extends AbViewPage {
 		super(p);
 		pac = pack;
 
-		PackData.UserPack pac = UserProfile.getUserPack(pack);
+		PackData pac = UserProfile.getPack(pack);
 
 		if(pac != null)
 			jlu.setListData(new Vector<>(pac.units.getList()));
