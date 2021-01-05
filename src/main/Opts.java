@@ -1,8 +1,13 @@
 package main;
 
+import page.JL;
+import page.JTF;
 import page.Page;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
 
 public class Opts {
 
@@ -106,4 +111,39 @@ public class Opts {
 		return val == JOptionPane.OK_OPTION;
 	}
 
+	public static Object[] showTextCheck(String title, String content, boolean defaultCheck) {
+		JLabel contents = new JLabel(content);
+		JTF text = new JTF();
+		JCheckBox check = new JCheckBox("Allow users to copy animation without password");
+
+		Border b = text.getBorder();
+		Border e = new EmptyBorder(8, 0, 8 ,0);
+		if(b == null) {
+			text.setBorder(e);
+		} else {
+			text.setBorder(new CompoundBorder(e, b));
+		}
+
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+		panel.add(contents);
+		panel.add(text);
+		panel.add(check);
+
+		check.setSelected(defaultCheck);
+
+		int result = JOptionPane.showConfirmDialog(null, panel, title, JOptionPane.OK_CANCEL_OPTION);
+
+		if(result == JOptionPane.OK_OPTION) {
+			Object[] res = new Object[2];
+
+			res[0] = text.getText();
+			res[1] = check.isSelected();
+
+			return res;
+		} else {
+			return null;
+		}
+	}
 }
