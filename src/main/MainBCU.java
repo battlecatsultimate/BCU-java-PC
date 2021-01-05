@@ -87,8 +87,8 @@ public class MainBCU {
 			UserProfile.loadPacks(LoadPage::prog);
 			LoadPage.prog("read basis");
 			BasisSet.read();
-//			LoadPage.prog("read replays");
-//			Replay.read();
+			LoadPage.prog("read replays");
+			Replay.read();
 			LoadPage.prog("finish reading");
 		}
 

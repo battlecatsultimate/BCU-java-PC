@@ -215,6 +215,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			ac.setNum(MainBCU.builder.build(bimg));
 			ac.saveImg();
 			ac.createNew();
+			AnimCE.map().put(rl.id, ac);
 			Vector<AnimCE> v = new Vector<>(AnimCE.map().values());
 			jlu.setListData(v);
 			jlu.setSelectedValue(ac, true);
@@ -366,7 +367,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 		addl.addActionListener(arg0 -> {
 			changing = true;
-			ImgCut ic = icet.ic;
+			ImgCut ic = icet.anim.imgcut;
 			int[][] data = ic.cuts;
 			String[] name = ic.strs;
 			ic.cuts = new int[++ic.n][];
@@ -392,7 +393,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 		reml.addActionListener(arg0 -> {
 			changing = true;
-			ImgCut ic = icet.ic;
+			ImgCut ic = icet.anim.imgcut;
 			int ind = sb.sele;
 			int[][] data = ic.cuts;
 			String[] name = ic.strs;
@@ -428,7 +429,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			int ind = sb.sele;
 			int[] data = null;
 			if (ind >= 0) {
-				ImgCut ic = icet.ic;
+				ImgCut ic = icet.anim.imgcut;
 				data = ic.cuts[ind];
 			}
 			ReColor.transcolor((BufferedImage) icet.anim.getNum().bimg(), data, jlf.getSelectedIndex(),
@@ -535,6 +536,9 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 	private void setA(AnimCE anim) {
 		boolean boo = changing;
+		if(anim != null) {
+			anim.check();
+		}
 		changing = true;
 		aep.setAnim(anim);
 		addl.setEnabled(anim != null);
