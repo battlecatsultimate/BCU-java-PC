@@ -25,6 +25,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -272,7 +273,7 @@ public class BCUWriter extends DataIO {
 			imp[i] = Importer.curs[i] == null ? null : Importer.curs[i].toString();
 		jo.add("export_paths", JsonEncoder.encode(exp));
 		jo.add("import_paths", JsonEncoder.encode(imp));
-		try (java.io.Writer w = new FileWriter(f)) {
+		try (java.io.Writer w = new OutputStreamWriter(new FileOutputStream(f), StandardCharsets.UTF_8)) {
 			w.write(jo.toString());
 		} catch (Exception e) {
 			CommonStatic.ctx.noticeErr(e, ErrType.ERROR, "failed to write config");
