@@ -90,6 +90,7 @@ public class PackEditPage extends Page {
 	private final JL lbt = new JL(0, "selepar");
 	private final JLabel pid = new JLabel();
 	private final JLabel pauth = new JLabel();
+	private final JLabel animall = new JLabel();
 
 	private UserPack pac;
 	private Enemy ene;
@@ -123,6 +124,7 @@ public class PackEditPage extends Page {
 		set(unpk, x, y, w + 200, 950, 200, 50);
 		set(pid, x, y, w, 1050, 400, 50);
 		set(pauth, x, y, w, 1100, 400, 50);
+		set(animall, x, y, w, 1150, 400, 50);
 
 		w += 450;
 
@@ -270,13 +272,17 @@ public class PackEditPage extends Page {
 
 		extr.setLnr(x -> {
 			if (pac.editable) {
-				String pass = Opts.read("Unpack password: ");
-				if (pass == null)
-					pass = "";
-				String key = pass;
-				CommonStatic.ctx.noticeErr(() -> ((Workspace) pac.source).export(pac, key, (d) -> {
-				}), ErrType.WARN, "failed to export pack");
+				Object[] result = Opts.showTextCheck("Password", "Decide the password of pack : ", pac.desc.allowAnim);
 
+				if (result == null)
+					return;
+
+				String password = (String) result[0];
+
+				pac.desc.allowAnim = (boolean) result[1];
+
+				CommonStatic.ctx.noticeErr(() -> ((Workspace) pac.source).export(pac, password, (d) -> {
+				}), ErrType.WARN, "failed to export pack");
 			}
 		});
 
@@ -477,6 +483,7 @@ public class PackEditPage extends Page {
 		add(recd);
 		add(pid);
 		add(pauth);
+		add(animall);
 		jle.setCellRenderer(new AnimLCR());
 		jld.setCellRenderer(new AnimLCR());
 		setPack(null);
@@ -556,6 +563,7 @@ public class PackEditPage extends Page {
 		setEnemy(null);
 		pid.setVisible(pack != null);
 		pauth.setVisible(pack != null);
+		animall.setVisible(pack == null || !pack.editable);
 
 		if(pack != null) {
 			pid.setText("ID : "+pack.desc.id);
@@ -564,6 +572,10 @@ public class PackEditPage extends Page {
 			} else {
 				pauth.setText("Author : "+pack.desc.author);
 			}
+			if(pack.desc.allowAnim)
+				animall.setText("Copy Anim : Allowed");
+			else
+				animall.setText("Copy Anim : Not Allowed");
 		}
 	}
 
