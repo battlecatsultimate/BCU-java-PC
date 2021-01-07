@@ -1,6 +1,5 @@
 package main;
 
-import page.JL;
 import page.JTF;
 import page.Page;
 
