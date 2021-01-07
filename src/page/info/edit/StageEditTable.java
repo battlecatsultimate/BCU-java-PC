@@ -194,7 +194,8 @@ class StageEditTable extends AbJTable implements Reorderable {
 			ans[sind].enemy = enemy == null ? null : enemy.getID();
 			ans[sind].number = 1;
 			ans[sind].castle_0 = 100;
-			ans[sind].layer_0 = 9;
+			ans[sind].layer_0 = 0;
+			ans[sind].layer_1 = 9;
 			ans[sind].multiple = 100;
 			ans[sind].mult_atk = 100;
 		}
