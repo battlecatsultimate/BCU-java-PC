@@ -44,6 +44,11 @@ public class MainBCU {
 		}
 
 		@Override
+		public boolean confirmDelete(File f) {
+			return Opts.conf(f);
+		}
+
+		@Override
 		public File getAssetFile(String string) {
 			return new File("./assets/" + string);
 		}
