@@ -40,8 +40,7 @@ public class MainBCU {
 
 		@Override
 		public boolean confirmDelete() {
-			System.out.println("skip delete confirmation");// FIXME
-			return true;
+			return Opts.conf();
 		}
 
 		@Override
@@ -130,7 +129,7 @@ public class MainBCU {
 		}
 	}
 
-	public static final int ver = 50000;
+	public static final int ver = 50001;
 
 	public static int FILTER_TYPE = 1;
 	public static final boolean WRITE = !new File("./.project").exists();
