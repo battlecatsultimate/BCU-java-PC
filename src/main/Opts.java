@@ -1,6 +1,5 @@
 package main;
 
-import page.JL;
 import page.JTF;
 import page.Page;
 
@@ -8,6 +7,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+import java.io.File;
 
 public class Opts {
 
@@ -27,6 +27,10 @@ public class Opts {
 
 	public static boolean conf() {
 		return warning(Page.get(0, "w0"), "confirmation");
+	}
+
+	public static boolean conf(File f) {
+		return warning("Are you sure that you want to delete "+f.getName()+"? This can't be undone", "Confirmation");
 	}
 
 	public static boolean conf(String text) {
