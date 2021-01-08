@@ -42,6 +42,7 @@ public class BasisPage extends LubCont {
 	private final JBTN bscop = new JBTN(0, "copy");
 	private final JBTN badd = new JBTN(0, "add");
 	private final JBTN brem = new JBTN(0, "rem");
+	private final JBTN bcpy = new JBTN(0, "copy");
 	private final JBTN form = new JBTN(0, "form");
 	private final JTF bsjtf = new JTF();
 	private final JTF bjtf = new JTF();
@@ -149,6 +150,7 @@ public class BasisPage extends LubCont {
 		set(jspb, x, y, 750, 50, 200, 500);
 		set(badd, x, y, 750, 550, 200, 50);
 		set(brem, x, y, 750, 600, 200, 50);
+		set(bcpy, x, y, 750, 650, 200, 50);
 		set(bjtf, x, y, 750, 700, 200, 50);
 		set(ncb, x, y, 750, 800, 200, 300);
 		set(trea, x, y, 300, 50, 400, 1200);
@@ -384,6 +386,20 @@ public class BasisPage extends LubCont {
 			}
 		});
 
+		bcpy.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				changing = true;
+				BasisLU b = current().copyCurrent();
+				vb.clear();
+				vb.addAll(current().lb);
+				jlb.setListData(vb);
+				jlb.setSelectedValue(b, true);
+				setB(b);
+				changing = false;
+			}
+		});
+
 		bsjtf.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
@@ -483,6 +499,7 @@ public class BasisPage extends LubCont {
 		add(bscop);
 		add(badd);
 		add(brem);
+		add(bcpy);
 		add(lub);
 		add(back);
 		add(unit);
