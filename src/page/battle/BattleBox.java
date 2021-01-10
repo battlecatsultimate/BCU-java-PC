@@ -370,21 +370,40 @@ public interface BattleBox {
 			boolean drawCast = sb.ebase instanceof Entity;
 			int posy = (int) (midh - road_h * siz);
 			int posx = (int) ((800 * ratio + off) * siz + pos);
+
+			double shake = 0.0;
+
+			if(sb.ebase.health <= 0) {
+				shake = (2 + (sb.time % 2 * -4)) * siz;
+			}
+
 			if (!drawCast) {
 				Identifier<CastleImg> cind = sb.st.castle;
 				VImg cast = Identifier.getOr(cind, CastleImg.class).img;
 				FakeImage bimg = cast.getImg();
 				int bw = (int) (bimg.getWidth() * siz);
 				int bh = (int) (bimg.getHeight() * siz);
-				gra.drawImage(bimg, posx - bw, posy - bh, bw, bh);
-			} else
-				((Entity) sb.ebase).anim.draw(gra, setP(posx, posy), siz * sprite);
+				gra.drawImage(bimg, posx - bw + shake, posy - bh, bw, bh);
+			} else {
+				if(sb.s_stop == 0 || (sb.ebase.getAbi() & Data.AB_TIMEI) == 0) {
+					((Entity) sb.ebase).anim.draw(gra, setP(posx + shake, posy), siz * sprite);
+					if(sb.ebase.health > 0)
+						((Entity) sb.ebase).anim.drawEff(gra, setP(posx + shake, posy), siz * sprite);
+				}
+			}
 			gra.setTransform(at);
 			posx -= castw * siz / 2;
 			posy -= casth * siz;
 			Res.getBase(sb.ebase, setSym(gra, siz, posx, posy, 0), bf.sb.st.trail);
 			posx = (int) (((sb.st.len - 800) * ratio + off) * siz + pos);
-			drawNyCast(gra, (int) (midh - road_h * siz), posx, siz, sb.nyc);
+
+			shake = 0.0;
+
+			if(sb.ubase.health <= 0) {
+				shake = (2 + (sb.time % 2 * -4)) * siz;
+			}
+
+			drawNyCast(gra, (int) (midh - road_h * siz), (int) (posx + shake), siz, sb.nyc);
 			posx += castw * siz / 2;
 			Res.getBase(sb.ubase, setSym(gra, siz, posx, posy, 1), false);
 		}
@@ -413,11 +432,16 @@ public interface BattleBox {
 						double y = midh - (road_h - DEP * wc.layer) * siz;
 						wc.draw(gra, setP(p, y), psiz);
 					}
+			}
+
+			for(int i = 0; i < 10; i++) {
+				int dep = i * DEP;
+
 				for (EAnimCont eac : sb.lea)
 					if (eac.layer == i) {
 						gra.setTransform(at);
 						double p = getX(eac.pos);
-						double y = midh - (road_h - DEP * eac.layer) * siz;
+						double y = midh - (road_h - dep) * siz;
 
 						if (eac instanceof WaprCont) {
 							double dx = ((WaprCont) eac).dire == -1 ? -27 * siz : -24 * siz;
@@ -425,8 +449,27 @@ public interface BattleBox {
 						} else {
 							eac.draw(gra, setP(p, y), psiz);
 						}
-
 					}
+			}
+
+			if(sb.ebase.health <= 0) {
+				for(EAnimCont eac : sb.ebaseSmoke) {
+					gra.setTransform(at);
+					double p = getX(eac.pos);
+					double y = midh - (road_h - DEP * eac.layer) * siz;
+
+					eac.draw(gra, setP(p, y), psiz);
+				}
+			}
+
+			if(sb.ubase.health <= 0) {
+				for(EAnimCont eac : sb.ubaseSmoke) {
+					gra.setTransform(at);
+					double p = getX(eac.pos);
+					double y = midh - (road_h - DEP * eac.layer) * siz;
+
+					eac.draw(gra, setP(p, y), psiz);
+				}
 			}
 
 			gra.setTransform(at);
@@ -447,6 +490,22 @@ public interface BattleBox {
 			if (sb.s_stop > 0) {
 				gra.setComposite(FakeGraphics.GRAY, 0, 0);
 				gra.fillRect(0, 0, w, h);
+
+				if((sb.ebase.getAbi() * Data.AB_TIMEI) != 0) {
+					int posy = (int) (midh - road_h * siz);
+					int posx = (int) ((800 * ratio + off) * siz + pos);
+
+					double shake = 0.0;
+
+					if(sb.ebase.health <= 0) {
+						shake = (2 + (sb.time % 2 * -4)) * siz;
+					}
+
+					((Entity) sb.ebase).anim.draw(gra, setP(posx + shake, posy), siz * sprite);
+					if(sb.ebase.health > 0)
+						((Entity) sb.ebase).anim.drawEff(gra, setP(posx + shake, posy), siz * sprite);
+				}
+
 				for (int i = 0; i < 10; i++) {
 					int dep = i * DEP;
 					for (Entity e : sb.le)
