@@ -76,13 +76,13 @@ public class HeadTable extends AbJTable {
 			MainFrame.changePanel(new MusicPage(page, sta.mus0));
 		if (r == 1 && c == 7)
 			MainFrame.changePanel(new MusicPage(page, sta.mus1));
-		if (r == 2 && c == 1)
+		if (r == 3 && c == 1)
 			MainFrame.changePanel(new BGViewPage(page, null, sta.bg));
-		if (r == 2 && c == 3)
+		if (r == 3 && c == 3)
 			MainFrame.changePanel(new CastleViewPage(page, CastleList.from(sta), sta.castle));
-		if (r == 2 && c == 5 && data[r][c] != null && data[r][c] instanceof LvRestrict)
+		if (r == 3 && c == 5 && data[r][c] != null && data[r][c] instanceof LvRestrict)
 			MainFrame.changePanel(new LvRestrictPage(page, (LvRestrict) data[r][c]));
-		if (r == 2 && c == 7 && data[r][c] != null)
+		if (r == 3 && c == 7 && data[r][c] != null)
 			MainFrame.changePanel(new CharaGroupPage(page, (CharaGroup) data[r][c]));
 	}
 
@@ -109,9 +109,14 @@ public class HeadTable extends AbJTable {
 		bas[5] = st.mus0;
 		bas[6] = "<" + st.mush + "%:";
 		bas2[0] = Page.get(1, "minspawn");
-		bas2[1] = st.minSpawn;
-		bas2[2] = Page.get(1, "maxspawn");
-		bas2[3] = st.maxSpawn;
+		if(st.minSpawn == st.maxSpawn)
+			bas2[1] = st.minSpawn + "f";
+		else
+			bas2[1] = st.minSpawn + "f ~ " + st.maxSpawn + "f";
+		bas2[4] = MainLocale.getLoc(1, "lop");
+		bas2[5] = convertTime(st.loop0);
+		bas2[6] = MainLocale.getLoc(1, "lop1");
+		bas2[7] = convertTime(st.loop1);
 		if(st.timeLimit != 0) {
 			bas2[4] = Page.get(1, "time");
 			bas2[5] = st.timeLimit +" min";
@@ -121,10 +126,6 @@ public class HeadTable extends AbJTable {
 		img[1] = st.bg;
 		img[2] = infs[5];
 		img[3] = st.castle;
-		img[4] = MainLocale.getLoc(1, "lop");
-		img[5] = convertTime(st.loop0);
-		img[6] = MainLocale.getLoc(1, "lop1");
-		img[7] = convertTime(st.loop1);
 		Limit lim = st.getLim(0);
 		if (lim != null) {
 			if (lim.rare != 0) {
