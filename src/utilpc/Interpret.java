@@ -166,7 +166,7 @@ public class Interpret extends Data {
 		}
 
 		List<String> l = new ArrayList<>();
-		if (lds != -me.getWidth()) {
+		if (lds != -me.getWidth() && ldr != 0) {
 			int p0 = Math.min(lds, lds + ldr);
 			int p1 = Math.max(lds, lds + ldr);
 			int r = Math.abs(ldr);
