@@ -30,8 +30,9 @@ public class BCMusic extends Data {
 
 	private static boolean h, h1, bh;
 
-	protected static Map<Integer, ArrayDeque<BCPlayer>> sounds = new HashMap<Integer, ArrayDeque<BCPlayer>>();
+	protected static Map<Integer, ArrayDeque<BCPlayer>> sounds = new HashMap<>();
 
+	@SuppressWarnings("UnusedAssignment")
 	public static void clear() {
 		for (ArrayDeque<BCPlayer> clips : sounds.values()) {
 			while (true) {
@@ -48,6 +49,9 @@ public class BCMusic extends Data {
 
 		if (hit != null) {
 			for (int i = 0; i < hit.length; i++) {
+				if(hit[i] == null)
+					continue;
+
 				hit[i].release();
 				hit[i] = null;
 			}
@@ -57,6 +61,9 @@ public class BCMusic extends Data {
 
 		if (hit1 != null) {
 			for (int i = 0; i < hit1.length; i++) {
+				if(hit1[i] == null)
+					continue;
+
 				hit1[i].release();
 				hit1[i] = null;
 			}
@@ -66,6 +73,9 @@ public class BCMusic extends Data {
 
 		if (baseHit != null) {
 			for (int i = 0; i < baseHit.length; i++) {
+				if(baseHit[i] == null)
+					continue;
+
 				baseHit[i].release();
 				baseHit[i] = null;
 			}
@@ -80,6 +90,9 @@ public class BCMusic extends Data {
 
 		if (UI != null) {
 			for(int i = 0; i < UI.length; i++) {
+				if(UI[i] == null)
+					continue;
+
 				UI[i].release();
 				UI[i] = null;
 			}
