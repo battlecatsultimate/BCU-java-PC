@@ -33,9 +33,9 @@ class HeadEditTable extends Page {
 	private final JTF jlen = new JTF();
 	private final JTF jbg = new JTF();
 	private final JTF jcas = new JTF();
-	private final JTF jm0 = new JTF();
+	private final JL jm0 = new JL();
 	private final JTF jmh = new JTF();
-	private final JTF jm1 = new JTF();
+	private final JBTN jm1 = new JBTN();
 	private final JTG con = new JTG(1, "ht03");
 	private final JTF[] star = new JTF[4];
 	private final JTF jmax = new JTF();
@@ -84,10 +84,9 @@ class HeadEditTable extends Page {
 		}
 
 		if (mp != null) {
-			JTF jtf = musl == 0 ? jm0 : jm1;
 			Identifier<Music> val = mp.getSelected();
-			jtf.setText("" + val);
-			if (jtf == jm0) {
+			if(musl == 0) {
+				jm0.setText("" + val);
 				sta.mus0 = val;
 				if (sta.mus0 != null) {
 					lop.setEnabled(true);
@@ -97,8 +96,8 @@ class HeadEditTable extends Page {
 					sta.loop0 = 0;
 					lop.setEnabled(false);
 				}
-			}
-			if (jtf == jm1) {
+			} else if(musl == 1) {
+				jm1.setText("" + val);
 				sta.mus1 = val;
 				if (sta.mus1 != null) {
 					lop1.setEnabled(true);
@@ -109,7 +108,6 @@ class HeadEditTable extends Page {
 					lop1.setEnabled(false);
 				}
 			}
-
 		}
 
 		bvp = null;
@@ -229,6 +227,13 @@ class HeadEditTable extends Page {
 		});
 
 		mus.addActionListener(arg0 -> {
+			musl = 0;
+			mp = new MusicPage(getFront(), pac.desc.id);
+			changePanel(mp);
+		});
+
+		jm1.addActionListener(arg0 -> {
+			musl = 1;
 			mp = new MusicPage(getFront(), pac.desc.id);
 			changePanel(mp);
 		});
@@ -294,6 +299,7 @@ class HeadEditTable extends Page {
 		add(cas);
 		add(con);
 		add(mus);
+		add(jm1);
 		set(jhea);
 		set(jlen);
 		set(jbg);
@@ -302,7 +308,6 @@ class HeadEditTable extends Page {
 		set(name);
 		set(jm0);
 		set(jmh);
-		set(jm1);
 		add(lt);
 		set(loop);
 		set(lop);
@@ -402,15 +407,6 @@ class HeadEditTable extends Page {
 		add(jtf);
 
 		jtf.addFocusListener(new FocusAdapter() {
-			@Override
-			public void focusGained(FocusEvent fe) {
-				if (isAdj())
-					return;
-				if (jtf == jm0)
-					musl = 0;
-				if (jtf == jm1)
-					musl = 1;
-			}
 
 			@Override
 			public void focusLost(FocusEvent fe) {
