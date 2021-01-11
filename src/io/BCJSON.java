@@ -105,6 +105,8 @@ public class BCJSON {
 			if(jar == null)
 				continue;
 
+			System.out.println(MainBCU.ver+" | "+jar.ver+" | "+(MainBCU.ver < jar.ver));
+
 			if(MainBCU.ver < jar.ver)
 				return jar;
 		}
