@@ -233,7 +233,7 @@ class EFBList extends EnemyFilterBox {
 
 	private static final long serialVersionUID = 1L;
 
-	private final JTG[] orop = new JTG[3];
+	private final JTG[] orop = new JTG[4];
 	private final JList<String> rare = new JList<>(ERARE);
 	private final Vector<String> vt = new Vector<>();
 	private final Vector<String> va = new Vector<>();
@@ -274,6 +274,7 @@ class EFBList extends EnemyFilterBox {
 		set(orop[0], x, y, 0, 350, 200, 50);
 		set(orop[1], x, y, 250, 0, 200, 50);
 		set(orop[2], x, y, 0, 800, 200, 50);
+		set(orop[3], x, y, 0, 0, 200, 50);
 
 		set(jr, x, y, 0, 50, 200, 250);
 		set(jt, x, y, 0, 400, 200, 350);
@@ -287,7 +288,13 @@ class EFBList extends EnemyFilterBox {
 			for (Enemy e : p.enemies.getList()) {
 				int t = e.de.getType();
 				int a = e.de.getAbi();
-				boolean b0 = isER(e, rare.getSelectedIndex());
+				boolean b0 = !orop[3].isSelected();
+				for (int r : rare.getSelectedIndices()) {
+					if (orop[3].isSelected())
+						b0 |= isER(e, r);
+					else
+						b0 &= isER(e, r);
+				}
 				boolean b1 = !orop[0].isSelected();
 				for (int i : trait.getSelectedIndices())
 					if (orop[0].isSelected())
@@ -360,7 +367,6 @@ class EFBList extends EnemyFilterBox {
 		trait.setListData(vt);
 		abis.setListData(va);
 		atkt.setListData(ATKCONF);
-		rare.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		int m = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
 		trait.setSelectionMode(m);
 		abis.setSelectionMode(m);
