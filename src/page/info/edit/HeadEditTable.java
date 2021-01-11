@@ -43,6 +43,8 @@ class HeadEditTable extends Page {
 	private final JL loop1 = new JL(1, "lop1");
 	private final JTF lop = new JTF();
 	private final JTF lop1 = new JTF();
+	private final JL minres = new JL(1, "minspawn");
+	private final JTF minrest = new JTF();
 	private final LimitTable lt;
 
 	private Stage sta;
@@ -110,6 +112,11 @@ class HeadEditTable extends Page {
 			}
 		}
 
+		minrest.setEnabled(sta != null);
+
+		if(sta != null)
+			minrest.setText(generateMinRespawn(sta.minSpawn, sta.maxSpawn));
+
 		bvp = null;
 		cvp = null;
 		mp = null;
@@ -130,6 +137,8 @@ class HeadEditTable extends Page {
 		set(jbg, x, y, w, 100, w, 50);
 		set(cas, x, y, w * 2, 100, w, 50);
 		set(jcas, x, y, w * 3, 100, w, 50);
+		set(minres, x, y, w * 4, 100, w, 50);
+		set(minrest, x, y, w * 5, 100, w, 50);
 		set(mus, x, y, 0, 150, w, 50);
 		set(jm0, x, y, w, 150, w, 50);
 		set(loop, x, y, w * 2, 150, w, 50);
@@ -193,6 +202,8 @@ class HeadEditTable extends Page {
 			lop1.setEnabled(false);
 		}
 
+		minrest.setEnabled(true);
+		minrest.setText(generateMinRespawn(st.minSpawn, st.maxSpawn));
 	}
 
 	private void abler(boolean b) {
@@ -313,6 +324,8 @@ class HeadEditTable extends Page {
 		set(lop);
 		set(loop1);
 		set(lop1);
+		set(minres);
+		set(minrest);
 		con.setSelected(true);
 
 		for (int i = 0; i < 4; i++)
@@ -395,6 +408,32 @@ class HeadEditTable extends Page {
 
 			lop1.setText(convertTime(sta.loop1));
 		}
+
+		if (jtf == minrest) {
+			try {
+				int[] vals = CommonStatic.parseIntsN(jtf.getText());
+
+				if(vals.length == 1) {
+					if(vals[0] <= 0)
+						return;
+
+					sta.minSpawn = sta.maxSpawn = vals[0];
+				} else if(vals.length >= 2) {
+					if(vals[0] <= 0 || vals[1] <= 0)
+						return;
+
+					if(vals[0] == vals[1]) {
+						sta.minSpawn = sta.maxSpawn = vals[0];
+					} else if(vals[0] < vals[1]) {
+						sta.minSpawn = vals[0];
+						sta.maxSpawn = vals[1];
+					}
+				}
+
+				minrest.setText(generateMinRespawn(sta.minSpawn, sta.maxSpawn));
+			} catch (Exception ignored) {
+			}
+		}
 	}
 
 	private void set(JLabel jl) {
@@ -448,4 +487,11 @@ class HeadEditTable extends Page {
 		}
 	}
 
+	private String generateMinRespawn(int min, int max) {
+		if(min == max) {
+			return min+"f";
+		} else {
+			return min+"f ~ "+max+"f";
+		}
+	}
 }
