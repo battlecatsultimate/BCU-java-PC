@@ -326,10 +326,10 @@ public class Interpret extends Data {
 	}
 
 	public static boolean isER(Enemy e, int t) {
-		if (t == 0 && e.inDic)
-			return true;
-		if (t == 1 && e.de.getStar() == 1)
-			return true;
+		if (t == 0)
+			return e.inDic;
+		if (t == 1)
+			return e.de.getStar() == 1;
 		List<MapColc> lis = e.findMap();
 		boolean colab = false;
 		if (lis.contains(DefMapColc.getMap("C")))
@@ -338,14 +338,14 @@ public class Interpret extends Data {
 			else if (lis.size() == 2)
 				colab = lis.contains(DefMapColc.getMap("R")) || lis.contains(DefMapColc.getMap("CH"));
 
-		if (t == 2 && !colab)
-			return true;
-		if (t == 3 && !colab && !e.inDic)
-			return true;
-		if (t == 4 && colab)
-			return true;
-		if (t == 5 && !e.id.pack.equals(Identifier.DEF))
-			return true;
+		if (t == 2)
+			return !colab;
+		if (t == 3)
+			return !colab && !e.inDic;
+		if (t == 4)
+			return colab;
+		if (t == 5)
+			return !e.id.pack.equals(Identifier.DEF);
 		return false;
 	}
 
