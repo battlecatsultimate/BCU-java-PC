@@ -126,6 +126,11 @@ public class MainBCU {
 				CommonStatic.def.exit(false);
 		}
 
+		@Override
+		public void loadProg(String str) {
+			LoadPage.prog(str);
+		}
+
 		private boolean noNeedToShow(ErrType t) {
 			if(t == ErrType.DEBUG)
 				return true;
