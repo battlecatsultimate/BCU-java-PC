@@ -1,6 +1,7 @@
 package page.battle;
 
 import common.util.stage.Replay;
+import io.BCMusic;
 import main.MainBCU;
 import page.JBTN;
 import page.JTF;
@@ -38,12 +39,7 @@ public class RecdSavePage extends Page {
 	}
 
 	private void addListeners() {
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
-		});
+		back.addActionListener(arg0 -> changePanel(getFront()));
 
 		jtf.addFocusListener(new FocusAdapter() {
 			@Override
@@ -57,13 +53,15 @@ public class RecdSavePage extends Page {
 			}
 		});
 
-		save.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				recd.write();
-				Replay.getMap().put(recd.rl.id, recd);
-				changePanel(new RecdManagePage(getRootPage()));
+		save.addActionListener(arg0 -> {
+			recd.write();
+			Replay.getMap().put(recd.rl.id, recd);
+
+			if(BCMusic.music != null) {
+				BCMusic.stopAll();
 			}
+
+			changePanel(new RecdManagePage(getRootPage()));
 		});
 
 	}
@@ -72,8 +70,10 @@ public class RecdSavePage extends Page {
 		add(back);
 		add(jtf);
 		add(save);
-		jtf.setText("new replay for stage " + recd.st.toString());
 		addListeners();
+		String initName = "new replay for stage " + recd.st.toString();
+		jtf.setText(initName);
+		recd.rename(initName);
 	}
 
 }
