@@ -13,10 +13,6 @@ import page.view.AbViewPage;
 import utilpc.UtilPC;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.Vector;
 
@@ -57,7 +53,6 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 	public DIYViewPage(Page p, EditHead bar) {
 		super(p, BBBuilder.def.getIconBox());
 		ib = (IconBox) vb;
-
 		aep = bar;
 		ini();
 		resized();
@@ -91,7 +86,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 	@Override
 	protected void renew() {
 		if (aep.focus == null)
-			jlu.setListData(new Vector<AnimCE>(AnimCE.map().values()));
+			jlu.setListData(new Vector<>(AnimCE.map().values()));
 		else
 			jlu.setListData(new AnimCE[] { aep.focus });
 		jlu.setSelectedIndex(0);
@@ -120,38 +115,23 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 
 	private void addListeners() {
 
-		jlu.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (arg0.getValueIsAdjusting())
-					return;
-				updateChoice();
-			}
-
+		jlu.addListSelectionListener(arg0 -> {
+			if (arg0.getValueIsAdjusting())
+				return;
+			updateChoice();
 		});
 
-		ics.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				enabler(!ics.isSelected());
-				ib.setBlank(ics.isSelected());
-			}
-
+		ics.addActionListener(arg0 -> {
+			enabler(!ics.isSelected());
+			ib.setBlank(ics.isSelected());
 		});
 
-		jcb.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				int t = jcb.getSelectedIndex();
-				IconBox.IBConf.mode = t / 4;
-				IconBox.IBConf.type = t % 4;
-				IconBox.IBConf.glow = IconBox.IBConf.type + IconBox.IBConf.mode > 1 ? 1 : 0;
-				ib.changeType();
-			}
-
+		jcb.addActionListener(arg0 -> {
+			int t = jcb.getSelectedIndex();
+			IconBox.IBConf.mode = t / 4;
+			IconBox.IBConf.type = t % 4;
+			IconBox.IBConf.glow = IconBox.IBConf.type + IconBox.IBConf.mode > 1 ? 1 : 0;
+			ib.changeType();
 		});
 
 		icc.setLnr(x -> {
