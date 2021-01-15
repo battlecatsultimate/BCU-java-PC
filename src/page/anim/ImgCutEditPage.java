@@ -252,6 +252,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				if (str.length() == 0 || icet.anim == null || icet.anim.id.id.equals(str)) {
 					if (icet.anim != null)
 						jtf.setText(icet.anim.id.id);
+					changing = false;
 					return;
 				}
 				AnimCE rep = AnimCE.map().get(str);
