@@ -18,6 +18,8 @@ import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 
 public class MaAnimEditPage extends Page implements AbEditPage {
@@ -150,9 +152,10 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		int par = maet.getSelectedRow();
 		int row = mpet.getSelectedRow();
 		Vector<AnimCE> vec = new Vector<>();
-		if (aep.focus == null)
-			vec.addAll(AnimCE.map().values());
-		else
+		if (aep.focus == null) {
+			Map<String, AnimCE> animList = new TreeMap<>(AnimCE.map());
+			vec.addAll(animList.values());
+		} else
 			vec.add(aep.focus);
 		change(0, x -> {
 			jlu.setListData(vec);

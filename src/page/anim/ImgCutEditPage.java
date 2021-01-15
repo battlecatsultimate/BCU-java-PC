@@ -30,6 +30,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 
 public class ImgCutEditPage extends Page implements AbEditPage {
@@ -73,10 +75,12 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	public ImgCutEditPage(Page p) {
 		super(p);
 		aep = new EditHead(this, 1);
-		if (aep.focus == null)
-			jlu.setListData(new Vector<>(AnimCE.map().values()));
-		else
+		if (aep.focus == null) {
+			Map<String, AnimCE> animList = new TreeMap<>(AnimCE.map());
+			jlu.setListData(new Vector<>(animList.values()));
+		} else
 			jlu.setListData(new AnimCE[] { aep.focus });
+
 		ini();
 		resized();
 
@@ -85,9 +89,10 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	public ImgCutEditPage(Page p, EditHead bar) {
 		super(p);
 		aep = bar;
-		if (aep.focus == null)
-			jlu.setListData(new Vector<>(Workspace.loadAnimations(null)));
-		else
+		if (aep.focus == null) {
+			Map<String, AnimCE> animList = new TreeMap<>(AnimCE.map());
+			jlu.setListData(new Vector<>(animList.values()));
+		} else
 			jlu.setListData(new AnimCE[] { aep.focus });
 
 		ini();

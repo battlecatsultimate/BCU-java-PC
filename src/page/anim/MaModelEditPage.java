@@ -14,6 +14,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 
 public class MaModelEditPage extends Page implements AbEditPage {
@@ -116,9 +118,10 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		change(this, page -> {
 			AnimCE da = jlu.getSelectedValue();
 			Vector<AnimCE> vec = new Vector<>();
-			if (aep.focus == null)
-				vec.addAll(AnimCE.map().values());
-			else
+			if (aep.focus == null) {
+				Map<String, AnimCE> animList = new TreeMap<>(AnimCE.map());
+				vec.addAll(animList.values());
+			} else
 				vec.add(aep.focus);
 			jlu.setListData(vec);
 			if (da != null && vec.contains(da)) {

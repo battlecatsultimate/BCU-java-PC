@@ -14,6 +14,8 @@ import utilpc.UtilPC;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 
 public class DIYViewPage extends AbViewPage implements AbEditPage {
@@ -85,9 +87,10 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 
 	@Override
 	protected void renew() {
-		if (aep.focus == null)
-			jlu.setListData(new Vector<>(AnimCE.map().values()));
-		else
+		if (aep.focus == null) {
+			Map<String, AnimCE> animList = new TreeMap<>(AnimCE.map());
+			jlu.setListData(new Vector<>(animList.values()));
+		}  else
 			jlu.setListData(new AnimCE[] { aep.focus });
 		jlu.setSelectedIndex(0);
 	}
