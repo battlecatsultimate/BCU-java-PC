@@ -2,6 +2,7 @@ package page.support;
 
 import common.io.OutStream;
 import io.BCUWriter;
+import main.Opts;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -26,6 +27,11 @@ public class Exporter extends JFileChooser {
 		int returnVal = showSaveDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			file = getSelectedFile();
+			if (file.exists()) {
+				boolean verifyFile = Opts.conf("A file with this name already exists. Save anyway?");
+				if (!verifyFile)
+					return;
+			}
 			curs[t] = getCurrentDirectory();
 			BCUWriter.writeImage(bimg, file);
 		}
