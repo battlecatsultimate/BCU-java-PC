@@ -119,8 +119,6 @@ public class BCPlayer implements LineListener {
 	}
 
 	private int milliToFrame(long milli) {
-		long rate = (long) c.getFormat().getFrameRate();
-
-		return (int) (milli / 1000.0) * (int) rate;
+		return (int) (c.getFormat().getFrameRate() * milli / 1000.0);
 	}
 }
