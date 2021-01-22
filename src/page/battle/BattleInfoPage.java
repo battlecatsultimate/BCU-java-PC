@@ -53,6 +53,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	private final JLabel ecount = new JLabel();
 	private final JLabel ucount = new JLabel();
 	private final JLabel stream = new JLabel();
+	private final JLabel respawn = new JLabel();
 	private final JTG jtb = new JTG(0, "larges");
 	private final JSlider jsl = new JSlider();
 	private final BattleBox bb;
@@ -199,6 +200,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			set(eup, x, y, 50, 400, 0, 0);
 			set(ecount, x, y, 50, 50, 0, 0);
 			set(ucount, x, y, 50, 350, 0, 0);
+			set(respawn, x, y, 0, 0, 0, 0);
 			set(jsl, x, y, 0, 0, 0, 0);
 		} else {
 			set(ctp, x, y, 50, 850, 1200, 400);
@@ -214,6 +216,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			set(ubase, x, y, 1300, 250, 200, 50);
 			set(ecount, x, y, 50, 50, 600, 50);
 			set(ucount, x, y, 1650, 50, 600, 50);
+			set(respawn, x, y, 50, 800, 600, 50);
 			set(jsl, x, y, 700, 800, 800, 50);
 		}
 		ct.setRowHeight(size(x, y, 50));
@@ -254,6 +257,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		timer.setText(sb.time + "f");
 		ecount.setText(sb.entityCount(1) + "/" + sb.st.max);
 		ucount.setText(sb.entityCount(-1) + "/" + sb.max_num);
+		respawn.setText("respawn timer: " + sb.respawnTime + "f");
 		resized();
 		if (sb.getEBHP() * 100 <= sb.st.mush && BCMusic.music != sb.st.mus1)
 			if(basis.sb.st.mush == 0 || basis.sb.st.mush == 100)
@@ -348,6 +352,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		add(timer);
 		add(ecount);
 		add(ucount);
+		add(respawn);
 		add(jtb);
 		if (bb instanceof BBRecd)
 			add(stream);
