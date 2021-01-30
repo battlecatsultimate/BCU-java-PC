@@ -23,8 +23,6 @@ import common.util.unit.Form;
 import io.BCMusic;
 import io.BCUReader;
 import io.BCUWriter;
-import page.MainLocale;
-import page.Page;
 import utilpc.awt.FG2D;
 
 import javax.swing.*;
@@ -263,14 +261,10 @@ public class UtilPC {
 		else {
 			StringBuilder lab;
 
-			if(pc.flagRelic(0)) {
-				lab = new StringBuilder(Page.get(MainLocale.UTIL, "flagr")).append(' ');
-			} else if(pc.flagZombie(0)) {
-				lab = new StringBuilder(Page.get(MainLocale.UTIL, "flagz")).append(' ');
-			} else if(pc.flagMetal(0)) {
-				lab = new StringBuilder(Page.get(MainLocale.UTIL, "flagm")).append(' ');
-			} else {
-				lab = new StringBuilder();
+			lab = new StringBuilder();
+
+			if(pc.type != 0) {
+				lab.append("[").append(Interpret.getTrait(pc.type, 0)).append("]").append(" ");
 			}
 
 			lab.append(Interpret.PCTX[pc.info[0][0]]);
@@ -289,16 +283,6 @@ public class UtilPC {
 		if(index < 0 || index >= pc.info.length)
 			return null;
 
-		String res = "";
-
-		if(pc.flagRelic(index))
-			res += Page.get(MainLocale.UTIL, "flagr") + " ";
-		else if(pc.flagZombie(index))
-			res += Page.get(MainLocale.UTIL, "flagz") + " ";
-		else if(pc.flagMetal(index))
-			res += Page.get(MainLocale.UTIL, "flagm") + " ";
-
-
-		return res + Interpret.PCTX[pc.info[index][0]];
+		return Interpret.PCTX[pc.info[index][0]];
 	}
 }

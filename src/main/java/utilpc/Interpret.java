@@ -125,11 +125,9 @@ public class Interpret extends Data {
 					return false;
 				}
 			}
-
-			return true;
-		} else {
-			return true;
 		}
+
+		return true;
 	}
 
 	public static String comboInfo(Combo c) {
@@ -175,16 +173,16 @@ public class Interpret extends Data {
 			l.add(Page.get(MainLocale.UTIL, "ld0") + ": " + tb + ", " + Page.get(MainLocale.UTIL, "ld1") + ": " + p0 + "~" + p1 + ", "
 					+ Page.get(MainLocale.UTIL, "ld2") + ": " + r);
 		}
-		String imu = Page.get(MainLocale.UTIL, "imu");
+		StringBuilder imu = new StringBuilder(Page.get(MainLocale.UTIL, "imu"));
 		for (int i = 0; i < ABIS.length; i++)
 			if (((me.getAbi() >> i) & 1) > 0)
 				if (ABIS[i].startsWith("IMU"))
-					imu += ABIS[i].substring(3) + ", ";
+					imu.append(ABIS[i].substring(3)).append(", ");
 				else
 					l.add(ABIS[i]);
 
 		if (imu.length() > 10)
-			l.add(imu);
+			l.add(imu.toString());
 		return l;
 	}
 
@@ -240,13 +238,20 @@ public class Interpret extends Data {
 	}
 
 	public static String getTrait(int type, int star) {
-		String ans = "";
+		StringBuilder ans = new StringBuilder();
 		for (int i = 0; i < TRAIT.length; i++)
 			if (((type >> i) & 1) > 0)
-				ans += TRAIT[i] + ", ";
+				ans.append(TRAIT[i]).append(", ");
 		if (star > 0)
-			ans += STAR[star];
-		return ans;
+			ans.append(STAR[star]);
+
+		String res = ans.toString();
+
+		if(res.endsWith(", ")) {
+			res = res.substring(0, res.length() - 2);
+		}
+
+		return res;
 	}
 
 	public static int getValue(int ind, Treasure t) {
@@ -372,7 +377,6 @@ public class Interpret extends Data {
 		ERARE = Page.get(MainLocale.UTIL, "er", 6);
 		RARITY = Page.get(MainLocale.UTIL, "r", 6);
 		TRAIT = Page.get(MainLocale.UTIL, "c", 12);
-		System.out.println("TRAIT : "+ Arrays.toString(TRAIT));
 		STAR = Page.get(MainLocale.UTIL, "s", 5);
 		ABIS = Page.get(MainLocale.UTIL, "a", 22);
 		SABIS = Page.get(MainLocale.UTIL, "sa", 22);
@@ -490,7 +494,6 @@ public class Interpret extends Data {
 			t.bslv[BASE_BARRIER] = v;
 		else if (ind == 36)
 			t.bslv[BASE_CURSE] = v;
-
 	}
 
 }

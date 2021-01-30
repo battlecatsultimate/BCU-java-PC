@@ -45,7 +45,7 @@ public strictfp class MainLocale {
 			ttt.ttts.put(text, cont);
 		else {
 			if (!ttt.ttt.containsKey(page))
-				ttt.ttt.put(page, new TreeMap<String, String>());
+				ttt.ttt.put(page, new TreeMap<>());
 			ttt.ttt.get(page).put(text, cont);
 		}
 		return ttt;
@@ -64,10 +64,9 @@ public strictfp class MainLocale {
 					return str;
 				for (int i = 1; i < strs.length; i += 2)
 					strs[i] = getLoc(loc, strs[i]);
-				String ans = "";
-				for (int i = 0; i < strs.length; i++)
-					ans += strs[i];
-				return ans;
+				StringBuilder ans = new StringBuilder();
+				for (String s : strs) ans.append(s);
+				return ans.toString();
 			}
 			try {
 				return exLang ? "[" + loci + key + "]" : RENS[loc].getString(key);
@@ -205,7 +204,6 @@ class TTT {
 		String strt = ttts.get(text);
 		if (strt != null)
 			return strt;
-		String strp = tttp.get(page);
-		return strp;
+		return tttp.get(page);
 	}
 }
