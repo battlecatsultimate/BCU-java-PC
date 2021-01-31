@@ -30,7 +30,7 @@ public strictfp class MainLocale {
 
 	static {
 		for (int i = 0; i < 4; i++)
-			RENS[i] = ResourceBundle.getBundle(RENN[i], Locale.ROOT, new URLClassLoader(new URL[]{MainLocale.class.getResource(RENN[i]+".properties")}));
+			RENS[i] = ResourceBundle.getBundle(RENN[i], Locale.ROOT, new URLClassLoader(new URL[]{MainLocale.class.getClassLoader().getResource(RENN[i]+".properties")}));
 	}
 
 	public static boolean exLang, exTTT;
