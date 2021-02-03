@@ -2,6 +2,7 @@ package page;
 
 import common.CommonStatic;
 import common.system.P;
+import main.Opts;
 import main.Printer;
 import utilpc.PP;
 
@@ -21,6 +22,7 @@ public class MainFrame extends JFrame {
 	public static int x = 0, y = 0;
 	public static Rectangle rect = null, crect = null;
 	public static Font font = null;
+	public static boolean closeClicked = false;
 
 	public static String fontType = "Dialog";
 	public static int fontStyle = Font.PLAIN;
@@ -31,6 +33,11 @@ public class MainFrame extends JFrame {
 
 	public static void changePanel(Page p) {
 		F.FchangePanel(p);
+	}
+
+	public static void exitAll() {
+		if (mainPanel != null)
+			mainPanel.exitAll();
 	}
 
 	public static Page getPanel() {
@@ -110,10 +117,11 @@ public class MainFrame extends JFrame {
 
 			@Override
 			public void windowClosing(WindowEvent arg0) {
-				setVisible(false);
-				if (mainPanel != null)
-					mainPanel.exitAll();
-				CommonStatic.def.exit(true);
+				if(!closeClicked) {
+					changePanel(new SavePage());
+				} else {
+					Opts.warnPop("Saving progress...\nPlease wait!", "Saving");
+				}
 			}
 
 			@Override
@@ -123,46 +131,34 @@ public class MainFrame extends JFrame {
 			}
 		});
 
-		Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
-			@Override
-			public void eventDispatched(AWTEvent event) {
-				if (event.getID() == KeyEvent.KEY_PRESSED && mainPanel != null)
-					mainPanel.keyPressed((KeyEvent) event);
-				if (event.getID() == KeyEvent.KEY_RELEASED && mainPanel != null)
-					mainPanel.keyReleased((KeyEvent) event);
-				if (event.getID() == KeyEvent.KEY_TYPED && mainPanel != null)
-					mainPanel.keyTyped((KeyEvent) event);
-			}
+		Toolkit.getDefaultToolkit().addAWTEventListener(event -> {
+			if (event.getID() == KeyEvent.KEY_PRESSED && mainPanel != null)
+				mainPanel.keyPressed((KeyEvent) event);
+			if (event.getID() == KeyEvent.KEY_RELEASED && mainPanel != null)
+				mainPanel.keyReleased((KeyEvent) event);
+			if (event.getID() == KeyEvent.KEY_TYPED && mainPanel != null)
+				mainPanel.keyTyped((KeyEvent) event);
 		}, AWTEvent.KEY_EVENT_MASK);
 
-		Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
-			@Override
-			public void eventDispatched(AWTEvent event) {
-				if (event.getID() == MouseEvent.MOUSE_PRESSED && mainPanel != null)
-					mainPanel.mousePressed((MouseEvent) event);
-				if (event.getID() == MouseEvent.MOUSE_RELEASED && mainPanel != null)
-					mainPanel.mouseReleased((MouseEvent) event);
-				if (event.getID() == MouseEvent.MOUSE_CLICKED && mainPanel != null)
-					mainPanel.mouseClicked((MouseEvent) event);
-			}
+		Toolkit.getDefaultToolkit().addAWTEventListener(event -> {
+			if (event.getID() == MouseEvent.MOUSE_PRESSED && mainPanel != null)
+				mainPanel.mousePressed((MouseEvent) event);
+			if (event.getID() == MouseEvent.MOUSE_RELEASED && mainPanel != null)
+				mainPanel.mouseReleased((MouseEvent) event);
+			if (event.getID() == MouseEvent.MOUSE_CLICKED && mainPanel != null)
+				mainPanel.mouseClicked((MouseEvent) event);
 		}, AWTEvent.MOUSE_EVENT_MASK);
 
-		Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
-			@Override
-			public void eventDispatched(AWTEvent event) {
-				if (event.getID() == MouseEvent.MOUSE_MOVED && mainPanel != null)
-					mainPanel.mouseMoved((MouseEvent) event);
-				if (event.getID() == MouseEvent.MOUSE_DRAGGED && mainPanel != null)
-					mainPanel.mouseDragged((MouseEvent) event);
-			}
+		Toolkit.getDefaultToolkit().addAWTEventListener(event -> {
+			if (event.getID() == MouseEvent.MOUSE_MOVED && mainPanel != null)
+				mainPanel.mouseMoved((MouseEvent) event);
+			if (event.getID() == MouseEvent.MOUSE_DRAGGED && mainPanel != null)
+				mainPanel.mouseDragged((MouseEvent) event);
 		}, AWTEvent.MOUSE_MOTION_EVENT_MASK);
 
-		Toolkit.getDefaultToolkit().addAWTEventListener(new AWTEventListener() {
-			@Override
-			public void eventDispatched(AWTEvent event) {
-				if (event.getID() == MouseEvent.MOUSE_WHEEL && mainPanel != null)
-					mainPanel.mouseWheel((MouseEvent) event);
-			}
+		Toolkit.getDefaultToolkit().addAWTEventListener(event -> {
+			if (event.getID() == MouseEvent.MOUSE_WHEEL && mainPanel != null)
+				mainPanel.mouseWheel((MouseEvent) event);
 		}, AWTEvent.MOUSE_WHEEL_EVENT_MASK);
 
 		addComponentListener(new ComponentAdapter() {

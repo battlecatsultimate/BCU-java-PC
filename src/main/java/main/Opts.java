@@ -71,6 +71,11 @@ public class Opts {
 		JOptionPane.showMessageDialog(null, text, title, opt);
 	}
 
+	public static void warnPop(String text, String title) {
+		int opt = JOptionPane.WARNING_MESSAGE;
+		JOptionPane.showMessageDialog(null, text, title, opt);
+	}
+
 	public static String read(String string) {
 		return JOptionPane.showInputDialog(null, string, "");
 	}
