@@ -94,4 +94,7 @@ public class ReorderList<T> extends JList<T> implements Reorderable {
 			model.addElement(t);
 	}
 
+	public void allowDrag(boolean drag) {
+		setDragEnabled(drag);
+	}
 }

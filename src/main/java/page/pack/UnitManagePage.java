@@ -22,16 +22,9 @@ import page.view.UnitViewPage;
 import utilpc.Interpret;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 public class UnitManagePage extends Page {
 
@@ -133,37 +126,22 @@ public class UnitManagePage extends Page {
 
 	private void addListeners() {
 
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
+		back.addActionListener(arg0 -> changePanel(getFront()));
+
+		jld.addListSelectionListener(arg0 -> {
+			if (jld.getValueIsAdjusting())
+				return;
+			boolean edi = pac != null && pac.editable && jld.getSelectedValue() != null;
+			addu.setEnabled(edi);
+			addf.setEnabled(edi && uni != null);
 		});
 
-		jld.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (jld.getValueIsAdjusting())
-					return;
-				boolean edi = pac != null && pac.editable && jld.getSelectedValue() != null;
-				addu.setEnabled(edi);
-				addf.setEnabled(edi && uni != null);
-			}
-
-		});
-
-		jlp.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (changing || jlp.getValueIsAdjusting())
-					return;
-				changing = true;
-				setPack(jlp.getSelectedValue());
-				changing = false;
-			}
-
+		jlp.addListSelectionListener(arg0 -> {
+			if (changing || jlp.getValueIsAdjusting())
+				return;
+			changing = true;
+			setPack(jlp.getSelectedValue());
+			changing = false;
 		});
 
 		jlf.list = new ReorderListener<Form>() {
@@ -171,8 +149,7 @@ public class UnitManagePage extends Page {
 			@Override
 			public void reordered(int ori, int fin) {
 				List<Form> lsm = new ArrayList<>();
-				for (Form sm : uni.forms)
-					lsm.add(sm);
+				Collections.addAll(lsm, uni.forms);
 				Form sm = lsm.remove(ori);
 				lsm.add(fin, sm);
 				for (int i = 0; i < uni.forms.length; i++) {
@@ -193,51 +170,38 @@ public class UnitManagePage extends Page {
 
 	private void addListeners$1() {
 
-		jlu.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (changing || jlu.getValueIsAdjusting())
-					return;
-				changing = true;
-				setUnit(jlu.getSelectedValue());
-				changing = false;
-			}
-
+		jlu.addListSelectionListener(e -> {
+			if (changing || jlu.getValueIsAdjusting())
+				return;
+			changing = true;
+			setUnit(jlu.getSelectedValue());
+			changing = false;
 		});
 
-		addu.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				CustomUnit cu = new CustomUnit();
-				Unit u = new Unit(pac.getNextID(Unit.class), jld.getSelectedValue(), cu);
-				pac.units.add(u);
-				jlu.setListData(pac.units.toArray());
-				jlu.setSelectedValue(u, true);
-				setUnit(u);
-				changing = false;
-			}
-
+		addu.addActionListener(arg0 -> {
+			changing = true;
+			CustomUnit cu = new CustomUnit();
+			Unit u = new Unit(pac.getNextID(Unit.class), jld.getSelectedValue(), cu);
+			pac.units.add(u);
+			jlu.setListData(pac.units.toArray());
+			jlu.setSelectedValue(u, true);
+			setUnit(u);
+			changing = false;
 		});
 
-		remu.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (!Opts.conf())
-					return;
-				changing = true;
-				int ind = jlu.getSelectedIndex();
-				pac.units.remove(uni);
-				uni.lv.units.remove(uni);
-				jlu.setListData(pac.units.toArray());
-				if (ind >= 0)
-					ind--;
-				jlu.setSelectedIndex(ind);
-				setUnit(jlu.getSelectedValue());
-				changing = false;
-			}
-
+		remu.addActionListener(arg0 -> {
+			if (!Opts.conf())
+				return;
+			changing = true;
+			int ind = jlu.getSelectedIndex();
+			pac.units.remove(uni);
+			uni.lv.units.remove(uni);
+			jlu.setListData(pac.units.toArray());
+			if (ind >= 0)
+				ind--;
+			jlu.setSelectedIndex(ind);
+			setUnit(jlu.getSelectedValue());
+			changing = false;
 		});
 
 		maxl.addFocusListener(new FocusAdapter() {
@@ -268,88 +232,69 @@ public class UnitManagePage extends Page {
 
 		});
 
-		rar.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (changing)
-					return;
-				uni.rarity = rar.getSelectedIndex();
-			}
-
+		rar.addActionListener(arg0 -> {
+			if (changing)
+				return;
+			uni.rarity = rar.getSelectedIndex();
 		});
 
-		cbl.addActionListener(new ActionListener() {
+		cbl.addActionListener(arg0 -> {
+			if (changing || uni == null)
+				return;
+			UnitLevel sel = (UnitLevel) cbl.getSelectedItem();
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (changing || uni == null)
-					return;
-				UnitLevel sel = (UnitLevel) cbl.getSelectedItem();
-				uni.lv.units.remove(uni);
-				uni.lv = sel;
-				sel.units.add(uni);
-				setUnit(uni);
-				setLevel(ul);
-			}
+			if(sel == null)
+				return;
 
+			uni.lv.units.remove(uni);
+			uni.lv = sel;
+			sel.units.add(uni);
+			setUnit(uni);
+			setLevel(ul);
 		});
 
 	}
 
 	private void addListeners$2() {
 
-		jlf.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (changing || jlf.getValueIsAdjusting())
-					return;
-				changing = true;
-				setForm(jlf.getSelectedValue());
-				changing = false;
-			}
-
+		jlf.addListSelectionListener(e -> {
+			if (changing || jlf.getValueIsAdjusting())
+				return;
+			changing = true;
+			setForm(jlf.getSelectedValue());
+			changing = false;
 		});
 
-		addf.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				CustomUnit cu = new CustomUnit();
-				AnimCE ac = jld.getSelectedValue();
-				frm = new Form(uni, uni.forms.length, "new form", ac, cu);
-				uni.forms = Arrays.copyOf(uni.forms, uni.forms.length + 1);
-				uni.forms[uni.forms.length - 1] = frm;
-				setUnit(uni);
-				changing = false;
-			}
-
+		addf.addActionListener(arg0 -> {
+			changing = true;
+			CustomUnit cu = new CustomUnit();
+			AnimCE ac = jld.getSelectedValue();
+			frm = new Form(uni, uni.forms.length, "new form", ac, cu);
+			uni.forms = Arrays.copyOf(uni.forms, uni.forms.length + 1);
+			uni.forms[uni.forms.length - 1] = frm;
+			setUnit(uni);
+			changing = false;
 		});
 
-		remf.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (!Opts.conf())
-					return;
-				changing = true;
-				int ind = jlf.getSelectedIndex();
-				Form[] fs = new Form[uni.forms.length - 1];
-				int x = 0;
-				for (int i = 0; i < uni.forms.length; i++)
-					if (i != ind)
-						fs[x++] = uni.forms[i];
-				uni.forms = fs;
-				for (int i = 0; i < uni.forms.length; i++)
-					uni.forms[i].fid = i;
-				setUnit(uni);
-				if (ind >= 0)
-					ind--;
-				jlf.setSelectedIndex(ind);
-				setForm(jlf.getSelectedValue());
-				changing = false;
-			}
-
+		remf.addActionListener(arg0 -> {
+			if (!Opts.conf())
+				return;
+			changing = true;
+			int ind = jlf.getSelectedIndex();
+			Form[] fs = new Form[uni.forms.length - 1];
+			int x = 0;
+			for (int i = 0; i < uni.forms.length; i++)
+				if (i != ind)
+					fs[x++] = uni.forms[i];
+			uni.forms = fs;
+			for (int i = 0; i < uni.forms.length; i++)
+				uni.forms[i].fid = i;
+			setUnit(uni);
+			if (ind >= 0)
+				ind--;
+			jlf.setSelectedIndex(ind);
+			setForm(jlf.getSelectedValue());
+			changing = false;
 		});
 
 		jtff.addFocusListener(new FocusAdapter() {
@@ -361,55 +306,37 @@ public class UnitManagePage extends Page {
 
 		});
 
-		edit.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				changePanel(new FormEditPage(getThis(), pac, frm));
-			}
-
-		});
+		edit.addActionListener(e -> changePanel(new FormEditPage(getThis(), pac, frm)));
 
 	}
 
 	private void addListeners$3() {
 
-		jll.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (changing || jll.getValueIsAdjusting())
-					return;
-				setLevel(jll.getSelectedValue());
-			}
-
+		jll.addListSelectionListener(arg0 -> {
+			if (changing || jll.getValueIsAdjusting())
+				return;
+			setLevel(jll.getSelectedValue());
 		});
 
-		addl.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				ul = new UnitLevel(pac.getNextID(UnitLevel.class), CommonStatic.getBCAssets().defLv);
-				pac.unitLevels.add(ul);
-				setPack(pac);
-				changing = false;
-			}
+		addl.addActionListener(arg0 -> {
+			changing = true;
+			ul = new UnitLevel(pac.getNextID(UnitLevel.class), CommonStatic.getBCAssets().defLv);
+			pac.unitLevels.add(ul);
+			setPack(pac);
+			changing = false;
 		});
 
-		reml.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				int ind = jll.getSelectedIndex();
-				UnitLevel ul = jll.getSelectedValue();
-				pac.unitLevels.remove(ul);
-				setPack(pac);
-				if (ind >= pac.unitLevels.size())
-					ind--;
-				jll.setSelectedIndex(ind);
-				setLevel(jll.getSelectedValue());
-				changing = false;
-			}
+		reml.addActionListener(arg0 -> {
+			changing = true;
+			int ind = jll.getSelectedIndex();
+			UnitLevel ul = jll.getSelectedValue();
+			pac.unitLevels.remove(ul);
+			setPack(pac);
+			if (ind >= pac.unitLevels.size())
+				ind--;
+			jll.setSelectedIndex(ind);
+			setLevel(jll.getSelectedValue());
+			changing = false;
 		});
 
 		jtfl.addFocusListener(new FocusAdapter() {
@@ -426,9 +353,7 @@ public class UnitManagePage extends Page {
 
 		});
 
-		vuni.setLnr((e) -> {
-			changePanel(new UnitViewPage(this, pac.getSID()));
-		});
+		vuni.setLnr((e) -> changePanel(new UnitViewPage(this, pac.getSID())));
 	}
 
 	private void ini() {
@@ -526,6 +451,7 @@ public class UnitManagePage extends Page {
 			jll.setListData(new UnitLevel[0]);
 			cbl.removeAllItems();
 		} else {
+			jlf.allowDrag(pac.editable);
 			jlu.setListData(pac.units.toArray());
 			jlu.clearSelection();
 			jll.setListData(pac.unitLevels.toArray());
