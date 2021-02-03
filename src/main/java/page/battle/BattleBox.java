@@ -369,7 +369,7 @@ public interface BattleBox {
 			FakeTransform at = gra.getTransform();
 			boolean drawCast = sb.ebase instanceof Entity;
 			int posy = (int) (midh - road_h * siz);
-			int posx = (int) ((800 * ratio + off) * siz + pos);
+			int posx = (int) ((sb.ebase.pos * ratio + off) * siz + pos);
 
 			double shake = 0.0;
 
