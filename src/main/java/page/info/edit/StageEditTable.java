@@ -2,7 +2,9 @@ package page.info.edit;
 
 import common.CommonStatic;
 import common.pack.Identifier;
+import common.pack.PackData;
 import common.pack.PackData.UserPack;
+import common.pack.UserProfile;
 import common.util.Data;
 import common.util.stage.SCDef;
 import common.util.stage.SCDef.Line;
@@ -51,26 +53,30 @@ class StageEditTable extends AbJTable implements Reorderable {
 		page = p;
 		pack = pac;
 		setTransferHandler(new InTableTH(this));
-		setDefaultRenderer(Integer.class, new EnemyTCR());
+		setDefaultRenderer(String.class, new EnemyTCR());
 	}
 
 	@Override
 	public boolean editCellAt(int r, int c, EventObject e) {
 		boolean result = super.editCellAt(r, c, e);
 		Component editor = getEditorComponent();
-		if (editor == null || !(editor instanceof JTextComponent))
+		if (!(editor instanceof JTextComponent))
 			return result;
 		JTextComponent jtf = ((JTextComponent) editor);
 		if (e instanceof KeyEvent)
 			jtf.selectAll();
-		if (lnk[c] == 1 && jtf.getText().length() > 0)
-			jtf.setText(((AbEnemy) get(r, c)).getID() + "");
+		if (lnk[c] == 1 && jtf.getText().length() > 0) {
+			Object obj = get(r, c);
+
+			if(obj != null)
+				jtf.setText(((AbEnemy) obj).getID() + "");
+		}
 		return result;
 	}
 
 	@Override
 	public Class<?> getColumnClass(int c) {
-		return lnk[c] == 1 ? Integer.class : String.class;
+		return c == 1 ? String.class : Object.class;
 	}
 
 	@Override
@@ -122,11 +128,9 @@ class StageEditTable extends AbJTable implements Reorderable {
 		int ifi = info.length - fin - 1;
 		Line temp = info[ior];
 		if (ior < ifi)
-			for (int i = ior; i < ifi; i++)
-				info[i] = info[i + 1];
-		else
-			for (int i = ior; i > ifi; i--)
-				info[i] = info[i - 1];
+			System.arraycopy(info, ior + 1, info, ior, ifi - ior);
+		else if (ior - ifi >= 0)
+			System.arraycopy(info, ifi, info, ifi + 1, ior - ifi);
 		info[ifi] = temp;
 	}
 
@@ -137,7 +141,12 @@ class StageEditTable extends AbJTable implements Reorderable {
 		if (r >= getRowCount())
 			return;
 		c = lnk[c];
-		if (c > 3) {
+		if (c == 1) {
+			int[] is = CommonStatic.parseIntsN((String) arg0);
+
+			if(is.length == 2)
+				set(r, c, is[0], is[1]);
+		} else if (c > 3) {
 			int[] is = CommonStatic.parseIntsN((String) arg0);
 			if (is.length == 0)
 				return;
@@ -152,9 +161,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 		} else if (c == 2) {
 			int[] data = CommonStatic.parseIntsN((String) arg0);
 
-			if (data.length == 0) {
-				return;
-			} else if (data.length == 1) {
+			if (data.length == 1) {
 				if(data[0] == 0)
 					return;
 
@@ -182,10 +189,8 @@ class StageEditTable extends AbJTable implements Reorderable {
 		int sind = len - ind - 1;
 		Line[] ans = new Line[len + 1];
 		if (sind >= 0) {
-			for (int i = 0; i < sind; i++)
-				ans[i] = info[i];
-			for (int i = sind + 1; i < len + 1; i++)
-				ans[i] = info[i - 1];
+			System.arraycopy(info, 0, ans, 0, sind);
+			if (len + 1 - (sind + 1) >= 0) System.arraycopy(info, sind + 1 - 1, ans, sind + 1, len + 1 - (sind + 1));
 		} else
 			sind = 0;
 		if (enemy == null && sind < info.length && getSelectedRow() >= 0)
@@ -224,9 +229,9 @@ class StageEditTable extends AbJTable implements Reorderable {
 		if (info[ind] == null)
 			return;
 		AbEnemy e = Identifier.get(info[ind].enemy);
-		if (e != null && e instanceof Enemy)
+		if (e instanceof Enemy)
 			MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, info[ind].multiple, info[ind].mult_atk));
-		if (e != null && e instanceof EneRand)
+		if (e instanceof EneRand)
 			MainFrame.changePanel(new EREditPage(page, pack, (EneRand) e));
 	}
 
@@ -300,7 +305,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 			return;
 		if (r < 0 || r >= stage.datas.length)
 			return;
-		if (c == 1 && v < 0)
+		if (c == 1 && (v < 0 || para == -1))
 			return;
 		if (c != 5 && v < 0)
 			v = 0;
@@ -308,8 +313,19 @@ class StageEditTable extends AbJTable implements Reorderable {
 		Line data = info[info.length - r - 1];
 		if (c == 0)
 			data.boss = v;
+		else if (c == 1) {
+			PackData pack = UserProfile.getPack(Data.hex(v));
+
+			if(pack != null) {
+				Enemy e = pack.enemies.get(para);
+
+				if(e != null) {
+					data.enemy = e.id;
+				}
+			}
+		}
 		else if (c == 2) {
-			data.multiple = v == -1 ? data.multiple : v;
+			data.multiple = v == 0 ? data.multiple : v;
 			data.mult_atk = para == -1 ? v : para;
 		} else if (c == 3)
 			data.number = v;
@@ -347,7 +363,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 				data.layer_1 = Math.max(v, para);
 			}
 		else if (c == 8)
-			data.group = Math.max(0, v);
+			data.group = v;
 	}
 
 }
