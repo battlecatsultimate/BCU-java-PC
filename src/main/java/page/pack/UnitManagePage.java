@@ -183,7 +183,7 @@ public class UnitManagePage extends Page {
 			CustomUnit cu = new CustomUnit();
 			Unit u = new Unit(pac.getNextID(Unit.class), jld.getSelectedValue(), cu);
 			pac.units.add(u);
-			jlu.setListData(pac.units.toArray());
+			jlu.setListData(pac.units.toRawArray());
 			jlu.setSelectedValue(u, true);
 			setUnit(u);
 			changing = false;
@@ -196,7 +196,7 @@ public class UnitManagePage extends Page {
 			int ind = jlu.getSelectedIndex();
 			pac.units.remove(uni);
 			uni.lv.units.remove(uni);
-			jlu.setListData(pac.units.toArray());
+			jlu.setListData(pac.units.toRawArray());
 			if (ind >= 0)
 				ind--;
 			jlu.setSelectedIndex(ind);
@@ -452,7 +452,7 @@ public class UnitManagePage extends Page {
 			cbl.removeAllItems();
 		} else {
 			jlf.allowDrag(pac.editable);
-			jlu.setListData(pac.units.toArray());
+			jlu.setListData(pac.units.toRawArray());
 			jlu.clearSelection();
 			jll.setListData(pac.unitLevels.toArray());
 			setLevel(jll.getSelectedValue());
