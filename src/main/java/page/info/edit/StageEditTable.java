@@ -142,10 +142,12 @@ class StageEditTable extends AbJTable implements Reorderable {
 			return;
 		c = lnk[c];
 		if (c == 1) {
-			int[] is = CommonStatic.parseIntsN((String) arg0);
+			String[] is = CommonStatic.getPackEntityID((String) arg0);
 
-			if(is.length == 2)
-				set(r, c, is[0], is[1]);
+			if(is[0] == null || is[0].isEmpty() || is[1] == null || is[1].isEmpty())
+				return;
+
+			setEnemy(r, is[0], is[1]);
 		} else if (c > 3) {
 			int[] is = CommonStatic.parseIntsN((String) arg0);
 			if (is.length == 0)
@@ -366,4 +368,70 @@ class StageEditTable extends AbJTable implements Reorderable {
 			data.group = v;
 	}
 
+	private void setEnemy(int r, String pack, String id) {
+		if(pack.isEmpty())
+			return;
+
+		if(id.isEmpty())
+			return;
+
+		if(id.endsWith("r")) {
+			if (!CommonStatic.isInteger(id.substring(0, id.length() - 1)))
+				return;
+		} else if(!CommonStatic.isInteger(id))
+			return;
+
+		Line[] info = stage.datas;
+
+		Line data = info[info.length-r-1];
+
+		String packID;
+
+		if(CommonStatic.isInteger(pack))
+			packID = Data.hex(CommonStatic.parseIntN(pack));
+		else
+			packID = pack;
+
+		PackData p = UserProfile.getPack(packID);
+
+		if(p == null)
+			return;
+
+		if(id.endsWith("r") && p instanceof PackData.DefPack)
+			return;
+
+		if(p instanceof UserPack && !this.pack.getSID().equals(packID) && !this.pack.desc.dependency.contains(packID))
+			return;
+
+		int entityID;
+		boolean random;
+
+		if(id.endsWith("r")) {
+			entityID = CommonStatic.parseIntN(id.substring(0, id.length()-1));
+			random = true;
+		} else {
+			entityID = CommonStatic.parseIntN(id);
+			random = false;
+		}
+
+		System.out.println("I'm here : "+packID+" | "+entityID);
+
+		if(random) {
+			if(entityID >= p.randEnemies.size() || entityID < 0)
+				return;
+
+			AbEnemy ab = p.randEnemies.get(entityID);
+
+			if(ab != null)
+				data.enemy = ab.getID();
+		} else {
+			if(entityID >= p.enemies.size() || entityID < 0)
+				return;
+
+			AbEnemy ab = p.enemies.get(entityID);
+
+			if(ab != null)
+				data.enemy = ab.getID();
+		}
+	}
 }
