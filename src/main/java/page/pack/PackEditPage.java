@@ -4,6 +4,7 @@ import common.CommonStatic;
 import common.battle.data.CustomEnemy;
 import common.pack.Context.ErrType;
 import common.pack.PackData.UserPack;
+import common.pack.Source;
 import common.pack.Source.Workspace;
 import common.pack.Source.ZipSource;
 import common.pack.UserProfile;
@@ -15,10 +16,7 @@ import common.util.unit.EneRand;
 import common.util.unit.Enemy;
 import main.MainBCU;
 import main.Opts;
-import page.JBTN;
-import page.JL;
-import page.JTF;
-import page.Page;
+import page.*;
 import page.info.StageViewPage;
 import page.info.edit.EnemyEditPage;
 import page.info.edit.StageEditPage;
@@ -287,11 +285,19 @@ public class PackEditPage extends Page {
 		});
 
 		unpk.setLnr(x -> {
-			String str = Opts.read("password: "); // FIXME
-			Data.err(() -> ((ZipSource) pac.source).unzip(str, (d) -> {
-			}));
-			unpk.setEnabled(false);
-			extr.setEnabled(true);
+			String pass = Opts.read("Enter the password : ");
+
+			if(pass == null)
+				return;
+
+			if(((Source.ZipSource) pac.source).zip.matchKey(pass)) {
+				Data.err(() -> ((ZipSource) pac.source).unzip(pass, (d) -> {
+				}));
+				unpk.setEnabled(false);
+				extr.setEnabled(true);
+			} else {
+				Opts.pop("You typed incorrect password", "Incorrect password");
+			}
 		});
 
 	}
@@ -312,7 +318,7 @@ public class PackEditPage extends Page {
 			AnimCE anim = jld.getSelectedValue();
 			Enemy e = new Enemy(pac.getNextID(Enemy.class), anim, ce);
 			pac.enemies.add(e);
-			jle.setListData(pac.enemies.toArray());
+			jle.setListData(pac.enemies.toRawArray());
 			jle.setSelectedValue(e, true);
 			setEnemy(e);
 			changing = false;
@@ -324,7 +330,7 @@ public class PackEditPage extends Page {
 			changing = true;
 			int ind = jle.getSelectedIndex();
 			pac.enemies.remove(ene);
-			jle.setListData(pac.enemies.toArray());
+			jle.setListData(pac.enemies.toRawArray());
 			if (ind >= 0)
 				ind--;
 			jle.setSelectedIndex(ind);
@@ -525,7 +531,15 @@ public class PackEditPage extends Page {
 	private void setPack(UserPack pack) {
 		pac = pack;
 		boolean b = pac != null && pac.editable;
-		remp.setEnabled(pac != null);
+		remp.setEnabled(pac != null && canBeDeleted(pac));
+
+		if(pac != null)
+			if(!canBeDeleted(pac)) {
+				remp.setToolTipText(Page.get(MainLocale.PAGE, "packused"));
+			} else {
+				remp.setToolTipText(null);
+			}
+
 		jtfp.setEnabled(b);
 		adde.setEnabled(b && jld.getSelectedValue() != null);
 		adds.setEnabled(b);
@@ -545,7 +559,7 @@ public class PackEditPage extends Page {
 			jle.setListData(new Enemy[0]);
 			jlr.setListData(new UserPack[0]);
 		} else {
-			jle.setListData(pac.enemies.toArray());
+			jle.setListData(pac.enemies.toRawArray());
 			jle.clearSelection();
 			updateJlr();
 			jlr.clearSelection();
@@ -597,4 +611,15 @@ public class PackEditPage extends Page {
 		jlr.setListData(rel);
 	}
 
+	private boolean canBeDeleted(UserPack pack) {
+		for(UserPack p : UserProfile.getUserPacks()) {
+			if(p.getSID().equals(pack.getSID()))
+				continue;
+
+			if(p.desc.dependency.contains(pack.getSID()))
+				return false;
+		}
+
+		return true;
+	}
 }
