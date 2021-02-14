@@ -136,9 +136,6 @@ public abstract class SwingEditor extends Editor {
 
 			Object obj = field.get();
 
-			if(obj != null)
-				System.out.println(field.get().getClass().getName());
-
 			if(obj instanceof Identifier<?>)
 				if(((Identifier<?>) obj).cls == EneRand.class)
 					jl.setText("" + field.get() + " [Random]");

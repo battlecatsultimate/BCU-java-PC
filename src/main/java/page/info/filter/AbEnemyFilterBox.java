@@ -362,8 +362,6 @@ class AEFBList extends AbEnemyFilterBox {
             }
         }
 
-        System.out.println(pack);
-
         for(PackData.UserPack p : UserProfile.getUserPacks()) {
             if(pack == null || pack.equals(p.desc.id) || parents.contains(p.desc.id)) {
                 for(EneRand rand : p.randEnemies.getList()) {
