@@ -31,7 +31,6 @@ public class AbEnemySelectionPage extends Page implements SupPage<AbEnemy> {
         resized();
         this.table = table;
         this.index = index;
-        System.out.println("A : "+elt);
     }
 
     public AbEnemySelectionPage(Page p, StageEditTable table, int index, String pack, String... parents) {
@@ -42,7 +41,6 @@ public class AbEnemySelectionPage extends Page implements SupPage<AbEnemy> {
         resized();
         this.table = table;
         this.index = index;
-        System.out.println("B : "+elt);
     }
 
     @Override
