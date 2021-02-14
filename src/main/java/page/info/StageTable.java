@@ -104,7 +104,11 @@ public class StageTable extends AbJTable {
 
 			int[] d = CommonStatic.parseIntsN((String) data[r][2]);
 
-			MainFrame.changePanel(new EnemyInfoPage(page, e, d[0], d[1]));
+			if(d.length == 1) {
+				MainFrame.changePanel(new EnemyInfoPage(page, e, d[0], d[0]));
+			} else {
+				MainFrame.changePanel(new EnemyInfoPage(page, e, d[0], d[1]));
+			}
 		} else if(data[r][c] instanceof EneRand) {
 			EneRand e = (EneRand) data[r][c];
 
