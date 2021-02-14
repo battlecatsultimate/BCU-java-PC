@@ -40,18 +40,18 @@ public class EnemyEditPage extends EntityEditPage {
 	}
 
 	@Override
-	protected void getInput(JTF jtf, int v) {
+	protected void getInput(JTF jtf, int[] v) {
 
 		if (jtf == fdr) {
-			int act = (int) (v / bas.t().getDropMulti());
+			int act = (int) (v[0] / bas.t().getDropMulti());
 			ce.drop = act;
 		}
 		if (jtf == fsr) {
-			if (v < 0)
-				v = 0;
-			if (v > 4)
-				v = 1;
-			ce.star = v;
+			if (v[0] < 0)
+				v[0] = 0;
+			if (v[0] > 4)
+				v[0] = 1;
+			ce.star = v[0];
 		}
 	}
 

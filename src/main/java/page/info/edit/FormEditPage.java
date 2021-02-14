@@ -1,5 +1,6 @@
 package page.info.edit;
 
+import common.CommonStatic;
 import common.battle.data.CustomEntity;
 import common.battle.data.CustomUnit;
 import common.pack.PackData.UserPack;
@@ -20,9 +21,11 @@ public class FormEditPage extends EntityEditPage {
 	private final JL llv = new JL(1, "Lv");
 	private final JL ldr = new JL(1, "price");
 	private final JL lrs = new JL(1, "CD");
+	private final JL llr = new JL(1, "layer");
 	private final JTF fdr = new JTF();
 	private final JTF flv = new JTF();
 	private final JTF frs = new JTF();
+	private final JTF flr = new JTF();
 	private final JBTN vuni = new JBTN(0, "vuni");
 	private final JBTN impt = new JBTN(0, "import");
 	private final JBTN vene = new JBTN(0, "enemy");
@@ -59,18 +62,40 @@ public class FormEditPage extends EntityEditPage {
 	}
 
 	@Override
-	protected void getInput(JTF jtf, int v) {
+	protected void getInput(JTF jtf, int[] v) {
 		if (jtf == fdr)
-			cu.price = (int) (v / 1.5);
+			cu.price = (int) (v[0] / 1.5);
 		if (jtf == flv) {
-			if (v <= 0)
-				v = 1;
-			lv = v;
+			if (v[0] <= 0)
+				v[0] = 1;
+			lv = v[0];
 		}
 		if (jtf == frs) {
-			if (v <= 60)
-				v = 60;
-			cu.resp = bas.t().getRevRes(v);
+			if (v[0] <= 60)
+				v[0] = 60;
+			cu.resp = bas.t().getRevRes(v[0]);
+		}
+		if (jtf == flr) {
+			try {
+				if (v.length == 1) {
+					int firstLayer = v[0];
+					if (firstLayer >= 0)
+						cu.back = cu.front = firstLayer;
+				} else if (v.length >= 2) {
+					int firstLayer = v[0];
+					int secondLayer = v[1];
+					if (firstLayer < 0 || secondLayer < 0) {
+						return;
+					} else if (firstLayer == secondLayer) {
+						cu.back = cu.front = firstLayer;
+					} else if (firstLayer < secondLayer) {
+						cu.back = firstLayer;
+						cu.front = secondLayer;
+					}
+				}
+
+				flr.setText(interpretLayer(cu.back, cu.front));
+			} catch (Exception ignored) { }
 		}
 	}
 
@@ -80,12 +105,16 @@ public class FormEditPage extends EntityEditPage {
 		set(ldr);
 		set(llv);
 		set(lrs);
+		set(llr);
 
 		set(flv);
 
 		set(fdr);
 		set(frs);
 		super.ini();
+
+		set(flr);
+
 		add(ueb);
 
 		add(vuni);
@@ -106,6 +135,8 @@ public class FormEditPage extends EntityEditPage {
 		set(fdr, x, y, 150, 350, 200, 50);
 		set(lrs, x, y, 50, 400, 100, 50);
 		set(frs, x, y, 150, 400, 200, 50);
+		set(llr, x, y, 550, 900, 100, 50);
+		set(flr, x, y, 650, 900, 200, 50);
 		set(ueb, x, y, 350, 50, 200, 1200);
 		set(ldps, x, y, 900, 1150, 200, 50);
 		set(vdps, x, y, 1100, 1150, 200, 50);
@@ -123,6 +154,7 @@ public class FormEditPage extends EntityEditPage {
 		flv.setText("" + lv);
 		frs.setText("" + bas.t().getFinRes(cu.getRespawn()));
 		fdr.setText("" + (int) (cu.getPrice() * 1.5));
+		flr.setText(interpretLayer(cu.back, cu.front));
 		int imu = 0;
 		for (int i = 0; i < ABIIND.length; i++) {
 			int id = ABIIND[i] - 100;
@@ -134,4 +166,10 @@ public class FormEditPage extends EntityEditPage {
 
 	}
 
+	private String interpretLayer(int back, int front) {
+		if (front == back)
+			return front + "";
+		else
+			return back + "~" + front;
+	}
 }

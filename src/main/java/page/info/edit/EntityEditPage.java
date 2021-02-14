@@ -187,7 +187,7 @@ public abstract class EntityEditPage extends Page {
 		return 1;
 	}
 
-	protected abstract void getInput(JTF jtf, int v);
+	protected abstract void getInput(JTF jtf, int[] v);
 
 	protected void ini() {
 		set(lhp);
@@ -551,7 +551,7 @@ public abstract class EntityEditPage extends Page {
 			return ce.res;
 	}
 
-	private void input(JTF jtf, String text) {
+	protected void input(JTF jtf, String text) {
 
 		if (jtf == atkn) {
 			AtkDataModel adm = aet.adm;
@@ -570,61 +570,61 @@ public abstract class EntityEditPage extends Page {
 			return;
 		}
 		if (text.length() > 0) {
-			int v = CommonStatic.parseIntN(text);
+			int[] v = CommonStatic.parseIntsN(text);
 			if (jtf == fhp) {
-				v /= getDef();
-				if (v <= 0)
-					v = 1;
-				ce.hp = v;
+				v[0] /= getDef();
+				if (v[0] <= 0)
+					v[0] = 1;
+				ce.hp = v[0];
 			}
 			if (jtf == fhb) {
-				if (v <= 0)
-					v = 1;
-				if (v > ce.hp)
-					v = ce.hp;
-				ce.hb = v;
+				if (v[0] <= 0)
+					v[0] = 1;
+				if (v[0] > ce.hp)
+					v[0] = ce.hp;
+				ce.hb = v[0];
 			}
 			if (jtf == fsp) {
-				if (v < 0)
-					v = 0;
-				if (v > 150)
-					v = 150;
-				ce.speed = v;
+				if (v[0] < 0)
+					v[0] = 0;
+				if (v[0] > 150)
+					v[0] = 150;
+				ce.speed = v[0];
 			}
 			if (jtf == fra) {
-				if (v <= 0)
-					v = 1;
-				ce.range = v;
+				if (v[0] <= 0)
+					v[0] = 1;
+				ce.range = v[0];
 			}
 			if (jtf == fwd) {
-				if (v <= 0)
-					v = 1;
-				ce.width = v;
+				if (v[0] <= 0)
+					v[0] = 1;
+				ce.width = v[0];
 			}
 			if (jtf == fsh) {
-				if (v < 0)
-					v = 0;
-				ce.shield = v;
+				if (v[0] < 0)
+					v[0] = 0;
+				ce.shield = v[0];
 			}
 			if (jtf == ftb) {
-				if (v < 0)
-					v = 0;
-				ce.tba = v;
+				if (v[0] < 0)
+					v[0] = 0;
+				ce.tba = v[0];
 			}
 			if (jtf == fbs) {
-				if (v < 0)
-					v = 0;
-				ce.base = v;
+				if (v[0] < 0)
+					v[0] = 0;
+				ce.base = v[0];
 			}
 			if (jtf == ftp) {
-				if (v < 1)
-					v = 1;
-				ce.touch = v;
+				if (v[0] < 1)
+					v[0] = 1;
+				ce.touch = v[0];
 			}
 			if (jtf == fct) {
-				if (v < -1)
-					v = -1;
-				ce.loop = v;
+				if (v[0] < -1)
+					v[0] = -1;
+				ce.loop = v[0];
 			}
 			getInput(jtf, v);
 		}
