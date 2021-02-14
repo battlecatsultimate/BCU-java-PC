@@ -159,7 +159,7 @@ public abstract class EntityEditPage extends Page {
 
 		sup = ans;
 
-		return ans; // FIXME
+		return ans;
 	}
 
 	public SupPage<Unit> getUnitSup(IdEditor<Unit> edi) {
@@ -392,7 +392,7 @@ public abstract class EntityEditPage extends Page {
 		if (ce.rev != null)
 			ints[ix++] = ce.rev.str;
 		if (ce.res != null)
-			ints[ix++] = ce.res.str;
+			ints[ix] = ce.res.str;
 		int ind = jli.getSelectedIndex();
 		jli.setListData(ints);
 		if (ind < 0)

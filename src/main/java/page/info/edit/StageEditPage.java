@@ -91,7 +91,7 @@ public class StageEditPage extends Page {
 	@Override
 	protected void mouseClicked(MouseEvent e) {
 		if (e.getSource() == jt && !e.isControlDown())
-			jt.clicked(e.getPoint());
+			jt.clicked(e.getPoint(), e.getButton());
 	}
 
 	@Override

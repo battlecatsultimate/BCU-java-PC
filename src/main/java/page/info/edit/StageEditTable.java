@@ -17,11 +17,9 @@ import page.MainFrame;
 import page.MainLocale;
 import page.Page;
 import page.info.EnemyInfoPage;
+import page.info.filter.AbEnemySelectionPage;
 import page.pack.EREditPage;
-import page.support.AbJTable;
-import page.support.EnemyTCR;
-import page.support.InTableTH;
-import page.support.Reorderable;
+import page.support.*;
 
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -29,7 +27,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
-class StageEditTable extends AbJTable implements Reorderable {
+public class StageEditTable extends AbJTable implements Reorderable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -94,6 +92,13 @@ class StageEditTable extends AbJTable implements Reorderable {
 		if (stage == null)
 			return 0;
 		return stage.datas.length;
+	}
+
+	public void updateAbEnemy(AbEnemySelectionPage page) {
+		if(page.getSelected() == null)
+			stage.datas[page.index].enemy = null;
+		else
+			stage.datas[page.index].enemy = page.getSelected().getID();
 	}
 
 	@Override
@@ -217,7 +222,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 		return ind;
 	}
 
-	protected synchronized void clicked(Point p) {
+	protected synchronized void clicked(Point p, int button) {
 		if (stage == null)
 			return;
 		int c = getColumnModel().getColumnIndexAtX(p.x);
@@ -230,11 +235,24 @@ class StageEditTable extends AbJTable implements Reorderable {
 		int ind = len - r - 1;
 		if (info[ind] == null)
 			return;
-		AbEnemy e = Identifier.get(info[ind].enemy);
-		if (e instanceof Enemy)
-			MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, info[ind].multiple, info[ind].mult_atk));
-		if (e instanceof EneRand)
-			MainFrame.changePanel(new EREditPage(page, pack, (EneRand) e));
+
+		if(button == MouseEvent.BUTTON3) {
+			AbEnemy e = Identifier.get(info[ind].enemy);
+			if (e instanceof Enemy)
+				MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, info[ind].multiple, info[ind].mult_atk));
+			if (e instanceof EneRand)
+				MainFrame.changePanel(new EREditPage(page, pack, (EneRand) e));
+		} else {
+			AbEnemySelectionPage find;
+
+			if(pack == null) {
+				find = new AbEnemySelectionPage(page, this, ind);
+			} else {
+				find = new AbEnemySelectionPage(page, this, ind, pack.getSID(), pack.desc.dependency.toArray(new String[0]));
+			}
+
+			MainFrame.changePanel(find);
+		}
 	}
 
 	protected synchronized int remLine() {
@@ -283,7 +301,7 @@ class StageEditTable extends AbJTable implements Reorderable {
 		else if (c == 1)
 			return Identifier.get(data.enemy);
 		else if (c == 2)
-			return CommonStatic.toArrayFormat(data.multiple, data.mult_atk) + "%";
+			return (data.multiple == data.mult_atk ? data.multiple : CommonStatic.toArrayFormat(data.multiple, data.mult_atk)) + "%";
 		else if (c == 3)
 			return data.number == 0 ? "infinite" : data.number;
 		else if (c == 4)
@@ -413,8 +431,6 @@ class StageEditTable extends AbJTable implements Reorderable {
 			entityID = CommonStatic.parseIntN(id);
 			random = false;
 		}
-
-		System.out.println("I'm here : "+packID+" | "+entityID);
 
 		if(random) {
 			if(entityID >= p.randEnemies.size() || entityID < 0)
