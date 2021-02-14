@@ -6,6 +6,7 @@ import common.CommonStatic.BattleConst;
 import common.battle.BattleField;
 import common.battle.StageBasis;
 import common.battle.attack.ContAb;
+import common.battle.attack.ContWaveAb;
 import common.battle.entity.EAnimCont;
 import common.battle.entity.Entity;
 import common.battle.entity.WaprCont;
@@ -428,7 +429,11 @@ public interface BattleBox {
 				for (ContAb wc : sb.lw)
 					if (wc.layer == i) {
 						gra.setTransform(at);
-						double p = (wc.pos * ratio + off - wave) * siz + pos;
+						double p = (wc.pos * ratio + off) * siz + pos;
+
+						if(wc instanceof ContWaveAb)
+							p -= wave * siz;
+
 						double y = midh - (road_h - DEP * wc.layer) * siz;
 						wc.draw(gra, setP(p, y), psiz);
 					}
