@@ -101,6 +101,7 @@ public class FormEditPage extends EntityEditPage {
 
 	@Override
 	protected void ini() {
+		llr.setToolTipText("<html>set possible layers of which units can spawn on.</html>");
 
 		set(ldr);
 		set(llv);
