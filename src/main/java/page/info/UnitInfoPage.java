@@ -63,7 +63,7 @@ public class UnitInfoPage extends Page {
 		set(anim, x, y, 600, 0, 200, 50);
 		set(next, x, y, 900, 0, 200, 50);
 		set(find, x, y, 1200, 0, 200, 50);
-		set(extr, x, y, 50, 50, 200, 50);
+		set(extr, x, y, 1500, 0, 200, 50);
 		int h = 0;
 		set(jsp, x, y, 50, 100, 1650, 1150);
 		for (int i = 0; i < info.length; i++) {
