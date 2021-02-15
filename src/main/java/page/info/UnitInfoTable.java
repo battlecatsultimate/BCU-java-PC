@@ -22,7 +22,7 @@ public class UnitInfoTable extends Page {
 	private static final long serialVersionUID = 1L;
 
 	private final JL[][] main = new JL[4][8];
-	private final JL[] special = new JL[4];
+	private final JL[][] special = new JL[1][8];
 	private final JL[] atks;
 	private final JLabel[] proc;
 	private final JTF jtf = new JTF();
@@ -31,7 +31,7 @@ public class UnitInfoTable extends Page {
 	private final BasisSet b;
 	private final Form f;
 	private int[] multi;
-	private boolean displaySpecial = false;
+	private boolean displaySpecial;
 
 	protected UnitInfoTable(Page p, Form de, boolean sp) {
 		super(p);
@@ -60,7 +60,9 @@ public class UnitInfoTable extends Page {
 	}
 
 	protected int getH() {
-		int l = displaySpecial ? main.length + 2 : main.length + 1;
+		int l = main.length + 1;
+		if (displaySpecial)
+			l += special.length;
 		return (l + (proc.length + 1) / 2) * 50;
 	}
 
@@ -96,34 +98,33 @@ public class UnitInfoTable extends Page {
 
 	@Override
 	protected void resized(int x, int y) {
-		for (int i = 0; i < 4; i++)
-			for (int j = 0; j < 8; j++)
+		for (int i = 0; i < main.length; i++)
+			for (int j = 0; j < main[i].length; j++)
 				if ((i != 0 || j < 4) && (i != 1 || j > 1))
 					set(main[i][j], x, y, 200 * j, 50 * i, 200, 50);
 		set(jtf, x, y, 100, 50, 300, 50);
 		set(main[1][0], x, y, 0, 50, 100, 50);
 		set(main[0][4], x, y, 800, 0, 800, 50);
-
+		int h = main.length * 50;
 		if (displaySpecial) {
-			set(special[0], x, y, 0,  200, 200, 50);
-			set(special[1], x, y, 200, 200, 200, 50);
-			set(special[2], x, y, 400, 200, 200, 50);
-			set(special[3], x, y, 600, 200, 200, 50);
+			for (int i = 0; i < special.length; i++) {
+				for (int j = 0; j < special[i].length; j++)
+					set(special[i][j], x, y, 200 * j, h, 200, 50);
+				h += 50;
+			}
 		} else {
-			set(special[0], x, y, 0,  200, 0, 0);
-			set(special[1], x, y, 200, 200, 0, 0);
-			set(special[2], x, y, 400, 200, 0, 0);
-			set(special[3], x, y, 600, 200, 0, 0);
+			for (int i = 0; i < special.length; i++) {
+				for (int j = 0; j < special[i].length; j++)
+					set(special[i][j], x, y, 200 * j, h, 0, 0);
+			}
 		}
-
-		int atkY = displaySpecial ? 250 : 200;
-		set(atks[0], x, y, 0, atkY, 200, 50);
-		set(atks[1], x, y, 200, atkY, 400, 50);
-		set(atks[2], x, y, 600, atkY, 200, 50);
-		set(atks[3], x, y, 800, atkY, 400, 50);
-		set(atks[4], x, y, 1200, atkY, 200, 50);
-		set(atks[5], x, y, 1400, atkY, 200, 50);
-		int h = displaySpecial ? 300 : 250;
+		set(atks[0], x, y, 0, h, 200, 50);
+		set(atks[1], x, y, 200, h, 400, 50);
+		set(atks[2], x, y, 600, h, 200, 50);
+		set(atks[3], x, y, 800, h, 400, 50);
+		set(atks[4], x, y, 1200, h, 200, 50);
+		set(atks[5], x, y, 1400, h, 200, 50);
+		h += 50;
 		for (int i = 0; i < proc.length; i++)
 			set(proc[i], x, y, i % 2 * 800, h + 50 * (i / 2), 800, 50);
 
@@ -147,8 +148,8 @@ public class UnitInfoTable extends Page {
 	}
 
 	private void ini() {
-		for (int i = 0; i < 4; i++)
-			for (int j = 0; j < 8; j++)
+		for (int i = 0; i < main.length; i++)
+			for (int j = 0; j < main[i].length; j++)
 				if (i * j != 1 && (i != 0 || j < 5)) {
 					add(main[i][j] = new JL());
 					main[i][j].setBorder(BorderFactory.createEtchedBorder());
@@ -161,11 +162,13 @@ public class UnitInfoTable extends Page {
 			if (i % 2 == 0)
 				atks[i].setHorizontalAlignment(SwingConstants.CENTER);
 		}
-		for (int i = 0; i < 4; i++) {
-			add(special[i] = new JL());
-			special[i].setBorder(BorderFactory.createEtchedBorder());
-			if (i % 2 == 0)
-				special[i].setHorizontalAlignment(SwingConstants.CENTER);
+		for (int i = 0; i < special.length; i++) {
+			for (int j = 0; j < special[i].length; j++) {
+				add(special[i][j] = new JL());
+				special[i][j].setBorder(BorderFactory.createEtchedBorder());
+				if (j % 2 == 0)
+					special[i][j].setHorizontalAlignment(SwingConstants.CENTER);
+			}
 		}
 		add(jtf);
 		String[] strs = UtilPC.lvText(f, multi);
@@ -197,15 +200,15 @@ public class UnitInfoTable extends Page {
 		main[3][5].setText(f.du.getTBA() + "f");
 		main[3][6].setText(1, "postaa");
 		main[3][7].setText(f.du.getPost() + "f");
-		special[0].setText(1, "count");
-		special[1].setText(f.du.getAtkLoop() < 0 ? "infinite" : f.du.getAtkLoop() + "");
-		special[2].setText(1, "t7");
+		special[0][0].setText(1, "count");
+		special[0][1].setText(f.du.getAtkLoop() < 0 ? "infinite" : f.du.getAtkLoop() + "");
+		special[0][2].setText(1, "t7");
 		int back = Math.min(f.du.getBack(), f.du.getFront());
 		int front = Math.max(f.du.getBack(), f.du.getFront());
 		if (back == front)
-			special[3].setText(back + "");
+			special[0][3].setText(back + "");
 		else
-			special[3].setText(Math.min(back, front) + " ~ " + Math.max(back, front));
+			special[0][3].setText(Math.min(back, front) + " ~ " + Math.max(back, front));
 		atks[0].setText("atk");
 		atks[2].setText(1, "preaa");
 		atks[4].setText(1, "use");

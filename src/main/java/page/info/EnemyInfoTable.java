@@ -64,8 +64,8 @@ public class EnemyInfoTable extends Page {
 
 	@Override
 	protected void resized(int x, int y) {
-		for (int i = 0; i < 4; i++)
-			for (int j = 0; j < 8; j++)
+		for (int i = 0; i < main.length; i++)
+			for (int j = 0; j < main[i].length; j++)
 				if (i * j != 1 && (i != 0 || j < 4))
 					set(main[i][j], x, y, 200 * j, 50 * i, 200, 50);
 		set(jtf, x, y, 200, 50, 200, 50);
@@ -79,11 +79,11 @@ public class EnemyInfoTable extends Page {
 			}
 		} else {
 			for (int i = 0; i < special.length; i++)
-				for (int j = 0; j < 8; j++)
+				for (int j = 0; j < special[i].length; j++)
 					set(special[i][j], x, y, 200 * i, h, 0, 0);
 		}
 		for (int i = 0; i < atks.length; i++)
-			for (int j = 0; j < 8; j++)
+			for (int j = 0; j < atks[i].length; j++)
 				set(atks[i][j], x, y, 200 * j, h + 50 * i, 200, 50);
 		h += atks.length * 50;
 		for (int i = 0; i < abis.length; i++)
@@ -129,8 +129,8 @@ public class EnemyInfoTable extends Page {
 	}
 
 	private void ini() {
-		for (int i = 0; i < 4; i++)
-			for (int j = 0; j < 8; j++)
+		for (int i = 0; i < main.length; i++)
+			for (int j = 0; j < main[i].length; j++)
 				if (i * j != 1 && (i != 0 || j < 5)) {
 					add(main[i][j] = new JL());
 					main[i][j].setBorder(BorderFactory.createEtchedBorder());
@@ -146,7 +146,7 @@ public class EnemyInfoTable extends Page {
 			}
 		}
 		for (int i = 0; i < atks.length; i++)
-			for (int j = 0; j < 8; j++) {
+			for (int j = 0; j < atks[i].length; j++) {
 				add(atks[i][j] = new JL());
 				atks[i][j].setBorder(BorderFactory.createEtchedBorder());
 				if (j % 2 == 0)
