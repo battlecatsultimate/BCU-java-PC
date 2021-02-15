@@ -4,6 +4,7 @@ import common.battle.BasisSet;
 import common.system.Node;
 import common.util.unit.Unit;
 import page.JBTN;
+import page.JTG;
 import page.Page;
 import page.basis.BasisPage;
 import page.view.UnitViewPage;
@@ -21,6 +22,7 @@ public class UnitInfoPage extends Page {
 	private final JBTN prev = new JBTN(0, "prev");
 	private final JBTN next = new JBTN(0, "next");
 	private final JBTN find = new JBTN(0, "combo");
+	private final JTG extr = new JTG(0, "extra");
 	private final JPanel cont = new JPanel();
 	private final JScrollPane jsp = new JScrollPane(cont);
 	private final UnitInfoTable[] info;
@@ -30,18 +32,19 @@ public class UnitInfoPage extends Page {
 	private final Node<Unit> n;
 
 	public UnitInfoPage(Page p, Node<Unit> de) {
-		this(p, de, BasisSet.current());
+		this(p, de, BasisSet.current(), false);
 	}
 
-	private UnitInfoPage(Page p, Node<Unit> de, BasisSet bas) {
+	private UnitInfoPage(Page p, Node<Unit> de, BasisSet bas, boolean sp) {
 		super(p);
 		n = de;
 		b = bas;
 
 		info = new UnitInfoTable[n.val.forms.length];
 		for (int i = 0; i < info.length; i++)
-			info[i] = new UnitInfoTable(this, n.val.forms[i]);
+			info[i] = new UnitInfoTable(this, n.val.forms[i], sp);
 		trea = new TreaTable(this, b);
+		extr.setSelected(sp);
 		ini();
 		resized();
 	}
@@ -60,6 +63,7 @@ public class UnitInfoPage extends Page {
 		set(anim, x, y, 600, 0, 200, 50);
 		set(next, x, y, 900, 0, 200, 50);
 		set(find, x, y, 1200, 0, 200, 50);
+		set(extr, x, y, 50, 50, 200, 50);
 		int h = 0;
 		set(jsp, x, y, 50, 100, 1650, 1150);
 		for (int i = 0; i < info.length; i++) {
@@ -83,7 +87,7 @@ public class UnitInfoPage extends Page {
 		prev.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new UnitInfoPage(getFront(), n.prev, b));
+				changePanel(new UnitInfoPage(getFront(), n.prev, b, extr.isSelected()));
 			}
 		});
 
@@ -100,7 +104,7 @@ public class UnitInfoPage extends Page {
 		next.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new UnitInfoPage(getFront(), n.next, b));
+				changePanel(new UnitInfoPage(getFront(), n.next, b, extr.isSelected()));
 			}
 		});
 
@@ -118,6 +122,11 @@ public class UnitInfoPage extends Page {
 			}
 		});
 
+		extr.addActionListener(arg0 -> {
+			for (UnitInfoTable inf : info) {
+				inf.setDisplaySpecial(extr.isSelected());
+			}
+		});
 	}
 
 	private void ini() {
@@ -126,6 +135,7 @@ public class UnitInfoPage extends Page {
 		add(anim);
 		add(next);
 		add(find);
+		add(extr);
 		for (int i = 0; i < info.length; i++)
 			cont.add(info[i]);
 		cont.setLayout(null);
