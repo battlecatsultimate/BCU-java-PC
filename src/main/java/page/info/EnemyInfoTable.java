@@ -19,6 +19,7 @@ public class EnemyInfoTable extends Page {
 	private static final long serialVersionUID = 1L;
 
 	private final JL[][] main = new JL[4][8];
+	private final JL[][] special = new JL[1][8];
 	private final JL[][] atks;
 	private final JLabel[] abis, proc;
 	private final JTF jtf = new JTF();
@@ -26,6 +27,7 @@ public class EnemyInfoTable extends Page {
 	private final BasisSet b;
 	private final Enemy e;
 	private int multi, mulatk;
+	private boolean displaySpecial;
 
 	protected EnemyInfoTable(Page p, Enemy de, int mul, int mula) {
 		super(p);
@@ -68,7 +70,18 @@ public class EnemyInfoTable extends Page {
 					set(main[i][j], x, y, 200 * j, 50 * i, 200, 50);
 		set(jtf, x, y, 200, 50, 200, 50);
 		set(main[0][4], x, y, 800, 0, 800, 50);
-		int h = 200;
+		int h = main.length * 50;
+		if (displaySpecial) {
+			for (int i = 0; i < special.length; i++) {
+				for (int j = 0; j < 8; j++)
+					set(special[i][j], x, y, 200 * j, h, 200, 50);
+				h += 50;
+			}
+		} else {
+			for (int i = 0; i < special.length; i++)
+				for (int j = 0; j < 8; j++)
+					set(special[i][j], x, y, 200 * i, h, 0, 0);
+		}
 		for (int i = 0; i < atks.length; i++)
 			for (int j = 0; j < 8; j++)
 				set(atks[i][j], x, y, 200 * j, h + 50 * i, 200, 50);
@@ -124,6 +137,14 @@ public class EnemyInfoTable extends Page {
 					if (i != 0 && j % 2 == 0 || i == 0 && j < 4)
 						main[i][j].setHorizontalAlignment(SwingConstants.CENTER);
 				}
+		for (int i = 0; i < special.length; i++) {
+			for (int j = 0; j < 8; j++) {
+				add(special[i][j] = new JL());
+				special[i][j].setBorder(BorderFactory.createEtchedBorder());
+				if (j % 2 == 0)
+					special[i][j].setHorizontalAlignment(SwingConstants.CENTER);
+			}
+		}
 		for (int i = 0; i < atks.length; i++)
 			for (int j = 0; j < 8; j++) {
 				add(atks[i][j] = new JL());
@@ -160,6 +181,8 @@ public class EnemyInfoTable extends Page {
 		main[3][4].setText(1, "TBA");
 		main[3][5].setText(e.de.getTBA() + "f");
 		main[3][6].setText(1, "postaa");
+		special[0][0].setText(1, "count");
+		special[0][1].setText(e.de.getAtkLoop() < 0 ? "infinite" : e.de.getAtkLoop() + "");
 		int[][] atkData = e.de.rawAtkData();
 		for (int i = 0; i < atks.length; i++) {
 			atks[i][0].setText("atk");
@@ -174,4 +197,7 @@ public class EnemyInfoTable extends Page {
 		addListeners();
 	}
 
+	public void setDisplaySpecial(boolean displaySpecial) {
+		this.displaySpecial = displaySpecial;
+	}
 }

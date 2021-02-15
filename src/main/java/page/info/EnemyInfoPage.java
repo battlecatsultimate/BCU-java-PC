@@ -3,6 +3,7 @@ package page.info;
 import common.battle.BasisSet;
 import common.util.unit.Enemy;
 import page.JBTN;
+import page.JTG;
 import page.Page;
 import page.view.EnemyViewPage;
 
@@ -17,6 +18,7 @@ public class EnemyInfoPage extends Page {
 	private final JBTN back = new JBTN(0, "back");
 	private final JBTN anim = new JBTN(0, "anim");
 	private final JBTN find = new JBTN(0, "stage");
+	private final JTG extr = new JTG(0, "extra");
 	private final JLabel source = new JLabel("Source of enemy icon: DB");
 	private final EnemyInfoTable info;
 	private final TreaTable trea;
@@ -50,6 +52,7 @@ public class EnemyInfoPage extends Page {
 		set(source, x, y, 0, 50, 600, 50);
 		set(anim, x, y, 600, 0, 200, 50);
 		set(find, x, y, 1200, 0, 200, 50);
+		set(extr, x, y, 1500, 0, 200, 50);
 		set(info, x, y, 50, 100, 1600, 800);
 		set(trea, x, y, 1700, 100, 400, 1200);
 	}
@@ -58,10 +61,7 @@ public class EnemyInfoPage extends Page {
 		back.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				if (getFront() instanceof StageFilterPage)
-					changePanel(getFront().getFront());
-				else
-					changePanel(getFront());
+				changePanel(getFront());
 			}
 		});
 
@@ -82,6 +82,9 @@ public class EnemyInfoPage extends Page {
 			}
 		});
 
+		extr.addActionListener(arg0 -> {
+			info.setDisplaySpecial(extr.isSelected());
+		});
 	}
 
 	private void ini() {
@@ -90,6 +93,7 @@ public class EnemyInfoPage extends Page {
 		add(trea);
 		add(anim);
 		add(find);
+		add(extr);
 		add(source);
 		addListeners();
 	}
