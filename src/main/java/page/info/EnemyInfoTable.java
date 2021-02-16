@@ -138,7 +138,7 @@ public class EnemyInfoTable extends Page {
 						main[i][j].setHorizontalAlignment(SwingConstants.CENTER);
 				}
 		for (int i = 0; i < special.length; i++) {
-			for (int j = 0; j < 8; j++) {
+			for (int j = 0; j < special[i].length; j++) {
 				add(special[i][j] = new JL());
 				special[i][j].setBorder(BorderFactory.createEtchedBorder());
 				if (j % 2 == 0)
