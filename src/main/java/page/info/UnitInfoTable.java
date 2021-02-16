@@ -202,13 +202,15 @@ public class UnitInfoTable extends Page {
 		main[3][7].setText(f.du.getPost() + "f");
 		special[0][0].setText(1, "count");
 		special[0][1].setText(f.du.getAtkLoop() < 0 ? "infinite" : f.du.getAtkLoop() + "");
-		special[0][2].setText(1, "t7");
+		special[0][2].setText(1, "width");
+		special[0][3].setText(f.du.getWidth() + "");
+		special[0][4].setText(1, "t7");
 		int back = Math.min(f.du.getBack(), f.du.getFront());
 		int front = Math.max(f.du.getBack(), f.du.getFront());
 		if (back == front)
-			special[0][3].setText(back + "");
+			special[0][5].setText(back + "");
 		else
-			special[0][3].setText(Math.min(back, front) + " ~ " + Math.max(back, front));
+			special[0][5].setText(Math.min(back, front) + " ~ " + Math.max(back, front));
 		atks[0].setText("atk");
 		atks[2].setText(1, "preaa");
 		atks[4].setText(1, "use");

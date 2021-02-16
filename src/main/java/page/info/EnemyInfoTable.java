@@ -183,6 +183,8 @@ public class EnemyInfoTable extends Page {
 		main[3][6].setText(1, "postaa");
 		special[0][0].setText(1, "count");
 		special[0][1].setText(e.de.getAtkLoop() < 0 ? "infinite" : e.de.getAtkLoop() + "");
+		special[0][2].setText(1, "width");
+		special[0][3].setText(e.de.getWidth() + "");
 		int[][] atkData = e.de.rawAtkData();
 		for (int i = 0; i < atks.length; i++) {
 			atks[i][0].setText("atk");
