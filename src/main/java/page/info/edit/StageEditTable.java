@@ -236,13 +236,13 @@ public class StageEditTable extends AbJTable implements Reorderable {
 		if (info[ind] == null)
 			return;
 
-		if(button == MouseEvent.BUTTON3) {
+		if(button == MouseEvent.BUTTON1) {
 			AbEnemy e = Identifier.get(info[ind].enemy);
 			if (e instanceof Enemy)
 				MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, info[ind].multiple, info[ind].mult_atk));
 			if (e instanceof EneRand)
 				MainFrame.changePanel(new EREditPage(page, pack, (EneRand) e));
-		} else {
+		} else if(button == MouseEvent.BUTTON3) {
 			AbEnemySelectionPage find;
 
 			if(pack == null) {
