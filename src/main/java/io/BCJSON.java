@@ -35,6 +35,21 @@ public class BCJSON {
 			CommonStatic.def.exit(false);
 		}
 
+		int music = json != null ? json.music : Data.SE_ALL[Data.SE_ALL.length - 1] + 1;
+		musics = UpdateCheck.checkMusic(music);
+		String[] langs = new String[PC_LANG_CODES.length * PC_LANG_FILES.length];
+		for (int i = 0; i < PC_LANG_CODES.length; i++)
+			for (int j = 0; j < PC_LANG_FILES.length; j++)
+				langs[i * PC_LANG_FILES.length + j] = PC_LANG_CODES[i] + "/" + PC_LANG_FILES[j];
+		lang = Data.err(UpdateCheck.checkLang(langs));
+		clearList(libs, true);
+		clearList(assets, true);
+		clearList(musics, false);
+		clearList(lang, false);
+		while (!Data.err(AssetLoader::merge))
+			if (!Opts.conf("failed to process assets, retry?"))
+				CommonStatic.def.exit(false);
+
 		if(jar != null) {
 			boolean updateIt = Opts.conf("New jar file update found. "+jar.desc+" Do you want to update jar file?");
 
@@ -62,21 +77,6 @@ public class BCJSON {
 				}
 			}
 		}
-
-		int music = json != null ? json.music : Data.SE_ALL[Data.SE_ALL.length - 1] + 1;
-		musics = UpdateCheck.checkMusic(music);
-		String[] langs = new String[PC_LANG_CODES.length * PC_LANG_FILES.length];
-		for (int i = 0; i < PC_LANG_CODES.length; i++)
-			for (int j = 0; j < PC_LANG_FILES.length; j++)
-				langs[i * PC_LANG_FILES.length + j] = PC_LANG_CODES[i] + "/" + PC_LANG_FILES[j];
-		lang = Data.err(UpdateCheck.checkLang(langs));
-		clearList(libs, true);
-		clearList(assets, true);
-		clearList(musics, false);
-		clearList(lang, false);
-		while (!Data.err(AssetLoader::merge))
-			if (!Opts.conf("failed to process assets, retry?"))
-				CommonStatic.def.exit(false);
 	}
 
 	private static boolean clearList(List<Downloader> list, boolean quit) {
