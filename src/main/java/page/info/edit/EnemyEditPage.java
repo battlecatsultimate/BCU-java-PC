@@ -2,7 +2,7 @@ package page.info.edit;
 
 import common.battle.data.CustomEnemy;
 import common.battle.data.CustomEntity;
-import common.pack.UserProfile;
+import common.pack.PackData;
 import common.util.unit.Enemy;
 import page.JBTN;
 import page.JL;
@@ -29,8 +29,8 @@ public class EnemyEditPage extends EntityEditPage {
 	private final Enemy ene;
 	private final CustomEnemy ce;
 
-	public EnemyEditPage(Page p, Enemy e) {
-		super(p, e.id.pack, (CustomEntity) e.de, UserProfile.getUserPack(e.id.pack).editable, true);
+	public EnemyEditPage(Page p, Enemy e, PackData.UserPack pack) {
+		super(p, e.id.pack, (CustomEntity) e.de, pack.editable, true);
 		ene = e;
 		ce = (CustomEnemy) ene.de;
 		eeb = new EnemyEditBox(this, editable);
@@ -43,8 +43,7 @@ public class EnemyEditPage extends EntityEditPage {
 	protected void getInput(JTF jtf, int[] v) {
 
 		if (jtf == fdr) {
-			int act = (int) (v[0] / bas.t().getDropMulti());
-			ce.drop = act;
+			ce.drop = (int) (v[0] / bas.t().getDropMulti());
 		}
 		if (jtf == fsr) {
 			if (v[0] < 0)
@@ -92,9 +91,9 @@ public class EnemyEditPage extends EntityEditPage {
 		fsr.setText("star: " + ce.star);
 		fdr.setText("" + (int) (ce.getDrop() * bas.t().getDropMulti()));
 		int imu = 0;
-		for (int i = 0; i < EABIIND.length; i++)
-			if (EABIIND[i] > 100) {
-				int id = EABIIND[i] - 100;
+		for (int j : EABIIND)
+			if (j > 100) {
+				int id = j - 100;
 				if (ce.getProc().getArr(id).exists())
 					imu |= 1 << id - IMUSFT;
 			}

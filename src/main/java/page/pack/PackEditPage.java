@@ -3,6 +3,7 @@ package page.pack;
 import common.CommonStatic;
 import common.battle.data.CustomEnemy;
 import common.pack.Context.ErrType;
+import common.pack.PackData;
 import common.pack.PackData.UserPack;
 import common.pack.Source;
 import common.pack.Source.Workspace;
@@ -338,7 +339,14 @@ public class PackEditPage extends Page {
 			changing = false;
 		});
 
-		edit.setLnr(() -> new EnemyEditPage(getThis(), ene));
+		edit.setLnr(a -> {
+			UserPack pack = UserProfile.getUserPack(ene.id.pack);
+
+			if(pack == null)
+				return;
+
+			new EnemyEditPage(getThis(), ene, pack);
+		});
 
 		jtfe.setLnr(e -> ene.name = jtfe.getText().trim());
 

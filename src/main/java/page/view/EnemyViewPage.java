@@ -88,7 +88,12 @@ public class EnemyViewPage extends AbViewPage {
 			if (ene == null)
 				return;
 			if (ene.de instanceof CustomEnemy) {
-				changePanel(new EnemyEditPage(getThis(), ene));
+				PackData.UserPack pack = UserProfile.getUserPack(ene.id.pack);
+
+				if(pack == null)
+					return;
+
+				changePanel(new EnemyEditPage(getThis(), ene, pack));
 			} else
 				changePanel(new EnemyInfoPage(getThis(), ene));
 		});
