@@ -345,7 +345,7 @@ public class PackEditPage extends Page {
 			if(pack == null)
 				return;
 
-			new EnemyEditPage(getThis(), ene, pack);
+			changePanel(new EnemyEditPage(getThis(), ene, pack));
 		});
 
 		jtfe.setLnr(e -> ene.name = jtfe.getText().trim());
