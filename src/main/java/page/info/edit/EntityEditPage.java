@@ -183,6 +183,10 @@ public abstract class EntityEditPage extends Page {
 		return 1;
 	}
 
+	protected double getLvAtk() {
+		return 1;
+	}
+
 	protected double getDef() {
 		return 1;
 	}
@@ -672,7 +676,7 @@ public abstract class EntityEditPage extends Page {
 		copy.setEnabled(editable && ind < ce.atks.length);
 		atkn.setEnabled(editable && ind < ce.atks.length);
 		atkn.setText(adm.str);
-		aet.setData(adm, getAtk());
+		aet.setData(adm, getAtk(), getLvAtk());
 		rem.setEnabled(editable && (ce.atks.length > 1 || ind >= ce.atks.length));
 	}
 

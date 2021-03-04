@@ -72,7 +72,7 @@ public class UnitListTable extends SortTable<Form> {
 			return e0.toString().compareTo(e1.toString());
 		int i0 = (int) get(e0, c);
 		int i1 = (int) get(e1, c);
-		return i0 > i1 ? 1 : i0 == i1 ? 0 : -1;
+		return Integer.compare(i0, i1);
 	}
 
 	@Override
@@ -94,7 +94,7 @@ public class UnitListTable extends SortTable<Form> {
 		else if (c == 4)
 			return du.getHb();
 		else if (c == 5)
-			return (int) (du.allAtk() * mul * atk);
+			return (int) (Math.round(du.allAtk() * mul) * atk);
 		else if (c == 6)
 			return du.getRange();
 		else if (c == 7)

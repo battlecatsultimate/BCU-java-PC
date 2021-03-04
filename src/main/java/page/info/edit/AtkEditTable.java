@@ -43,6 +43,7 @@ class AtkEditTable extends Page {
 	private final boolean editable;
 
 	private double mul;
+	private double lvMul;
 	private final boolean changing = false;
 
 	protected AtkDataModel adm;
@@ -86,11 +87,12 @@ class AtkEditTable extends Page {
 		set(jsp, x, y, 450, 0, 800, 950);
 	}
 
-	protected void setData(AtkDataModel data, double multi) {
+	protected void setData(AtkDataModel data, double multi, double lvMulti) {
 		adm = data;
 		mul = multi;
+		lvMul = lvMulti;
 
-		fatk.setText("" + (int) (adm.atk * mul));
+		fatk.setText("" + (int) (Math.round(adm.atk * lvMul) * mul));
 		fpre.setText("" + adm.pre);
 		fp0.setText("" + adm.ld0);
 		fp1.setText("" + adm.ld1);
@@ -101,12 +103,12 @@ class AtkEditTable extends Page {
 		fmv.setText("" + adm.move);
 		int alt = adm.getAltAbi();
 		int i = 0;
-		String str = "{";
+		StringBuilder str = new StringBuilder("{");
 		while (alt > 0) {
 			if ((alt & 1) == 1) {
 				if (str.length() > 1)
-					str += ",";
-				str += i;
+					str.append(",");
+				str.append(i);
 			}
 			alt >>= 1;
 			i++;
@@ -142,12 +144,12 @@ class AtkEditTable extends Page {
 
 		fpre.setToolTipText(
 				"<html>use 0 for random attack attaching to previous one.<br>pre=0 for first attack will invalidate it</html>");
-		String ttt = "<html>enter ID of abilities separated by comma or space.<br>" + "it changes the ability state"
+		StringBuilder ttt = new StringBuilder("<html>enter ID of abilities separated by comma or space.<br>" + "it changes the ability state"
 				+ "(has to hot has, not has to has)<br>"
-				+ "it won't change back until you make another attack to change it<br>";
+				+ "it won't change back until you make another attack to change it<br>");
 
 		for (int i = 0; i < Interpret.SABIS.length; i++)
-			ttt += i + ": " + Interpret.SABIS[i] + "<br>";
+			ttt.append(i).append(": ").append(Interpret.SABIS[i]).append("<br>");
 		fab.setToolTipText(ttt + "</html>");
 
 		add(jsp);
@@ -175,8 +177,7 @@ class AtkEditTable extends Page {
 			}
 			int v = CommonStatic.parseIntN(text);
 			if (jtf == fatk) {
-				v /= mul;
-				adm.atk = v;
+				adm.atk = findIdealAtkValue(v);
 			}
 			if (jtf == fpre) {
 				if (v < 0)
@@ -240,7 +241,11 @@ class AtkEditTable extends Page {
 			}
 
 		});
-
 	}
 
+	private int findIdealAtkValue(int val) {
+		double lvValue = Math.round(val * 1.0 / mul);
+
+		return (int) ((lvValue + 0.5) / lvMul);
+	}
 }

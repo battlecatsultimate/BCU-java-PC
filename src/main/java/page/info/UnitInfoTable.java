@@ -72,19 +72,19 @@ public class UnitInfoTable extends Page {
 		double atk = b.t().getAtkMulti();
 		double def = b.t().getDefMulti();
 		main[1][3].setText((int) (ef.du.getHp() * mul * def) + " / " + ef.du.getHb());
-		main[2][3].setText("" + (int) (ef.du.allAtk() * mul * atk * 30 / ef.du.getItv()));
+		main[2][3].setText("" + (int) (Math.round(ef.du.allAtk() * mul) * atk * 30 / ef.du.getItv()));
 		main[2][5].setText("" + (int) (ef.du.getSpeed() * (1 + b.getInc(Data.C_SPE) * 0.01)));
 		main[1][5].setText(b.t().getFinRes(ef.du.getRespawn()) + "f");
 		main[1][7].setText("" + ef.getPrice(1));
 		main[0][4].setText(Interpret.getTrait(ef.du.getType(), 0));
 		int[][] atkData = ef.du.rawAtkData();
-		String satk = "";
-		for (int i = 0; i < atkData.length; i++) {
+		StringBuilder satk = new StringBuilder();
+		for (int[] atkDatum : atkData) {
 			if (satk.length() > 0)
-				satk += " / ";
-			satk += (int) (atkData[i][0] * mul * b.t().getAtkMulti());
+				satk.append(" / ");
+			satk.append((int) (Math.round(atkDatum[0] * mul) * b.t().getAtkMulti()));
 		}
-		atks[1].setText(satk);
+		atks[1].setText(satk.toString());
 
 		List<String> ls = Interpret.getAbi(ef.du);
 		ls.addAll(Interpret.getProc(ef.du, b.t(), ef.du.getType()));
@@ -107,15 +107,15 @@ public class UnitInfoTable extends Page {
 		set(main[0][4], x, y, 800, 0, 800, 50);
 		int h = main.length * 50;
 		if (displaySpecial) {
-			for (int i = 0; i < special.length; i++) {
-				for (int j = 0; j < special[i].length; j++)
-					set(special[i][j], x, y, 200 * j, h, 200, 50);
+			for (JL[] jls : special) {
+				for (int j = 0; j < jls.length; j++)
+					set(jls[j], x, y, 200 * j, h, 200, 50);
 				h += 50;
 			}
 		} else {
-			for (int i = 0; i < special.length; i++) {
-				for (int j = 0; j < special[i].length; j++)
-					set(special[i][j], x, y, 200 * j, h, 0, 0);
+			for (JL[] jls : special) {
+				for (int j = 0; j < jls.length; j++)
+					set(jls[j], x, y, 200 * j, h, 0, 0);
 			}
 		}
 		set(atks[0], x, y, 0, h, 200, 50);
@@ -215,18 +215,19 @@ public class UnitInfoTable extends Page {
 		atks[2].setText(1, "preaa");
 		atks[4].setText(1, "use");
 		int[][] atkData = f.du.rawAtkData();
-		String pre = "", use = "";
-		for (int i = 0; i < atkData.length; i++) {
+		StringBuilder pre = new StringBuilder();
+		StringBuilder use = new StringBuilder();
+		for (int[] atkDatum : atkData) {
 			if (pre.length() > 0)
-				pre += " / ";
+				pre.append(" / ");
 			if (use.length() > 0)
-				use += " / ";
-			pre += atkData[i][1] + "f";
-			use += atkData[i][2] == 1;
+				use.append(" / ");
+			pre.append(atkDatum[1]).append("f");
+			use.append(atkDatum[2] == 1);
 
 		}
-		atks[3].setText(pre);
-		atks[5].setText(use);
+		atks[3].setText(pre.toString());
+		atks[5].setText(use.toString());
 		reset();
 		addListeners();
 	}

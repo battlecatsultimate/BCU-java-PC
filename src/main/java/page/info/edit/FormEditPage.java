@@ -1,6 +1,5 @@
 package page.info.edit;
 
-import common.CommonStatic;
 import common.battle.data.CustomEntity;
 import common.battle.data.CustomUnit;
 import common.pack.PackData.UserPack;
@@ -49,9 +48,12 @@ public class FormEditPage extends EntityEditPage {
 
 	@Override
 	protected double getAtk() {
-		double mul = form.unit.lv.getMult(lv);
-		double atk = bas.t().getAtkMulti();
-		return mul * atk;
+		return bas.t().getAtkMulti();
+	}
+
+	@Override
+	protected double getLvAtk() {
+		return form.unit.lv.getMult(lv);
 	}
 
 	@Override
@@ -157,8 +159,8 @@ public class FormEditPage extends EntityEditPage {
 		fdr.setText("" + (int) (cu.getPrice() * 1.5));
 		flr.setText(interpretLayer(cu.back, cu.front));
 		int imu = 0;
-		for (int i = 0; i < ABIIND.length; i++) {
-			int id = ABIIND[i] - 100;
+		for (int j : ABIIND) {
+			int id = j - 100;
 			if (cu.getProc().getArr(id).exists())
 				imu |= 1 << id - IMUSFT;
 		}
