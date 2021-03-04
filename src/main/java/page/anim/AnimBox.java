@@ -111,8 +111,14 @@ class BufferedAnim extends Canvas implements AnimBox {
 
 	@Override
 	public synchronized void update() {
-		if (ent != null)
-			ent.update(true);
+		if (ent != null) {
+			if (ent instanceof EAnimU) {
+				EAnimU e = (EAnimU) ent;
+				ent.update(e.type.rotate());
+			} else {
+				ent.update(true);
+			}
+		}
 	}
 
 	@Override
@@ -181,8 +187,14 @@ class GLAnimBox extends GLCstd implements AnimBox {
 
 	@Override
 	public void update() {
-		if (ent != null)
-			ent.update(true);
+		if (ent != null) {
+			if (ent instanceof EAnimU) {
+				EAnimU e = (EAnimU) ent;
+				ent.update(e.type.rotate());
+			} else {
+				ent.update(true);
+			}
+		}
 	}
 
 	@Override

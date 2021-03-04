@@ -8,6 +8,7 @@ import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeTransform;
 import common.util.anim.EAnimI;
+import common.util.anim.EAnimU;
 import jogl.util.GLGraphics;
 import page.JTG;
 import page.anim.IconBox;
@@ -208,7 +209,12 @@ class GLViewBox extends GLCstd implements ViewBox, GLEventListener {
 	@Override
 	public void update() {
 		if (ent != null) {
-			ent.update(true);
+			if (ent instanceof EAnimU) {
+				EAnimU e = (EAnimU) ent;
+				ent.update(e.type.rotate());
+			} else {
+				ent.update(true);
+			}
 			exp.update();
 		}
 	}
