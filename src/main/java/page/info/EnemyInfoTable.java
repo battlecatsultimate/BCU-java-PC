@@ -194,7 +194,7 @@ public class EnemyInfoTable extends Page {
 			atks[i][5].setText("" + (atkData[i][2] == 1));
 			itv -= atkData[i][1];
 		}
-		main[3][7].setText(itv - e.de.getTBA() + "f");
+		main[3][7].setText(e.de.getPost() + "f");
 		reset();
 		addListeners();
 	}
