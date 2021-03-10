@@ -1,11 +1,14 @@
 package page.pack;
 
+import common.system.VImg;
 import common.system.files.VFile;
 import common.system.files.VFileRoot;
 import io.BCUWriter;
 import page.JBTN;
+import page.JL;
 import page.Page;
 import page.support.Exporter;
+import utilpc.UtilPC;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
@@ -24,8 +27,15 @@ public class ResourcePage extends Page {
 	private final JBTN back = new JBTN(0, "back");
 	private final JBTN rept = new JBTN(0, "extract");
 	private final JLabel jln = new JLabel();
+	private final JTextArea jt = new JTextArea();
 	private final JTree jls = new JTree();
 	private final JScrollPane jsps = new JScrollPane(jls);
+	private final JScrollPane jspf = new JScrollPane(jt);
+	private final JScrollPane jspi = new JScrollPane(jln);
+
+	private final JL assetsLabel = new JL("assets");
+	private final JL contentLabel = new JL("content");
+	private final JL imageLabel = new JL("image");
 
 	private VFile sel;
 	private boolean changing;
@@ -41,10 +51,14 @@ public class ResourcePage extends Page {
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);
-		set(jln, x, y, 50, 50, 750, 50);
-		set(jsps, x, y, 50, 100, 400, 800);
-		set(rept, x, y, 500, 300, 200, 50);
+		set(jsps, x, y, 50, 150, 400, 800);
+		set(jspf, x, y, 450, 150, 400, 800);
+		set(jspi, x, y, 850, 150, 800, 800);
+		set(rept, x, y, 50, 950, 400, 50);
 
+		set(assetsLabel, x, y, 50, 100, 400, 50);
+		set(contentLabel, x, y, 450, 100, 400, 50);
+		set(imageLabel, x, y, 850, 100, 800, 50);
 	}
 
 	private void addListeners() {
@@ -79,8 +93,24 @@ public class ResourcePage extends Page {
 					if (obj != null)
 						obj = ((DefaultMutableTreeNode) obj).getUserObject();
 					sel = obj instanceof VFile ? (VFile) obj : null;
-				} else
+				} else {
 					sel = null;
+				}
+				if (sel != null && sel.getName().contains(".")) {
+					if (sel.getName().endsWith(".png")) {
+						jln.setIcon(UtilPC.getIcon(new VImg(sel)));
+						jt.setText(null);
+					} else {
+						jln.setIcon(null);
+						StringBuilder txt = new StringBuilder();
+						for (String str : sel.getData().readLine())
+							txt.append(str).append("\n");
+						jt.setText(txt.toString());
+					}
+				} else {
+					jln.setIcon(null);
+					jt.setText(null);
+				}
 				setSele();
 			}
 
@@ -106,10 +136,16 @@ public class ResourcePage extends Page {
 	}
 
 	private void ini() {
+		jln.setVerticalAlignment(SwingConstants.TOP);
+		jt.setEditable(false);
 		add(back);
 		add(jsps);
+		add(jspf);
+		add(jspi);
 		add(rept);
-		add(jln);
+		add(assetsLabel);
+		add(contentLabel);
+		add(imageLabel);
 		setSele();
 		setTree(VFile.getBCFileTree());
 		addListeners();
