@@ -71,8 +71,18 @@ public class UnitInfoTable extends Page {
 		double mul = f.unit.lv.getMult(multi[0]);
 		double atk = b.t().getAtkMulti();
 		double def = b.t().getDefMulti();
-		main[1][3].setText((int) (ef.du.getHp() * mul * def) + " / " + ef.du.getHb());
-		main[2][3].setText("" + (int) (Math.round(ef.du.allAtk() * mul) * atk * 30 / ef.du.getItv()));
+
+		int attack = (int) (Math.round(ef.du.allAtk() * mul) * atk);
+
+		int hp = (int) (Math.round(ef.du.getHp() * mul) * def);
+
+		if(f.getPCoin() != null) {
+			attack = (int) (attack * f.getPCoin().getAtkMultiplication(multi));
+			hp = (int) (hp * f.getPCoin().getHPMultiplication(multi));
+		}
+
+		main[1][3].setText(hp + " / " + ef.du.getHb());
+		main[2][3].setText("" + (attack * 30 / ef.du.getItv()));
 		main[2][5].setText("" + (int) (ef.du.getSpeed() * (1 + b.getInc(Data.C_SPE) * 0.01)));
 		main[1][5].setText(b.t().getFinRes(ef.du.getRespawn()) + "f");
 		main[1][7].setText("" + ef.getPrice(1));
@@ -82,7 +92,14 @@ public class UnitInfoTable extends Page {
 		for (int[] atkDatum : atkData) {
 			if (satk.length() > 0)
 				satk.append(" / ");
-			satk.append((int) (Math.round(atkDatum[0] * mul) * b.t().getAtkMulti()));
+
+			int a = (int) (Math.round(atkDatum[0] * mul) * b.t().getAtkMulti());
+
+			if(f.getPCoin() != null) {
+				a = (int) (a * f.getPCoin().getAtkMultiplication(multi));
+			}
+
+			satk.append(a);
 		}
 		atks[1].setText(satk.toString());
 
