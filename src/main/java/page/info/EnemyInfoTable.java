@@ -73,7 +73,7 @@ public class EnemyInfoTable extends Page {
 		int h = main.length * 50;
 		if (displaySpecial) {
 			for (int i = 0; i < special.length; i++) {
-				for (int j = 0; j < 8; j++)
+				for (int j = 0; j < special[i].length; j++)
 					set(special[i][j], x, y, 200 * j, h, 200, 50);
 				h += 50;
 			}
