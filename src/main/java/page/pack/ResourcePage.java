@@ -52,13 +52,13 @@ public class ResourcePage extends Page {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);
 		set(jsps, x, y, 50, 150, 400, 800);
-		set(jspf, x, y, 450, 150, 400, 800);
-		set(jspi, x, y, 850, 150, 800, 800);
+		set(jspf, x, y, 450, 150, 700, 800);
+		set(jspi, x, y, 1150, 150, 700, 800);
 		set(rept, x, y, 50, 950, 400, 50);
 
 		set(assetsLabel, x, y, 50, 100, 400, 50);
-		set(contentLabel, x, y, 450, 100, 400, 50);
-		set(imageLabel, x, y, 850, 100, 800, 50);
+		set(contentLabel, x, y, 450, 100, 700, 50);
+		set(imageLabel, x, y, 1150, 100, 700, 50);
 	}
 
 	private void addListeners() {
