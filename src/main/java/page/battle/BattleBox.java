@@ -254,7 +254,7 @@ public interface BattleBox {
 						ih++;
 					}
 					hi -= ih;
-					g.drawImage(img, w - iw + BOTTOM_GAP, hi, iw, ih);
+					g.drawImage(img, w - iw + BOTTOM_GAP * hr, hi, iw, ih);
 				}
 			if(sb.can == sb.max_can) {
 				FakeImage fire = aux.battle[1][getFireLang()+ctype].getImg();
@@ -262,7 +262,7 @@ public interface BattleBox {
 				int fw = (int) (hr * fire.getWidth());
 				int fh = (int) (hr * fire.getHeight());
 
-				g.drawImage(fire, w - fw - 4 * hr + BOTTOM_GAP, h - fh - 4 * hr, fw, fh);
+				g.drawImage(fire, w - fw - 4 * hr, h - fh - 4 * hr, fw, fh);
 			}
 			//Decide lineup icon's size, 0.675 is guessed value by comparing BC and BCU
 			hr = avah * 0.675 / aux.slot[0].getImg().getHeight();
