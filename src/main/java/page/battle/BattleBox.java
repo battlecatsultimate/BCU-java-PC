@@ -124,7 +124,7 @@ public interface BattleBox {
 
 			ImgCore.set(g);
 			P rect = setP(box.getWidth(), box.getHeight());
-			sb.bg.draw(g, rect, pos, midh, siz, (int) groundHeight);
+			sb.bg.draw(g, rect, pos, midh, siz, (int) (groundHeight + (h * 0.75 / 10.0)));
 			drawCastle(g);
 			if(sb.can == sb.max_can && sb.canon.id == 0) {
 				drawCannonRange(g);
@@ -176,6 +176,8 @@ public interface BattleBox {
 				pos = (int) (w - maxW * siz);
 			midh = h + (int) (groundHeight * (siz - maxSiz) / (maxSiz - minSiz));
 
+			if(CommonStatic.getConfig().twoRow)
+				midh -= h * 0.75 / 10.0;
 		}
 
 		public void reset() {
@@ -265,13 +267,20 @@ public interface BattleBox {
 			hr = avah * 0.675 / aux.slot[0].getImg().getHeight();
 			//Make lineup won't cover cannon button and money upgrade button
 			hr = Math.min(hr, (box.getWidth()-iw*2.0)/aux.slot[0].getImg().getWidth()/5.9);
+
 			double term = hr * aux.slot[0].getImg().getWidth() * 0.2;
 
-			if(sb.isOneLineup) {
-				drawLineup(g, w, h, hr, term, false, 0);
+			if(!CommonStatic.getConfig().twoRow) {
+				if(sb.isOneLineup) {
+					drawLineup(g, w, h, hr, term, false, 0);
+				} else {
+					drawLineup(g, w, h, hr, term, true, 1-sb.frontLineup);
+					drawLineup(g, w, h, hr, term, false, sb.frontLineup);
+				}
 			} else {
-				drawLineup(g, w, h, hr, term, true, 1-sb.frontLineup);
-				drawLineup(g, w, h, hr, term, false, sb.frontLineup);
+				double termh = hr * aux.slot[0].getImg().getHeight() * 0.1;
+
+				drawLineupWithTwoRows(g, w, h ,hr, term, termh);
 			}
 
 			unir = hr;
@@ -290,15 +299,58 @@ public interface BattleBox {
 			}
 		}
 
+		private void drawLineupWithTwoRows(FakeGraphics g, int w, int h, double hr, double term, double termh) {
+			int iw;
+			int ih;
+
+			for (int i = 0; i < 2; i++) {
+				for(int j = 0; j < 5; j++) {
+					Form f = sb.b.lu.fs[i][j];
+					FakeImage img = f == null ? aux.slot[0].getImg() : f.anim.getUni().getImg();
+
+					iw = (int) (hr * img.getWidth());
+					ih = (int) (hr * img.getHeight());
+
+					int x = (w - iw * 5) / 2 + iw * (j % 5) + (int) (term * ((j % 5) - 2));
+					int y = (int) (h - (2 - i) * (ih + termh));
+
+					g.drawImage(img, x, y, iw, ih);
+
+					if(f == null)
+						continue;
+
+					int pri = sb.elu.price[i][j];
+					if (pri == -1)
+						g.colRect(x, y, iw, ih, 255, 0, 0, 100);
+					int cool = sb.elu.cool[i][j];
+					boolean b = pri > sb.mon || cool > 0;
+					if (b)
+						g.colRect(x, y, iw, ih, 0, 0, 0, 100);
+					if (sb.locks[i][j])
+						g.colRect(x, y, iw, ih, 0, 255, 0, 100);
+					if (cool > 0) {
+						int dw = (int) (hr * 10);
+						int dh = (int) (hr * 12);
+						double cd = 1.0 * cool / sb.elu.maxC[i][j];
+						int xw = (int) (cd * (iw - dw * 2));
+						g.colRect(x + iw - dw - xw, y + ih - dh * 2, xw, dh, 0, 0, 0, -1);
+						g.colRect(x + dw, y + ih - dh * 2, iw - dw * 2 - xw, dh, 100, 212, 255, -1);
+					} else
+						Res.getCost(pri, !b, setSym(g, hr, x + iw, y + ih, 3));
+				}
+			}
+		}
+
 		private void drawLineup(FakeGraphics g, int w, int h, double hr, double term, boolean isBehind, int index) {
 			int iw;
 			int ih;
+
 			for (int i = 0; i < 5; i++) {
 				Form f = sb.b.lu.fs[index][i];
 				FakeImage img = f == null ? aux.slot[0].getImg() : f.anim.getUni().getImg();
 				iw = (int) (hr * img.getWidth());
 				ih = (int) (hr * img.getHeight());
-				int x = (w - iw * 5) / 2 + iw * (i % 5) + (int) (term * ((i % 5) - 2) + (index == 0 ? 0 : (term / 2)));
+				int x = (w - iw * 5) / 2 + iw * i + (int) (term * (i - 2) + (index == 0 ? 0 : (term / 2)));
 				int y = h - ih - (isBehind ? 0 : (int) (ih * 0.1));
 
 				//Check if lineup is changing
@@ -317,20 +369,20 @@ public interface BattleBox {
 				g.drawImage(img, x, y, iw, ih);
 				if (f == null)
 					continue;
-				int pri = sb.elu.price[index][i % 5];
+				int pri = sb.elu.price[index][i];
 				if (pri == -1)
 					g.colRect(x, y, iw, ih, 255, 0, 0, 100);
-				int cool = sb.elu.cool[index][i % 5];
+				int cool = sb.elu.cool[index][i];
 				boolean b = isBehind || pri > sb.mon || cool > 0;
 				if (b)
 					g.colRect(x, y, iw, ih, 0, 0, 0, 100);
-				if (sb.locks[index][i % 5])
+				if (sb.locks[index][i])
 					g.colRect(x, y, iw, ih, 0, 255, 0, 100);
 				if(!isBehind) {
 					if (cool > 0) {
 						int dw = (int) (hr * 10);
 						int dh = (int) (hr * 12);
-						double cd = 1.0 * cool / sb.elu.maxC[index][i % 5];
+						double cd = 1.0 * cool / sb.elu.maxC[index][i];
 						int xw = (int) (cd * (iw - dw * 2));
 						g.colRect(x + iw - dw - xw, y + ih - dh * 2, xw, dh, 0, 0, 0, -1);
 						g.colRect(x + dw, y + ih - dh * 2, iw - dw * 2 - xw, dh, 100, 212, 255, -1);
@@ -349,6 +401,8 @@ public interface BattleBox {
 			for(int i = 0; i < sb.b.t().tech[Data.LV_CRG]+2; i++) {
 				rang -= 405;
 			}
+
+			rang = Math.max(rang, sb.ebase.pos * ratio + off / 2.0);
 
 			rang = getX(rang);
 

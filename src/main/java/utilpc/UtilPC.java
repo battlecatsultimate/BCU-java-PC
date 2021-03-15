@@ -23,6 +23,7 @@ import common.util.unit.Form;
 import io.BCMusic;
 import io.BCUReader;
 import io.BCUWriter;
+import main.Opts;
 import utilpc.awt.FG2D;
 
 import javax.swing.*;
@@ -159,7 +160,7 @@ public class UtilPC {
 
 		@Override
 		public void exit(boolean save) {
-			BCUWriter.logClose(save);
+			CommonStatic.ctx.noticeErr(() -> BCUWriter.logClose(save), Context.ErrType.ERROR, "Save failed...");
 			System.exit(0);
 		}
 

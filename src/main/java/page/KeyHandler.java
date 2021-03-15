@@ -1,5 +1,6 @@
 package page;
 
+import common.CommonStatic;
 import common.CommonStatic.FakeKey;
 
 import java.awt.event.KeyEvent;
@@ -26,14 +27,24 @@ public abstract class KeyHandler extends Page implements FakeKey {
 
 	@Override
 	public synchronized boolean pressed(int type, int slot) {
-		int key = (type == -3 ? change : type == -2 ? lock : type == -1 ? act : slots[0])[slot];
-		return press.containsKey(key) && press.get(key) != 1;
+		if(CommonStatic.getConfig().twoRow) {
+			int key = (type == -2 ? lock : type == -1 ? act : slots[type])[slot];
+			return press.containsKey(key) && press.get(key) != 1;
+		} else {
+			int key = (type == -3 ? change : type == -2 ? lock : type == -1 ? act : slots[0])[slot];
+			return press.containsKey(key) && press.get(key) != 1;
+		}
 	}
 
 	@Override
 	public synchronized void remove(int type, int slot) {
-		int key = (type == -3 ? change : type == -2 ? lock : type == -1 ? act : slots[0])[slot];
-		press.put(key, 3);
+		if(CommonStatic.getConfig().twoRow) {
+			int key = (type == -2 ? lock : type == -1 ? act : slots[type])[slot];
+			press.put(key, 3);
+		} else {
+			int key = (type == -3 ? change : type == -2 ? lock : type == -1 ? act : slots[0])[slot];
+			press.put(key, 3);
+		}
 	}
 
 	@Override

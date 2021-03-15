@@ -40,17 +40,36 @@ public class BBCtrl extends BBPainter {
 		int h = box.getHeight();
 		double hr = unir;
 		double term = hr * aux.slot[0].getImg().getWidth() * 0.2;
-		for (int i = 0; i < 5; i++) {
-			Form f = sbc.sb.b.lu.fs[sbc.sb.frontLineup][i % 5];
-			FakeImage img = f == null ? aux.slot[0].getImg() : f.anim.getUni().getImg();
-			int iw = (int) (hr * img.getWidth());
-			int ih = (int) (hr * img.getHeight());
-			int x = (w - iw * 5) / 2 + iw * (i % 5) + (int) (term * ((i % 5) -2) + (sbc.sb.frontLineup == 0 ? 0 : term/2));
-			int y = h - (int) (ih * 1.1);
-			if (!new PP(p).out(new P(x, y), new P(x + iw, y + ih), 0))
-				sbc.action.add(i+sbc.sb.frontLineup*5);
-			if (button != MouseEvent.BUTTON1)
-				sbc.action.add(10);
+		if(CommonStatic.getConfig().twoRow) {
+			double termh = hr * aux.slot[0].getImg().getHeight() * 0.1;
+
+			for (int i = 0; i < 2; i++) {
+				for(int j = 0; j < 5; j++) {
+					Form f = sbc.sb.b.lu.fs[i][j];
+					FakeImage img = f == null ? aux.slot[0].getImg() : f.anim.getUni().getImg();
+					int iw = (int) (hr * img.getWidth());
+					int ih = (int) (hr * img.getHeight());
+					int x = (w - iw * 5) / 2 + iw * j + (int) (term * (j -2));
+					int y = (int) (h - (2 - i) * (ih + termh));
+					if (!new PP(p).out(new P(x, y), new P(x + iw, y + ih), 0))
+						sbc.action.add(j + i * 5);
+					if (button != MouseEvent.BUTTON1)
+						sbc.action.add(10);
+				}
+			}
+		} else {
+			for (int i = 0; i < 5; i++) {
+				Form f = sbc.sb.b.lu.fs[sbc.sb.frontLineup][i];
+				FakeImage img = f == null ? aux.slot[0].getImg() : f.anim.getUni().getImg();
+				int iw = (int) (hr * img.getWidth());
+				int ih = (int) (hr * img.getHeight());
+				int x = (w - iw * 5) / 2 + iw * i + (int) (term * (i -2) + (sbc.sb.frontLineup == 0 ? 0 : term/2));
+				int y = h - (int) (ih * 1.1);
+				if (!new PP(p).out(new P(x, y), new P(x + iw, y + ih), 0))
+					sbc.action.add(i+sbc.sb.frontLineup*5);
+				if (button != MouseEvent.BUTTON1)
+					sbc.action.add(10);
+			}
 		}
 		hr = corr;
 		FakeImage left = aux.battle[0][0].getImg();
@@ -85,17 +104,19 @@ public class BBCtrl extends BBPainter {
 
 	@Override
 	protected synchronized void drag(Point p) {
-		if(!dragging) {
-			dragInit = p;
+		if(!CommonStatic.getConfig().twoRow) {
+			if(!dragging) {
+				dragInit = p;
+			}
+
+			dragging = true;
+
+			dragEnd = p;
+
+			checkDragUpDown();
 		}
 
-		dragging = true;
-
-		dragEnd = p;
-
 		super.drag(p);
-
-		checkDragUpDown();
 	}
 
 	private void checkDragUpDown() {

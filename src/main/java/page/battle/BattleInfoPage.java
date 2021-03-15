@@ -1,5 +1,6 @@
 package page.battle;
 
+import common.CommonStatic;
 import common.battle.*;
 import common.battle.entity.AbEntity;
 import common.battle.entity.Entity;
@@ -8,10 +9,7 @@ import common.util.stage.Replay;
 import common.util.stage.Stage;
 import io.BCMusic;
 import main.Opts;
-import page.JBTN;
-import page.JTG;
-import page.KeyHandler;
-import page.Page;
+import page.*;
 import page.awt.BBBuilder;
 import page.battle.BattleBox.OuterBox;
 
@@ -20,9 +18,9 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.*;
+import java.util.Random;
 
 public class BattleInfoPage extends KeyHandler implements OuterBox {
 
@@ -41,6 +39,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	private final JBTN paus = new JBTN(0, "pause");
 	private final JBTN next = new JBTN(0, "nextf");
 	private final JBTN rply = new JBTN();
+	private final JBTN row = new JBTN();
 	private final EntityTable ut = new EntityTable(-1);
 	private final ComingTable ct = new ComingTable(this);
 	private final EntityTable et = new EntityTable(1);
@@ -191,10 +190,11 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			set(rply, x, y, 900, 0, 200, 50);
 			set(stream, x, y, 900, 0, 400, 50);
 			set(next, x, y, 1100, 0, 200, 50);
+			set(row, x, y, 1300, 0, 200, 50);
 			set(ebase, x, y, 240, 0, 600, 50);
-			set(timer, x, y, 1300, 0, 200, 50);
-			set(ubase, x, y, 1540, 0, 200, 50);
-			set((Canvas) bb, x, y, 50, 50, 1920, 1200);
+			set(timer, x, y, 1500, 0, 200, 50);
+			set(ubase, x, y, 1740, 0, 200, 50);
+			set((Canvas) bb, x, y, 190, 50, 1920, 1200);
 			set(ctp, x, y, 0, 0, 0, 0);
 			set(eep, x, y, 50, 100, 0, 0);
 			set(eup, x, y, 50, 400, 0, 0);
@@ -206,6 +206,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			set(ctp, x, y, 50, 850, 1200, 400);
 			set(eep, x, y, 50, 100, 600, 700);
 			set((Canvas) bb, x, y, 700, 300, 800, 500);
+			set(row, x, y , 700, 800, 200, 50);
 			set(paus, x, y, 700, 200, 200, 50);
 			set(rply, x, y, 1000, 200, 200, 50);
 			set(stream, x, y, 900, 200, 400, 50);
@@ -336,6 +337,11 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			pause = true;
 		});
 
+		row.addActionListener(a -> {
+			CommonStatic.getConfig().twoRow = !CommonStatic.getConfig().twoRow;
+			row.setText(get(MainLocale.PAGE, CommonStatic.getConfig().twoRow ? "tworow" : "onerow"));
+		});
+
 		jsl.addChangeListener(e -> {
 			if (jsl.getValueIsAdjusting() || isAdj() || !(basis instanceof SBRply))
 				return;
@@ -360,6 +366,8 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		add(ucount);
 		add(respawn);
 		add(jtb);
+		add(row);
+		row.setText(get(MainLocale.PAGE, CommonStatic.getConfig().twoRow ? "tworow" : "onerow"));
 		if (bb instanceof BBRecd)
 			add(stream);
 		else {

@@ -265,6 +265,7 @@ public class BCUWriter extends DataIO {
 		jo.addProperty("style_light", MainBCU.light);
 		jo.addProperty("style_nimbus", MainBCU.nimbus);
 		jo.addProperty("author", MainBCU.author);
+		jo.addProperty("rowlayout", CommonStatic.getConfig().twoRow);
 		String[] exp = new String[Exporter.curs.length];
 		for (int i = 0; i < exp.length; i++)
 			exp[i] = Exporter.curs[i] == null ? null : Exporter.curs[i].toString();

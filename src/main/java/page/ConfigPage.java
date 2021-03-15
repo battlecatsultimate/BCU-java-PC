@@ -49,6 +49,7 @@ public class ConfigPage extends Page {
 	private final JSlider jsse = new JSlider(0, 100);
 	private final JSlider jsui = new JSlider(0, 100);
 	private final JList<String> jls = new JList<>(MainLocale.LOC_NAME);
+	private final JBTN row = new JBTN(MainLocale.PAGE, CommonStatic.getConfig().twoRow ? "tworow" : "onerow");
 
 	private final JScrollPane jsps = new JScrollPane(jls);
 
@@ -103,6 +104,7 @@ public class ConfigPage extends Page {
 		set(rlla, x, y, 1100, 850, 450, 50);
 		set(nimbus, x, y, 1100, 950, 200, 50);
 		set(theme, x, y, 1350, 950, 200, 50);
+		set(row, x, y, 1100, 1050, 400, 50);
 	}
 
 	private void addListeners() {
@@ -210,6 +212,11 @@ public class ConfigPage extends Page {
 				theme.setToolTipText(MainLocale.getLoc(MainLocale.PAGE, "themed"));
 			}
 		});
+
+		row.addActionListener(a -> {
+			CommonStatic.getConfig().twoRow = !CommonStatic.getConfig().twoRow;
+			row.setText(MainLocale.PAGE, CommonStatic.getConfig().twoRow ? "tworow" : "onerow");
+		});
 	}
 
 	private void ini() {
@@ -236,6 +243,7 @@ public class ConfigPage extends Page {
 		set(jsui);
 		add(nimbus);
 		add(theme);
+		add(row);
 		jls.setSelectedIndex(cfg().lang);
 		jsmin.setValue(cfg().deadOpa);
 		jsmax.setValue(cfg().fullOpa);
