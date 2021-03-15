@@ -15,7 +15,7 @@ public class SavePage extends Page {
         ini();
         resized();
 
-        finishJob();
+        new Thread(this::finishJob).start();
     }
 
     @Override
