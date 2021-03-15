@@ -18,7 +18,6 @@ import page.MainLocale;
 import page.Page;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Interpret extends Data {

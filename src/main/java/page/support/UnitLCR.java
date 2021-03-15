@@ -1,8 +1,5 @@
 package page.support;
 
-import common.pack.PackData;
-import common.pack.Source;
-import common.pack.UserProfile;
 import common.system.VImg;
 import common.util.unit.Form;
 import common.util.unit.Unit;

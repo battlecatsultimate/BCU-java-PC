@@ -79,6 +79,7 @@ public class MainBCU {
 			return new File("./workspace/" + relativePath);
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public void initProfile() {
 			LoadPage.prog("read assets");
@@ -139,7 +140,7 @@ public class MainBCU {
 		}
 	}
 
-	public static final int ver = 50020;
+	public static final int ver = 50021;
 
 	public static int FILTER_TYPE = 1;
 	public static final boolean WRITE = !new File("./.project").exists();

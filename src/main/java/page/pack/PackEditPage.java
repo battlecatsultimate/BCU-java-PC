@@ -3,7 +3,6 @@ package page.pack;
 import common.CommonStatic;
 import common.battle.data.CustomEnemy;
 import common.pack.Context.ErrType;
-import common.pack.PackData;
 import common.pack.PackData.UserPack;
 import common.pack.Source;
 import common.pack.Source.Workspace;

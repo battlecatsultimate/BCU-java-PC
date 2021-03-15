@@ -2,7 +2,6 @@ package utilpc.awt;
 
 import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
-import jogl.util.AmbImage;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;

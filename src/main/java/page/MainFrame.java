@@ -1,6 +1,5 @@
 package page;
 
-import common.CommonStatic;
 import common.system.P;
 import main.Opts;
 import main.Printer;

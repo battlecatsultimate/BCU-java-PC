@@ -112,6 +112,7 @@ class BufferedModel extends Canvas implements ModelBox {
 }
 
 class GLModelBox extends GLCstd implements ModelBox {
+	private static final long serialVersionUID = 1L;
 
 	private double siz = 0.5;
 

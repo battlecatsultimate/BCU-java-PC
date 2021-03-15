@@ -5,6 +5,8 @@ import common.CommonStatic;
 import javax.swing.*;
 
 public class SavePage extends Page {
+    private static final long serialVersionUID = 1L;
+
     private final JLabel save = new JLabel(Page.get(MainLocale.PAGE, "savepro"));
 
     protected SavePage() {

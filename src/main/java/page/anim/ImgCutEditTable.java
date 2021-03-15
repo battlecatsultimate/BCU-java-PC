@@ -1,7 +1,6 @@
 package page.anim;
 
 import common.util.anim.AnimCE;
-import common.util.anim.ImgCut;
 import page.support.AbJTable;
 
 import javax.swing.text.JTextComponent;
