@@ -124,7 +124,7 @@ public interface BattleBox {
 
 			ImgCore.set(g);
 			P rect = setP(box.getWidth(), box.getHeight());
-			sb.bg.draw(g, rect, pos, midh, siz, (int) (groundHeight + (h * 0.75 / 10.0)));
+			sb.bg.draw(g, rect, pos, midh, siz, (int) (groundHeight + (CommonStatic.getConfig().twoRow ? (h * 0.75 / 10.0) : 0)));
 			drawCastle(g);
 			if(sb.can == sb.max_can && sb.canon.id == 0) {
 				drawCannonRange(g);
