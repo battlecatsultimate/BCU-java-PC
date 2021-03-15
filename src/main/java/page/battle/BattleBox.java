@@ -42,6 +42,7 @@ public interface BattleBox {
 		private static final int[] canx = new int[] { 0, 0, 0, 64, 64, 0, 0, 0 };
 		private static final DecimalFormat df = new DecimalFormat("00.00");
 		private static final double bar = 8;
+		private static final double BOTTOM_GAP = 48;
 
 		public static void drawNyCast(FakeGraphics gra, int y, int x, double siz, int[] inf) {
 			BCAuxAssets aux = CommonStatic.getBCAssets();
@@ -234,10 +235,10 @@ public interface BattleBox {
 			corr = hr = Math.min(r, hr);
 			int ih = (int) (hr * left.getHeight());
 			int iw = (int) (hr * left.getWidth());
-			g.drawImage(left, 0, h - ih, iw, ih);
+			g.drawImage(left, - BOTTOM_GAP * hr, h - ih, iw, ih);
 			iw = (int) (hr * right.getWidth());
 			ih = (int) (hr * right.getHeight());
-			g.drawImage(right, w - iw, h - ih, iw, ih);
+			g.drawImage(right, w - iw + BOTTOM_GAP * hr, h - ih, iw, ih);
 			Res.getCost(sb.next_lv, mtype > 0, setSym(g, hr, hr * 5, h - hr * 5, 2));
 			Res.getWorkerLv(sb.work_lv, mtype > 0, setSym(g, hr, hr * 5, h - hr * 130, 0));
 			int hi = h;
@@ -253,7 +254,7 @@ public interface BattleBox {
 						ih++;
 					}
 					hi -= ih;
-					g.drawImage(img, w - iw, hi, iw, ih);
+					g.drawImage(img, w - iw + BOTTOM_GAP, hi, iw, ih);
 				}
 			if(sb.can == sb.max_can) {
 				FakeImage fire = aux.battle[1][getFireLang()+ctype].getImg();
@@ -261,7 +262,7 @@ public interface BattleBox {
 				int fw = (int) (hr * fire.getWidth());
 				int fh = (int) (hr * fire.getHeight());
 
-				g.drawImage(fire, w - fw - 4 * hr, h - fh - 4 * hr, fw, fh);
+				g.drawImage(fire, w - fw - 4 * hr + BOTTOM_GAP, h - fh - 4 * hr, fw, fh);
 			}
 			//Decide lineup icon's size, 0.675 is guessed value by comparing BC and BCU
 			hr = avah * 0.675 / aux.slot[0].getImg().getHeight();
