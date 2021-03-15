@@ -121,6 +121,12 @@ public class Opts {
 		return val == JOptionPane.OK_OPTION;
 	}
 
+	public static int selection(String message, String title, String ...choices) {
+		return JOptionPane.showOptionDialog(null, message, title,
+				JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+				null, choices, choices[0]);
+	}
+
 	public static Object[] showTextCheck(String title, String content, boolean defaultCheck) {
 		JLabel contents = new JLabel(content);
 		JTF text = new JTF();
