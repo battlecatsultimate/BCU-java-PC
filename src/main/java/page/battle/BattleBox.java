@@ -402,7 +402,7 @@ public interface BattleBox {
 				rang -= 405;
 			}
 
-			rang = Math.max(rang, sb.ebase.pos * ratio + off / 2.0);
+			rang = Math.max(rang, sb.ebase.pos * ratio - off / 2.0);
 
 			rang = getX(rang);
 
