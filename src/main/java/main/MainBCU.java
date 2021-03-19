@@ -100,6 +100,7 @@ public class MainBCU {
 		@Override
 		public void noticeErr(Exception e, ErrType t, String str) {
 			if (noNeedToShow(t)) {
+				System.out.println("???");
 				System.out.println(str);
 				e.printStackTrace();
 				return;
@@ -136,7 +137,7 @@ public class MainBCU {
 			if(t == ErrType.DEBUG)
 				return true;
 			else
-				return t == ErrType.CORRUPT || t == ErrType.ERROR || t == ErrType.FATAL || t == ErrType.WARN || !MainBCU.WRITE;
+				return !(t == ErrType.CORRUPT || t == ErrType.ERROR || t == ErrType.FATAL || t == ErrType.WARN || !MainBCU.WRITE);
 		}
 	}
 

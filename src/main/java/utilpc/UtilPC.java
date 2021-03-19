@@ -23,7 +23,6 @@ import common.util.unit.Form;
 import io.BCMusic;
 import io.BCUReader;
 import io.BCUWriter;
-import main.Opts;
 import utilpc.awt.FG2D;
 
 import javax.swing.*;
