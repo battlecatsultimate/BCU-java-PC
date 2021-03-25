@@ -18,7 +18,9 @@ import page.MainLocale;
 import page.Page;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Interpret extends Data {
 
@@ -90,9 +92,7 @@ public class Interpret extends Data {
 			{}, { 1, 1 }, { 1, 1 }, { 2, 2 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 },
 			{ 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 } };
 
-	public static final int[] EABIIND = { 5, 7, 8, 9, 10, 11, 12, 15, 16, 18, 113, 114, 115, 116, 117, 118, 119, 133,
-			134 };
-	public static final int[] ABIIND = { 113, 114, 115, 116, 117, 118, 119, 133, 134 };
+	public static final int[] EABIIND = { 5, 7, 8, 9, 10, 11, 12, 15, 16, 18 };
 	public static final int IMUSFT = 13, EFILTER = 8;
 
 	static {
@@ -205,34 +205,89 @@ public class Interpret extends Data {
 		return ans;
 	}
 
-	public static List<String> getProc(MaskEnemy de) {
-		Formatter.Context ctx = new Formatter.Context(true, false);
-		List<String> l = new ArrayList<>();
-		MaskAtk ma = de.getRepAtk();
-		for (int i = 0; i < Data.PROC_TOT; i++) {
-			ProcItem item = ma.getProc().getArr(i);
-			if (!item.exists())
-				continue;
-			String format = ProcLang.get().get(i).format;
-			String formatted = Formatter.format(format, item, ctx);
-			l.add(formatted);
-
-		}
-		return l;
-	}
-
-	public static List<String> getProc(MaskEntity du, Treasure t, int trait) {
-		List<String> l = new ArrayList<>();
+	public static List<String> getProc(MaskEntity du) {
 		Formatter.Context ctx = new Formatter.Context(false, false);
-		MaskAtk ma = du.getRepAtk();
-		for (int i = 0; i < Data.PROC_TOT; i++) {
-			ProcItem item = ma.getProc().getArr(i);
-			if (!item.exists())
-				continue;
-			String format = ProcLang.get().get(i).format;
-			String formatted = Formatter.format(format, item, ctx);
-			l.add(formatted);
+		boolean common;
+
+		if(du instanceof CustomEntity) {
+			common = ((CustomEntity) du).common;
+		} else {
+			common = true;
 		}
+
+		ArrayList<String> l = new ArrayList<>();
+
+		if(common) {
+			MaskAtk ma = du.getRepAtk();
+
+			for(int i = 0; i < Data.PROC_TOT; i++) {
+				ProcItem item = ma.getProc().getArr(i);
+
+				if(!item.exists())
+					continue;
+
+				String format = ProcLang.get().get(i).format;
+				String formatted = Formatter.format(format, item, ctx);
+				l.add(formatted);
+			}
+
+		} else {
+			Map<String, List<Integer>> atkMap = new HashMap<>();
+
+			MaskAtk ma = du.getRepAtk();
+
+			for (int i = 0; i < Data.PROC_TOT; i++) {
+				ProcItem item = ma.getProc().getArr(i);
+
+				if (!item.exists() || ma.getProc().sharable(i))
+					continue;
+
+				String format = ProcLang.get().get(i).format;
+				String formatted = Formatter.format(format, item, ctx);
+				l.add(formatted);
+			}
+
+			for (int i = 0; i < du.getAtkCount(); i++) {
+				ma = du.getAtkModel(i);
+
+				for (int j = 0; j < Data.PROC_TOT; j++) {
+					ProcItem item = ma.getProc().getArr(j);
+
+					if (!item.exists())
+						continue;
+
+					String format = ProcLang.get().get(j).format;
+					String formatted = Formatter.format(format, item, ctx);
+
+					if (atkMap.containsKey(formatted)) {
+						List<Integer> inds = atkMap.get(formatted);
+
+						inds.add(i + 1);
+					} else {
+						List<Integer> inds = new ArrayList<>();
+
+						inds.add(i + 1);
+
+						atkMap.put(formatted, inds);
+					}
+				}
+			}
+
+			for (String key : atkMap.keySet()) {
+				List<Integer> inds = atkMap.get(key);
+
+				if (inds == null) {
+					l.add(key);
+				} else {
+					if (inds.size() == du.getAtkCount()) {
+						l.add(key);
+					} else {
+						l.add(key + " " + getAtkNumbers(inds));
+					}
+				}
+			}
+		}
+
 		return l;
 	}
 
@@ -495,4 +550,64 @@ public class Interpret extends Data {
 			t.bslv[BASE_CURSE] = v;
 	}
 
+	private static String getAtkNumbers(List<Integer> inds) {
+		StringBuilder builder = new StringBuilder("[");
+
+		switch (CommonStatic.getConfig().lang) {
+			case 1:
+				builder.append("第 ");
+
+				for(int i = 0; i < inds.size(); i++) {
+					builder.append(i);
+
+					if(i < inds.size() -1) {
+						builder.append(", ");
+					}
+				}
+
+				return builder.append(" 次攻擊]").toString();
+			case 2:
+				for(int i = 0; i < inds.size(); i++) {
+					builder.append(i);
+
+					if(i < inds.size() - 1) {
+						builder.append(", ");
+					}
+				}
+
+				return builder.append(" 번째 공격]").toString();
+			case 3:
+				for(int i = 0; i < inds.size(); i++) {
+					builder.append(i);
+
+					if(i < inds.size() - 1) {
+						builder.append(", ");
+					}
+				}
+
+				return builder.append(" 回目の攻撃]").toString();
+			default:
+				for (int i = 0; i < inds.size(); i++) {
+					builder.append(getNumberExtension(inds.get(i)));
+
+					if (i < inds.size() - 1) {
+						builder.append(", ");
+					}
+				}
+
+				return builder.append(" Attack]").toString();
+		}
+	}
+
+	private static String getNumberExtension(int i) {
+		if(i != 11 && i % 10 == 1) {
+			return i + "st";
+		} else if(i != 12 && i % 10 == 2) {
+			return i + "nd";
+		} else if(i != 13 && i % 10 == 3) {
+			return i + "rd";
+		} else {
+			return i + "th";
+		}
+	}
 }
