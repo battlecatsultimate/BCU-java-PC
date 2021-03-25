@@ -59,7 +59,7 @@ public class EnemyInfoTable extends Page {
 		main[2][3].setText("" + (int) (e.de.allAtk() * mula * 30 / e.de.getItv()));
 		int[][] atkData = e.de.rawAtkData();
 		for (int i = 0; i < atks.length; i++)
-			atks[i][1].setText("" + (int) (atkData[i][0] * mula));
+			atks[i][1].setText("" + Math.round(atkData[i][0] * mula));
 	}
 
 	@Override
