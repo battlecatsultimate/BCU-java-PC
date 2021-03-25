@@ -1,5 +1,6 @@
 package page.info.edit;
 
+import common.util.Data;
 import common.util.Data.Proc;
 import common.util.lang.Formatter;
 import page.JTF;
@@ -16,7 +17,7 @@ public abstract class ProcTable extends Page {
 
 		private static final int SEC = 16;
 		private static final int[] INDS = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 20, 27, 29, 31, 32, 21, 22, 23, 24, 25,
-				26, 30, 35, 36, 37 };
+				26, 35, 36, 37 };
 
 		protected AtkProcTable(Page p, boolean edit, boolean unit) {
 			super(p, INDS, edit, unit);
@@ -45,7 +46,10 @@ public abstract class ProcTable extends Page {
 
 		private static final long serialVersionUID = 1L;
 
-		private static final int[] INDS = { 9, 10, 11, 12, 28, 30 };
+		private static final int[] INDS = { 9, 10, 11, 12, 28, 30, Data.P_IMUKB, Data.P_IMUSTOP,
+				Data.P_IMUSLOW, Data.P_IMUWAVE, Data.P_IMUWEAK, Data.P_IMUWARP, Data.P_IMUCURSE,
+				Data.P_IMUPOIATK, Data.P_IMUVOLC
+		};
 
 		protected MainProcTable(Page p, boolean edit, boolean unit) {
 			super(p, INDS, edit, unit);
@@ -53,7 +57,6 @@ public abstract class ProcTable extends Page {
 
 		@Override
 		protected void resized(int x, int y) {
-			setPreferredSize(size(x, y, 300, 1000).toDimension());
 			int h = 0;
 			for (int i = 0; i < INDS.length; i++) {
 				set(group[i].jlm, x, y, 0, h, 300, 50);
@@ -64,7 +67,7 @@ public abstract class ProcTable extends Page {
 					h += 50;
 				}
 			}
-
+			setPreferredSize(size(x, y, 300, h).toDimension());
 		}
 
 	}
