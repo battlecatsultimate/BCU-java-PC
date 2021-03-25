@@ -40,8 +40,6 @@ import javax.swing.*;
 import java.util.*;
 
 import static common.util.Data.*;
-import static utilpc.Interpret.ABIIND;
-import static utilpc.Interpret.IMUSFT;
 
 public abstract class EntityEditPage extends Page {
 
@@ -124,13 +122,6 @@ public abstract class EntityEditPage extends Page {
 			if (vals.length == 3) {
 				ce.type = vals[0];
 				ce.abi = vals[1];
-				for (int j : ABIIND) {
-					int id = j - 100;
-					if ((vals[2] & (1 << id - IMUSFT)) > 0)
-						((Proc.IMU) ce.getProc().getArr(id)).mult = 100;
-					else
-						((Proc.IMU) ce.getProc().getArr(id)).mult = 0;
-				}
 				ce.loop = (ce.abi & AB_GLASS) > 0 ? 1 : -1;
 			}
 		}

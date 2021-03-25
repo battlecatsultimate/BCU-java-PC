@@ -50,12 +50,7 @@ class AttList extends JList<String> {
 				if (type == -1) {
 					v = ind < para ? UtilPC.getIcon(0, EABIIND[ind]) : UtilPC.getIcon(1, ind - para);
 				} else if (type == 0) {
-					int len = SABIS.length;
-					if (para == 0) {
-						v = ind < len ? UtilPC.getIcon(0, ind) : UtilPC.getIcon(1, ind - len);
-					} else {
-						v = ind < len ? UtilPC.getIcon(0, ind) : UtilPC.getIcon(0, ABIIND[ind - len]);
-					}
+					v = ind < SABIS.length ? UtilPC.getIcon(0, ind) : UtilPC.getIcon(1, ind - SABIS.length);
 				} else
 					v = UtilPC.getIcon(type, ind);
 				if (v == null)

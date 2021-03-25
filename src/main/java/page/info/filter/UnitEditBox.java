@@ -3,14 +3,12 @@ package page.info.filter;
 import page.Page;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import common.util.lang.ProcLang;
-
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Vector;
 
-import static utilpc.Interpret.*;
+import static utilpc.Interpret.SABIS;
+import static utilpc.Interpret.TRAIT;
 
 public class UnitEditBox extends Page {
 
@@ -44,12 +42,6 @@ public class UnitEditBox extends Page {
 			if (((vals[1] >> i) & 1) > 0)
 				abis.addSelectionInterval(i, i);
 		}
-		int lev = SABIS.length;
-		for (int i = 0; i < ABIIND.length; i++) {
-			int ind = ABIIND[i];
-			if (((vals[2] >> (ind - 100 - IMUSFT)) & 1) > 0)
-				abis.addSelectionInterval(lev + i, lev + i);
-		}
 		changing = false;
 	}
 
@@ -68,20 +60,13 @@ public class UnitEditBox extends Page {
 		for (int i = 0; i < lev; i++)
 			if (abis.isSelectedIndex(i))
 				ans[1] |= 1 << i;
-		for (int i = 0; i < ABIIND.length; i++)
-			if (abis.isSelectedIndex(lev + i))
-				ans[2] |= 1 << (ABIIND[i] - 100 - IMUSFT);
 
 		getFront().callBack(ans);
 	}
 
 	private void ini() {
-		for (int i = 0; i < 9; i++)
-			vt.add(TRAIT[i]);
-		for (int i = 0; i < SABIS.length; i++)
-			va.add(SABIS[i]);
-		for (int i = 0; i < ABIIND.length; i++)
-			va.add(ProcLang.get().get(ABIIND[i] - 100).abbr_name);
+		vt.addAll(Arrays.asList(TRAIT).subList(0, 9));
+		Collections.addAll(va, SABIS);
 		trait.setListData(vt);
 		abis.setListData(va);
 		int m = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
@@ -97,14 +82,9 @@ public class UnitEditBox extends Page {
 
 	private void set(JList<?> jl) {
 
-		jl.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (!changing && !jl.getValueIsAdjusting())
-					confirm();
-			}
-
+		jl.addListSelectionListener(arg0 -> {
+			if (!changing && !jl.getValueIsAdjusting())
+				confirm();
 		});
 	}
 
