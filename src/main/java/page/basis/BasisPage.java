@@ -568,6 +568,8 @@ public class BasisPage extends LubCont {
 		bsjtf.setText(BasisSet.current().name);
 		bsrem.setEnabled(current() != BasisSet.def());
 		setB(b);
+		jlc.setBasis(bs);
+		jlcn.setBasis(bs);
 	}
 
 	private void setC(int c) {

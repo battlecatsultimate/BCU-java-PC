@@ -129,18 +129,8 @@ public class Interpret extends Data {
 		return true;
 	}
 
-	public static String comboInfo(Combo c) {
-		return combo(c.type, CommonStatic.getBCAssets().values[c.type][c.lv]);
-	}
-
-	public static String[] comboInfo(int[] inc) {
-		List<String> ls = new ArrayList<>();
-		for (int i = 0; i < C_TOT; i++) {
-			if (inc[i] == 0)
-				continue;
-			ls.add(combo(i, inc[i]));
-		}
-		return ls.toArray(new String[0]);
+	public static String comboInfo(Combo c, BasisSet b) {
+		return combo(c.type, CommonStatic.getBCAssets().values[c.type][c.lv], b);
 	}
 
 	public static List<String> getAbi(MaskEntity me) {
@@ -461,10 +451,14 @@ public class Interpret extends Data {
 			setVal(ind, v, bl.t());
 	}
 
-	private static String combo(int t, int val) {
+	private static String combo(int t, int val, BasisSet b) {
 		int[] con = CDC[t];
-		return COMN[t] + " " + CDP[0][con[0]] + CDP[1][con[1]].replaceAll("_", "" + val);
-
+		if (COMN[t].equals("cool down")) {
+			double research = (b.t().tech[LV_RES] - 1) * 6 + b.t().trea[T_RES] * 0.3;
+			return COMN[t] + " " + CDP[0][con[0]] + CDP[1][con[1]].replaceAll("_", "" + research * val / 100);
+		} else {
+			return COMN[t] + " " + CDP[0][con[0]] + CDP[1][con[1]].replaceAll("_", "" + val);
+		}
 	}
 
 	private static void setVal(int ind, int v, Treasure t) {
