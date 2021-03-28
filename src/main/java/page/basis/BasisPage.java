@@ -69,7 +69,7 @@ public class BasisPage extends LubCont {
 	private final NyCasBox ncb = new NyCasBox();
 	private final JBTN[] jbcs = new JBTN[3];
 
-	private boolean changing = false, outside = false;
+	private boolean changing = false, outside = false, resize = true;
 
 	private UnitFLUPage ufp;
 
@@ -81,6 +81,10 @@ public class BasisPage extends LubCont {
 
 		ini();
 		resized();
+	}
+
+	public void requireResize() {
+		resize = true;
 	}
 
 	@Override
@@ -153,8 +157,8 @@ public class BasisPage extends LubCont {
 		set(brem, x, y, 275, 650, 200, 50);
 		set(bcop, x, y, 275, 700, 200, 50);
 		set(bjtf, x, y, 275, 750, 200, 50);
-		set(ncb, x, y, 950, 500, 128, 256);
-		set(jspt, x, y, 1600, 150, 400, 600);
+		set(ncb, x, y, 1125, 100, 128, 256);
+		set(jspt, x, y, 1600, 150, 450, 600);
 		set(lub, x, y, 500, 150, 600, 300);
 		set(unit, x, y, 1350, 100, 200, 50);
 		set(jspcs, x, y, 1250, 800, 300, 450);
@@ -168,9 +172,14 @@ public class BasisPage extends LubCont {
 		set(setc, x, y, 700, 450, 200, 50);
 		set(lvorb, x, y, 900, 450, 200, 50);
 		for (int i = 0; i < jbcs.length; i++)
-			set(jbcs[i], x, y, 1100, 500 + 103 * i, 200, 50);
+			set(jbcs[i], x, y, 1100, 350 + 50 * i, 200, 50);
 		jlc.setRowHeight(85);
 		jlc.getColumnModel().getColumn(1).setPreferredWidth(size(x, y, 300));
+		if (resize) {
+			trea.setPreferredSize(new Dimension(trea.getPWidth(), trea.getPHeight()));
+			trea.resized(x, y);
+			resize = false;
+		}
 	}
 
 	@Override
@@ -541,6 +550,7 @@ public class BasisPage extends LubCont {
 		addListeners$1();
 		addListeners$2();
 		lvorb.setEnabled(lub.sf != null);
+		jspt.getVerticalScrollBar().setUnitIncrement(31);
 	}
 
 	private LineUp lu() {

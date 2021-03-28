@@ -7,6 +7,7 @@ import main.MainBCU;
 import page.JTF;
 import page.JTG;
 import page.Page;
+import page.basis.BasisPage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,7 +73,7 @@ public class TreaTable extends Page {
 	}
 
 	@Override
-	protected void resized(int x, int y) {
+	public void resized(int x, int y) {
 		int i = 0;
 		for (Node<Integer> n = nc; n != null; n = n.next) {
 			if (n.val > 0) {
@@ -86,7 +87,6 @@ public class TreaTable extends Page {
 			}
 			i++;
 		}
-
 	}
 
 	private void close(Node<Integer> n) {
@@ -132,8 +132,11 @@ public class TreaTable extends Page {
 								if (s != J && jlb[s].isSelected())
 									jlb[s].doClick();
 							expand(n);
-						} else
+						} else {
 							close(n);
+						}
+						if (front instanceof BasisPage)
+							((BasisPage) front).requireResize();
 					}
 
 				});
@@ -195,4 +198,11 @@ public class TreaTable extends Page {
 			jcf[i].setText(tos(getComp(i, b.t()), -i - 1));
 	}
 
+	public int getPWidth() {
+		return 200;
+	}
+
+	public int getPHeight() {
+		return nc.len() * 31;
+	}
 }
