@@ -453,7 +453,7 @@ public class Interpret extends Data {
 
 	private static String combo(int t, int val, BasisSet b) {
 		int[] con = CDC[t];
-		if (COMN[t].equals("cool down")) {
+		if (t == C_RESP) {
 			double research = (b.t().tech[LV_RES] - 1) * 6 + b.t().trea[T_RES] * 0.3;
 			return COMN[t] + " " + CDP[0][con[0]] + CDP[1][con[1]].replaceAll("_", "" + research * val / 100);
 		} else {

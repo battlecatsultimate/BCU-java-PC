@@ -74,6 +74,7 @@ public class BasisPage extends LubCont {
 	private UnitFLUPage ufp;
 
 	private final TreaTable trea = new TreaTable(this, BasisSet.current());
+	private final JScrollPane jspt = new JScrollPane(trea);
 
 	public BasisPage(Page p) {
 		super(p);
@@ -142,32 +143,32 @@ public class BasisPage extends LubCont {
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);
-		set(jspbs, x, y, 50, 100, 200, 300);
-		set(bsadd, x, y, 50, 450, 200, 50);
-		set(bsrem, x, y, 50, 550, 200, 50);
-		set(bscop, x, y, 50, 650, 200, 50);
+		set(jspbs, x, y, 50, 100, 200, 500);
+		set(bsadd, x, y, 50, 600, 200, 50);
+		set(bsrem, x, y, 50, 650, 200, 50);
+		set(bscop, x, y, 50, 700, 200, 50);
 		set(bsjtf, x, y, 50, 750, 200, 50);
-		set(jspb, x, y, 750, 50, 200, 500);
-		set(badd, x, y, 750, 550, 200, 50);
-		set(brem, x, y, 750, 600, 200, 50);
-		set(bcop, x, y, 750, 650, 200, 50);
-		set(bjtf, x, y, 750, 700, 200, 50);
-		set(ncb, x, y, 750, 800, 200, 300);
-		set(trea, x, y, 300, 50, 400, 1200);
-		set(lub, x, y, 1000, 100, 600, 300);
-		set(unit, x, y, 1650, 0, 200, 50);
-		set(jspcs, x, y, 1950, 00, 300, 250);
-		set(jspcl, x, y, 1950, 300, 300, 450);
-		set(jspc, x, y, 1050, 800, 1200, 450);
-		set(jspcn, x, y, 1300, 450, 300, 300);
-		set(jspul, x, y, 1650, 50, 200, 700);
-		set(form, x, y, 1000, 400, 200, 50);
-		set(pcoin, x, y, 1000, 0, 600, 50);
-		set(lvjtf, x, y, 1000, 50, 350, 50);
-		set(lvorb, x, y, 1350, 50, 250, 50);
-		set(setc, x, y, 1050, 700, 200, 50);
-		for (int i = 0; i < 3; i++)
-			set(jbcs[i], x, y, 750, 1100 + 50 * i, 200, 50);
+		set(jspb, x, y, 275, 100, 200, 500);
+		set(badd, x, y, 275, 600, 200, 50);
+		set(brem, x, y, 275, 650, 200, 50);
+		set(bcop, x, y, 275, 700, 200, 50);
+		set(bjtf, x, y, 275, 750, 200, 50);
+		set(ncb, x, y, 950, 500, 128, 256);
+		set(jspt, x, y, 1600, 150, 400, 600);
+		set(lub, x, y, 500, 150, 600, 300);
+		set(unit, x, y, 1350, 100, 200, 50);
+		set(jspcs, x, y, 1250, 800, 300, 450);
+		set(jspcl, x, y, 1550, 800, 300, 450);
+		set(jspc, x, y, 50, 800, 1200, 450);
+		set(jspcn, x, y, 500, 500, 400, 250);
+		set(jspul, x, y, 1300, 150, 300, 600);
+		set(pcoin, x, y, 500, 50, 600, 50);
+		set(lvjtf, x, y, 500, 100, 600, 50);
+		set(form, x, y, 500, 450, 200, 50);
+		set(setc, x, y, 700, 450, 200, 50);
+		set(lvorb, x, y, 900, 450, 200, 50);
+		for (int i = 0; i < jbcs.length; i++)
+			set(jbcs[i], x, y, 1100, 500 + 103 * i, 200, 50);
 		jlc.setRowHeight(85);
 		jlc.getColumnModel().getColumn(1).setPreferredWidth(size(x, y, 300));
 	}
@@ -492,8 +493,7 @@ public class BasisPage extends LubCont {
 		add(back);
 		add(jspbs);
 		add(jspb);
-		add(trea);
-		add(trea);
+		add(jspt);
 		add(bsadd);
 		add(bsrem);
 		add(bscop);
@@ -625,7 +625,7 @@ public class BasisPage extends LubCont {
 			return;
 		}
 
-		lvorb.setVisible(f.orbs != null);
+		lvorb.setEnabled(f.orbs != null);
 
 		String[] strs = UtilPC.lvText(f, lu().getLv(f.unit).getLvs());
 		lvjtf.setText(strs[0]);
@@ -633,7 +633,7 @@ public class BasisPage extends LubCont {
 	}
 
 	private void updateSetC() {
-		Combo com = jlc.getSelectedRow() != -1 ? jlc.list.get(jlc.getSelectedRow()) : null;
+		Combo com = jlc.list.size() > 0 && jlc.getSelectedRow() != -1 ? jlc.list.get(jlc.getSelectedRow()) : null;
 		setc.setEnabled(com != null && !lu().contains(com));
 		boolean b = false;
 		if (com != null)
