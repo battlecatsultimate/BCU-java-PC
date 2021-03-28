@@ -199,10 +199,10 @@ public class TreaTable extends Page {
 	}
 
 	public int getPWidth() {
-		return 200;
+		return 400;
 	}
 
 	public int getPHeight() {
-		return nc.len() * 31;
+		return nc.len() * 50;
 	}
 }

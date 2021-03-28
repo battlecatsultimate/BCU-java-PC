@@ -175,9 +175,10 @@ public class BasisPage extends LubCont {
 			set(jbcs[i], x, y, 1100, 350 + 50 * i, 200, 50);
 		jlc.setRowHeight(85);
 		jlc.getColumnModel().getColumn(1).setPreferredWidth(size(x, y, 300));
+		trea.resized(x, y);
 		if (resize) {
-			trea.setPreferredSize(new Dimension(trea.getPWidth(), trea.getPHeight()));
-			trea.resized(x, y);
+			jspt.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
+			trea.setPreferredSize(size(x, y, trea.getPWidth(), trea.getPHeight()).toDimension());
 			resize = false;
 		}
 	}
@@ -550,7 +551,6 @@ public class BasisPage extends LubCont {
 		addListeners$1();
 		addListeners$2();
 		lvorb.setEnabled(lub.sf != null);
-		jspt.getVerticalScrollBar().setUnitIncrement(31);
 	}
 
 	private LineUp lu() {
