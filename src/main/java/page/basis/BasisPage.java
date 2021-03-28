@@ -177,8 +177,9 @@ public class BasisPage extends LubCont {
 		jlc.getColumnModel().getColumn(1).setPreferredWidth(size(x, y, 300));
 		trea.resized(x, y);
 		if (resize) {
-			jspt.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
 			trea.setPreferredSize(size(x, y, trea.getPWidth(), trea.getPHeight()).toDimension());
+			jspt.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
+			jspt.revalidate();
 			resize = false;
 		}
 	}
