@@ -633,7 +633,7 @@ public class BasisPage extends LubCont {
 	}
 
 	private void updateSetC() {
-		Combo com = jlc.list.size() > 0 ? jlc.list.get(jlc.getSelectedRow()) : null;
+		Combo com = jlc.getSelectedRow() != -1 ? jlc.list.get(jlc.getSelectedRow()) : null;
 		setc.setEnabled(com != null && !lu().contains(com));
 		boolean b = false;
 		if (com != null)

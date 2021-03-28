@@ -144,7 +144,7 @@ public class TreaTable extends Page {
 					public void focusLost(FocusEvent e) {
 						int ans = getComp(J, b.t());
 						int val = Math.abs(CommonStatic.parseIntN(jcf[J].getText()));
-						setComp(J, val == -1 ? ans : val, b);
+						setComp(J, val == 0 ? ans : val, b);
 						reset();
 						getFront().callBack(null);
 					}
@@ -177,7 +177,7 @@ public class TreaTable extends Page {
 				public void focusLost(FocusEvent e) {
 					int ans = getValue(ind, b.t());
 					int val = Math.abs(CommonStatic.parseIntN(jtf[I].getText()));
-					setValue(ind, val == -1 ? ans : val, b);
+					setValue(ind, val == 0 ? ans : val, b);
 					reset();
 					getFront().callBack(null);
 				}
