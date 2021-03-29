@@ -16,6 +16,7 @@ import utilpc.PP;
 import utilpc.awt.FG2D;
 
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -173,6 +174,10 @@ public class LineUpBox extends Canvas {
 		for (int i = 0; i < 5; i++)
 			if (backup[i] != null && su.contains(backup[i].unit))
 				backup[i] = null;
+	}
+
+	protected void resetBackup() {
+		Arrays.fill(backup, null);
 	}
 
 	private Form getForm(int pos) {
