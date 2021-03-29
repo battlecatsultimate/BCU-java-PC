@@ -548,6 +548,7 @@ public class BasisPage extends LubCont {
 		jlcs.setSelectionMode(m0);
 		jlcl.setSelectionMode(m1);
 		jlcn.setSelectionMode(m0);
+		ul.setSelectionMode(m0);
 		jlc.getSelectionModel().setSelectionMode(m0);
 		setCS(0);
 		setBS(current());
