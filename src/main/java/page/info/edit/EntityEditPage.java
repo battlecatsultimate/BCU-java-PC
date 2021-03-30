@@ -76,6 +76,8 @@ public abstract class EntityEditPage extends Page {
 	private final JTG comm = new JTG(1, "common");
 	private final JTF atkn = new JTF();
 	private final JL lpst = new JL(1, "postaa");
+	private final JL ldps = new JL(1,"DPS");
+	private final JL cdps = new JL();
 	private final JL vpst = new JL();
 	private final JL litv = new JL(1, "atkf");
 	private final JL lrev = new JL(1, "post-HB");
@@ -215,6 +217,8 @@ public abstract class EntityEditPage extends Page {
 		add(link);
 		add(back);
 		set(atkn);
+		set(ldps);
+		set(cdps);
 		set(lpst);
 		set(vpst);
 		set(litv);
@@ -320,8 +324,10 @@ public abstract class EntityEditPage extends Page {
 		set(lct, x, y, 550, 850, 100, 50);
 		set(fct, x, y, 650, 850, 200, 50);
 
-		set(aet, x, y, 900, 50, 1400, 1000);
+		set(aet, x, y, 900, 50, 1400, 950);
 
+		set(ldps, x, y, 900, 1000, 200, 50);
+		set(cdps, x, y, 1100, 1000, 200, 50);
 		set(lpst, x, y, 900, 1050, 200, 50);
 		set(vpst, x, y, 1100, 1050, 200, 50);
 		set(litv, x, y, 900, 1100, 200, 50);
@@ -383,6 +389,7 @@ public abstract class EntityEditPage extends Page {
 			if (pre >= ce.getAnimLen())
 				ints[i] += " (out of range)";
 		}
+		cdps.setText("" + (int) Math.floor((30.0/ce.getItv()) * ce.allAtk()));
 		int ix = ce.atks.length;
 		if (ce.rev != null)
 			ints[ix++] = ce.rev.str;

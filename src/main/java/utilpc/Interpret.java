@@ -72,7 +72,7 @@ public class Interpret extends Data {
 	/**
 	 * treasure grouper
 	 */
-	public static final int[][] TCOLP = { { 0, 8 }, { 8, 6 }, { 14, 3 }, { 17, 4 }, { 21, 3 }, { 29, 8 } };
+	public static final int[][] TCOLP = { { 0, 6 }, { 8, 6 }, { 14, 3 }, { 17, 4 }, { 21, 3 }, { 29, 8 } };
 
 	/**
 	 * treasure max
@@ -465,12 +465,13 @@ public class Interpret extends Data {
 
 		if (v < 0)
 			v = 0;
-		v = Math.min(v, TMAX[ind]);
+		if (v > TMAX[ind])
+			v = TMAX[ind];
 
 		if (ind == 0)
-			t.tech[LV_RES] = Math.max(v, 1);
+			t.tech[LV_RES] = v;
 		else if (ind == 1)
-			t.tech[LV_ACC] = Math.max(v, 1);
+			t.tech[LV_ACC] = v;
 		else if (ind == 2)
 			t.trea[T_ATK] = v;
 		else if (ind == 3)
@@ -504,17 +505,17 @@ public class Interpret extends Data {
 		else if (ind == 17)
 			t.gods[2] = v;
 		else if (ind == 18)
-			t.tech[LV_BASE] = Math.max(v, 1);
+			t.tech[LV_BASE] = v;
 		else if (ind == 19)
-			t.tech[LV_WORK] = Math.max(v, 1);
+			t.tech[LV_WORK] = v;
 		else if (ind == 20)
-			t.tech[LV_WALT] = Math.max(v, 1);
+			t.tech[LV_WALT] = v;
 		else if (ind == 21)
-			t.tech[LV_RECH] = Math.max(v, 1);
+			t.tech[LV_RECH] = v;
 		else if (ind == 22)
-			t.tech[LV_CATK] = Math.max(v, 1);
+			t.tech[LV_CATK] = v;
 		else if (ind == 23)
-			t.tech[LV_CRG] = Math.max(v, 1);
+			t.tech[LV_CRG] = v;
 		else if (ind == 24)
 			t.trea[T_WORK] = v;
 		else if (ind == 25)
