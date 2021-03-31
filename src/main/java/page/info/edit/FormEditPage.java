@@ -138,8 +138,8 @@ public class FormEditPage extends EntityEditPage {
 		set(llr, x, y, 550, 900, 100, 50);
 		set(flr, x, y, 650, 900, 200, 50);
 		set(ueb, x, y, 350, 50, 200, 1200);
-		set(ldps, x, y, 900, 1150, 200, 50);
-		set(vdps, x, y, 1100, 1150, 200, 50);
+		set(ldps, x, y, 900, 1000, 200, 50);
+		set(vdps, x, y, 1100, 1000, 200, 50);
 		set(vuni, x, y, 1350, 1050, 200, 50);
 		set(impt, x, y, 1350, 1100, 200, 50);
 		set(vene, x, y, 1350, 1150, 200, 50);
@@ -155,7 +155,7 @@ public class FormEditPage extends EntityEditPage {
 		frs.setText("" + bas.t().getFinRes(cu.getRespawn()));
 		fdr.setText("" + (int) (cu.getPrice() * 1.5));
 		flr.setText(interpretLayer(cu.back, cu.front));
-		vdps.setText("" + (int) (cu.allAtk() * 30 * getAtk() / cu.getItv()));
+		vdps.setText("" + (int) (cu.allAtk() * 30 * getLvAtk() * getAtk() / cu.getItv()));
 
 	}
 
