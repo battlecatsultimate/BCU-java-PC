@@ -2,12 +2,17 @@ package page.info.edit;
 
 import common.battle.data.CustomEntity;
 import common.battle.data.CustomUnit;
+import common.pack.Identifier;
 import common.pack.PackData.UserPack;
+import common.pack.UserProfile;
+import common.system.Node;
 import common.util.unit.Form;
+import common.util.unit.Unit;
 import page.JBTN;
 import page.JL;
 import page.JTF;
 import page.Page;
+import page.info.UnitInfoPage;
 import page.info.filter.UnitEditBox;
 
 public class FormEditPage extends EntityEditPage {
@@ -23,10 +28,9 @@ public class FormEditPage extends EntityEditPage {
 	private final JTF frs = new JTF();
 	private final JTF flr = new JTF();
 	private final JBTN vuni = new JBTN(0, "vuni");
+	private final JBTN stat = new JBTN(0, "stat");
 	private final JBTN impt = new JBTN(0, "import");
 	private final JBTN vene = new JBTN(0, "enemy");
-	private final JL ldps = new JL("DPS");
-	private final JL vdps = new JL();
 	private final UnitEditBox ueb;
 	private final Form form;
 	private final CustomUnit cu;
@@ -118,12 +122,17 @@ public class FormEditPage extends EntityEditPage {
 		add(ueb);
 
 		add(vuni);
+		add(stat);
 		add(impt);
 		add(vene);
-		set(ldps);
-		set(vdps);
 
 		subListener(vene, impt, vuni, form.unit);
+
+		stat.setLnr(x -> {
+			Unit u = Identifier.get(cu.getPack().uid);
+			Node<Unit> nu = Node.getList(UserProfile.getAll(cu.getPack().uid.pack, Unit.class), u);
+			changePanel(new UnitInfoPage(this, nu));
+		});
 	}
 
 	@Override
@@ -133,16 +142,20 @@ public class FormEditPage extends EntityEditPage {
 		set(flv, x, y, 150, 50, 200, 50);
 		set(ldr, x, y, 50, 350, 100, 50);
 		set(fdr, x, y, 150, 350, 200, 50);
-		set(lrs, x, y, 50, 400, 100, 50);
-		set(frs, x, y, 150, 400, 200, 50);
-		set(llr, x, y, 550, 900, 100, 50);
-		set(flr, x, y, 650, 900, 200, 50);
-		set(ueb, x, y, 350, 50, 200, 1200);
-		set(ldps, x, y, 900, 1150, 200, 50);
-		set(vdps, x, y, 1100, 1150, 200, 50);
-		set(vuni, x, y, 1350, 1050, 200, 50);
-		set(impt, x, y, 1350, 1100, 200, 50);
-		set(vene, x, y, 1350, 1150, 200, 50);
+		set(lrs, x, y, 350, 50, 100, 50);
+		set(frs, x, y, 450, 50, 200, 50);
+		set(llr, x, y, 650, 50, 100, 50);
+		set(flr, x, y, 750, 50, 200, 50);
+		set(ueb, x, y, 50, 650, 600, 500);
+		if (editable) {
+			set(vuni, x, y, 650, 750, 200, 50);
+			set(stat, x, y, 850, 750, 200, 50);
+		} else {
+			set(vuni, x, y, 650, 700, 200, 50);
+			set(stat, x, y, 850, 700, 200, 50);
+		}
+		set(impt, x, y, 50, 1150, 200, 50);
+		set(vene, x, y, 250, 1150, 200, 50);
 
 		ueb.resized();
 
@@ -155,7 +168,6 @@ public class FormEditPage extends EntityEditPage {
 		frs.setText("" + bas.t().getFinRes(cu.getRespawn()));
 		fdr.setText("" + (int) (cu.getPrice() * 1.5));
 		flr.setText(interpretLayer(cu.back, cu.front));
-		vdps.setText("" + (int) (cu.allAtk() * 30 * getAtk() / cu.getItv()));
 
 	}
 

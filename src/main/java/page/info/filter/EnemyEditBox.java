@@ -47,8 +47,8 @@ public class EnemyEditBox extends Page {
 
 	@Override
 	protected void resized(int x, int y) {
-		set(jt, x, y, 0, 0, 200, 400);
-		set(jab, x, y, 0, 450, 200, 650);
+		set(jt, x, y, 0, 0, 300, 500);
+		set(jab, x, y, 300, 0, 300, 500);
 	}
 
 	private void confirm() {

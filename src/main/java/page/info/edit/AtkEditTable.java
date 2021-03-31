@@ -38,8 +38,6 @@ class AtkEditTable extends Page {
 	private final JTG isr = new JTG(1, "isr");
 
 	private final ListJtfPolicy ljp = new ListJtfPolicy();
-	private final ProcTable.AtkProcTable apt;
-	private final JScrollPane jsp;
 	private final boolean editable;
 
 	private double mul;
@@ -47,11 +45,10 @@ class AtkEditTable extends Page {
 	private final boolean changing = false;
 
 	protected AtkDataModel adm;
+	protected ProcTable.AtkProcTable apt;
 
 	protected AtkEditTable(Page p, boolean edit, boolean unit) {
 		super(p);
-		apt = new ProcTable.AtkProcTable(this, edit, unit);
-		jsp = new JScrollPane(apt);
 		editable = edit;
 		ini();
 	}
@@ -72,6 +69,7 @@ class AtkEditTable extends Page {
 		set(lct, x, y, 0, 300, 200, 50);
 		set(lab, x, y, 0, 350, 200, 50);
 		set(lmv, x, y, 0, 400, 200, 50);
+		set(isr, x, y, 0, 450, 200, 50);
 		set(fatk, x, y, 200, 0, 200, 50);
 		set(fpre, x, y, 200, 50, 200, 50);
 		set(fp0, x, y, 200, 100, 200, 50);
@@ -81,10 +79,6 @@ class AtkEditTable extends Page {
 		set(fct, x, y, 200, 300, 200, 50);
 		set(fab, x, y, 200, 350, 200, 50);
 		set(fmv, x, y, 200, 400, 200, 50);
-		set(isr, x, y, 200, 450, 200, 50);
-		apt.setPreferredSize(size(x, y, 750, 2500).toDimension());
-		apt.resized(x, y);
-		set(jsp, x, y, 450, 0, 800, 950);
 	}
 
 	protected void setData(AtkDataModel data, double multi, double lvMulti) {
@@ -97,10 +91,10 @@ class AtkEditTable extends Page {
 		fp0.setText("" + adm.ld0);
 		fp1.setText("" + adm.ld1);
 		ftp.setText("" + adm.targ);
-		apt.setData(adm.ce.common ? adm.ce.rep.proc : adm.proc);
 		fdr.setText("" + adm.dire);
 		fct.setText("" + adm.count);
 		fmv.setText("" + adm.move);
+		apt.setData(adm.ce.common ? adm.ce.rep.proc : adm.proc);
 		int alt = adm.getAltAbi();
 		int i = 0;
 		StringBuilder str = new StringBuilder("{");
@@ -152,10 +146,7 @@ class AtkEditTable extends Page {
 			ttt.append(i).append(": ").append(Interpret.SABIS[i]).append("<br>");
 		fab.setToolTipText(ttt + "</html>");
 
-		add(jsp);
-
 		isr.setEnabled(editable);
-		jsp.getVerticalScrollBar().setUnitIncrement(10);
 		setFocusTraversalPolicy(ljp);
 		setFocusCycleRoot(true);
 
@@ -247,5 +238,9 @@ class AtkEditTable extends Page {
 		double lvValue = Math.round(val * 1.0 / mul);
 
 		return (int) ((lvValue + 0.5) / lvMul);
+	}
+
+	protected void setProcTable(ProcTable.AtkProcTable a) {
+		apt = a;
 	}
 }

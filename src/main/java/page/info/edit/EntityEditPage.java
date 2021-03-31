@@ -92,6 +92,9 @@ public abstract class EntityEditPage extends Page {
 	private final CustomEntity ce;
 	private final String pack;
 
+	private final ProcTable.AtkProcTable apt;
+	private final JScrollPane jsp;
+
 	private boolean changing = false;
 	private EnemyFindPage efp;
 	private UnitFindPage ufp;
@@ -108,6 +111,9 @@ public abstract class EntityEditPage extends Page {
 		pack = pac;
 		ce = e;
 		aet = new AtkEditTable(this, edit, !isEnemy);
+		apt = new ProcTable.AtkProcTable(aet, edit, !isEnemy);
+		aet.setProcTable(apt);
+		jsp = new JScrollPane(apt);
 		mpt = new ProcTable.MainProcTable(this, edit, !isEnemy);
 		jspm = new JScrollPane(mpt);
 		editable = edit;
@@ -254,6 +260,8 @@ public abstract class EntityEditPage extends Page {
 		atkn.setEnabled(editable);
 		comm.setEnabled(editable);
 		jcbs.setEnabled(editable);
+
+		add(jsp);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -298,42 +306,54 @@ public abstract class EntityEditPage extends Page {
 		set(lwd, x, y, 50, 300, 100, 50);
 		set(fwd, x, y, 150, 300, 200, 50);
 
-		set(jspm, x, y, 0, 450, 350, 800);
+		set(jspm, x, y, 1850, 100, 350, 850);
 		mpt.componentResized(x, y);
 
-		set(jspi, x, y, 550, 50, 300, 350);
-		set(add, x, y, 550, 400, 150, 50);
-		set(rem, x, y, 700, 400, 150, 50);
-		set(copy, x, y, 550, 450, 150, 50);
-		set(link, x, y, 700, 450, 150, 50);
-		set(comm, x, y, 550, 500, 300, 50);
-		set(atkn, x, y, 550, 550, 300, 50);
+		set(jspi, x, y, 350, 100, 300, 350);
+		set(add, x, y, 350, 450, 150, 50);
+		set(rem, x, y, 500, 450, 150, 50);
+		set(copy, x, y, 350, 500, 150, 50);
+		set(link, x, y, 500, 500, 150, 50);
+		set(comm, x, y, 350, 550, 300, 50);
+		set(atkn, x, y, 350, 600, 300, 50);
 
-		set(lra, x, y, 550, 650, 100, 50);
-		set(fra, x, y, 650, 650, 200, 50);
-		set(ltb, x, y, 550, 700, 100, 50);
-		set(ftb, x, y, 650, 700, 200, 50);
-		set(lbs, x, y, 550, 750, 100, 50);
-		set(fbs, x, y, 650, 750, 200, 50);
-		set(ltp, x, y, 550, 800, 100, 50);
-		set(ftp, x, y, 650, 800, 200, 50);
-		set(lct, x, y, 550, 850, 100, 50);
-		set(fct, x, y, 650, 850, 200, 50);
+		set(lra, x, y, 50, 400, 100, 50);
+		set(fra, x, y, 150, 400, 200, 50);
+		set(ltb, x, y, 50, 450, 100, 50);
+		set(ftb, x, y, 150, 450, 200, 50);
+		set(lbs, x, y, 50, 500, 100, 50);
+		set(fbs, x, y, 150, 500, 200, 50);
+		set(ltp, x, y, 50, 550, 100, 50);
+		set(ftp, x, y, 150, 550, 200, 50);
+		set(lct, x, y, 50, 600, 100, 50);
+		set(fct, x, y, 150, 600, 200, 50);
 
-		set(aet, x, y, 900, 50, 1400, 1000);
+		set(aet, x, y, 650, 100, 400, 500);
 
-		set(lpst, x, y, 900, 1050, 200, 50);
-		set(vpst, x, y, 1100, 1050, 200, 50);
-		set(litv, x, y, 900, 1100, 200, 50);
-		set(vitv, x, y, 1100, 1100, 200, 50);
-		set(jcba, x, y, 900, 1150, 400, 50);
+		set(lpst, x, y, 650, 600, 200, 50);
+		set(vpst, x, y, 850, 600, 200, 50);
+		set(litv, x, y, 650, 650, 200, 50);
+		set(vitv, x, y, 850, 650, 200, 50);
+		set(jcba, x, y, 650, 700, 400, 50);
 
-		set(lrev, x, y, 1600, 1050, 200, 50);
-		set(vrev, x, y, 1800, 1050, 100, 50);
-		set(lres, x, y, 1600, 1100, 200, 50);
-		set(vres, x, y, 1800, 1100, 100, 50);
-		set(jcbs, x, y, 1600, 1150, 300, 50);
+		if (editable) {
+			set(lrev, x, y, 650, 800, 200, 50);
+			set(vrev, x, y, 850, 800, 200, 50);
+			set(lres, x, y, 650, 850, 200, 50);
+			set(vres, x, y, 850, 850, 200, 50);
+			set(jcbs, x, y, 650, 900, 400, 50);
+		} else {
+			set(lrev, x, y, 650, 750, 200, 50);
+			set(vrev, x, y, 850, 750, 200, 50);
+			set(lres, x, y, 650, 800, 200, 50);
+			set(vres, x, y, 850, 800, 200, 50);
+			set(jcbs, x, y, 650, 850, 400, 50);
+		}
 
+		jsp.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
+		apt.setPreferredSize(size(x, y, 750, 2500).toDimension());
+		apt.resized(x, y);
+		set(jsp, x, y, 1050, 100, 800, 850);
 	}
 
 	protected void set(JL jl) {
