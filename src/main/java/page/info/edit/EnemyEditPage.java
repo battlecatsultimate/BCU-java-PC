@@ -22,6 +22,8 @@ public class EnemyEditPage extends EntityEditPage {
 	private final JL ldr = new JL(1, "drop");
 	private final JTF fdr = new JTF();
 	private final JTF fsr = new JTF();
+	private final JL cdps = new JL();
+	private final JL ldps = new JL(1,"DPS");
 	private final JBTN vene = new JBTN(0, "vene");
 	private final JBTN stat = new JBTN(0, "stat");
 	private final JBTN impt = new JBTN(0, "import");
@@ -61,6 +63,8 @@ public class EnemyEditPage extends EntityEditPage {
 		set(ldr);
 		set(fdr);
 		set(fsr);
+		set(ldps);
+		set(cdps);
 		super.ini();
 		add(eeb);
 		add(vene);
@@ -103,6 +107,7 @@ public class EnemyEditPage extends EntityEditPage {
 				if (ce.getProc().getArr(id).exists())
 					imu |= 1 << id - IMUSFT;
 			}
+		cdps.setText("" + (int) ((30.0/ce.getItv()) * ce.allAtk()));
 		eeb.setData(new int[] { ce.type, ce.abi, imu });
 
 	}
