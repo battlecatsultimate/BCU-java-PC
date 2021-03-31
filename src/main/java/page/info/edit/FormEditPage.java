@@ -15,6 +15,9 @@ import page.Page;
 import page.info.UnitInfoPage;
 import page.info.filter.UnitEditBox;
 
+import static utilpc.Interpret.EABIIND;
+import static utilpc.Interpret.IMUSFT;
+
 public class FormEditPage extends EntityEditPage {
 
 	private static final long serialVersionUID = 1L;
@@ -168,6 +171,14 @@ public class FormEditPage extends EntityEditPage {
 		frs.setText("" + bas.t().getFinRes(cu.getRespawn()));
 		fdr.setText("" + (int) (cu.getPrice() * 1.5));
 		flr.setText(interpretLayer(cu.back, cu.front));
+		int imu = 0;
+		for (int j : EABIIND)
+			if (j > 100) {
+				int id = j - 100;
+				if (cu.getProc().getArr(id).exists())
+					imu |= 1 << id - IMUSFT;
+			}
+		ueb.setData(new int[] { cu.type, cu.abi, imu });
 	}
 
 	private String interpretLayer(int back, int front) {
