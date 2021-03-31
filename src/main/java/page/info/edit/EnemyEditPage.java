@@ -2,13 +2,14 @@ package page.info.edit;
 
 import common.battle.data.CustomEnemy;
 import common.battle.data.CustomEntity;
+import common.pack.Identifier;
 import common.pack.PackData;
 import common.util.unit.Enemy;
 import page.JBTN;
 import page.JL;
 import page.JTF;
 import page.Page;
-import page.info.StageFilterPage;
+import page.info.EnemyInfoPage;
 import page.info.filter.EnemyEditBox;
 
 import static utilpc.Interpret.EABIIND;
@@ -24,7 +25,7 @@ public class EnemyEditPage extends EntityEditPage {
 	private final JL cdps = new JL();
 	private final JL ldps = new JL(1,"DPS");
 	private final JBTN vene = new JBTN(0, "vene");
-	private final JBTN appr = new JBTN(0, "stage");
+	private final JBTN stat = new JBTN(0, "stat");
 	private final JBTN impt = new JBTN(0, "import");
 	private final JBTN vuni = new JBTN(0, "unit");
 	private final EnemyEditBox eeb;
@@ -67,10 +68,10 @@ public class EnemyEditPage extends EntityEditPage {
 		super.ini();
 		add(eeb);
 		add(vene);
-		add(appr);
+		add(stat);
 		add(impt);
 		add(vuni);
-		appr.setLnr(x -> changePanel(new StageFilterPage(getThis(), ene.findApp())));
+		stat.setLnr(x -> changePanel(new EnemyInfoPage(this, (Enemy) Identifier.get(ce.getPack().getID()))));
 		subListener(impt, vuni, vene, ene);
 	}
 
@@ -79,14 +80,17 @@ public class EnemyEditPage extends EntityEditPage {
 		super.resized(x, y);
 		set(ldr, x, y, 50, 350, 100, 50);
 		set(fdr, x, y, 150, 350, 200, 50);
-		set(eeb, x, y, 350, 50, 200, 1100);
-		set(fsr, x, y, 350, 1200, 200, 50);
-		set(vene, x, y, 900, 1200, 200, 50);
-		set(ldps, x, y, 900, 1000, 200, 50);
-		set(cdps, x, y, 1100, 1000, 200, 50);
-		set(appr, x, y, 1100, 1200, 200, 50);
-		set(impt, x, y, 1350, 1050, 200, 50);
-		set(vuni, x, y, 1350, 1100, 200, 50);
+		set(eeb, x, y, 50, 650, 600, 500);
+		set(fsr, x, y, 50, 1150, 200, 50);
+		if (editable) {
+			set(vene, x, y, 650, 750, 200, 50);
+			set(stat, x, y, 850, 750, 200, 50);
+		} else {
+			set(vene, x, y, 650, 700, 200, 50);
+			set(stat, x, y, 850, 700, 200, 50);
+		}
+		set(impt, x, y, 250, 1150, 200, 50);
+		set(vuni, x, y, 450, 1150, 200, 50);
 		eeb.resized();
 
 	}

@@ -10,6 +10,7 @@ import page.info.filter.UnitFilterBox;
 import page.info.filter.UnitListTable;
 
 import javax.swing.*;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
@@ -56,6 +57,14 @@ public class UnitFLUPage extends LubCont {
 		if (e.getSource() == ult)
 			ult.clicked(e.getPoint());
 		super.mouseClicked(e);
+	}
+
+	@Override
+	protected void keyTyped(KeyEvent e) {
+		if (!seatf.isFocusOwner()) {
+			super.keyTyped(e);
+			e.consume();
+		}
 	}
 
 	@Override

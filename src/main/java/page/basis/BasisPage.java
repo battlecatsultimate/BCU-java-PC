@@ -44,6 +44,7 @@ public class BasisPage extends LubCont {
 	private final JBTN brem = new JBTN(0, "rem");
 	private final JBTN bcop = new JBTN(0, "copy");
 	private final JBTN form = new JBTN(0, "form");
+	private final JBTN reset = new JBTN(0, "renew");
 	private final JTF bsjtf = new JTF();
 	private final JTF bjtf = new JTF();
 	private final JTF lvjtf = new JTF();
@@ -164,12 +165,13 @@ public class BasisPage extends LubCont {
 		set(jspcs, x, y, 1250, 800, 300, 450);
 		set(jspcl, x, y, 1550, 800, 300, 450);
 		set(jspc, x, y, 50, 800, 1200, 450);
+		set(setc, x, y, 500, 750, 200, 50);
 		set(jspcn, x, y, 500, 500, 400, 250);
 		set(jspul, x, y, 1300, 150, 300, 600);
 		set(pcoin, x, y, 500, 50, 600, 50);
 		set(lvjtf, x, y, 500, 100, 600, 50);
 		set(form, x, y, 500, 450, 200, 50);
-		set(setc, x, y, 700, 450, 200, 50);
+		set(reset, x, y, 700, 450, 200, 50);
 		set(lvorb, x, y, 900, 450, 200, 50);
 		for (int i = 0; i < jbcs.length; i++)
 			set(jbcs[i], x, y, 1100, 350 + 50 * i, 200, 50);
@@ -177,8 +179,9 @@ public class BasisPage extends LubCont {
 		jlc.getColumnModel().getColumn(1).setPreferredWidth(size(x, y, 300));
 		trea.resized(x, y);
 		if (resize) {
-			jspt.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
 			trea.setPreferredSize(size(x, y, trea.getPWidth(), trea.getPHeight()).toDimension());
+			jspt.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
+			jspt.revalidate();
 			resize = false;
 		}
 	}
@@ -489,6 +492,10 @@ public class BasisPage extends LubCont {
 				changeLU();
 			}
 		});
+
+		reset.addActionListener(x -> {
+			lub.resetBackup();
+		});
 	}
 
 	private void changeLU() {
@@ -527,6 +534,7 @@ public class BasisPage extends LubCont {
 		add(pcoin);
 		add(lvorb);
 		add(ncb);
+		add(reset);
 		add(jbcs[0] = new JBTN(0, "ctop"));
 		add(jbcs[1] = new JBTN(0, "cmid"));
 		add(jbcs[2] = new JBTN(0, "cbas"));
@@ -540,6 +548,7 @@ public class BasisPage extends LubCont {
 		jlcs.setSelectionMode(m0);
 		jlcl.setSelectionMode(m1);
 		jlcn.setSelectionMode(m0);
+		ul.setSelectionMode(m0);
 		jlc.getSelectionModel().setSelectionMode(m0);
 		setCS(0);
 		setBS(current());
