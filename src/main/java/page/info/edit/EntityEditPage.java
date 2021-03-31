@@ -57,6 +57,8 @@ public abstract class EntityEditPage extends Page {
 	private final JL lbs = new JL(1, "tbase");
 	private final JL ltp = new JL(1, "type");
 	private final JL lct = new JL(1, "count");
+	private final JL ldps = new JL(1,"DPS");
+	private final JL cdps = new JL();
 	private final JTF fhp = new JTF();
 	private final JTF fhb = new JTF();
 	private final JTF fsp = new JTF();
@@ -211,6 +213,8 @@ public abstract class EntityEditPage extends Page {
 		set(fbs);
 		set(ftp);
 		set(fct);
+		set(ldps);
+		set(cdps);
 		ljp.end();
 		add(jspi);
 		add(aet);
@@ -306,7 +310,7 @@ public abstract class EntityEditPage extends Page {
 		set(lwd, x, y, 50, 300, 100, 50);
 		set(fwd, x, y, 150, 300, 200, 50);
 
-		set(jspm, x, y, 1850, 100, 350, 850);
+		set(jspm, x, y, 1850, 100, 350, 900);
 		mpt.componentResized(x, y);
 
 		set(jspi, x, y, 350, 100, 300, 350);
@@ -330,30 +334,33 @@ public abstract class EntityEditPage extends Page {
 
 		set(aet, x, y, 650, 100, 400, 500);
 
-		set(lpst, x, y, 650, 600, 200, 50);
-		set(vpst, x, y, 850, 600, 200, 50);
-		set(litv, x, y, 650, 650, 200, 50);
-		set(vitv, x, y, 850, 650, 200, 50);
-		set(jcba, x, y, 650, 700, 400, 50);
+		set(ldps, x, y, 650, 600, 200, 50);
+		set(cdps, x, y, 850, 600, 200, 50);
+		set(lpst, x, y, 650, 650, 200, 50);
+		set(vpst, x, y, 850, 650, 200, 50);
+		set(litv, x, y, 650, 700, 200, 50);
+		set(vitv, x, y, 850, 700, 200, 50);
+		set(jcba, x, y, 650, 750, 400, 50);
 
 		if (editable) {
+			set(lrev, x, y, 650, 850, 200, 50);
+			set(vrev, x, y, 850, 850, 200, 50);
+			set(lres, x, y, 650, 900, 200, 50);
+			set(vres, x, y, 850, 900, 200, 50);
+			set(jcbs, x, y, 650, 950, 400, 50);
+		} else {
 			set(lrev, x, y, 650, 800, 200, 50);
 			set(vrev, x, y, 850, 800, 200, 50);
 			set(lres, x, y, 650, 850, 200, 50);
 			set(vres, x, y, 850, 850, 200, 50);
 			set(jcbs, x, y, 650, 900, 400, 50);
-		} else {
-			set(lrev, x, y, 650, 750, 200, 50);
-			set(vrev, x, y, 850, 750, 200, 50);
-			set(lres, x, y, 650, 800, 200, 50);
-			set(vres, x, y, 850, 800, 200, 50);
-			set(jcbs, x, y, 650, 850, 400, 50);
 		}
 
 		jsp.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
+		jspm.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
 		apt.setPreferredSize(size(x, y, 750, 2500).toDimension());
 		apt.resized(x, y);
-		set(jsp, x, y, 1050, 100, 800, 850);
+		set(jsp, x, y, 1050, 100, 800, 900);
 	}
 
 	protected void set(JL jl) {
@@ -387,6 +394,7 @@ public abstract class EntityEditPage extends Page {
 		vitv.setText("" + ce.getItv());
 		ftp.setText("" + ce.touch);
 		fct.setText("" + ce.loop);
+		cdps.setText("" + (int) (Math.round(getLvAtk() * ce.allAtk()) * getAtk()) * 30 / ce.getItv());
 		comm.setSelected(data.common);
 		mpt.setData(ce.rep.proc);
 		int[][] raw = ce.rawAtkData();
