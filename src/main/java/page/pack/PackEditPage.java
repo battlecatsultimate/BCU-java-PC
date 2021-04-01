@@ -72,6 +72,7 @@ public class PackEditPage extends Page {
 	private final JBTN vrcg = new JBTN(0, "recg");
 	private final JBTN vrlr = new JBTN(0, "relr");
 	private final JBTN cunt = new JBTN(0, "cunt");
+	private final JBTN tdiy = new JBTN(0, "ctrt");
 	private final JBTN ener = new JBTN(0, "ener");
 	private final JBTN vmsc = new JBTN(0, "vmsc");
 	private final JBTN unpk = new JBTN(0, "unpack");
@@ -166,6 +167,7 @@ public class PackEditPage extends Page {
 		set(remr, x, y, w + 175, 800, 175, 50);
 
 		set(recd, x, y, w, 950, 300, 50);
+		set(tdiy, x, y, w, 1050, 300, 50);
 
 		w += 350;
 
@@ -368,6 +370,15 @@ public class PackEditPage extends Page {
 
 		cunt.addActionListener(arg0 -> changePanel(new UnitManagePage(getThis(), pac)));
 
+		tdiy.addActionListener(arg0 -> {
+			if (pac.editable)
+				changePanel(new TraitEditPage(getThis(), pac));
+			else {
+				List<MapColc> lmc = Arrays.asList(new MapColc[] { pac.mc });
+				changePanel(new StageViewPage(getThis(), lmc));
+			}
+		});
+
 		vmsc.setLnr(() -> pac.editable ? new MusicEditPage(getThis(), pac)
 				: new MusicPage(getThis(), pac.musics.getList()));
 
@@ -486,6 +497,7 @@ public class PackEditPage extends Page {
 		add(lbr);
 		add(lbt);
 		add(cunt);
+		add(tdiy);
 		add(vcas);
 		add(vrcg);
 		add(vrlr);
@@ -574,6 +586,7 @@ public class PackEditPage extends Page {
 		checkAddr();
 		boolean b0 = pac != null;
 		sdiy.setEnabled(b0);
+		tdiy.setEnabled(b0);
 		if (b0) {
 			jls.setListData(pac.mc, pac.mc.maps);
 			jls.clearSelection();

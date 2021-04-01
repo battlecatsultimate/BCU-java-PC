@@ -73,6 +73,8 @@ public class UnitInfoPage extends Page {
 			h += ih + 50;
 		}
 		cont.setPreferredSize(size(x, y, 1600, h - 50).toDimension());
+		jsp.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
+		jsp.revalidate();
 		set(trea, x, y, 1750, 100, 400, 1200);
 	}
 

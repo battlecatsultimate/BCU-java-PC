@@ -19,10 +19,12 @@ public class RecdSavePage extends Page {
 	private final JTF jtf = new JTF();
 
 	private final Replay recd;
+	private final String stageName;
 
-	protected RecdSavePage(Page p, Replay rec) {
+	protected RecdSavePage(Page p, Replay rec, String stName) {
 		super(p);
 		recd = rec;
+		stageName = stName;
 
 		ini();
 		resized();
@@ -69,7 +71,7 @@ public class RecdSavePage extends Page {
 		add(jtf);
 		add(save);
 		addListeners();
-		String initName = "new replay for stage " + recd.st.toString();
+		String initName = stageName + " replay";
 		jtf.setText(initName);
 		recd.rename(initName);
 	}

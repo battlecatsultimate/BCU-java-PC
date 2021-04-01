@@ -1,6 +1,8 @@
 package page.info.filter;
 
+import common.CommonStatic;
 import common.battle.data.MaskUnit;
+import common.pack.Context;
 import common.pack.Identifier;
 import common.pack.PackData;
 import common.pack.UserProfile;
