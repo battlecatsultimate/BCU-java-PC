@@ -66,7 +66,13 @@ public class ComboListTable extends SortTable<Combo> {
 					jl.setIcon(null);
 					return jl;
 				}
-				jl.setIcon(UtilPC.getIcon(form.anim.getUni()));
+				ImageIcon icon = UtilPC.getIcon(form.anim.getUni());
+				if (icon != null) {
+					Image img = icon.getImage().getScaledInstance(64, 50, java.awt.Image.SCALE_SMOOTH);
+					jl.setIcon(new ImageIcon(img));
+				} else {
+					jl.setIcon(null);
+				}
 				return jl;
 			}
 

@@ -185,7 +185,7 @@ public class BasisPage extends LubCont {
 		set(lvorb, x, y, 900, 450, 200, 50);
 		for (int i = 0; i < jbcs.length; i++)
 			set(jbcs[i], x, y, 1100, 350 + 50 * i, 200, 50);
-		jlc.setRowHeight(85);
+		jlc.setRowHeight(50);
 		jlc.getColumnModel().getColumn(1).setPreferredWidth(size(x, y, 300));
 		trea.resized(x, y);
 		if (resize) {
