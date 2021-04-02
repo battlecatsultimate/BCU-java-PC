@@ -12,6 +12,7 @@ import common.util.unit.Form;
 import common.util.unit.Unit;
 import page.JBTN;
 import page.JTF;
+import page.JTG;
 import page.Page;
 import page.info.TreaTable;
 import page.support.ReorderList;
@@ -48,6 +49,7 @@ public class BasisPage extends LubCont {
 	private final JBTN form = new JBTN(0, "form");
 	private final JBTN reset = new JBTN(0, "renew");
 	private final JBTN search = new JBTN(0, "search");
+	private final JTG combo = new JTG(0, "combo");
 	private final JTF bsjtf = new JTF();
 	private final JTF bjtf = new JTF();
 	private final JTF lvjtf = new JTF();
@@ -80,7 +82,7 @@ public class BasisPage extends LubCont {
 
 	private final TreaTable trea = new TreaTable(this, BasisSet.current());
 	private final JScrollPane jspt = new JScrollPane(trea);
-	private List<Combo> combos;
+	private Unit cunit;
 
 	private String comboName = "";
 
@@ -101,19 +103,23 @@ public class BasisPage extends LubCont {
 			changeLU();
 		else if (o instanceof Unit) {
 			Unit unit = (Unit) o;
-			setLvs(unit.forms[unit.forms.length - 1]);
-			List<Combo> lc = unit.allCombo();
-			if (lc.size() == 0)
+			if (cunit != null && unit.compareTo(cunit) == 0)
 				return;
-			combos = lc;
+			combo.setSelected(true);
+			lub.select(unit.forms[unit.forms.length - 1]);
+		} else if (o instanceof Form) {
+			if (!combo.isSelected())
+				return;
+			Unit unit = ((Form) o).unit;
+			if (cunit != null && unit.compareTo(cunit) == 0)
+				return;
+			setLvs(unit.forms[unit.forms.length - 1]);
+			cunit = unit;
 			outside = true;
 			changing = true;
-			jlc.setList(lc);
-			jlc.getSelectionModel().setSelectionInterval(0, 0);
-			setC(0);
+			setCL(jlcs.getSelectedIndex());
 			changing = false;
 		}
-
 	}
 
 	@Override
@@ -180,10 +186,11 @@ public class BasisPage extends LubCont {
 		set(jspcn, x, y, 500, 500, 400, 250);
 		set(jspul, x, y, 1300, 150, 300, 600);
 		set(pcoin, x, y, 500, 50, 600, 50);
-		set(lvjtf, x, y, 500, 100, 600, 50);
+		set(lvjtf, x, y, 500, 100, 400, 50);
 		set(form, x, y, 500, 450, 200, 50);
 		set(reset, x, y, 700, 450, 200, 50);
-		set(lvorb, x, y, 900, 450, 200, 50);
+		set(lvorb, x, y, 900, 100, 200, 50);
+		set(combo, x, y, 900, 450, 200, 50);
 		for (int i = 0; i < jbcs.length; i++)
 			set(jbcs[i], x, y, 1100, 350 + 50 * i, 200, 50);
 		jlc.setRowHeight(50);
@@ -491,7 +498,7 @@ public class BasisPage extends LubCont {
 				if (changing || arg0.getValueIsAdjusting())
 					return;
 				changing = true;
-				setC(jlc.getSelectedRow());
+				setC();
 				changing = false;
 			}
 		});
@@ -517,6 +524,20 @@ public class BasisPage extends LubCont {
 
 		cjtf.addActionListener(x -> {
 			comboName = cjtf.getText();
+			changing = true;
+			setCL(jlcs.getSelectedIndex());
+			changing = false;
+		});
+
+		combo.addActionListener(x -> {
+			if (combo.isSelected() && lub.sf != null) {
+				Unit unit = lub.sf.unit;
+				setLvs(unit.forms[unit.forms.length - 1]);
+				cunit = unit;
+				outside = true;
+			} else {
+				cunit = null;
+			}
 			changing = true;
 			setCL(jlcs.getSelectedIndex());
 			changing = false;
@@ -562,6 +583,7 @@ public class BasisPage extends LubCont {
 		add(reset);
 		add(cjtf);
 		add(search);
+		add(combo);
 		add(jbcs[0] = new JBTN(0, "ctop"));
 		add(jbcs[1] = new JBTN(0, "cmid"));
 		add(jbcs[2] = new JBTN(0, "cbas"));
@@ -618,7 +640,7 @@ public class BasisPage extends LubCont {
 		jlcn.setBasis(bs);
 	}
 
-	private void setC(int c) {
+	private void setC() {
 		if (outside) {
 			jlcs.setSelectedIndex(0);
 			jlcl.setListData(Interpret.getComboFilter(0));
@@ -644,12 +666,14 @@ public class BasisPage extends LubCont {
 						lc.add(c);
 				}
 		}
-		if (combos != null)
-			lc = lc.stream().filter(combo -> combos.contains(combo)).collect(Collectors.toList());
+		if (cunit != null) {
+			List<Combo> combos = cunit.allCombo();
+			lc = lc.stream().filter(combos::contains).collect(Collectors.toList());
+		}
 		jlc.setList(lc);
 		jlc.getSelectionModel().setSelectionInterval(0, 0);
 		outside = false;
-		setC(0);
+		setC();
 	}
 
 	private void setCN() {
