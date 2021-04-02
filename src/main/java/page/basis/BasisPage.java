@@ -27,8 +27,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import static common.battle.BasisSet.current;
 
@@ -80,6 +80,7 @@ public class BasisPage extends LubCont {
 
 	private final TreaTable trea = new TreaTable(this, BasisSet.current());
 	private final JScrollPane jspt = new JScrollPane(trea);
+	private List<Combo> combos;
 
 	private String comboName = "";
 
@@ -98,13 +99,13 @@ public class BasisPage extends LubCont {
 	public void callBack(Object o) {
 		if (o == null)
 			changeLU();
-		else if (o instanceof Form) {
-			Form f = (Form) o;
-			Unit u = f.unit;
-			setLvs(f);
-			List<Combo> lc = u.allCombo();
+		else if (o instanceof Unit) {
+			Unit unit = (Unit) o;
+			setLvs(unit.forms[unit.forms.length - 1]);
+			List<Combo> lc = unit.allCombo();
 			if (lc.size() == 0)
 				return;
+			combos = lc;
 			outside = true;
 			changing = true;
 			jlc.setList(lc);
@@ -621,37 +622,31 @@ public class BasisPage extends LubCont {
 		if (outside) {
 			jlcs.setSelectedIndex(0);
 			jlcl.setListData(Interpret.getComboFilter(0));
-			int row = jlc.list.get(c).type;
-			jlcl.setSelectedIndex(row);
-			Point p = jlcl.indexToLocation(row);
-			int h = jlcl.indexToLocation(1).y - jlcl.indexToLocation(0).y;
-			if (p != null)
-				jlcl.scrollRectToVisible(new Rectangle(p.x, p.y, 1, h));
 		}
 		updateSetC();
 	}
 
 	private void setCL(int cs) {
 		int[] cls = jlcl.getSelectedIndices();
+		List<Combo> lc = new ArrayList<>();
 		if (cls.length == 0) {
-			List<Combo> lc = new ArrayList<>();
 			for (int i = 0; i < CommonStatic.getBCAssets().filter[cs].length; i++)
 				for (Combo c : CommonStatic.getBCAssets().combos[CommonStatic.getBCAssets().filter[cs][i]]) {
 					String name = MultiLangCont.getStatic().COMNAME.getCont(c.name);
 					if (name.toLowerCase().contains(comboName.toLowerCase()))
 						lc.add(c);
 				}
-			jlc.setList(lc);
 		} else {
-			List<Combo> lc = new ArrayList<>();
 			for (int val : cls)
 				for (Combo c : CommonStatic.getBCAssets().combos[CommonStatic.getBCAssets().filter[cs][val]]) {
 					String name = MultiLangCont.getStatic().COMNAME.getCont(c.name);
 					if (name.toLowerCase().contains(comboName.toLowerCase()))
 						lc.add(c);
 				}
-			jlc.setList(lc);
 		}
+		if (combos != null)
+			lc = lc.stream().filter(combo -> combos.contains(combo)).collect(Collectors.toList());
+		jlc.setList(lc);
 		jlc.getSelectionModel().setSelectionInterval(0, 0);
 		outside = false;
 		setC(0);
