@@ -109,12 +109,12 @@ public class BasisPage extends LubCont {
 			combo.setSelected(true);
 			lub.select(unit.forms[unit.forms.length - 1]);
 		} else if (o instanceof Form) {
+			Unit unit = ((Form) o).unit;
+			setLvs(unit.forms[unit.forms.length - 1]);
 			if (!combo.isSelected())
 				return;
-			Unit unit = ((Form) o).unit;
 			if (cunit != null && unit.compareTo(cunit) == 0)
 				return;
-			setLvs(unit.forms[unit.forms.length - 1]);
 			cunit = unit;
 			outside = true;
 			changing = true;
