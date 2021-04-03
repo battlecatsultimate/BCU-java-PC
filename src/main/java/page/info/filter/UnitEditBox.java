@@ -1,10 +1,13 @@
 package page.info.filter;
 
+import common.pack.PackData.UserPack;
+import common.util.unit.CustomTrait;
 import page.Page;
 
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
 
 import static utilpc.Interpret.SABIS;
@@ -24,10 +27,12 @@ public class UnitEditBox extends Page {
 	private final JScrollPane jab = new JScrollPane(abis);
 
 	private boolean changing = false;
+	private final List<CustomTrait> diyTraits;
 
-	public UnitEditBox(Page p, boolean edit) {
+	public UnitEditBox(Page p, UserPack pack) {
 		super(p);
-		editable = edit;
+		editable = pack.editable;
+		diyTraits = pack.diyTrait.getList();
 		ini();
 	}
 
@@ -60,13 +65,14 @@ public class UnitEditBox extends Page {
 		for (int i = 0; i < lev; i++)
 			if (abis.isSelectedIndex(i))
 				ans[1] |= 1 << i;
-
 		getFront().callBack(ans);
 	}
 
 	private void ini() {
 		vt.addAll(Arrays.asList(TRAIT).subList(0, 9));
 		Collections.addAll(va, SABIS);
+		for (int k = 0; k < diyTraits.size(); k++)
+			vt.add(diyTraits.get(k).name);
 		trait.setListData(vt);
 		abis.setListData(va);
 		int m = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;

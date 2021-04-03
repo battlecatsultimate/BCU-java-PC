@@ -51,6 +51,9 @@ class AttList extends JList<String> {
 					v = ind < para ? UtilPC.getIcon(0, EABIIND[ind]) : UtilPC.getIcon(1, ind - para);
 				} else if (type == 0) {
 					v = ind < SABIS.length ? UtilPC.getIcon(0, ind) : UtilPC.getIcon(1, ind - SABIS.length);
+				} else if (type == 3 && ind > 8) {
+					v = null;
+					// In future, v will be used to fetch custom trait icons
 				} else
 					v = UtilPC.getIcon(type, ind);
 				if (v == null)

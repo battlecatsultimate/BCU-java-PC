@@ -34,7 +34,7 @@ public class EnemyEditPage extends EntityEditPage {
 		super(p, e.id.pack, (CustomEntity) e.de, pack.editable, true);
 		ene = e;
 		ce = (CustomEnemy) ene.de;
-		eeb = new EnemyEditBox(this, editable);
+		eeb = new EnemyEditBox(this, pack);
 		ini();
 		setData((CustomEnemy) e.de);
 		resized();

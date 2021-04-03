@@ -126,8 +126,8 @@ public class MainPage extends Page {
 		auth.setLnr(e -> {
 			String author = Opts.read("Decide your author name");
 
-			if(author == null)
-				author = "";
+			if (author == null)
+				return;
 
 			author = author.trim();
 

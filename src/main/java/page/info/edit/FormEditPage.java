@@ -36,6 +36,7 @@ public class FormEditPage extends EntityEditPage {
 	private final JBTN vene = new JBTN(0, "enemy");
 	private final UnitEditBox ueb;
 	private final Form form;
+	private final UserPack upack;
 	private final CustomUnit cu;
 	private int lv;
 
@@ -43,8 +44,9 @@ public class FormEditPage extends EntityEditPage {
 		super(p, pac.desc.id, (CustomEntity) f.du, pac.editable, false);
 		form = f;
 		cu = (CustomUnit) form.du;
+		upack = pac;
 		lv = f.unit.getPrefLv();
-		ueb = new UnitEditBox(this, pac.editable);
+		ueb = new UnitEditBox(this, pac);
 		ini();
 		setData((CustomUnit) f.du);
 		resized();

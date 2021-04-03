@@ -1,10 +1,13 @@
 package page.info.filter;
 
+import common.pack.PackData.UserPack;
+import common.util.unit.CustomTrait;
 import page.Page;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import java.util.List;
 import java.util.Vector;
 
 import static utilpc.Interpret.*;
@@ -23,10 +26,12 @@ public class EnemyEditBox extends Page {
 	private final JScrollPane jab = new JScrollPane(abis);
 
 	private boolean changing = false;
+	private final List<CustomTrait> diyTraits;
 
-	public EnemyEditBox(Page p, boolean edit) {
+	public EnemyEditBox(Page p, UserPack pack) {
 		super(p);
-		editable = edit;
+		editable = pack.editable;
+		diyTraits = pack.diyTrait.getList();
 		ini();
 	}
 
@@ -41,6 +46,11 @@ public class EnemyEditBox extends Page {
 			int ind = EABIIND[i];
 			if (ind < 100 ? ((vals[1] >> ind) & 1) > 0 : ((vals[2] >> (ind - 100 - IMUSFT)) & 1) > 0)
 				abis.addSelectionInterval(i, i);
+		}
+		for (int k = 0; k < diyTraits.size(); k++) {
+			CustomTrait t = diyTraits.get(k);
+
+				trait.addSelectionInterval(k + 9, k + 9);
 		}
 		changing = false;
 	}
@@ -69,6 +79,8 @@ public class EnemyEditBox extends Page {
 	private void ini() {
 		for (int i = 0; i < 9; i++)
 			vt.add(TRAIT[i]);
+		for (int k = 0; k < diyTraits.size(); k++)
+			vt.add(diyTraits.get(k).name);
 		for (int i = 0; i < EABIIND.length; i++)
 			va.add(EABI[i]);
 		trait.setListData(vt);

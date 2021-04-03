@@ -87,15 +87,8 @@ public class EnemyViewPage extends AbViewPage {
 			Enemy ene = jlu.getSelectedValue();
 			if (ene == null)
 				return;
-			if (ene.de instanceof CustomEnemy) {
-				PackData.UserPack pack = UserProfile.getUserPack(ene.id.pack);
 
-				if(pack == null)
-					return;
-
-				changePanel(new EnemyEditPage(getThis(), ene, pack));
-			} else
-				changePanel(new EnemyInfoPage(getThis(), ene));
+			changePanel(new EnemyInfoPage(getThis(), ene));
 		});
 
 		ActionListener[] listeners = copy.getActionListeners();

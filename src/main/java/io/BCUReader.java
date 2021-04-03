@@ -117,6 +117,17 @@ public class BCUReader extends DataIO {
 						try {
 							String nl = fl.getName();
 
+							if (nl.equals("ComboName.txt")) {
+								Queue<String> qs = readLines(fl);
+								if (qs != null) {
+									for (String line : qs) {
+										String[] str = line.trim().split("\t");
+										int comboID = Integer.parseInt(str[0]);
+										MultiLangCont.getStatic().COMNAME.put(ni, comboID, str[1]);
+									}
+								}
+								continue;
+							}
 							if (nl.equals("tutorial.txt")) {
 								Queue<String> qs = readLines(fl);
 								if(qs != null)
