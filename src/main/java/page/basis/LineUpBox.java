@@ -86,7 +86,7 @@ public class LineUpBox extends Canvas {
 	}
 
 	protected void adjForm() {
-		if (sf == null)
+		if (sf == null || getPos(sf) == -1)
 			return;
 		int i = getPos(sf);
 		if (getForm(i).uid == sf.uid) {
