@@ -188,7 +188,7 @@ public abstract class SwingEditor extends Editor {
 
 		@SuppressWarnings("ConstantConditions")
 		private void edit(FocusEvent fe) {
-			field.setInt(Data.ignore(() -> Integer.parseInt(input.getText())));
+			field.setInt(Data.ignore(() -> CommonStatic.parseIntN(input.getText())));
 			update();
 		}
 
