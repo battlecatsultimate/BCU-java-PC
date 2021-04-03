@@ -74,7 +74,8 @@ public class BasisPage extends LubCont {
 	private final JList<Form> ul = new JList<>();
 	private final JScrollPane jspul = new JScrollPane(ul);
 	private final NyCasBox ncb = new NyCasBox();
-	private final JBTN[] jbcs = new JBTN[3];
+	private final JBTN[] jbcsR = new JBTN[3];
+	private final JBTN[] jbcsL = new JBTN[3];
 
 	private boolean changing = false, outside = false, resize = true;
 
@@ -173,13 +174,13 @@ public class BasisPage extends LubCont {
 		set(brem, x, y, 275, 650, 200, 50);
 		set(bcop, x, y, 275, 700, 200, 50);
 		set(bjtf, x, y, 275, 750, 200, 50);
-		set(ncb, x, y, 1125, 100, 128, 256);
+		set(ncb, x, y, 1036, 500, 128, 256);
 		set(jspt, x, y, 1600, 150, 450, 600);
 		set(lub, x, y, 500, 150, 600, 300);
 		set(unit, x, y, 1350, 100, 200, 50);
-		set(jspcs, x, y, 1250, 800, 300, 450);
-		set(jspcl, x, y, 1550, 800, 300, 450);
-		set(jspc, x, y, 50, 800, 1200, 450);
+		set(jspcs, x, y, 1300, 800, 300, 450);
+		set(jspcl, x, y, 1600, 800, 300, 450);
+		set(jspc, x, y, 50, 800, 1250, 450);
 		set(cjtf, x, y, 500, 750, 400, 50);
 		set(search, x, y, 900, 750, 200, 50);
 		set(setc, x, y, 1100, 750, 200, 50);
@@ -191,8 +192,10 @@ public class BasisPage extends LubCont {
 		set(reset, x, y, 700, 450, 200, 50);
 		set(lvorb, x, y, 900, 100, 200, 50);
 		set(combo, x, y, 900, 450, 200, 50);
-		for (int i = 0; i < jbcs.length; i++)
-			set(jbcs[i], x, y, 1100, 350 + 50 * i, 200, 50);
+		for (int i = 0; i < jbcsL.length; i++)
+			set(jbcsL[i], x, y, 930, 500 + 103 * i, 100, 50);
+		for (int i = 0; i < jbcsR.length; i++)
+			set(jbcsR[i], x, y, 1170, 500 + 103 * i, 100, 50);
 		jlc.setRowHeight(50);
 		jlc.getColumnModel().getColumn(1).setPreferredWidth(size(x, y, 300));
 		trea.resized(x, y);
@@ -264,14 +267,16 @@ public class BasisPage extends LubCont {
 		for (int i = 0; i < 3; i++) {
 			int I = i;
 
-			jbcs[i].addActionListener(new ActionListener() {
+			jbcsR[i].addActionListener(e -> {
+				current().sele.nyc[I]++;
+				current().sele.nyc[I] %= NyCastle.TOT;
+			});
 
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					current().sele.nyc[I]++;
-					current().sele.nyc[I] %= NyCastle.TOT;
-				}
-
+			jbcsL[i].addActionListener(e -> {
+				if (current().sele.nyc[I] == 0)
+					current().sele.nyc[I] = NyCastle.TOT - 1;
+				else
+					current().sele.nyc[I] = (current().sele.nyc[I] - 1) % NyCastle.TOT;
 			});
 		}
 
@@ -584,9 +589,12 @@ public class BasisPage extends LubCont {
 		add(cjtf);
 		add(search);
 		add(combo);
-		add(jbcs[0] = new JBTN(0, "ctop"));
-		add(jbcs[1] = new JBTN(0, "cmid"));
-		add(jbcs[2] = new JBTN(0, "cbas"));
+		add(jbcsR[0] = new JBTN(0, ">"));
+		add(jbcsR[1] = new JBTN(0, ">"));
+		add(jbcsR[2] = new JBTN(0, ">"));
+		add(jbcsL[0] = new JBTN(0, "<"));
+		add(jbcsL[1] = new JBTN(0, "<"));
+		add(jbcsL[2] = new JBTN(0, "<"));
 		ul.setCellRenderer(new UnitLCR());
 		int m0 = ListSelectionModel.SINGLE_SELECTION;
 		int m1 = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
