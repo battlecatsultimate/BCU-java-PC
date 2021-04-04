@@ -2,6 +2,8 @@ package page.info;
 
 import common.CommonStatic;
 import common.battle.BasisSet;
+import common.battle.data.CustomEnemy;
+import common.battle.data.CustomEntity;
 import common.util.unit.Enemy;
 import page.JL;
 import page.JTF;
@@ -129,6 +131,14 @@ public class EnemyInfoTable extends Page {
 	}
 
 	private void ini() {
+		String[] TraitBox = {};
+		if (e.de instanceof CustomEnemy) {
+			int trsize = ((CustomEnemy) e.de).customTraits.size();
+			TraitBox = new String[trsize];
+			for (int i = 0; i < trsize; i++) {
+				TraitBox[i] = ((CustomEnemy) e.de).customTraits.get(i).get().name;
+			}
+		}
 		for (int i = 0; i < main.length; i++)
 			for (int j = 0; j < main[i].length; j++)
 				if (i * j != 1 && (i != 0 || j < 5)) {
@@ -160,7 +170,7 @@ public class EnemyInfoTable extends Page {
 		if (e.anim.getEdi() != null && e.anim.getEdi().getImg() != null)
 			main[0][2].setIcon(UtilPC.getIcon(e.anim.getEdi()));
 		main[0][3].setText(1, "trait");
-		main[0][4].setText(Interpret.getTrait(e.de.getType(), e.de.getStar()));
+		main[0][4].setText(Interpret.getTrait(e.de.getType(), TraitBox, e.de.getStar()));
 		main[1][0].setText(1, "mult");
 		main[1][2].setText("HP");
 		main[1][4].setText("HB");

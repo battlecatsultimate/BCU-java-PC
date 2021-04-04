@@ -46,7 +46,7 @@ public class FormEditPage extends EntityEditPage {
 		cu = (CustomUnit) form.du;
 		upack = pac;
 		lv = f.unit.getPrefLv();
-		ueb = new UnitEditBox(this, pac);
+		ueb = new UnitEditBox(this, pac, cu);
 		ini();
 		setData((CustomUnit) f.du);
 		resized();
@@ -180,6 +180,7 @@ public class FormEditPage extends EntityEditPage {
 				if (cu.getProc().getArr(id).exists())
 					imu |= 1 << id - IMUSFT;
 			}
+		ueb.cconfirm();
 		ueb.setData(new int[] { cu.type, cu.abi, imu });
 	}
 

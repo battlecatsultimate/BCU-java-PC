@@ -1,10 +1,14 @@
 package page.pack;
 
 import common.CommonStatic;
+import common.battle.data.CustomEnemy;
+import common.battle.data.CustomUnit;
+import common.util.unit.Form;
+import common.util.unit.Enemy;
+import common.util.unit.Unit;
 import common.pack.PackData.UserPack;
 import common.util.unit.CustomTrait;
 import common.pack.FixIndexList.FixIndexMap;
-import common.util.unit.Unit;
 import page.JBTN;
 import page.JTF;
 import page.JTG;
@@ -15,8 +19,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.util.List;
 
 public class TraitEditPage extends Page {
@@ -144,14 +146,24 @@ public class TraitEditPage extends Page {
 
     private void updateCT() {
         altrg.setEnabled(ct != null);
-        remct.setEnabled(ct != null);
-        //Later on, replace (ct != null); with (ct != null && !ct.used());
+        remct.setEnabled(ct != null && !isUsedTrait(ct));
         ctrna.setEnabled(ct != null);
         ctrna.setText("");
         if (ct != null) {
             ctrna.setText(ct.name);
             altrg.setSelected(ct.targetType);
         }
+    }
+
+    private boolean isUsedTrait(CustomTrait ct) {
+        for (Enemy en : packpack.enemies.getList())
+            if (((CustomEnemy)en.de).customTraits.contains(ct.id))
+                return true;
+        for (Unit un : packpack.units.getList())
+            for (Form uf : un.forms)
+                if (((CustomUnit)uf.du).customTraits.contains(ct.id))
+                    return true;
+        return false;
     }
 
     private void ini() {

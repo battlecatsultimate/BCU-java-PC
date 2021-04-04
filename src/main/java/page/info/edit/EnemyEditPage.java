@@ -34,7 +34,7 @@ public class EnemyEditPage extends EntityEditPage {
 		super(p, e.id.pack, (CustomEntity) e.de, pack.editable, true);
 		ene = e;
 		ce = (CustomEnemy) ene.de;
-		eeb = new EnemyEditBox(this, pack);
+		eeb = new EnemyEditBox(this, pack, ce);
 		ini();
 		setData((CustomEnemy) e.de);
 		resized();
@@ -103,6 +103,7 @@ public class EnemyEditPage extends EntityEditPage {
 				if (ce.getProc().getArr(id).exists())
 					imu |= 1 << id - IMUSFT;
 			}
+		eeb.cconfirm();
 		eeb.setData(new int[] { ce.type, ce.abi, imu });
 	}
 

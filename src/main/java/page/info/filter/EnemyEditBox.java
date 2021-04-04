@@ -1,5 +1,6 @@
 package page.info.filter;
 
+import common.battle.data.CustomEnemy;
 import common.pack.PackData.UserPack;
 import common.util.unit.CustomTrait;
 import page.Page;
@@ -27,11 +28,13 @@ public class EnemyEditBox extends Page {
 
 	private boolean changing = false;
 	private final List<CustomTrait> diyTraits;
+	private final CustomEnemy ce;
 
-	public EnemyEditBox(Page p, UserPack pack) {
+	public EnemyEditBox(Page p, UserPack pack, CustomEnemy cen) {
 		super(p);
 		editable = pack.editable;
 		diyTraits = pack.diyTrait.getList();
+		ce = cen;
 		ini();
 	}
 
@@ -48,8 +51,7 @@ public class EnemyEditBox extends Page {
 				abis.addSelectionInterval(i, i);
 		}
 		for (int k = 0; k < diyTraits.size(); k++) {
-			CustomTrait t = diyTraits.get(k);
-
+			if (ce.customTraits.contains(diyTraits.get(k).id))
 				trait.addSelectionInterval(k + 9, k + 9);
 		}
 		changing = false;
@@ -76,6 +78,14 @@ public class EnemyEditBox extends Page {
 		getFront().callBack(ans);
 	}
 
+	public void cconfirm() {
+		for (int i = 0; i < diyTraits.size(); i++)
+			if (trait.isSelectedIndex(i + 9)) {
+				if (!ce.customTraits.contains(diyTraits.get(i).id))
+					ce.customTraits.add(diyTraits.get(i).id);
+			} else ce.customTraits.remove(diyTraits.get(i).id);
+	}
+
 	private void ini() {
 		for (int i = 0; i < 9; i++)
 			vt.add(TRAIT[i]);
@@ -86,6 +96,7 @@ public class EnemyEditBox extends Page {
 		trait.setListData(vt);
 		abis.setListData(va);
 		int m = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
+		inidiytraitcheck();
 		trait.setSelectionMode(m);
 		abis.setSelectionMode(m);
 		set(trait);
@@ -96,6 +107,13 @@ public class EnemyEditBox extends Page {
 		abis.setEnabled(editable);
 	}
 
+	private void inidiytraitcheck() {
+		for (int k = 0; k < diyTraits.size(); k++) {
+			if (ce.customTraits.contains(diyTraits.get(k).id))
+				trait.addSelectionInterval(k + 9, k + 9);
+		}
+	};
+
 	private void set(JList<?> jl) {
 
 		jl.addListSelectionListener(new ListSelectionListener() {
@@ -105,7 +123,6 @@ public class EnemyEditBox extends Page {
 				if (!changing && !jl.getValueIsAdjusting())
 					confirm();
 			}
-
 		});
 	}
 

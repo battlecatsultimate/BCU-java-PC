@@ -259,12 +259,13 @@ public class UtilPC {
 		if (pc == null)
 			return new String[] { "Lv." + lvs[0], "" };
 		else {
+			String[] Placeholder = {};
 			StringBuilder lab;
 
 			lab = new StringBuilder();
 
 			if(pc.type != 0) {
-				lab.append("[").append(Interpret.getTrait(pc.type, 0)).append("]").append(" ");
+				lab.append("[").append(Interpret.getTrait(pc.type, Placeholder, 0)).append("]").append(" ");
 			}
 
 			lab.append(Interpret.PCTX[pc.info[0][0]]);
