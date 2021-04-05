@@ -371,12 +371,7 @@ public class PackEditPage extends Page {
 		cunt.addActionListener(arg0 -> changePanel(new UnitManagePage(getThis(), pac)));
 
 		tdiy.addActionListener(arg0 -> {
-			if (pac.editable)
-				changePanel(new TraitEditPage(getThis(), pac));
-			else {
-				List<MapColc> lmc = Arrays.asList(new MapColc[] { pac.mc });
-				changePanel(new StageViewPage(getThis(), lmc));
-			}
+			changePanel(new TraitEditPage(getThis(), pac));
 		});
 
 		vmsc.setLnr(() -> pac.editable ? new MusicEditPage(getThis(), pac)

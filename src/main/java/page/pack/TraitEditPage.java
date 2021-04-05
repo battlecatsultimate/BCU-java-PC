@@ -1,6 +1,5 @@
 package page.pack;
 
-import common.CommonStatic;
 import common.battle.data.CustomEnemy;
 import common.battle.data.CustomUnit;
 import common.util.unit.Form;
@@ -38,7 +37,7 @@ public class TraitEditPage extends Page {
     private final UserPack packpack;
     private final FixIndexMap<CustomTrait> pct;
 
-    private boolean changing = false;
+    private boolean changing = false, editable;
     private CustomTrait ct;
 
     public TraitEditPage(Page p, UserPack pac) {
@@ -47,6 +46,7 @@ public class TraitEditPage extends Page {
         packpack = pac;
         pct = pac.diyTrait;
         ini();
+        editable = pac.editable;
     }
 
     @Override
@@ -145,9 +145,9 @@ public class TraitEditPage extends Page {
     }
 
     private void updateCT() {
-        altrg.setEnabled(ct != null);
-        remct.setEnabled(ct != null && !isUsedTrait(ct));
-        ctrna.setEnabled(ct != null);
+        altrg.setEnabled(ct != null && editable);
+        remct.setEnabled(ct != null && !isUsedTrait(ct) && editable);
+        ctrna.setEnabled(ct != null && editable);
         ctrna.setText("");
         if (ct != null) {
             ctrna.setText(ct.name);
