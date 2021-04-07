@@ -247,12 +247,9 @@ public class TraitEditPage extends Page {
     }
 
     private void setIconImage(CustomTrait slt) {
-        ctr = slt;
         if (ct == null)
             return;
-        if (ct.icon == null)
-            return;
-
+        ctr = slt;
         if (jlct.getSelectedValue() != slt) {
             changing = true;
             jlct.setSelectedValue(slt, true);
