@@ -379,8 +379,11 @@ public class Interpret extends Data {
 	public static boolean isER(Enemy e, int t) {
 		if (t == 0)
 			return e.inDic;
-		if (t == 1)
+		else if (t == 1)
 			return e.de.getStar() == 1;
+		else if (t == 5)
+			return !e.id.pack.equals(Identifier.DEF);
+
 		List<MapColc> lis = e.findMap();
 		boolean colab = false;
 		if (lis.contains(DefMapColc.getMap("C")))
@@ -391,13 +394,12 @@ public class Interpret extends Data {
 
 		if (t == 2)
 			return !colab;
-		if (t == 3)
+		else if (t == 3)
 			return !colab && !e.inDic;
-		if (t == 4)
+		else if (t == 4)
 			return colab;
-		if (t == 5)
-			return !e.id.pack.equals(Identifier.DEF);
-		return false;
+		else
+			return false;
 	}
 
 	public static boolean isType(MaskEntity de, int type) {
