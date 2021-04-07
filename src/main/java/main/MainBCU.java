@@ -1,5 +1,6 @@
 package main;
 
+import common.io.nullTraitFix;
 import common.CommonStatic;
 import common.battle.BasisSet;
 import common.io.PackLoader.ZipDesc.FileDesc;
@@ -188,6 +189,7 @@ public class MainBCU {
 
 		BCUReader.getData$1();
 		loaded = true;
+		nullTraitFix.fixNullTraits();
 		MainFrame.changePanel(new MainPage());
 	}
 

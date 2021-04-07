@@ -1,10 +1,12 @@
 package page.info.filter;
 
+import common.util.unit.CustomTrait;
 import main.MainBCU;
 import page.JTG;
 import page.Page;
 import utilpc.Theme;
 import utilpc.UtilPC;
+import java.util.List;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,17 +53,39 @@ class AttList extends JList<String> {
 					v = ind < para ? UtilPC.getIcon(0, EABIIND[ind]) : UtilPC.getIcon(1, ind - para);
 				} else if (type == 0) {
 					v = ind < SABIS.length ? UtilPC.getIcon(0, ind) : UtilPC.getIcon(1, ind - SABIS.length);
-				} else if (type == 3 && ind > 8) {
+				} else if (type == 3 && ind > 8)
 					v = null;
-					// In future, v will be used to fetch custom trait icons
-				} else
+				else
 					v = UtilPC.getIcon(type, ind);
 				if (v == null)
 					return jl;
 				jl.setIcon(new ImageIcon(v));
 				return jl;
 			}
+		});
 
+	}
+
+	protected void diyTraitIcons(AttList trait, List<CustomTrait> diyTraits, boolean includeCollab) {
+		trait.setCellRenderer(new DefaultListCellRenderer() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getListCellRendererComponent(JList<?> l, Object o, int ind, boolean s, boolean f) {
+				int BCTraits = includeCollab ? 11 : 8;
+				JLabel jl = (JLabel) super.getListCellRendererComponent(l, o, ind, s, f);
+				if (ind > BCTraits) {
+					jl.setIcon(diyTraits.get(ind - BCTraits - 1).obtainIcon());
+				} else {
+					BufferedImage v;
+					v = UtilPC.getIcon(3, ind);
+					if (v == null)
+						return jl;
+					jl.setIcon(new ImageIcon(v));
+				}
+				return jl;
+			}
 		});
 	}
 

@@ -1,11 +1,13 @@
 package page.info.filter;
 
+import common.battle.data.CustomEnemy;
 import common.pack.Identifier;
 import common.pack.PackData;
 import common.pack.UserProfile;
 import common.util.Data;
 import common.util.lang.MultiLangCont;
 import common.util.lang.ProcLang;
+import common.util.unit.CustomTrait;
 import common.util.unit.Enemy;
 import main.MainBCU;
 import page.JTG;
@@ -282,12 +284,15 @@ class EFBList extends EnemyFilterBox {
 		set(jat, x, y, 0, 850, 200, 300);
 	}
 
+	private final List<CustomTrait> trlis = new ArrayList<>();
+
 	private void confirm() {
 		List<Enemy> ans = new ArrayList<>();
 		for(PackData p : UserProfile.getAllPacks()) {
 			for (Enemy e : p.enemies.getList()) {
 				int t = e.de.getType();
 				int a = e.de.getAbi();
+				List<Identifier<CustomTrait>> ct = e.de instanceof CustomEnemy ? ((CustomEnemy)e.de).customTraits : null;
 				boolean b0 = !orop[3].isSelected();
 				for (int r : rare.getSelectedIndices()) {
 					if (orop[3].isSelected())
@@ -295,12 +300,23 @@ class EFBList extends EnemyFilterBox {
 					else
 						b0 &= isER(e, r);
 				}
-				boolean b1 = !orop[0].isSelected();
+				boolean b1 = !orop[0].isSelected(), selbc = false, seldiy = false;
 				for (int i : trait.getSelectedIndices())
-					if (orop[0].isSelected())
-						b1 |= ((t >> i) & 1) == 1;
-					else
-						b1 &= ((t >> i) & 1) == 1;
+					if (i < 12) {
+						selbc = true;
+						if (orop[0].isSelected())
+							b1 |= ((t >> i) & 1) == 1;
+						else
+							b1 &= ((t >> i) & 1) == 1;
+					} else if (ct != null && ct.size() > 0) {
+						seldiy = true;
+						for (Identifier<CustomTrait> diyt : ct)
+							if (orop[0].isSelected())
+								b1 |= trlis.get(i - 12).id.equals(diyt);
+							else
+								b1 &= trlis.get(i - 12).id.equals(diyt);
+					} else if (selbc && !orop[0].isSelected()) b1 = false;
+					else if (!seldiy && !orop[0].isSelected()) b1 = false;
 				boolean b2 = !orop[1].isSelected();
 				int len = EFILTER;
 				for (int i : abis.getSelectedIndices())
@@ -360,6 +376,14 @@ class EFBList extends EnemyFilterBox {
 		for (int i = 0; i < orop.length; i++)
 			set(orop[i] = new JTG(get(0, "orop")));
 		Collections.addAll(vt, TRAIT);
+		Collection<PackData.UserPack> pacs = UserProfile.getUserPacks();
+		for (PackData.UserPack pacc : pacs)
+			for (CustomTrait ctra : pacc.diyTrait)
+				if (pack == null || ctra.id.pack.equals(pack) || parents.contains(ctra.id.pack)) {
+					trlis.add(ctra);
+					vt.add(ctra.name);
+				}
+		customTraitsIco(trait,trlis);
 		va.addAll(Arrays.asList(EABI).subList(0, EFILTER));
 		ProcLang proclang = ProcLang.get();
 		for (int i = 0; i < Data.PROC_TOT; i++)
@@ -379,6 +403,10 @@ class EFBList extends EnemyFilterBox {
 		add(jt);
 		add(jab);
 		add(jat);
+	}
+
+	protected static void customTraitsIco(AttList trait, List<CustomTrait> diyTraits) {
+		trait.diyTraitIcons(trait, diyTraits, true);
 	}
 
 	private void set(AbstractButton b) {

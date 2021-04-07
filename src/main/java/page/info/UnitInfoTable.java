@@ -91,7 +91,6 @@ public class UnitInfoTable extends Page {
 				TraitBox[i] = ((CustomUnit) ef.du).customTraits.get(i).get().name;
 			}
 		}
-
 		main[1][3].setText(hp + " / " + ef.du.getHb());
 		main[2][3].setText("" + (attack * 30 / ef.du.getItv()));
 		main[2][5].setText("" + (int) (ef.du.getSpeed() * (1 + b.getInc(Data.C_SPE) * 0.01)));

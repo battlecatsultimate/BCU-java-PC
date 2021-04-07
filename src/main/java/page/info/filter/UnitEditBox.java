@@ -2,14 +2,12 @@ package page.info.filter;
 
 import common.battle.data.CustomUnit;
 import common.pack.PackData.UserPack;
+import common.pack.UserProfile;
 import common.util.unit.CustomTrait;
 import page.Page;
 
 import javax.swing.*;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 import static utilpc.Interpret.SABIS;
 import static utilpc.Interpret.TRAIT;
@@ -20,6 +18,7 @@ public class UnitEditBox extends Page {
 
 	private final boolean editable;
 
+	private String packID;
 	private final Vector<String> vt = new Vector<>();
 	private final Vector<String> va = new Vector<>();
 	private final AttList trait = new AttList(3, 0);
@@ -33,8 +32,13 @@ public class UnitEditBox extends Page {
 
 	public UnitEditBox(Page p, UserPack pack, CustomUnit cun) {
 		super(p);
+		packID = pack.desc.id;
 		editable = pack.editable;
 		diyTraits = pack.diyTrait.getList();
+		Collection<UserPack> pacs = UserProfile.getUserPacks();
+		for (UserPack pacc : pacs)
+			if (!pacc.desc.id.equals("000000") && (pack.desc.dependency.contains(pacc.desc.id)))
+				diyTraits.addAll(pacc.diyTrait.getList());
 		cu = cun;
 		ini();
 	}
@@ -78,9 +82,14 @@ public class UnitEditBox extends Page {
 	public void cconfirm() {
 		for (int i = 0; i < diyTraits.size(); i++)
 			if (trait.isSelectedIndex(i + 9)) {
-				if (!cu.customTraits.contains(diyTraits.get(i).id))
+				if (!cu.customTraits.contains(diyTraits.get(i).id)) {
 					cu.customTraits.add(diyTraits.get(i).id);
-			} else cu.customTraits.remove(diyTraits.get(i).id);
+					cu.nullFixer.add(diyTraits.get(i).id.toString());
+				}
+			} else {
+				cu.customTraits.remove(diyTraits.get(i).id);
+				cu.nullFixer.remove(diyTraits.get(i).id.toString());
+			}
 	}
 
 	private void ini() {
@@ -88,6 +97,7 @@ public class UnitEditBox extends Page {
 		Collections.addAll(va, SABIS);
 		for (int k = 0; k < diyTraits.size(); k++)
 			vt.add(diyTraits.get(k).name);
+		customTraitsIco(trait,diyTraits);
 		trait.setListData(vt);
 		abis.setListData(va);
 		int m = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
@@ -116,5 +126,7 @@ public class UnitEditBox extends Page {
 				confirm();
 		});
 	}
-
+	protected static void customTraitsIco(AttList trait, List<CustomTrait> diyTraits) {
+		trait.diyTraitIcons(trait, diyTraits, false);
+	}
 }
