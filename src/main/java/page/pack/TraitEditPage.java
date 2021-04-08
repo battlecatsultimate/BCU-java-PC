@@ -51,7 +51,7 @@ public class TraitEditPage extends Page {
     private final FixIndexMap<CustomTrait> pct;
 
     private boolean changing = false, editable;
-    private CustomTrait ct, ctr;
+    private CustomTrait ct;
 
     public TraitEditPage(Page p, UserPack pac) {
         super(p);
@@ -72,11 +72,6 @@ public class TraitEditPage extends Page {
         set(ctrna, x, y, 50, 900, 300, 50);
         set(adicn, x, y, 400, 100, 150, 50);
         set(jl, x, y, 450, 150, 100, 100);
-        if (ctr != null) {
-            jl.setIcon(ctr.obtainIcon());
-        } else {
-            jl.setIcon(null);
-        }
     }
 
     private void addListeners$0() {
@@ -99,16 +94,6 @@ public class TraitEditPage extends Page {
                 changing = true;
                 ct = new CustomTrait(packpack.getNextID(CustomTrait.class));
                 pct.add(ct);
-                ct.icon = CommonStatic.getBCAssets().icon[3][0];
-                try {
-                    File file = ((Source.Workspace) packpack.source).getTraitIconFile(ct.id);
-                    Context.check(file);
-                    ImageIO.write(Objects.requireNonNull(UtilPC.getIcon(3, 0)), "PNG", file);
-                } catch (IOException e) {
-                    CommonStatic.ctx.noticeErr(e, Context.ErrType.WARN, "failed to write file");
-                    getFile("Failed to save file");
-                    return;
-                }
                 updateCTL();
                 jlct.setSelectedValue(ct, true);
                 changing = false;
@@ -189,6 +174,10 @@ public class TraitEditPage extends Page {
         if (ct != null) {
             ctrna.setText(ct.name);
             altrg.setSelected(ct.targetType);
+            if (ct.icon != null)
+                jl.setIcon(ct.obtainIcon());
+            else
+                jl.setIcon(null);
         }
     }
 
@@ -217,6 +206,7 @@ public class TraitEditPage extends Page {
         add(ctrna);
         add(adicn);
         add(jl);
+        jl.setIcon(null);
         addListeners$0();
         addListeners$CG();
         updateCTL();
@@ -246,7 +236,6 @@ public class TraitEditPage extends Page {
     private void setIconImage(CustomTrait slt) {
         if (ct == null)
             return;
-        ctr = slt;
         if (jlct.getSelectedValue() != slt) {
             changing = true;
             jlct.setSelectedValue(slt, true);
