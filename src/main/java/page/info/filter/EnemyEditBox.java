@@ -1,6 +1,7 @@
 package page.info.filter;
 
 import common.battle.data.CustomEnemy;
+import common.pack.Identifier;
 import common.pack.PackData.UserPack;
 import common.pack.UserProfile;
 import common.util.unit.CustomTrait;
@@ -46,8 +47,18 @@ public class EnemyEditBox extends Page {
 		ini();
 	}
 
+	public void diyIni(ArrayList<Identifier<CustomTrait>> cts) {
+		changing = true;
+		for (int k = 0; k < diyTraits.size(); k++)
+			if (cts.contains(diyTraits.get(k).id))
+				trait.addSelectionInterval(k + 9, k + 9);
+			else
+				trait.removeSelectionInterval(k + 9, k + 9);
+	}
+
 	public void setData(int[] vals) {
 		changing = true;
+		int[] sel = trait.getSelectedIndices();
 		trait.clearSelection();
 		for (int i = 0; i < 9; i++)
 			if (((vals[0] >> i) & 1) > 0)
@@ -58,10 +69,9 @@ public class EnemyEditBox extends Page {
 			if (ind < 100 ? ((vals[1] >> ind) & 1) > 0 : ((vals[2] >> (ind - 100 - IMUSFT)) & 1) > 0)
 				abis.addSelectionInterval(i, i);
 		}
-		for (int k = 0; k < diyTraits.size(); k++) {
-			if (ce.customTraits.contains(diyTraits.get(k).id))
-				trait.addSelectionInterval(k + 9, k + 9);
-		}
+		for (int area : sel)
+			if (area >= 9)
+				trait.addSelectionInterval(area, area);
 		changing = false;
 	}
 
@@ -83,10 +93,6 @@ public class EnemyEditBox extends Page {
 					ans[1] |= 1 << EABIIND[i];
 				else
 					ans[2] |= 1 << (EABIIND[i] - 100 - IMUSFT);
-		getFront().callBack(ans);
-	}
-
-	public void cconfirm() {
 		for (int i = 0; i < diyTraits.size(); i++)
 			if (trait.isSelectedIndex(i + 9)) {
 				if (!ce.customTraits.contains(diyTraits.get(i).id)) {
@@ -97,6 +103,7 @@ public class EnemyEditBox extends Page {
 				ce.customTraits.remove(diyTraits.get(i).id);
 				ce.nullFixer.remove(diyTraits.get(i).id.toString());
 			}
+		getFront().callBack(ans);
 	}
 
 	private void ini() {
@@ -110,7 +117,6 @@ public class EnemyEditBox extends Page {
 		trait.setListData(vt);
 		abis.setListData(va);
 		int m = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
-		inidiytraitcheck();
 		trait.setSelectionMode(m);
 		abis.setSelectionMode(m);
 		set(trait);
@@ -119,13 +125,6 @@ public class EnemyEditBox extends Page {
 		add(jab);
 		trait.setEnabled(editable);
 		abis.setEnabled(editable);
-	}
-
-	private void inidiytraitcheck() {
-		for (int k = 0; k < diyTraits.size(); k++) {
-			if (ce.customTraits.contains(diyTraits.get(k).id))
-				trait.addSelectionInterval(k + 9, k + 9);
-		}
 	}
 
 	private void set(JList<?> jl) {

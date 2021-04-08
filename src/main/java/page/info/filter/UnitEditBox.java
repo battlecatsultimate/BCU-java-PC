@@ -1,6 +1,7 @@
 package page.info.filter;
 
 import common.battle.data.CustomUnit;
+import common.pack.Identifier;
 import common.pack.PackData.UserPack;
 import common.pack.UserProfile;
 import common.util.unit.CustomTrait;
@@ -18,7 +19,6 @@ public class UnitEditBox extends Page {
 
 	private final boolean editable;
 
-	private String packID;
 	private final Vector<String> vt = new Vector<>();
 	private final Vector<String> va = new Vector<>();
 	private final AttList trait = new AttList(3, 0);
@@ -32,7 +32,6 @@ public class UnitEditBox extends Page {
 
 	public UnitEditBox(Page p, UserPack pack, CustomUnit cun) {
 		super(p);
-		packID = pack.desc.id;
 		editable = pack.editable;
 		diyTraits = pack.diyTrait.getList();
 		Collection<UserPack> pacs = UserProfile.getUserPacks();
@@ -43,21 +42,29 @@ public class UnitEditBox extends Page {
 		ini();
 	}
 
+	public void diyIni(ArrayList<Identifier<CustomTrait>> cts) {
+		changing = true;
+		for (int k = 0; k < diyTraits.size(); k++)
+			if (cts.contains(diyTraits.get(k).id))
+				trait.addSelectionInterval(k + 9, k + 9);
+			else
+				trait.removeSelectionInterval(k + 9, k + 9);
+	}
+
 	public void setData(int[] vals) {
 		changing = true;
+		int[] sel = trait.getSelectedIndices();
 		trait.clearSelection();
 		abis.clearSelection();
 		for (int i = 0; i < 9; i++)
 			if (((vals[0] >> i) & 1) > 0)
 				trait.addSelectionInterval(i, i);
-		for (int i = 0; i < SABIS.length; i++) {
+		for (int i = 0; i < SABIS.length; i++)
 			if (((vals[1] >> i) & 1) > 0)
 				abis.addSelectionInterval(i, i);
-		}
-		for (int k = 0; k < diyTraits.size(); k++) {
-			if (cu.customTraits.contains(diyTraits.get(k).id))
-				trait.addSelectionInterval(k + 9, k + 9);
-		}
+		for (int area : sel)
+			if (area >= 9)
+				trait.addSelectionInterval(area, area);
 		changing = false;
 	}
 
@@ -76,10 +83,6 @@ public class UnitEditBox extends Page {
 		for (int i = 0; i < lev; i++)
 			if (abis.isSelectedIndex(i))
 				ans[1] |= 1 << i;
-		getFront().callBack(ans);
-	}
-
-	public void cconfirm() {
 		for (int i = 0; i < diyTraits.size(); i++)
 			if (trait.isSelectedIndex(i + 9)) {
 				if (!cu.customTraits.contains(diyTraits.get(i).id)) {
@@ -90,6 +93,7 @@ public class UnitEditBox extends Page {
 				cu.customTraits.remove(diyTraits.get(i).id);
 				cu.nullFixer.remove(diyTraits.get(i).id.toString());
 			}
+		getFront().callBack(ans);
 	}
 
 	private void ini() {
@@ -101,7 +105,6 @@ public class UnitEditBox extends Page {
 		trait.setListData(vt);
 		abis.setListData(va);
 		int m = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
-		inidiytraitcheck();
 		trait.setSelectionMode(m);
 		abis.setSelectionMode(m);
 		set(trait);
@@ -111,13 +114,6 @@ public class UnitEditBox extends Page {
 		trait.setEnabled(editable);
 		abis.setEnabled(editable);
 	}
-
-	private void inidiytraitcheck() {
-		for (int k = 0; k < diyTraits.size(); k++) {
-			if (cu.customTraits.contains(diyTraits.get(k).id))
-				trait.addSelectionInterval(k + 9, k + 9);
-		}
-	};
 
 	private void set(JList<?> jl) {
 

@@ -103,7 +103,7 @@ public class EnemyEditPage extends EntityEditPage {
 				if (ce.getProc().getArr(id).exists())
 					imu |= 1 << id - IMUSFT;
 			}
-		eeb.cconfirm();
+		eeb.diyIni(data.customTraits);
 		eeb.setData(new int[] { ce.type, ce.abi, imu });
 	}
 

@@ -301,11 +301,11 @@ class UFBList extends UnitFilterBox {
 								b1 &= ((t >> i) & 1) == 1;
 						} else if (ct != null && ct.size() > 0) {
 							seldiy = true;
-							for (Identifier<CustomTrait> diyt : ct)
-								if (orop[0].isSelected())
+							if (orop[0].isSelected())
+								for (Identifier<CustomTrait> diyt : ct)
 									b1 |= trlis.get(i - 9).id.equals(diyt);
-								else
-									b1 &= trlis.get(i - 9).id.equals(diyt);
+							else
+								b1 &= ct.contains(trlis.get(i - 9).id);
 						} else if (selbc && !orop[0].isSelected()) b1 = false;
 						else if (!seldiy && !orop[0].isSelected()) b1 = false;
 					boolean b2 = !orop[1].isSelected();
