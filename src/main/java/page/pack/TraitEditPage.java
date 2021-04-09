@@ -18,7 +18,6 @@ import page.JTF;
 import page.JTG;
 import page.Page;
 import page.support.Importer;
-import utilpc.UtilPC;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -31,7 +30,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 public class TraitEditPage extends Page {
 
@@ -44,13 +42,15 @@ public class TraitEditPage extends Page {
     private final JBTN addct = new JBTN(0, "add");
     private final JBTN remct = new JBTN(0, "rem");
     private final JBTN adicn = new JBTN(0, "icon");
+    private final JBTN reicn = new JBTN(0, "remove icon");
     private final JTG altrg = new JTG(0, "affected by anti-traited");
     private final JTF ctrna = new JTF();
 
     private final UserPack packpack;
     private final FixIndexMap<CustomTrait> pct;
 
-    private boolean changing = false, editable;
+    private boolean changing = false;
+    private final boolean editable;
     private CustomTrait ct;
 
     public TraitEditPage(Page p, UserPack pac) {
@@ -71,7 +71,8 @@ public class TraitEditPage extends Page {
         set(altrg, x, y, 50, 950, 300, 50);
         set(ctrna, x, y, 50, 900, 300, 50);
         set(adicn, x, y, 400, 100, 150, 50);
-        set(jl, x, y, 450, 150, 100, 100);
+        set(jl, x, y, 450, 150, 50, 50);
+        set(reicn, x, y, 400, 200, 150, 50);
     }
 
     private void addListeners$0() {
@@ -82,6 +83,18 @@ public class TraitEditPage extends Page {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 getFile("Choose your file");
+            }
+        });
+
+        reicn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                File file = ((Source.Workspace) packpack.source).getTraitIconFile(ct.id);
+                if (file.delete()) {
+                    ct.icon = null;
+                    jl.setIcon(null);
+                    reicn.setEnabled(false);
+                }
             }
         });
 
@@ -179,6 +192,7 @@ public class TraitEditPage extends Page {
             else
                 jl.setIcon(null);
         }
+        reicn.setEnabled(ct != null && ct.icon != null && editable);
     }
 
     private boolean isUsedTrait(CustomTrait ct) {
@@ -206,6 +220,7 @@ public class TraitEditPage extends Page {
         add(ctrna);
         add(adicn);
         add(jl);
+        add(reicn);
         jl.setIcon(null);
         addListeners$0();
         addListeners$CG();
@@ -220,7 +235,10 @@ public class TraitEditPage extends Page {
             getFile("Wrong img size. Img size: w=41, h=41");
             return;
         }
-        ct.icon.setImg(MainBCU.builder.build(bimg));
+        if (ct.icon != null)
+            ct.icon.setImg(MainBCU.builder.build(bimg));
+        else
+            ct.icon = MainBCU.builder.toVImg(bimg);
         try {
             File file = ((Source.Workspace) packpack.source).getTraitIconFile(ct.id);
             Context.check(file);
@@ -230,6 +248,7 @@ public class TraitEditPage extends Page {
             getFile("Failed to save file");
             return;
         }
+        updateCT();
         setIconImage(jlct.getSelectedValue());
     }
 
@@ -241,5 +260,5 @@ public class TraitEditPage extends Page {
             jlct.setSelectedValue(slt, true);
             changing = false;
         }
-    };
+    }
 }

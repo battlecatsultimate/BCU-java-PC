@@ -207,6 +207,31 @@ public class BCUReader extends DataIO {
 									}
 								continue;
 							}
+							if (nl.equals("UnitExplanation.txt")) {
+								Queue<String> qs = readLines(fl);
+								if(qs != null)
+									for (String str : qs) {
+										String[] strs = str.trim().split("\t");
+										Unit u = UserProfile.getBCData().units.get(CommonStatic.parseIntN(strs[0]));
+										if (u == null)
+											continue;
+										for (int i = 0; i < Math.min(u.forms.length, strs.length - 1); i++)
+											MultiLangCont.getStatic().FEXP.put(ni, u.forms[i], strs);
+									}
+								continue;
+							}
+							if (nl.equals("EnemyExplanation.txt")) {
+								Queue<String> qs = readLines(fl);
+								if(qs != null)
+									for (String str : qs) {
+										String[] strs = str.trim().split("\t");
+										Enemy e = UserProfile.getBCData().enemies.get(CommonStatic.parseIntN(strs[0]));
+										if (e == null || strs.length < 2)
+											continue;
+										MultiLangCont.getStatic().EEXP.put(ni, e, strs);
+									}
+								continue;
+							}
 							if (!nl.endsWith(".properties"))
 								continue;
 							MainLocale ml = new MainLocale(nl.split("\\.")[0] + "_" + ni);

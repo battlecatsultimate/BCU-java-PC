@@ -80,7 +80,7 @@ class AttList extends JList<String> {
 					if (trait.icon != null)
 						jl.setIcon(trait.obtainIcon());
 					else
-						jl = null;
+						return jl;
 				} else {
 					BufferedImage v;
 					v = UtilPC.getIcon(3, ind);

@@ -15,6 +15,8 @@ import page.Page;
 import page.info.UnitInfoPage;
 import page.info.filter.UnitEditBox;
 
+import javax.swing.*;
+
 import static utilpc.Interpret.EABIIND;
 import static utilpc.Interpret.IMUSFT;
 
@@ -34,6 +36,9 @@ public class FormEditPage extends EntityEditPage {
 	private final JBTN stat = new JBTN(0, "stat");
 	private final JBTN impt = new JBTN(0, "import");
 	private final JBTN vene = new JBTN(0, "enemy");
+	private final JL cdesc = new JL(1, "Description");
+	private final JTF fdesc = new JTF();
+	private final JScrollPane sdesc = new JScrollPane(fdesc);
 	private final UnitEditBox ueb;
 	private final Form form;
 	private final CustomUnit cu;
@@ -128,6 +133,14 @@ public class FormEditPage extends EntityEditPage {
 		add(stat);
 		add(impt);
 		add(vene);
+		add(sdesc);
+		add(cdesc);
+		fdesc.setLnr(d -> {
+			String txt = fdesc.getText().trim();
+			if (!txt.equals("Use <br> to implement new lines. Descriptions also have a 200 character limit") && txt.length() < 200)
+				form.explanation = txt;
+			setData(cu);
+		});
 
 		subListener(vene, impt, vuni, form.unit);
 
@@ -159,7 +172,8 @@ public class FormEditPage extends EntityEditPage {
 		}
 		set(impt, x, y, 50, 1150, 200, 50);
 		set(vene, x, y, 250, 1150, 200, 50);
-
+		set(cdesc, x, y, 650, 1000, 400, 50);
+		set(sdesc, x, y, 650, 1050, 400, 150);
 		ueb.resized();
 
 	}
@@ -167,6 +181,8 @@ public class FormEditPage extends EntityEditPage {
 	@Override
 	protected void setData(CustomEntity data) {
 		super.setData(data);
+		String uniDesc = form.descriptionGet();
+		fdesc.setText("" + (uniDesc.length() > 0 ? uniDesc : "Use <br> to implement new lines. Descriptions also have a 200 character limit"));
 		flv.setText("" + lv);
 		frs.setText("" + bas.t().getFinRes(cu.getRespawn()));
 		fdr.setText("" + (int) (cu.getPrice() * 1.5));
