@@ -195,6 +195,8 @@ public class ConfigPage extends Page {
 
 			if (Opts.conf("This requires restart to apply. Do you want to restart?"+(MainBCU.nimbus ? "\n\nWarning : Using Nimbus theme may result in high CPU usage" : "")))
 				CommonStatic.def.exit(true);
+			else
+				MainBCU.nimbus = !MainBCU.nimbus;
 		});
 
 		theme.setLnr((b) -> {

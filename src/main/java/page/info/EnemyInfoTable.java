@@ -139,7 +139,7 @@ public class EnemyInfoTable extends Page {
 		int l = main.length + atks.length;
 		if (displaySpecial)
 			l += special.length;
-		return (l + (proc.length + (proc.length % 2 == 1 ? 1 : 0) + abis.length + (abis.length % 2 == 1 ? 1 : 0)) / 2) * 50 + (e.descriptionGet().length() > 0 ? 200 : 0);
+		return (l + (proc.length + (proc.length % 2 == 1 ? 1 : 0) + abis.length + (abis.length % 2 == 1 ? 1 : 0)) / 2) * 50 + (e.descriptionGet().replace("<br>", "").length() > 0 ? 200 : 0);
 	}
 
 	private void ini() {
@@ -218,7 +218,7 @@ public class EnemyInfoTable extends Page {
 		}
 		main[3][7].setText(e.de.getPost() + "f");
 		String eDesc = e.descriptionGet().replace("<br>", "\n");
-		if (eDesc.length() > 0)
+		if (eDesc.replace("\n","").length() > 0)
 			add(desc);
 		descr.setText(e.toString().replace(Data.trio(e.id.id) + " - ", "") + (e.de.getType() != 256 ? " (" + Interpret.getTrait(e.de.getType(), TraitBox, 0) + ")" : "") + (e.de.getStar() >= 2 ? " (Cool Dude)" : "") + "\n" + eDesc);
 		reset();

@@ -5,6 +5,7 @@ import common.pack.Identifier;
 import common.pack.PackData.UserPack;
 import common.util.pack.Background;
 import common.util.stage.*;
+import org.jcodec.common.tools.MathUtil;
 import page.*;
 import page.view.BGViewPage;
 import page.view.CastleViewPage;
@@ -44,7 +45,9 @@ class HeadEditTable extends Page {
 	private final JTF lop = new JTF();
 	private final JTF lop1 = new JTF();
 	private final JL minres = new JL(1, "minspawn");
+	private final JL cost = new JL(1, "Ch. Cost");
 	private final JTF minrest = new JTF();
+	private final JTF cos = new JTF();
 	private final LimitTable lt;
 
 	private Stage sta;
@@ -114,6 +117,7 @@ class HeadEditTable extends Page {
 
 		minrest.setEnabled(sta != null);
 
+
 		if(sta != null)
 			minrest.setText(generateMinRespawn(sta.minSpawn, sta.maxSpawn));
 
@@ -139,6 +143,8 @@ class HeadEditTable extends Page {
 		set(jcas, x, y, w * 3, 100, w, 50);
 		set(minres, x, y, w * 4, 100, w, 50);
 		set(minrest, x, y, w * 5, 100, w, 50);
+		set(cost, x, y, w * 6, 100, w, 50);
+		set(cos, x, y, w * 7, 100, w, 50);
 		set(mus, x, y, 0, 150, w, 50);
 		set(jm0, x, y, w, 150, w, 50);
 		set(loop, x, y, w * 2, 150, w, 50);
@@ -168,6 +174,7 @@ class HeadEditTable extends Page {
 		jmh.setText("<" + st.mush + "% health:");
 		jm1.setText("" + st.mus1);
 		jmax.setText("" + st.max);
+		cos.setText("" + (st.getCont().price + 1));
 		con.setSelected(!st.non_con);
 		String str = get(1, "star") + ": ";
 		for (int i = 0; i < 4; i++)
@@ -222,6 +229,7 @@ class HeadEditTable extends Page {
 		jm1.setEnabled(b);
 		for (JTF jtf : star)
 			jtf.setEnabled(b);
+		cos.setEnabled(b);
 		lt.abler(b);
 	}
 
@@ -326,6 +334,8 @@ class HeadEditTable extends Page {
 		set(lop1);
 		set(minres);
 		set(minrest);
+		set(cost);
+		set(cos);
 		con.setSelected(true);
 
 		for (int i = 0; i < 4; i++)
@@ -433,6 +443,9 @@ class HeadEditTable extends Page {
 				minrest.setText(generateMinRespawn(sta.minSpawn, sta.maxSpawn));
 			} catch (Exception ignored) {
 			}
+		}
+		if (jtf == cos) {
+			sta.getCont().price = MathUtil.clip(val - 1, 0, 9);
 		}
 	}
 

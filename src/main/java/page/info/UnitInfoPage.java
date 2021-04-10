@@ -70,9 +70,9 @@ public class UnitInfoPage extends Page {
 			int ih = info[i].getH();
 			set(info[i], x, y, 0, h, 1600, ih);
 			info[i].resized();
-			h += ih + 50;
+			h += ih + (n.val.forms[i].descriptionGet().replace("<br>", "").length() == 0 ? 50 : 0);
 		}
-		cont.setPreferredSize(size(x, y, 1600, h - 50).toDimension());
+		cont.setPreferredSize(size(x, y, 1600, h).toDimension());
 		jsp.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
 		jsp.revalidate();
 		set(trea, x, y, 1750, 100, 400, 1200);

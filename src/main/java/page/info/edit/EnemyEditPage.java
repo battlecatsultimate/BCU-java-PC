@@ -13,7 +13,8 @@ import page.Page;
 import page.info.EnemyInfoPage;
 import page.info.filter.EnemyEditBox;
 
-import javax.swing.*;
+import java.util.Arrays;
+import java.util.List;
 
 import static utilpc.Interpret.EABIIND;
 import static utilpc.Interpret.IMUSFT;
@@ -29,12 +30,11 @@ public class EnemyEditPage extends EntityEditPage {
 	private final JBTN stat = new JBTN(0, "stat");
 	private final JBTN impt = new JBTN(0, "import");
 	private final JBTN vuni = new JBTN(0, "unit");
-	private final JL cdesc = new JL(1, "Description");
-	private final JTF fdesc = new JTF();
-	private final JScrollPane sdesc = new JScrollPane(fdesc);
+	private final JTF[] edesc = new JTF[4];
 	private final EnemyEditBox eeb;
 	private final Enemy ene;
 	private final CustomEnemy ce;
+	private String[] eneDesc;
 
 	public EnemyEditPage(Page p, Enemy e, PackData.UserPack pack) {
 		super(p, e.id.pack, (CustomEntity) e.de, pack.editable, true);
@@ -70,16 +70,26 @@ public class EnemyEditPage extends EntityEditPage {
 		add(stat);
 		add(impt);
 		add(vuni);
-		add(sdesc);
-		add(cdesc);
-		fdesc.setLnr(d -> {
-			String txt = fdesc.getText().trim();
-			if (!txt.equals("Use <br> to implement new lines") && txt.length() < 200)
-				ene.desc = txt;
-			setData(ce);
-		});
+		for (int i = 0 ; i < edesc.length ; i++)
+			add(edesc[i] = new JTF());
+
+		edesc[0].setLnr(d -> changeDesc(edesc[0]));
+		edesc[1].setLnr(d -> changeDesc(edesc[1]));
+		edesc[2].setLnr(d -> changeDesc(edesc[2]));
+		edesc[3].setLnr(d -> changeDesc(edesc[3]));
+
 		stat.setLnr(x -> changePanel(new EnemyInfoPage(this, (Enemy) Identifier.get(ce.getPack().getID()))));
 		subListener(impt, vuni, vene, ene);
+	}
+
+	private void changeDesc(JTF jt) {
+		List<JTF> descList = Arrays.asList(edesc);
+		int line = descList.indexOf(jt);
+		String txt = edesc[line].getText().trim();
+		if (!txt.equals("Description Line " + (line + 1)) && txt.length() < 64)
+			eneDesc[line] = txt;
+		ene.desc = String.join("<br>", eneDesc);
+		setData(ce);
 	}
 
 	@Override
@@ -98,8 +108,11 @@ public class EnemyEditPage extends EntityEditPage {
 		}
 		set(impt, x, y, 250, 1150, 200, 50);
 		set(vuni, x, y, 450, 1150, 200, 50);
-		set(cdesc, x, y, 650, 1050, 400, 50);
-		set(sdesc, x, y, 650, 1100, 400, 100);
+		int h = 1000;
+		for (JTF jtf : edesc) {
+			set(jtf, x, y, 650, h, 1150, 50);
+			h += 50;
+		}
 		eeb.resized();
 
 	}
@@ -107,8 +120,9 @@ public class EnemyEditPage extends EntityEditPage {
 	@Override
 	protected void setData(CustomEntity data) {
 		super.setData(data);
-		String eneDesc = ene.descriptionGet();
-		fdesc.setText("" + (eneDesc.length() > 0 ? eneDesc : "Use <br> to implement new lines"));
+		eneDesc = ene.descriptionGet().split("<br>",4);
+		for (int i = 0; i < edesc.length; i++)
+			edesc[i].setText("" + (eneDesc[i].length() > 0 ? eneDesc[i] : "Description Line " + (i + 1)));
 		fsr.setText("star: " + ce.star);
 		fdr.setText("" + (int) (ce.getDrop() * bas.t().getDropMulti()));
 		int imu = 0;

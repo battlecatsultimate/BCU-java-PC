@@ -67,7 +67,7 @@ public class UnitInfoTable extends Page {
 		int l = main.length + 1;
 		if (displaySpecial)
 			l += special.length;
-		return (l + (proc.length + 1) / 2) * 50 + (f.descriptionGet().length() > 0 ? 200 : 0);
+		return (l + (proc.length + 1) / 2) * 50 + (f.descriptionGet().replace("<br>", "").length() > 0 ? 200 : 0);
 	}
 
 	protected void reset() {
@@ -259,7 +259,7 @@ public class UnitInfoTable extends Page {
 		atks[3].setText(pre.toString());
 		atks[5].setText(use.toString());
 		String fDesc = f.descriptionGet().replace("<br>", "\n");
-		if (fDesc.length() > 0)
+		if (fDesc.replace("\n","").length() > 0)
 			add(desc);
 		descr.setText(f.toString().replace((f.uid == null ? "NULL" : f.uid.id) + "-" + f.fid + " ", "") + "\n" + fDesc);
 		reset();
