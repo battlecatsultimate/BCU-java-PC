@@ -15,8 +15,6 @@ public abstract class Page extends JPanel implements RetFunc {
 
 	private static final long serialVersionUID = 1L;
 
-	protected boolean ctrl = false;
-
 	public static Color BGCOLOR = MainBCU.light || !MainBCU.nimbus ? new Color(255, 255, 255) : new Color(54, 54, 54);
 
 	static {
@@ -149,19 +147,17 @@ public abstract class Page extends JPanel implements RetFunc {
 	}
 
 	protected void keyPressed(KeyEvent e) {
+		// meta is the Mac OS command key
+		if (!e.isControlDown() && !e.isMetaDown())
+			return;
 		int code = e.getKeyCode();
-		// VK_META is the command key on Mac OS devices
-		if (code == KeyEvent.VK_CONTROL || code == KeyEvent.VK_META)
-			ctrl = true;
-		if (ctrl && code == KeyEvent.VK_S) {
+		if (code == KeyEvent.VK_S) {
 			BCUWriter.writeData();
 			Opts.pop("Successfully saved data.", "Save Confirmation");
 		}
 	}
 
 	protected void keyReleased(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_CONTROL)
-			ctrl = false;
 	}
 
 	protected void keyTyped(KeyEvent e) {
