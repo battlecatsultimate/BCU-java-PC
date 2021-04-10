@@ -7,6 +7,8 @@ import utilpc.PP;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
@@ -62,6 +64,15 @@ public abstract class Page extends JPanel implements RetFunc {
 		front = p;
 		setBackground(BGCOLOR);
 		setLayout(null);
+
+		getInputMap().put(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), "save");
+		getActionMap().put("save", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				BCUWriter.writeData();
+				Opts.pop("Successfully saved data.", "Save Confirmation");
+			}
+		});
 	}
 
 	@Override
@@ -147,14 +158,6 @@ public abstract class Page extends JPanel implements RetFunc {
 	}
 
 	protected void keyPressed(KeyEvent e) {
-		// meta is the Mac OS command key
-		if (!e.isControlDown() && !e.isMetaDown())
-			return;
-		int code = e.getKeyCode();
-		if (code == KeyEvent.VK_S) {
-			BCUWriter.writeData();
-			Opts.pop("Successfully saved data.", "Save Confirmation");
-		}
 	}
 
 	protected void keyReleased(KeyEvent e) {

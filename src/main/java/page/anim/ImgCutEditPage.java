@@ -122,14 +122,12 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 	@Override
 	protected void keyPressed(KeyEvent ke) {
-		super.keyPressed(ke);
 		if (ke.getSource() == sb)
 			sb.keyPressed(ke);
 	}
 
 	@Override
 	protected void keyReleased(KeyEvent ke) {
-		super.keyReleased(ke);
 		if (ke.getSource() == sb)
 			sb.keyReleased(ke);
 	}
