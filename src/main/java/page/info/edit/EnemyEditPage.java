@@ -73,6 +73,9 @@ public class EnemyEditPage extends EntityEditPage {
 		for (int i = 0 ; i < edesc.length ; i++)
 			add(edesc[i] = new JTF());
 
+		for (JTF jtf : edesc)
+			jtf.setEnabled(editable);
+
 		edesc[0].setLnr(d -> changeDesc(edesc[0]));
 		edesc[1].setLnr(d -> changeDesc(edesc[1]));
 		edesc[2].setLnr(d -> changeDesc(edesc[2]));

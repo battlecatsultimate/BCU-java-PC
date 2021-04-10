@@ -75,14 +75,12 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 
 	@Override
 	protected void keyPressed(KeyEvent ke) {
-		super.keyPressed(ke);
 		if (ke.getSource() == ib)
 			ib.keyPressed(ke);
 	}
 
 	@Override
 	protected void keyReleased(KeyEvent ke) {
-		super.keyPressed(ke);
 		if (ke.getSource() == ib)
 			ib.keyReleased(ke);
 	}

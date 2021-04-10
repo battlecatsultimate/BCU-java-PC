@@ -262,6 +262,7 @@ public class UnitInfoTable extends Page {
 		if (fDesc.replace("\n","").length() > 0)
 			add(desc);
 		descr.setText(f.toString().replace((f.uid == null ? "NULL" : f.uid.id) + "-" + f.fid + " ", "") + "\n" + fDesc);
+		descr.setEditable(false);
 		reset();
 		addListeners();
 	}

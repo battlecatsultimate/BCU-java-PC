@@ -221,6 +221,7 @@ public class EnemyInfoTable extends Page {
 		if (eDesc.replace("\n","").length() > 0)
 			add(desc);
 		descr.setText(e.toString().replace(Data.trio(e.id.id) + " - ", "") + (e.de.getType() != 256 ? " (" + Interpret.getTrait(e.de.getType(), TraitBox, 0) + ")" : "") + (e.de.getStar() >= 2 ? " (Cool Dude)" : "") + "\n" + eDesc);
+		descr.setEditable(false);
 		reset();
 		addListeners();
 	}

@@ -136,6 +136,9 @@ public class FormEditPage extends EntityEditPage {
 		for (int i = 0 ; i < fdesc.length ; i++)
 			add(fdesc[i] = new JTF());
 
+		for (JTF jtf : fdesc)
+			jtf.setEnabled(editable);
+
 		fdesc[0].setLnr(d -> changeDesc(fdesc[0]));
 		fdesc[1].setLnr(d -> changeDesc(fdesc[1]));
 		fdesc[2].setLnr(d -> changeDesc(fdesc[2]));
