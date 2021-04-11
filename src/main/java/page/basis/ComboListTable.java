@@ -122,8 +122,10 @@ public class ComboListTable extends SortTable<Combo> {
 			return t;
 		if (c == 2)
 			return lu.occupance(t);
-		if (t.units.length > c - 3)
-			return UserProfile.getBCData().units.get(t.units[c - 3][0]).forms[t.units[c - 3][1]];
+		if (t.units.size() > c - 3) {
+			Form f = t.units.get(c - 3);
+			return UserProfile.getBCData().units.get(f.uid.id).forms[f.fid];
+		}
 		return null;
 	}
 
