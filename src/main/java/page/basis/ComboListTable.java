@@ -3,6 +3,7 @@ package page.basis;
 import common.battle.BasisSet;
 import common.battle.LineUp;
 import common.pack.UserProfile;
+import common.util.lang.MultiLangCont;
 import common.util.unit.Combo;
 import common.util.unit.Form;
 import page.MainLocale;
@@ -105,13 +106,25 @@ public class ComboListTable extends SortTable<Combo> {
 
 	@Override
 	protected int compare(Combo e0, Combo e1, int c) {
-		if (c == 2) {
-
+		if (c == 1) {
+			String name0 = Interpret.comboInfo(e0, lineup);
+			String name1 = Interpret.comboInfo(e1, lineup);
+			return name0.compareToIgnoreCase(name1);
+		} else if (c == 2) {
 			int o0 = lu.occupance(e0);
 			int o1 = lu.occupance(e1);
 			return Integer.compare(o0, o1);
+		} else if (c >= 3 && c <= 7) {
+			if (e0.units.size() <= c - 3)
+				return -1;
+			if (e1.units.size() <= c - 3)
+				return 1;
+			Form f0 = e0.units.get(c - 3);
+			Form f1 = e1.units.get(c - 3);
+			return f0.uid.compareTo(f1.uid);
+		} else {
+			return Integer.compare(e0.lv, e1.lv);
 		}
-		return Integer.compare(e0.lv, e1.lv);
 	}
 
 	@Override
