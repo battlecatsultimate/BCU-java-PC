@@ -19,7 +19,6 @@ import utilpc.Interpret;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -48,7 +47,7 @@ public class ComboEditPage extends Page {
 
     private final JBTN back = new JBTN(0, "back");
     private final JBTN addf = new JBTN(0, "add");
-    private final JBTN addc = new JBTN(0, "add");
+    private final JBTN addc = new JBTN(0, "add combo");
 
     private final JL lbp = new JL(0, "pack");
     private final JL lbu = new JL(0, "unit");
@@ -152,8 +151,7 @@ public class ComboEditPage extends Page {
             CustomCombo combo = new CustomCombo(id, "new combo", frm);
             combos.add(combo);
             jlc.getSelectionModel().setSelectionInterval(0, combos.indexOf(combo));
-            ctypes.setEnabled(jlc.getSelectedRow() > -1);
-            clvls.setEnabled(jlc.getSelectedRow() > -1);
+            updateC();
             changing = false;
         });
 
@@ -257,6 +255,11 @@ public class ComboEditPage extends Page {
         boolean editable = frm != null && pac.editable;
         addc.setEnabled(editable);
         boolean size = jlc.list.size() > 0 && jlc.getSelectedRow() != -1;
+        if (size) {
+            Combo c = jlc.list.get(jlc.getSelectedRow());
+            ctypes.setSelectedIndex(c.type);
+            clvls.setSelectedIndex(c.lv);
+        }
         ctypes.setEnabled(size);
         clvls.setEnabled(size);
         boolean check = editable && size && jlc.list.get(jlc.getSelectedRow()).forms.values().stream().noneMatch(fr -> fr.uid.id == frm.uid.id);
