@@ -5,12 +5,16 @@ import common.battle.data.CustomEntity;
 import common.pack.Identifier;
 import common.pack.PackData;
 import common.util.unit.Enemy;
+import org.jcodec.common.tools.MathUtil;
 import page.JBTN;
 import page.JL;
 import page.JTF;
 import page.Page;
 import page.info.EnemyInfoPage;
 import page.info.filter.EnemyEditBox;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static utilpc.Interpret.EABIIND;
 import static utilpc.Interpret.IMUSFT;
@@ -26,15 +30,17 @@ public class EnemyEditPage extends EntityEditPage {
 	private final JBTN stat = new JBTN(0, "stat");
 	private final JBTN impt = new JBTN(0, "import");
 	private final JBTN vuni = new JBTN(0, "unit");
+	private final JTF[] edesc = new JTF[4];
 	private final EnemyEditBox eeb;
 	private final Enemy ene;
 	private final CustomEnemy ce;
+	private String[] eneDesc;
 
 	public EnemyEditPage(Page p, Enemy e, PackData.UserPack pack) {
 		super(p, e.id.pack, (CustomEntity) e.de, pack.editable, true);
 		ene = e;
 		ce = (CustomEnemy) ene.de;
-		eeb = new EnemyEditBox(this, editable);
+		eeb = new EnemyEditBox(this, pack, ce);
 		ini();
 		setData((CustomEnemy) e.de);
 		resized();
@@ -47,10 +53,7 @@ public class EnemyEditPage extends EntityEditPage {
 			ce.drop = (int) (v[0] / bas.t().getDropMulti());
 		}
 		if (jtf == fsr) {
-			if (v[0] < 0)
-				v[0] = 0;
-			if (v[0] > 4)
-				v[0] = 1;
+			v[0] = MathUtil.clip(v[0], 0, 4);
 			ce.star = v[0];
 		}
 	}
@@ -67,8 +70,29 @@ public class EnemyEditPage extends EntityEditPage {
 		add(stat);
 		add(impt);
 		add(vuni);
+		for (int i = 0 ; i < edesc.length ; i++)
+			add(edesc[i] = new JTF());
+
+		for (JTF jtf : edesc)
+			jtf.setEnabled(editable);
+
+		edesc[0].setLnr(d -> changeDesc(edesc[0]));
+		edesc[1].setLnr(d -> changeDesc(edesc[1]));
+		edesc[2].setLnr(d -> changeDesc(edesc[2]));
+		edesc[3].setLnr(d -> changeDesc(edesc[3]));
+
 		stat.setLnr(x -> changePanel(new EnemyInfoPage(this, (Enemy) Identifier.get(ce.getPack().getID()))));
 		subListener(impt, vuni, vene, ene);
+	}
+
+	private void changeDesc(JTF jt) {
+		List<JTF> descList = Arrays.asList(edesc);
+		int line = descList.indexOf(jt);
+		String txt = edesc[line].getText().trim();
+		if (!txt.equals("Description Line " + (line + 1)) && txt.length() < 64)
+			eneDesc[line] = txt;
+		ene.desc = String.join("<br>", eneDesc);
+		setData(ce);
 	}
 
 	@Override
@@ -87,6 +111,11 @@ public class EnemyEditPage extends EntityEditPage {
 		}
 		set(impt, x, y, 250, 1150, 200, 50);
 		set(vuni, x, y, 450, 1150, 200, 50);
+		int h = 1000;
+		for (JTF jtf : edesc) {
+			set(jtf, x, y, 650, h, 1150, 50);
+			h += 50;
+		}
 		eeb.resized();
 
 	}
@@ -94,6 +123,9 @@ public class EnemyEditPage extends EntityEditPage {
 	@Override
 	protected void setData(CustomEntity data) {
 		super.setData(data);
+		eneDesc = ene.descriptionGet().split("<br>",4);
+		for (int i = 0; i < edesc.length; i++)
+			edesc[i].setText("" + (eneDesc[i].length() > 0 ? eneDesc[i] : "Description Line " + (i + 1)));
 		fsr.setText("star: " + ce.star);
 		fdr.setText("" + (int) (ce.getDrop() * bas.t().getDropMulti()));
 		int imu = 0;
@@ -103,6 +135,7 @@ public class EnemyEditPage extends EntityEditPage {
 				if (ce.getProc().getArr(id).exists())
 					imu |= 1 << id - IMUSFT;
 			}
+		eeb.diyIni(data.customTraits);
 		eeb.setData(new int[] { ce.type, ce.abi, imu });
 	}
 

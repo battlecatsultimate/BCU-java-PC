@@ -20,6 +20,8 @@ public class EnemyInfoPage extends Page {
 	private final JBTN find = new JBTN(0, "stage");
 	private final JTG extr = new JTG(0, "extra");
 	private final JLabel source = new JLabel("Source of enemy icon: DB");
+	private final JPanel cont = new JPanel();
+	private final JScrollPane jsp = new JScrollPane(cont);
 	private final EnemyInfoTable info;
 	private final TreaTable trea;
 
@@ -53,8 +55,14 @@ public class EnemyInfoPage extends Page {
 		set(anim, x, y, 600, 0, 200, 50);
 		set(find, x, y, 1200, 0, 200, 50);
 		set(extr, x, y, 1500, 0, 200, 50);
-		set(info, x, y, 50, 100, 1600, 800);
+		set(jsp, x, y, 50, 100, 1650, 1150);
 		set(trea, x, y, 1700, 100, 400, 1200);
+		int ih = info.getH();
+		cont.setPreferredSize(size(x, y, 1600, ih - 50).toDimension());
+		jsp.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
+		set(info, x, y, 0, 0, 1600, ih);
+		info.resized();
+		jsp.revalidate();
 	}
 
 	private void addListeners() {
@@ -89,7 +97,9 @@ public class EnemyInfoPage extends Page {
 
 	private void ini() {
 		add(back);
-		add(info);
+		cont.add(info);
+		cont.setLayout(null);
+		add(jsp);
 		add(trea);
 		add(anim);
 		add(find);

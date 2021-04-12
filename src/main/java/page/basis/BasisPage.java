@@ -718,5 +718,4 @@ public class BasisPage extends LubCont {
 		setc.setText(0, "set" + (b ? "1" : "0"));
 
 	}
-
 }

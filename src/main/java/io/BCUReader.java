@@ -63,6 +63,7 @@ public class BCUReader extends DataIO {
 				MainBCU.preload = jo.get("preload").getAsBoolean();
 				ViewBox.Conf.white = jo.get("transparent").getAsBoolean();
 				MainBCU.USE_JOGL = jo.get("JOGL").getAsBoolean();
+				MainBCU.prefLevel = jo.get("prefLv").getAsInt();
 				MainBCU.FILTER_TYPE = jo.get("filter").getAsInt();
 				BCMusic.play = jo.get("play_sound").getAsBoolean();
 				BCMusic.VOL_BG = jo.get("volume_BG").getAsInt();
@@ -203,6 +204,31 @@ public class BCUReader extends DataIO {
 										if (e == null || strs.length < 2)
 											continue;
 										MultiLangCont.getStatic().ENAME.put(ni, e, strs[1].trim());
+									}
+								continue;
+							}
+							if (nl.equals("UnitExplanation.txt")) {
+								Queue<String> qs = readLines(fl);
+								if(qs != null)
+									for (String str : qs) {
+										String[] strs = str.trim().split("\t");
+										Unit u = UserProfile.getBCData().units.get(CommonStatic.parseIntN(strs[0]));
+										if (u == null)
+											continue;
+										for (int i = 0; i < Math.min(u.forms.length, strs.length - 1); i++)
+											MultiLangCont.getStatic().FEXP.put(ni, u.forms[i], strs);
+									}
+								continue;
+							}
+							if (nl.equals("EnemyExplanation.txt")) {
+								Queue<String> qs = readLines(fl);
+								if(qs != null)
+									for (String str : qs) {
+										String[] strs = str.trim().split("\t");
+										Enemy e = UserProfile.getBCData().enemies.get(CommonStatic.parseIntN(strs[0]));
+										if (e == null || strs.length < 2)
+											continue;
+										MultiLangCont.getStatic().EEXP.put(ni, e, strs);
 									}
 								continue;
 							}

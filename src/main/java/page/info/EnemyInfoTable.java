@@ -2,6 +2,9 @@ package page.info;
 
 import common.CommonStatic;
 import common.battle.BasisSet;
+import common.battle.data.CustomEnemy;
+import common.battle.data.CustomEntity;
+import common.util.Data;
 import common.util.unit.Enemy;
 import page.JL;
 import page.JTF;
@@ -23,6 +26,9 @@ public class EnemyInfoTable extends Page {
 	private final JL[][] atks;
 	private final JLabel[] abis, proc;
 	private final JTF jtf = new JTF();
+	private final JTextArea descr = new JTextArea();
+	private final JScrollPane desc = new JScrollPane(descr);
+
 
 	private final BasisSet b;
 	private final Enemy e;
@@ -87,11 +93,12 @@ public class EnemyInfoTable extends Page {
 				set(atks[i][j], x, y, 200 * j, h + 50 * i, 200, 50);
 		h += atks.length * 50;
 		for (int i = 0; i < abis.length; i++)
-			set(abis[i], x, y, 0, h + 50 * i, 1200, 50);
-		h += abis.length * 50;
+			set(abis[i], x, y, i % 2 * 800, h + 50 * (i / 2), i % 2 == 0 && i + 1 == abis.length ? 1600 : 800, 50);
+		h += abis.length * 25 + (abis.length % 2 == 1 ? 25 : 0);
 		for (int i = 0; i < proc.length; i++)
-			set(proc[i], x, y, 0, h + 50 * i, 1200, 50);
-
+			set(proc[i], x, y, i % 2 * 800, h + 50 * (i / 2), i % 2 == 0 && i + 1 == proc.length ? 1600 : 800, 50);
+		h += proc.length * 25 + (proc.length % 2 == 1 ? 25 : 0);
+		set(desc, x, y, 0, h, 1600, 200);
 	}
 
 	private void addListeners() {
@@ -128,7 +135,22 @@ public class EnemyInfoTable extends Page {
 		});
 	}
 
+	protected int getH() {
+		int l = main.length + atks.length;
+		if (displaySpecial)
+			l += special.length;
+		return (l + (proc.length + (proc.length % 2 == 1 ? 1 : 0) + abis.length + (abis.length % 2 == 1 ? 1 : 0)) / 2) * 50 + (e.descriptionGet().replace("<br>", "").length() > 0 ? 200 : 0);
+	}
+
 	private void ini() {
+		String[] TraitBox = {};
+		if (e.de instanceof CustomEnemy) {
+			int trsize = ((CustomEnemy) e.de).customTraits.size();
+			TraitBox = new String[trsize];
+			for (int i = 0; i < trsize; i++) {
+				TraitBox[i] = ((CustomEnemy) e.de).customTraits.get(i).get().name;
+			}
+		}
 		for (int i = 0; i < main.length; i++)
 			for (int j = 0; j < main[i].length; j++)
 				if (i * j != 1 && (i != 0 || j < 5)) {
@@ -160,7 +182,7 @@ public class EnemyInfoTable extends Page {
 		if (e.anim.getEdi() != null && e.anim.getEdi().getImg() != null)
 			main[0][2].setIcon(UtilPC.getIcon(e.anim.getEdi()));
 		main[0][3].setText(1, "trait");
-		main[0][4].setText(Interpret.getTrait(e.de.getType(), e.de.getStar()));
+		main[0][4].setText(Interpret.getTrait(e.de.getType(), TraitBox, e.de.getStar()));
 		main[1][0].setText(1, "mult");
 		main[1][2].setText("HP");
 		main[1][4].setText("HB");
@@ -195,6 +217,11 @@ public class EnemyInfoTable extends Page {
 			itv -= atkData[i][1];
 		}
 		main[3][7].setText(e.de.getPost() + "f");
+		String eDesc = e.descriptionGet().replace("<br>", "\n");
+		if (eDesc.replace("\n","").length() > 0)
+			add(desc);
+		descr.setText(e.toString().replace(Data.trio(e.id.id) + " - ", "") + (e.de.getType() != 256 ? " (" + Interpret.getTrait(e.de.getType(), TraitBox, 0) + ")" : "") + (e.de.getStar() >= 2 ? " (Cool Dude)" : "") + "\n" + eDesc);
+		descr.setEditable(false);
 		reset();
 		addListeners();
 	}

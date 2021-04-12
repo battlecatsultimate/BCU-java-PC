@@ -1,5 +1,6 @@
 package main;
 
+import common.io.nullTraitFix;
 import common.CommonStatic;
 import common.battle.BasisSet;
 import common.io.PackLoader.ZipDesc.FileDesc;
@@ -143,7 +144,7 @@ public class MainBCU {
 
 	public static final int ver = 50024;
 
-	public static int FILTER_TYPE = 1;
+	public static int FILTER_TYPE = 1, prefLevel = 50;
 	public static final boolean WRITE = !new File("./.project").exists();
 	public static boolean preload = false, trueRun = true, loaded = false, USE_JOGL = false;
 	public static boolean light = true, nimbus = false;
@@ -188,6 +189,7 @@ public class MainBCU {
 
 		BCUReader.getData$1();
 		loaded = true;
+		nullTraitFix.fixNullTraits();
 		MainFrame.changePanel(new MainPage());
 	}
 

@@ -14,6 +14,9 @@ import page.JTF;
 import page.Page;
 import page.info.UnitInfoPage;
 import page.info.filter.UnitEditBox;
+import java.util.List;
+
+import java.util.Arrays;
 
 import static utilpc.Interpret.EABIIND;
 import static utilpc.Interpret.IMUSFT;
@@ -34,17 +37,19 @@ public class FormEditPage extends EntityEditPage {
 	private final JBTN stat = new JBTN(0, "stat");
 	private final JBTN impt = new JBTN(0, "import");
 	private final JBTN vene = new JBTN(0, "enemy");
+	private final JTF[] fdesc = new JTF[4];
 	private final UnitEditBox ueb;
 	private final Form form;
 	private final CustomUnit cu;
 	private int lv;
+	private String[] uniDesc;
 
 	public FormEditPage(Page p, UserPack pac, Form f) {
 		super(p, pac.desc.id, (CustomEntity) f.du, pac.editable, false);
 		form = f;
 		cu = (CustomUnit) form.du;
 		lv = f.unit.getPrefLv();
-		ueb = new UnitEditBox(this, pac.editable);
+		ueb = new UnitEditBox(this, pac, cu);
 		ini();
 		setData((CustomUnit) f.du);
 		resized();
@@ -128,6 +133,16 @@ public class FormEditPage extends EntityEditPage {
 		add(stat);
 		add(impt);
 		add(vene);
+		for (int i = 0 ; i < fdesc.length ; i++)
+			add(fdesc[i] = new JTF());
+
+		for (JTF jtf : fdesc)
+			jtf.setEnabled(editable);
+
+		fdesc[0].setLnr(d -> changeDesc(fdesc[0]));
+		fdesc[1].setLnr(d -> changeDesc(fdesc[1]));
+		fdesc[2].setLnr(d -> changeDesc(fdesc[2]));
+		fdesc[3].setLnr(d -> changeDesc(fdesc[3]));
 
 		subListener(vene, impt, vuni, form.unit);
 
@@ -136,6 +151,16 @@ public class FormEditPage extends EntityEditPage {
 			Node<Unit> nu = Node.getList(UserProfile.getAll(cu.getPack().uid.pack, Unit.class), u);
 			changePanel(new UnitInfoPage(this, nu));
 		});
+	}
+
+	private void changeDesc(JTF jt) {
+		List<JTF> descList = Arrays.asList(fdesc);
+		int line = descList.indexOf(jt);
+		String txt = fdesc[line].getText().trim();
+		if (!txt.equals("Description Line " + (line + 1)) && txt.length() < 64)
+			uniDesc[line] = txt;
+		form.explanation = String.join("<br>", uniDesc);
+		setData(cu);
 	}
 
 	@Override
@@ -159,7 +184,11 @@ public class FormEditPage extends EntityEditPage {
 		}
 		set(impt, x, y, 50, 1150, 200, 50);
 		set(vene, x, y, 250, 1150, 200, 50);
-
+		int h = 1000;
+		for (JTF jtf : fdesc) {
+			set(jtf, x, y, 650, h, 1150, 50);
+			h += 50;
+		}
 		ueb.resized();
 
 	}
@@ -167,6 +196,9 @@ public class FormEditPage extends EntityEditPage {
 	@Override
 	protected void setData(CustomEntity data) {
 		super.setData(data);
+		uniDesc = form.descriptionGet().split("<br>",4);
+		for (int i = 0; i < fdesc.length; i++)
+			fdesc[i].setText("" + (uniDesc[i].length() > 0 ? uniDesc[i] : "Description Line " + (i + 1)));
 		flv.setText("" + lv);
 		frs.setText("" + bas.t().getFinRes(cu.getRespawn()));
 		fdr.setText("" + (int) (cu.getPrice() * 1.5));
@@ -178,6 +210,7 @@ public class FormEditPage extends EntityEditPage {
 				if (cu.getProc().getArr(id).exists())
 					imu |= 1 << id - IMUSFT;
 			}
+		ueb.diyIni(data.customTraits);
 		ueb.setData(new int[] { cu.type, cu.abi, imu });
 	}
 
