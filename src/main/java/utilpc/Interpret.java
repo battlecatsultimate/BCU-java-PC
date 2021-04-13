@@ -9,11 +9,14 @@ import common.pack.Identifier;
 import common.util.Data;
 import common.util.Data.Proc.ProcItem;
 import common.util.lang.Formatter;
+import common.util.lang.MultiLangCont;
 import common.util.lang.ProcLang;
 import common.util.stage.MapColc;
 import common.util.stage.MapColc.DefMapColc;
 import common.util.unit.Combo;
 import common.util.unit.Enemy;
+import common.util.unit.CustomCombo;
+import common.util.unit.DataCombo;
 import page.MainLocale;
 import page.Page;
 
@@ -131,6 +134,15 @@ public class Interpret extends Data {
 
 	public static String comboInfo(Combo c, BasisSet b) {
 		return combo(c.type, CommonStatic.getBCAssets().values[c.type][c.lv], b);
+	}
+
+	public static String comboName(Combo c) {
+		if (c instanceof DataCombo)
+			return MultiLangCont.getStatic().COMNAME.getCont(((DataCombo) c).name);
+		else if (c instanceof CustomCombo)
+			return ((CustomCombo) c).name;
+		else
+			return null;
 	}
 
 	public static List<String> getAbi(MaskEntity me) {
