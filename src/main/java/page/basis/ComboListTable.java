@@ -2,8 +2,6 @@ package page.basis;
 
 import common.battle.BasisSet;
 import common.battle.LineUp;
-import common.pack.UserProfile;
-import common.util.lang.MultiLangCont;
 import common.util.unit.Combo;
 import common.util.unit.Form;
 import page.MainLocale;
@@ -22,6 +20,7 @@ public class ComboListTable extends SortTable<Combo> {
 	private static final long serialVersionUID = 1L;
 
 	private static String[] tit;
+	private static String[] lvl;
 
 	static {
 		redefine();
@@ -31,12 +30,13 @@ public class ComboListTable extends SortTable<Combo> {
 		String str = MainLocale.getLoc(MainLocale.INFO, "unit");
 		tit = new String[] { "Lv.", MainLocale.getLoc(MainLocale.INFO, "desc"), MainLocale.getLoc(MainLocale.INFO, "occu"), str + " 1", str + " 2",
 				str + " 3", str + " 4", str + " 5" };
+		lvl = new String[] { "Sm", "M", "L", "XL" };
 	}
 
 	private final LineUp lu;
 	private final Page fr;
 
-	protected ComboListTable(Page p, LineUp line) {
+	public ComboListTable(Page p, LineUp line) {
 		fr = p;
 		lu = line;
 
@@ -113,12 +113,12 @@ public class ComboListTable extends SortTable<Combo> {
 			int o1 = lu.occupance(e1);
 			return Integer.compare(o0, o1);
 		} else if (c >= 3 && c <= 7) {
-			if (e0.units.size() <= c - 3)
+			if (e0.forms.size() <= c - 3)
 				return -1;
-			if (e1.units.size() <= c - 3)
+			if (e1.forms.size() <= c - 3)
 				return 1;
-			Form f0 = e0.units.get(c - 3);
-			Form f1 = e1.units.get(c - 3);
+			Form f0 = e0.forms.get(c - 3);
+			Form f1 = e1.forms.get(c - 3);
 			return f0.uid.compareTo(f1.uid);
 		} else {
 			return Integer.compare(e0.lv, e1.lv);
@@ -128,14 +128,13 @@ public class ComboListTable extends SortTable<Combo> {
 	@Override
 	protected Object get(Combo t, int c) {
 		if (c == 0)
-			return t.lv;
+			return lvl[t.lv];
 		if (c == 1)
 			return t;
 		if (c == 2)
 			return lu.occupance(t);
-		if (t.units.size() > c - 3) {
-			Form f = t.units.get(c - 3);
-			return UserProfile.getBCData().units.get(f.uid.id).forms[f.fid];
+		if (t.forms.size() > c - 3) {
+			return t.forms.get(c - 3);
 		}
 		return null;
 	}
