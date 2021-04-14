@@ -1,6 +1,5 @@
 package page.view;
 
-import common.battle.data.CustomEnemy;
 import common.pack.PackData;
 import common.pack.Source;
 import common.pack.UserProfile;
@@ -13,7 +12,6 @@ import page.JBTN;
 import page.Page;
 import page.anim.ImgCutEditPage;
 import page.info.EnemyInfoPage;
-import page.info.edit.EnemyEditPage;
 import page.support.AnimLCR;
 
 import javax.swing.*;
