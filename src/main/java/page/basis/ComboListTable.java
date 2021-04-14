@@ -107,9 +107,7 @@ public class ComboListTable extends SortTable<Combo> {
 	@Override
 	protected int compare(Combo e0, Combo e1, int c) {
 		if (c == 1) {
-			String name0 = Interpret.comboInfo(e0, lineup);
-			String name1 = Interpret.comboInfo(e1, lineup);
-			return name0.compareToIgnoreCase(name1);
+			return Integer.compare(e0.type, e1.type);
 		} else if (c == 2) {
 			int o0 = lu.occupance(e0);
 			int o1 = lu.occupance(e1);
