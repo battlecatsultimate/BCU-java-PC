@@ -51,6 +51,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 	private final JBTN appl = new JBTN(0, "apply");// TODO
 	private final JBTN show = new JBTN(0, "show");// TODO
 	private final JBTN time = new JBTN(0, "time");// TODO
+	private final JBTN revt = new JBTN(0, "revt");
 	private final JL lkip = new JL();
 	private final JL inft = new JL();
 	private final JL inff = new JL();
@@ -190,6 +191,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 		set(sort, x, y, 1300, 100, 200, 50);
 		set(clea, x, y, 1300, 150, 200, 50);
 		set(time, x, y, 1300, 200, 200, 50);
+		set(revt, x, y, 1300, 250, 200, 50);
 		set(lkip, x, y, 1500, 50, 200, 50);
 		set(keep, x, y, 1500, 100, 200, 50);
 		set(appl, x, y, 1500, 150, 200, 50);
@@ -265,6 +267,58 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 			for (int i : times)
 				str.append(i == 0 ? "-" : "X");
 			System.out.println(str);// TODO
+		});
+
+		revt.setLnr(x -> {
+			MaAnim anim = ac.getMaAnim(animID);
+			if (anim == null)
+				return;
+			if (Arrays.stream(anim.parts).anyMatch(p -> p.ints[0] == 0 && p.ints[1] == 9)) {
+				Arrays.stream(anim.parts).filter(p -> p.ints[0] == 0 && p.ints[1] == 9).forEach(p -> {
+					Arrays.stream(p.moves)
+							.forEach(ints -> ints[1] *= -1);
+				});
+			} else {
+				Part[] data = anim.parts;
+				anim.parts = new Part[++anim.n];
+				System.arraycopy(data, 0, anim.parts, 0, data.length);
+				Part newScalePart = new Part();
+				newScalePart.validate();
+				newScalePart.ints[1] = 9;
+				newScalePart.moves = new int[++newScalePart.n][];
+				newScalePart.moves[0] = new int[] { 0, -1000, 0, 0 };
+				newScalePart.validate();
+				anim.parts[anim.n - 1] = newScalePart;
+				anim.validate();
+			}
+			for (int i = 0; i < ac.mamodel.parts.length; i++) {
+				int[] parts = ac.mamodel.parts[i];
+				int partID = i;
+				int angle = parts[10];
+				if (Arrays.stream(anim.parts).anyMatch(p -> p.ints[0] == partID && p.ints[1] == 11)) {
+					Arrays.stream(anim.parts)
+							.filter(p -> p.ints[0] == partID && p.ints[1] == 11)
+							.forEach(p -> Arrays.stream(p.moves).forEach(ints -> {
+								ints[1] += angle * 2;
+								ints[1] *= -1;
+							}));
+				} else if (angle != 0) {
+					Part[] data = anim.parts; // copy parts
+					anim.parts = new Part[++anim.n]; // add slot for new part
+					System.arraycopy(data, 0, anim.parts, 0, data.length); // preserve parts
+					Part newPart = new Part(); // create part
+					newPart.validate(); // validate
+					newPart.ints[0] = partID;
+					newPart.ints[1] = 11; // set type to angle
+					newPart.moves = new int[++newPart.n][]; // add slot for new move
+					newPart.moves[0] = new int[] { 0, angle * -2, 0, 0 }; // set angle to negative ma_model angle
+					newPart.validate(); // validate part
+					anim.parts[anim.n - 1] = newPart; // set part to anim parts
+				}
+				anim.validate(); // validate animation before next ma_model part check
+			}
+			maet.anim.unSave("maanim revert");
+			callBack(null);
 		});
 	}
 
@@ -545,6 +599,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 		add(show);
 		add(lkip);
 		add(time);
+		add(revt);
 		setA();
 
 		addListeners$0();
