@@ -2,6 +2,7 @@ package page.basis;
 
 import common.battle.BasisSet;
 import common.battle.LineUp;
+import common.pack.UserProfile;
 import common.util.unit.Combo;
 import common.util.unit.Form;
 import page.MainLocale;
