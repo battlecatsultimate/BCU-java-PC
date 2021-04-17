@@ -221,7 +221,7 @@ public class ComboEditPage extends Page {
         if (pac == null) {
             jlu.setListData(new Unit[0]);
             jlc.clearSelection();
-            jlc.setList(null);
+            jlc.setList(new ArrayList<>());
         } else {
             jlf.allowDrag(pac.editable);
             jlu.setListData(pac.units.toRawArray());
