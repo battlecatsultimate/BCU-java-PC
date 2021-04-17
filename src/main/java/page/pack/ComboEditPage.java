@@ -5,7 +5,6 @@ import common.pack.Identifier;
 import common.pack.PackData;
 import common.pack.UserProfile;
 import common.util.unit.Combo;
-import common.util.unit.CustomCombo;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import page.JBTN;
@@ -19,8 +18,7 @@ import page.support.UnitLCR;
 import utilpc.Interpret;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Vector;
 
 public class ComboEditPage extends Page {
@@ -42,7 +40,6 @@ public class ComboEditPage extends Page {
     private final JScrollPane jspf = new JScrollPane(jlf);
     private final ComboListTable jlc = new ComboListTable(this, b.sele.lu);
     private final JScrollPane jspc = new JScrollPane(jlc);
-    private final List<Combo> combos = new ArrayList<>();
     private final JComboBox<String> ctypes = new JComboBox<>(Interpret.getComboFilter(0));
     private final JComboBox<String> clvls = new JComboBox<>(new String[] { "Sm", "M", "L", "XL" });
     private final JTF comboname = new JTF();
@@ -63,8 +60,6 @@ public class ComboEditPage extends Page {
         super(p);
 
         pac = pack;
-        for (CustomCombo cm : pac.diyCombo)
-            combos.add(cm);
 
         ini();
         resized();
@@ -93,7 +88,6 @@ public class ComboEditPage extends Page {
         jlu.setCellRenderer(new UnitLCR());
         jlf.setCellRenderer(new AnimLCR());
         jlc.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        jlc.setList(combos);
         ctypes.setEnabled(false);
         clvls.setEnabled(false);
 
@@ -112,7 +106,6 @@ public class ComboEditPage extends Page {
             if (changing || jlp.getValueIsAdjusting())
                 return;
             changing = true;
-            combos.clear();
             jlc.getSelectionModel().setSelectionInterval(0, 0);
             setPack(jlp.getSelectedValue());
             updateC();
@@ -139,7 +132,7 @@ public class ComboEditPage extends Page {
             if (changing || jlf.getValueIsAdjusting())
                 return;
             changing = true;
-            CustomCombo combo = (CustomCombo) jlc.list.get(jlc.getSelectedRow());
+            Combo combo = jlc.list.get(jlc.getSelectedRow());
             combo.addForm(frm);
             updateC();
             changing = false;
@@ -149,8 +142,8 @@ public class ComboEditPage extends Page {
             if (changing || jlf.getValueIsAdjusting())
                 return;
             changing = true;
-            CustomCombo combo = (CustomCombo) jlc.list.get(jlc.getSelectedRow());
-            combo.removeForm(combo.forms.size() - 1);
+            Combo combo = jlc.list.get(jlc.getSelectedRow());
+            combo.removeForm(combo.forms.length - 1);
             updateC();
             changing = false;
         });
@@ -170,12 +163,9 @@ public class ComboEditPage extends Page {
                 return;
             changing = true;
             Identifier<Combo> id = pac.getNextID(Combo.class);
-            CustomCombo combo = new CustomCombo(id, "new combo", frm);
-            combos.add(combo);
-            pac.diyCombo.add(combo);
-            jlc.getSelectionModel().setSelectionInterval(0, combos.indexOf(combo));
-            ctypes.setEnabled(jlc.getSelectedRow() > -1);
-            clvls.setEnabled(jlc.getSelectedRow() > -1);
+            Combo combo = new Combo(id, "new combo", 0, 0, 1, frm);
+            pac.combos.add(combo);
+            jlc.getSelectionModel().setSelectionInterval(0, pac.combos.indexOf(combo));
             updateC();
             changing = false;
         });
@@ -185,12 +175,11 @@ public class ComboEditPage extends Page {
                 return;
             changing = true;
             int sel = jlc.getSelectedRow();
-            CustomCombo combo = (CustomCombo) jlc.list.get(sel);
+            Combo combo = jlc.list.get(sel);
             if (sel > 0)
                 sel--;
             jlc.setRowSelectionInterval(sel, sel);
-            combos.remove(combo);
-            pac.diyCombo.remove(combo);
+            pac.combos.remove(combo);
             updateC();
             changing = false;
         });
@@ -199,7 +188,7 @@ public class ComboEditPage extends Page {
             if (changing || jlf.getValueIsAdjusting())
                 return;
             changing = true;
-            CustomCombo combo = (CustomCombo) jlc.list.get(jlc.getSelectedRow());
+            Combo combo = jlc.list.get(jlc.getSelectedRow());
             combo.setType(ctypes.getSelectedIndex());
             changing = false;
         });
@@ -208,14 +197,14 @@ public class ComboEditPage extends Page {
             if (changing || jlf.getValueIsAdjusting())
                 return;
             changing = true;
-            CustomCombo combo = (CustomCombo) jlc.list.get(jlc.getSelectedRow());
+            Combo combo = jlc.list.get(jlc.getSelectedRow());
             combo.setLv(clvls.getSelectedIndex());
             changing = false;
         });
 
         comboname.setLnr(x -> {
             String str = comboname.getText();
-            CustomCombo combo = (CustomCombo) jlc.list.get(jlc.getSelectedRow());
+            Combo combo = jlc.list.get(jlc.getSelectedRow());
             if (combo.name.equals(str))
                 return;
             if (str.equals("")) {
@@ -265,6 +254,9 @@ public class ComboEditPage extends Page {
         changing = true;
         if (pac == null) {
             jlu.setListData(new Unit[0]);
+            jlc.clearSelection();
+            jlc.setList(null);
+            jlc.setList(pac.combos.getList());
         } else {
             jlf.allowDrag(pac.editable);
             PackData.DefPack BCs = UserProfile.getBCData();
@@ -316,13 +308,13 @@ public class ComboEditPage extends Page {
     private void updateC() {
         boolean editable = frm != null && pac.editable;
         addc.setEnabled(editable);
-        boolean size = editable && jlc.list.size() > 0 && jlc.getSelectedRow() != -1;
+        boolean size = editable && jlc.getSelectedRow() != -1;
         if (size) {
             Combo c = jlc.list.get(jlc.getSelectedRow());
             ctypes.setSelectedIndex(c.type);
             clvls.setSelectedIndex(c.lv);
-            comboname.setText(Interpret.comboName(c));
-            pac.diyCombo.set(jlc.getSelectedRow(),(CustomCombo)c);
+            comboname.setText(c.name);
+            pac.combos.set(jlc.getSelectedRow(),c);
         } else {
             comboname.setText("");
         }
@@ -331,8 +323,8 @@ public class ComboEditPage extends Page {
         clvls.setEnabled(size);
         remc.setEnabled(size);
         boolean esize = editable && size;
-        remcf.setEnabled(esize && jlc.list.get(jlc.getSelectedRow()).forms.size() > 1);
-        boolean check = esize && jlc.list.get(jlc.getSelectedRow()).forms.values().stream().noneMatch(fr -> fr.uid.id == frm.uid.id);
+        remcf.setEnabled(esize && jlc.list.get(jlc.getSelectedRow()).forms.length > 1);
+        boolean check = esize && Arrays.stream(jlc.list.get(jlc.getSelectedRow()).forms).noneMatch(fr -> fr.uid.id == frm.uid.id) && jlc.list.get(jlc.getSelectedRow()).forms.length < 5;
         addf.setEnabled(check);
     }
 }

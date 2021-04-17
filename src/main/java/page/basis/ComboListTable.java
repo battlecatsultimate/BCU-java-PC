@@ -107,20 +107,18 @@ public class ComboListTable extends SortTable<Combo> {
 	@Override
 	protected int compare(Combo e0, Combo e1, int c) {
 		if (c == 1) {
-			String name0 = Interpret.comboInfo(e0, lineup);
-			String name1 = Interpret.comboInfo(e1, lineup);
-			return name0.compareToIgnoreCase(name1);
+			return Integer.compare(e0.type, e1.type);
 		} else if (c == 2) {
 			int o0 = lu.occupance(e0);
 			int o1 = lu.occupance(e1);
 			return Integer.compare(o0, o1);
 		} else if (c >= 3 && c <= 7) {
-			if (e0.forms.size() <= c - 3)
+			if (e0.forms.length <= c - 3)
 				return -1;
-			if (e1.forms.size() <= c - 3)
+			if (e1.forms.length <= c - 3)
 				return 1;
-			Form f0 = e0.forms.get(c - 3);
-			Form f1 = e1.forms.get(c - 3);
+			Form f0 = e0.forms[c - 3];
+			Form f1 = e1.forms[c - 3];
 			return f0.uid.compareTo(f1.uid);
 		} else {
 			return Integer.compare(e0.lv, e1.lv);
@@ -135,8 +133,8 @@ public class ComboListTable extends SortTable<Combo> {
 			return t;
 		if (c == 2)
 			return lu.occupance(t);
-		if (t.forms.size() > c - 3) {
-			return t.forms.get(c - 3);
+		if (t.forms.length > c - 3) {
+			return t.forms[c - 3];
 		}
 		return null;
 	}

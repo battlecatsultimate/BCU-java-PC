@@ -72,7 +72,6 @@ public class PackEditPage extends Page {
 	private final JBTN vrcg = new JBTN(0, "recg");
 	private final JBTN vrlr = new JBTN(0, "relr");
 	private final JBTN cunt = new JBTN(0, "cunt");
-	private final JBTN ccom = new JBTN(0, "custom catcombos");
 	private final JBTN tdiy = new JBTN(0, "ctrt");
 	private final JBTN ener = new JBTN(0, "ener");
 	private final JBTN vmsc = new JBTN(0, "vmsc");
@@ -169,7 +168,6 @@ public class PackEditPage extends Page {
 
 		set(recd, x, y, w, 950, 300, 50);
 		set(tdiy, x, y, w, 1050, 300, 50);
-		set(ccom, x, y, w, 1150, 300, 50);
 
 		w += 350;
 
@@ -372,10 +370,6 @@ public class PackEditPage extends Page {
 
 		cunt.addActionListener(arg0 -> changePanel(new UnitManagePage(getThis(), pac)));
 
-		ccom.addActionListener(arg0 -> {
-			changePanel(new ComboEditPage(getThis(), pac));
-		});
-
 		tdiy.addActionListener(arg0 -> {
 			changePanel(new TraitEditPage(getThis(), pac));
 		});
@@ -498,7 +492,6 @@ public class PackEditPage extends Page {
 		add(lbr);
 		add(lbt);
 		add(cunt);
-		add(ccom);
 		add(tdiy);
 		add(vcas);
 		add(vrcg);
@@ -588,7 +581,6 @@ public class PackEditPage extends Page {
 		checkAddr();
 		boolean b0 = pac != null;
 		sdiy.setEnabled(b0);
-		ccom.setEnabled(b0);
 		tdiy.setEnabled(b0);
 		if (b0) {
 			jls.setListData(pac.mc, pac.mc.maps);

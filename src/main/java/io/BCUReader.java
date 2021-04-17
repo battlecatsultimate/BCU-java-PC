@@ -15,6 +15,7 @@ import common.util.stage.MapColc;
 import common.util.stage.MapColc.DefMapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
+import common.util.unit.Combo;
 import common.util.unit.Enemy;
 import common.util.unit.Unit;
 import main.MainBCU;
@@ -35,8 +36,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.ArrayDeque;
-import java.util.Queue;
+import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class BCUReader extends DataIO {
 
@@ -122,8 +124,11 @@ public class BCUReader extends DataIO {
 								if (qs != null) {
 									for (String line : qs) {
 										String[] str = line.trim().split("\t");
-										int comboID = Integer.parseInt(str[0]);
-										MultiLangCont.getStatic().COMNAME.put(ni, comboID, str[1]);
+										List<Combo> combo = Arrays.stream(UserProfile.getBCData().combos.toArray())
+												.filter(c -> c.name.equals(str[0]))
+												.collect(Collectors.toList());
+										if (combo.size() > 0)
+											MultiLangCont.getStatic().COMNAME.put(ni, combo.get(0), str[1]);
 									}
 								}
 								continue;
