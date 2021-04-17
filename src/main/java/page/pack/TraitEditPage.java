@@ -10,7 +10,7 @@ import common.util.unit.Form;
 import common.util.unit.Enemy;
 import common.util.unit.Unit;
 import common.pack.PackData.UserPack;
-import common.util.unit.CustomTrait;
+import common.util.unit.Trait;
 import common.pack.FixIndexList.FixIndexMap;
 import main.MainBCU;
 import page.JBTN;
@@ -33,7 +33,7 @@ import java.util.List;
 
 public class TraitEditPage extends Page {
 
-    private final JList<CustomTrait> jlct = new JList<>();
+    private final JList<Trait> jlct = new JList<>();
     private final JScrollPane jspct = new JScrollPane(jlct);
 
     private final JLabel jl = new JLabel();
@@ -47,16 +47,16 @@ public class TraitEditPage extends Page {
     private final JTF ctrna = new JTF();
 
     private final UserPack packpack;
-    private final FixIndexMap<CustomTrait> pct;
+    private final FixIndexMap<Trait> pct;
 
     private boolean changing = false;
     private final boolean editable;
-    private CustomTrait ct;
+    private Trait t;
 
     public TraitEditPage(Page p, UserPack pac) {
         super(p);
         packpack = pac;
-        pct = pac.diyTrait;
+        pct = pac.traits;
         ini();
         editable = pac.editable;
     }
@@ -89,9 +89,9 @@ public class TraitEditPage extends Page {
         reicn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                File file = ((Source.Workspace) packpack.source).getTraitIconFile(ct.id);
+                File file = ((Source.Workspace) packpack.source).getTraitIconFile(t.id);
                 if (file.delete()) {
-                    ct.icon = null;
+                    t.icon = null;
                     jl.setIcon(null);
                     reicn.setEnabled(false);
                 }
@@ -105,31 +105,31 @@ public class TraitEditPage extends Page {
             @Override
             public void actionPerformed(ActionEvent arg0) {
                 changing = true;
-                ct = new CustomTrait(packpack.getNextID(CustomTrait.class));
-                pct.add(ct);
+                t = new Trait(packpack.getNextID(Trait.class));
+                pct.add(t);
                 updateCTL();
-                jlct.setSelectedValue(ct, true);
+                jlct.setSelectedValue(t, true);
                 changing = false;
             }
         });
         remct.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                if (ct == null)
+                if (t == null)
                     return;
                 changing = true;
-                List<CustomTrait> list = pct.getList();
-                int ind = list.indexOf(ct) - 1;
+                List<Trait> list = pct.getList();
+                int ind = list.indexOf(t) - 1;
                 if (ind < 0 && list.size() > 1)
                     ind = 0;
-                File file = ((Source.Workspace) packpack.source).getTraitIconFile(ct.id);
+                File file = ((Source.Workspace) packpack.source).getTraitIconFile(t.id);
                 file.delete();
-                list.remove(ct);
-                pct.remove(ct);
+                list.remove(t);
+                pct.remove(t);
                 if (ind >= 0)
-                    ct = list.get(ind);
+                    t = list.get(ind);
                 else
-                    ct = null;
+                    t = null;
                 updateCTL();
                 changing = false;
             }
@@ -137,10 +137,10 @@ public class TraitEditPage extends Page {
         altrg.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                if (ct == null)
+                if (t == null)
                     return;
                 changing = true;
-                ct.targetType = !ct.targetType;
+                t.targetType = !t.targetType;
                 updateCTL();
                 changing = false;
             }
@@ -152,7 +152,7 @@ public class TraitEditPage extends Page {
                 if (changing || jlct.getValueIsAdjusting())
                     return;
                 changing = true;
-                ct = jlct.getSelectedValue();
+                t = jlct.getSelectedValue();
                 updateCT();
                 changing = false;
             }
@@ -161,50 +161,50 @@ public class TraitEditPage extends Page {
 
         ctrna.setLnr(x -> {
             String str = ctrna.getText();
-            if (ct.name.equals(str))
+            if (t.name.equals(str))
                 return;
             if (str.equals("")) {
-                ctrna.setText(ct.name);
+                ctrna.setText(t.name);
                 return;
             }
-            ct.name = str;
+            t.name = str;
         });
     }
 
     private void updateCTL() {
         jlct.setListData(pct.toArray());
-        jlct.setSelectedValue(ct, true);
+        jlct.setSelectedValue(t, true);
         updateCT();
     }
 
     private void updateCT() {
-        altrg.setEnabled(ct != null && editable);
-        remct.setEnabled(ct != null && !isUsedTrait(ct) && editable);
-        ctrna.setEnabled(ct != null && editable);
-        adicn.setEnabled(ct != null && editable);
-        setIconImage(ct);
+        altrg.setEnabled(t != null && editable);
+        remct.setEnabled(t != null && !isUsedTrait(t) && editable);
+        ctrna.setEnabled(t != null && editable);
+        adicn.setEnabled(t != null && editable);
+        setIconImage(t);
         ctrna.setText("");
-        if (ct != null) {
-            ctrna.setText(ct.name);
-            altrg.setSelected(ct.targetType);
-            if (ct.icon != null)
-                jl.setIcon(ct.obtainIcon());
+        if (t != null) {
+            ctrna.setText(t.name);
+            altrg.setSelected(t.targetType);
+            if (t.icon != null)
+                jl.setIcon(t.obtainIcon());
             else
                 jl.setIcon(null);
         }
-        reicn.setEnabled(ct != null && ct.icon != null && editable);
+        reicn.setEnabled(t != null && t.icon != null && editable);
     }
 
-    private boolean isUsedTrait(CustomTrait ct) {
+    private boolean isUsedTrait(Trait tr) {
         Collection<UserPack> pacs = UserProfile.getUserPacks();
         for (UserPack pacc : pacs) {
             if (!pacc.desc.id.equals("000000") && (pacc.desc.dependency.contains(packpack.desc.id) || pacc.desc.id.equals(packpack.desc.id))) {
                 for (Enemy en : pacc.enemies.getList())
-                    if (((CustomEnemy) en.de).customTraits.contains(ct.id))
+                    if (((CustomEnemy) en.de).customTraits.contains(tr.id))
                         return true;
                 for (Unit un : pacc.units.getList())
                     for (Form uf : un.forms)
-                        if (((CustomUnit) uf.du).customTraits.contains(ct.id))
+                        if (((CustomUnit) uf.du).customTraits.contains(tr.id))
                             return true;
             }
         }
@@ -235,12 +235,12 @@ public class TraitEditPage extends Page {
             getFile("Wrong img size. Img size: w=41, h=41");
             return;
         }
-        if (ct.icon != null)
-            ct.icon.setImg(MainBCU.builder.build(bimg));
+        if (t.icon != null)
+            t.icon.setImg(MainBCU.builder.build(bimg));
         else
-            ct.icon = MainBCU.builder.toVImg(bimg);
+            t.icon = MainBCU.builder.toVImg(bimg);
         try {
-            File file = ((Source.Workspace) packpack.source).getTraitIconFile(ct.id);
+            File file = ((Source.Workspace) packpack.source).getTraitIconFile(t.id);
             Context.check(file);
             ImageIO.write(bimg, "PNG", file);
         } catch (IOException e) {
@@ -252,8 +252,8 @@ public class TraitEditPage extends Page {
         setIconImage(jlct.getSelectedValue());
     }
 
-    private void setIconImage(CustomTrait slt) {
-        if (ct == null)
+    private void setIconImage(Trait slt) {
+        if (t == null)
             return;
         if (jlct.getSelectedValue() != slt) {
             changing = true;

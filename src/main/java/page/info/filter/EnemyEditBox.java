@@ -4,7 +4,7 @@ import common.battle.data.CustomEnemy;
 import common.pack.Identifier;
 import common.pack.PackData.UserPack;
 import common.pack.UserProfile;
-import common.util.unit.CustomTrait;
+import common.util.unit.Trait;
 import page.Page;
 
 import javax.swing.*;
@@ -31,26 +31,26 @@ public class EnemyEditBox extends Page {
 	private final JScrollPane jab = new JScrollPane(abis);
 
 	private boolean changing = false;
-	private final List<CustomTrait> diyTraits;
+	private final List<Trait> traitList;
 	private final CustomEnemy ce;
 
 	public EnemyEditBox(Page p, UserPack pack, CustomEnemy cen) {
 		super(p);
 		editable = pack.editable;
-		diyTraits = new ArrayList<>(pack.diyTrait.getList());
+		traitList = new ArrayList<>(pack.traits.getList());
 		Collection<UserPack> pacs = UserProfile.getUserPacks();
 		for (UserPack pacc : pacs) {
 			if (!pacc.desc.id.equals("000000") && (pack.desc.dependency.contains(pacc.desc.id)))
-				diyTraits.addAll(pacc.diyTrait.getList());
+				traitList.addAll(pacc.traits.getList());
 		}
 		ce = cen;
 		ini();
 	}
 
-	public void diyIni(ArrayList<Identifier<CustomTrait>> cts) {
+	public void diyIni(ArrayList<Identifier<Trait>> cts) {
 		changing = true;
-		for (int k = 0; k < diyTraits.size(); k++)
-			if (cts.contains(diyTraits.get(k).id))
+		for (int k = 0; k < traitList.size(); k++)
+			if (cts.contains(traitList.get(k).id))
 				trait.addSelectionInterval(k + 9, k + 9);
 			else
 				trait.removeSelectionInterval(k + 9, k + 9);
@@ -93,15 +93,15 @@ public class EnemyEditBox extends Page {
 					ans[1] |= 1 << EABIIND[i];
 				else
 					ans[2] |= 1 << (EABIIND[i] - 100 - IMUSFT);
-		for (int i = 0; i < diyTraits.size(); i++)
+		for (int i = 0; i < traitList.size(); i++)
 			if (trait.isSelectedIndex(i + 9)) {
-				if (!ce.customTraits.contains(diyTraits.get(i).id)) {
-					ce.customTraits.add(diyTraits.get(i).id);
-					ce.nullFixer.add(diyTraits.get(i).id.toString());
+				if (!ce.customTraits.contains(traitList.get(i).id)) {
+					ce.customTraits.add(traitList.get(i).id);
+					ce.nullFixer.add(traitList.get(i).id.toString());
 				}
 			} else {
-				ce.customTraits.remove(diyTraits.get(i).id);
-				ce.nullFixer.remove(diyTraits.get(i).id.toString());
+				ce.customTraits.remove(traitList.get(i).id);
+				ce.nullFixer.remove(traitList.get(i).id.toString());
 			}
 		getFront().callBack(ans);
 	}
@@ -109,11 +109,11 @@ public class EnemyEditBox extends Page {
 	private void ini() {
 		for (int i = 0; i < 9; i++)
 			vt.add(TRAIT[i]);
-		for (CustomTrait diyTrait : diyTraits)
+		for (Trait diyTrait : traitList)
 			vt.add(diyTrait.name);
 		for (int i = 0; i < EABIIND.length; i++)
 			va.add(EABI[i]);
-		customTraitsIco(trait,diyTraits);
+		customTraitsIco(trait,traitList);
 		trait.setListData(vt);
 		abis.setListData(va);
 		int m = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
@@ -138,7 +138,7 @@ public class EnemyEditBox extends Page {
 			}
 		});
 	}
-	protected static void customTraitsIco(AttList trait, List<CustomTrait> diyTraits) {
+	protected static void customTraitsIco(AttList trait, List<Trait> diyTraits) {
 		trait.diyTraitIcons(trait, diyTraits, false);
 	}
 }

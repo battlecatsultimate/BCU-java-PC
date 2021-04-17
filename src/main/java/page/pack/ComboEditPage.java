@@ -19,6 +19,7 @@ import utilpc.Interpret;
 
 import javax.swing.*;
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class ComboEditPage extends Page {
@@ -165,6 +166,7 @@ public class ComboEditPage extends Page {
             Identifier<Combo> id = pac.getNextID(Combo.class);
             Combo combo = new Combo(id, "new combo", 0, 0, 1, frm);
             pac.combos.add(combo);
+            jlc.setList(pac.combos.getRawList());
             jlc.getSelectionModel().setSelectionInterval(0, pac.combos.indexOf(combo));
             updateC();
             changing = false;
@@ -180,6 +182,7 @@ public class ComboEditPage extends Page {
                 sel--;
             jlc.setRowSelectionInterval(sel, sel);
             pac.combos.remove(combo);
+            jlc.setList(pac.combos.getRawList());
             updateC();
             changing = false;
         });
@@ -229,18 +232,18 @@ public class ComboEditPage extends Page {
 
         set(lbf, x, y, 800, 100, 300, 50);
         set(jspf, x, y, 800, 150, 300, 600);
-        set(addf, x, y, 1300, 800, 225, 50);
-        set(remcf, x, y, 1525, 800, 225, 50);
-        set(comboname, x, y, 1300, 1000, 450, 50);
 
-        set(jspc, x, y, 50, 800, 1250, 450);
-        set(addc, x, y, 1300, 850, 450, 50);
-        set(remc, x, y, 1300, 900, 300, 50);
-        set(ctypes, x, y, 1300, 950, 450, 50);
-        set(clvls, x, y, 1600, 900, 150, 50);
+        set(addf, x, y, 1500, 800, 225, 50);
+        set(remcf, x, y, 1725, 800, 225, 50);
+        set(comboname, x, y, 1500, 1000, 450, 50);
+        set(jspc, x, y, 50, 800, 1450, 450);
+        set(addc, x, y, 1500, 850, 450, 50);
+        set(remc, x, y, 1500, 900, 300, 50);
+        set(ctypes, x, y, 1500, 950, 450, 50);
+        set(clvls, x, y, 1800, 900, 150, 50);
 
         jlc.setRowHeight(50);
-        jlc.getColumnModel().getColumn(1).setPreferredWidth(size(x, y, 300));
+        jlc.getColumnModel().getColumn(2).setPreferredWidth(size(x, y, 300));
     }
 
     private void setPack(PackData.UserPack pack) {
@@ -255,8 +258,7 @@ public class ComboEditPage extends Page {
         if (pac == null) {
             jlu.setListData(new Unit[0]);
             jlc.clearSelection();
-            jlc.setList(null);
-            jlc.setList(pac.combos.getList());
+            jlc.setList(new ArrayList<>());
         } else {
             jlf.allowDrag(pac.editable);
             PackData.DefPack BCs = UserProfile.getBCData();
@@ -267,6 +269,7 @@ public class ComboEditPage extends Page {
                 unis[t] = pac.units.get(t - BCs.units.size());
             jlu.setListData(unis);
             jlu.clearSelection();
+            jlc.setList(pac.combos.getList());
         }
         changing = pre;
         if (pac == null || !pac.units.contains(uni))
@@ -308,21 +311,20 @@ public class ComboEditPage extends Page {
     private void updateC() {
         boolean editable = frm != null && pac.editable;
         addc.setEnabled(editable);
-        boolean size = editable && jlc.getSelectedRow() != -1;
+        boolean size = pac.editable && jlc.getSelectedRow() != -1 && jlc.list.size() > 0;
+        boolean esize = editable && size;
         if (size) {
             Combo c = jlc.list.get(jlc.getSelectedRow());
             ctypes.setSelectedIndex(c.type);
             clvls.setSelectedIndex(c.lv);
             comboname.setText(c.name);
             pac.combos.set(jlc.getSelectedRow(),c);
-        } else {
+        } else
             comboname.setText("");
-        }
         comboname.setEnabled(size);
         ctypes.setEnabled(size);
         clvls.setEnabled(size);
         remc.setEnabled(size);
-        boolean esize = editable && size;
         remcf.setEnabled(esize && jlc.list.get(jlc.getSelectedRow()).forms.length > 1);
         boolean check = esize && Arrays.stream(jlc.list.get(jlc.getSelectedRow()).forms).noneMatch(fr -> fr.uid.id == frm.uid.id) && jlc.list.get(jlc.getSelectedRow()).forms.length < 5;
         addf.setEnabled(check);

@@ -1,6 +1,6 @@
 package page.info.filter;
 
-import common.util.unit.CustomTrait;
+import common.util.unit.Trait;
 import main.MainBCU;
 import page.JTG;
 import page.Page;
@@ -66,7 +66,7 @@ class AttList extends JList<String> {
 
 	}
 
-	protected void diyTraitIcons(AttList trait, List<CustomTrait> diyTraits, boolean includeCollab) {
+	protected void diyTraitIcons(AttList trait, List<Trait> diyTraits, boolean includeCollab) {
 		trait.setCellRenderer(new DefaultListCellRenderer() {
 
 			private static final long serialVersionUID = 1L;
@@ -76,7 +76,7 @@ class AttList extends JList<String> {
 				int BCTraits = includeCollab ? 11 : 8;
 				JLabel jl = (JLabel) super.getListCellRendererComponent(l, o, ind, s, f);
 				if (ind > BCTraits) {
-					CustomTrait trait = diyTraits.get(ind - BCTraits - 1);
+					Trait trait = diyTraits.get(ind - BCTraits - 1);
 					if (trait.icon != null)
 						jl.setIcon(trait.obtainIcon());
 					else

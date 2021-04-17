@@ -8,7 +8,7 @@ import common.pack.UserProfile;
 import common.util.Data;
 import common.util.lang.MultiLangCont;
 import common.util.lang.ProcLang;
-import common.util.unit.CustomTrait;
+import common.util.unit.Trait;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import main.MainBCU;
@@ -279,7 +279,7 @@ class UFBList extends UnitFilterBox {
 		set(jat, x, y, 0, 850, 200, 300);
 	}
 
-	private final List<CustomTrait> trlis = new ArrayList<>();
+	private final List<Trait> trlis = new ArrayList<>();
 
 	private void confirm() {
 		List<Form> ans = new ArrayList<>();
@@ -289,7 +289,7 @@ class UFBList extends UnitFilterBox {
 					MaskUnit du = f.maxu();
 					int t = du.getType();
 					int a = du.getAbi();
-					List<Identifier<CustomTrait>> ct = f.du instanceof CustomUnit ? ((CustomUnit)f.du).customTraits : null;
+					List<Identifier<Trait>> ct = f.du instanceof CustomUnit ? ((CustomUnit)f.du).customTraits : null;
 					boolean b0 = rare.isSelectedIndex(u.rarity);
 					boolean b1 = !orop[0].isSelected(), selbc = false, seldiy = false;;
 					for (int i : trait.getSelectedIndices())
@@ -302,7 +302,7 @@ class UFBList extends UnitFilterBox {
 						} else if (ct != null && ct.size() > 0) {
 							seldiy = true;
 							if (orop[0].isSelected())
-								for (Identifier<CustomTrait> diyt : ct)
+								for (Identifier<Trait> diyt : ct)
 									b1 |= trlis.get(i - 9).id.equals(diyt);
 							else
 								b1 &= ct.contains(trlis.get(i - 9).id);
@@ -367,7 +367,7 @@ class UFBList extends UnitFilterBox {
 		vt.addAll(Arrays.asList(TRAIT).subList(0, 9));
 		Collection<PackData.UserPack> pacs = UserProfile.getUserPacks();
 		for (PackData.UserPack pacc : pacs)
-			for (CustomTrait ctra : pacc.diyTrait)
+			for (Trait ctra : pacc.traits)
 				if (pack == null || ctra.id.pack.equals(pack) || parents.contains(ctra.id.pack)) {
 					trlis.add(ctra);
 					vt.add(ctra.name);
@@ -389,7 +389,7 @@ class UFBList extends UnitFilterBox {
 		add(jat);
 	}
 
-	protected static void customTraitsIco(AttList trait, List<CustomTrait> diyTraits) {
+	protected static void customTraitsIco(AttList trait, List<Trait> diyTraits) {
 		trait.diyTraitIcons(trait, diyTraits, false);
 	}
 

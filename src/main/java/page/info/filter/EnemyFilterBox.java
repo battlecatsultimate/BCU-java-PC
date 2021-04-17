@@ -7,7 +7,7 @@ import common.pack.UserProfile;
 import common.util.Data;
 import common.util.lang.MultiLangCont;
 import common.util.lang.ProcLang;
-import common.util.unit.CustomTrait;
+import common.util.unit.Trait;
 import common.util.unit.Enemy;
 import main.MainBCU;
 import page.JTG;
@@ -284,7 +284,7 @@ class EFBList extends EnemyFilterBox {
 		set(jat, x, y, 0, 850, 200, 300);
 	}
 
-	private final List<CustomTrait> trlis = new ArrayList<>();
+	private final List<Trait> trlis = new ArrayList<>();
 
 	private void confirm() {
 		List<Enemy> ans = new ArrayList<>();
@@ -292,7 +292,7 @@ class EFBList extends EnemyFilterBox {
 			for (Enemy e : p.enemies.getList()) {
 				int t = e.de.getType();
 				int a = e.de.getAbi();
-				List<Identifier<CustomTrait>> ct = e.de instanceof CustomEnemy ? ((CustomEnemy)e.de).customTraits : null;
+				List<Identifier<Trait>> ct = e.de instanceof CustomEnemy ? ((CustomEnemy)e.de).customTraits : null;
 				boolean b0 = !orop[3].isSelected();
 				for (int r : rare.getSelectedIndices()) {
 					if (orop[3].isSelected())
@@ -311,7 +311,7 @@ class EFBList extends EnemyFilterBox {
 					} else if (ct != null && ct.size() > 0) {
 						seldiy = true;
 						if (orop[0].isSelected())
-							for (Identifier<CustomTrait> diyt : ct)
+							for (Identifier<Trait> diyt : ct)
 								b1 |= trlis.get(i - 12).id.equals(diyt);
 							else
 								b1 &= ct.contains(trlis.get(i - 12).id);
@@ -378,7 +378,7 @@ class EFBList extends EnemyFilterBox {
 		Collections.addAll(vt, TRAIT);
 		Collection<PackData.UserPack> pacs = UserProfile.getUserPacks();
 		for (PackData.UserPack pacc : pacs)
-			for (CustomTrait ctra : pacc.diyTrait)
+			for (Trait ctra : pacc.traits)
 				if (pack == null || ctra.id.pack.equals(pack) || parents.contains(ctra.id.pack)) {
 					trlis.add(ctra);
 					vt.add(ctra.name);
@@ -405,7 +405,7 @@ class EFBList extends EnemyFilterBox {
 		add(jat);
 	}
 
-	protected static void customTraitsIco(AttList trait, List<CustomTrait> diyTraits) {
+	protected static void customTraitsIco(AttList trait, List<Trait> diyTraits) {
 		trait.diyTraitIcons(trait, diyTraits, true);
 	}
 
