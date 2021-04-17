@@ -178,9 +178,9 @@ public class BasisPage extends LubCont {
 		set(jspt, x, y, 1600, 150, 450, 600);
 		set(lub, x, y, 500, 150, 600, 300);
 		set(unit, x, y, 1350, 100, 200, 50);
-		set(jspcs, x, y, 1300, 800, 300, 450);
-		set(jspcl, x, y, 1600, 800, 300, 450);
-		set(jspc, x, y, 50, 800, 1250, 450);
+		set(jspcs, x, y, 1450, 800, 300, 450);
+		set(jspcl, x, y, 1750, 800, 300, 450);
+		set(jspc, x, y, 50, 800, 1450, 450);
 		set(cjtf, x, y, 500, 750, 400, 50);
 		set(search, x, y, 900, 750, 200, 50);
 		set(setc, x, y, 1100, 750, 200, 50);
@@ -197,7 +197,7 @@ public class BasisPage extends LubCont {
 		for (int i = 0; i < jbcsR.length; i++)
 			set(jbcsR[i], x, y, 1170, 500 + 103 * i, 100, 50);
 		jlc.setRowHeight(50);
-		jlc.getColumnModel().getColumn(1).setPreferredWidth(size(x, y, 300));
+		jlc.getColumnModel().getColumn(2).setPreferredWidth(size(x, y, 300));
 		trea.resized(x, y);
 		if (resize) {
 			trea.setPreferredSize(size(x, y, trea.getPWidth(), trea.getPHeight()).toDimension());
@@ -659,12 +659,12 @@ public class BasisPage extends LubCont {
 	private void setCL(int cs) {
 		int[] cls = jlcl.getSelectedIndices();
 		List<Combo> lc = new ArrayList<>();
+		List<Combo> comboList = UserProfile.getBCData().combos.getList();
+		UserProfile.getUserPacks().forEach(p -> comboList.addAll(p.combos.getList()));
 		if (cls.length == 0) {
 			for (int i = 0; i < CommonStatic.getBCAssets().filter[cs].length; i++) {
 				int finalI = i;
-				for (Combo c : UserProfile.getBCData().combos
-						.getList()
-						.stream()
+				for (Combo c : comboList.stream()
 						.filter(c -> c.type == CommonStatic.getBCAssets().filter[cs][finalI])
 						.collect(Collectors.toList())) {
 					String name = c.getName();
@@ -674,9 +674,7 @@ public class BasisPage extends LubCont {
 			}
 		} else {
 			for (int val : cls)
-				for (Combo c : UserProfile.getBCData().combos
-						.getList()
-						.stream()
+				for (Combo c : comboList.stream()
 						.filter(c -> c.type == CommonStatic.getBCAssets().filter[cs][val])
 				.collect(Collectors.toList())) {
 					String name = c.getName();

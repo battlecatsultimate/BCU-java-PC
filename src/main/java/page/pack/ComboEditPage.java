@@ -199,14 +199,14 @@ public class ComboEditPage extends Page {
         set(jspf, x, y, 800, 150, 300, 600);
         set(addf, x, y, 800, 750, 300, 50);
 
-        set(jspc, x, y, 50, 800, 1250, 450);
-        set(addc, x, y, 1300, 800, 300, 50);
-        set(ctypes, x, y, 1300, 850, 450, 50);
-        set(clvls, x, y, 1600, 800, 150, 50);
-        set(remcf, x, y, 1300, 900, 225, 50);
+        set(jspc, x, y, 50, 800, 1450, 450);
+        set(addc, x, y, 1500, 800, 300, 50);
+        set(ctypes, x, y, 1500, 850, 450, 50);
+        set(clvls, x, y, 1800, 800, 150, 50);
+        set(remcf, x, y, 1500, 900, 225, 50);
 
         jlc.setRowHeight(50);
-        jlc.getColumnModel().getColumn(1).setPreferredWidth(size(x, y, 300));
+        jlc.getColumnModel().getColumn(2).setPreferredWidth(size(x, y, 300));
     }
 
     private void setPack(PackData.UserPack pack) {
