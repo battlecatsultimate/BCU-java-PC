@@ -41,7 +41,6 @@ public class ComboEditPage extends Page {
     private final JScrollPane jspf = new JScrollPane(jlf);
     private final ComboListTable jlc = new ComboListTable(this, b.sele.lu);
     private final JScrollPane jspc = new JScrollPane(jlc);
-    private final List<Combo> combos = new ArrayList<>();
     private final JComboBox<String> ctypes = new JComboBox<>(Interpret.getComboFilter(0));
     private final JComboBox<String> clvls = new JComboBox<>(new String[] { "Sm", "M", "L", "XL" });
 
@@ -86,7 +85,6 @@ public class ComboEditPage extends Page {
         jlu.setCellRenderer(new UnitLCR());
         jlf.setCellRenderer(new AnimLCR());
         jlc.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        jlc.setList(combos);
         ctypes.setEnabled(false);
         clvls.setEnabled(false);
 
@@ -103,7 +101,6 @@ public class ComboEditPage extends Page {
             if (changing || jlp.getValueIsAdjusting())
                 return;
             changing = true;
-            combos.clear();
             jlc.getSelectionModel().setSelectionInterval(0, 0);
             setPack(jlp.getSelectedValue());
             updateC();
@@ -150,10 +147,10 @@ public class ComboEditPage extends Page {
             if (changing || jlf.getValueIsAdjusting())
                 return;
             changing = true;
-            Identifier<Combo> id = pac.getNextID(Combo.class);
-            Combo combo = new Combo(id, "new combo", 0, 0, 1, frm);
-            combos.add(combo);
-            jlc.getSelectionModel().setSelectionInterval(0, combos.indexOf(combo));
+            Combo combo = new Combo(pac.getNextID(Combo.class), "new combo", 0, 0, 1, frm);
+            pac.combos.add(combo);
+            jlc.setList(pac.combos.getRawList());
+            jlc.getSelectionModel().setSelectionInterval(0, pac.combos.indexOf(combo));
             updateC();
             changing = false;
         });
@@ -223,10 +220,13 @@ public class ComboEditPage extends Page {
         changing = true;
         if (pac == null) {
             jlu.setListData(new Unit[0]);
+            jlc.clearSelection();
+            jlc.setList(null);
         } else {
             jlf.allowDrag(pac.editable);
             jlu.setListData(pac.units.toRawArray());
             jlu.clearSelection();
+            jlc.setList(pac.combos.getList());
         }
         changing = pre;
         if (pac == null || !pac.units.contains(uni))
