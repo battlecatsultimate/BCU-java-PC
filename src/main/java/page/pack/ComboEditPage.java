@@ -5,7 +5,6 @@ import common.pack.Identifier;
 import common.pack.PackData;
 import common.pack.UserProfile;
 import common.util.unit.Combo;
-import common.util.unit.CustomCombo;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import page.JBTN;
@@ -130,7 +129,7 @@ public class ComboEditPage extends Page {
             if (changing || jlf.getValueIsAdjusting())
                 return;
             changing = true;
-            CustomCombo combo = (CustomCombo) jlc.list.get(jlc.getSelectedRow());
+            Combo combo = jlc.list.get(jlc.getSelectedRow());
             combo.addForm(frm);
             updateC();
             changing = false;
@@ -151,7 +150,7 @@ public class ComboEditPage extends Page {
                 return;
             changing = true;
             Identifier<Combo> id = pac.getNextID(Combo.class);
-            CustomCombo combo = new CustomCombo(id, "new combo", frm);
+            Combo combo = new Combo(id, "new combo", 0, 0, 1, frm);
             combos.add(combo);
             jlc.getSelectionModel().setSelectionInterval(0, combos.indexOf(combo));
             updateC();
@@ -162,7 +161,7 @@ public class ComboEditPage extends Page {
             if (changing || jlf.getValueIsAdjusting())
                 return;
             changing = true;
-            CustomCombo combo = (CustomCombo) jlc.list.get(jlc.getSelectedRow());
+            Combo combo = jlc.list.get(jlc.getSelectedRow());
             combo.setType(ctypes.getSelectedIndex());
             changing = false;
         });
@@ -171,7 +170,7 @@ public class ComboEditPage extends Page {
             if (changing || jlf.getValueIsAdjusting())
                 return;
             changing = true;
-            CustomCombo combo = (CustomCombo) jlc.list.get(jlc.getSelectedRow());
+            Combo combo = jlc.list.get(jlc.getSelectedRow());
             combo.setLv(clvls.getSelectedIndex());
             changing = false;
         });
@@ -180,7 +179,7 @@ public class ComboEditPage extends Page {
             if (changing || jlf.getValueIsAdjusting())
                 return;
             changing = true;
-            CustomCombo combo = (CustomCombo) jlc.list.get(jlc.getSelectedRow());
+            Combo combo = jlc.list.get(jlc.getSelectedRow());
             combo.removeForm(combo.forms.size() - 1);
             updateC();
             changing = false;

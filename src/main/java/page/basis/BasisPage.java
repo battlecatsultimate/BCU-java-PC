@@ -4,6 +4,7 @@ import common.CommonStatic;
 import common.battle.BasisLU;
 import common.battle.BasisSet;
 import common.battle.LineUp;
+import common.pack.UserProfile;
 import common.system.Node;
 import common.util.pack.NyCastle;
 import common.util.unit.Combo;
@@ -659,16 +660,26 @@ public class BasisPage extends LubCont {
 		int[] cls = jlcl.getSelectedIndices();
 		List<Combo> lc = new ArrayList<>();
 		if (cls.length == 0) {
-			for (int i = 0; i < CommonStatic.getBCAssets().filter[cs].length; i++)
-				for (Combo c : CommonStatic.getBCAssets().combos[CommonStatic.getBCAssets().filter[cs][i]]) {
-					String name = Interpret.comboName(c);
+			for (int i = 0; i < CommonStatic.getBCAssets().filter[cs].length; i++) {
+				int finalI = i;
+				for (Combo c : UserProfile.getBCData().combos
+						.getList()
+						.stream()
+						.filter(c -> c.type == CommonStatic.getBCAssets().filter[cs][finalI])
+						.collect(Collectors.toList())) {
+					String name = c.getName();
 					if (name.toLowerCase().contains(comboName.toLowerCase()))
 						lc.add(c);
 				}
+			}
 		} else {
 			for (int val : cls)
-				for (Combo c : CommonStatic.getBCAssets().combos[CommonStatic.getBCAssets().filter[cs][val]]) {
-					String name = Interpret.comboName(c);
+				for (Combo c : UserProfile.getBCData().combos
+						.getList()
+						.stream()
+						.filter(c -> c.type == CommonStatic.getBCAssets().filter[cs][val])
+				.collect(Collectors.toList())) {
+					String name = c.getName();
 					if (name.toLowerCase().contains(comboName.toLowerCase()))
 						lc.add(c);
 				}
