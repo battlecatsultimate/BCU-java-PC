@@ -18,6 +18,7 @@ import utilpc.Interpret;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -180,7 +181,7 @@ public class ComboEditPage extends Page {
                 return;
             changing = true;
             Combo combo = jlc.list.get(jlc.getSelectedRow());
-            combo.removeForm(combo.forms.size() - 1);
+            combo.removeForm(combo.forms.length - 1);
             updateC();
             changing = false;
         });
@@ -276,8 +277,8 @@ public class ComboEditPage extends Page {
         ctypes.setEnabled(size);
         clvls.setEnabled(size);
         boolean esize = editable && size;
-        remcf.setEnabled(esize && jlc.list.get(jlc.getSelectedRow()).forms.size() > 1);
-        boolean check = esize && jlc.list.get(jlc.getSelectedRow()).forms.values().stream().noneMatch(fr -> fr.uid.id == frm.uid.id);
+        remcf.setEnabled(esize && jlc.list.get(jlc.getSelectedRow()).forms.length > 1);
+        boolean check = esize && Arrays.stream(jlc.list.get(jlc.getSelectedRow()).forms).noneMatch(fr -> fr.uid.id == frm.uid.id);
         addf.setEnabled(check);
     }
 }
