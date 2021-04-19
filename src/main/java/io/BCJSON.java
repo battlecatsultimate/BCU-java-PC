@@ -16,9 +16,10 @@ import page.LoadPage;
 public class BCJSON {
 
 	public static final String[] PC_LANG_CODES = { "en", "jp", "kr", "zh" };
-	public static final String[] PC_LANG_FILES = {"util.properties", "page.properties", "info.properties",
+	public static final String[] PC_LANG_FILES = { "util.properties", "page.properties", "info.properties",
 			"StageName.txt", "UnitName.txt", "EnemyName.txt", "ComboName.txt", "proc.json", "animation_type.json" };
 	public static final String JAR_LINK = "https://github.com/battlecatsultimate/bcu-assets/raw/master/jar/BCU-";
+	public static final String ALT_LINK = "https://gitee.com/lcy0x1/bcu-assets/raw/master/jar/BCU-";
 
 	public static void check() {
 		LoadPage.prog("checking update information");
@@ -50,16 +51,17 @@ public class BCJSON {
 			if (!Opts.conf("failed to process assets, retry?"))
 				CommonStatic.def.exit(false);
 
-		if(jar != null) {
-			boolean updateIt = Opts.conf("New jar file update found. "+jar.desc+" Do you want to update jar file?");
+		if (jar != null) {
+			boolean updateIt = Opts.conf("New jar file update found. " + jar.desc + " Do you want to update jar file?");
 
-			if(updateIt) {
+			if (updateIt) {
 				String ver = Data.revVer(jar.ver);
-				File target = new File("./BCU-"+ver+".jar");
+				File target = new File("./BCU-" + ver + ".jar");
 				File temp = new File("./temp.temp");
-				String url = JAR_LINK+ver+".jar";
+				String url = JAR_LINK + ver + ".jar";
+				String alt = ALT_LINK + ver + ".jar";
 
-				Downloader down = new Downloader(url, target, temp, "Downloading BCU-"+ver+".jar...", false);
+				Downloader down = new Downloader(target, temp, "Downloading BCU-" + ver + ".jar...", false, url, alt);
 
 				LoadPage.prog(down.desc);
 
@@ -70,8 +72,9 @@ public class BCJSON {
 					if (!Opts.conf("failed to download, retry?"))
 						break;
 
-				if(done) {
-					Opts.pop("Finished downloading BCU-"+ver+".jar. Run this jar file from now on", "Download finished");
+				if (done) {
+					Opts.pop("Finished downloading BCU-" + ver + ".jar. Run this jar file from now on",
+							"Download finished");
 
 					CommonStatic.def.exit(false);
 				}
@@ -98,14 +101,14 @@ public class BCJSON {
 	}
 
 	private static UpdateJson.JarJson getLatestJar(UpdateJson json) {
-		if(json == null)
+		if (json == null)
 			return null;
 
-		for(UpdateJson.JarJson jar : json.pc_update) {
-			if(jar == null)
+		for (UpdateJson.JarJson jar : json.pc_update) {
+			if (jar == null)
 				continue;
 
-			if(MainBCU.ver < jar.ver)
+			if (MainBCU.ver < jar.ver)
 				return jar;
 		}
 
