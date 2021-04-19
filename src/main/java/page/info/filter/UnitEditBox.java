@@ -32,7 +32,8 @@ public class UnitEditBox extends Page {
 	public UnitEditBox(Page p, UserPack pack, CustomUnit cun) {
 		super(p);
 		editable = pack.editable;
-		traitList = pack.traits.getList();
+		traitList = new ArrayList<>(UserProfile.getBCData().traits.getList().subList(0,9));
+		traitList.addAll(pack.traits.getList());
 		for (UserPack pacc : UserProfile.getUserPacks())
 			if (pack.desc.dependency.contains(pacc.desc.id))
 				traitList.addAll(pacc.traits.getList());
@@ -44,9 +45,9 @@ public class UnitEditBox extends Page {
 		changing = true;
 		for (int k = 0; k < traitList.size(); k++)
 			if (ts.contains(traitList.get(k)))
-				trait.addSelectionInterval(k + 9, k + 9);
+				trait.addSelectionInterval(k, k);
 			else
-				trait.removeSelectionInterval(k + 9, k + 9);
+				trait.removeSelectionInterval(k, k);
 	}
 
 	public void setData(int[] vals) {
@@ -70,15 +71,12 @@ public class UnitEditBox extends Page {
 
 	private void confirm() {
 		int[] ans = new int[3];
-		for (int i = 0; i < 9; i++)
-			if (trait.isSelectedIndex(i))
-				ans[0] |= 1 << i;
 		int lev = SABIS.length;
 		for (int i = 0; i < lev; i++)
 			if (abis.isSelectedIndex(i))
 				ans[1] |= 1 << i;
 		for (int i = 0; i < traitList.size(); i++)
-			if (trait.isSelectedIndex(i + 9)) {
+			if (trait.isSelectedIndex(i)) {
 				if (!cu.traits.contains(traitList.get(i))) {
 					cu.traits.add(traitList.get(i));
 				}
@@ -88,10 +86,9 @@ public class UnitEditBox extends Page {
 	}
 
 	private void ini() {
-		vt.addAll(Arrays.asList(TRAIT).subList(0, 9));
-		Collections.addAll(va, SABIS);
 		for (Trait value : traitList)
 			vt.add(value.name);
+		Collections.addAll(va, SABIS);
 		customTraitsIco(trait,traitList);
 		trait.setListData(vt);
 		abis.setListData(va);
@@ -114,6 +111,6 @@ public class UnitEditBox extends Page {
 		});
 	}
 	protected static void customTraitsIco(AttList trait, List<Trait> diyTraits) {
-		trait.diyTraitIcons(trait, diyTraits, false);
+		trait.diyTraitIcons(trait, diyTraits);
 	}
 }

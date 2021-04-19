@@ -420,7 +420,7 @@ class EFBList extends EnemyFilterBox {
 	}
 
 	protected static void customTraitsIco(AttList trait, List<Trait> diyTraits) {
-		trait.diyTraitIcons(trait, diyTraits, true);
+		trait.diyTraitIcons(trait, diyTraits);
 	}
 
 	private void set(AbstractButton b) {

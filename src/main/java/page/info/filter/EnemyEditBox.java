@@ -46,7 +46,6 @@ public class EnemyEditBox extends Page {
 
 	public void diyIni(ArrayList<Trait> cts) {
 		changing = true;
-		System.out.println(cts);
 		for (int k = 0; k < traitList.size(); k++)
 			if (cts.contains(traitList.get(k)))
 				trait.addSelectionInterval(k, k);
@@ -123,6 +122,6 @@ public class EnemyEditBox extends Page {
 		});
 	}
 	protected static void customTraitsIco(AttList trait, List<Trait> diyTraits) {
-		trait.diyTraitIcons(trait, diyTraits, false);
+		trait.diyTraitIcons(trait, diyTraits);
 	}
 }

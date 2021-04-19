@@ -66,28 +66,17 @@ class AttList extends JList<String> {
 
 	}
 
-	protected void diyTraitIcons(AttList trait, List<Trait> diyTraits, boolean includeCollab) {
+	protected void diyTraitIcons(AttList trait, List<Trait> diyTraits) {
 		trait.setCellRenderer(new DefaultListCellRenderer() {
 
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public Component getListCellRendererComponent(JList<?> l, Object o, int ind, boolean s, boolean f) {
-				int BCTraits = includeCollab ? 11 : 8;
 				JLabel jl = (JLabel) super.getListCellRendererComponent(l, o, ind, s, f);
-				if (ind > BCTraits) {
-					Trait trait = diyTraits.get(ind);
-					if (trait.icon != null)
-						jl.setIcon(trait.obtainIcon());
-					else
-						return jl;
-				} else {
-					BufferedImage v;
-					v = UtilPC.getIcon(3, ind);
-					if (v == null)
-						return jl;
-					jl.setIcon(new ImageIcon(v));
-				}
+				Trait trait = diyTraits.get(ind);
+				if (trait.icon != null)
+					jl.setIcon(trait.obtainIcon());
 				return jl;
 			}
 		});

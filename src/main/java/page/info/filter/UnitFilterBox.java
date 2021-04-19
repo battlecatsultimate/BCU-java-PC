@@ -404,7 +404,7 @@ class UFBList extends UnitFilterBox {
 	}
 
 	protected static void customTraitsIco(AttList trait, List<Trait> diyTraits) {
-		trait.diyTraitIcons(trait, diyTraits, false);
+		trait.diyTraitIcons(trait, diyTraits);
 	}
 
 	private void set(AbstractButton b) {
