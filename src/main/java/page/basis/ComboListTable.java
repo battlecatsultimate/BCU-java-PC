@@ -16,8 +16,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 
 public class ComboListTable extends SortTable<Combo> {
-	private BasisSet lineup;
-
 	private static final long serialVersionUID = 1L;
 
 	private static String[] tit;
@@ -49,7 +47,7 @@ public class ComboListTable extends SortTable<Combo> {
 			public Component getTableCellRendererComponent(JTable l, Object o, boolean s, boolean f, int r, int c) {
 				JLabel jl = (JLabel) super.getTableCellRendererComponent(l, c, s, f, r, c);
 				Combo com = (Combo) o;
-				jl.setText(Interpret.comboInfo(com, lineup));
+				jl.setText(Interpret.comboInfo(com, BasisSet.current()));
 				return jl;
 			}
 
@@ -147,9 +145,5 @@ public class ComboListTable extends SortTable<Combo> {
 	@Override
 	protected String[] getTit() {
 		return tit;
-	}
-
-	public void setBasis(BasisSet b) {
-		lineup = b;
 	}
 }
