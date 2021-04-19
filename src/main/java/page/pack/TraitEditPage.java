@@ -1,8 +1,6 @@
 package page.pack;
 
 import common.CommonStatic;
-import common.battle.data.CustomEnemy;
-import common.battle.data.CustomUnit;
 import common.pack.Context;
 import common.pack.Source;
 import common.pack.UserProfile;
@@ -198,13 +196,13 @@ public class TraitEditPage extends Page {
     private boolean isUsedTrait(Trait tr) {
         Collection<UserPack> pacs = UserProfile.getUserPacks();
         for (UserPack pacc : pacs) {
-            if (!pacc.desc.id.equals("000000") && (pacc.desc.dependency.contains(packpack.desc.id) || pacc.desc.id.equals(packpack.desc.id))) {
+            if (pacc.desc.dependency.contains(packpack.desc.id) || pacc.desc.id.equals(packpack.desc.id)) {
                 for (Enemy en : pacc.enemies.getList())
-                    if (((CustomEnemy) en.de).customTraits.contains(tr.id))
+                    if (en.de.getTraits().contains(tr))
                         return true;
                 for (Unit un : pacc.units.getList())
                     for (Form uf : un.forms)
-                        if (((CustomUnit) uf.du).customTraits.contains(tr.id))
+                        if (uf.du.getTraits().contains(tr))
                             return true;
             }
         }

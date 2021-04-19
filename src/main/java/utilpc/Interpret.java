@@ -281,11 +281,8 @@ public class Interpret extends Data {
 		return l;
 	}
 
-	public static String getTrait(int type, String[] cTraits, int star) {
+	public static String getTrait(String[] cTraits, int star) {
 		StringBuilder ans = new StringBuilder();
-		for (int i = 0; i < TRAIT.length; i++)
-			if (((type >> i) & 1) > 0)
-				ans.append(TRAIT[i]).append(", ");
 		for (String cTrait : cTraits) ans.append(cTrait).append(", ");
 		if (star > 0)
 			ans.append(STAR[star]);

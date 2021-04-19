@@ -1,7 +1,7 @@
 package page.info.filter;
 
-import common.battle.data.CustomUnit;
 import common.battle.data.MaskUnit;
+import common.pack.FixIndexList;
 import common.pack.Identifier;
 import common.pack.PackData;
 import common.pack.UserProfile;
@@ -107,22 +107,32 @@ class UFBButton extends UnitFilterBox {
 		AttList.btnDealer(x, y, btns, orop, -1, 0, 1, -1, 2);
 	}
 
+	private final List<Trait> trlis = new ArrayList<>();
+
 	private void confirm() {
 		List<Form> ans = new ArrayList<>();
 		for(PackData p : UserProfile.getAllPacks()) {
 			for (Unit u : p.units.getList())
 				for (Form f : u.forms) {
 					MaskUnit du = f.maxu();
-					int t = du.getType();
+					List<Trait> ct = f.du.getTraits();
 					int a = du.getAbi();
 					boolean b0 = rare[u.rarity].isSelected();
 					boolean b1 = !orop[0].isSelected();
 					for (int i = 0; i < trait.length; i++)
-						if (trait[i].isSelected())
+						if (ct.size() > 0) {
 							if (orop[0].isSelected())
-								b1 |= ((t >> i) & 1) == 1;
-							else
-								b1 &= ((t >> i) & 1) == 1;
+								for (Trait diyt : ct) {
+									b1 |= trlis.get(i).equals(diyt);
+									if (b1)
+										break;
+								}
+							else {
+								b1 &= ct.contains(trlis.get(i));
+								if (!b1)
+									break;
+							}
+						} else b1 = false;
 					boolean b2 = !orop[1].isSelected();
 					for (int i = 0; i < abis.length; i++)
 						if (abis[i].isSelected()) {
@@ -189,6 +199,9 @@ class UFBButton extends UnitFilterBox {
 				continue;
 			trait[i].setIcon(new ImageIcon(v));
 		}
+		FixIndexList.FixIndexMap<Trait> BCtraits = UserProfile.getBCData().traits;
+		for (int i = 0 ; i < BCtraits.size() - 4 ; i++)
+			trlis.add(BCtraits.get(i));
 		for (int i = 0; i < abis.length; i++) {
 			set(abis[i] = new JTG(SABIS[i]));
 			BufferedImage v = UtilPC.getIcon(0, i);
@@ -287,27 +300,24 @@ class UFBList extends UnitFilterBox {
 			for (Unit u : p.units.getList())
 				for (Form f : u.forms) {
 					MaskUnit du = f.maxu();
-					int t = du.getType();
 					int a = du.getAbi();
-					List<Identifier<Trait>> ct = f.du instanceof CustomUnit ? ((CustomUnit)f.du).customTraits : null;
+					List<Trait> ct = f.du.getTraits();
 					boolean b0 = rare.isSelectedIndex(u.rarity);
-					boolean b1 = !orop[0].isSelected(), selbc = false, seldiy = false;;
+					boolean b1 = !orop[0].isSelected();
 					for (int i : trait.getSelectedIndices())
-						if (i < 9) {
-							selbc = true;
+						if (ct.size() > 0) {
 							if (orop[0].isSelected())
-								b1 |= ((t >> i) & 1) == 1;
-							else
-								b1 &= ((t >> i) & 1) == 1;
-						} else if (ct != null && ct.size() > 0) {
-							seldiy = true;
-							if (orop[0].isSelected())
-								for (Identifier<Trait> diyt : ct)
-									b1 |= trlis.get(i - 9).id.equals(diyt);
-							else
-								b1 &= ct.contains(trlis.get(i - 9).id);
-						} else if (selbc && !orop[0].isSelected()) b1 = false;
-						else if (!seldiy && !orop[0].isSelected()) b1 = false;
+								for (Trait diyt : ct) {
+									b1 |= trlis.get(i).equals(diyt);
+									if (b1)
+										break;
+								}
+							else {
+								b1 &= ct.contains(trlis.get(i));
+								if (!b1)
+									break;
+							}
+						} else b1 = false;
 					boolean b2 = !orop[1].isSelected();
 					int len = SABIS.length;
 					for (int i : abis.getSelectedIndices())
@@ -364,7 +374,11 @@ class UFBList extends UnitFilterBox {
 	private void ini() {
 		for (int i = 0; i < orop.length; i++)
 			set(orop[i] = new JTG(get(0, "orop")));
-		vt.addAll(Arrays.asList(TRAIT).subList(0, 9));
+		FixIndexList.FixIndexMap<Trait> BCtraits = UserProfile.getBCData().traits;
+		for (int i = 0 ; i < BCtraits.size() - 4 ; i++) {
+			trlis.add(BCtraits.get(i));
+			vt.add(BCtraits.get(i).name);
+		}
 		Collection<PackData.UserPack> pacs = UserProfile.getUserPacks();
 		for (PackData.UserPack pacc : pacs)
 			for (Trait ctra : pacc.traits)

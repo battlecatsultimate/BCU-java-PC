@@ -76,7 +76,7 @@ class AttList extends JList<String> {
 				int BCTraits = includeCollab ? 11 : 8;
 				JLabel jl = (JLabel) super.getListCellRendererComponent(l, o, ind, s, f);
 				if (ind > BCTraits) {
-					Trait trait = diyTraits.get(ind - BCTraits - 1);
+					Trait trait = diyTraits.get(ind);
 					if (trait.icon != null)
 						jl.setIcon(trait.obtainIcon());
 					else

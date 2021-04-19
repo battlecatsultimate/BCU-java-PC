@@ -1,18 +1,21 @@
 package main;
 
-import common.io.nullTraitFix;
 import common.CommonStatic;
 import common.battle.BasisSet;
 import common.io.PackLoader.ZipDesc.FileDesc;
 import common.io.assets.Admin;
 import common.io.assets.AssetLoader;
 import common.pack.Context;
+import common.pack.Identifier;
+import common.pack.PackData;
 import common.pack.Source.Workspace;
 import common.pack.UserProfile;
 import common.pack.Context.ErrType;
 import common.system.fake.ImageBuilder;
 import common.util.Data;
 import common.util.stage.Replay;
+import common.util.unit.Enemy;
+import common.util.unit.Trait;
 import io.BCJSON;
 import io.BCUReader;
 import io.BCUWriter;
@@ -33,6 +36,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 public class MainBCU {
@@ -83,19 +88,19 @@ public class MainBCU {
 		@SuppressWarnings("deprecation")
 		@Override
 		public void initProfile() {
-			LoadPage.prog("read assets");
+			LoadPage.prog("reading assets");
 			AssetLoader.load(LoadPage::prog);
-			LoadPage.prog("read BC data");
+			LoadPage.prog("reading BC data");
 			UserProfile.getBCData().load(LoadPage::prog, LoadPage::prog);
-			LoadPage.prog("read local animations");
+			LoadPage.prog("reading local animations");
 			Workspace.loadAnimations(null);
-			LoadPage.prog("read packs");
+			LoadPage.prog("reading packs");
 			UserProfile.loadPacks(LoadPage::prog);
-			LoadPage.prog("read basis");
+			LoadPage.prog("reading basis");
 			BasisSet.read();
-			LoadPage.prog("read replays");
+			LoadPage.prog("reading replays");
 			Replay.read();
-			LoadPage.prog("finish reading");
+			LoadPage.prog("finished reading");
 		}
 
 		@Override
@@ -189,7 +194,6 @@ public class MainBCU {
 
 		BCUReader.getData$1();
 		loaded = true;
-		nullTraitFix.fixNullTraits();
 		MainFrame.changePanel(new MainPage());
 	}
 

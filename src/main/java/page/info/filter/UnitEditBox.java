@@ -1,7 +1,6 @@
 package page.info.filter;
 
 import common.battle.data.CustomUnit;
-import common.pack.Identifier;
 import common.pack.PackData.UserPack;
 import common.pack.UserProfile;
 import common.util.unit.Trait;
@@ -41,10 +40,10 @@ public class UnitEditBox extends Page {
 		ini();
 	}
 
-	public void diyIni(ArrayList<Identifier<Trait>> ts) {
+	public void diyIni(ArrayList<Trait> ts) {
 		changing = true;
 		for (int k = 0; k < traitList.size(); k++)
-			if (ts.contains(traitList.get(k).id))
+			if (ts.contains(traitList.get(k)))
 				trait.addSelectionInterval(k + 9, k + 9);
 			else
 				trait.removeSelectionInterval(k + 9, k + 9);
@@ -55,15 +54,11 @@ public class UnitEditBox extends Page {
 		int[] sel = trait.getSelectedIndices();
 		trait.clearSelection();
 		abis.clearSelection();
-		for (int i = 0; i < 9; i++)
-			if (((vals[0] >> i) & 1) > 0)
-				trait.addSelectionInterval(i, i);
 		for (int i = 0; i < SABIS.length; i++)
-			if (((vals[1] >> i) & 1) > 0)
+			if (((vals[0] >> i) & 1) > 0)
 				abis.addSelectionInterval(i, i);
 		for (int area : sel)
-			if (area >= 9)
-				trait.addSelectionInterval(area, area);
+			trait.addSelectionInterval(area, area);
 		changing = false;
 	}
 
@@ -84,22 +79,19 @@ public class UnitEditBox extends Page {
 				ans[1] |= 1 << i;
 		for (int i = 0; i < traitList.size(); i++)
 			if (trait.isSelectedIndex(i + 9)) {
-				if (!cu.customTraits.contains(traitList.get(i).id)) {
-					cu.customTraits.add(traitList.get(i).id);
-					cu.nullFixer.add(traitList.get(i).id.toString());
+				if (!cu.traits.contains(traitList.get(i))) {
+					cu.traits.add(traitList.get(i));
 				}
-			} else {
-				cu.customTraits.remove(traitList.get(i).id);
-				cu.nullFixer.remove(traitList.get(i).id.toString());
-			}
+			} else
+				cu.traits.remove(traitList.get(i));
 		getFront().callBack(ans);
 	}
 
 	private void ini() {
 		vt.addAll(Arrays.asList(TRAIT).subList(0, 9));
 		Collections.addAll(va, SABIS);
-		for (int k = 0; k < traitList.size(); k++)
-			vt.add(traitList.get(k).name);
+		for (Trait value : traitList)
+			vt.add(value.name);
 		customTraitsIco(trait,traitList);
 		trait.setListData(vt);
 		abis.setListData(va);

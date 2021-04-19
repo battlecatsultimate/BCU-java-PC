@@ -178,8 +178,8 @@ public class BasisPage extends LubCont {
 		set(jspt, x, y, 1600, 150, 450, 600);
 		set(lub, x, y, 500, 150, 600, 300);
 		set(unit, x, y, 1350, 100, 200, 50);
-		set(jspcs, x, y, 1450, 800, 300, 450);
-		set(jspcl, x, y, 1750, 800, 300, 450);
+		set(jspcs, x, y, 1500, 800, 300, 450);
+		set(jspcl, x, y, 1800, 800, 300, 450);
 		set(jspc, x, y, 50, 800, 1450, 450);
 		set(cjtf, x, y, 500, 750, 400, 50);
 		set(search, x, y, 900, 750, 200, 50);

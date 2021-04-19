@@ -210,8 +210,8 @@ public class FormEditPage extends EntityEditPage {
 				if (cu.getProc().getArr(id).exists())
 					imu |= 1 << id - IMUSFT;
 			}
-		ueb.diyIni(data.customTraits);
-		ueb.setData(new int[] { cu.type, cu.abi, imu });
+		ueb.diyIni(data.traits);
+		ueb.setData(new int[] { cu.abi, imu });
 	}
 
 	private String interpretLayer(int back, int front) {

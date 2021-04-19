@@ -2,8 +2,7 @@ package page.info;
 
 import common.CommonStatic;
 import common.battle.BasisSet;
-import common.battle.data.CustomEnemy;
-import common.battle.data.CustomEntity;
+import common.pack.UserProfile;
 import common.util.Data;
 import common.util.unit.Enemy;
 import page.JL;
@@ -143,14 +142,10 @@ public class EnemyInfoTable extends Page {
 	}
 
 	private void ini() {
-		String[] TraitBox = {};
-		if (e.de instanceof CustomEnemy) {
-			int trsize = ((CustomEnemy) e.de).customTraits.size();
-			TraitBox = new String[trsize];
-			for (int i = 0; i < trsize; i++) {
-				TraitBox[i] = ((CustomEnemy) e.de).customTraits.get(i).get().name;
-			}
-		}
+		int trsize = e.de.getTraits().size();
+		String[] TraitBox = new String[trsize];
+		for (int i = 0; i < trsize; i++)
+			TraitBox[i] = e.de.getTraits().get(i).name;
 		for (int i = 0; i < main.length; i++)
 			for (int j = 0; j < main[i].length; j++)
 				if (i * j != 1 && (i != 0 || j < 5)) {
@@ -182,7 +177,7 @@ public class EnemyInfoTable extends Page {
 		if (e.anim.getEdi() != null && e.anim.getEdi().getImg() != null)
 			main[0][2].setIcon(UtilPC.getIcon(e.anim.getEdi()));
 		main[0][3].setText(1, "trait");
-		main[0][4].setText(Interpret.getTrait(e.de.getType(), TraitBox, e.de.getStar()));
+		main[0][4].setText(Interpret.getTrait(TraitBox, e.de.getStar()));
 		main[1][0].setText(1, "mult");
 		main[1][2].setText("HP");
 		main[1][4].setText("HB");
@@ -220,7 +215,7 @@ public class EnemyInfoTable extends Page {
 		String eDesc = e.descriptionGet().replace("<br>", "\n");
 		if (eDesc.replace("\n","").length() > 0)
 			add(desc);
-		descr.setText(e.toString().replace(Data.trio(e.id.id) + " - ", "") + (e.de.getType() != 256 ? " (" + Interpret.getTrait(e.de.getType(), TraitBox, 0) + ")" : "") + (e.de.getStar() >= 2 ? " (Cool Dude)" : "") + "\n" + eDesc);
+		descr.setText(e.toString().replace(Data.trio(e.id.id) + " - ", "") + (!e.de.getTraits().contains(UserProfile.getBCData().traits.get(Data.TRAIT_WHITE)) ? " (" + Interpret.getTrait(TraitBox, 0) + ")" : "") + (e.de.getStar() >= 2 ? " (Cool Dude)" : "") + "\n" + eDesc);
 		descr.setEditable(false);
 		reset();
 		addListeners();

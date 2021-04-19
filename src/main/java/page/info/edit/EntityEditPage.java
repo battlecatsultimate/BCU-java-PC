@@ -127,9 +127,8 @@ public abstract class EntityEditPage extends Page {
 	public void callBack(Object o) {
 		if (o instanceof int[]) {
 			int[] vals = (int[]) o;
-			if (vals.length == 3) {
-				ce.type = vals[0];
-				ce.abi = vals[1];
+			if (vals.length == 2) {
+				ce.abi = vals[0];
 				ce.loop = (ce.abi & AB_GLASS) > 0 ? 1 : -1;
 			}
 		}

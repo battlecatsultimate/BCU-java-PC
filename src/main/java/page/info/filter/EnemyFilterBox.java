@@ -1,6 +1,6 @@
 package page.info.filter;
 
-import common.battle.data.CustomEnemy;
+import common.pack.FixIndexList.FixIndexMap;
 import common.pack.Identifier;
 import common.pack.PackData;
 import common.pack.UserProfile;
@@ -106,11 +106,13 @@ class EFBButton extends EnemyFilterBox {
 		AttList.btnDealer(x, y, btns, orop, -1, 0, 1, -1, 2);
 	}
 
+	private final List<Trait> trlis = new ArrayList<>();
+
 	private void confirm() {
 		List<Enemy> ans = new ArrayList<>();
 		for(PackData p : UserProfile.getAllPacks()) {
 			for (Enemy e : p.enemies.getList()) {
-				int t = e.de.getType();
+				List<Trait> ct = e.de.getTraits();
 				int a = e.de.getAbi();
 				boolean b0 = false;
 				for (int i = 0; i < rare.length; i++)
@@ -118,11 +120,19 @@ class EFBButton extends EnemyFilterBox {
 						b0 |= isER(e, i);
 				boolean b1 = !orop[0].isSelected();
 				for (int i = 0; i < trait.length; i++)
-					if (trait[i].isSelected())
+					if (ct.size() > 0) {
 						if (orop[0].isSelected())
-							b1 |= ((t >> i) & 1) == 1;
-						else
-							b1 &= ((t >> i) & 1) == 1;
+							for (Trait diyt : ct) {
+								b1 |= trlis.get(i).equals(diyt);
+								if (b1)
+									break;
+							}
+						else {
+							b1 &= ct.contains(trlis.get(i));
+							if (!b1)
+								break;
+						}
+					} else b1 = false;
 				boolean b2 = !orop[1].isSelected();
 				for (int i = 0; i < abis.length; i++)
 					if (abis[i].isSelected()) {
@@ -192,6 +202,9 @@ class EFBButton extends EnemyFilterBox {
 				continue;
 			trait[i].setIcon(new ImageIcon(v));
 		}
+		FixIndexMap<Trait> BCtraits = UserProfile.getBCData().traits;
+		for (int i = 0 ; i < BCtraits.size() - 1 ; i++)
+			trlis.add(BCtraits.get(i));
 		for (int i = 0; i < abis.length; i++) {
 			set(abis[i] = new JTG(EABI[i]));
 			BufferedImage v = UtilPC.getIcon(0, EABIIND[i]);
@@ -290,9 +303,8 @@ class EFBList extends EnemyFilterBox {
 		List<Enemy> ans = new ArrayList<>();
 		for(PackData p : UserProfile.getAllPacks()) {
 			for (Enemy e : p.enemies.getList()) {
-				int t = e.de.getType();
 				int a = e.de.getAbi();
-				List<Identifier<Trait>> ct = e.de instanceof CustomEnemy ? ((CustomEnemy)e.de).customTraits : null;
+				List<Trait> ct = e.de.getTraits();
 				boolean b0 = !orop[3].isSelected();
 				for (int r : rare.getSelectedIndices()) {
 					if (orop[3].isSelected())
@@ -300,23 +312,21 @@ class EFBList extends EnemyFilterBox {
 					else
 						b0 &= isER(e, r);
 				}
-				boolean b1 = !orop[0].isSelected(), selbc = false, seldiy = false;
+				boolean b1 = !orop[0].isSelected();
 				for (int i : trait.getSelectedIndices())
-					if (i < 12) {
-						selbc = true;
+					if (ct.size() > 0) {
 						if (orop[0].isSelected())
-							b1 |= ((t >> i) & 1) == 1;
-						else
-							b1 &= ((t >> i) & 1) == 1;
-					} else if (ct != null && ct.size() > 0) {
-						seldiy = true;
-						if (orop[0].isSelected())
-							for (Identifier<Trait> diyt : ct)
-								b1 |= trlis.get(i - 12).id.equals(diyt);
-							else
-								b1 &= ct.contains(trlis.get(i - 12).id);
-					} else if (selbc && !orop[0].isSelected()) b1 = false;
-					else if (!seldiy && !orop[0].isSelected()) b1 = false;
+							for (Trait diyt : ct) {
+								b1 |= trlis.get(i).equals(diyt);
+								if (b1)
+									break;
+							}
+						else {
+							b1 &= ct.contains(trlis.get(i));
+							if (!b1)
+								break;
+						}
+					} else b1 = false;
 				boolean b2 = !orop[1].isSelected();
 				int len = EFILTER;
 				for (int i : abis.getSelectedIndices())
@@ -375,7 +385,11 @@ class EFBList extends EnemyFilterBox {
 	private void ini() {
 		for (int i = 0; i < orop.length; i++)
 			set(orop[i] = new JTG(get(0, "orop")));
-		Collections.addAll(vt, TRAIT);
+		FixIndexMap<Trait> BCtraits = UserProfile.getBCData().traits;
+		for (int i = 0 ; i < BCtraits.size() - 1 ; i++) {
+			trlis.add(BCtraits.get(i));
+			vt.add(BCtraits.get(i).name);
+		}
 		Collection<PackData.UserPack> pacs = UserProfile.getUserPacks();
 		for (PackData.UserPack pacc : pacs)
 			for (Trait ctra : pacc.traits)

@@ -20,6 +20,7 @@ import common.util.anim.MaModel;
 import common.util.pack.Background;
 import common.util.stage.Music;
 import common.util.unit.Form;
+import common.util.unit.Trait;
 import io.BCMusic;
 import io.BCUReader;
 import io.BCUWriter;
@@ -259,13 +260,15 @@ public class UtilPC {
 		if (pc == null)
 			return new String[] { "Lv." + lvs[0], "" };
 		else {
-			String[] Placeholder = {};
+			String[] TraitsHolder = new String[pc.trait.size()];
+			for (int i = 0 ; i < pc.trait.size() ; i++)
+				TraitsHolder[i] = pc.trait.get(i).name;
 			StringBuilder lab;
 
 			lab = new StringBuilder();
 
 			if(pc.type != 0) {
-				lab.append("[").append(Interpret.getTrait(pc.type, Placeholder, 0)).append("]").append(" ");
+				lab.append("[").append(Interpret.getTrait(TraitsHolder, 0)).append("]").append(" ");
 			}
 
 			lab.append(Interpret.PCTX[pc.info[0][0]]);

@@ -1,7 +1,6 @@
 package page.info.filter;
 
 import common.battle.data.CustomEnemy;
-import common.pack.Identifier;
 import common.pack.PackData.UserPack;
 import common.pack.UserProfile;
 import common.util.unit.Trait;
@@ -10,10 +9,7 @@ import page.Page;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 import static utilpc.Interpret.*;
 
@@ -37,41 +33,39 @@ public class EnemyEditBox extends Page {
 	public EnemyEditBox(Page p, UserPack pack, CustomEnemy cen) {
 		super(p);
 		editable = pack.editable;
-		traitList = new ArrayList<>(pack.traits.getList());
+		traitList = new ArrayList<>(UserProfile.getBCData().traits.getList().subList(0,8));
+		traitList.addAll(pack.traits.getList());
 		Collection<UserPack> pacs = UserProfile.getUserPacks();
 		for (UserPack pacc : pacs) {
-			if (!pacc.desc.id.equals("000000") && (pack.desc.dependency.contains(pacc.desc.id)))
+			if (pack.desc.dependency.contains(pacc.desc.id))
 				traitList.addAll(pacc.traits.getList());
 		}
 		ce = cen;
 		ini();
 	}
 
-	public void diyIni(ArrayList<Identifier<Trait>> cts) {
+	public void diyIni(ArrayList<Trait> cts) {
 		changing = true;
+		System.out.println(cts);
 		for (int k = 0; k < traitList.size(); k++)
-			if (cts.contains(traitList.get(k).id))
-				trait.addSelectionInterval(k + 9, k + 9);
+			if (cts.contains(traitList.get(k)))
+				trait.addSelectionInterval(k, k);
 			else
-				trait.removeSelectionInterval(k + 9, k + 9);
+				trait.removeSelectionInterval(k, k);
 	}
 
 	public void setData(int[] vals) {
 		changing = true;
 		int[] sel = trait.getSelectedIndices();
 		trait.clearSelection();
-		for (int i = 0; i < 9; i++)
-			if (((vals[0] >> i) & 1) > 0)
-				trait.addSelectionInterval(i, i);
 		abis.clearSelection();
 		for (int i = 0; i < EABIIND.length; i++) {
 			int ind = EABIIND[i];
-			if (ind < 100 ? ((vals[1] >> ind) & 1) > 0 : ((vals[2] >> (ind - 100 - IMUSFT)) & 1) > 0)
+			if (ind < 100 ? ((vals[0] >> ind) & 1) > 0 : ((vals[1] >> (ind - 100 - IMUSFT)) & 1) > 0)
 				abis.addSelectionInterval(i, i);
 		}
 		for (int area : sel)
-			if (area >= 9)
-				trait.addSelectionInterval(area, area);
+			trait.addSelectionInterval(area, area);
 		changing = false;
 	}
 
@@ -83,10 +77,6 @@ public class EnemyEditBox extends Page {
 
 	private void confirm() {
 		int[] ans = new int[3];
-		for (int i = 0; i < 9; i++)
-			if (trait.isSelectedIndex(i))
-				ans[0] |= 1 << i;
-
 		for (int i = 0; i < EABIIND.length; i++)
 			if (abis.isSelectedIndex(i))
 				if (EABIIND[i] < 100)
@@ -94,25 +84,19 @@ public class EnemyEditBox extends Page {
 				else
 					ans[2] |= 1 << (EABIIND[i] - 100 - IMUSFT);
 		for (int i = 0; i < traitList.size(); i++)
-			if (trait.isSelectedIndex(i + 9)) {
-				if (!ce.customTraits.contains(traitList.get(i).id)) {
-					ce.customTraits.add(traitList.get(i).id);
-					ce.nullFixer.add(traitList.get(i).id.toString());
+			if (trait.isSelectedIndex(i)) {
+				if (!ce.traits.contains(traitList.get(i))) {
+					ce.traits.add(traitList.get(i));
 				}
-			} else {
-				ce.customTraits.remove(traitList.get(i).id);
-				ce.nullFixer.remove(traitList.get(i).id.toString());
-			}
+			} else
+				ce.traits.remove(traitList.get(i));
 		getFront().callBack(ans);
 	}
 
 	private void ini() {
-		for (int i = 0; i < 9; i++)
-			vt.add(TRAIT[i]);
 		for (Trait diyTrait : traitList)
 			vt.add(diyTrait.name);
-		for (int i = 0; i < EABIIND.length; i++)
-			va.add(EABI[i]);
+		va.addAll(Arrays.asList(EABI).subList(0, EABIIND.length));
 		customTraitsIco(trait,traitList);
 		trait.setListData(vt);
 		abis.setListData(va);
