@@ -667,7 +667,7 @@ public class BasisPage extends LubCont {
 						.filter(c -> c.type == CommonStatic.getBCAssets().filter[cs][finalI])
 						.collect(Collectors.toList())) {
 					String name = c.getName();
-					if (name.toLowerCase().contains(comboName.toLowerCase()))
+					if (name != null && name.toLowerCase().contains(comboName.toLowerCase()))
 						lc.add(c);
 				}
 			}
@@ -677,7 +677,7 @@ public class BasisPage extends LubCont {
 						.filter(c -> c.type == CommonStatic.getBCAssets().filter[cs][val])
 						.collect(Collectors.toList())) {
 					String name = c.getName();
-					if (name.toLowerCase().contains(comboName.toLowerCase()))
+					if (name != null && name.toLowerCase().contains(comboName.toLowerCase()))
 						lc.add(c);
 				}
 		}
