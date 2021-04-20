@@ -663,14 +663,14 @@ public class BasisPage extends LubCont {
 			for (int i = 0; i < CommonStatic.getBCAssets().filter[cs].length; i++)
 				for (Combo c : CommonStatic.getBCAssets().combos[CommonStatic.getBCAssets().filter[cs][i]]) {
 					String name = MultiLangCont.getStatic().COMNAME.getCont(c.name);
-					if (name.toLowerCase().contains(comboName.toLowerCase()))
+					if (name != null && name.toLowerCase().contains(comboName.toLowerCase()))
 						lc.add(c);
 				}
 		} else {
 			for (int val : cls)
 				for (Combo c : CommonStatic.getBCAssets().combos[CommonStatic.getBCAssets().filter[cs][val]]) {
 					String name = MultiLangCont.getStatic().COMNAME.getCont(c.name);
-					if (name.toLowerCase().contains(comboName.toLowerCase()))
+					if (name != null && name.toLowerCase().contains(comboName.toLowerCase()))
 						lc.add(c);
 				}
 		}
