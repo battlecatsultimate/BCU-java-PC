@@ -5,6 +5,7 @@ import common.battle.BasisSet;
 import common.pack.UserProfile;
 import common.util.Data;
 import common.util.unit.Enemy;
+import common.util.unit.Trait;
 import page.JL;
 import page.JTF;
 import page.Page;
@@ -144,8 +145,13 @@ public class EnemyInfoTable extends Page {
 	private void ini() {
 		int trsize = e.de.getTraits().size();
 		String[] TraitBox = new String[trsize];
-		for (int i = 0; i < trsize; i++)
-			TraitBox[i] = e.de.getTraits().get(i).name;
+		for (int i = 0; i < trsize; i++) {
+			Trait trait = e.de.getTraits().get(i);
+			if (trait.BCTrait)
+				TraitBox[i] = Interpret.TRAIT[trait.id.id];
+			else
+				TraitBox[i] = trait.name;
+		}
 		for (int i = 0; i < main.length; i++)
 			for (int j = 0; j < main[i].length; j++)
 				if (i * j != 1 && (i != 0 || j < 5)) {

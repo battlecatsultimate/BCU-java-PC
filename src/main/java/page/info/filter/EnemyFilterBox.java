@@ -388,7 +388,7 @@ class EFBList extends EnemyFilterBox {
 		FixIndexMap<Trait> BCtraits = UserProfile.getBCData().traits;
 		for (int i = 0 ; i < BCtraits.size() - 1 ; i++) {
 			trlis.add(BCtraits.get(i));
-			vt.add(BCtraits.get(i).name);
+			vt.add(TRAIT[i]);
 		}
 		Collection<PackData.UserPack> pacs = UserProfile.getUserPacks();
 		for (PackData.UserPack pacc : pacs)

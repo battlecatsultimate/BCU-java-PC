@@ -6,6 +6,7 @@ import common.battle.data.MaskUnit;
 import common.util.Data;
 import common.util.unit.EForm;
 import common.util.unit.Form;
+import common.util.unit.Trait;
 import page.JL;
 import page.JTF;
 import page.Page;
@@ -85,8 +86,13 @@ public class UnitInfoTable extends Page {
 
 		int trsize = ef.du.getTraits().size();
 		String[] TraitBox = new String[trsize];
-		for (int i = 0; i < trsize; i++)
-			TraitBox[i] = ef.du.getTraits().get(i).name;
+		for (int i = 0; i < trsize; i++) {
+			Trait trait = ef.du.getTraits().get(i);
+			if (trait.BCTrait)
+				TraitBox[i] = Interpret.TRAIT[trait.id.id];
+			else
+				TraitBox[i] = trait.name;
+		}
 		main[1][3].setText(hp + " / " + ef.du.getHb());
 		main[2][3].setText("" + (attack * 30 / ef.du.getItv()));
 		main[2][5].setText("" + (int) (ef.du.getSpeed() * (1 + b.getInc(Data.C_SPE) * 0.01)));

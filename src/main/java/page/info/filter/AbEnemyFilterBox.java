@@ -408,8 +408,16 @@ class AEFBList extends AbEnemyFilterBox {
         FixIndexList.FixIndexMap<Trait> BCtraits = UserProfile.getBCData().traits;
         for (int i = 0 ; i < BCtraits.size() - 1 ; i++) {
             trlis.add(BCtraits.get(i));
-            vt.add(BCtraits.get(i).name);
+            vt.add(TRAIT[i]);
         }
+        Collection<PackData.UserPack> pacs = UserProfile.getUserPacks();
+        for (PackData.UserPack pacc : pacs)
+            for (Trait ctra : pacc.traits)
+                if (pack == null || ctra.id.pack.equals(pack) || parents.contains(ctra.id.pack)) {
+                    trlis.add(ctra);
+                    vt.add(ctra.name);
+                }
+        customTraitsIco(trait,trlis);
         va.addAll(Arrays.asList(EABI).subList(0, EFILTER));
         ProcLang proclang = ProcLang.get();
         for (int i = 0; i < Data.PROC_TOT; i++)
@@ -430,6 +438,10 @@ class AEFBList extends AbEnemyFilterBox {
         add(jt);
         add(jab);
         add(jat);
+    }
+
+    protected static void customTraitsIco(AttList trait, List<Trait> diyTraits) {
+        trait.diyTraitIcons(trait, diyTraits);
     }
 
     private void set(AbstractButton b) {

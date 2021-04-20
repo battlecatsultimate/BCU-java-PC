@@ -261,8 +261,13 @@ public class UtilPC {
 			return new String[] { "Lv." + lvs[0], "" };
 		else {
 			String[] TraitsHolder = new String[pc.trait.size()];
-			for (int i = 0 ; i < pc.trait.size() ; i++)
-				TraitsHolder[i] = pc.trait.get(i).name;
+			for (int i = 0 ; i < pc.trait.size() ; i++) {
+				Trait trait = pc.trait.get(i);
+				if (trait.BCTrait)
+					TraitsHolder[i] = Interpret.TRAIT[trait.id.id];
+				else
+					TraitsHolder[i] = trait.name;
+			}
 			StringBuilder lab;
 
 			lab = new StringBuilder();
