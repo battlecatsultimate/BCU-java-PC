@@ -1,5 +1,6 @@
 package page;
 
+import common.debug.DebugCore;
 import common.pack.PackData;
 import common.pack.UserProfile;
 import common.util.stage.MapColc;
@@ -126,7 +127,10 @@ public class MainPage extends Page {
 		vmsc.setLnr(() -> new MusicPage(this));
 		rply.setLnr(() -> new RecdManagePage(this));
 		allf.setLnr(() -> new ResourcePage(this));
-		dbug.setLnr((e) -> new DebugFrame());
+		dbug.setLnr((e) -> {
+			if (DebugCore.DEBUG_LOCK == null)
+				new DebugFrame();
+		});
 		auth.setLnr(e -> {
 			String author = Opts.read("Decide your author name");
 

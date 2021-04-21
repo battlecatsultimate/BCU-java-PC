@@ -4,10 +4,11 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -16,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
+import common.debug.DebugCore;
 import common.debug.DebugCore.Accessor;
 import common.debug.DebugCore.Entry;
 import common.debug.DebugCore.StaticContainer;
@@ -109,8 +111,8 @@ public class DebugFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	public final StaticContainer root = new StaticContainer(UserProfile.class, MainFrame.class);
-	public final InfoPane main = new InfoPane(root);
+	public final InfoPane main = new InfoPane(
+			DebugCore.DEBUG_LOCK = new StaticContainer(UserProfile.class, MainFrame.class));
 	private final JScrollPane jsp = new JScrollPane(main, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
 			ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 
@@ -121,6 +123,16 @@ public class DebugFrame extends JFrame {
 		this.setFont(MainFrame.font);
 		this.add(jsp);
 		this.setVisible(true);
+		addWindowListener(new WindowAdapter() {
+
+			public void windowClosing(WindowEvent arg0) {
+				synchronized (DebugCore.DEBUG_LOCK) {
+					DebugCore.DEBUG_LOCK.notifyAll();
+				}
+				DebugCore.DEBUG_LOCK = null;
+			}
+
+		});
 	}
 
 }
