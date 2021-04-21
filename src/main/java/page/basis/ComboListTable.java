@@ -15,7 +15,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 
 public class ComboListTable extends SortTable<Combo> {
-	private BasisSet lineup;
 
 	private static final long serialVersionUID = 1L;
 
@@ -28,7 +27,7 @@ public class ComboListTable extends SortTable<Combo> {
 
 	public static void redefine() {
 		String str = MainLocale.getLoc(MainLocale.INFO, "unit");
-		tit = new String[] { "Lv.", MainLocale.getLoc(MainLocale.INFO, "desc"), MainLocale.getLoc(MainLocale.INFO, "occu"), str + " 1", str + " 2",
+		tit = new String[] {"ID", "Lv.", MainLocale.getLoc(MainLocale.INFO, "desc"), MainLocale.getLoc(MainLocale.INFO, "occu"), str + " 1", str + " 2",
 				str + " 3", str + " 4", str + " 5" };
 		lvl = new String[] { "Sm", "M", "L", "XL" };
 	}
@@ -48,7 +47,7 @@ public class ComboListTable extends SortTable<Combo> {
 			public Component getTableCellRendererComponent(JTable l, Object o, boolean s, boolean f, int r, int c) {
 				JLabel jl = (JLabel) super.getTableCellRendererComponent(l, c, s, f, r, c);
 				Combo com = (Combo) o;
-				jl.setText(Interpret.comboInfo(com, lineup));
+				jl.setText(Interpret.comboInfo(com, BasisSet.current()));
 				return jl;
 			}
 
@@ -86,7 +85,7 @@ public class ComboListTable extends SortTable<Combo> {
 		int c = getColumnModel().getColumnIndexAtX(p.x);
 		c = lnk[c];
 		int r = p.y / getRowHeight();
-		if (r < 0 || r >= list.size() || c < 3)
+		if (r < 0 || r >= list.size() || c <= 3)
 			return;
 		Form f = ((Form) get(list.get(r), c));
 		if (f == null)
@@ -97,30 +96,30 @@ public class ComboListTable extends SortTable<Combo> {
 	@Override
 	public Class<?> getColumnClass(int c) {
 		c = lnk[c];
-		if (c == 1)
+		if (c == 2)
 			return Combo.class;
-		if (c > 2)
+		if (c > 3)
 			return Form.class;
 		return String.class;
 	}
 
 	@Override
 	protected int compare(Combo e0, Combo e1, int c) {
-		if (c == 1) {
-			String name0 = Interpret.comboInfo(e0, lineup);
-			String name1 = Interpret.comboInfo(e1, lineup);
-			return name0.compareToIgnoreCase(name1);
+		if (c == 0) {
+			return e0.getID().compareTo(e1.getID());
 		} else if (c == 2) {
+			return Integer.compare(e0.type, e1.type);
+		} else if (c == 3) {
 			int o0 = lu.occupance(e0);
 			int o1 = lu.occupance(e1);
 			return Integer.compare(o0, o1);
-		} else if (c >= 3 && c <= 7) {
-			if (e0.forms.size() <= c - 3)
+		} else if (c >= 4 && c <= 8) {
+			if (e0.forms.length <= c - 3)
 				return -1;
-			if (e1.forms.size() <= c - 3)
+			if (e1.forms.length <= c - 3)
 				return 1;
-			Form f0 = e0.forms.get(c - 3);
-			Form f1 = e1.forms.get(c - 3);
+			Form f0 = e0.forms[c - 3];
+			Form f1 = e1.forms[c - 3];
 			return f0.uid.compareTo(f1.uid);
 		} else {
 			return Integer.compare(e0.lv, e1.lv);
@@ -130,13 +129,15 @@ public class ComboListTable extends SortTable<Combo> {
 	@Override
 	protected Object get(Combo t, int c) {
 		if (c == 0)
-			return lvl[t.lv];
+			return t.toString();
 		if (c == 1)
-			return t;
+			return lvl[t.lv];
 		if (c == 2)
+			return t;
+		if (c == 3)
 			return lu.occupance(t);
-		if (t.forms.size() > c - 3) {
-			return t.forms.get(c - 3);
+		if (t.forms.length > c - 4) {
+			return t.forms[c - 4];
 		}
 		return null;
 	}
@@ -144,9 +145,5 @@ public class ComboListTable extends SortTable<Combo> {
 	@Override
 	protected String[] getTit() {
 		return tit;
-	}
-
-	public void setBasis(BasisSet b) {
-		lineup = b;
 	}
 }

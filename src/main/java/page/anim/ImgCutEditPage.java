@@ -175,7 +175,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
-		set(aep, x, y, 550, 0, 1750, 50);
+		set(aep, x, y, 800, 0, 1750, 50);
 		set(back, x, y, 0, 0, 200, 50);
 		set(relo, x, y, 250, 0, 200, 50);
 		set(jspu, x, y, 0, 50, 300, 500);

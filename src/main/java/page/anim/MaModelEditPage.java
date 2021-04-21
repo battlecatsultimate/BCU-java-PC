@@ -40,6 +40,8 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	private final JBTN reml = new JBTN(0, "reml");
 	private final JBTN rema = new JBTN(0, "rema");
 	private final JBTN sort = new JBTN(0, "sort");
+	private final JBTN camres = new JBTN(0, "reset camera");
+	private final JBTN zomres = new JBTN(0, "reset zoom");
 	private final EditHead aep;
 	private Point p = null;
 	private MMTree mmt;
@@ -141,8 +143,10 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	@Override
 	protected synchronized void resized(int x, int y) {
 		setBounds(0, 0, x, y);
-		set(aep, x, y, 550, 0, 1750, 50);
+		set(aep, x, y, 800, 0, 1750, 50);
 		set(back, x, y, 0, 0, 200, 50);
+		set(camres, x, y, 350, 0, 200, 50);
+		set(zomres, x, y, 560, 0, 200, 50);
 		set(jsptr, x, y, 0, 550, 300, 750);
 		set(jspmm, x, y, 300, 550, 2000, 750);
 		set(jspu, x, y, 0, 50, 300, 500);
@@ -191,6 +195,13 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	private void addListeners$0() {
 
 		back.setLnr(x -> changePanel(getFront()));
+
+		camres.setLnr(x -> {
+			mb.ori.x = 0;
+			mb.ori.y = 0;
+		});
+
+		zomres.setLnr(x -> mb.setSiz(0.5));
 
 		jlu.addListSelectionListener(arg0 -> {
 			if (isAdj() || jlu.getValueIsAdjusting())
@@ -272,6 +283,8 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	private void ini() {
 		add(aep);
 		add(back);
+		add(camres);
+		add(zomres);
 		add(jspu);
 		add(jspp);
 		add(jspmm);

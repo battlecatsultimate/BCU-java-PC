@@ -78,7 +78,7 @@ public class Interpret extends Data {
 	 * treasure max
 	 */
 	private static final int[] TMAX = { 30, 30, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 600, 1500, 100,
-			100, 100, 30, 30, 30, 30, 30, 10, 300, 300, 600, 600, 600, 20, 30, 30, 30, 20, 20, 20, 20 };
+			100, 100, 30, 30, 30, 30, 30, 10, 300, 300, 600, 600, 600, 20, 30, 30, 30, 20, 30, 20, 20 };
 
 	/**
 	 * combo string component
@@ -195,8 +195,8 @@ public class Interpret extends Data {
 		return ans;
 	}
 
-	public static List<String> getProc(MaskEntity du) {
-		Formatter.Context ctx = new Formatter.Context(false, false);
+	public static List<String> getProc(MaskEntity du, boolean isEnemy) {
+		Formatter.Context ctx = new Formatter.Context(isEnemy, false);
 		boolean common;
 
 		if(du instanceof CustomEntity) {
@@ -229,7 +229,7 @@ public class Interpret extends Data {
 			for (int i = 0; i < Data.PROC_TOT; i++) {
 				ProcItem item = ma.getProc().getArr(i);
 
-				if (!item.exists() || ma.getProc().sharable(i))
+				if (!item.exists() || !ma.getProc().sharable(i))
 					continue;
 
 				String format = ProcLang.get().get(i).format;
@@ -243,7 +243,7 @@ public class Interpret extends Data {
 				for (int j = 0; j < Data.PROC_TOT; j++) {
 					ProcItem item = ma.getProc().getArr(j);
 
-					if (!item.exists())
+					if (!item.exists() || ma.getProc().sharable(j))
 						continue;
 
 					String format = ProcLang.get().get(j).format;
@@ -281,11 +281,9 @@ public class Interpret extends Data {
 		return l;
 	}
 
-	public static String getTrait(int type, int star) {
+	public static String getTrait(String[] cTraits, int star) {
 		StringBuilder ans = new StringBuilder();
-		for (int i = 0; i < TRAIT.length; i++)
-			if (((type >> i) & 1) > 0)
-				ans.append(TRAIT[i]).append(", ");
+		for (String cTrait : cTraits) ans.append(cTrait).append(", ");
 		if (star > 0)
 			ans.append(STAR[star]);
 

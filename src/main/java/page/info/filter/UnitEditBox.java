@@ -1,11 +1,13 @@
 package page.info.filter;
 
+import common.battle.data.CustomUnit;
+import common.pack.PackData.UserPack;
+import common.pack.UserProfile;
+import common.util.unit.Trait;
 import page.Page;
 
 import javax.swing.*;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Vector;
+import java.util.*;
 
 import static utilpc.Interpret.SABIS;
 import static utilpc.Interpret.TRAIT;
@@ -24,24 +26,40 @@ public class UnitEditBox extends Page {
 	private final JScrollPane jab = new JScrollPane(abis);
 
 	private boolean changing = false;
+	private final List<Trait> traitList;
+	private final CustomUnit cu;
 
-	public UnitEditBox(Page p, boolean edit) {
+	public UnitEditBox(Page p, UserPack pack, CustomUnit cun) {
 		super(p);
-		editable = edit;
+		editable = pack.editable;
+		traitList = new ArrayList<>(UserProfile.getBCData().traits.getList().subList(0,9));
+		traitList.addAll(pack.traits.getList());
+		for (UserPack pacc : UserProfile.getUserPacks())
+			if (pack.desc.dependency.contains(pacc.desc.id))
+				traitList.addAll(pacc.traits.getList());
+		cu = cun;
 		ini();
+	}
+
+	public void diyIni(ArrayList<Trait> ts) {
+		changing = true;
+		for (int k = 0; k < traitList.size(); k++)
+			if (ts.contains(traitList.get(k)))
+				trait.addSelectionInterval(k, k);
+			else
+				trait.removeSelectionInterval(k, k);
 	}
 
 	public void setData(int[] vals) {
 		changing = true;
+		int[] sel = trait.getSelectedIndices();
 		trait.clearSelection();
 		abis.clearSelection();
-		for (int i = 0; i < 9; i++)
+		for (int i = 0; i < SABIS.length; i++)
 			if (((vals[0] >> i) & 1) > 0)
-				trait.addSelectionInterval(i, i);
-		for (int i = 0; i < SABIS.length; i++) {
-			if (((vals[1] >> i) & 1) > 0)
 				abis.addSelectionInterval(i, i);
-		}
+		for (int area : sel)
+			trait.addSelectionInterval(area, area);
 		changing = false;
 	}
 
@@ -53,20 +71,25 @@ public class UnitEditBox extends Page {
 
 	private void confirm() {
 		int[] ans = new int[3];
-		for (int i = 0; i < 9; i++)
-			if (trait.isSelectedIndex(i))
-				ans[0] |= 1 << i;
 		int lev = SABIS.length;
 		for (int i = 0; i < lev; i++)
 			if (abis.isSelectedIndex(i))
 				ans[1] |= 1 << i;
-
+		for (int i = 0; i < traitList.size(); i++)
+			if (trait.isSelectedIndex(i)) {
+				if (!cu.traits.contains(traitList.get(i))) {
+					cu.traits.add(traitList.get(i));
+				}
+			} else
+				cu.traits.remove(traitList.get(i));
 		getFront().callBack(ans);
 	}
 
 	private void ini() {
-		vt.addAll(Arrays.asList(TRAIT).subList(0, 9));
+		for (Trait value : traitList)
+			vt.add(value.name);
 		Collections.addAll(va, SABIS);
+		customTraitsIco(trait,traitList);
 		trait.setListData(vt);
 		abis.setListData(va);
 		int m = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
@@ -87,5 +110,7 @@ public class UnitEditBox extends Page {
 				confirm();
 		});
 	}
-
+	protected static void customTraitsIco(AttList trait, List<Trait> diyTraits) {
+		trait.diyTraitIcons(trait, diyTraits);
+	}
 }

@@ -6,6 +6,7 @@ import common.battle.data.MaskUnit;
 import common.util.Data;
 import common.util.unit.EForm;
 import common.util.unit.Form;
+import common.util.unit.Trait;
 import page.JL;
 import page.JTF;
 import page.Page;
@@ -27,6 +28,8 @@ public class UnitInfoTable extends Page {
 	private final JLabel[] proc;
 	private final JTF jtf = new JTF();
 	private final JLabel pcoin;
+	private final JTextArea descr = new JTextArea();
+	private final JScrollPane desc = new JScrollPane(descr);
 
 	private final BasisSet b;
 	private final Form f;
@@ -43,7 +46,7 @@ public class UnitInfoTable extends Page {
 		atks = new JL[6];
 		MaskUnit du = f.maxu();
 		List<String> ls = Interpret.getAbi(du);
-		ls.addAll(Interpret.getProc(du));
+		ls.addAll(Interpret.getProc(du, false));
 		boolean pc = de.getPCoin() != null;
 		if (pc)
 			ls.add("");
@@ -63,7 +66,7 @@ public class UnitInfoTable extends Page {
 		int l = main.length + 1;
 		if (displaySpecial)
 			l += special.length;
-		return (l + (proc.length + 1) / 2) * 50;
+		return (l + (proc.length + 1) / 2) * 50 + (f.descriptionGet().replace("<br>", "").length() > 0 ? 200 : 0);
 	}
 
 	protected void reset() {
@@ -81,12 +84,21 @@ public class UnitInfoTable extends Page {
 			hp = (int) (hp * f.getPCoin().getHPMultiplication(multi));
 		}
 
+		int trsize = ef.du.getTraits().size();
+		String[] TraitBox = new String[trsize];
+		for (int i = 0; i < trsize; i++) {
+			Trait trait = ef.du.getTraits().get(i);
+			if (trait.BCTrait)
+				TraitBox[i] = Interpret.TRAIT[trait.id.id];
+			else
+				TraitBox[i] = trait.name;
+		}
 		main[1][3].setText(hp + " / " + ef.du.getHb());
 		main[2][3].setText("" + (attack * 30 / ef.du.getItv()));
 		main[2][5].setText("" + (int) (ef.du.getSpeed() * (1 + b.getInc(Data.C_SPE) * 0.01)));
 		main[1][5].setText(b.t().getFinRes(ef.du.getRespawn()) + "f");
 		main[1][7].setText("" + ef.getPrice(1));
-		main[0][4].setText(Interpret.getTrait(ef.du.getType(), 0));
+		main[0][4].setText(Interpret.getTrait(TraitBox, 0));
 		int[][] atkData = ef.du.rawAtkData();
 		StringBuilder satk = new StringBuilder();
 		for (int[] atkDatum : atkData) {
@@ -104,7 +116,7 @@ public class UnitInfoTable extends Page {
 		atks[1].setText(satk.toString());
 
 		List<String> ls = Interpret.getAbi(ef.du);
-		ls.addAll(Interpret.getProc(ef.du));
+		ls.addAll(Interpret.getProc(ef.du, false));
 		for (JLabel l : proc)
 			if (l != pcoin)
 				l.setText("");
@@ -143,8 +155,9 @@ public class UnitInfoTable extends Page {
 		set(atks[5], x, y, 1400, h, 200, 50);
 		h += 50;
 		for (int i = 0; i < proc.length; i++)
-			set(proc[i], x, y, i % 2 * 800, h + 50 * (i / 2), 800, 50);
-
+			set(proc[i], x, y, i % 2 * 800, h + 50 * (i / 2), i % 2 == 0 && i + 1 == proc.length ? 1600 : 800, 50);
+		h += proc.length * 25 + (proc.length % 2 == 1 ? 25 : 0);
+		set(desc, x, y, 0, h, 1600, 200);
 	}
 
 	private void addListeners() {
@@ -245,6 +258,11 @@ public class UnitInfoTable extends Page {
 		}
 		atks[3].setText(pre.toString());
 		atks[5].setText(use.toString());
+		String fDesc = f.descriptionGet().replace("<br>", "\n");
+		if (fDesc.replace("\n","").length() > 0)
+			add(desc);
+		descr.setText(f.toString().replace((f.uid == null ? "NULL" : f.uid.id) + "-" + f.fid + " ", "") + "\n" + fDesc);
+		descr.setEditable(false);
 		reset();
 		addListeners();
 	}

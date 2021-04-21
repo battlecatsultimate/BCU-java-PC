@@ -2,6 +2,7 @@ package page.pack;
 
 import common.CommonStatic;
 import common.battle.data.CustomEnemy;
+import common.io.PackLoader;
 import common.pack.Context.ErrType;
 import common.pack.PackData.UserPack;
 import common.pack.Source;
@@ -31,6 +32,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
@@ -72,6 +75,7 @@ public class PackEditPage extends Page {
 	private final JBTN vrcg = new JBTN(0, "recg");
 	private final JBTN vrlr = new JBTN(0, "relr");
 	private final JBTN cunt = new JBTN(0, "cunt");
+	private final JBTN tdiy = new JBTN(0, "ctrt");
 	private final JBTN ener = new JBTN(0, "ener");
 	private final JBTN vmsc = new JBTN(0, "vmsc");
 	private final JBTN unpk = new JBTN(0, "unpack");
@@ -166,6 +170,7 @@ public class PackEditPage extends Page {
 		set(remr, x, y, w + 175, 800, 175, 50);
 
 		set(recd, x, y, w, 950, 300, 50);
+		set(tdiy, x, y, w, 1050, 300, 50);
 
 		w += 350;
 
@@ -276,10 +281,11 @@ public class PackEditPage extends Page {
 					return;
 
 				String password = (String) result[0];
+				String parentPassword = (String) result[2];
 
 				pac.desc.allowAnim = (boolean) result[1];
 
-				CommonStatic.ctx.noticeErr(() -> ((Workspace) pac.source).export(pac, password, (d) -> {
+				CommonStatic.ctx.noticeErr(() -> ((Workspace) pac.source).export(pac, password, parentPassword, (d) -> {
 				}), ErrType.WARN, "failed to export pack");
 			}
 		});
@@ -368,6 +374,10 @@ public class PackEditPage extends Page {
 
 		cunt.addActionListener(arg0 -> changePanel(new UnitManagePage(getThis(), pac)));
 
+		tdiy.addActionListener(arg0 -> {
+			changePanel(new TraitEditPage(getThis(), pac));
+		});
+
 		vmsc.setLnr(() -> pac.editable ? new MusicEditPage(getThis(), pac)
 				: new MusicPage(getThis(), pac.musics.getList()));
 
@@ -409,10 +419,71 @@ public class PackEditPage extends Page {
 		addr.addActionListener(arg0 -> {
 			changing = true;
 			UserPack rel = jlt.getSelectedValue();
+
+			//Need to cache parented pack for situation when parent pack of parent pack has password
+			ArrayList<String> passedParents = new ArrayList<>();
+
+			if(rel.desc.parentPassword != null) {
+				String pass = Opts.read("Enter the password for "+rel.getSID()+" : ");
+
+				if(pass == null) {
+					changing = false;
+					return;
+				}
+
+				byte[] md5 = PackLoader.getMD5(pass.getBytes(StandardCharsets.UTF_8), 16);
+
+				if(!Arrays.equals(rel.desc.parentPassword, md5)) {
+					Opts.pop("You typed incorrect password", "Incorrect password");
+					changing = false;
+					return;
+				}
+			}
+
 			pac.desc.dependency.add(rel.getSID());
-			for (String id : rel.desc.dependency)
-				if (!pac.desc.dependency.contains(id))
-					pac.desc.dependency.add(id);
+
+			passedParents.add(rel.getSID());
+
+			for (String id : rel.desc.dependency) {
+				if (!pac.desc.dependency.contains(id)) {
+					UserPack pack = UserProfile.getUserPack(id);
+
+					if(pack == null) {
+						Opts.pop("Can't get parent pack ["+id+".pack.bcuzip] from data, aborting parent pack adding", "Can't find parent pack");
+						pac.desc.dependency.removeAll(passedParents);
+						changing = false;
+						return;
+					}
+
+					if(pack.editable) {
+						pac.desc.dependency.add(id);
+						passedParents.add(id);
+					} else if(pack.desc.parentPassword != null) {
+						String pass = Opts.read("Enter the password for "+id+" : ");
+
+						if(pass == null) {
+							changing = false;
+							pac.desc.dependency.removeAll(passedParents);
+							return;
+						}
+
+						byte[] md5 = PackLoader.getMD5(pass.getBytes(StandardCharsets.UTF_8), 16);
+
+						if(!Arrays.equals(pack.desc.parentPassword, md5)) {
+							Opts.pop("You typed incorrect password", "Incorrect password");
+							pac.desc.dependency.removeAll(passedParents);
+							changing = false;
+							return;
+						}
+
+						pac.desc.dependency.add(id);
+						passedParents.add(id);
+					} else {
+						pac.desc.dependency.add(id);
+						passedParents.add(id);
+					}
+				}
+			}
 			updateJlr();
 			jlr.setSelectedValue(rel, true);
 			setRely(rel);
@@ -486,6 +557,7 @@ public class PackEditPage extends Page {
 		add(lbr);
 		add(lbt);
 		add(cunt);
+		add(tdiy);
 		add(vcas);
 		add(vrcg);
 		add(vrlr);
@@ -574,6 +646,7 @@ public class PackEditPage extends Page {
 		checkAddr();
 		boolean b0 = pac != null;
 		sdiy.setEnabled(b0);
+		tdiy.setEnabled(b0);
 		if (b0) {
 			jls.setListData(pac.mc, pac.mc.maps);
 			jls.clearSelection();

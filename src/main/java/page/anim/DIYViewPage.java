@@ -98,7 +98,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 	@Override
 	protected void resized(int x, int y) {
 		super.resized(x, y);
-		set(aep, x, y, 550, 0, 1750, 50);
+		set(aep, x, y, 800, 0, 1750, 50);
 		set(jspu, x, y, 50, 100, 300, 1100);
 		set(ics, x, y, 1000, 1050, 200, 50);
 		set(uni, x, y, 750, 500, 200, 200);

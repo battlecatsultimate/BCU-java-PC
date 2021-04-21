@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+import java.awt.event.ItemEvent;
 import java.io.File;
 
 public class Opts {
@@ -131,6 +132,13 @@ public class Opts {
 		JLabel contents = new JLabel(content);
 		JTF text = new JTF();
 		JCheckBox check = new JCheckBox("Allow users to copy animation without password");
+		JCheckBox parentCheck = new JCheckBox("Allow users to set this pack as parent pack");
+		JTF parentText = new JTF();
+
+		parentCheck.setSelected(true);
+		parentText.setEnabled(!parentCheck.isSelected());
+
+		parentCheck.addItemListener(e -> parentText.setEnabled(e.getStateChange() != ItemEvent.SELECTED));
 
 		Border b = text.getBorder();
 		Border e = new EmptyBorder(8, 0, 8 ,0);
@@ -140,22 +148,34 @@ public class Opts {
 			text.setBorder(new CompoundBorder(e, b));
 		}
 
+		b = check.getBorder();
+		e = new EmptyBorder(0, 0, 8, 0);
+
+		if(b == null) {
+			check.setBorder(e);
+		} else {
+			check.setBorder(new CompoundBorder(e, b));
+		}
+
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
 		panel.add(contents);
 		panel.add(text);
 		panel.add(check);
+		panel.add(parentCheck);
+		panel.add(parentText);
 
 		check.setSelected(defaultCheck);
 
 		int result = JOptionPane.showConfirmDialog(null, panel, title, JOptionPane.OK_CANCEL_OPTION);
 
 		if(result == JOptionPane.OK_OPTION) {
-			Object[] res = new Object[2];
+			Object[] res = new Object[3];
 
 			res[0] = text.getText();
 			res[1] = check.isSelected();
+			res[2] = !parentCheck.isSelected() ? parentText.getText() : null;
 
 			return res;
 		} else {
