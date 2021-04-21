@@ -327,7 +327,7 @@ public class ComboEditPage extends Page {
         clvls.setEnabled(size);
         remc.setEnabled(size);
         remcf.setEnabled(esize && jlc.list.get(jlc.getSelectedRow()).forms.length > 1);
-        boolean check = esize && Arrays.stream(jlc.list.get(jlc.getSelectedRow()).forms).noneMatch(fr -> fr.uid.id == frm.uid.id) && jlc.list.get(jlc.getSelectedRow()).forms.length < 5;
+        boolean check = esize && Arrays.stream(jlc.list.get(jlc.getSelectedRow()).forms).noneMatch(fr -> fr.unit == frm.unit) && jlc.list.get(jlc.getSelectedRow()).forms.length < 5;
         addf.setEnabled(check);
     }
 }

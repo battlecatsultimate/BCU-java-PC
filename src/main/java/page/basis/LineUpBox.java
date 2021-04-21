@@ -62,7 +62,7 @@ public class LineUpBox extends Canvas {
 					for (Form fc : sc.forms)
 						if (f.unit == fc.unit && f.fid >= fc.fid)
 							gra.drawImage(slot[2].getImg(), 120 * j, 100 * i);
-				if (time == 1 && sf != null && f.uid == sf.uid && relative == null)
+				if (time == 1 && sf != null && f.unit == sf.unit && relative == null)
 					gra.drawImage(slot[1].getImg(), 120 * j, 100 * i);
 				if (sf == null || sf != f || relative == null)
 					Res.getCost(lu.getLv(f.unit).getLvs()[0], true,
@@ -90,7 +90,7 @@ public class LineUpBox extends Canvas {
 		if (sf == null || getPos(sf) == -1)
 			return;
 		int i = getPos(sf);
-		if (getForm(i).uid == sf.uid) {
+		if (getForm(i).unit == sf.unit) {
 			Form[] ufs = sf.unit.forms;
 			sf = ufs[(getForm(i).fid + 1) % ufs.length];
 			setForm(i, sf);
@@ -193,7 +193,7 @@ public class LineUpBox extends Canvas {
 		if (f == null)
 			return -1;
 		for (int i = 0; i < 15; i++)
-			if (getForm(i) != null && getForm(i).uid == f.uid)
+			if (getForm(i) != null && getForm(i).unit == f.unit)
 				return i;
 		return -1;
 	}
