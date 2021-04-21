@@ -74,7 +74,7 @@ public class ComboEditPage extends Page {
         add(back);
         add(addf);
         add(remc);
-
+        
         add(lbp);
         add(lbu);
         add(lbf);
@@ -148,6 +148,8 @@ public class ComboEditPage extends Page {
             updateC();
             changing = false;
         });
+        
+        
     }
 
     private void addListeners$1() {
@@ -216,7 +218,7 @@ public class ComboEditPage extends Page {
             }
             combo.name = str;
         });
-
+        
     }
 
     @Override
@@ -285,7 +287,6 @@ public class ComboEditPage extends Page {
             jlu.setSelectedValue(uni, true);
             changing = pre;
         }
-        boolean editable = unit != null && pac.editable;
         changing = true;
         if (unit == null)
             jlf.setListData(new Form[0]);

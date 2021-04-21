@@ -4,6 +4,8 @@ import page.MainFrame;
 
 import javax.swing.*;
 
+import common.debug.DebugCore;
+
 public strictfp class Timer extends Thread {
 
 	public static int p = 33;
@@ -19,21 +21,30 @@ public strictfp class Timer extends Thread {
 		while (true) {
 			long m = System.currentTimeMillis();
 			state = 0;
-			SwingUtilities.invokeLater(thr = new Inv());
+			boolean syn;
+			if (syn = DebugCore.DEBUG_LOCK == null)
+				SwingUtilities.invokeLater(thr = new Inv());
+			else {
+				if (!thr.isAlive())
+					(thr = new Inv()).run();
+			}
 			try {
-				boolean end = false;
-				while (!end) {
-					synchronized (thr) {
-						end = state == 1;
+				if (syn) {
+					boolean end = false;
+					while (!end) {
+						synchronized (thr) {
+							end = state == 1;
+						}
+						if (!end)
+							sleep(1);
 					}
-					if (!end)
-						sleep(1);
-				}
-				thr.join();
-				delay = (int) (System.currentTimeMillis() - m);
-				inter = (inter * 9 + 100 * delay / p) / 10;
-				int sle = delay >= p ? 1 : p - delay;
-				sleep(sle);
+					thr.join();
+					delay = (int) (System.currentTimeMillis() - m);
+					inter = (inter * 9 + 100 * delay / p) / 10;
+					int sle = delay >= p ? 1 : p - delay;
+					sleep(sle);
+				} else
+					sleep(33);
 			} catch (InterruptedException e) {
 				return;
 			}

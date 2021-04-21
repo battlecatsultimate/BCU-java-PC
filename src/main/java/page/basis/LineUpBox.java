@@ -60,7 +60,7 @@ public class LineUpBox extends Canvas {
 					continue;
 				if (time == 0 && sc != null)
 					for (Form fc : sc.forms)
-						if (f.uid == fc.uid && f.fid >= fc.fid)
+						if (f.unit == fc.unit && f.fid >= fc.fid)
 							gra.drawImage(slot[2].getImg(), 120 * j, 100 * i);
 				if (time == 1 && sf != null && f.uid == sf.uid && relative == null)
 					gra.drawImage(slot[1].getImg(), 120 * j, 100 * i);

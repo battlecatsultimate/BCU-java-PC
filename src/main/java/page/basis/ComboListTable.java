@@ -2,6 +2,7 @@ package page.basis;
 
 import common.battle.BasisSet;
 import common.battle.LineUp;
+import common.pack.UserProfile;
 import common.util.unit.Combo;
 import common.util.unit.Form;
 import page.MainLocale;
@@ -27,8 +28,9 @@ public class ComboListTable extends SortTable<Combo> {
 
 	public static void redefine() {
 		String str = MainLocale.getLoc(MainLocale.INFO, "unit");
-		tit = new String[] {"ID", "Lv.", MainLocale.getLoc(MainLocale.INFO, "desc"), MainLocale.getLoc(MainLocale.INFO, "occu"), str + " 1", str + " 2",
-				str + " 3", str + " 4", str + " 5" };
+		tit = new String[] { "ID", "Lv.", MainLocale.getLoc(MainLocale.INFO, "desc"),
+				MainLocale.getLoc(MainLocale.INFO, "occu"), str + " 1", str + " 2", str + " 3", str + " 4",
+				str + " 5" };
 		lvl = new String[] { "Sm", "M", "L", "XL" };
 	}
 
