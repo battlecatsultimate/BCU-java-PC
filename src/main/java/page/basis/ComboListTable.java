@@ -85,7 +85,7 @@ public class ComboListTable extends SortTable<Combo> {
 		int c = getColumnModel().getColumnIndexAtX(p.x);
 		c = lnk[c];
 		int r = p.y / getRowHeight();
-		if (r < 0 || r >= list.size() || c < 3)
+		if (r < 0 || r >= list.size() || c < 4)
 			return;
 		Form f = ((Form) get(list.get(r), c));
 		if (f == null)
