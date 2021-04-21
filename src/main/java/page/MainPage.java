@@ -13,6 +13,7 @@ import page.anim.MaModelEditPage;
 import page.basis.BasisPage;
 import page.battle.BattleInfoPage;
 import page.battle.RecdManagePage;
+import page.debug.DebugFrame;
 import page.info.StageViewPage;
 import page.info.filter.EnemyFindPage;
 import page.info.filter.UnitFindPage;
@@ -29,7 +30,7 @@ public class MainPage extends Page {
 	private final JLabel memo = new JLabel();
 	private final JLabel seicon = new JLabel("Source of enemy icon: battlecats-db.com");
 	private final JLabel sgifau = new JLabel("Author of GIF exporter: Kevin Weiner, FM Software");
-	private final JLabel welcome = new JLabel("Welcome "+MainBCU.author+"!");
+	private final JLabel welcome = new JLabel("Welcome " + MainBCU.author + "!");
 	private final JBTN vuni = new JBTN(0, "vuni");
 	private final JBTN vene = new JBTN(0, "vene");
 	private final JBTN vsta = new JBTN(0, "vsta");
@@ -52,6 +53,7 @@ public class MainPage extends Page {
 	private final JBTN bckp = new JBTN(0, "backup");
 	private final JBTN allf = new JBTN(0, "all file");
 	private final JBTN auth = new JBTN(0, "author");
+	private final JBTN dbug = new JBTN(0, "debug");
 
 	public MainPage() {
 		super(null);
@@ -82,6 +84,7 @@ public class MainPage extends Page {
 		set(vbgr, x, y, 600, 600, 200, 50);
 		set(vmsc, x, y, 600, 700, 200, 50);
 		set(allf, x, y, 600, 800, 200, 50);
+		set(dbug, x, y, 600, 900, 200, 50);
 
 		set(conf, x, y, 900, 200, 200, 50);
 		set(save, x, y, 900, 300, 200, 50);
@@ -123,6 +126,7 @@ public class MainPage extends Page {
 		vmsc.setLnr(() -> new MusicPage(this));
 		rply.setLnr(() -> new RecdManagePage(this));
 		allf.setLnr(() -> new ResourcePage(this));
+		dbug.setLnr((e) -> new DebugFrame());
 		auth.setLnr(e -> {
 			String author = Opts.read("Decide your author name");
 
@@ -131,15 +135,15 @@ public class MainPage extends Page {
 
 			author = author.trim();
 
-			for(PackData.UserPack p : UserProfile.getUserPacks()) {
-				if(p.editable) {
+			for (PackData.UserPack p : UserProfile.getUserPacks()) {
+				if (p.editable) {
 					p.desc.author = author;
 				}
 			}
 
 			MainBCU.author = author;
 
-			if(!author.isEmpty()) {
+			if (!author.isEmpty()) {
 				welcome.setVisible(true);
 				welcome.setText("Welcome " + MainBCU.author + "!");
 			} else {
@@ -175,6 +179,7 @@ public class MainPage extends Page {
 		add(bckp);
 		add(allf);
 		add(auth);
+		add(dbug);
 
 		welcome.setVisible(!MainBCU.author.isEmpty());
 
