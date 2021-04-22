@@ -37,8 +37,7 @@ public class CastleViewPage extends Page {
 
 	public CastleViewPage(Page p, Collection<CastleList> list) {
 		super(p);
-		Vector<CastleList> vec = new Vector<>();
-		vec.addAll(list);
+		Vector<CastleList> vec = new Vector<>(list);
 		jlsm.setListData(vec);
 		ini();
 		resized();

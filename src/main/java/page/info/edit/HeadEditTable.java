@@ -2,7 +2,9 @@ package page.info.edit;
 
 import common.CommonStatic;
 import common.pack.Identifier;
+import common.pack.PackData;
 import common.pack.PackData.UserPack;
+import common.util.Data;
 import common.util.pack.Background;
 import common.util.stage.*;
 import page.*;
@@ -433,6 +435,44 @@ class HeadEditTable extends Page {
 				minrest.setText(generateMinRespawn(sta.minSpawn, sta.maxSpawn));
 			} catch (Exception ignored) {
 			}
+		}
+
+		if (jtf == jbg) {
+			String[] result = CommonStatic.getPackContentID(str);
+			if (Arrays.stream(result).anyMatch(r -> r == null || r.isEmpty()))
+				return;
+			String p = result[0];
+			String i = result[1];
+			if (CommonStatic.isInteger(p))
+				p = Data.hex(CommonStatic.parseIntN(p));
+			PackData pack = PackData.getPack(p);
+			if (pack == null)
+				return;
+			Background bg = pack.bgs.get(Integer.parseInt(i));
+			if (bg == null)
+				return;
+
+			jbg.setText(bg.toString());
+			sta.bg = bg.getID();
+		}
+
+		if (jtf == jcas) {
+			String[] result = CommonStatic.getPackContentID(str);
+			if (Arrays.stream(result).anyMatch(r -> r == null || r.isEmpty()))
+				return;
+			String p = result[0];
+			String i = result[1];
+			if (CommonStatic.isInteger(p))
+				p = Data.hex(CommonStatic.parseIntN(p));
+			CastleList cl = CastleList.getList(p);
+			if (cl == null)
+				return;
+			CastleImg castle = cl.get(Integer.parseInt(i));
+			if (castle == null)
+				return;
+
+			jcas.setText(castle.toString());
+			sta.castle = castle.getID();
 		}
 	}
 
