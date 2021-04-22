@@ -113,7 +113,7 @@ public class EnemyEditPage extends EntityEditPage {
 		set(vuni, x, y, 450, 1150, 200, 50);
 		int h = 1000;
 		for (JTF jtf : edesc) {
-			set(jtf, x, y, 650, h, 1150, 50);
+			set(jtf, x, y, 650, h, 750, 50);
 			h += 50;
 		}
 		eeb.resized();

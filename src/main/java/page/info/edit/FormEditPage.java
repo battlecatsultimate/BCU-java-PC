@@ -186,7 +186,7 @@ public class FormEditPage extends EntityEditPage {
 		set(vene, x, y, 250, 1150, 200, 50);
 		int h = 1000;
 		for (JTF jtf : fdesc) {
-			set(jtf, x, y, 650, h, 1150, 50);
+			set(jtf, x, y, 650, h, 750, 50);
 			h += 50;
 		}
 		ueb.resized();
