@@ -15,6 +15,8 @@ import utilpc.UtilPC;
 import javax.swing.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class EnemyInfoTable extends Page {
@@ -143,9 +145,11 @@ public class EnemyInfoTable extends Page {
 	}
 
 	private void ini() {
-		int trsize = e.de.getTraits().size();
-		String[] TraitBox = new String[trsize];
-		for (int i = 0; i < trsize; i++) {
+		ArrayList<Trait> trs = e.de.getTraits();
+		trs.sort(Comparator.comparing(t -> t.id.pack));
+		trs.sort(Comparator.comparingInt(t -> t.id.id));
+		String[] TraitBox = new String[trs.size()];
+		for (int i = 0; i < trs.size(); i++) {
 			Trait trait = e.de.getTraits().get(i);
 			if (trait.BCTrait)
 				TraitBox[i] = Interpret.TRAIT[trait.id.id];
