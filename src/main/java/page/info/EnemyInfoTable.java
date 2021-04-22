@@ -146,8 +146,9 @@ public class EnemyInfoTable extends Page {
 
 	private void ini() {
 		ArrayList<Trait> trs = e.de.getTraits();
-		trs.sort(Comparator.comparing(t -> t.id.pack));
 		trs.sort(Comparator.comparingInt(t -> t.id.id));
+		trs.sort(Comparator.comparing(t -> t.id.pack));
+		trs.sort(Comparator.comparing(t -> !t.BCTrait));
 		String[] TraitBox = new String[trs.size()];
 		for (int i = 0; i < trs.size(); i++) {
 			Trait trait = e.de.getTraits().get(i);

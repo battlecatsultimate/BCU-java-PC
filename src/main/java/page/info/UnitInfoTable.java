@@ -87,8 +87,9 @@ public class UnitInfoTable extends Page {
 		}
 
 		ArrayList<Trait> trs = ef.du.getTraits();
-		trs.sort(Comparator.comparing(t -> t.id.pack));
 		trs.sort(Comparator.comparingInt(t -> t.id.id));
+		trs.sort(Comparator.comparing(t -> t.id.pack));
+		trs.sort(Comparator.comparing(t -> !t.BCTrait));
 		String[] TraitBox = new String[trs.size()];
 		for (int i = 0; i < trs.size(); i++) {
 			Trait trait = ef.du.getTraits().get(i);
