@@ -213,8 +213,8 @@ public class UnitInfoTable extends Page {
 			main[0][2].setIcon(UtilPC.getIcon(f.anim.getEdi()));
 		main[0][3].setText(1, "trait");
 		main[1][0].setText(Interpret.RARITY[f.unit.rarity]);
-		main[1][2].setText("HP / HB");
-		main[1][4].setText("CD");
+		main[1][2].setText(1, "HPB");
+		main[1][4].setText(1, "cdo");
 		main[1][6].setText(1, "price");
 		main[2][0].setText(1, "range");
 		main[2][1].setText("" + f.du.getRange());
@@ -241,7 +241,9 @@ public class UnitInfoTable extends Page {
 			special[0][5].setText(back + "");
 		else
 			special[0][5].setText(Math.min(back, front) + " ~ " + Math.max(back, front));
-		atks[0].setText("atk");
+		special[0][6].setText(1, "will");
+		special[0][7].setText("" + (f.du.getWill() + 1));
+		atks[0].setText(1, "atk");
 		atks[2].setText(1, "preaa");
 		atks[4].setText(1, "use");
 		int[][] atkData = f.du.rawAtkData();

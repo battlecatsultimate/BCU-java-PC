@@ -45,7 +45,7 @@ class HeadEditTable extends Page {
 	private final JTF lop = new JTF();
 	private final JTF lop1 = new JTF();
 	private final JL minres = new JL(1, "minspawn");
-	private final JL cost = new JL(1, "Ch. Cost");
+	private final JL cost = new JL(1, "chcos");
 	private final JTF minrest = new JTF();
 	private final JTF cos = new JTF();
 	private final LimitTable lt;

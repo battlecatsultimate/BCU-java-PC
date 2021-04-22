@@ -113,6 +113,8 @@ public class HeadTable extends AbJTable {
 			bas2[1] = st.minSpawn + "f";
 		else
 			bas2[1] = st.minSpawn + "f ~ " + st.maxSpawn + "f";
+		bas2[2] = Page.get(MainLocale.INFO, "chcos");
+		bas2[3] = st.getCont().price + 1;
 		bas2[4] = MainLocale.getLoc(MainLocale.INFO, "lop");
 		bas2[5] = convertTime(st.loop0);
 		bas2[6] = MainLocale.getLoc(MainLocale.INFO, "lop1");

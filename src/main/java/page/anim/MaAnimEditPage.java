@@ -58,8 +58,8 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 	private final JBTN reml = new JBTN(0, "reml");
 	private final JBTN advs = new JBTN(0, "advs");
 	private final JBTN sort = new JBTN(0, "sort");
-	private final JBTN camres = new JBTN(0, "reset camera");
-	private final JBTN zomres = new JBTN(0, "reset zoom");
+	private final JBTN camres = new JBTN(0, "rescam");
+	private final JBTN zomres = new JBTN(0, "reszom");
 	private final JLabel inft = new JLabel();
 	private final JLabel inff = new JLabel();
 	private final JLabel infv = new JLabel();

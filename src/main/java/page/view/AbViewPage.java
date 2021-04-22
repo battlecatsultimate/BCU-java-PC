@@ -41,7 +41,7 @@ public abstract class AbViewPage extends Page {
 	private final JBTN nex = new JBTN(0, "nextf");
 	private final JTG gif = new JTG(0, "gif");
 	private final JBTN png = new JBTN(0, "png");
-	private final JBTN camres = new JBTN(0, "reset camera");
+	private final JBTN camres = new JBTN(0, "rescam");
 	private final JLabel scale = new JLabel(MainLocale.getLoc(MainLocale.PAGE, "zoom"));
 
 	protected final ViewBox vb;

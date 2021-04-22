@@ -185,8 +185,8 @@ public class EnemyInfoTable extends Page {
 		main[0][3].setText(1, "trait");
 		main[0][4].setText(Interpret.getTrait(TraitBox, e.de.getStar()));
 		main[1][0].setText(1, "mult");
-		main[1][2].setText("HP");
-		main[1][4].setText("HB");
+		main[1][2].setText(1, "HP");
+		main[1][4].setText(1, "HB");
 		main[1][5].setText("" + e.de.getHb());
 		main[1][6].setText(1, "drop");
 		main[1][7].setText("" + (int) (e.de.getDrop() * b.t().getDropMulti()));
@@ -208,9 +208,11 @@ public class EnemyInfoTable extends Page {
 		special[0][1].setText(e.de.getAtkLoop() < 0 ? "infinite" : e.de.getAtkLoop() + "");
 		special[0][2].setText(1, "width");
 		special[0][3].setText(e.de.getWidth() + "");
+		special[0][4].setText(1, "will");
+		special[0][5].setText("" + (e.de.getWill() + 1));
 		int[][] atkData = e.de.rawAtkData();
 		for (int i = 0; i < atks.length; i++) {
-			atks[i][0].setText("atk");
+			atks[i][0].setText(1, "atk");
 			atks[i][2].setText(1, "preaa");
 			atks[i][3].setText(atkData[i][1] + "f");
 			atks[i][4].setText(1, "use");

@@ -40,8 +40,8 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	private final JBTN reml = new JBTN(0, "reml");
 	private final JBTN rema = new JBTN(0, "rema");
 	private final JBTN sort = new JBTN(0, "sort");
-	private final JBTN camres = new JBTN(0, "reset camera");
-	private final JBTN zomres = new JBTN(0, "reset zoom");
+	private final JBTN camres = new JBTN(0, "rescam");
+	private final JBTN zomres = new JBTN(0, "reszom");
 	private final EditHead aep;
 	private Point p = null;
 	private MMTree mmt;
