@@ -327,7 +327,7 @@ public class StageEditTable extends AbJTable implements Reorderable {
 			return;
 		if (c == 1 && (v < 0 || para == -1))
 			return;
-		if (c != 5 && v < 0)
+		if (c != 5 && c != 7 && v < 0)
 			v = 0;
 		Line[] info = stage.datas;
 		Line data = info[info.length - r - 1];
@@ -379,8 +379,8 @@ public class StageEditTable extends AbJTable implements Reorderable {
 			if (para == -1)
 				data.layer_0 = data.layer_1 = v;
 			else {
-				data.layer_0 = Math.min(v, para);
-				data.layer_1 = Math.max(v, para);
+				data.layer_0 = v;
+				data.layer_1 = para;
 			}
 		else if (c == 8)
 			data.group = v;

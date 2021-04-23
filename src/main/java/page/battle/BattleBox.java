@@ -470,46 +470,50 @@ public interface BattleBox {
 			FakeTransform at = gra.getTransform();
 			double psiz = siz * sprite;
 			CommonStatic.getConfig().battle = true;
-			for (int i = 0; i < 10; i++) {
-				int dep = i * DEP;
-				for (Entity e : sb.le)
-					if (e.layer == i && (sb.s_stop == 0 || (e.getAbi() & Data.AB_TIMEI) == 0)) {
-						gra.setTransform(at);
-						double p = getX(e.pos);
-						double y = midh - (road_h - dep) * siz;
-						e.anim.draw(gra, setP(p, y), psiz);
-						gra.setTransform(at);
-						e.anim.drawEff(gra, setP(p, y), siz);
-					}
-				for (ContAb wc : sb.lw)
-					if (wc.layer == i) {
-						gra.setTransform(at);
-						double p = (wc.pos * ratio + off) * siz + pos;
 
-						if(wc instanceof ContWaveAb)
-							p -= wave * siz;
+			for(int i = 0; i < sb.le.size(); i++) {
+				Entity e = sb.le.get(i);
 
-						double y = midh - (road_h - DEP * wc.layer) * siz;
-						wc.draw(gra, setP(p, y), psiz);
-					}
+				int dep = e.layer * DEP;
+
+				gra.setTransform(at);
+				double p = getX(e.pos);
+				double y = midh - (road_h - dep) * siz;
+				e.anim.draw(gra, setP(p, y), psiz);
+				gra.setTransform(at);
+				e.anim.drawEff(gra, setP(p, y), siz);
 			}
 
-			for(int i = 0; i < 10; i++) {
-				int dep = i * DEP;
+			for(int i = 0; i < sb.lw.size(); i++) {
+				ContAb wc = sb.lw.get(i);
 
-				for (EAnimCont eac : sb.lea)
-					if (eac.layer == i) {
-						gra.setTransform(at);
-						double p = getX(eac.pos);
-						double y = midh - (road_h - dep) * siz;
+				int dep = wc.layer * DEP;
 
-						if (eac instanceof WaprCont) {
-							double dx = ((WaprCont) eac).dire == -1 ? -27 * siz : -24 * siz;
-							eac.draw(gra, setP(p + dx, y - 24 * siz), psiz);
-						} else {
-							eac.draw(gra, setP(p, y), psiz);
-						}
-					}
+				gra.setTransform(at);
+				double p = (wc.pos * ratio + off) * siz + pos;
+
+				if(wc instanceof ContWaveAb)
+					p -= wave * siz;
+
+				double y = midh - (road_h - DEP * wc.layer) * siz;
+				wc.draw(gra, setP(p, y), psiz);
+			}
+
+			for(int i = 0; i < sb.lea.size(); i++) {
+				EAnimCont eac = sb.lea.get(i);
+
+				int dep = eac.layer * DEP;
+
+				gra.setTransform(at);
+				double p = getX(eac.pos);
+				double y = midh - (road_h - dep) * siz;
+
+				if (eac instanceof WaprCont) {
+					double dx = ((WaprCont) eac).dire == -1 ? -27 * siz : -24 * siz;
+					eac.draw(gra, setP(p + dx, y - 24 * siz), psiz);
+				} else {
+					eac.draw(gra, setP(p, y), psiz);
+				}
 			}
 
 			if(sb.ebase.health <= 0) {
@@ -566,17 +570,19 @@ public interface BattleBox {
 						((Entity) sb.ebase).anim.drawEff(gra, setP(posx + shake, posy), siz * sprite);
 				}
 
-				for (int i = 0; i < 10; i++) {
-					int dep = i * DEP;
-					for (Entity e : sb.le)
-						if (e.layer == i && (e.getAbi() & Data.AB_TIMEI) > 0) {
-							gra.setTransform(at);
-							double p = getX(e.pos);
-							double y = midh - (road_h - dep) * siz;
-							e.anim.draw(gra, setP(p, y), psiz);
-							gra.setTransform(at);
-							e.anim.drawEff(gra, setP(p, y), siz);
-						}
+				for(int i = 0; i < sb.le.size(); i ++) {
+					Entity e = sb.le.get(i);
+
+					if((e.getAbi() & Data.AB_TIMEI) > 0) {
+						int dep = e.layer * DEP;
+
+						gra.setTransform(at);
+						double p = getX(e.pos);
+						double y = midh - (road_h - dep) * siz;
+						e.anim.draw(gra, setP(p, y), psiz);
+						gra.setTransform(at);
+						e.anim.drawEff(gra, setP(p, y), siz);
+					}
 				}
 			}
 			gra.setTransform(at);
