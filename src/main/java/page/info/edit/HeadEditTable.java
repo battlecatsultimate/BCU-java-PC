@@ -1,9 +1,11 @@
 package page.info.edit;
 
 import common.CommonStatic;
+import common.pack.FixIndexList;
 import common.pack.Identifier;
 import common.pack.PackData;
 import common.pack.PackData.UserPack;
+import common.pack.UserProfile;
 import common.util.Data;
 import common.util.pack.Background;
 import common.util.stage.*;
@@ -432,8 +434,18 @@ class HeadEditTable extends Page {
 
 		if (jtf == jbg) {
 			String[] result = CommonStatic.getPackContentID(str);
-			if (Arrays.stream(result).anyMatch(r -> r == null || r.isEmpty()))
+			if (result[0].isEmpty())
 				return;
+			if (result[1].isEmpty()) {
+				if (!CommonStatic.isInteger(result[0]))
+					return;
+				Background b = UserProfile.getBCData().bgs.get(CommonStatic.safeParseInt(result[0]));
+				if (b == null)
+					return;
+				jbg.setText(b.toString());
+				sta.bg = b.getID();
+				return;
+			}
 			String p = result[0];
 			String i = result[1];
 			if (CommonStatic.isInteger(p))
@@ -441,7 +453,7 @@ class HeadEditTable extends Page {
 			PackData pack = PackData.getPack(p);
 			if (pack == null)
 				return;
-			Background bg = pack.bgs.get(Integer.parseInt(i));
+			Background bg = pack.bgs.get(CommonStatic.safeParseInt(i));
 			if (bg == null)
 				return;
 
@@ -451,8 +463,21 @@ class HeadEditTable extends Page {
 
 		if (jtf == jcas) {
 			String[] result = CommonStatic.getPackContentID(str);
-			if (Arrays.stream(result).anyMatch(r -> r == null || r.isEmpty()))
+			if (result[0].isEmpty()) {
+				jm0.setText("null");
+				sta.mus0 = null;
 				return;
+			}
+			if (result[1].isEmpty()) {
+				if (!CommonStatic.isInteger(result[0]))
+					return;
+				CastleImg c = CastleList.getList("000000").get(CommonStatic.safeParseInt(result[0]));
+				if (c == null)
+					return;
+				jcas.setText(c.toString());
+				sta.castle = c.getID();
+				return;
+			}
 			String p = result[0];
 			String i = result[1];
 			if (CommonStatic.isInteger(p))
@@ -470,9 +495,19 @@ class HeadEditTable extends Page {
 
 		if (jtf == jm0) {
 			String[] result = CommonStatic.getPackContentID(str);
-			if (Arrays.stream(result).anyMatch(r -> r == null || r.isEmpty())) {
+			if (result[0].isEmpty()) {
 				jm0.setText("null");
 				sta.mus0 = null;
+				return;
+			}
+			if (result[1].isEmpty()) {
+				if (!CommonStatic.isInteger(result[0]))
+					return;
+				Music m = UserProfile.getBCData().musics.get(CommonStatic.safeParseInt(result[0]));
+				if (m == null)
+					return;
+				jm0.setText(m.toString());
+				sta.mus0 = m.getID();
 				return;
 			}
 			String p = result[0];
@@ -486,11 +521,8 @@ class HeadEditTable extends Page {
 				return;
 			}
 			Music music = pack.musics.get(CommonStatic.safeParseInt(i));
-			if (music == null) {
-				jm0.setText("null");
-				sta.mus0 = null;
+			if (music == null)
 				return;
-			}
 
 			jm0.setText(str);
 			sta.mus0 = music.getID();
@@ -498,9 +530,19 @@ class HeadEditTable extends Page {
 
 		if (jtf == jm1) {
 			String[] result = CommonStatic.getPackContentID(str);
-			if (Arrays.stream(result).anyMatch(r -> r == null || r.isEmpty())) {
+			if (result[0].isEmpty()) {
 				jm1.setText("null");
 				sta.mus1 = null;
+				return;
+			}
+			if (result[1].isEmpty()) {
+				if (!CommonStatic.isInteger(result[0]))
+					return;
+				Music m = UserProfile.getBCData().musics.get(CommonStatic.safeParseInt(result[0]));
+				if (m == null)
+					return;
+				jm1.setText(m.toString());
+				sta.mus1 = m.getID();
 				return;
 			}
 			String p = result[0];
@@ -514,11 +556,8 @@ class HeadEditTable extends Page {
 				return;
 			}
 			Music music = pack.musics.get(CommonStatic.safeParseInt(i));
-			if (music == null) {
-				jm1.setText("null");
-				sta.mus1 = null;
+			if (music == null)
 				return;
-			}
 
 			jm1.setText(str);
 			sta.mus1 = music.getID();
