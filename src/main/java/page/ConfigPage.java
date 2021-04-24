@@ -32,7 +32,7 @@ public class ConfigPage extends Page {
 	private final JTG musc = new JTG(0, "musc");
 	private final JTG exla = new JTG(0, "exlang");
 	private final JTG extt = new JTG(0, "extip");
-	private final JL preflv = new JL(1, "Preferred Unit Level");
+	private final JL preflv = new JL(0, "preflv");
 	private final JTF prlvmd = new JTF();
 	private final JBTN[] left = new JBTN[4];
 	private final JBTN[] right = new JBTN[4];

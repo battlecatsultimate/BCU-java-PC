@@ -470,31 +470,39 @@ public interface BattleBox {
 			FakeTransform at = gra.getTransform();
 			double psiz = siz * sprite;
 			CommonStatic.getConfig().battle = true;
-			for (Entity e : sb.le) {
+			for(int i = 0; i < sb.le.size(); i++) {
+				Entity e = sb.le.get(i);
+
 				int dep = e.layer * DEP;
-				if (sb.s_stop == 0 || (e.getAbi() & Data.AB_TIMEI) == 0) {
-					gra.setTransform(at);
-					double p = getX(e.pos);
-					double y = midh - (road_h - dep) * siz;
-					e.anim.draw(gra, setP(p, y), psiz);
-					gra.setTransform(at);
-					e.anim.drawEff(gra, setP(p, y), siz);
-				}
-			for (ContAb wc : sb.lw)
-				if (wc.layer == e.layer) {
-					gra.setTransform(at);
-					double p = (wc.pos * ratio + off) * siz + pos;
 
-					if(wc instanceof ContWaveAb)
-						p -= wave * siz;
-
-					double y = midh - (road_h - DEP * wc.layer) * siz;
-					wc.draw(gra, setP(p, y), psiz);
-				}
+				gra.setTransform(at);
+				double p = getX(e.pos);
+				double y = midh - (road_h - dep) * siz;
+				e.anim.draw(gra, setP(p, y), psiz);
+				gra.setTransform(at);
+				e.anim.drawEff(gra, setP(p, y), siz);
 			}
 
-			for (EAnimCont eac : sb.lea) {
+			for(int i = 0; i < sb.lw.size(); i++) {
+				ContAb wc = sb.lw.get(i);
+
+				int dep = wc.layer * DEP;
+
+				gra.setTransform(at);
+				double p = (wc.pos * ratio + off) * siz + pos;
+
+				if(wc instanceof ContWaveAb)
+					p -= wave * siz;
+
+				double y = midh - (road_h - DEP * wc.layer) * siz;
+				wc.draw(gra, setP(p, y), psiz);
+			}
+
+			for(int i = 0; i < sb.lea.size(); i++) {
+				EAnimCont eac = sb.lea.get(i);
+
 				int dep = eac.layer * DEP;
+
 				gra.setTransform(at);
 				double p = getX(eac.pos);
 				double y = midh - (road_h - dep) * siz;
@@ -561,9 +569,12 @@ public interface BattleBox {
 						((Entity) sb.ebase).anim.drawEff(gra, setP(posx + shake, posy), siz * sprite);
 				}
 
-				for (Entity e : sb.le) {
-					int dep = e.layer * DEP;
+				for(int i = 0; i < sb.le.size(); i ++) {
+					Entity e = sb.le.get(i);
+
 					if ((e.getAbi() & Data.AB_TIMEI) > 0) {
+						int dep = e.layer * DEP;
+
 						gra.setTransform(at);
 						double p = getX(e.pos);
 						double y = midh - (road_h - dep) * siz;

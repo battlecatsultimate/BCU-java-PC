@@ -90,18 +90,18 @@ public class FormEditPage extends EntityEditPage {
 			try {
 				if (v.length == 1) {
 					int firstLayer = v[0];
-					if (firstLayer >= 0)
-						cu.back = cu.front = firstLayer;
+					cu.back = cu.front = firstLayer;
 				} else if (v.length >= 2) {
 					int firstLayer = v[0];
 					int secondLayer = v[1];
-					if (firstLayer < 0 || secondLayer < 0) {
-						return;
-					} else if (firstLayer == secondLayer) {
+					if (firstLayer == secondLayer) {
 						cu.back = cu.front = firstLayer;
 					} else if (firstLayer < secondLayer) {
 						cu.back = firstLayer;
 						cu.front = secondLayer;
+					} else {
+						cu.front = firstLayer;
+						cu.back = secondLayer;
 					}
 				}
 
