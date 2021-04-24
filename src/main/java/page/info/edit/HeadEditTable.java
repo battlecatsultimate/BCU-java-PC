@@ -2,7 +2,9 @@ package page.info.edit;
 
 import common.CommonStatic;
 import common.pack.Identifier;
+import common.pack.PackData;
 import common.pack.PackData.UserPack;
+import common.util.Data;
 import common.util.pack.Background;
 import common.util.stage.*;
 import page.*;
@@ -33,9 +35,9 @@ class HeadEditTable extends Page {
 	private final JTF jlen = new JTF();
 	private final JTF jbg = new JTF();
 	private final JTF jcas = new JTF();
-	private final JL jm0 = new JL();
+	private final JTF jm0 = new JTF();
 	private final JTF jmh = new JTF();
-	private final JBTN jm1 = new JBTN();
+	private final JTF jm1 = new JTF();
 	private final JTG con = new JTG(1, "ht03");
 	private final JTF[] star = new JTF[4];
 	private final JTF jmax = new JTF();
@@ -87,7 +89,7 @@ class HeadEditTable extends Page {
 
 		if (mp != null) {
 			Identifier<Music> val = mp.getSelected();
-			if(musl == 0) {
+			if (musl == 0) {
 				jm0.setText("" + val);
 				sta.mus0 = val;
 				if (sta.mus0 != null) {
@@ -98,7 +100,7 @@ class HeadEditTable extends Page {
 					sta.loop0 = 0;
 					lop.setEnabled(false);
 				}
-			} else if(musl == 1) {
+			} else if (musl == 1) {
 				jm1.setText("" + val);
 				sta.mus1 = val;
 				if (sta.mus1 != null) {
@@ -114,7 +116,7 @@ class HeadEditTable extends Page {
 
 		minrest.setEnabled(sta != null);
 
-		if(sta != null)
+		if (sta != null)
 			minrest.setText(generateMinRespawn(sta.minSpawn, sta.maxSpawn));
 
 		bvp = null;
@@ -238,13 +240,6 @@ class HeadEditTable extends Page {
 		});
 
 		mus.addActionListener(arg0 -> {
-			musl = 0;
-			mp = new MusicPage(getFront(), pac.desc.id);
-			changePanel(mp);
-		});
-
-		jm1.addActionListener(arg0 -> {
-			musl = 1;
 			mp = new MusicPage(getFront(), pac.desc.id);
 			changePanel(mp);
 		});
@@ -310,7 +305,6 @@ class HeadEditTable extends Page {
 		add(cas);
 		add(con);
 		add(mus);
-		add(jm1);
 		set(jhea);
 		set(jlen);
 		set(jbg);
@@ -319,6 +313,7 @@ class HeadEditTable extends Page {
 		set(name);
 		set(jm0);
 		set(jmh);
+		set(jm1);
 		add(lt);
 		set(loop);
 		set(lop);
@@ -413,18 +408,18 @@ class HeadEditTable extends Page {
 			try {
 				int[] vals = CommonStatic.parseIntsN(jtf.getText());
 
-				if(vals.length == 1) {
-					if(vals[0] <= 0)
+				if (vals.length == 1) {
+					if (vals[0] <= 0)
 						return;
 
 					sta.minSpawn = sta.maxSpawn = vals[0];
-				} else if(vals.length >= 2) {
-					if(vals[0] <= 0 || vals[1] <= 0)
+				} else if (vals.length >= 2) {
+					if (vals[0] <= 0 || vals[1] <= 0)
 						return;
 
-					if(vals[0] == vals[1]) {
+					if (vals[0] == vals[1]) {
 						sta.minSpawn = sta.maxSpawn = vals[0];
-					} else if(vals[0] < vals[1]) {
+					} else if (vals[0] < vals[1]) {
 						sta.minSpawn = vals[0];
 						sta.maxSpawn = vals[1];
 					}
@@ -433,6 +428,100 @@ class HeadEditTable extends Page {
 				minrest.setText(generateMinRespawn(sta.minSpawn, sta.maxSpawn));
 			} catch (Exception ignored) {
 			}
+		}
+
+		if (jtf == jbg) {
+			String[] result = CommonStatic.getPackContentID(str);
+			if (Arrays.stream(result).anyMatch(r -> r == null || r.isEmpty()))
+				return;
+			String p = result[0];
+			String i = result[1];
+			if (CommonStatic.isInteger(p))
+				p = Data.hex(CommonStatic.parseIntN(p));
+			PackData pack = PackData.getPack(p);
+			if (pack == null)
+				return;
+			Background bg = pack.bgs.get(Integer.parseInt(i));
+			if (bg == null)
+				return;
+
+			jbg.setText(bg.toString());
+			sta.bg = bg.getID();
+		}
+
+		if (jtf == jcas) {
+			String[] result = CommonStatic.getPackContentID(str);
+			if (Arrays.stream(result).anyMatch(r -> r == null || r.isEmpty()))
+				return;
+			String p = result[0];
+			String i = result[1];
+			if (CommonStatic.isInteger(p))
+				p = Data.hex(CommonStatic.safeParseInt(p));
+			CastleList cl = CastleList.getList(p);
+			if (cl == null)
+				return;
+			CastleImg castle = cl.get(CommonStatic.safeParseInt(i));
+			if (castle == null)
+				return;
+
+			jcas.setText(castle.toString());
+			sta.castle = castle.getID();
+		}
+
+		if (jtf == jm0) {
+			String[] result = CommonStatic.getPackContentID(str);
+			if (Arrays.stream(result).anyMatch(r -> r == null || r.isEmpty())) {
+				jm0.setText("null");
+				sta.mus0 = null;
+				return;
+			}
+			String p = result[0];
+			String i = result[1];
+			if (CommonStatic.isInteger(p))
+				p = Data.hex(CommonStatic.safeParseInt(p));
+			PackData pack = PackData.getPack(p);
+			if (pack == null) {
+				jm0.setText("null");
+				sta.mus0 = null;
+				return;
+			}
+			Music music = pack.musics.get(CommonStatic.safeParseInt(i));
+			if (music == null) {
+				jm0.setText("null");
+				sta.mus0 = null;
+				return;
+			}
+
+			jm0.setText(str);
+			sta.mus0 = music.getID();
+		}
+
+		if (jtf == jm1) {
+			String[] result = CommonStatic.getPackContentID(str);
+			if (Arrays.stream(result).anyMatch(r -> r == null || r.isEmpty())) {
+				jm1.setText("null");
+				sta.mus1 = null;
+				return;
+			}
+			String p = result[0];
+			String i = result[1];
+			if (CommonStatic.isInteger(p))
+				p = Data.hex(CommonStatic.safeParseInt(p));
+			PackData pack = PackData.getPack(p);
+			if (pack == null) {
+				jm1.setText("null");
+				sta.mus1 = null;
+				return;
+			}
+			Music music = pack.musics.get(CommonStatic.safeParseInt(i));
+			if (music == null) {
+				jm1.setText("null");
+				sta.mus1 = null;
+				return;
+			}
+
+			jm1.setText(str);
+			sta.mus1 = music.getID();
 		}
 	}
 
@@ -446,6 +535,15 @@ class HeadEditTable extends Page {
 		add(jtf);
 
 		jtf.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent fe) {
+				if (isAdj())
+					return;
+				if (jtf == jm0)
+					musl = 0;
+				if (jtf == jm1)
+					musl = 1;
+			}
 
 			@Override
 			public void focusLost(FocusEvent fe) {
@@ -488,10 +586,10 @@ class HeadEditTable extends Page {
 	}
 
 	private String generateMinRespawn(int min, int max) {
-		if(min == max) {
-			return min+"f";
+		if (min == max) {
+			return min + "f";
 		} else {
-			return min+"f ~ "+max+"f";
+			return min + "f ~ " + max + "f";
 		}
 	}
 }

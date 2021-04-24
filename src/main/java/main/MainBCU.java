@@ -100,7 +100,6 @@ public class MainBCU {
 		@Override
 		public void noticeErr(Exception e, ErrType t, String str) {
 			if (noNeedToShow(t)) {
-				System.out.println("???");
 				System.out.println(str);
 				e.printStackTrace();
 				return;
@@ -141,7 +140,7 @@ public class MainBCU {
 		}
 	}
 
-	public static final int ver = 50027;
+	public static final int ver = 50028;
 
 	public static int FILTER_TYPE = 1;
 	public static final boolean WRITE = !new File("./.project").exists();

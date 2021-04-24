@@ -195,8 +195,8 @@ public class Interpret extends Data {
 		return ans;
 	}
 
-	public static List<String> getProc(MaskEntity du) {
-		Formatter.Context ctx = new Formatter.Context(false, false);
+	public static List<String> getProc(MaskEntity du, boolean isEnemy) {
+		Formatter.Context ctx = new Formatter.Context(isEnemy, false);
 		boolean common;
 
 		if(du instanceof CustomEntity) {
@@ -229,7 +229,7 @@ public class Interpret extends Data {
 			for (int i = 0; i < Data.PROC_TOT; i++) {
 				ProcItem item = ma.getProc().getArr(i);
 
-				if (!item.exists() || ma.getProc().sharable(i))
+				if (!item.exists() || !ma.getProc().sharable(i))
 					continue;
 
 				String format = ProcLang.get().get(i).format;
@@ -243,7 +243,7 @@ public class Interpret extends Data {
 				for (int j = 0; j < Data.PROC_TOT; j++) {
 					ProcItem item = ma.getProc().getArr(j);
 
-					if (!item.exists())
+					if (!item.exists() || ma.getProc().sharable(j))
 						continue;
 
 					String format = ProcLang.get().get(j).format;
@@ -262,6 +262,8 @@ public class Interpret extends Data {
 					}
 				}
 			}
+
+			System.out.println(atkMap);
 
 			for (String key : atkMap.keySet()) {
 				List<Integer> inds = atkMap.get(key);

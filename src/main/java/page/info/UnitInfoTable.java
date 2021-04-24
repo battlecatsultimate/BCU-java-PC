@@ -43,7 +43,7 @@ public class UnitInfoTable extends Page {
 		atks = new JL[6];
 		MaskUnit du = f.maxu();
 		List<String> ls = Interpret.getAbi(du);
-		ls.addAll(Interpret.getProc(du));
+		ls.addAll(Interpret.getProc(du, false));
 		boolean pc = de.getPCoin() != null;
 		if (pc)
 			ls.add("");
@@ -104,7 +104,7 @@ public class UnitInfoTable extends Page {
 		atks[1].setText(satk.toString());
 
 		List<String> ls = Interpret.getAbi(ef.du);
-		ls.addAll(Interpret.getProc(ef.du));
+		ls.addAll(Interpret.getProc(ef.du, false));
 		for (JLabel l : proc)
 			if (l != pcoin)
 				l.setText("");
