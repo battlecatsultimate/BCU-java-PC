@@ -49,6 +49,7 @@ public abstract class KeyHandler extends Page implements FakeKey {
 
 	@Override
 	protected synchronized void keyPressed(KeyEvent e) {
+		super.keyPressed(e);
 		press.put(e.getKeyCode(), 2);
 	}
 
