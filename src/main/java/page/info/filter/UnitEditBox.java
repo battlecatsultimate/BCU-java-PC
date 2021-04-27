@@ -41,17 +41,13 @@ public class UnitEditBox extends Page {
 		ini();
 	}
 
-	public void diyIni(ArrayList<Trait> ts) {
+	public void setData(int[] vals, ArrayList<Trait> ts) {
 		changing = true;
 		for (int k = 0; k < traitList.size(); k++)
 			if (ts.contains(traitList.get(k)))
 				trait.addSelectionInterval(k, k);
 			else
 				trait.removeSelectionInterval(k, k);
-	}
-
-	public void setData(int[] vals) {
-		changing = true;
 		int[] sel = trait.getSelectedIndices();
 		trait.clearSelection();
 		abis.clearSelection();
@@ -70,11 +66,11 @@ public class UnitEditBox extends Page {
 	}
 
 	private void confirm() {
-		int[] ans = new int[3];
+		int[] ans = new int[2];
 		int lev = SABIS.length;
 		for (int i = 0; i < lev; i++)
 			if (abis.isSelectedIndex(i))
-				ans[1] |= 1 << i;
+				ans[0] |= 1 << i;
 		for (int i = 0; i < traitList.size(); i++)
 			if (trait.isSelectedIndex(i)) {
 				if (!cu.traits.contains(traitList.get(i))) {
