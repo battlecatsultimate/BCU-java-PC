@@ -46,7 +46,7 @@ public abstract class ProcTable extends Page {
 
 		private static final long serialVersionUID = 1L;
 
-		private static final int[] INDS = { 9, 10, 11, 12, 28, 30, Data.P_IMUKB, Data.P_IMUSTOP,
+		private static final int[] INDS = { 9, 10, 11, 12, 28, 30, Data.P_DMGCUT, Data.P_DMGCAP, Data.P_IMUKB, Data.P_IMUSTOP,
 				Data.P_IMUSLOW, Data.P_IMUWAVE, Data.P_IMUWEAK, Data.P_IMUWARP, Data.P_IMUCURSE,
 				Data.P_IMUPOIATK, Data.P_IMUVOLC, Data.P_IMUSUMMON
 		};
