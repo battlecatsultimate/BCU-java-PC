@@ -101,9 +101,9 @@ public abstract class AbRecdPage extends Page {
 	protected abstract void setList();
 
 	protected void setRecd(Replay r) {
-		rply.setEnabled(r != null && r.isAvail());
-		recd.setEnabled(r != null && r.isAvail());
-		imgs.setEnabled(r != null && r.isAvail());
+		rply.setEnabled(r != null);
+		recd.setEnabled(r != null);
+		imgs.setEnabled(r != null);
 		seed.setEditable(editable && r != null);
 		vsta.setEnabled(r != null);
 		Stage st = r == null ? null : Identifier.getOr(r.st, Stage.class);
