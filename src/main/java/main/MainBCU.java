@@ -190,10 +190,10 @@ public class MainBCU {
 		MainFrame.changePanel(new MainPage());
 	}
 
-	public static String validate(String str) {
+	public static String validate(String str, char replace) {
 		char[] chs = new char[] { '.', '/', '\\', ':', '*', '?', '"', '<', '>', '|' };
 		for (char c : chs)
-			str = str.replace(c, '#');
+			str = str.replace(c, replace);
 		return str;
 	}
 
