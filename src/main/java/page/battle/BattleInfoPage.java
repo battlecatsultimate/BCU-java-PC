@@ -321,7 +321,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 				changePanel(new BattleInfoPage(getThis(), ((SBCtrl) basis).getData(), 0));
 			if (basis instanceof SBRply)
 				if (recd.rl == null)
-					changePanel(new RecdSavePage(getThis(), recd, basis.sb.st.name));
+					changePanel(new RecdSavePage(getThis(), recd));
 				else
 					changePanel(new BattleInfoPage(this, (SBRply) basis));
 		});

@@ -3,6 +3,7 @@ package page.battle;
 import common.CommonStatic;
 import common.pack.Source;
 import common.util.stage.Replay;
+import main.Opts;
 import page.JBTN;
 import page.JTF;
 import page.Page;
@@ -55,6 +56,13 @@ public class RecdManagePage extends AbRecdPage {
 
 	@Override
 	protected void setRecd(Replay r) {
+		try {
+			int check = r == null || r.st == null ? 0 : r.st.get().health;
+		} catch (Exception e) {
+			Opts.pop("Please change the stage to a new one","Replay stage not found");
+			r.st = null;
+			r.marked = false;
+		}
 		super.setRecd(r);
 		dele.setEnabled(r != null);
 		rena.setEditable(r != null);

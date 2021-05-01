@@ -63,15 +63,6 @@ public abstract class Page extends JPanel implements RetFunc {
 		front = p;
 		setBackground(BGCOLOR);
 		setLayout(null);
-
-		getInputMap().put(KeyStroke.getKeyStroke('S', Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), "save");
-		getActionMap().put("save", new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				BCUWriter.writeData();
-				Opts.pop("Successfully saved data.", "Save Confirmation");
-			}
-		});
 	}
 
 	@Override
@@ -157,6 +148,12 @@ public abstract class Page extends JPanel implements RetFunc {
 	}
 
 	protected void keyPressed(KeyEvent e) {
+		int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+		char key = e.getKeyChar();
+		if ((e.getModifiers() & modifier) > 0 && key == 's') {
+			BCUWriter.writeData();
+			Opts.pop("Successfully saved data.", "Save Confirmation");
+		}
 	}
 
 	protected void keyReleased(KeyEvent e) {

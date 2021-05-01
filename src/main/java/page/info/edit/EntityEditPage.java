@@ -563,10 +563,8 @@ public abstract class EntityEditPage extends Page {
 
 			Soul s = (Soul) jcbs.getSelectedItem();
 
-			if(s != null) {
-				ce.death = s.getID();
-				setData(ce);
-			}
+			ce.death = s == null ? null : s.getID();
+			setData(ce);
 		});
 
 	}

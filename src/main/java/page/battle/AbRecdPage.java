@@ -66,9 +66,18 @@ public abstract class AbRecdPage extends Page {
 		if (editable && svp != null) {
 			Replay r = getSelection();
 			Stage ns = svp.getStage();
-			if (r != null && ns != null && ns != r.st.get() && Opts.conf("are you sure to change stage?")) {
-				r.st = svp.getStage().id;
-				r.marked = true;
+			if (r != null && ns != null) {
+				if (r.st != null) {
+					if (ns != r.st.get() && Opts.conf("are you sure to change stage?")) {
+						r.st = ns.id;
+						r.marked = true;
+					}
+				} else {
+					r.st = ns.id;
+					r.marked = true;
+				}
+				ista.setText(r.st.toString());
+				imap.setText(r.st.getCont().toString());
 			}
 		}
 		if (editable && bp != null) {
@@ -101,12 +110,12 @@ public abstract class AbRecdPage extends Page {
 	protected abstract void setList();
 
 	protected void setRecd(Replay r) {
-		rply.setEnabled(r != null && r.isAvail());
-		recd.setEnabled(r != null && r.isAvail());
-		imgs.setEnabled(r != null && r.isAvail());
+		rply.setEnabled(r != null);
+		recd.setEnabled(r != null);
+		imgs.setEnabled(r != null);
 		seed.setEditable(editable && r != null);
 		vsta.setEnabled(r != null);
-		Stage st = r == null ? null : Identifier.getOr(r.st, Stage.class);
+		Stage st = r == null || r.st == null ? null : Identifier.getOr(r.st, Stage.class);
 		ista.setText(st == null ? "(unavailable)" : st.toString());
 		imap.setText(st == null ? "(unavailable)" : st.getCont().toString());
 		jlu.setEnabled(r != null);
@@ -122,7 +131,10 @@ public abstract class AbRecdPage extends Page {
 	private void addListeners() {
 		back.setLnr(x -> changePanel(getFront()));
 
-		vsta.setLnr(x -> changePanel(svp = new StageViewPage(getThis(), MapColc.values(), getSelection().st.get())));
+		vsta.setLnr(x -> {
+			Stage rStage = getSelection().st == null ? null : getSelection().st.get();
+			changePanel(svp = new StageViewPage(getThis(), MapColc.values(), rStage));
+		});
 
 		jlu.setLnr(x -> changePanel(bp = new BasisPage(getThis())));
 
