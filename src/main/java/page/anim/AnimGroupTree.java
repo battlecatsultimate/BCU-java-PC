@@ -30,6 +30,7 @@ public class AnimGroupTree implements TreeExpansionListener {
         Object userObject = ((DefaultMutableTreeNode) o).getUserObject();
 
         if(userObject instanceof String) {
+            //TODO
             System.out.println("OHOH");
         }
     }
@@ -44,22 +45,13 @@ public class AnimGroupTree implements TreeExpansionListener {
         Object userObject = ((DefaultMutableTreeNode) o).getUserObject();
 
         if(userObject instanceof String) {
+            //TODO
             System.out.println("OHOH");
         }
     }
 
     public void renewNodes() {
         nodes.removeAllChildren();
-
-        ArrayList<AnimCE> baseGroup = AnimGroup.workspaceGroup.groups.get("");
-
-        if(baseGroup != null && !baseGroup.isEmpty()) {
-            for(AnimCE anim : baseGroup) {
-                DefaultMutableTreeNode animNode = new DefaultMutableTreeNode(anim);
-
-                nodes.add(animNode);
-            }
-        }
 
         for(String key : AnimGroup.workspaceGroup.groups.keySet()) {
             if(key.equals(""))
@@ -79,6 +71,16 @@ public class AnimGroupTree implements TreeExpansionListener {
             }
 
             nodes.add(container);
+        }
+
+        ArrayList<AnimCE> baseGroup = AnimGroup.workspaceGroup.groups.get("");
+
+        if(baseGroup != null && !baseGroup.isEmpty()) {
+            for(AnimCE anim : baseGroup) {
+                DefaultMutableTreeNode animNode = new DefaultMutableTreeNode(anim);
+
+                nodes.add(animNode);
+            }
         }
 
         animTree.setModel(new DefaultTreeModel(nodes));
