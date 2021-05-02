@@ -90,7 +90,8 @@ public class StageEditPage extends Page {
 
 	@Override
 	protected void mouseClicked(MouseEvent e) {
-		if (e.getSource() == jt && !e.isControlDown())
+		int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+		if (e.getSource() == jt && (e.getModifiers() & modifier) == 0)
 			jt.clicked(e.getPoint(), e.getButton());
 	}
 
