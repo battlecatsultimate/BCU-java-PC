@@ -1,19 +1,26 @@
 package page.anim;
 
 import common.system.VImg;
+import common.util.AnimGroup;
 import common.util.anim.AnimCE;
 import main.MainBCU;
 import main.Opts;
 import page.JBTN;
 import page.JTG;
+import page.MainLocale;
 import page.Page;
 import page.awt.BBBuilder;
 import page.support.AnimLCR;
+import page.support.AnimTreeRenderer;
 import page.view.AbViewPage;
 import utilpc.UtilPC;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -24,9 +31,11 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 
 	private static final String[] icos = new String[] { "default", "starred", "EF", "TF", "uni_f", "uni_c", "uni_s" };
 
-	private final JList<AnimCE> jlu = new JList<>();
-	private final JScrollPane jspu = new JScrollPane(jlu);
+	private final JTree jlt = new JTree();
+	private final JScrollPane jspu = new JScrollPane(jlt);
+	private final JBTN group = new JBTN(MainLocale.PAGE, "addgroup");
 	private final EditHead aep;
+	private final AnimGroupTree agt;
 
 	private final JTG ics = new JTG(0, "icon");
 	private final JBTN icc = new JBTN(0, "confirm");
@@ -38,6 +47,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		super(p, BBBuilder.def.getIconBox());
 		ib = (IconBox) vb;
 		aep = new EditHead(this, 0);
+		agt = new AnimGroupTree(jlt);
 		ini();
 		resized();
 	}
@@ -46,6 +56,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		super(p, BBBuilder.def.getIconBox());
 		ib = (IconBox) vb;
 		aep = new EditHead(this, 0);
+		agt = new AnimGroupTree(jlt);
 		if (!ac.inPool())
 			aep.focus = ac;
 		ini();
@@ -56,13 +67,21 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		super(p, BBBuilder.def.getIconBox());
 		ib = (IconBox) vb;
 		aep = bar;
+		agt = new AnimGroupTree(jlt);
 		ini();
 		resized();
 	}
 
 	@Override
 	public void setSelection(AnimCE ac) {
-		jlu.setSelectedValue(ac, true);
+
+		DefaultMutableTreeNode selectedNode = agt.findAnimNode(ac);
+
+		if(selectedNode == null)
+			return;
+
+		jlt.setSelectionPath(new TreePath(selectedNode));
+		jlt.setExpandsSelectedPaths(true);
 	}
 
 	@Override
@@ -70,7 +89,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		super.enabler(b);
 		ics.setEnabled(ics.isSelected() || b && pause);
 		icc.setEnabled(ics.isSelected());
-		jlu.setEnabled(b);
+		jlt.setEnabled(b);
 	}
 
 	@Override
@@ -89,11 +108,19 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 	@Override
 	protected void renew() {
 		if (aep.focus == null) {
-			Map<String, AnimCE> animList = new TreeMap<>(AnimCE.map());
-			jlu.setListData(new Vector<>(animList.values()));
-		}  else
-			jlu.setListData(new AnimCE[] { aep.focus });
-		jlu.setSelectedIndex(0);
+			AnimGroup.workspaceGroup.renewGroup();
+			agt.renewNodes();
+		}  else {
+			DefaultMutableTreeNode root = new DefaultMutableTreeNode("Animation");
+
+			root.add(new DefaultMutableTreeNode(aep.focus));
+
+			jlt.setModel(new DefaultTreeModel(root));
+		}
+
+		jlt.setSelectionPath(new TreePath(agt.getVeryFirstAnimNode()));
+
+		group.setEnabled(aep.focus == null);
 	}
 
 	@Override
@@ -105,23 +132,39 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		set(uni, x, y, 750, 500, 200, 200);
 		set(jcb, x, y, 750, 750, 200, 50);
 		set(icc, x, y, 1000, 1150, 200, 50);
+		set(group, x, y, 50, 1200, 300, 50);
 	}
 
 	@Override
 	protected void updateChoice() {
-		AnimCE e = jlu.getSelectedValue();
-		aep.setAnim(e);
-		uni.setIcon(e == null ? null : UtilPC.getIcon(e.getUni()));
-		if (e == null)
+		TreePath path = jlt.getSelectionPath();
+
+		if(path == null)
 			return;
-		setAnim(e);
+
+		Object o = path.getLastPathComponent();
+
+		if(!(o instanceof DefaultMutableTreeNode))
+			return;
+
+		if(((DefaultMutableTreeNode) o).getUserObject() instanceof AnimCE) {
+			AnimCE e = (AnimCE) ((DefaultMutableTreeNode) o).getUserObject();
+			aep.setAnim(e);
+			uni.setIcon(e == null ? null : UtilPC.getIcon(e.getUni()));
+			if (e == null)
+				return;
+			setAnim(e);
+		}
 	}
 
 	private void addListeners() {
 
-		jlu.addListSelectionListener(arg0 -> {
-			if (arg0.getValueIsAdjusting())
+		jlt.addTreeSelectionListener(t -> {
+			TreePath path = t.getNewLeadSelectionPath();
+
+			if(path == null)
 				return;
+
 			updateChoice();
 		});
 
@@ -145,7 +188,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 				AnimCE ac = aep.anim;
 				ac.setEdi(clip);
 				ac.saveIcon();
-				jlu.repaint();
+				jlt.repaint();
 			}
 			if (IconBox.IBConf.mode == 1
 					&& Opts.conf("are you sure to replace battle icon? This action cannot be undone")) {
@@ -156,6 +199,18 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 			}
 		});
 
+		group.setLnr(a -> {
+			String groupName = Opts.read(get(MainLocale.PAGE, "addgrouppop"));
+
+			if(groupName == null)
+				return;
+
+			groupName = AnimGroup.workspaceGroup.validateGroupName(groupName);
+
+			AnimGroup.workspaceGroup.groups.put(groupName, new ArrayList<>());
+
+			renew();
+		});
 	}
 
 	private void ini() {
@@ -166,12 +221,13 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		add(icc);
 		add(jcb);
 		add(uni);
+		add(group);
 		jcb.setSelectedIndex(IconBox.IBConf.type);
 		ics.setEnabled(false);
 		icc.setEnabled(false);
-		jlu.setCellRenderer(new AnimLCR());
+		jlt.setCellRenderer(new AnimTreeRenderer());
+		group.setEnabled(aep.focus == null);
 		addListeners();
-
 	}
 
 }
