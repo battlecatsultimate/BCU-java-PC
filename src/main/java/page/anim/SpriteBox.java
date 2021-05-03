@@ -17,7 +17,7 @@ class SpriteBox extends Canvas {
 	private AnimCE anim;
 	private Point c;
 	private int skip = 0;
-	private boolean ctrl, drag;
+	private boolean drag;
 	private final Page page;
 	protected int sele = -1;
 	protected boolean white = true;
@@ -108,16 +108,6 @@ class SpriteBox extends Canvas {
 		return img;
 	}
 
-	protected synchronized void keyPressed(KeyEvent ke) {
-		if (ke.getKeyCode() == KeyEvent.VK_CONTROL)
-			ctrl = true;
-	}
-
-	protected synchronized void keyReleased(KeyEvent ke) {
-		if (ke.getKeyCode() == KeyEvent.VK_CONTROL)
-			ctrl = false;
-	}
-
 	protected synchronized void keyTyped(KeyEvent ke) {
 		if (ke.getKeyCode() == KeyEvent.VK_TAB) {
 			skip++;
@@ -125,8 +115,9 @@ class SpriteBox extends Canvas {
 		}
 	}
 
-	protected synchronized void mouseDragged(Point p) {
-		if(!drag) {
+	protected synchronized void mouseDragged(MouseEvent e) {
+		Point p = e.getPoint();
+		if (!drag) {
 			Point p2 = new Point(p.x + (int) x, p.y + (int) y);
 			sele = findSprite(p2);
 			page.callBack(null);
@@ -143,8 +134,14 @@ class SpriteBox extends Canvas {
 			limit();
 		} else {
 			int[] line = anim.imgcut.cuts[sele];
-			line[ctrl ? 2 : 0] += p1.x - p0.x;
-			line[ctrl ? 3 : 1] += p1.y - p0.y;
+			int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+			if ((e.getModifiers() & modifier) > 0) {
+				line[2] += p1.x - p0.x;
+				line[3] += p1.y - p0.y;
+			} else {
+				line[0] += p1.x - p0.x;
+				line[1] += p1.y - p0.y;
+			}
 		}
 	}
 
