@@ -2,10 +2,7 @@ package page.info.edit;
 
 import common.CommonStatic;
 import common.battle.data.AtkDataModel;
-import page.JL;
-import page.JTF;
-import page.JTG;
-import page.Page;
+import page.*;
 import page.support.ListJtfPolicy;
 import utilpc.Interpret;
 
@@ -113,7 +110,7 @@ class AtkEditTable extends Page {
 		fab.setText(str + "}");
 		isr.setSelected(adm.range);
 		spt.setSelected(adm.specialTrait);
-		spt.setText((isUnit && adm.dire == 1) || (!isUnit && adm.dire == -1) ? "Ignore Traits" : "Consider Traits");
+		spt.setText(MainLocale.PAGE, (isUnit && adm.dire == 1) || (!isUnit && adm.dire == -1) ? "igtr" : "cntr");
 	}
 
 	private void ini() {

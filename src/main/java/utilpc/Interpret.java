@@ -551,7 +551,7 @@ public class Interpret extends Data {
 				builder.append("第 ");
 
 				for(int i = 0; i < inds.size(); i++) {
-					builder.append(i);
+					builder.append(inds.get(i));
 
 					if(i < inds.size() -1) {
 						builder.append(", ");
@@ -561,7 +561,7 @@ public class Interpret extends Data {
 				return builder.append(" 次攻擊]").toString();
 			case 2:
 				for(int i = 0; i < inds.size(); i++) {
-					builder.append(i);
+					builder.append(inds.get(i));
 
 					if(i < inds.size() - 1) {
 						builder.append(", ");
@@ -571,7 +571,7 @@ public class Interpret extends Data {
 				return builder.append(" 번째 공격]").toString();
 			case 3:
 				for(int i = 0; i < inds.size(); i++) {
-					builder.append(i);
+					builder.append(inds.get(i));
 
 					if(i < inds.size() - 1) {
 						builder.append(", ");

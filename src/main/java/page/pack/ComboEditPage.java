@@ -46,14 +46,14 @@ public class ComboEditPage extends Page {
     private final JTF comboname = new JTF();
 
     private final JBTN back = new JBTN(0, "back");
-    private final JBTN addf = new JBTN(0, "add form");
-    private final JBTN addc = new JBTN(0, "add combo");
-    private final JBTN remcf = new JBTN(0, "remove form");
-    private final JBTN remc = new JBTN(0, "remove combo");
+    private final JBTN addf = new JBTN(0, "addf");
+    private final JBTN addc = new JBTN(0, "addc");
+    private final JBTN remcf = new JBTN(0, "remcf");
+    private final JBTN remc = new JBTN(0, "remc");
 
     private final JL lbp = new JL(0, "pack");
     private final JL lbu = new JL(0, "unit");
-    private final JL lbf = new JL(1, "forms");
+    private final JL lbf = new JL(0, "forms");
 
     private boolean changing = false;
 

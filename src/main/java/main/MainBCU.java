@@ -10,6 +10,7 @@ import common.pack.Source.Workspace;
 import common.pack.UserProfile;
 import common.pack.Context.ErrType;
 import common.system.fake.ImageBuilder;
+import common.util.AnimGroup;
 import common.util.Data;
 import common.util.stage.Replay;
 import io.BCJSON;
@@ -88,6 +89,8 @@ public class MainBCU {
 			UserProfile.getBCData().load(LoadPage::prog, LoadPage::prog);
 			LoadPage.prog("reading local animations");
 			Workspace.loadAnimations(null);
+			LoadPage.prog("reading local animation group data");
+			AnimGroup.readGroupData();
 			LoadPage.prog("reading packs");
 			UserProfile.loadPacks(LoadPage::prog);
 			LoadPage.prog("reading basis");

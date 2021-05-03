@@ -40,8 +40,8 @@ public class TraitEditPage extends Page {
     private final JBTN addct = new JBTN(0, "add");
     private final JBTN remct = new JBTN(0, "rem");
     private final JBTN adicn = new JBTN(0, "icon");
-    private final JBTN reicn = new JBTN(0, "remove icon");
-    private final JTG altrg = new JTG(0, "affected by anti-traited");
+    private final JBTN reicn = new JBTN(0, "remicon");
+    private final JTG altrg = new JTG(0, "traitfect");
     private final JTF ctrna = new JTF();
 
     private final UserPack packpack;
@@ -68,9 +68,9 @@ public class TraitEditPage extends Page {
         set(jspct, x, y, 50, 100, 300, 800);
         set(altrg, x, y, 50, 950, 300, 50);
         set(ctrna, x, y, 50, 900, 300, 50);
-        set(adicn, x, y, 400, 100, 150, 50);
+        set(adicn, x, y, 350, 100, 250, 50);
         set(jl, x, y, 450, 150, 50, 50);
-        set(reicn, x, y, 400, 200, 150, 50);
+        set(reicn, x, y, 350, 200, 250, 50);
     }
 
     private void addListeners$0() {

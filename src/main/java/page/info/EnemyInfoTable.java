@@ -223,6 +223,8 @@ public class EnemyInfoTable extends Page {
 			atks[i][3].setText(atkData[i][1] + "f");
 			atks[i][4].setText(1, "use");
 			atks[i][5].setText("" + (atkData[i][2] == 1));
+			atks[i][6].setText(1, "dire");
+			atks[i][7].setText("" + atkData[i][3]);
 			itv -= atkData[i][1];
 		}
 		main[3][7].setText(e.de.getPost() + "f");

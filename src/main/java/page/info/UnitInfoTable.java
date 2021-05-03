@@ -191,7 +191,7 @@ public class UnitInfoTable extends Page {
 					if (i != 0 && j % 2 == 0 || i == 0 && j < 4)
 						main[i][j].setHorizontalAlignment(SwingConstants.CENTER);
 				}
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < atks.length; i++) {
 			add(atks[i] = new JL());
 			atks[i].setBorder(BorderFactory.createEtchedBorder());
 			if (i % 2 == 0)

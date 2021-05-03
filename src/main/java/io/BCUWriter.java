@@ -9,6 +9,7 @@ import common.io.json.JsonEncoder;
 import common.pack.Context;
 import common.pack.Context.ErrType;
 import common.pack.Source;
+import common.util.AnimGroup;
 import common.util.Data;
 import main.MainBCU;
 import main.Opts;
@@ -171,6 +172,7 @@ public class BCUWriter extends DataIO {
 		BasisSet.write();
 		Source.Workspace.saveLocalAnimations();
 		Source.Workspace.saveWorkspace();
+		AnimGroup.writeAnimGroup();
 		writeOptions();
 	}
 
