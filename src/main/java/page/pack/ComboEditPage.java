@@ -312,7 +312,7 @@ public class ComboEditPage extends Page {
     private void updateC() {
         boolean editable = frm != null && pac.editable;
         addc.setEnabled(editable);
-        boolean size = pac.editable && jlc.getSelectedRow() != -1 && jlc.list.size() > 0;
+        boolean size = pac != null && pac.editable && jlc.getSelectedRow() != -1 && jlc.list.size() > 0;
         boolean esize = editable && size;
         if (size) {
             Combo c = jlc.list.get(jlc.getSelectedRow());
