@@ -84,10 +84,10 @@ public class AnimGroupTree implements TreeExpansionListener {
     }
 
     public void handleAnimGroup(DefaultMutableTreeNode root, boolean initial) {
-        if(initial)
+        if(initial) {
             AnimGroup.workspaceGroup.groups.clear();
-
-        AnimGroup.workspaceGroup.groups.put("", new ArrayList<>());
+            AnimGroup.workspaceGroup.groups.put("", new ArrayList<>());
+        }
 
         Enumeration<?> enumeration = root.children();
 
