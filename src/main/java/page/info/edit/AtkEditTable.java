@@ -36,9 +36,10 @@ class AtkEditTable extends Page {
 	private final JTF fab = new JTF();
 	private final JTF fmv = new JTF();
 	private final JTG isr = new JTG(1, "isr");
+	private final JTG spt = new JTG();
 
 	private final ListJtfPolicy ljp = new ListJtfPolicy();
-	private final boolean editable;
+	private final boolean editable, isUnit;
 
 	private double mul;
 	private double lvMul;
@@ -50,6 +51,7 @@ class AtkEditTable extends Page {
 	protected AtkEditTable(Page p, boolean edit, boolean unit) {
 		super(p);
 		editable = edit;
+		isUnit = unit;
 		ini();
 	}
 
@@ -70,6 +72,7 @@ class AtkEditTable extends Page {
 		set(lab, x, y, 0, 350, 200, 50);
 		set(lmv, x, y, 0, 400, 200, 50);
 		set(isr, x, y, 0, 450, 200, 50);
+		set(spt, x, y, 200, 450, 200, 50);
 		set(fatk, x, y, 200, 0, 200, 50);
 		set(fpre, x, y, 200, 50, 200, 50);
 		set(fp0, x, y, 200, 100, 200, 50);
@@ -109,6 +112,8 @@ class AtkEditTable extends Page {
 		}
 		fab.setText(str + "}");
 		isr.setSelected(adm.range);
+		spt.setSelected(adm.specialTrait);
+		spt.setText((isUnit && adm.dire == 1) || (!isUnit && adm.dire == -1) ? "Ignore Traits" : "Consider Traits");
 	}
 
 	private void ini() {
@@ -131,6 +136,7 @@ class AtkEditTable extends Page {
 		set(fab);
 		set(fmv);
 		add(isr);
+		add(spt);
 		ftp.setToolTipText(
 				"<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
 						+ "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost</html>");
@@ -147,10 +153,12 @@ class AtkEditTable extends Page {
 		fab.setToolTipText(ttt + "</html>");
 
 		isr.setEnabled(editable);
+		spt.setEnabled(editable);
 		setFocusTraversalPolicy(ljp);
 		setFocusCycleRoot(true);
 
 		isr.setLnr(x -> adm.range = isr.isSelected());
+		spt.setLnr(x -> adm.specialTrait = spt.isSelected());
 	}
 
 	private void input(JTF jtf, String text) {
