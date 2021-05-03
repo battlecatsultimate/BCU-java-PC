@@ -10,8 +10,9 @@ import page.JTG;
 import page.MainLocale;
 import page.Page;
 import page.awt.BBBuilder;
-import page.support.AnimLCR;
 import page.support.AnimTreeRenderer;
+import page.support.AnimTreeTransfer;
+import page.support.TreeNodeExpander;
 import page.view.AbViewPage;
 import utilpc.UtilPC;
 
@@ -19,11 +20,9 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.Vector;
 
 public class DIYViewPage extends AbViewPage implements AbEditPage {
 
@@ -34,6 +33,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 	private final JTree jlt = new JTree();
 	private final JScrollPane jspu = new JScrollPane(jlt);
 	private final JBTN group = new JBTN(MainLocale.PAGE, "addgroup");
+	private final JBTN remgroup = new JBTN(MainLocale.PAGE, "remgroup");
 	private final EditHead aep;
 	private final AnimGroupTree agt;
 
@@ -74,14 +74,15 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 
 	@Override
 	public void setSelection(AnimCE ac) {
-
-		DefaultMutableTreeNode selectedNode = agt.findAnimNode(ac);
+		DefaultMutableTreeNode selectedNode = agt.findAnimNode(ac, null);
 
 		if(selectedNode == null)
 			return;
 
-		jlt.setSelectionPath(new TreePath(selectedNode));
+		jlt.setSelectionPath(new TreePath(selectedNode.getPath()));
 		jlt.setExpandsSelectedPaths(true);
+
+		remgroup.setEnabled(false);
 	}
 
 	@Override
@@ -97,6 +98,41 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		super.keyPressed(ke);
 		if (ke.getSource() == ib)
 			ib.keyPressed(ke);
+		if(ke.getSource() == jlt) {
+			if(ke.getKeyCode() == KeyEvent.VK_DELETE) {
+				if(remgroup.isEnabled()) {
+					TreePath[] paths = jlt.getSelectionPaths();
+
+					if(paths == null)
+						return;
+
+					if(Opts.conf(get(MainLocale.PAGE, "remgroupconf"))) {
+						ArrayList<String> groups = new ArrayList<>();
+
+						for(TreePath path : paths) {
+							if(path == null || !(path.getLastPathComponent() instanceof DefaultMutableTreeNode) || !(((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject() instanceof String))
+								return;
+
+							if(((DefaultMutableTreeNode) path.getLastPathComponent()).isRoot())
+								return;
+
+							String groupName = (String) ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+
+							if(groupName.equals(""))
+								return;
+
+							groups.add(groupName);
+						}
+
+						for(String groupName : groups) {
+							agt.removeGroup(groupName);
+						}
+
+						remgroup.setEnabled(false);
+					}
+				}
+			}
+		}
 	}
 
 	@Override
@@ -127,20 +163,23 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 	protected void resized(int x, int y) {
 		super.resized(x, y);
 		set(aep, x, y, 550, 0, 1750, 50);
-		set(jspu, x, y, 50, 100, 300, 1100);
+		set(jspu, x, y, 50, 100, 300, 1050);
 		set(ics, x, y, 1000, 1050, 200, 50);
 		set(uni, x, y, 750, 500, 200, 200);
 		set(jcb, x, y, 750, 750, 200, 50);
 		set(icc, x, y, 1000, 1150, 200, 50);
-		set(group, x, y, 50, 1200, 300, 50);
+		set(group, x, y, 50, 1150, 300, 50);
+		set(remgroup, x, y, 50, 1200, 300, 50);
+		SwingUtilities.invokeLater(() -> jlt.setUI(new TreeNodeExpander(jlt)));
 	}
 
 	@Override
 	protected void updateChoice() {
 		TreePath path = jlt.getSelectionPath();
 
-		if(path == null)
+		if(path == null) {
 			return;
+		}
 
 		Object o = path.getLastPathComponent();
 
@@ -158,14 +197,59 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 	}
 
 	private void addListeners() {
-
 		jlt.addTreeSelectionListener(t -> {
-			TreePath path = t.getNewLeadSelectionPath();
+			TreePath[] paths = jlt.getSelectionPaths();
 
-			if(path == null)
+			if(paths == null)
 				return;
 
+			boolean canEnabled = true;
+
+			for(TreePath path : paths) {
+				if(!(path.getLastPathComponent() instanceof DefaultMutableTreeNode))
+					return;
+
+				if(!(((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject() instanceof String)) {
+					canEnabled = false;
+					break;
+				}
+			}
+
+			remgroup.setEnabled(canEnabled);
+
 			updateChoice();
+		});
+
+		remgroup.setLnr(a -> {
+			TreePath[] paths = jlt.getSelectionPaths();
+
+			if(paths == null)
+				return;
+
+			if(Opts.conf(get(MainLocale.PAGE, "remgroupconf"))) {
+				ArrayList<String> groups = new ArrayList<>();
+
+				for(TreePath path : paths) {
+					if(path == null || !(path.getLastPathComponent() instanceof DefaultMutableTreeNode) || !(((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject() instanceof String))
+						return;
+
+					if(((DefaultMutableTreeNode) path.getLastPathComponent()).isRoot())
+						return;
+
+					String groupName = (String) ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+
+					if(groupName.equals(""))
+						return;
+
+					groups.add(groupName);
+				}
+
+				for(String groupName : groups) {
+					agt.removeGroup(groupName);
+				}
+
+				remgroup.setEnabled(false);
+			}
 		});
 
 		ics.addActionListener(arg0 -> {
@@ -222,11 +306,18 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		add(jcb);
 		add(uni);
 		add(group);
+		add(remgroup);
 		jcb.setSelectedIndex(IconBox.IBConf.type);
 		ics.setEnabled(false);
 		icc.setEnabled(false);
 		jlt.setCellRenderer(new AnimTreeRenderer());
 		group.setEnabled(aep.focus == null);
+		SwingUtilities.invokeLater(() -> jlt.setUI(new TreeNodeExpander(jlt)));
+		jlt.setTransferHandler(new AnimTreeTransfer(agt));
+		jlt.setDragEnabled(true);
+		jlt.setDropMode(DropMode.ON_OR_INSERT);
+		jlt.getSelectionModel().setSelectionMode(TreeSelectionModel.CONTIGUOUS_TREE_SELECTION);
+		remgroup.setEnabled(false);
 		addListeners();
 	}
 
