@@ -202,6 +202,11 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 				if(!(path.getLastPathComponent() instanceof DefaultMutableTreeNode))
 					return;
 
+				if(((DefaultMutableTreeNode) path.getLastPathComponent()).isRoot()) {
+					canEnabled = false;
+					break;
+				}
+
 				if(!(((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject() instanceof String)) {
 					canEnabled = false;
 					break;
