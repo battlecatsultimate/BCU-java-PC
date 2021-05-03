@@ -313,8 +313,8 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		SwingUtilities.invokeLater(() -> jlt.setUI(new TreeNodeExpander(jlt)));
 		jlt.setTransferHandler(new AnimTreeTransfer(agt));
 		jlt.setDragEnabled(true);
+		jlt.addTreeExpansionListener(agt);
 		jlt.setDropMode(DropMode.ON_OR_INSERT);
-		jlt.getSelectionModel().setSelectionMode(TreeSelectionModel.CONTIGUOUS_TREE_SELECTION);
 		remgroup.setEnabled(false);
 		addListeners();
 	}

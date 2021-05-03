@@ -4,15 +4,19 @@ import common.util.AnimGroup;
 import common.util.anim.AnimCE;
 
 import javax.swing.*;
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.HashMap;
 
-public class AnimGroupTree {
+public class AnimGroupTree implements TreeExpansionListener {
     private final JTree animTree;
+    private final HashMap<String, Boolean> groupExpanded = new HashMap<>();
 
     private DefaultMutableTreeNode nodes = new DefaultMutableTreeNode("Animation");
 
@@ -64,30 +68,18 @@ public class AnimGroupTree {
 
         handleAnimGroup(nodes, true);
 
-        ArrayList<Boolean> expanded = new ArrayList<>();
+        renewNodes();
 
         Enumeration<?> enumeration = nodes.children();
 
         while(enumeration.hasMoreElements()) {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) enumeration.nextElement();
 
-            expanded.add(node.getUserObject() instanceof String && animTree.isExpanded(new TreePath(node.getPath())));
-        }
-
-        renewNodes();
-
-        enumeration = nodes.children();
-
-        int i = 0;
-
-        while(enumeration.hasMoreElements()) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode) enumeration.nextElement();
-
-            if(expanded.get(i)) {
-                animTree.expandPath(new TreePath(node.getPath()));
+            if(node.getUserObject() instanceof String) {
+                if(groupExpanded.containsKey((String) node.getUserObject())) {
+                    animTree.expandPath(new TreePath(node.getPath()));
+                }
             }
-
-            i++;
         }
     }
 
@@ -121,11 +113,13 @@ public class AnimGroupTree {
 
                         AnimCE a = (AnimCE) node.getUserObject();
 
-                        a.group = id;
+                        if(!anim.contains(a)) {
+                            a.group = id;
 
-                        anim.add(a);
+                            anim.add(a);
 
-                        AnimGroup.workspaceGroup.groups.put(id, anim);
+                            AnimGroup.workspaceGroup.groups.put(id, anim);
+                        }
                     } else {
                         throw new IllegalStateException("Parent node must be String : "+parent.getUserObject().getClass().getName());
                     }
@@ -134,11 +128,13 @@ public class AnimGroupTree {
 
                     AnimCE a = (AnimCE) node.getUserObject();
 
-                    a.group = "";
+                    if(!anim.contains(a)) {
+                        a.group = "";
 
-                    anim.add(a);
+                        anim.add(a);
 
-                    AnimGroup.workspaceGroup.groups.put("", anim);
+                        AnimGroup.workspaceGroup.groups.put("", anim);
+                    }
                 }
             }
         }
@@ -175,6 +171,8 @@ public class AnimGroupTree {
         if(groupName.equals(""))
             return;
 
+        groupExpanded.remove(groupName);
+
         ArrayList<AnimCE> anims = AnimGroup.workspaceGroup.groups.get(groupName);
 
         if(anims == null)
@@ -209,5 +207,23 @@ public class AnimGroupTree {
         }
 
         return null;
+    }
+
+    @Override
+    public void treeExpanded(TreeExpansionEvent event) {
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) event.getPath().getLastPathComponent();
+
+        if(node.getUserObject() instanceof String) {
+            groupExpanded.put((String) node.getUserObject(), true);
+        }
+    }
+
+    @Override
+    public void treeCollapsed(TreeExpansionEvent event) {
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) event.getPath().getLastPathComponent();
+
+        if(node.getUserObject() instanceof String) {
+            groupExpanded.put((String) node.getUserObject(), false);
+        }
     }
 }

@@ -50,6 +50,9 @@ public class AnimTreeTransfer extends TransferHandler {
         if(!(support.getDropLocation() instanceof JTree.DropLocation))
             return false;
 
+        if(support.getDropAction() == COPY)
+            return false;
+
         JTree.DropLocation dl = (JTree.DropLocation) support.getDropLocation();
 
         //filter if drop location is anim or not
