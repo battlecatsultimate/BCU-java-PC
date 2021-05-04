@@ -20,7 +20,6 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
@@ -79,8 +78,8 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		if(selectedNode == null)
 			return;
 
+		agt.expandCurrentAnimNode(selectedNode);
 		jlt.setSelectionPath(new TreePath(selectedNode.getPath()));
-		jlt.setExpandsSelectedPaths(true);
 
 		remgroup.setEnabled(false);
 	}
@@ -147,7 +146,12 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 			jlt.setModel(new DefaultTreeModel(root));
 		}
 
-		jlt.setSelectionPath(new TreePath(agt.getVeryFirstAnimNode()));
+		DefaultMutableTreeNode firstNode = agt.getVeryFirstAnimNode();
+
+		if(firstNode != null) {
+			agt.expandCurrentAnimNode(firstNode);
+			jlt.setSelectionPath(new TreePath(firstNode));
+		}
 
 		group.setEnabled(aep.focus == null);
 	}

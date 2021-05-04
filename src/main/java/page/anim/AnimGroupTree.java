@@ -51,6 +51,7 @@ public class AnimGroupTree implements TreeExpansionListener {
 
         if(baseGroup != null && !baseGroup.isEmpty()) {
             for(AnimCE anim : baseGroup) {
+                System.out.println(baseGroup);
                 DefaultMutableTreeNode animNode = new DefaultMutableTreeNode(anim);
 
                 nodes.add(animNode);
@@ -76,7 +77,7 @@ public class AnimGroupTree implements TreeExpansionListener {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) enumeration.nextElement();
 
             if(node.getUserObject() instanceof String) {
-                if(groupExpanded.containsKey((String) node.getUserObject())) {
+                if(groupExpanded.containsKey((String) node.getUserObject()) && groupExpanded.get((String) node.getUserObject())) {
                     animTree.expandPath(new TreePath(node.getPath()));
                 }
             }
@@ -145,12 +146,15 @@ public class AnimGroupTree implements TreeExpansionListener {
     }
 
     public DefaultMutableTreeNode findAnimNode(AnimCE anim, DefaultMutableTreeNode nodes) {
+        if(anim == null)
+            return null;
+
         DefaultMutableTreeNode node;
 
         if(nodes == null)
             nodes = this.nodes;
 
-        Enumeration<?> e = nodes.breadthFirstEnumeration();
+        Enumeration<?> e = nodes.children();
 
         while(e.hasMoreElements()) {
             node = (DefaultMutableTreeNode) e.nextElement();
@@ -224,6 +228,47 @@ public class AnimGroupTree implements TreeExpansionListener {
 
         if(node.getUserObject() instanceof String) {
             groupExpanded.put((String) node.getUserObject(), false);
+        }
+    }
+
+    public DefaultMutableTreeNode selectVeryFirstBaseNodeOr() {
+        Enumeration<?> enumeration = nodes.children();
+
+        while(enumeration.hasMoreElements()) {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) enumeration.nextElement();
+
+            if(node.getUserObject() instanceof AnimCE) {
+                return node;
+            }
+        }
+
+        //no base anim node
+
+        enumeration = nodes.children();
+
+        while(enumeration.hasMoreElements()) {
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) enumeration.nextElement();
+
+            if(node.getUserObject() instanceof String && node.getChildCount() > 0) {
+
+                return (DefaultMutableTreeNode) node.getChildAt(0);
+            }
+        }
+
+        return null;
+    }
+
+    public void expandCurrentAnimNode(DefaultMutableTreeNode node) {
+        if(!(node.getParent() instanceof DefaultMutableTreeNode))
+            return;
+
+        DefaultMutableTreeNode parent = (DefaultMutableTreeNode) node.getParent();
+
+        if(parent.isRoot())
+            return;
+
+        if(!animTree.isExpanded(new TreePath(node.getPath()))) {
+            animTree.expandPath(new TreePath(node.getPath()));
         }
     }
 }

@@ -5,9 +5,13 @@ import common.util.anim.*;
 import page.JBTN;
 import page.Page;
 import page.support.AnimLCR;
+import page.support.AnimTreeRenderer;
+import page.support.TreeNodeExpander;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,8 +29,9 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	private static final double res = 0.95;
 
 	private final JBTN back = new JBTN(0, "back");
-	private final JList<AnimCE> jlu = new JList<>();
-	private final JScrollPane jspu = new JScrollPane(jlu);
+	private final JTree jlt = new JTree();
+	private final AnimGroupTree agt = new AnimGroupTree(jlt);
+	private final JScrollPane jspu = new JScrollPane(jlt);
 	private final JList<String> jlp = new JList<>();
 	private final JScrollPane jspp = new JScrollPane(jlp);
 	private final JTree jtr = new JTree();
@@ -50,6 +55,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		aep = new EditHead(this, 2);
 		ini();
 		resized();
+		agt.renewNodes();
 	}
 
 	public MaModelEditPage(Page p, EditHead bar) {
@@ -58,6 +64,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		aep = bar;
 		ini();
 		resized();
+		agt.renewNodes();
 	}
 
 	@Override
@@ -75,10 +82,21 @@ public class MaModelEditPage extends Page implements AbEditPage {
 
 	}
 
+	private void selectAnimNode(AnimCE ac) {
+		DefaultMutableTreeNode selectedNode = agt.findAnimNode(ac, null);
+
+		if(selectedNode != null) {
+			agt.expandCurrentAnimNode(selectedNode);
+			jlt.setSelectionPath(new TreePath(selectedNode.getPath()));
+		} else {
+			jlt.clearSelection();
+		}
+	}
+
 	@Override
 	public void setSelection(AnimCE anim) {
 		change(anim, ac -> {
-			jlu.setSelectedValue(ac, true);
+			selectAnimNode(ac);
 			setA(ac);
 		});
 	}
@@ -116,18 +134,34 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	@Override
 	protected void renew() {
 		change(this, page -> {
-			AnimCE da = jlu.getSelectedValue();
-			Vector<AnimCE> vec = new Vector<>();
+			TreePath path = jlt.getSelectionPath();
+
+			if(path == null)
+				return;
+
+			if(!(path.getLastPathComponent() instanceof DefaultMutableTreeNode))
+				return;
+
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+
+			if(!(node.getUserObject() instanceof AnimCE))
+				return;
+
+			AnimCE da = (AnimCE) node.getUserObject();
+
 			if (aep.focus == null) {
-				Map<String, AnimCE> animList = new TreeMap<>(AnimCE.map());
-				vec.addAll(animList.values());
-			} else
-				vec.add(aep.focus);
-			jlu.setListData(vec);
-			if (da != null && vec.contains(da)) {
+				agt.renewNodes();
+			} else {
+				DefaultMutableTreeNode root = new DefaultMutableTreeNode("Animation");
+
+				root.add(new DefaultMutableTreeNode(aep.focus));
+
+				jlt.setModel(new DefaultTreeModel(root));
+			}
+			if (da != null) {
 				int row = mmet.getSelectedRow();
 				setA(da);
-				jlu.setSelectedValue(da, true);
+				selectAnimNode(da);
 				if (row >= 0 && row < mmet.mm.parts.length) {
 					setB(row);
 					mmet.setRowSelectionInterval(row, row);
@@ -154,6 +188,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		set(addl, x, y, 1700, 500, 200, 50);
 		set(reml, x, y, 1900, 500, 200, 50);
 		set(rema, x, y, 2100, 500, 200, 50);
+		SwingUtilities.invokeLater(() -> jlt.setUI(new TreeNodeExpander(jlt)));
 		aep.componentResized(x, y);
 		mmet.setRowHeight(size(x, y, 50));
 		sb.paint(sb.getGraphics());
@@ -192,10 +227,21 @@ public class MaModelEditPage extends Page implements AbEditPage {
 
 		back.setLnr(x -> changePanel(getFront()));
 
-		jlu.addListSelectionListener(arg0 -> {
-			if (isAdj() || jlu.getValueIsAdjusting())
+		jlt.addTreeSelectionListener(a -> {
+			if(isAdj())
 				return;
-			change(jlu.getSelectedValue(), this::setA);
+
+			TreePath path = jlt.getSelectionPath();
+
+			if(path == null || !(path.getLastPathComponent() instanceof DefaultMutableTreeNode))
+				return;
+
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+
+			if(!(node.getUserObject() instanceof AnimCE))
+				return;
+
+			change((AnimCE) node.getUserObject(), this::setA);
 		});
 
 		jlp.addListSelectionListener(arg0 -> sb.sele = jlp.getSelectedIndex());
@@ -283,7 +329,8 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		add(sort);
 		add(sb);
 		add((Canvas) mb);
-		jlu.setCellRenderer(new AnimLCR());
+		jlt.setCellRenderer(new AnimTreeRenderer());
+		SwingUtilities.invokeLater(() -> jlt.setUI(new TreeNodeExpander(jlt)));
 		jtr.setExpandsSelectedPaths(true);
 		reml.setForeground(Color.RED);
 		rema.setForeground(Color.RED);
