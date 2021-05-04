@@ -19,7 +19,9 @@ public class EnemyEditPage extends EntityEditPage {
 
 	private static final long serialVersionUID = 1L;
 
+	private final JL lbd = new JL(1, "limit");
 	private final JL ldr = new JL(1, "drop");
+	private final JTF fbd = new JTF();
 	private final JTF fdr = new JTF();
 	private final JTF fsr = new JTF();
 	private final JBTN vene = new JBTN(0, "vene");
@@ -42,7 +44,9 @@ public class EnemyEditPage extends EntityEditPage {
 
 	@Override
 	protected void getInput(JTF jtf, int[] v) {
-
+		if (jtf == fbd) {
+			ce.limit = v[0];
+		}
 		if (jtf == fdr) {
 			ce.drop = (int) (v[0] / bas.t().getDropMulti());
 		}
@@ -57,8 +61,9 @@ public class EnemyEditPage extends EntityEditPage {
 
 	@Override
 	protected void ini() {
-
+		set(lbd);
 		set(ldr);
+		set(fbd);
 		set(fdr);
 		set(fsr);
 		super.ini();
@@ -81,9 +86,13 @@ public class EnemyEditPage extends EntityEditPage {
 		if (editable) {
 			set(vene, x, y, 650, 800, 200, 50);
 			set(stat, x, y, 850, 800, 200, 50);
+			set(lbd, x, y, 650, 1000, 200, 50);
+			set(fbd, x, y, 850, 1000, 200, 50);
 		} else {
 			set(vene, x, y, 650, 750, 200, 50);
 			set(stat, x, y, 850, 750, 200, 50);
+			set(lbd, x, y, 650, 950, 200, 50);
+			set(fbd, x, y, 850, 950, 200, 50);
 		}
 		set(impt, x, y, 250, 1150, 200, 50);
 		set(vuni, x, y, 450, 1150, 200, 50);
@@ -94,6 +103,7 @@ public class EnemyEditPage extends EntityEditPage {
 	@Override
 	protected void setData(CustomEntity data) {
 		super.setData(data);
+		fbd.setText(ce.getLim() + "");
 		fsr.setText("star: " + ce.star);
 		fdr.setText("" + (int) (ce.getDrop() * bas.t().getDropMulti()));
 		int imu = 0;
