@@ -122,7 +122,7 @@ public class EnemyEditPage extends EntityEditPage {
 		else
 			fbd.setToolTipText("<html>"
 					+ "This enemy, if it's a boss, will always stay at least "
-					+ ce.getLim()
+					+ (100 - ce.getLim())
 					+ " units inside the base<br>once it passes that threshold."
 					+ "</html>");
 		eeb.setData(new int[] { ce.type, ce.abi, imu });

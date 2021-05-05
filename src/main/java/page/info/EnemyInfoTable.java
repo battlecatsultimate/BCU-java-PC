@@ -207,7 +207,7 @@ public class EnemyInfoTable extends Page {
 		else
 			special[0][5].setToolTipText("<html>"
 					+ "This enemy, if it's a boss, will always stay at least "
-					+ e.de.getLim()
+					+ (100 - e.de.getLim())
 					+ " units inside the base<br>once it passes that threshold."
 					+ "</html>");
 		reset();
