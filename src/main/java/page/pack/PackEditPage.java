@@ -320,7 +320,7 @@ public class PackEditPage extends Page {
 			changing = true;
 			CustomEnemy ce = new CustomEnemy();
 			AnimCE anim = jld.getSelectedValue();
-			ce.limit = Math.abs(anim.mamodel.parts[0][6]);
+			ce.limit = Math.abs(anim.mamodel.parts[0][6] * 6);
 			Enemy e = new Enemy(pac.getNextID(Enemy.class), anim, ce);
 			pac.enemies.add(e);
 			jle.setListData(pac.enemies.toRawArray());
