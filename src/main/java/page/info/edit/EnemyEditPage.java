@@ -113,6 +113,18 @@ public class EnemyEditPage extends EntityEditPage {
 				if (ce.getProc().getArr(id).exists())
 					imu |= 1 << id - IMUSFT;
 			}
+		if (ce.getLim() >= 100)
+			fbd.setToolTipText("<html>"
+				+ "This enemy, if it's a boss, will always stay "
+				+ (ce.getLim() - 100)
+				+ " units from the base<br>once it passes that threshold."
+				+ "</html>");
+		else
+			fbd.setToolTipText("<html>"
+					+ "This enemy, if it's a boss, will always stay "
+					+ ce.getLim()
+					+ " units inside the base<br>once it passes that threshold."
+					+ "</html>");
 		eeb.setData(new int[] { ce.type, ce.abi, imu });
 	}
 
