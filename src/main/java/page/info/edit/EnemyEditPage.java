@@ -115,13 +115,13 @@ public class EnemyEditPage extends EntityEditPage {
 			}
 		if (ce.getLim() >= 100)
 			fbd.setToolTipText("<html>"
-				+ "This enemy, if it's a boss, will always stay "
+				+ "This enemy, if it's a boss, will always stay at least "
 				+ (ce.getLim() - 100)
 				+ " units from the base<br>once it passes that threshold."
 				+ "</html>");
 		else
 			fbd.setToolTipText("<html>"
-					+ "This enemy, if it's a boss, will always stay "
+					+ "This enemy, if it's a boss, will always stay at least "
 					+ ce.getLim()
 					+ " units inside the base<br>once it passes that threshold."
 					+ "</html>");
