@@ -470,6 +470,8 @@ public interface BattleBox {
 			FakeTransform at = gra.getTransform();
 			double psiz = siz * sprite;
 			CommonStatic.getConfig().battle = true;
+			boolean[] effDrawn = new boolean[sb.lw.size()];
+
 			for(int i = 0; i < sb.le.size(); i++) {
 				Entity e = sb.le.get(i);
 
@@ -483,18 +485,21 @@ public interface BattleBox {
 				e.anim.drawEff(gra, setP(p, y), siz);
 
 				for(int j = 0; j < sb.lw.size(); j++) {
-					ContAb wc = sb.lw.get(j);
-					if (wc.layer == e.layer) {
-						int depA = wc.layer * DEP;
+					if (!effDrawn[j]) {
+						ContAb wc = sb.lw.get(j);
+						if (wc.layer == e.layer) {
+							int depA = wc.layer * DEP;
 
-						gra.setTransform(at);
-						double pA = (wc.pos * ratio + off) * siz + pos;
+							gra.setTransform(at);
+							double pA = (wc.pos * ratio + off) * siz + pos;
 
-						if (wc instanceof ContWaveAb)
-							pA -= wave * siz;
+							if (wc instanceof ContWaveAb)
+								pA -= wave * siz;
 
-						double yA = midh - (road_h - depA) * siz;
-						wc.draw(gra, setP(pA, yA), psiz);
+							double yA = midh - (road_h - depA) * siz;
+							wc.draw(gra, setP(pA, yA), psiz);
+							effDrawn[j] = true;
+						}
 					}
 				}
 			}
