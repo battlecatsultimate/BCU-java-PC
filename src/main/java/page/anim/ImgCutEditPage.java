@@ -283,7 +283,8 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			@Override
 			public void focusLost(FocusEvent arg0) {
 				changing = true;
-				String str = jtf.getText().trim();
+				String str = CommonStatic.verifyFileName(jtf.getText().trim());
+
 				if (str.length() == 0 || icet.anim == null || icet.anim.id.id.equals(str)) {
 					if (icet.anim != null)
 						jtf.setText(icet.anim.id.id);
