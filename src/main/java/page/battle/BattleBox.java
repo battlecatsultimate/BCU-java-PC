@@ -481,21 +481,22 @@ public interface BattleBox {
 				e.anim.draw(gra, setP(p, y), psiz);
 				gra.setTransform(at);
 				e.anim.drawEff(gra, setP(p, y), siz);
-			}
 
-			for(int i = 0; i < sb.lw.size(); i++) {
-				ContAb wc = sb.lw.get(i);
+				for(int j = 0; j < sb.lw.size(); j++) {
+					ContAb wc = sb.lw.get(j);
+					if (wc.layer == e.layer) {
+						int depA = wc.layer * DEP;
 
-				int dep = wc.layer * DEP;
+						gra.setTransform(at);
+						double pA = (wc.pos * ratio + off) * siz + pos;
 
-				gra.setTransform(at);
-				double p = (wc.pos * ratio + off) * siz + pos;
+						if (wc instanceof ContWaveAb)
+							pA -= wave * siz;
 
-				if(wc instanceof ContWaveAb)
-					p -= wave * siz;
-
-				double y = midh - (road_h - DEP * wc.layer) * siz;
-				wc.draw(gra, setP(p, y), psiz);
+						double yA = midh - (road_h - depA) * siz;
+						wc.draw(gra, setP(pA, yA), psiz);
+					}
+				}
 			}
 
 			for(int i = 0; i < sb.lea.size(); i++) {
@@ -624,7 +625,7 @@ public interface BattleBox {
 			FakeImage separator = aux.timer[10].getImg();
 			FakeImage zero = aux.timer[0].getImg();
 
-			if(timeLeft < 0) {
+			if(timeLeft < 0 || min < 0) {
 				for(int i = 0; i < 3; i ++) {
 					g.drawImage(zero, p.x, p.y, zero.getWidth() * ratio, zero.getHeight() * ratio);
 					p.x += zero.getWidth() * ratio;

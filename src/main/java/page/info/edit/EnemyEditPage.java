@@ -23,7 +23,9 @@ public class EnemyEditPage extends EntityEditPage {
 
 	private static final long serialVersionUID = 1L;
 
+	private final JL lbd = new JL(1, "limit");
 	private final JL ldr = new JL(1, "drop");
+	private final JTF fbd = new JTF();
 	private final JTF fdr = new JTF();
 	private final JTF fsr = new JTF();
 	private final JBTN vene = new JBTN(0, "vene");
@@ -48,7 +50,9 @@ public class EnemyEditPage extends EntityEditPage {
 
 	@Override
 	protected void getInput(JTF jtf, int[] v) {
-
+		if (jtf == fbd) {
+			ce.limit = v[0];
+		}
 		if (jtf == fdr) {
 			ce.drop = (int) (v[0] / bas.t().getDropMulti());
 		}
@@ -61,8 +65,10 @@ public class EnemyEditPage extends EntityEditPage {
 	@Override
 	protected void ini() {
 
+		set(lbd);
 		set(ldr);
 		set(fdr);
+		set(fbd);
 		set(fsr);
 		super.ini();
 		add(eeb);
@@ -109,6 +115,9 @@ public class EnemyEditPage extends EntityEditPage {
 			set(vene, x, y, 650, 750, 200, 50);
 			set(stat, x, y, 850, 750, 200, 50);
 		}
+		set(lbd, x, y, 1400, 1050, 200, 50);
+		set(fbd, x, y, 1600, 1050, 200, 50);
+
 		set(impt, x, y, 250, 1150, 200, 50);
 		set(vuni, x, y, 450, 1150, 200, 50);
 		int h = 1000;
@@ -123,6 +132,7 @@ public class EnemyEditPage extends EntityEditPage {
 	@Override
 	protected void setData(CustomEntity data) {
 		super.setData(data);
+		fbd.setText(ce.getLim() + "");
 		eneDesc = ene.descriptionGet().split("<br>",4);
 		for (int i = 0; i < edesc.length; i++)
 			edesc[i].setText("" + (eneDesc[i].length() > 0 ? eneDesc[i] : "Description Line " + (i + 1)));
@@ -135,6 +145,18 @@ public class EnemyEditPage extends EntityEditPage {
 				if (ce.getProc().getArr(id).exists())
 					imu |= 1 << id - IMUSFT;
 			}
+		if (ce.getLim() >= 100)
+			fbd.setToolTipText("<html>"
+					+ "This enemy, if it's a boss, will always stay at least "
+					+ (ce.getLim() - 100)
+					+ " units from the base<br>once it passes that threshold."
+					+ "</html>");
+		else
+			fbd.setToolTipText("<html>"
+					+ "This enemy, if it's a boss, will always stay at least "
+					+ (100 - ce.getLim())
+					+ " units inside the base<br>once it passes that threshold."
+					+ "</html>");
 		eeb.setData(new int[] { ce.abi, imu }, data.traits);
 	}
 

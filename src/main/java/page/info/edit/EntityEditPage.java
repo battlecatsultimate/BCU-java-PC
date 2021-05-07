@@ -259,6 +259,9 @@ public abstract class EntityEditPage extends Page {
 		ftp.setToolTipText(
 				"<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
 						+ "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost</html>");
+		fwp.setToolTipText(
+				"<html>" + "The amount of slots this entity will take of the limit"
+				+ " when spawned</html>");
 
 		add.setEnabled(editable);
 		rem.setEnabled(editable);

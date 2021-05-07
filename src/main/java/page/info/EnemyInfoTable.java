@@ -214,8 +214,10 @@ public class EnemyInfoTable extends Page {
 		special[0][1].setText(e.de.getAtkLoop() < 0 ? "infinite" : e.de.getAtkLoop() + "");
 		special[0][2].setText(1, "width");
 		special[0][3].setText(e.de.getWidth() + "");
-		special[0][4].setText(1, "will");
-		special[0][5].setText("" + (e.de.getWill() + 1));
+		special[0][4].setText(1, "limit");
+		special[0][5].setText(e.de.getLim() + "");
+		special[0][6].setText(1, "will");
+		special[0][7].setText("" + (e.de.getWill() + 1));
 		int[][] atkData = e.de.rawAtkData();
 		for (int i = 0; i < atks.length; i++) {
 			atks[i][0].setText(1, "atk");
@@ -228,6 +230,18 @@ public class EnemyInfoTable extends Page {
 			itv -= atkData[i][1];
 		}
 		main[3][7].setText(e.de.getPost() + "f");
+		if (e.de.getLim() >= 100)
+			special[0][5].setToolTipText("<html>"
+					+ "This enemy, if it's a boss, will always stay at least"
+					+ (e.de.getLim() - 100)
+					+ " units from the base<br>once it passes that threshold."
+					+ "</html>");
+		else
+			special[0][5].setToolTipText("<html>"
+					+ "This enemy, if it's a boss, will always stay at least"
+					+ (100 - e.de.getLim())
+					+ " units inside the base<br>once it passes that threshold."
+					+ "</html>");
 		String eDesc = e.descriptionGet().replace("<br>", "\n");
 		if (eDesc.replace("\n","").length() > 0)
 			add(desc);
