@@ -475,17 +475,7 @@ public interface BattleBox {
 			FakeTransform at = gra.getTransform();
 			double psiz = siz * sprite;
 			CommonStatic.getConfig().battle = true;
-
-			for(int i = 0; i < efList.size(); i++) {
-				ContAb wc = efList.get(i); // Draw the ones in rearmost layers first. The purpose of this loop is so
-				if (wc.layer < sb.le.get(0).layer) {  // that when an unit in the rearmost layer is killed and
-					drawEff(gra, wc, at, psiz); // an effect on it's layer is left behind it remains being drawn behind the units that are alive
-					efList.remove(i);
-					i--;
-				}
-				else
-					break;
-			}
+			
 			for(int i = 0; i < sb.le.size(); i++) {
 				Entity e = sb.le.get(i);
 				int dep = e.layer * DEP;
