@@ -595,6 +595,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		swcl.setEnabled(aep.focus == null);
 		jta.setCellRenderer(new AnimTreeRenderer());
 		SwingUtilities.invokeLater(() -> jta.setUI(new TreeNodeExpander(jta)));
+		jta.setRowHeight(0);
 		setA(null);
 		jlf.setSelectedIndex(0);
 		jlt.setSelectedIndex(1);

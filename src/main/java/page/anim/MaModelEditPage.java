@@ -331,6 +331,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		add((Canvas) mb);
 		jlt.setCellRenderer(new AnimTreeRenderer());
 		SwingUtilities.invokeLater(() -> jlt.setUI(new TreeNodeExpander(jlt)));
+		jlt.setRowHeight(0);
 		jtr.setExpandsSelectedPaths(true);
 		reml.setForeground(Color.RED);
 		rema.setForeground(Color.RED);

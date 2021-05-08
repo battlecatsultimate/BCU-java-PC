@@ -315,6 +315,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		jlt.setCellRenderer(new AnimTreeRenderer());
 		group.setEnabled(aep.focus == null);
 		SwingUtilities.invokeLater(() -> jlt.setUI(new TreeNodeExpander(jlt)));
+		jlt.setRowHeight(0);
 		jlt.setTransferHandler(new AnimTreeTransfer(agt));
 		jlt.setDragEnabled(true);
 		jlt.addTreeExpansionListener(agt);

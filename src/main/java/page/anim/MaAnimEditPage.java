@@ -509,6 +509,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		agt.renewNodes();
 		jta.setCellRenderer(new AnimTreeRenderer());
 		SwingUtilities.invokeLater(() -> jta.setUI(new TreeNodeExpander(jta)));
+		jta.setRowHeight(0);
 		inft.setBorder(BorderFactory.createEtchedBorder());
 		inff.setBorder(BorderFactory.createEtchedBorder());
 		infv.setBorder(BorderFactory.createEtchedBorder());
