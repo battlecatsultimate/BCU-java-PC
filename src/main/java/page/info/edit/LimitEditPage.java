@@ -9,8 +9,6 @@ import page.JTF;
 import page.Page;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 public class LimitEditPage extends Page {
 
@@ -98,15 +96,10 @@ public class LimitEditPage extends Page {
 			setListL();
 		});
 
-		jll.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (isAdj() || jll.getValueIsAdjusting())
-					return;
-				setLimit(jll.getSelectedValue());
-			}
-
+		jll.addListSelectionListener(e -> {
+			if (isAdj() || jll.getValueIsAdjusting())
+				return;
+			setLimit(jll.getSelectedValue());
 		});
 
 	}
@@ -134,7 +127,7 @@ public class LimitEditPage extends Page {
 
 	private void setListL() {
 		Limit l = jll.getSelectedValue();
-		change(st.getCont().lim.toArray(new Limit[0]), x -> jll.setListData(x));
+		change(st.getCont().lim.toArray(new Limit[0]), jll::setListData);
 		if (!st.getCont().lim.contains(l))
 			l = null;
 		setLimit(l);

@@ -8,6 +8,7 @@ import common.battle.StageBasis;
 import common.battle.attack.ContAb;
 import common.battle.attack.ContWaveAb;
 import common.battle.entity.EAnimCont;
+import common.battle.entity.ECastle;
 import common.battle.entity.Entity;
 import common.battle.entity.WaprCont;
 import common.pack.Identifier;
@@ -27,6 +28,7 @@ import utilpc.PP;
 
 import java.awt.*;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public interface BattleBox {
 
@@ -429,7 +431,7 @@ public interface BattleBox {
 
 			double shake = 0.0;
 
-			if(sb.ebase.health <= 0) {
+			if(sb.ebase.health <= 0 || (!drawCast && ((ECastle)sb.ebase).hit > 0)) {
 				shake = (2 + (sb.time % 2 * -4)) * siz;
 			}
 
@@ -455,7 +457,7 @@ public interface BattleBox {
 
 			shake = 0.0;
 
-			if(sb.ubase.health <= 0) {
+			if(sb.ubase.health <= 0 || ((ECastle)sb.ubase).hit > 0) {
 				shake = (2 + (sb.time % 2 * -4)) * siz;
 			}
 
@@ -464,44 +466,49 @@ public interface BattleBox {
 			Res.getBase(sb.ubase, setSym(gra, siz, posx, posy, 1), false);
 		}
 
+		private final ArrayList<ContAb> efList = new ArrayList<>();
+
 		private void drawEntity(FakeGraphics gra) {
+			efList.addAll(sb.lw);
 			int w = box.getWidth();
 			int h = box.getHeight();
 			FakeTransform at = gra.getTransform();
 			double psiz = siz * sprite;
 			CommonStatic.getConfig().battle = true;
-			boolean[] effDrawn = new boolean[sb.lw.size()];
 
+			for(int i = 0; i < efList.size(); i++) {
+				ContAb wc = efList.get(i); // Draw the ones in rearmost layers first. The purpose of this loop is so
+				if (wc.layer < sb.le.get(0).layer) {  // that when an unit in the rearmost layer is killed and
+					drawEff(gra, wc, at, psiz); // an effect on it's layer is left behind it remains being drawn behind the units that are alive
+					efList.remove(i);
+					i--;
+				}
+				else
+					break;
+			}
 			for(int i = 0; i < sb.le.size(); i++) {
 				Entity e = sb.le.get(i);
-
 				int dep = e.layer * DEP;
 
+				for(int j = 0; j < efList.size(); j++) {
+					ContAb wc = efList.get(j);
+					if (wc.layer + 1 <= e.layer) {
+						drawEff(gra, wc, at, psiz);
+						efList.remove(j);
+						j--;
+					}
+				}
 				gra.setTransform(at);
 				double p = getX(e.pos);
 				double y = midh - (road_h - dep) * siz;
 				e.anim.draw(gra, setP(p, y), psiz);
 				gra.setTransform(at);
 				e.anim.drawEff(gra, setP(p, y), siz);
-
-				for(int j = 0; j < sb.lw.size(); j++) {
-					if (!effDrawn[j]) {
-						ContAb wc = sb.lw.get(j);
-						if (wc.layer == e.layer) {
-							int depA = wc.layer * DEP;
-
-							gra.setTransform(at);
-							double pA = (wc.pos * ratio + off) * siz + pos;
-
-							if (wc instanceof ContWaveAb)
-								pA -= wave * siz;
-
-							double yA = midh - (road_h - depA) * siz;
-							wc.draw(gra, setP(pA, yA), psiz);
-							effDrawn[j] = true;
-						}
-					}
-				}
+			}
+			for(int i = 0; i < efList.size(); i++) {
+				drawEff(gra, efList.get(i), at, psiz);
+				efList.remove(i); //If the list isn't empty, draw the remaining items and empty the list
+				i--;
 			}
 
 			for(int i = 0; i < sb.lea.size(); i++) {
@@ -566,7 +573,7 @@ public interface BattleBox {
 
 					double shake = 0.0;
 
-					if(sb.ebase.health <= 0) {
+					if(sb.ebase.health <= 0 || ((ECastle)sb.ebase).hit > 0) {
 						shake = (2 + (sb.time % 2 * -4)) * siz;
 					}
 
@@ -592,6 +599,18 @@ public interface BattleBox {
 			}
 			gra.setTransform(at);
 			CommonStatic.getConfig().battle = false;
+		}
+
+		private void drawEff(FakeGraphics gra, ContAb wc, FakeTransform at, double psiz) {
+			int depA = wc.layer * DEP;
+
+			gra.setTransform(at);
+			double pA = (wc.pos * ratio + off) * siz + pos;
+
+			if (wc instanceof ContWaveAb)
+				pA -= wave * siz;
+			double yA = midh - (road_h - depA) * siz;
+			wc.draw(gra, setP(pA, yA), psiz);
 		}
 
 		private void drawTop(FakeGraphics g) {

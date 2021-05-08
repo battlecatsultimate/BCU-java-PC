@@ -123,22 +123,17 @@ public class UnitFLUPage extends LubCont {
 			lub.select(f);
 		});
 
-		seabt.setLnr((b) -> {
-			if (ufb != null) {
-				ufb.name = seatf.getText();
+		seabt.setLnr(e -> search());
 
-				ufb.callBack(null);
-			}
-		});
+		seatf.addActionListener(e -> search());
+	}
 
-		seatf.addActionListener(e -> {
-			if (ufb != null) {
-				ufb.name = seatf.getText();
-
-				ufb.callBack(null);
-			}
-		});
-
+	private void search() {
+		if (ufb != null) {
+			ult.getSelectionModel().clearSelection();
+			ufb.name = seatf.getText();
+			ufb.callBack(null);
+		}
 	}
 
 	private void ini() {
