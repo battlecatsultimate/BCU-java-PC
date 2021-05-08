@@ -480,13 +480,13 @@ public interface BattleBox {
 				Entity e = sb.le.get(i);
 				int dep = e.layer * DEP;
 
-				for(int j = 0; j < efList.size(); j++) {
-					ContAb wc = efList.get(j);
+				while(efList.size() > 0) {
+					ContAb wc = efList.get(0);
 					if (wc.layer + 1 <= e.layer) {
 						drawEff(gra, wc, at, psiz);
-						efList.remove(j);
-						j--;
-					}
+						efList.remove(0);
+					} else
+						break;
 				}
 				gra.setTransform(at);
 				double p = getX(e.pos);
@@ -495,10 +495,9 @@ public interface BattleBox {
 				gra.setTransform(at);
 				e.anim.drawEff(gra, setP(p, y), siz);
 			}
-			for(int i = 0; i < efList.size(); i++) {
-				drawEff(gra, efList.get(i), at, psiz);
-				efList.remove(i); //If the list isn't empty, draw the remaining items and empty the list
-				i--;
+			while (efList.size() > 0) {
+				drawEff(gra, efList.get(0), at, psiz);
+				efList.remove(0); //If the list isn't empty, draw the remaining items and empty the list
 			}
 
 			for(int i = 0; i < sb.lea.size(); i++) {
