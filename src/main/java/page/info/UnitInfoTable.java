@@ -3,6 +3,7 @@ package page.info;
 import common.CommonStatic;
 import common.battle.BasisSet;
 import common.battle.data.MaskUnit;
+import common.battle.data.PCoin;
 import common.util.Data;
 import common.util.unit.EForm;
 import common.util.unit.Form;
@@ -49,7 +50,7 @@ public class UnitInfoTable extends Page {
 		MaskUnit du = f.maxu();
 		List<String> ls = Interpret.getAbi(du);
 		ls.addAll(Interpret.getProc(du, false));
-		boolean pc = de.getPCoin() != null;
+		boolean pc = de.du.getPCoin() != null;
 		if (pc)
 			ls.add("");
 		proc = new JLabel[ls.size()];
@@ -81,9 +82,10 @@ public class UnitInfoTable extends Page {
 
 		int hp = (int) (Math.round(ef.du.getHp() * mul) * def);
 
-		if(f.getPCoin() != null) {
-			attack = (int) (attack * f.getPCoin().getAtkMultiplication(multi));
-			hp = (int) (hp * f.getPCoin().getHPMultiplication(multi));
+		PCoin pc = f.du.getPCoin();
+		if(pc != null) {
+			attack = (int) (attack * pc.getAtkMultiplication(multi));
+			hp = (int) (hp * pc.getHPMultiplication(multi));
 		}
 
 		ArrayList<Trait> trs = ef.du.getTraits();
@@ -112,8 +114,8 @@ public class UnitInfoTable extends Page {
 
 			int a = (int) (Math.round(atkDatum[0] * mul) * b.t().getAtkMulti());
 
-			if(f.getPCoin() != null) {
-				a = (int) (a * f.getPCoin().getAtkMultiplication(multi));
+			if(pc != null) {
+				a = (int) (a * pc.getAtkMultiplication(multi));
 			}
 
 			satk.append(a);

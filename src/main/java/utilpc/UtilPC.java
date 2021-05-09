@@ -256,7 +256,7 @@ public class UtilPC {
 	}
 
 	public static String[] lvText(Form f, int[] lvs) {
-		PCoin pc = f.getPCoin();
+		PCoin pc = f.du.getPCoin();
 		if (pc == null)
 			return new String[] { "Lv." + lvs[0], "" };
 		else {
@@ -272,7 +272,7 @@ public class UtilPC {
 
 			lab = new StringBuilder();
 
-			if(pc.type != 0) {
+			if(pc.trait.size() > 0) {
 				lab.append("[").append(Interpret.getTrait(TraitsHolder, 0)).append("]").append(" ");
 			}
 

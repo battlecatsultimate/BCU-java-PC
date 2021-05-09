@@ -66,29 +66,16 @@ public class EnemyInfoPage extends Page {
 	}
 
 	private void addListeners() {
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
+		back.addActionListener(arg0 -> changePanel(getFront()));
+
+		anim.addActionListener(arg0 -> {
+			if (getFront() instanceof EnemyViewPage)
 				changePanel(getFront());
-			}
+			else
+				changePanel(new EnemyViewPage(getThis(), e));
 		});
 
-		anim.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (getFront() instanceof EnemyViewPage)
-					changePanel(getFront());
-				else
-					changePanel(new EnemyViewPage(getThis(), e));
-			}
-		});
-
-		find.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new StageFilterPage(getThis(), e.findApp()));
-			}
-		});
+		find.addActionListener(arg0 -> changePanel(new StageFilterPage(getThis(), e.findApp())));
 
 		extr.addActionListener(arg0 -> {
 			info.setDisplaySpecial(extr.isSelected());

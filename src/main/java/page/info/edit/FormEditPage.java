@@ -37,6 +37,7 @@ public class FormEditPage extends EntityEditPage {
 	private final JBTN stat = new JBTN(0, "stat");
 	private final JBTN impt = new JBTN(0, "import");
 	private final JBTN vene = new JBTN(0, "enemy");
+	private final JBTN pcoin = new JBTN(0, "PCoin");
 	private final JTF[] fdesc = new JTF[4];
 	private final UnitEditBox ueb;
 	private final Form form;
@@ -133,6 +134,8 @@ public class FormEditPage extends EntityEditPage {
 		add(stat);
 		add(impt);
 		add(vene);
+		add(pcoin);
+		pcoin.setLnr(x -> changePanel(new PCoinEditPage(getThis(),form)));
 		for (int i = 0 ; i < fdesc.length ; i++)
 			add(fdesc[i] = new JTF());
 
@@ -184,6 +187,7 @@ public class FormEditPage extends EntityEditPage {
 		}
 		set(impt, x, y, 50, 1150, 200, 50);
 		set(vene, x, y, 250, 1150, 200, 50);
+		set(pcoin, x, y, 450, 1150, 200, 50);
 		int h = 1000;
 		for (JTF jtf : fdesc) {
 			set(jtf, x, y, 650, h, 750, 50);
