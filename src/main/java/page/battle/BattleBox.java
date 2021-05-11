@@ -476,27 +476,27 @@ public interface BattleBox {
 
 				int dep = e.layer * DEP;
 
+				for(int j = 0; j < sb.lw.size(); j++) {
+					ContAb wc = sb.lw.get(j);
+
+					if(!wc.drawn && wc.layer == e.layer) {
+						gra.setTransform(at);
+						double p = (wc.pos * ratio + off) * siz + pos;
+
+						if(wc instanceof ContWaveAb)
+							p -= wave * siz;
+
+						double y = midh - (road_h - dep) * siz;
+						wc.draw(gra, setP(p, y), psiz);
+					}
+				}
+
 				gra.setTransform(at);
 				double p = getX(e.pos);
 				double y = midh - (road_h - dep) * siz;
 				e.anim.draw(gra, setP(p, y), psiz);
 				gra.setTransform(at);
 				e.anim.drawEff(gra, setP(p, y), siz);
-			}
-
-			for(int i = 0; i < sb.lw.size(); i++) {
-				ContAb wc = sb.lw.get(i);
-
-				int dep = wc.layer * DEP;
-
-				gra.setTransform(at);
-				double p = (wc.pos * ratio + off) * siz + pos;
-
-				if(wc instanceof ContWaveAb)
-					p -= wave * siz;
-
-				double y = midh - (road_h - dep) * siz;
-				wc.draw(gra, setP(p, y), psiz);
 			}
 
 			for(int i = 0; i < sb.lea.size(); i++) {
