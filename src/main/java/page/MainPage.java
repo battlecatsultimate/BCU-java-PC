@@ -18,6 +18,7 @@ import page.debug.DebugFrame;
 import page.info.StageViewPage;
 import page.info.filter.EnemyFindPage;
 import page.info.filter.UnitFindPage;
+import page.pack.BackupTreePage;
 import page.pack.PackEditPage;
 import page.pack.ResourcePage;
 import page.view.*;
@@ -119,6 +120,7 @@ public class MainPage extends Page {
 		vuif.setLnr(() -> new UnitFindPage(this));
 		bass.setLnr(() -> new BasisPage(this));
 		curr.setLnr(() -> BattleInfoPage.current);
+		bckp.setLnr(() -> new BackupTreePage(this, true));
 		pcus.setLnr(() -> new PackEditPage(this));
 		caic.setLnr(() -> new ImgCutEditPage(this));
 		camm.setLnr(() -> new MaModelEditPage(this));
