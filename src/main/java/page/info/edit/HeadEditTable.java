@@ -41,6 +41,8 @@ class HeadEditTable extends Page {
 	private final JTF jm0 = new JTF();
 	private final JTF jmh = new JTF();
 	private final JTF jm1 = new JTF();
+	private final JTF jbgh = new JTF();
+	private final JTF jbg1 = new JTF();
 	private final JTG con = new JTG(1, "ht03");
 	private final JTF[] star = new JTF[4];
 	private final JTF jmax = new JTF();
@@ -60,6 +62,7 @@ class HeadEditTable extends Page {
 	private CastleViewPage cvp;
 	private MusicPage mp;
 
+	private int bgl = 0;
 	private int musl = 0;
 
 	protected HeadEditTable(Page p, UserPack pack) {
@@ -81,8 +84,13 @@ class HeadEditTable extends Page {
 			Identifier<Background> val = bvp.getSelected().id;
 			if (val == null)
 				return;
-			jbg.setText(val.toString());
-			sta.bg = val;
+			if (bgl == 0) {
+				jbg.setText(val.toString());
+				sta.bg = val;
+			} else {
+				jbg1.setText(val.toString());
+				sta.bg1 = val;
+			}
 		}
 		if (cvp != null) {
 			Identifier<CastleImg> val = cvp.getVal();
@@ -105,7 +113,7 @@ class HeadEditTable extends Page {
 					sta.loop0 = 0;
 					lop.setEnabled(false);
 				}
-			} else if (musl == 1) {
+			} else {
 				jm1.setText("" + val);
 				sta.mus1 = val;
 				if (sta.mus1 != null) {
@@ -143,12 +151,14 @@ class HeadEditTable extends Page {
 		set(con, x, y, w * 6, 50, w, 50);
 		set(bg, x, y, 0, 100, w, 50);
 		set(jbg, x, y, w, 100, w, 50);
+		set(jbgh, x, y, w * 6, 100, w, 50);
+		set(jbg1, x, y, w * 7, 100, w, 50);
 		set(cas, x, y, w * 2, 100, w, 50);
 		set(jcas, x, y, w * 3, 100, w, 50);
 		set(minres, x, y, w * 4, 100, w, 50);
 		set(minrest, x, y, w * 5, 100, w, 50);
-		set(cost, x, y, w * 6, 100, w, 50);
-		set(cos, x, y, w * 7, 100, w, 50);
+		set(cost, x, y, w * 6, 0, w, 50);
+		set(cos, x, y, w * 7, 0, w, 50);
 		set(mus, x, y, 0, 150, w, 50);
 		set(jm0, x, y, w, 150, w, 50);
 		set(loop, x, y, w * 2, 150, w, 50);
@@ -173,6 +183,8 @@ class HeadEditTable extends Page {
 		jhea.setText("" + st.health);
 		jlen.setText("" + st.len);
 		jbg.setText("" + st.bg);
+		jbgh.setText("<" + st.bgh + "% health:");
+		jbg1.setText("" + st.bg1);
 		jcas.setText("" + st.castle);
 		jm0.setText("" + st.mus0);
 		jmh.setText("<" + st.mush + "% health:");
@@ -224,6 +236,8 @@ class HeadEditTable extends Page {
 		jhea.setEnabled(b);
 		jlen.setEnabled(b);
 		jbg.setEnabled(b);
+		jbgh.setEnabled(b);
+		jbg1.setEnabled(b);
 		jcas.setEnabled(b);
 		jmax.setEnabled(b);
 		con.setEnabled(b);
@@ -318,6 +332,8 @@ class HeadEditTable extends Page {
 		set(jhea);
 		set(jlen);
 		set(jbg);
+		set(jbgh);
+		set(jbg1);
 		set(jcas);
 		set(jmax);
 		set(name);
@@ -392,6 +408,9 @@ class HeadEditTable extends Page {
 					sta.getCont().stars = ans;
 				}
 			}
+
+		if (jtf == jbgh)
+			sta.bgh = val;
 
 		if (jtf == jmh)
 			sta.mush = val;
@@ -469,6 +488,35 @@ class HeadEditTable extends Page {
 				return;
 
 			jbg.setText(bg.toString());
+			sta.bg = bg.getID();
+		}
+
+		if (jtf == jbg1) {
+			String[] result = CommonStatic.getPackContentID(str);
+			if (result[0].isEmpty())
+				return;
+			if (result[1].isEmpty()) {
+				if (!CommonStatic.isInteger(result[0]))
+					return;
+				Background b = UserProfile.getBCData().bgs.get(CommonStatic.safeParseInt(result[0]));
+				if (b == null)
+					return;
+				jbg1.setText(b.toString());
+				sta.bg = b.getID();
+				return;
+			}
+			String p = result[0];
+			String i = result[1];
+			if (CommonStatic.isInteger(p))
+				p = Data.hex(CommonStatic.parseIntN(p));
+			PackData pack = PackData.getPack(p);
+			if (pack == null)
+				return;
+			Background bg = pack.bgs.get(CommonStatic.safeParseInt(i));
+			if (bg == null)
+				return;
+
+			jbg1.setText(bg.toString());
 			sta.bg = bg.getID();
 		}
 
@@ -593,6 +641,10 @@ class HeadEditTable extends Page {
 			public void focusGained(FocusEvent fe) {
 				if (isAdj())
 					return;
+				if (jtf == jbg)
+					bgl = 0;
+				if (jtf == jbg1)
+					bgl = 1;
 				if (jtf == jm0)
 					musl = 0;
 				if (jtf == jm1)

@@ -13,9 +13,6 @@ import page.Page;
 import page.info.EnemyInfoPage;
 import page.info.filter.EnemyEditBox;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static utilpc.Interpret.EABIIND;
 import static utilpc.Interpret.IMUSFT;
 
@@ -82,21 +79,30 @@ public class EnemyEditPage extends EntityEditPage {
 		for (JTF jtf : edesc)
 			jtf.setEnabled(editable);
 
-		edesc[0].setLnr(d -> changeDesc(edesc[0]));
-		edesc[1].setLnr(d -> changeDesc(edesc[1]));
-		edesc[2].setLnr(d -> changeDesc(edesc[2]));
-		edesc[3].setLnr(d -> changeDesc(edesc[3]));
+		for (int i = 0; i < edesc.length; i++) {
+			int finalI = i;
+			edesc[i].setLnr(d -> changeDesc(finalI));
+		}
 
 		stat.setLnr(x -> changePanel(new EnemyInfoPage(this, (Enemy) Identifier.get(ce.getPack().getID()))));
 		subListener(impt, vuni, vene, ene);
 	}
 
-	private void changeDesc(JTF jt) {
-		List<JTF> descList = Arrays.asList(edesc);
-		int line = descList.indexOf(jt);
+	private void changeDesc(int line) {
 		String txt = edesc[line].getText().trim();
-		if (!txt.equals("Description Line " + (line + 1)) && txt.length() < 64)
+		if (!txt.equals("Description Line " + (line + 1))) {
 			eneDesc[line] = txt;
+			if (txt.length() > 63) {
+				for (int i = line; i + 1 < edesc.length; i++) {
+					if (eneDesc[i].length() > 63) {
+						eneDesc[i + 1] = eneDesc[i].substring(63) + eneDesc[line + 1];
+						eneDesc[i] = eneDesc[i].substring(0, 63);
+					}
+				}
+				if (eneDesc[edesc.length - 1].length() > 63)
+					eneDesc[edesc.length - 1] = eneDesc[edesc.length - 1].substring(0, 63);
+			}
+		}
 		ene.desc = String.join("<br>", eneDesc);
 		setData(ce);
 	}

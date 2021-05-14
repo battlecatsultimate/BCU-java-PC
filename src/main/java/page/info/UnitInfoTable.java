@@ -45,7 +45,7 @@ public class UnitInfoTable extends Page {
 
 		f = de;
 		displaySpecial = sp;
-		multi = de.unit.getPrefLvs();
+		multi = de.getPrefLvs();
 		atks = new JL[6];
 		MaskUnit du = f.maxu();
 		List<String> ls = Interpret.getAbi(du);

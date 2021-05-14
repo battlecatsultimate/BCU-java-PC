@@ -260,7 +260,7 @@ public class BasisPage extends LubCont {
 
 		lvorb.setLnr(x -> {
 			if (lub.sf != null) {
-				changePanel(new LevelEditPage(this, lu().getLv(lub.sf.unit), lub.sf));
+				changePanel(new LevelEditPage(this, lu().getLv(lub.sf), lub.sf));
 			}
 		});
 
@@ -711,7 +711,7 @@ public class BasisPage extends LubCont {
 
 		lvorb.setEnabled(f.orbs != null);
 
-		String[] strs = UtilPC.lvText(f, lu().getLv(f.unit).getLvs());
+		String[] strs = UtilPC.lvText(f, lu().getLv(f).getLvs());
 		lvjtf.setText(strs[0]);
 		pcoin.setText(strs[1]);
 	}

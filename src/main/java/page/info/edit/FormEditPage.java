@@ -14,9 +14,6 @@ import page.JTF;
 import page.Page;
 import page.info.UnitInfoPage;
 import page.info.filter.UnitEditBox;
-import java.util.List;
-
-import java.util.Arrays;
 
 import static utilpc.Interpret.EABIIND;
 import static utilpc.Interpret.IMUSFT;
@@ -37,7 +34,7 @@ public class FormEditPage extends EntityEditPage {
 	private final JBTN stat = new JBTN(0, "stat");
 	private final JBTN impt = new JBTN(0, "import");
 	private final JBTN vene = new JBTN(0, "enemy");
-	private final JBTN pcoin = new JBTN(0, "PCoin");
+	private final JBTN pcoin = new JBTN(0, "pcoin");
 	private final JTF[] fdesc = new JTF[4];
 	private final UnitEditBox ueb;
 	private final Form form;
@@ -135,17 +132,17 @@ public class FormEditPage extends EntityEditPage {
 		add(impt);
 		add(vene);
 		add(pcoin);
-		pcoin.setLnr(x -> changePanel(new PCoinEditPage(getThis(),form)));
+		pcoin.setLnr(x -> changePanel(new PCoinEditPage(getThis(),form, editable)));
 		for (int i = 0 ; i < fdesc.length ; i++)
 			add(fdesc[i] = new JTF());
 
 		for (JTF jtf : fdesc)
 			jtf.setEnabled(editable);
 
-		fdesc[0].setLnr(d -> changeDesc(fdesc[0]));
-		fdesc[1].setLnr(d -> changeDesc(fdesc[1]));
-		fdesc[2].setLnr(d -> changeDesc(fdesc[2]));
-		fdesc[3].setLnr(d -> changeDesc(fdesc[3]));
+		for (int i = 0; i < fdesc.length; i++) {
+			int finalI = i;
+			fdesc[i].setLnr(d -> changeDesc(finalI));
+		}
 
 		subListener(vene, impt, vuni, form.unit);
 
@@ -156,12 +153,21 @@ public class FormEditPage extends EntityEditPage {
 		});
 	}
 
-	private void changeDesc(JTF jt) {
-		List<JTF> descList = Arrays.asList(fdesc);
-		int line = descList.indexOf(jt);
+	private void changeDesc(int line) {
 		String txt = fdesc[line].getText().trim();
-		if (!txt.equals("Description Line " + (line + 1)) && txt.length() < 64)
+		if (!txt.equals("Description Line " + (line + 1))) {
 			uniDesc[line] = txt;
+			if (txt.length() > 63) {
+				for (int i = line; i + 1 < fdesc.length; i++) {
+					if (uniDesc[i].length() > 63) {
+						uniDesc[i + 1] = uniDesc[i].substring(63) + uniDesc[line + 1];
+						uniDesc[i] = uniDesc[i].substring(0, 63);
+					}
+				}
+				if (uniDesc[fdesc.length - 1].length() > 63)
+					uniDesc[fdesc.length - 1] = uniDesc[fdesc.length - 1].substring(0, 63);
+			}
+		}
 		form.explanation = String.join("<br>", uniDesc);
 		setData(cu);
 	}
@@ -215,6 +221,8 @@ public class FormEditPage extends EntityEditPage {
 					imu |= 1 << id - IMUSFT;
 			}
 		ueb.setData(new int[] { cu.abi, imu }, data.traits);
+		if (cu.getPCoin() != null)
+			cu.pcoin.update();
 	}
 
 	private String interpretLayer(int back, int front) {

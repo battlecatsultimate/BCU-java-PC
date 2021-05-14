@@ -111,7 +111,7 @@ public class UnitFLUPage extends LubCont {
 		});
 
 		ListSelectionModel lsm = ult.getSelectionModel();
-		lsm.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		ult.setRowSelectionAllowed(false);
 
 		lsm.addListSelectionListener(e -> {
 			if (lsm.getValueIsAdjusting())
@@ -121,6 +121,7 @@ public class UnitFLUPage extends LubCont {
 				return;
 			Form f = ult.list.get(ind);
 			lub.select(f);
+			lsm.clearSelection();
 		});
 
 		seabt.setLnr(e -> search());
@@ -130,7 +131,6 @@ public class UnitFLUPage extends LubCont {
 
 	private void search() {
 		if (ufb != null) {
-			ult.getSelectionModel().clearSelection();
 			ufb.name = seatf.getText();
 			ufb.callBack(null);
 		}

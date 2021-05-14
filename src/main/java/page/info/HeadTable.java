@@ -126,8 +126,10 @@ public class HeadTable extends AbJTable {
 		bas[7] = st.mus1;
 		img[0] = infs[4];
 		img[1] = st.bg;
-		img[2] = infs[5];
-		img[3] = st.castle;
+		img[2] = "<" + st.bgh + "%";
+		img[3] = st.bg1;
+		img[4] = infs[5];
+		img[5] = st.castle;
 		Limit lim = st.getLim(0);
 		if (lim != null) {
 			if (lim.rare != 0) {

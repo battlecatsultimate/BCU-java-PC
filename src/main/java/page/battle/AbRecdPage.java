@@ -140,26 +140,20 @@ public abstract class AbRecdPage extends Page {
 
 		rply.setLnr(x -> changePanel(new BattleInfoPage(getThis(), getSelection(), 0)));
 
-		recd.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Replay r = getSelection();
-				int conf = 1;
-				if (larg.isSelected())
-					conf |= 2;
-				changePanel(new BattleInfoPage(getThis(), r, conf));
-			}
+		recd.addActionListener(arg0 -> {
+			Replay r = getSelection();
+			int conf = 1;
+			if (larg.isSelected())
+				conf |= 2;
+			changePanel(new BattleInfoPage(getThis(), r, conf));
 		});
 
-		imgs.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Replay r = getSelection();
-				int conf = 5;
-				if (larg.isSelected())
-					conf |= 2;
-				changePanel(new BattleInfoPage(getThis(), r, conf));
-			}
+		imgs.addActionListener(arg0 -> {
+			Replay r = getSelection();
+			int conf = 5;
+			if (larg.isSelected())
+				conf |= 2;
+			changePanel(new BattleInfoPage(getThis(), r, conf));
 		});
 
 		seed.setLnr(x -> {

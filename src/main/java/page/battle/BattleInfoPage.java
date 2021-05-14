@@ -58,7 +58,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	private final BattleBox bb;
 	private final BattleField basis;
 
-	private boolean pause = false;
+	private boolean pause = false, changedBG = false;
 	private Replay recd;
 	private boolean backClicked = false;
 
@@ -167,7 +167,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	protected void renew() {
 		backClicked = false;
 
-		if (basis.sb.getEBHP() * 100 < basis.sb.st.mush)
+		if (basis.sb.getEBHP() < basis.sb.st.mush)
 			if(basis.sb.st.mush == 0 || basis.sb.st.mush == 100)
 				BCMusic.play(basis.sb.st.mus1, basis.sb.st.loop1);
 			else {
@@ -260,7 +260,16 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		ucount.setText(sb.entityCount(-1) + "/" + sb.max_num);
 		respawn.setText("respawn timer: " + sb.respawnTime + "f");
 		resized();
-		if (sb.getEBHP() * 100 <= sb.st.mush && BCMusic.music != sb.st.mus1)
+		if (basis.sb.getEBHP() < basis.sb.st.bgh && basis.sb.st.bg1 != null) {
+			if (!changedBG) {
+				changedBG = true;
+				basis.sb.changeBG(basis.sb.st.bg1);
+			}
+		} else if (changedBG) {
+			changedBG = false;
+			basis.sb.changeBG(basis.sb.st.bg);
+		}
+		if (sb.getEBHP() <= sb.st.mush && BCMusic.music != sb.st.mus1)
 			if(basis.sb.st.mush == 0 || basis.sb.st.mush == 100)
 				BCMusic.play(basis.sb.st.mus1, basis.sb.st.loop1);
 			else {
