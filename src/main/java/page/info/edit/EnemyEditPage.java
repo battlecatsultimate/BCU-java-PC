@@ -95,7 +95,7 @@ public class EnemyEditPage extends EntityEditPage {
 			if (txt.length() > 63) {
 				for (int i = line; i + 1 < edesc.length; i++) {
 					if (eneDesc[i].length() > 63) {
-						eneDesc[i + 1] = eneDesc[i].substring(63) + eneDesc[line + 1];
+						eneDesc[i + 1] = eneDesc[i].substring(63) + eneDesc[i + 1];
 						eneDesc[i] = eneDesc[i].substring(0, 63);
 					}
 				}

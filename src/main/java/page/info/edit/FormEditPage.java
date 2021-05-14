@@ -160,7 +160,7 @@ public class FormEditPage extends EntityEditPage {
 			if (txt.length() > 63) {
 				for (int i = line; i + 1 < fdesc.length; i++) {
 					if (uniDesc[i].length() > 63) {
-						uniDesc[i + 1] = uniDesc[i].substring(63) + uniDesc[line + 1];
+						uniDesc[i + 1] = uniDesc[i].substring(63) + uniDesc[i + 1];
 						uniDesc[i] = uniDesc[i].substring(0, 63);
 					}
 				}
