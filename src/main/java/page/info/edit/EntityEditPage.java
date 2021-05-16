@@ -254,8 +254,14 @@ public abstract class EntityEditPage extends Page {
 		atkn.setToolTipText("<html>use name \"revenge\" for attack during HB animation<br>"
 				+ "use name \"resurrection\" for attack during death animation</html>");
 		ftp.setToolTipText(
-				"<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
-						+ "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost</html>");
+				"<html>" + "+1 for normal attack<br>"
+						+ "+2 to attack kb<br>"
+						+ "+4 to attack underground<br>"
+						+ "+8 to attack corpse<br>"
+						+ "+16 to attack soul<br>"
+						+ "+32 to attack ghost<br>"
+						+ "+64 to attack entities that can revive others<br>"
+						+ "+128 to attack enter animations</html>");
 
 		add.setEnabled(editable);
 		rem.setEnabled(editable);
