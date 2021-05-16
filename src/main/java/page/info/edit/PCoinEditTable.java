@@ -5,11 +5,14 @@ import common.battle.data.CustomUnit;
 import common.pack.UserProfile;
 import common.util.Data;
 import common.util.lang.ProcLang;
+import common.util.unit.Trait;
 import org.jcodec.common.tools.MathUtil;
 import page.*;
 import utilpc.Interpret;
+import utilpc.UtilPC;
 
 import javax.swing.*;
+import java.awt.image.BufferedImage;
 
 public class PCoinEditTable extends Page {
 
@@ -31,10 +34,11 @@ public class PCoinEditTable extends Page {
     }
 
     //ensures not every single talent is here, to avoid touching unused values, each number corresponds to a PC_CORRES array
-    private final int[] allPC = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 50, 51, 52, 54, 56};
+    private final int[] allPC = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 50, 51, 52, 54, 56};
 
     private final CustomUnit unit;
     private final JComboBox<talentData> ctypes = new JComboBox<>();
+    private final JL pCoin = new JL();
     private final JL jPCLV = new JL(0,"Max Lv");
     private final JTF PCoinLV = new JTF();
     private final JBTN delet = new JBTN(0,"rem");
@@ -58,12 +62,13 @@ public class PCoinEditTable extends Page {
 
     @Override
     protected void resized(int x, int y) {
-        set(delet, x, y, 0, 0, 400, 50);
-        set(jPCLV, x, y, 0, 50, 200, 50);
-        set(PCoinLV, x, y, 200, 50, 200, 50);
+        set(pCoin, x, y, 0, 0, 400, 50);
+        set(delet, x, y, 0, 50, 400, 50);
+        set(jPCLV, x, y, 0, 100, 200, 50);
+        set(PCoinLV, x, y, 200, 100, 200, 50);
         for (int i = 0; i < chance.length; i++) {
-            set(chance[i], x, y, 0, 100 + i * 50, 200, 50);
-            set(tchance[i], x, y, 200, 100 + i * 50, 200, 50);
+            set(chance[i], x, y, 0, 150 + i * 50, 200, 50);
+            set(tchance[i], x, y, 200, 150 + i * 50, 200, 50);
         }
         set(ctypes, x, y, 0, cTypesY, 400, 50);
     }
@@ -73,7 +78,7 @@ public class PCoinEditTable extends Page {
             String txt = PCoinLV.getText().trim();
             int v = CommonStatic.parseIntN(txt);
             unit.pcoin.info.get(talent)[1] = MathUtil.clip(v, 1, 10);
-            enableSecondaries(Data.PC_CORRES[unit.pcoin.info.get(talent)[0]]);
+            setData();
         });
 
         delet.addActionListener(arg0 -> {
@@ -90,6 +95,19 @@ public class PCoinEditTable extends Page {
                 }
             unit.pcoin.info.get(talent)[0] = np.getValue();
             unit.pcoin.info.get(talent)[10] = np.getValue();
+
+            int[] vals = Data.PC_CORRES[np.getValue()];
+            if (!(vals[1] == Data.P_SATK || vals[1] == Data.P_VOLC)) {
+                unit.pcoin.info.get(talent)[4] = Math.max(1, unit.pcoin.info.get(talent)[4]);
+                unit.pcoin.info.get(talent)[5] = Math.max(1, unit.pcoin.info.get(talent)[5]);
+            }
+            if (vals[1] == Data.P_WAVE) {
+                unit.pcoin.info.get(talent)[6] = Math.max(1, unit.pcoin.info.get(talent)[6]);
+                unit.pcoin.info.get(talent)[7] = Math.max(1, unit.pcoin.info.get(talent)[7]);
+            } else if (vals[1] == Data.P_VOLC) {
+                unit.pcoin.info.get(talent)[8] = Math.max(1, unit.pcoin.info.get(talent)[8] / Data.VOLC_ITV) * Data.VOLC_ITV;
+                unit.pcoin.info.get(talent)[9] = Math.max(1, unit.pcoin.info.get(talent)[9] / Data.VOLC_ITV) * Data.VOLC_ITV;
+            }
             pcedit.setCoinTypes();
             setData();
         });
@@ -103,22 +121,33 @@ public class PCoinEditTable extends Page {
                 int[] vals = Data.PC_CORRES[unit.pcoin.info.get(talent)[0]];
                 if (vals[0] == Data.PC_BASE && vals[1] == Data.PC2_COST)
                     v[0] = (int)(v[0] / 1.5);
+                if (vals[0] == Data.PC_BASE && vals[1] == Data.PC2_HB)
+                    v[0] = Math.min(v[0], unit.hp - unit.hb);
 
                 int ind = finalI % 2 == 0 ? 1 : -1;
                 int w = v.length > 1 ? v[1] : unit.pcoin.info.get(talent)[finalI + ind];
 
-                if (finalI < 4 || finalI < 6 && !(vals[1] == Data.P_SATK || vals[1] == Data.P_VOLC) || finalI < 8 && vals[1] == Data.P_WAVE || finalI > 8 && vals[1] == Data.P_VOLC) {
+                if (finalI < 4 || finalI < 6 && !(vals[1] == Data.P_SATK || vals[1] == Data.P_VOLC) || finalI < 8 && vals[1] == Data.P_WAVE) {
                     v[0] = Math.max(1, v[0]);
                     if (v.length > 1)
                         v[1] = Math.max(1, v[1]);
+                } else if (finalI > 8 && vals[1] == Data.P_VOLC) {
+                    v[0] = Math.max(1, v[0] / Data.VOLC_ITV) * Data.VOLC_ITV;
+                    if (v.length > 1)
+                        v[1] = Math.max(1, v[1] / Data.VOLC_ITV) * Data.VOLC_ITV;
                 }
 
-                if (ind == 1) {
-                    unit.pcoin.info.get(talent)[finalI] = Math.min(v[0], w);
-                    unit.pcoin.info.get(talent)[finalI + ind] = Math.max(v[0], w);
-                } else {
-                    unit.pcoin.info.get(talent)[finalI] = Math.max(v[0], w);
-                    unit.pcoin.info.get(talent)[finalI + ind] = Math.min(v[0], w);
+                if (tchance[finalI + ind].isEnabled())
+                    if (ind == 1) {
+                        unit.pcoin.info.get(talent)[finalI] = Math.min(v[0], w);
+                        unit.pcoin.info.get(talent)[finalI + ind] = Math.max(v[0], w);
+                    } else {
+                        unit.pcoin.info.get(talent)[finalI] = Math.max(v[0], w);
+                        unit.pcoin.info.get(talent)[finalI + ind] = Math.min(v[0], w);
+                    }
+                else {
+                    unit.pcoin.info.get(talent)[finalI] = v[0];
+                    unit.pcoin.info.get(talent)[finalI + ind] = v[0];
                 }
 
                 setData();
@@ -129,6 +158,7 @@ public class PCoinEditTable extends Page {
     private void ini() {
         add(delet);
         add(jPCLV);
+        add(pCoin);
         add(PCoinLV);
         add(ctypes);
         setCTypes(unit.pcoin != null && unit.pcoin.info.size() > talent);
@@ -211,13 +241,40 @@ public class PCoinEditTable extends Page {
 
     //Enables or disables text fields, depending on the needed values for the proc
     private void enableSecondaries(int[] pdata) {
-        cTypesY = 500;
-        if (pdata[0] == -1 || pdata[0] == Data.PC_AB || pdata[0] == Data.PC_TRAIT || !editable || pdata[0] == Data.PC_IMU) {
+        cTypesY = 550;
+        int maxlv = pdata[0] != -1 ? unit.pcoin.info.get(talent)[1] : 0;
+        if (pdata[0] == -1 || pdata[0] == Data.PC_AB || pdata[0] == Data.PC_TRAIT || pdata[0] == Data.PC_IMU) {
             for (JTF jtf : tchance)
                 jtf.setVisible(false);
             for (JL jl : chance)
                 jl.setVisible(false);
             cTypesY -= 400;
+            if (pdata[0] != -1)
+                if (pdata[0] == Data.PC_IMU) {
+                    pCoin.setText(ProcLang.get().get(pdata[1]).full_name);
+                    BufferedImage v = UtilPC.getIcon(1, pdata[1]);
+                    if (v != null)
+                        pCoin.setIcon(new ImageIcon(v));
+                } else if (pdata[0] == Data.PC_AB) {
+                    for (int i = 0; i < Data.ABI_TOT; i++) {
+                        if (((pdata[1] >> i) & 1) == 1) {
+                            pCoin.setText(Interpret.SABIS[i]);
+                            BufferedImage v = UtilPC.getIcon(0, i);
+                            if (v != null)
+                                pCoin.setIcon(new ImageIcon(v));
+                            break;
+                        }
+                    }
+                } else {
+                    Trait tr = UserProfile.getBCData().traits.get(pdata[1]);
+                    pCoin.setText(Interpret.TRAIT[tr.id.id]);
+                    if (tr.icon != null)
+                        pCoin.setIcon(tr.obtainIcon());
+                }
+            else {
+                pCoin.setText("(None)");
+                pCoin.setIcon(null);
+            }
         }
         if (pdata[0] == Data.PC_BASE) {
             for (int i = 0; i < tchance.length; i++) {
@@ -225,9 +282,13 @@ public class PCoinEditTable extends Page {
                 tchance[i].setVisible(i < 2);
             }
             cTypesY -= 300;
-            String text = (pdata[1] < Data.PC2_COST ? "+" : "") + ctypes.getSelectedItem().toString() + (pdata[1] < Data.PC2_SPEED ? "%" : "");
+            String text = ctypes.getSelectedItem().toString() + (pdata[1] <= Data.PC2_SPEED || pdata[1] == Data.PC2_HB ? "+ " : "") + (pdata[1] <= Data.PC2_ATK ? "%" : "");
             chance[0].setText(text + " (Lv1)");
-            chance[1].setText(text + " (Lv" + unit.pcoin.info.get(talent)[1] + ")");
+            chance[1].setText(text + " (Lv" + maxlv + ")");
+            pCoin.setText(text);
+            BufferedImage v = UtilPC.getIcon(4, pdata[1]);
+            if (v != null)
+                pCoin.setIcon(new ImageIcon(v));
         }
         if (pdata[0] == Data.PC_P) {
             int procChance = unit.getProc().getArr(pdata[1]).get(0);
@@ -235,9 +296,13 @@ public class PCoinEditTable extends Page {
             unit.pcoin.info.get(talent)[3] = MathUtil.clip(unit.pcoin.info.get(talent)[3], 1, 100 - procChance);
             //This ensures raw proc chance + talent proc chance doesn't goes above 100%
 
-            int maxlv = unit.pcoin.info.get(talent)[1];
-            ProcLang.ItemLang lang = ProcLang.get().get(Data.Proc.getName(pdata[1]));
+            ProcLang.ItemLang lang = ProcLang.get().get(pdata[1]);
             String[] langText = lang.list();
+            pCoin.setText(lang.full_name);
+            BufferedImage v = UtilPC.getIcon(1, pdata[1]);
+            if (v != null)
+                pCoin.setIcon(new ImageIcon(v));
+
             chance[0].setVisible(true);
             chance[1].setVisible(true);
             tchance[0].setVisible(true);
@@ -278,11 +343,19 @@ public class PCoinEditTable extends Page {
                 chance[3].setText(lang.get(langText[1]).getNameValue() + "(Lv" + maxlv + ")");
             }
         }
-        if (editable && pdata[0] != -1)
+        for (int i = 0; i < tchance.length; i++) {
+            if (!tchance[i].isVisible())
+                break;
+            tchance[i].setEnabled(editable && (i % 2 == 0 || maxlv != 1));
+        }
+        if (pdata[0] != -1 && editable) {
             for (int i = 0; i < tchance.length; i++)
                 if (!tchance[i].isVisible())
                     unit.pcoin.info.get(talent)[2 + i] = 0;
+                else if (!tchance[i].isEnabled())
+                    unit.pcoin.info.get(talent)[2 + i] = unit.pcoin.info.get(talent)[1 + i];
                 else
                     unit.pcoin.info.get(talent)[2 + i] = Math.max(0, unit.pcoin.info.get(talent)[2 + i]);
+        }
     }
 }

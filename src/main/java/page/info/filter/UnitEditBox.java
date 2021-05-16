@@ -10,7 +10,6 @@ import javax.swing.*;
 import java.util.*;
 
 import static utilpc.Interpret.SABIS;
-import static utilpc.Interpret.TRAIT;
 
 public class UnitEditBox extends Page {
 

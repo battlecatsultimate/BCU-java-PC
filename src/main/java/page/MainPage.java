@@ -18,7 +18,6 @@ import page.debug.DebugFrame;
 import page.info.StageViewPage;
 import page.info.filter.EnemyFindPage;
 import page.info.filter.UnitFindPage;
-import page.pack.BackupTreePage;
 import page.pack.PackEditPage;
 import page.pack.ResourcePage;
 import page.view.*;
@@ -52,7 +51,6 @@ public class MainPage extends Page {
 	private final JBTN camm = new JBTN(0, "camm");
 	private final JBTN cama = new JBTN(0, "cama");
 	private final JBTN save = new JBTN(0, "save");
-	private final JBTN bckp = new JBTN(0, "backup");
 	private final JBTN allf = new JBTN(0, "all file");
 	private final JBTN auth = new JBTN(0, "author");
 	private final JBTN dbug = new JBTN(0, "debug");
@@ -86,12 +84,11 @@ public class MainPage extends Page {
 		set(vbgr, x, y, 600, 600, 200, 50);
 		set(vmsc, x, y, 600, 700, 200, 50);
 		set(allf, x, y, 600, 800, 200, 50);
-		set(dbug, x, y, 600, 900, 200, 50);
 
 		set(conf, x, y, 900, 200, 200, 50);
 		set(save, x, y, 900, 300, 200, 50);
 		set(bass, x, y, 900, 400, 200, 50);
-		set(bckp, x, y, 900, 500, 200, 50);
+		set(dbug, x, y, 900, 500, 200, 50);
 		set(curr, x, y, 900, 600, 200, 50);
 		set(auth, x, y, 900, 700, 200, 50);
 
@@ -120,7 +117,6 @@ public class MainPage extends Page {
 		vuif.setLnr(() -> new UnitFindPage(this));
 		bass.setLnr(() -> new BasisPage(this));
 		curr.setLnr(() -> BattleInfoPage.current);
-		bckp.setLnr(() -> new BackupTreePage(this, true));
 		pcus.setLnr(() -> new PackEditPage(this));
 		caic.setLnr(() -> new ImgCutEditPage(this));
 		camm.setLnr(() -> new MaModelEditPage(this));
@@ -182,7 +178,6 @@ public class MainPage extends Page {
 		add(sgifau);
 		add(welcome);
 		add(rply);
-		add(bckp);
 		add(allf);
 		add(auth);
 		add(dbug);
