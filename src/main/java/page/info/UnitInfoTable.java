@@ -15,8 +15,10 @@ import utilpc.Interpret;
 import utilpc.UtilPC;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -48,15 +50,20 @@ public class UnitInfoTable extends Page {
 		multi = de.getPrefLvs();
 		atks = new JL[6];
 		MaskUnit du = f.maxu();
-		List<String> ls = Interpret.getAbi(du);
+		List<Interpret.ProcDisplay> ls = Interpret.getAbi(du);
 		ls.addAll(Interpret.getProc(du, false));
 		boolean pc = de.du.getPCoin() != null;
 		if (pc)
-			ls.add("");
+			ls.add(new Interpret.ProcDisplay("",null));
 		proc = new JLabel[ls.size()];
 		for (int i = 0; i < ls.size(); i++) {
-			add(proc[i] = new JLabel(ls.get(i)));
+			Interpret.ProcDisplay display = ls.get(i);
+			add(proc[i] = new JLabel(display.toString()));
 			proc[i].setBorder(BorderFactory.createEtchedBorder());
+			if (display.getIcon() != null)
+				proc[i].setIcon(display.getIcon());
+			else
+				proc[i].setIcon(null);
 		}
 		if (pc)
 			pcoin = proc[ls.size() - 1];
@@ -122,14 +129,20 @@ public class UnitInfoTable extends Page {
 		}
 		atks[1].setText(satk.toString());
 
-		List<String> ls = Interpret.getAbi(ef.du);
+		List<Interpret.ProcDisplay> ls = Interpret.getAbi(ef.du);
 		ls.addAll(Interpret.getProc(ef.du, false));
 		for (JLabel l : proc)
-			if (l != pcoin)
+			if (l != pcoin) {
 				l.setText("");
-		for (int i = 0; i < ls.size(); i++)
-			proc[i].setText(ls.get(i));
-
+			}
+		for (int i = 0; i < ls.size(); i++) {
+			Interpret.ProcDisplay display = ls.get(i);
+			proc[i].setText(display.toString());
+			if (display.getIcon() != null)
+				proc[i].setIcon(display.getIcon());
+			else
+				proc[i].setIcon(null);
+		}
 	}
 
 	@Override
@@ -252,7 +265,7 @@ public class UnitInfoTable extends Page {
 		special[0][7].setText("" + (f.du.getWill() + 1));
 		atks[0].setText(1, "atk");
 		atks[2].setText(1, "preaa");
-		atks[4].setText(1, "use");
+		atks[4].setText(1, "dire");
 		int[][] atkData = f.du.rawAtkData();
 		StringBuilder pre = new StringBuilder();
 		StringBuilder use = new StringBuilder();
@@ -262,7 +275,7 @@ public class UnitInfoTable extends Page {
 			if (use.length() > 0)
 				use.append(" / ");
 			pre.append(atkDatum[1]).append("f");
-			use.append(atkDatum[2] == 1);
+			use.append(atkDatum[3]);
 
 		}
 		atks[3].setText(pre.toString());
@@ -274,6 +287,32 @@ public class UnitInfoTable extends Page {
 		descr.setEditable(false);
 		reset();
 		addListeners();
+		for (JLabel jl : proc) {
+			String str = jl.getText();
+			StringBuilder sb = new StringBuilder();
+			FontMetrics fm = jl.getFontMetrics(jl.getFont());
+			while (fm.stringWidth(str) >= 400) {
+				int i = 1;
+				String wrapped = str.substring(0, i);
+				while (fm.stringWidth(wrapped) < 400)
+					wrapped = str.substring(0, i++);
+
+				int maximum; //JP proc texts don't count with space, this is here to prevent it from staying in while loop forever
+				if (CommonStatic.getConfig().lang == 3)
+					maximum = Math.max(wrapped.lastIndexOf("。"),wrapped.lastIndexOf("、"));
+				else
+					maximum = Math.max(Math.max(wrapped.lastIndexOf(" "), wrapped.lastIndexOf(".")), wrapped.lastIndexOf(","));
+
+				if (maximum == 0)
+					maximum = i;
+
+				wrapped = wrapped.substring(0, maximum);
+				sb.append(wrapped).append("<br>");
+				str = str.substring(wrapped.length());
+			}
+			sb.append(str);
+			jl.setToolTipText("<html>" + sb.toString() + "</html>");
+		}
 	}
 
 	public void setDisplaySpecial(boolean s) {

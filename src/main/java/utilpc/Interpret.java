@@ -17,10 +17,9 @@ import common.util.unit.Enemy;
 import page.MainLocale;
 import page.Page;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.util.*;
 
 public class Interpret extends Data {
 
@@ -133,7 +132,21 @@ public class Interpret extends Data {
 		return combo(c.type, CommonStatic.getBCAssets().values[c.type][c.lv], b);
 	}
 
-	public static List<String> getAbi(MaskEntity me) {
+	public static class ProcDisplay {
+		String text;
+		ImageIcon icon = null;
+		public ProcDisplay(String desc, BufferedImage img) {
+			text = desc;
+			if (img != null)
+				icon = new ImageIcon(img);
+		}
+		@Override
+		public String toString() { return text; }
+
+		public ImageIcon getIcon() { return icon; }
+	}
+
+	public static List<ProcDisplay> getAbi(MaskEntity me) {
 		int tb = me.touchBase();
 		final MaskAtk ma;
 
@@ -154,24 +167,28 @@ public class Interpret extends Data {
 			ldr = ma.getLongPoint() - ma.getShortPoint();
 		}
 
-		List<String> l = new ArrayList<>();
+		List<ProcDisplay> l = new ArrayList<>();
 		if (lds != 0 || ldr != 0) {
 			int p0 = Math.min(lds, lds + ldr);
 			int p1 = Math.max(lds, lds + ldr);
 			int r = Math.abs(ldr);
-			l.add(Page.get(MainLocale.UTIL, "ld0") + ": " + tb + ", " + Page.get(MainLocale.UTIL, "ld1") + ": " + p0 + "~" + p1 + ", "
-					+ Page.get(MainLocale.UTIL, "ld2") + ": " + r);
+			BufferedImage bi;
+			if (ldr <= 0 || lds <= 0) {
+				bi = UtilPC.getIcon(2, ATK_OMNI);
+			} else {
+				bi = UtilPC.getIcon(2, ATK_LD);
+			}
+			l.add(new ProcDisplay(Page.get(MainLocale.UTIL, "ld0") + ": " + tb + ", " + Page.get(MainLocale.UTIL, "ld1") + ": " + p0 + "~" + p1 + ", "
+					+ Page.get(MainLocale.UTIL, "ld2") + ": " + r, bi));
 		}
-		StringBuilder imu = new StringBuilder(Page.get(MainLocale.UTIL, "imu"));
+		String imu = Page.get(MainLocale.UTIL, "imu");
 		for (int i = 0; i < ABIS.length; i++)
 			if (((me.getAbi() >> i) & 1) > 0)
 				if (ABIS[i].startsWith("IMU"))
-					imu.append(ABIS[i].substring(3)).append(", ");
-				else
-					l.add(ABIS[i]);
-
-		if (imu.length() > 10)
-			l.add(imu.toString());
+					l.add(new ProcDisplay(imu + ABIS[i].substring(3), UtilPC.getIcon(0, i)));
+				else {
+					l.add(new ProcDisplay(ABIS[i], UtilPC.getIcon(0, i)));
+				}
 		return l;
 	}
 
@@ -195,7 +212,7 @@ public class Interpret extends Data {
 		return ans;
 	}
 
-	public static List<String> getProc(MaskEntity du, boolean isEnemy) {
+	public static List<ProcDisplay> getProc(MaskEntity du, boolean isEnemy) {
 		Formatter.Context ctx = new Formatter.Context(isEnemy, false);
 		boolean common;
 
@@ -205,7 +222,8 @@ public class Interpret extends Data {
 			common = true;
 		}
 
-		ArrayList<String> l = new ArrayList<>();
+		ArrayList<ProcDisplay> l = new ArrayList<>();
+		List<Boolean> share = new ArrayList<>();
 
 		if(common) {
 			MaskAtk ma = du.getRepAtk();
@@ -216,13 +234,16 @@ public class Interpret extends Data {
 				if(!item.exists())
 					continue;
 
+				share.add(ma.getProc().sharable(i));
 				String format = ProcLang.get().get(i).format;
 				String formatted = Formatter.format(format, item, ctx);
-				l.add(formatted);
+
+				l.add(new ProcDisplay(formatted, UtilPC.getIcon(1, i)));
 			}
 
 		} else {
-			Map<String, List<Integer>> atkMap = new HashMap<>();
+			LinkedHashMap<String, List<Integer>> atkMap = new LinkedHashMap<>();
+			List<BufferedImage> procIcons = new ArrayList<>();
 
 			MaskAtk ma = du.getRepAtk();
 
@@ -234,7 +255,7 @@ public class Interpret extends Data {
 
 				String format = ProcLang.get().get(i).format;
 				String formatted = Formatter.format(format, item, ctx);
-				l.add(formatted);
+				l.add(new ProcDisplay(formatted, UtilPC.getIcon(1, i)));
 			}
 
 			for (int i = 0; i < du.getAtkCount(); i++) {
@@ -259,22 +280,62 @@ public class Interpret extends Data {
 						inds.add(i + 1);
 
 						atkMap.put(formatted, inds);
+						procIcons.add(UtilPC.getIcon(1, j));
 					}
 				}
 			}
 
+			int i = 0;
 			for (String key : atkMap.keySet()) {
 				List<Integer> inds = atkMap.get(key);
 
 				if (inds == null) {
-					l.add(key);
+					l.add(new ProcDisplay(key, procIcons.get(i++)));
 				} else {
 					if (inds.size() == du.getAtkCount()) {
-						l.add(key);
+						l.add(new ProcDisplay(key, procIcons.get(i++)));
 					} else {
-						l.add(key + " " + getAtkNumbers(inds));
+						l.add(new ProcDisplay(key + " " + getAtkNumbers(inds), procIcons.get(i++)));
 					}
 				}
+			}
+		}
+
+		if (du instanceof DefaultData && !((DefaultData)du).isCommon()) {
+			int[][] atkData = du.rawAtkData();
+			List<Integer> atks = new ArrayList<>();
+			for (int i = 0; i < atkData.length; i++)
+				if (atkData[i][2] == 1)
+					atks.add(i + 1);
+			for (int i = 0; i < l.size(); i++)
+				if (!share.get(i))
+					l.get(i).text = l.get(i).text + " " + getAtkNumbers(atks);
+		}
+
+		MaskAtk revenge = du.getRevenge();
+		if (revenge != null) {
+			for(int i = 0; i < Data.PROC_TOT; i++) {
+				ProcItem item = revenge.getProc().getArr(i);
+
+				if(!item.exists() || revenge.getProc().sharable(i))
+					continue;
+
+				String format = ProcLang.get().get(i).format;
+				String formatted = Formatter.format(format, item, ctx);
+				l.add(new ProcDisplay(formatted + " [" + Page.get(MainLocale.UTIL, "aa6") + "]", UtilPC.getIcon(1, i)));
+			}
+		}
+		MaskAtk resurrection = du.getResurrection();
+		if (resurrection != null) {
+			for(int i = 0; i < Data.PROC_TOT; i++) {
+				ProcItem item = resurrection.getProc().getArr(i);
+
+				if(!item.exists() || resurrection.getProc().sharable(i))
+					continue;
+
+				String format = ProcLang.get().get(i).format;
+				String formatted = Formatter.format(format, item, ctx);
+				l.add(new ProcDisplay(formatted + " [" + Page.get(MainLocale.UTIL, "aa7") + "]", UtilPC.getIcon(1, i)));
 			}
 		}
 
@@ -414,6 +475,10 @@ public class Interpret extends Data {
 			return de.isOmni();
 		else if (type == 5)
 			return de.getTBA() + raw[0][1] < de.getItv() / 2;
+		else if (type == 6)
+			return de.getRevenge() != null;
+		else if (type == 7)
+			return de.getResurrection() != null;
 		return false;
 	}
 
@@ -424,7 +489,7 @@ public class Interpret extends Data {
 		STAR = Page.get(MainLocale.UTIL, "s", 5);
 		ABIS = Page.get(MainLocale.UTIL, "a", 22);
 		SABIS = Page.get(MainLocale.UTIL, "sa", 22);
-		ATKCONF = Page.get(MainLocale.UTIL, "aa", 6);
+		ATKCONF = Page.get(MainLocale.UTIL, "aa", 8);
 		TREA = Page.get(MainLocale.UTIL, "t", 37);
 		TEXT = Page.get(MainLocale.UTIL, "d", 9);
 		COMF = Page.get(MainLocale.UTIL, "na", 6);

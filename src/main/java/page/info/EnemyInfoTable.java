@@ -2,6 +2,8 @@ package page.info;
 
 import common.CommonStatic;
 import common.battle.BasisSet;
+import common.battle.data.CustomEnemy;
+import common.battle.data.DataEnemy;
 import common.pack.UserProfile;
 import common.util.Data;
 import common.util.unit.Enemy;
@@ -13,6 +15,7 @@ import utilpc.Interpret;
 import utilpc.UtilPC;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.ArrayList;
@@ -26,7 +29,7 @@ public class EnemyInfoTable extends Page {
 	private final JL[][] main = new JL[4][8];
 	private final JL[][] special = new JL[1][8];
 	private final JL[][] atks;
-	private final JLabel[] abis, proc;
+	private final JLabel[] proc;
 	private final JTF jtf = new JTF();
 	private final JTextArea descr = new JTextArea();
 	private final JScrollPane desc = new JScrollPane(descr);
@@ -45,17 +48,15 @@ public class EnemyInfoTable extends Page {
 		multi = mul;
 		mulatk = mula;
 		atks = new JL[e.de.rawAtkData().length][8];
-		List<String> ls = Interpret.getAbi(e.de);
-		abis = new JLabel[ls.size()];
-		for (int i = 0; i < ls.size(); i++) {
-			add(abis[i] = new JLabel(ls.get(i)));
-			abis[i].setBorder(BorderFactory.createEtchedBorder());
-		}
-		ls = Interpret.getProc(e.de, true);
+		List<Interpret.ProcDisplay> ls = Interpret.getAbi(e.de);
+		ls.addAll(Interpret.getProc(e.de, true));
 		proc = new JLabel[ls.size()];
 		for (int i = 0; i < ls.size(); i++) {
-			add(proc[i] = new JLabel(ls.get(i)));
+			Interpret.ProcDisplay disp = ls.get(i);
+			add(proc[i] = new JLabel(disp.toString()));
 			proc[i].setBorder(BorderFactory.createEtchedBorder());
+			if (disp.getIcon() != null)
+				proc[i].setIcon(disp.getIcon());
 		}
 		ini();
 	}
@@ -95,9 +96,6 @@ public class EnemyInfoTable extends Page {
 			for (int j = 0; j < atks[i].length; j++)
 				set(atks[i][j], x, y, 200 * j, h + 50 * i, 200, 50);
 		h += atks.length * 50;
-		for (int i = 0; i < abis.length; i++)
-			set(abis[i], x, y, i % 2 * 800, h + 50 * (i / 2), i % 2 == 0 && i + 1 == abis.length ? 1600 : 800, 50);
-		h += abis.length * 25 + (abis.length % 2 == 1 ? 25 : 0);
 		for (int i = 0; i < proc.length; i++)
 			set(proc[i], x, y, i % 2 * 800, h + 50 * (i / 2), i % 2 == 0 && i + 1 == proc.length ? 1600 : 800, 50);
 		h += proc.length * 25 + (proc.length % 2 == 1 ? 25 : 0);
@@ -142,7 +140,7 @@ public class EnemyInfoTable extends Page {
 		int l = main.length + atks.length;
 		if (displaySpecial)
 			l += special.length;
-		return (l + (proc.length + (proc.length % 2 == 1 ? 1 : 0) + abis.length + (abis.length % 2 == 1 ? 1 : 0)) / 2) * 50 + (e.descriptionGet().replace("<br>", "").length() > 0 ? 200 : 0);
+		return (l + (proc.length + (proc.length % 2 == 1 ? 1 : 0)) / 2) * 50 + (e.descriptionGet().replace("<br>", "").length() > 0 ? 200 : 0);
 	}
 
 	private void ini() {
@@ -223,8 +221,8 @@ public class EnemyInfoTable extends Page {
 			atks[i][0].setText(1, "atk");
 			atks[i][2].setText(1, "preaa");
 			atks[i][3].setText(atkData[i][1] + "f");
-			atks[i][4].setText(1, "use");
-			atks[i][5].setText("" + (atkData[i][2] == 1));
+			atks[i][4].setText(0, atkData[i][3] == -1 ? "igtr" : "cntr");
+			atks[i][5].setText("" + (!(e.de instanceof DataEnemy) && ((CustomEnemy)e.de).atks[i].specialTrait));
 			atks[i][6].setText(1, "dire");
 			atks[i][7].setText("" + atkData[i][3]);
 			itv -= atkData[i][1];
@@ -249,6 +247,32 @@ public class EnemyInfoTable extends Page {
 		descr.setEditable(false);
 		reset();
 		addListeners();
+		for (JLabel jl : proc) {
+			String str = jl.getText();
+			StringBuilder sb = new StringBuilder();
+			FontMetrics fm = jl.getFontMetrics(jl.getFont());
+			while (fm.stringWidth(str) >= 400) {
+				int i = 1;
+				String wrapped = str.substring(0, i);
+				while (fm.stringWidth(wrapped) < 400)
+					wrapped = str.substring(0, i++);
+
+				int maximum;
+				if (CommonStatic.getConfig().lang == 3)
+					maximum = Math.max(wrapped.lastIndexOf("。"),wrapped.lastIndexOf("、"));
+				else
+					maximum = Math.max(Math.max(wrapped.lastIndexOf(" "), wrapped.lastIndexOf(".")), wrapped.lastIndexOf(","));
+
+				if (maximum <= 0)
+						maximum = Math.min(i,wrapped.length());
+
+				wrapped = wrapped.substring(0, maximum);
+				sb.append(wrapped).append("<br>");
+				str = str.substring(wrapped.length());
+			}
+			sb.append(str);
+			jl.setToolTipText("<html>" + sb.toString() + "</html>");
+		}
 	}
 
 	public void setDisplaySpecial(boolean displaySpecial) {

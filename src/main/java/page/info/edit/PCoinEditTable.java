@@ -14,6 +14,7 @@ import utilpc.UtilPC;
 import javax.swing.*;
 import java.awt.image.BufferedImage;
 
+@SuppressWarnings("deprecation")
 public class PCoinEditTable extends Page {
 
     private static final long serialVersionUID = 1L;
@@ -30,7 +31,7 @@ public class PCoinEditTable extends Page {
         @Override
         public String toString() { return name; }
 
-        public int getValue() { return key; }
+        private int getValue() { return key; }
     }
 
     //ensures not every single talent is here, to avoid touching unused values, each number corresponds to a PC_CORRES array
@@ -97,16 +98,19 @@ public class PCoinEditTable extends Page {
             unit.pcoin.info.get(talent)[10] = np.getValue();
 
             int[] vals = Data.PC_CORRES[np.getValue()];
-            if (!(vals[1] == Data.P_SATK || vals[1] == Data.P_VOLC)) {
-                unit.pcoin.info.get(talent)[4] = Math.max(1, unit.pcoin.info.get(talent)[4]);
-                unit.pcoin.info.get(talent)[5] = Math.max(1, unit.pcoin.info.get(talent)[5]);
-            }
-            if (vals[1] == Data.P_WAVE) {
-                unit.pcoin.info.get(talent)[6] = Math.max(1, unit.pcoin.info.get(talent)[6]);
-                unit.pcoin.info.get(talent)[7] = Math.max(1, unit.pcoin.info.get(talent)[7]);
-            } else if (vals[1] == Data.P_VOLC) {
-                unit.pcoin.info.get(talent)[8] = Math.max(1, unit.pcoin.info.get(talent)[8] / Data.VOLC_ITV) * Data.VOLC_ITV;
-                unit.pcoin.info.get(talent)[9] = Math.max(1, unit.pcoin.info.get(talent)[9] / Data.VOLC_ITV) * Data.VOLC_ITV;
+            if (vals[0] == Data.PC_P) {
+                int low = unit.getProc().getArr(vals[1]).get(0) == 0 ? 1 : 0;
+                unit.pcoin.info.get(talent)[2] = Math.max(low, unit.pcoin.info.get(talent)[4]);
+                unit.pcoin.info.get(talent)[3] = Math.max(low, unit.pcoin.info.get(talent)[5]);
+                if (!(vals[1] == Data.P_SATK || vals[1] == Data.P_VOLC || vals[1] == Data.P_CRIT)) {
+                    int min = unit.getProc().getArr(vals[1]).get(1) == 0 ? 1 : 0;
+                    unit.pcoin.info.get(talent)[4] = Math.max(min, unit.pcoin.info.get(talent)[4]);
+                    unit.pcoin.info.get(talent)[5] = Math.max(min, unit.pcoin.info.get(talent)[5]);
+                }
+                if (vals[1] == Data.P_VOLC) {
+                    unit.pcoin.info.get(talent)[8] = Math.max(1, unit.pcoin.info.get(talent)[8] / Data.VOLC_ITV) * Data.VOLC_ITV;
+                    unit.pcoin.info.get(talent)[9] = Math.max(1, unit.pcoin.info.get(talent)[9] / Data.VOLC_ITV) * Data.VOLC_ITV;
+                }
             }
             pcedit.setCoinTypes();
             setData();
@@ -118,26 +122,34 @@ public class PCoinEditTable extends Page {
                 String txt = tchance[finalI - 2].getText().trim();
                 int[] v = CommonStatic.parseIntsN(txt);
 
-                int[] vals = Data.PC_CORRES[unit.pcoin.info.get(talent)[0]];
-                if (vals[0] == Data.PC_BASE && vals[1] == Data.PC2_COST)
-                    v[0] = (int)(v[0] / 1.5);
-                if (vals[0] == Data.PC_BASE && vals[1] == Data.PC2_HB)
-                    v[0] = Math.min(v[0], unit.hp - unit.hb);
-
                 int ind = finalI % 2 == 0 ? 1 : -1;
                 int w = v.length > 1 ? v[1] : unit.pcoin.info.get(talent)[finalI + ind];
 
-                if (finalI < 4 || finalI < 6 && !(vals[1] == Data.P_SATK || vals[1] == Data.P_VOLC) || finalI < 8 && vals[1] == Data.P_WAVE) {
-                    v[0] = Math.max(1, v[0]);
+                int[] vals = Data.PC_CORRES[unit.pcoin.info.get(talent)[0]];
+
+                if (vals[0] == Data.PC_BASE) {
+                    if (vals[1] == Data.PC2_COST) {
+                        v[0] = (int) (v[0] / 1.5);
+                        if (v.length > 1)
+                            w = (int) (w / 1.5);
+                    } else if (vals[1] == Data.PC2_HB) {
+                        v[0] = Math.min(v[0], unit.hp - unit.hb);
+                        w = Math.min(w, unit.hp - unit.hb);
+                    }
+                }
+
+                if (finalI < 4 || finalI < 6 && !(vals[1] == Data.P_SATK || vals[1] == Data.P_VOLC || vals[1] == Data.P_CRIT)) {
+                    int min = vals[0] == Data.PC_BASE || unit.getProc().getArr(vals[1]).get((finalI - 2) / 2) == 0 ? 1 : 0;
+                    v[0] = Math.max(min, v[0]);
                     if (v.length > 1)
-                        v[1] = Math.max(1, v[1]);
-                } else if (finalI > 8 && vals[1] == Data.P_VOLC) {
+                        v[1] = Math.max(min, v[1]);
+                } else if (finalI >= 8 && vals[1] == Data.P_VOLC) {
                     v[0] = Math.max(1, v[0] / Data.VOLC_ITV) * Data.VOLC_ITV;
                     if (v.length > 1)
                         v[1] = Math.max(1, v[1] / Data.VOLC_ITV) * Data.VOLC_ITV;
                 }
 
-                if (tchance[finalI + ind].isEnabled())
+                if (tchance[finalI - 2 + ind].isEnabled())
                     if (ind == 1) {
                         unit.pcoin.info.get(talent)[finalI] = Math.min(v[0], w);
                         unit.pcoin.info.get(talent)[finalI + ind] = Math.max(v[0], w);
@@ -292,8 +304,8 @@ public class PCoinEditTable extends Page {
         }
         if (pdata[0] == Data.PC_P) {
             int procChance = unit.getProc().getArr(pdata[1]).get(0);
-            unit.pcoin.info.get(talent)[2] = MathUtil.clip(unit.pcoin.info.get(talent)[2], 1, 100 - procChance);
-            unit.pcoin.info.get(talent)[3] = MathUtil.clip(unit.pcoin.info.get(talent)[3], 1, 100 - procChance);
+            unit.pcoin.info.get(talent)[2] = Math.min(unit.pcoin.info.get(talent)[2], 100 - procChance);
+            unit.pcoin.info.get(talent)[3] = Math.min(unit.pcoin.info.get(talent)[3], 100 - procChance);
             //This ensures raw proc chance + talent proc chance doesn't goes above 100%
 
             ProcLang.ItemLang lang = ProcLang.get().get(pdata[1]);

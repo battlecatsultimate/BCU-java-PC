@@ -301,7 +301,7 @@ class UFBList extends UnitFilterBox {
 				for (Form f : u.forms) {
 					MaskUnit du = f.maxu();
 					int a = du.getAbi();
-					List<Trait> ct = f.du.getTraits();
+					List<Trait> ct = du.getTraits();
 					boolean b0 = rare.isSelectedIndex(u.rarity);
 					boolean b1 = !orop[0].isSelected();
 					for (int i : trait.getSelectedIndices())
