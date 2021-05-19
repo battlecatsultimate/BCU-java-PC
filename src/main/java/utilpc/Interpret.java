@@ -263,8 +263,6 @@ public class Interpret extends Data {
 				}
 			}
 
-			System.out.println(atkMap);
-
 			for (String key : atkMap.keySet()) {
 				List<Integer> inds = atkMap.get(key);
 

@@ -35,7 +35,7 @@ public class MaAnimEditTable extends AnimTable<Part> {
 	public boolean editCellAt(int row, int column, EventObject e) {
 		boolean result = super.editCellAt(row, column, e);
 		final Component editor = getEditorComponent();
-		if (editor == null || !(editor instanceof JTextComponent))
+		if (!(editor instanceof JTextComponent))
 			return result;
 		if (e instanceof KeyEvent)
 			((JTextComponent) editor).selectAll();
@@ -87,18 +87,17 @@ public class MaAnimEditTable extends AnimTable<Part> {
 	@Override
 	public boolean insert(int dst, Part[] data) {
 		List<Part> l = new ArrayList<>();
-		int ind = dst;
 		for (Part p : ma.parts)
 			if (p != null)
 				l.add(p);
 		for (int i = 0; i < data.length; i++) {
-			l.add(i + ind, data[i] = data[i].clone());
+			l.add(i + dst, data[i] = data[i].clone());
 			data[i].check(anim);
 		}
 		ma.parts = l.toArray(new Part[0]);
 		ma.n = ma.parts.length;
 		anim.unSave("maanim paste part");
-		page.callBack(new int[] { 0, ind, ind + data.length - 1 });
+		page.callBack(new int[] { 0, dst, dst + data.length - 1 });
 		return true;
 	}
 
@@ -146,7 +145,7 @@ public class MaAnimEditTable extends AnimTable<Part> {
 			else if (v >= anim.mamodel.n)
 				v = anim.mamodel.n - 1;
 		if (c == 1)
-			if ((v < 0 || v > 14) && v != 50)
+			if ((v < 0 || v > 14) && v != 50 && v != 52)
 				v = 5;
 		if (c == 2 && (v < -1 || v == 0))
 			v = -1;

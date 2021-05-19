@@ -51,7 +51,6 @@ public class AnimGroupTree implements TreeExpansionListener {
 
         if(baseGroup != null && !baseGroup.isEmpty()) {
             for(AnimCE anim : baseGroup) {
-                System.out.println(baseGroup);
                 DefaultMutableTreeNode animNode = new DefaultMutableTreeNode(anim);
 
                 nodes.add(animNode);
