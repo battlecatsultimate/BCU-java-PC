@@ -197,10 +197,7 @@ class EFBButton extends EnemyFilterBox {
 			set(rare[i] = new JTG(ERARE[i]));
 		for (int i = 0; i < trait.length; i++) {
 			set(trait[i] = new JTG(TRAIT[i]));
-			BufferedImage v = UtilPC.getIcon(3, i);
-			if (v == null)
-				continue;
-			trait[i].setIcon(new ImageIcon(v));
+			trait[i].setIcon(UtilPC.createIcon(3, i));
 		}
 		FixIndexMap<Trait> BCtraits = UserProfile.getBCData().traits;
 		for (int i = 0 ; i < BCtraits.size() - 1 ; i++)
@@ -252,7 +249,7 @@ class EFBList extends EnemyFilterBox {
 	private final JList<String> rare = new JList<>(ERARE);
 	private final Vector<String> vt = new Vector<>();
 	private final Vector<String> va = new Vector<>();
-	private final AttList trait = new AttList(3, 0);
+	private final AttList trait = new AttList();
 	private final AttList abis = new AttList(-1, EFILTER);
 	private final AttList atkt = new AttList(2, 0);
 	private final JScrollPane jr = new JScrollPane(rare);
@@ -397,7 +394,7 @@ class EFBList extends EnemyFilterBox {
 					trlis.add(ctra);
 					vt.add(ctra.name);
 				}
-		customTraitsIco(trait,trlis);
+		trait.setIcons(trlis);
 		va.addAll(Arrays.asList(EABI).subList(0, EFILTER));
 		ProcLang proclang = ProcLang.get();
 		for (int i = 0; i < Data.PROC_TOT; i++)
@@ -417,10 +414,6 @@ class EFBList extends EnemyFilterBox {
 		add(jt);
 		add(jab);
 		add(jat);
-	}
-
-	protected static void customTraitsIco(AttList trait, List<Trait> diyTraits) {
-		trait.diyTraitIcons(trait, diyTraits);
 	}
 
 	private void set(AbstractButton b) {

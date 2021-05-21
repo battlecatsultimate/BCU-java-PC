@@ -7,8 +7,6 @@ import common.util.unit.Trait;
 import page.Page;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.util.*;
 
 import static utilpc.Interpret.*;
@@ -22,8 +20,8 @@ public class EnemyEditBox extends Page {
 	private final Vector<String> vt = new Vector<>();
 	private final Vector<String> va = new Vector<>();
 	private final AttList abis = new AttList(-1, EABIIND.length);
-	private final AttList trait = new AttList(3, 0);
-	private final JScrollPane jt = new JScrollPane(trait);
+	private final AttList trait = new AttList();
+	private final JScrollPane jt;
 	private final JScrollPane jab = new JScrollPane(abis);
 
 	private boolean changing = false;
@@ -35,11 +33,11 @@ public class EnemyEditBox extends Page {
 		editable = pack.editable;
 		traitList = new ArrayList<>(UserProfile.getBCData().traits.getList().subList(0,9));
 		traitList.addAll(pack.traits.getList());
-		Collection<UserPack> pacs = UserProfile.getUserPacks();
-		for (UserPack pacc : pacs) {
+		for (UserPack pacc : UserProfile.getUserPacks())
 			if (pack.desc.dependency.contains(pacc.desc.id))
 				traitList.addAll(pacc.traits.getList());
-		}
+		trait.setIcons(traitList);
+		jt = new JScrollPane(trait);
 		ce = cen;
 		ini();
 	}
@@ -92,7 +90,6 @@ public class EnemyEditBox extends Page {
 		for (Trait diyTrait : traitList)
 			vt.add(diyTrait.name);
 		va.addAll(Arrays.asList(EABI).subList(0, EABIIND.length));
-		customTraitsIco(trait,traitList);
 		trait.setListData(vt);
 		abis.setListData(va);
 		int m = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
@@ -108,16 +105,9 @@ public class EnemyEditBox extends Page {
 
 	private void set(JList<?> jl) {
 
-		jl.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (!changing && !jl.getValueIsAdjusting())
-					confirm();
-			}
+		jl.addListSelectionListener(arg0 -> {
+			if (!changing && !jl.getValueIsAdjusting())
+				confirm();
 		});
-	}
-	protected static void customTraitsIco(AttList trait, List<Trait> diyTraits) {
-		trait.diyTraitIcons(trait, diyTraits);
 	}
 }

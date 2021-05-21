@@ -32,7 +32,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 	private static final String[] mod = new String[] { "0 parent", "1 id", "2 sprite", "3 z-order", "4 pos-x",
 			"5 pos-y", "6 pivot-x", "7 pivot-y", "8 scale", "9 scale-x", "10 scale-y", "11 angle", "12 opacity",
-			"13 horizontal flip", "14 vertical flip", "50 extend" };
+			"13 horizontal flip", "14 vertical flip", "50 extendX", "52 extendY" };
 
 	private final JBTN back = new JBTN(0, "back");
 	private final JTree jta = new JTree();

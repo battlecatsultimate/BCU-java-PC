@@ -21,6 +21,7 @@ import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 public class EnemyInfoTable extends Page {
 
@@ -201,8 +202,14 @@ public class EnemyInfoTable extends Page {
 		main[2][5].setText("" + e.de.getSpeed());
 		main[2][6].setText(1, "atkf");
 		main[2][7].setText(itv + "f");
-		main[3][0].setText(1, "isr");
-		main[3][1].setText("" + e.de.isRange());
+		main[3][0].setText(1, "atktype");
+		if (e.de.isRange()) {
+			main[3][1].setText(1, "isr");
+			main[3][1].setIcon(UtilPC.createIcon(2, Data.ATK_AREA));
+		} else {
+			main[3][1].setText(1, "single");
+			main[3][1].setIcon(UtilPC.createIcon(2, Data.ATK_SINGLE));
+		}
 		main[3][2].setText(1, "shield");
 		main[3][3].setText("" + e.de.getShield());
 		main[3][4].setText(1, "TBA");

@@ -246,6 +246,13 @@ public class UtilPC {
 		return (BufferedImage) CommonStatic.getBCAssets().icon[type][id].getImg().bimg();
 	}
 
+	public static ImageIcon createIcon(int type, int id) {
+		BufferedImage img = getIcon(type, id);
+		if (img != null)
+			return new ImageIcon(img);
+		return null;
+	}
+
 	public static ImageIcon getIcon(VImg v) {
 		FakeImage img = v.getImg();
 		if (img == null)

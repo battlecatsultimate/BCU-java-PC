@@ -19,9 +19,9 @@ public class UnitEditBox extends Page {
 
 	private final Vector<String> vt = new Vector<>();
 	private final Vector<String> va = new Vector<>();
-	private final AttList trait = new AttList(3, 0);
+	private final AttList trait = new AttList();
 	private final AttList abis = new AttList(0, 1);
-	private final JScrollPane jt = new JScrollPane(trait);
+	private final JScrollPane jt;
 	private final JScrollPane jab = new JScrollPane(abis);
 
 	private boolean changing = false;
@@ -36,6 +36,9 @@ public class UnitEditBox extends Page {
 		for (UserPack pacc : UserProfile.getUserPacks())
 			if (pack.desc.dependency.contains(pacc.desc.id))
 				traitList.addAll(pacc.traits.getList());
+		trait.setIcons(traitList);
+		jt = new JScrollPane(trait);
+
 		cu = cun;
 		ini();
 	}
@@ -84,7 +87,6 @@ public class UnitEditBox extends Page {
 		for (Trait value : traitList)
 			vt.add(value.name);
 		Collections.addAll(va, SABIS);
-		customTraitsIco(trait,traitList);
 		trait.setListData(vt);
 		abis.setListData(va);
 		int m = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
@@ -104,8 +106,5 @@ public class UnitEditBox extends Page {
 			if (!changing && !jl.getValueIsAdjusting())
 				confirm();
 		});
-	}
-	protected static void customTraitsIco(AttList trait, List<Trait> diyTraits) {
-		trait.diyTraitIcons(trait, diyTraits);
 	}
 }

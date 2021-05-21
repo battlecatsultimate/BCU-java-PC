@@ -39,7 +39,7 @@ public class PCoinEditPage extends Page {
         set(addP, x, y, 400, 50, 300, 50);
         set(remP, x, y, 700, 50, 300, 50);
         for (int i = 0; i < 5; i++)
-            set(pCoinEdits.get(i), x, y, i * 400, 200, 400, 700);
+            set(pCoinEdits.get(i), x, y, i * 400, 200, 400, 1300);
     }
 
     private void addListeners() {
@@ -50,6 +50,12 @@ public class PCoinEditPage extends Page {
                uni.pcoin = new PCoin(uni);
            int slot = uni.pcoin.info.size();
            uni.pcoin.info.add(new int[]{slot + 1,10,0,0,0,0,0,0,0,0,slot + 1,8,-1});
+           for (int i = 0; i < slot; i++)
+               if (uni.pcoin.info.get(i)[0] == slot + 1) {
+                   PCoinEditTable pc = pCoinEdits.get(i);
+                   pc.setData();
+                   pc.randomize();
+            }
            setCoinTypes();
         });
 

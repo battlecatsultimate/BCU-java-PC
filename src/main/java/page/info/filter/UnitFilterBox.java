@@ -248,11 +248,11 @@ class UFBList extends UnitFilterBox {
 	private final JList<String> rare = new JList<>(RARITY);
 	private final Vector<String> vt = new Vector<>();
 	private final Vector<String> va = new Vector<>();
-	private final AttList trait = new AttList(3, 0);
+	private final AttList trait = new AttList();
 	private final AttList abis = new AttList(0, 0);
 	private final AttList atkt = new AttList(2, 0);
 	private final JScrollPane jr = new JScrollPane(rare);
-	private final JScrollPane jt = new JScrollPane(trait);
+	private final JScrollPane jt  = new JScrollPane(trait);
 	private final JScrollPane jab = new JScrollPane(abis);
 	private final JScrollPane jat = new JScrollPane(atkt);
 
@@ -386,7 +386,7 @@ class UFBList extends UnitFilterBox {
 					trlis.add(ctra);
 					vt.add(ctra.name);
 				}
-		customTraitsIco(trait,trlis);
+		trait.setIcons(trlis);
 		Collections.addAll(va, SABIS);
 		for (int i = 0; i < Data.PROC_TOT; i++)
 			va.add(ProcLang.get().get(i).abbr_name);
@@ -401,10 +401,6 @@ class UFBList extends UnitFilterBox {
 		add(jt);
 		add(jab);
 		add(jat);
-	}
-
-	protected static void customTraitsIco(AttList trait, List<Trait> diyTraits) {
-		trait.diyTraitIcons(trait, diyTraits);
 	}
 
 	private void set(AbstractButton b) {

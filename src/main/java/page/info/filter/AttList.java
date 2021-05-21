@@ -37,6 +37,12 @@ class AttList extends JList<String> {
 
 	}
 
+	protected AttList() {
+		if (MainBCU.nimbus) {
+			setSelectionBackground(MainBCU.light ? Theme.LIGHT.NIMBUS_SELECT_BG : Theme.DARK.NIMBUS_SELECT_BG);
+		}
+	}
+
 	protected AttList(int type, int para) {
 		if (MainBCU.nimbus) {
 			setSelectionBackground(MainBCU.light ? Theme.LIGHT.NIMBUS_SELECT_BG : Theme.DARK.NIMBUS_SELECT_BG);
@@ -53,9 +59,7 @@ class AttList extends JList<String> {
 					v = ind < para ? UtilPC.getIcon(0, EABIIND[ind]) : UtilPC.getIcon(1, ind - para);
 				} else if (type == 0) {
 					v = ind < SABIS.length ? UtilPC.getIcon(0, ind) : UtilPC.getIcon(1, ind - SABIS.length);
-				} else if (type == 3 && ind > 8)
-					v = null;
-				else
+				} else
 					v = UtilPC.getIcon(type, ind);
 				if (v == null)
 					return jl;
@@ -63,11 +67,10 @@ class AttList extends JList<String> {
 				return jl;
 			}
 		});
-
 	}
 
-	protected void diyTraitIcons(AttList trait, List<Trait> diyTraits) {
-		trait.setCellRenderer(new DefaultListCellRenderer() {
+	protected void setIcons(List<Trait> diyTraits) {
+		setCellRenderer(new DefaultListCellRenderer() {
 
 			private static final long serialVersionUID = 1L;
 

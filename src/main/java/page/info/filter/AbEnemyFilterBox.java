@@ -17,7 +17,6 @@ import page.Page;
 import utilpc.UtilPC;
 
 import javax.swing.*;
-import java.awt.image.BufferedImage;
 import java.util.*;
 
 import static utilpc.Interpret.*;
@@ -213,35 +212,23 @@ class AEFBButton extends AbEnemyFilterBox {
             set(rare[i] = new JTG(ERARE[i]));
         for (int i = 0; i < trait.length; i++) {
             set(trait[i] = new JTG(TRAIT[i]));
-            BufferedImage v = UtilPC.getIcon(3, i);
-            if (v == null)
-                continue;
-            trait[i].setIcon(new ImageIcon(v));
+            trait[i].setIcon(UtilPC.createIcon(3, i));
         }
         FixIndexList.FixIndexMap<Trait> BCtraits = UserProfile.getBCData().traits;
         for (int i = 0 ; i < BCtraits.size() - 1 ; i++)
             trlis.add(BCtraits.get(i));
         for (int i = 0; i < abis.length; i++) {
             set(abis[i] = new JTG(EABI[i]));
-            BufferedImage v = UtilPC.getIcon(0, EABIIND[i]);
-            if (v == null)
-                continue;
-            abis[i].setIcon(new ImageIcon(v));
+            abis[i].setIcon(UtilPC.createIcon(0, EABIIND[i]));
         }
         ProcLang proclang = ProcLang.get();
         for (int i = 0; i < proc.length; i++) {
             set(proc[i] = new JTG(proclang.get(i).abbr_name));
-            BufferedImage v = UtilPC.getIcon(1, i);
-            if (v == null)
-                continue;
-            proc[i].setIcon(new ImageIcon(v));
+            proc[i].setIcon(UtilPC.createIcon(1, i));
         }
         for (int i = 0; i < atkt.length; i++) {
             set(atkt[i] = new JTG(ATKCONF[i]));
-            BufferedImage v = UtilPC.getIcon(2, i);
-            if (v == null)
-                continue;
-            atkt[i].setIcon(new ImageIcon(v));
+            atkt[i].setIcon(UtilPC.createIcon(2, i));
         }
     }
 
@@ -268,7 +255,7 @@ class AEFBList extends AbEnemyFilterBox {
     private final JList<String> rare = new JList<>(ERARE);
     private final Vector<String> vt = new Vector<>();
     private final Vector<String> va = new Vector<>();
-    private final AttList trait = new AttList(3, 0);
+    private final AttList trait = new AttList();
     private final AttList abis = new AttList(-1, EFILTER);
     private final AttList atkt = new AttList(2, 0);
     private final JScrollPane jr = new JScrollPane(rare);
@@ -417,7 +404,7 @@ class AEFBList extends AbEnemyFilterBox {
                     trlis.add(ctra);
                     vt.add(ctra.name);
                 }
-        customTraitsIco(trait,trlis);
+        trait.setIcons(trlis);
         va.addAll(Arrays.asList(EABI).subList(0, EFILTER));
         ProcLang proclang = ProcLang.get();
         for (int i = 0; i < Data.PROC_TOT; i++)
@@ -438,10 +425,6 @@ class AEFBList extends AbEnemyFilterBox {
         add(jt);
         add(jab);
         add(jat);
-    }
-
-    protected static void customTraitsIco(AttList trait, List<Trait> diyTraits) {
-        trait.diyTraitIcons(trait, diyTraits);
     }
 
     private void set(AbstractButton b) {

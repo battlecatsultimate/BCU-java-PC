@@ -16,13 +16,11 @@ import page.JTF;
 import page.JTG;
 import page.Page;
 import page.support.Importer;
+import utilpc.Theme;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +29,27 @@ import java.util.List;
 
 public class TraitEditPage extends Page {
 
-    private final JList<Trait> jlct = new JList<>();
+    private static class TraitList extends JList<Trait> {
+        protected TraitList() {
+            if (MainBCU.nimbus)
+                setSelectionBackground(MainBCU.light ? Theme.LIGHT.NIMBUS_SELECT_BG : Theme.DARK.NIMBUS_SELECT_BG);
+        }
+        protected void setTraitIcons() {
+            setCellRenderer(new DefaultListCellRenderer() {
+                private static final long serialVersionUID = 1L;
+                @Override
+                public Component getListCellRendererComponent(JList<?> l, Object o, int ind, boolean s, boolean f) {
+                    JLabel jl = (JLabel) super.getListCellRendererComponent(l, o, ind, s, f);
+                    Trait trait = (Trait)o;
+                    if (trait.icon != null)
+                        jl.setIcon(trait.obtainIcon());
+                    return jl;
+                }
+            });
+        }
+    }
+
+    private final TraitList jlct = new TraitList();
     private final JScrollPane jspct = new JScrollPane(jlct);
 
     private final JLabel jl = new JLabel();
@@ -77,84 +95,63 @@ public class TraitEditPage extends Page {
 
         back.setLnr(x -> changePanel(getFront()));
 
-        adicn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                getFile("Choose your file");
-            }
-        });
+        adicn.addActionListener(arg0 -> getFile("Choose your file"));
 
-        reicn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                File file = ((Source.Workspace) packpack.source).getTraitIconFile(t.id);
-                if (file.delete()) {
-                    t.icon = null;
-                    jl.setIcon(null);
-                    reicn.setEnabled(false);
-                }
+        reicn.addActionListener(arg0 -> {
+            File file = ((Source.Workspace) packpack.source).getTraitIconFile(t.id);
+            if (file.delete()) {
+                t.icon = null;
+                jl.setIcon(null);
+                reicn.setEnabled(false);
+                jlct.setTraitIcons();
             }
         });
 
     }
 
     private void addListeners$CG() {
-        addct.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                changing = true;
-                t = new Trait(packpack.getNextID(Trait.class));
-                pct.add(t);
-                updateCTL();
-                jlct.setSelectedValue(t, true);
-                changing = false;
-            }
+        addct.addActionListener(arg0 -> {
+            changing = true;
+            t = new Trait(packpack.getNextID(Trait.class));
+            pct.add(t);
+            updateCTL();
+            jlct.setSelectedValue(t, true);
+            changing = false;
         });
-        remct.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                if (t == null)
-                    return;
-                changing = true;
-                List<Trait> list = pct.getList();
-                int ind = list.indexOf(t) - 1;
-                if (ind < 0 && list.size() > 1)
-                    ind = 0;
-                File file = ((Source.Workspace) packpack.source).getTraitIconFile(t.id);
-                file.delete();
-                list.remove(t);
-                pct.remove(t);
-                if (ind >= 0)
-                    t = list.get(ind);
-                else
-                    t = null;
-                updateCTL();
-                changing = false;
-            }
+        remct.addActionListener(arg0 -> {
+            if (t == null)
+                return;
+            changing = true;
+            List<Trait> list = pct.getList();
+            int ind = list.indexOf(t) - 1;
+            if (ind < 0 && list.size() > 1)
+                ind = 0;
+            File file = ((Source.Workspace) packpack.source).getTraitIconFile(t.id);
+            file.delete();
+            list.remove(t);
+            pct.remove(t);
+            if (ind >= 0)
+                t = list.get(ind);
+            else
+                t = null;
+            updateCTL();
+            changing = false;
         });
-        altrg.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                if (t == null)
-                    return;
-                changing = true;
-                t.targetType = !t.targetType;
-                updateCTL();
-                changing = false;
-            }
+        altrg.addActionListener(arg0 -> {
+            if (t == null)
+                return;
+            changing = true;
+            t.targetType = !t.targetType;
+            updateCTL();
+            changing = false;
         });
-        jlct.addListSelectionListener(new ListSelectionListener() {
-
-            @Override
-            public void valueChanged(ListSelectionEvent arg0) {
-                if (changing || jlct.getValueIsAdjusting())
-                    return;
-                changing = true;
-                t = jlct.getSelectedValue();
-                updateCT();
-                changing = false;
-            }
-
+        jlct.addListSelectionListener(arg0 -> {
+            if (changing || jlct.getValueIsAdjusting())
+                return;
+            changing = true;
+            t = jlct.getSelectedValue();
+            updateCT();
+            changing = false;
         });
 
         ctrna.setLnr(x -> {
@@ -172,6 +169,7 @@ public class TraitEditPage extends Page {
     private void updateCTL() {
         jlct.setListData(pct.toArray());
         jlct.setSelectedValue(t, true);
+        jlct.setTraitIcons();
         updateCT();
     }
 
@@ -256,6 +254,7 @@ public class TraitEditPage extends Page {
         if (jlct.getSelectedValue() != slt) {
             changing = true;
             jlct.setSelectedValue(slt, true);
+            jlct.setTraitIcons();
             changing = false;
         }
     }
