@@ -101,6 +101,8 @@ public class HeadTable extends AbJTable {
 		String star = Page.get(MainLocale.INFO, "star");
 		for (int i = 0; i < st.getCont().stars.length; i++)
 			tit[2 + i] = (i + 1) + star + ": " + st.getCont().stars[i] + "%";
+		tit[6] = Page.get(MainLocale.INFO, "chcos");
+		tit[7] = st.getCont().price + 1;
 		bas[0] = infs[0];
 		bas[1] = st.health;
 		bas[2] = infs[1] + ": " + st.len;
@@ -113,8 +115,8 @@ public class HeadTable extends AbJTable {
 			bas2[1] = st.minSpawn + "f";
 		else
 			bas2[1] = st.minSpawn + "f ~ " + st.maxSpawn + "f";
-		bas2[2] = Page.get(MainLocale.INFO, "chcos");
-		bas2[3] = st.getCont().price + 1;
+		bas2[2] = MainLocale.getLoc(MainLocale.INFO, "ht03");
+		bas2[3] = !st.non_con;
 		bas2[4] = MainLocale.getLoc(MainLocale.INFO, "lop");
 		bas2[5] = convertTime(st.loop0);
 		bas2[6] = MainLocale.getLoc(MainLocale.INFO, "lop1");

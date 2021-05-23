@@ -55,6 +55,10 @@ public class MainPage extends Page {
 	private final JBTN auth = new JBTN(0, "author");
 	private final JBTN dbug = new JBTN(0, "debug");
 
+	private final JBTN refr = new JBTN(0, "refrtips");
+	private final JLabel tips = new JLabel();
+	private final String[] ALLTIPS = Page.get(MainLocale.PAGE, "tip", 9);
+
 	public MainPage() {
 		super(null);
 
@@ -84,6 +88,7 @@ public class MainPage extends Page {
 		set(vbgr, x, y, 600, 600, 200, 50);
 		set(vmsc, x, y, 600, 700, 200, 50);
 		set(allf, x, y, 600, 800, 200, 50);
+		set(tips, x, y, 600, 850, 1200, 200);
 
 		set(conf, x, y, 900, 200, 200, 50);
 		set(save, x, y, 900, 300, 200, 50);
@@ -91,6 +96,7 @@ public class MainPage extends Page {
 		set(dbug, x, y, 900, 500, 200, 50);
 		set(curr, x, y, 900, 600, 200, 50);
 		set(auth, x, y, 900, 700, 200, 50);
+		set(refr, x, y, 900, 800, 200, 50);
 
 		set(vsta, x, y, 1200, 200, 200, 50);
 		set(veif, x, y, 1200, 300, 200, 50);
@@ -152,6 +158,7 @@ public class MainPage extends Page {
 				welcome.setVisible(false);
 			}
 		});
+		refr.setLnr(c -> tips.setText("<html>" + ALLTIPS[(int)(Math.random() * ALLTIPS.length)] + "</html>"));
 	}
 
 	private void ini() {
@@ -181,6 +188,10 @@ public class MainPage extends Page {
 		add(allf);
 		add(auth);
 		add(dbug);
+		add(refr);
+		add(tips);
+		tips.setText("<html>" + ALLTIPS[(int)(Math.random() * ALLTIPS.length)] + "</html>");
+
 
 		welcome.setVisible(!MainBCU.author.isEmpty());
 

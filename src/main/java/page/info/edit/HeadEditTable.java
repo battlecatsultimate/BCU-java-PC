@@ -1,7 +1,6 @@
 package page.info.edit;
 
 import common.CommonStatic;
-import common.pack.FixIndexList;
 import common.pack.Identifier;
 import common.pack.PackData;
 import common.pack.PackData.UserPack;

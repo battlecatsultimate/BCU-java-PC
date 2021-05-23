@@ -8,6 +8,7 @@ import common.util.stage.Music;
 import javax.sound.sampled.*;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +23,7 @@ public class BCMusic extends Data {
 	private static boolean[] secall = new boolean[TOT];
 
 	public static BCPlayer BG;
+	public static BCPlayer End;
 
 	private static BCPlayer[] hit;
 	private static BCPlayer[] hit1;
@@ -103,7 +105,20 @@ public class BCMusic extends Data {
 		sounds.clear();
 	}
 
-	public static synchronized void flush(boolean allow) {
+	public static synchronized void clickSound() {
+		if (!play || VOL_SE == 0)
+			return;
+		try {
+			if (CACHE[11] == null)
+				loadSound(11, UserProfile.getBCData().musics.get(11), getVol(VOL_SE), false, 0);
+			else
+				loadSound(11, CACHE[11], getVol(VOL_SE), false, 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static synchronized void flush(boolean allow, boolean baseHP) {
 		if (hit == null) {
 			hit = new BCPlayer[2];
 
@@ -159,8 +174,34 @@ public class BCMusic extends Data {
 			}
 		}
 
-		for (int i = 0; i < TOT; i++) {
-			if (secall[i] && allow)
+		if (baseHP) {
+			if (End == null) {
+				int sfx = 0;
+				if (secall[SE_VICTORY])
+					sfx = SE_VICTORY;
+				else if (secall[SE_DEFEAT])
+					sfx = SE_DEFEAT;
+				if (sfx != 0)
+					try {
+						End = new BCPlayer(openFile(UserProfile.getBCData().musics.get(sfx)), sfx, false);
+						End.setVolume(VOL_SE);
+						if (CACHE[sfx] == null)
+							loadSound(sfx, UserProfile.getBCData().musics.get(sfx), getVol(VOL_SE), false, 0);
+						else
+							loadSound(sfx, CACHE[sfx], getVol(VOL_SE), false, 0);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+			}
+		} else if (End != null) {
+			End.release();
+			End = null;
+			secall[SE_DEFEAT] = false;
+			secall[SE_VICTORY] = false;
+		}
+
+		for (int i = 0; i < TOT; i++)
+			if (secall[i] && allow && !baseHP)
 				try {
 					if (CACHE[i] == null)
 						loadSound(i, UserProfile.getBCData().musics.get(i), getVol(VOL_SE), false, 0);
@@ -169,7 +210,6 @@ public class BCMusic extends Data {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-		}
 		secall = new boolean[TOT];
 	}
 
@@ -287,7 +327,7 @@ public class BCMusic extends Data {
 
 					loadSound(ind, openFile(bytes), false, VOL_UI);
 					break;
-				case 20:
+				case SE_HIT_0:
 					if (hit != null) {
 						if (h) {
 							hit[0].stop();
@@ -301,7 +341,7 @@ public class BCMusic extends Data {
 						h = !h;
 					}
 					break;
-				case 21:
+				case SE_HIT_1:
 					if (hit1 != null) {
 						if (h1) {
 							hit1[0].stop();
@@ -315,7 +355,7 @@ public class BCMusic extends Data {
 						h1 = !h1;
 					}
 					break;
-				case 22:
+				case SE_HIT_BASE:
 					if (baseHit != null) {
 						if (bh) {
 							baseHit[0].stop();

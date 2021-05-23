@@ -1,6 +1,7 @@
 package page;
 
 import common.system.P;
+import io.BCMusic;
 import main.Opts;
 import main.Printer;
 import utilpc.PP;
@@ -31,6 +32,7 @@ public class MainFrame extends JFrame {
 	private static Page mainPanel = null;
 
 	public static void changePanel(Page p) {
+		BCMusic.clickSound();
 		F.FchangePanel(p);
 	}
 
