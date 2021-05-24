@@ -303,8 +303,8 @@ public class UnitInfoTable extends Page {
 				else
 					maximum = Math.max(Math.max(wrapped.lastIndexOf(" "), wrapped.lastIndexOf(".")), wrapped.lastIndexOf(","));
 
-				if (maximum == 0)
-					maximum = i;
+				if (maximum <= 0)
+					maximum = Math.min(i,wrapped.length());
 
 				wrapped = wrapped.substring(0, maximum);
 				sb.append(wrapped).append("<br>");

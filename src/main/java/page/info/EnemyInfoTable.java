@@ -270,7 +270,7 @@ public class EnemyInfoTable extends Page {
 					maximum = Math.max(Math.max(wrapped.lastIndexOf(" "), wrapped.lastIndexOf(".")), wrapped.lastIndexOf(","));
 
 				if (maximum <= 0)
-						maximum = Math.min(i,wrapped.length());
+					maximum = Math.min(i,wrapped.length());
 
 				wrapped = wrapped.substring(0, maximum);
 				sb.append(wrapped).append("<br>");

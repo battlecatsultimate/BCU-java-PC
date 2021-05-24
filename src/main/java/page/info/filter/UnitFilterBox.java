@@ -34,13 +34,11 @@ public abstract class UnitFilterBox extends Page {
 		return null;
 	}
 
-	public static UnitFilterBox getNew(Page p, String pack, String... parent) {
-		if(MainBCU.FILTER_TYPE == 0) {
-			return new UFBButton(p, pack, parent);
-		} else if(MainBCU.FILTER_TYPE == 1) {
-			return new UFBList(p, pack, parent);
-		}
-
+	public static UnitFilterBox getNew(Page p, String pack, List<String> parents) {
+		if (MainBCU.FILTER_TYPE == 0)
+			return new UFBButton(p, pack, parents);
+		if (MainBCU.FILTER_TYPE == 1)
+			return new UFBList(p, pack, parents);
 		return null;
 	}
 
@@ -55,11 +53,11 @@ public abstract class UnitFilterBox extends Page {
 		parents = null;
 	}
 
-	protected UnitFilterBox(Page p, String pack, String... parent) {
+	protected UnitFilterBox(Page p, String pack, List<String> parent) {
 		super(p);
 
 		this.pack = pack;
-		this.parents = Arrays.asList(parent);
+		this.parents = parent;
 	}
 
 	public abstract int[] getSizer();
@@ -84,8 +82,8 @@ class UFBButton extends UnitFilterBox {
 		confirm();
 	}
 
-	protected UFBButton(Page p, String pack, String... parent) {
-		super(p, pack, parent);
+	protected UFBButton(Page p, String pack, List<String> parents) {
+		super(p, pack, parents);
 
 		ini();
 		confirm();
@@ -263,8 +261,8 @@ class UFBList extends UnitFilterBox {
 		confirm();
 	}
 
-	protected UFBList(Page p, String pack, String... parent) {
-		super(p, pack, parent);
+	protected UFBList(Page p, String pack, List<String> parents) {
+		super(p, pack, parents);
 
 		ini();
 		confirm();

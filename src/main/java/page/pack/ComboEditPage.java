@@ -12,6 +12,7 @@ import page.JL;
 import page.Page;
 import page.JTF;
 import page.basis.ComboListTable;
+import page.info.filter.UnitFindPage;
 import page.support.AnimLCR;
 import page.support.ReorderList;
 import page.support.UnitLCR;
@@ -20,6 +21,7 @@ import utilpc.Interpret;
 import javax.swing.*;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 public class ComboEditPage extends Page {
@@ -55,6 +57,9 @@ public class ComboEditPage extends Page {
     private final JL lbu = new JL(0, "unit");
     private final JL lbf = new JL(0, "forms");
 
+    private UnitFindPage ufp;
+    private final JBTN vuif = new JBTN(0,"vuif");
+
     private boolean changing = false;
 
     protected ComboEditPage(Page p, PackData.UserPack pack) {
@@ -66,9 +71,43 @@ public class ComboEditPage extends Page {
         resized();
     }
 
+    @Override
+    protected void renew() {
+        if (ufp != null && ufp.getList() != null) {
+            changing = true;
+            List<Unit> list = new ArrayList<>();
+            for (Form f : ufp.getList())
+                if (!list.contains(f.unit))
+                    list.add(f.unit);
+            jlu.setListData(list.toArray(new Unit[0]));
+            jlu.clearSelection();
+            if (list.size() > 0)
+                jlu.setSelectedIndex(0);
+            ufp = null;
+            changing = false;
+        } else if (pac == null) {
+            jlu.setListData(new Unit[0]);
+            jlc.clearSelection();
+            jlc.setList(new ArrayList<>());
+        } else {
+            jlf.allowDrag(pac.editable);
+            List<Unit> unis = new ArrayList<>();
+            for(PackData p : UserProfile.getAllPacks())
+                for (Unit u : p.units.getList())
+                    if (u.id.pack.equals(Identifier.DEF) || u.id.pack.equals(pac.getSID()) || pac.desc.dependency.contains(u.id.pack))
+                        unis.add(u);
+            jlu.setListData(unis.toArray(new Unit[0]));
+            jlu.clearSelection();
+            if (unis.size() > 0)
+                jlu.setSelectedIndex(0);
+            jlc.setList(pac.combos.getList());
+        }
+    }
+
     private void ini() {
         add(jspp);
         add(jspu);
+        add(vuif);
         add(jspf);
 
         add(back);
@@ -99,9 +138,7 @@ public class ComboEditPage extends Page {
     }
 
     private void addListeners$0() {
-        back.addActionListener(x -> {
-            changePanel(getFront());
-        });
+        back.addActionListener(x -> changePanel(getFront()));
 
         jlp.addListSelectionListener(arg0 -> {
             if (changing || jlp.getValueIsAdjusting())
@@ -111,6 +148,12 @@ public class ComboEditPage extends Page {
             setPack(jlp.getSelectedValue());
             updateC();
             changing = false;
+        });
+
+        vuif.addActionListener(arg0 -> {
+            if (ufp == null)
+                ufp = new UnitFindPage(getThis(), pac.getSID(), pac.desc.dependency);
+            changePanel(ufp);
         });
 
         jlu.addListSelectionListener(e -> {
@@ -231,6 +274,7 @@ public class ComboEditPage extends Page {
 
         set(lbu, x, y, 500, 100, 300, 50);
         set(jspu, x, y, 500, 150, 300, 600);
+        set(vuif, x, y, 500, 750, 300, 50);
 
         set(lbf, x, y, 800, 100, 300, 50);
         set(jspf, x, y, 800, 150, 300, 600);
@@ -257,23 +301,8 @@ public class ComboEditPage extends Page {
             changing = pre;
         }
         changing = true;
-        if (pac == null) {
-            jlu.setListData(new Unit[0]);
-            jlc.clearSelection();
-            jlc.setList(new ArrayList<>());
-        } else {
-            jlf.allowDrag(pac.editable);
-            PackData.DefPack BCs = UserProfile.getBCData();
-            Unit[] unis = new Unit[pac.units.size() + BCs.units.size()];
-            for (int i = 0; i < BCs.units.size() ; i++)
-                unis[i] = BCs.units.get(i);
-            for (int t = BCs.units.size(); t < unis.length ; t++)
-                unis[t] = pac.units.get(t - BCs.units.size());
-            jlu.setListData(unis);
-            jlu.clearSelection();
-            jlc.setList(pac.combos.getList());
-        }
         changing = pre;
+        renew();
         if (pac == null || !pac.units.contains(uni))
             uni = null;
         setUnit(uni);
@@ -312,8 +341,10 @@ public class ComboEditPage extends Page {
     private void updateC() {
         boolean editable = frm != null && pac.editable;
         addc.setEnabled(editable);
-        boolean size = pac != null && pac.editable && jlc.getSelectedRow() != -1 && jlc.list.size() > 0;
-        boolean esize = editable && size;
+        vuif.setEnabled(pac != null && pac.editable);
+        boolean size = pac != null && jlc.getSelectedRow() != -1 && jlc.list.size() > 0;
+        boolean dsize = size && pac.editable;
+        boolean esize = editable && dsize;
         if (size) {
             Combo c = jlc.list.get(jlc.getSelectedRow());
             ctypes.setSelectedIndex(c.type);
@@ -322,10 +353,10 @@ public class ComboEditPage extends Page {
             pac.combos.set(jlc.getSelectedRow(),c);
         } else
             comboname.setText("");
-        comboname.setEnabled(size);
-        ctypes.setEnabled(size);
-        clvls.setEnabled(size);
-        remc.setEnabled(size);
+        comboname.setEnabled(dsize);
+        ctypes.setEnabled(dsize);
+        clvls.setEnabled(dsize);
+        remc.setEnabled(dsize);
         remcf.setEnabled(esize && jlc.list.get(jlc.getSelectedRow()).forms.length > 1);
         boolean check = esize && Arrays.stream(jlc.list.get(jlc.getSelectedRow()).forms).noneMatch(fr -> fr.unit == frm.unit) && jlc.list.get(jlc.getSelectedRow()).forms.length < 5;
         addf.setEnabled(check);
