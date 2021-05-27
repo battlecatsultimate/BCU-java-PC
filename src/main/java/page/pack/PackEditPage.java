@@ -79,6 +79,7 @@ public class PackEditPage extends Page {
 	private final JBTN vmsc = new JBTN(0, "vmsc");
 	private final JBTN unpk = new JBTN(0, "unpack");
 	private final JBTN recd = new JBTN(0, "replay");
+	private final JBTN csol = new JBTN(0, "csoul");
 	private final JTF jtfp = new JTF();
 	private final JTF jtfe = new JTF();
 	private final JTF jtfs = new JTF();
@@ -169,6 +170,7 @@ public class PackEditPage extends Page {
 		set(remr, x, y, w + 175, 800, 175, 50);
 
 		set(recd, x, y, w, 950, 300, 50);
+		set(csol, x, y, w, 1050, 300, 50);
 
 		w += 350;
 
@@ -181,6 +183,8 @@ public class PackEditPage extends Page {
 		back.setLnr(x -> changePanel(getFront()));
 
 		recd.setLnr(x -> changePanel(new RecdPackPage(this, pac)));
+
+		csol.setLnr(x -> changePanel(new SoulEditPage(this, pac)));
 
 		vcas.addActionListener(arg0 -> {
 			if (pac != null && pac.editable)
@@ -560,6 +564,7 @@ public class PackEditPage extends Page {
 		add(vmsc);
 		add(unpk);
 		add(recd);
+		add(csol);
 		add(pid);
 		add(pauth);
 		add(animall);
