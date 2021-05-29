@@ -16,7 +16,6 @@ import common.util.anim.AnimU.UType;
 import common.util.lang.Editors;
 import common.util.pack.Background;
 import common.util.pack.Soul;
-import common.util.pack.AnimS.SoulType;
 import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
@@ -436,7 +435,7 @@ public abstract class EntityEditPage extends Page {
 		jcbs.setSelectedItem(Identifier.get(ce.death));
 		vrev.setText(ce.rev == null ? "x" : (KB_TIME[INT_HB] - ce.rev.pre + "f"));
 		Soul s = Identifier.get(ce.death);
-		vres.setText(ce.res == null ? "x" : s == null ? "-" : (s.anim.len(SoulType.DEF) - ce.res.pre + "f"));
+		vres.setText(ce.res == null ? "x" : s == null ? "-" : (s.anim.len(UType.SOUL) - ce.res.pre + "f"));
 		changing = false;
 	}
 
