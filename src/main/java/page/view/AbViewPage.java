@@ -205,7 +205,7 @@ public abstract class AbViewPage extends Page {
 				return;
 			AnimD<?, ?> eau = (AnimD<?, ?>) ei.anim();
 			ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, "new anim");
-			Workspace.validate(Source.ANIM, rl);
+			Workspace.validate(Source.BasePath.ANIM, rl);
 			new AnimCE(rl, eau);
 			changePanel(new ImgCutEditPage(getThis()));
 		});

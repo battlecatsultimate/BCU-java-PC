@@ -241,7 +241,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			if (selection == 0) {
 				changing = true;
 				ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, "new anim");
-				Workspace.validate(Source.ANIM, rl);
+				Workspace.validate(Source.BasePath.ANIM, rl);
 				AnimCE ac = new AnimCE(rl);
 				ac.setNum(MainBCU.builder.build(bimg));
 				ac.saveImg();
@@ -255,7 +255,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			} else if (selection == 1) { // TODO
 				changing = true;
 				ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, "new anim");
-				Workspace.validate(Source.SOUL, rl);
+				Workspace.validate(Source.BasePath.SOUL, rl);
 
 				Opts.pop("Selected Soul Animation", "Animation Type");
 				changing = false;
@@ -326,7 +326,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		copy.addActionListener(arg0 -> {
 			changing = true;
 			ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, icet.anim.id.id);
-			Workspace.validate(Source.ANIM, rl);
+			Workspace.validate(Source.BasePath.ANIM, rl);
 			AnimCE ac = new AnimCE(rl, icet.anim);
 			ac.setEdi(icet.anim.getEdi());
 			ac.setUni(icet.anim.getUni());
@@ -521,7 +521,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		merg.addActionListener(e -> {
 			changing = true;
 			ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, "merged");
-			Workspace.validate(Source.ANIM, rl);
+			Workspace.validate(Source.BasePath.ANIM, rl);
 
 			TreePath[] paths = jta.getSelectionPaths();
 

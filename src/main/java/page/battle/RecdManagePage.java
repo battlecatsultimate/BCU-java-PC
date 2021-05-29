@@ -90,7 +90,7 @@ public class RecdManagePage extends AbRecdPage {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				Replay r = jlr.getSelectedValue();
-				File f = CommonStatic.ctx.getWorkspaceFile(r.rl.getPath(Source.REPLAY) + ".replay");
+				File f = CommonStatic.ctx.getWorkspaceFile(r.rl.getPath(Source.BasePath.REPLAY) + ".replay");
 				if (f.exists())
 					f.delete();
 				if (!f.exists()) {
