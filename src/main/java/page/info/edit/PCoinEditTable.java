@@ -18,7 +18,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 @SuppressWarnings("deprecation")
-public class PCoinEditTable extends Page {
+class PCoinEditTable extends Page {
 
     private static final long serialVersionUID = 1L;
 
@@ -33,8 +33,7 @@ public class PCoinEditTable extends Page {
 
         @Override
         public String toString() { return name; }
-
-        public int getValue() { return key; }
+        private int getValue() { return key; }
     }
     private static class NPList extends JList<talentData> {
         protected NPList() {
@@ -233,7 +232,7 @@ public class PCoinEditTable extends Page {
         addListeners();
     }
 
-    public void setCTypes(boolean coin) {
+    protected void setCTypes(boolean coin) {
         ArrayList<talentData> available = new ArrayList<>();
         if (coin) {
             for (int i : allPC) {
@@ -269,14 +268,14 @@ public class PCoinEditTable extends Page {
             ctypes.setListData(new talentData[0]);
     }
 
-    public void randomize() {
+    protected void randomize() {
         ListModel<talentData> listModel = ctypes.getModel();
         int dat = listModel.getElementAt((int)(Math.random() * listModel.getSize())).getValue();
         unit.pcoin.info.get(talent)[0] = dat;
         unit.pcoin.info.get(talent)[10] = dat;
     }
 
-    public void setData() {
+    protected void setData() {
         boolean pc = unit.pcoin != null && unit.pcoin.info.size() > talent;
         int[] type = pc ? Data.PC_CORRES[unit.pcoin.info.get(talent)[0]] : new int[]{-1, 0};
         PCoinLV.setEnabled(pc && editable && (type[0] == Data.PC_P || type[0] == Data.PC_BASE));

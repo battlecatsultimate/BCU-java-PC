@@ -133,8 +133,8 @@ public class Interpret extends Data {
 	}
 
 	public static class ProcDisplay {
-		String text;
-		ImageIcon icon = null;
+		private String text;
+		private ImageIcon icon = null;
 		public ProcDisplay(String desc, BufferedImage img) {
 			text = desc;
 			if (img != null)
@@ -142,7 +142,6 @@ public class Interpret extends Data {
 		}
 		@Override
 		public String toString() { return text; }
-
 		public ImageIcon getIcon() { return icon; }
 	}
 
@@ -173,13 +172,71 @@ public class Interpret extends Data {
 			int p1 = Math.max(lds, lds + ldr);
 			int r = Math.abs(ldr);
 			BufferedImage bi;
-			if (ldr <= 0 || lds <= 0) {
+			if (me.isOmni()) {
 				bi = UtilPC.getIcon(2, ATK_OMNI);
 			} else {
 				bi = UtilPC.getIcon(2, ATK_LD);
 			}
 			l.add(new ProcDisplay(Page.get(MainLocale.UTIL, "ld0") + ": " + tb + ", " + Page.get(MainLocale.UTIL, "ld1") + ": " + p0 + "~" + p1 + ", "
 					+ Page.get(MainLocale.UTIL, "ld2") + ": " + r, bi));
+		} else if (!allRangeSame(me)) {
+			LinkedHashMap<String, List<Integer>> LDInts = new LinkedHashMap<>();
+			AtkDataModel[] atks = ((CustomEntity)me).atks;
+			List<BufferedImage> ics = new ArrayList<>();
+
+			for (int i = 0; i < atks.length ; i++ ) {
+				int rs = atks[i].getShortPoint();
+				int rl = atks[i].getLongPoint();
+				if (rs == 0 && rl == 0)
+					continue;
+				String LDData = Page.get(MainLocale.UTIL, "ld0") + ": " + tb + ", " + Page.get(MainLocale.UTIL, "ld1")
+						+ ": " + rs + "~" + rl + ", " + Page.get(MainLocale.UTIL, "ld2") + ": " + (rl - rs);
+				if (LDInts.containsKey(LDData)) {
+					List<Integer> li = LDInts.get(LDData);
+					li.add(i + 1);
+				} else {
+					List<Integer> li = new ArrayList<>();
+					li.add(i + 1);
+
+					LDInts.put(LDData, li);
+				}
+				if (atks[i].isOmni())
+					ics.add(UtilPC.getIcon(2, ATK_OMNI));
+				else
+					ics.add(UtilPC.getIcon(2, ATK_LD));
+			}
+
+			int i = 0;
+			for (String key : LDInts.keySet()) {
+				List<Integer> inds = LDInts.get(key);
+				if (inds == null) {
+					l.add(new ProcDisplay(key, ics.get(i++)));
+				} else {
+					if (inds.size() == me.getAtkCount()) {
+						l.add(new ProcDisplay(key, ics.get(i++)));
+					} else {
+						l.add(new ProcDisplay(key + " " + getAtkNumbers(inds), ics.get(i++)));
+					}
+				}
+			}
+		}
+		AtkDataModel rev = me.getRevenge();
+		for (int z = 0; z < 2; z++) {
+			if (rev != null) {
+				int revs = rev.getShortPoint();
+				int revl = rev.getLongPoint();
+				if (revs != 0 || revl != 0) {
+					BufferedImage bi;
+					if (rev.isOmni())
+						bi = (UtilPC.getIcon(2, ATK_OMNI));
+					else
+						bi = (UtilPC.getIcon(2, ATK_LD));
+					l.add(new ProcDisplay(Page.get(MainLocale.UTIL, "ld1") + ": " + revs + "~" + revl +
+							", " + Page.get(MainLocale.UTIL, "ld2") + ": " + (revl - revs) +
+							" [" + Page.get(MainLocale.UTIL, "aa" + (z + 6)) + "]", bi));
+				}
+			}
+			rev = me.getResurrection();
 		}
 		String imu = Page.get(MainLocale.UTIL, "imu");
 		for (int i = 0; i < ABIS.length; i++)
@@ -214,7 +271,7 @@ public class Interpret extends Data {
 
 	public static List<ProcDisplay> getProc(MaskEntity du, boolean isEnemy) {
 		Formatter.Context ctx = new Formatter.Context(isEnemy, false);
-		boolean common;
+		final boolean common;
 
 		if(du instanceof CustomEntity) {
 			common = ((CustomEntity) du).common;
@@ -445,20 +502,24 @@ public class Interpret extends Data {
 
 		List<MapColc> lis = e.findMap();
 		boolean colab = false;
+		final int recurring = e.findApp(DefMapColc.getMap("N")).size() + e.findApp(DefMapColc.getMap("A")).size();
 		if (lis.contains(DefMapColc.getMap("C")))
 			if (lis.size() == 1)
 				colab = true;
-			else if (lis.size() == 2)
-				colab = lis.contains(DefMapColc.getMap("R")) || lis.contains(DefMapColc.getMap("CH"));
-
+			else {
+				colab = lis.contains(DefMapColc.getMap("R")) || lis.contains(DefMapColc.getMap("CH")) || lis.contains(DefMapColc.getMap("CA"));
+				if (lis.size() > 2)
+					colab &= recurring == 0;
+			}
 		if (t == 2)
 			return !colab;
 		else if (t == 3)
-			return !colab && !e.inDic;
+			return e.id.pack.equals(Identifier.DEF) && !e.inDic;
 		else if (t == 4)
 			return colab;
-		else
-			return false;
+		else if (t == 6)
+			return recurring > 1;
+		return false;
 	}
 
 	public static boolean isType(MaskEntity de, int type) {
@@ -483,7 +544,7 @@ public class Interpret extends Data {
 	}
 
 	public static void redefine() {
-		ERARE = Page.get(MainLocale.UTIL, "er", 6);
+		ERARE = Page.get(MainLocale.UTIL, "er", 7);
 		RARITY = Page.get(MainLocale.UTIL, "r", 6);
 		TRAIT = Page.get(MainLocale.UTIL, "c", 12);
 		STAR = Page.get(MainLocale.UTIL, "s", 5);

@@ -68,14 +68,14 @@ public class PCoinEditPage extends Page {
         });
     }
 
-    public void setCoinTypes() {
+    protected void setCoinTypes() {
         for (PCoinEditTable pcedi : pCoinEdits)
             pcedi.setCTypes(uni.pcoin != null && uni.pcoin.info.size() > pcedi.talent);
         setCoins();
     }
 
     //Changes the other talent indexes once a talent is removed from the list
-    public void removed() {
+    protected void removed() {
         if (uni.pcoin.info.size() == 0)
             uni.pcoin = null;
         setCoinTypes();
