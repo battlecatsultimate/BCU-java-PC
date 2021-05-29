@@ -8,10 +8,8 @@ import common.pack.Source;
 import common.pack.UserProfile;
 import common.system.fake.FakeImage.Marker;
 import common.util.AnimGroup;
-import common.util.anim.AnimCE;
-import common.util.anim.ImgCut;
-import common.util.anim.MaAnim;
-import common.util.anim.Part;
+import common.util.anim.*;
+import common.util.pack.Soul;
 import common.util.unit.Enemy;
 import main.MainBCU;
 import main.Opts;
@@ -234,19 +232,34 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			BufferedImage bimg = new Importer("Add your sprite").getImg();
 			if (bimg == null)
 				return;
-			changing = true;
-			ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, "new anim");
-			Workspace.validate(Source.ANIM, rl);
-			AnimCE ac = new AnimCE(rl);
-			ac.setNum(MainBCU.builder.build(bimg));
-			ac.saveImg();
-			ac.createNew();
-			AnimCE.map().put(rl.id, ac);
-			AnimGroup.workspaceGroup.renewGroup();
-			agt.renewNodes();
-			selectAnimNode(ac);
-			setA(ac);
-			changing = false;
+			int selection = Opts.selection("What kind of animation do you want to create?",
+					"Select Animation Type",
+					"Unit/Enemy",
+					"Souls");
+			if (selection == -1)
+				return;
+			if (selection == 0) {
+				changing = true;
+				ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, "new anim");
+				Workspace.validate(Source.ANIM, rl);
+				AnimCE ac = new AnimCE(rl);
+				ac.setNum(MainBCU.builder.build(bimg));
+				ac.saveImg();
+				ac.createNew();
+				AnimCE.map().put(rl.id, ac);
+				AnimGroup.workspaceGroup.renewGroup();
+				agt.renewNodes();
+				selectAnimNode(ac);
+				setA(ac);
+				changing = false;
+			} else if (selection == 1) { // TODO
+				changing = true;
+				ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, "new anim");
+				Workspace.validate(Source.SOUL, rl);
+
+				Opts.pop("Selected Soul Animation", "Animation Type");
+				changing = false;
+			}
 		});
 
 		impt.addActionListener(arg0 -> {
