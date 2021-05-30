@@ -469,7 +469,9 @@ public interface BattleBox {
 		private final ArrayList<ContAb> efList = new ArrayList<>();
 
 		private void drawEntity(FakeGraphics gra) {
-			efList.addAll(sb.lw);
+			for(int i = 0; i < sb.lw.size(); i++) {
+				efList.add(sb.lw.get(i));
+			}
 			int w = box.getWidth();
 			int h = box.getHeight();
 			FakeTransform at = gra.getTransform();
@@ -566,7 +568,7 @@ public interface BattleBox {
 						shake = (2 + (sb.time % 2 * -4)) * siz;
 					}
 
-					((Entity) sb.ebase).anim.draw(gra, setP(posx + shake, posy), siz * sprite);
+					((Entity)sb.ebase).anim.draw(gra, setP(posx + shake, posy), siz * sprite);
 					if(sb.ebase.health > 0)
 						((Entity) sb.ebase).anim.drawEff(gra, setP(posx + shake, posy), siz * sprite);
 				}
