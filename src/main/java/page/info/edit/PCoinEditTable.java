@@ -88,9 +88,9 @@ class PCoinEditTable extends Page {
     private final boolean editable;
     private final JL[] chance = new JL[8];
     private final JTF[] tchance = new JTF[8];
-    public final int talent;
+    protected final int talent;
 
-    private boolean changing = true;
+    private boolean changing;
     private int cTypesY = 550;
 
     protected PCoinEditTable(Page p, CustomUnit u, int ind, boolean edi) {
@@ -160,7 +160,6 @@ class PCoinEditTable extends Page {
                 }
             }
             pcedit.setCoinTypes();
-            setData();
             changing = false;
         });
 
@@ -172,6 +171,11 @@ class PCoinEditTable extends Page {
                 changing = true;
                 String txt = tchance[finalI - 2].getText().trim();
                 int[] v = CommonStatic.parseIntsN(txt);
+                if (v.length == 0) {
+                    tchance[finalI - 2].setText("" + unit.pcoin.info.get(talent)[finalI]);
+                    changing = false;
+                    return;
+                }
 
                 int ind = finalI % 2 == 0 ? 1 : -1;
                 int w = v.length > 1 ? v[1] : unit.pcoin.info.get(talent)[finalI + ind];
@@ -276,6 +280,7 @@ class PCoinEditTable extends Page {
     }
 
     protected void setData() {
+        changing = true;
         boolean pc = unit.pcoin != null && unit.pcoin.info.size() > talent;
         int[] type = pc ? Data.PC_CORRES[unit.pcoin.info.get(talent)[0]] : new int[]{-1, 0};
         PCoinLV.setEnabled(pc && editable && (type[0] == Data.PC_P || type[0] == Data.PC_BASE));
