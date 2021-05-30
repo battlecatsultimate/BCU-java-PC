@@ -109,8 +109,12 @@ class AtkEditTable extends Page {
 		}
 		fab.setText(str + "}");
 		isr.setSelected(adm.range);
-		spt.setSelected(adm.specialTrait);
-		spt.setText(MainLocale.PAGE, (isUnit && adm.dire == 1) || (!isUnit && adm.dire == -1) ? "igtr" : "cntr");
+		spt.setVisible(!isUnit || adm.dire != 1);
+		if (spt.isVisible()) {
+			spt.setSelected(adm.specialTrait);
+			spt.setText(MainLocale.PAGE, !isUnit && adm.dire == -1 ? "igtr" : "cntr");
+		} else
+			adm.specialTrait = false;
 	}
 
 	private void ini() {
