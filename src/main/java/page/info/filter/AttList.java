@@ -78,7 +78,9 @@ class AttList extends JList<String> {
 			public Component getListCellRendererComponent(JList<?> l, Object o, int ind, boolean s, boolean f) {
 				JLabel jl = (JLabel) super.getListCellRendererComponent(l, o, ind, s, f);
 				Trait trait = diyTraits.get(ind);
-				if (trait.icon != null)
+				if (trait.BCTrait)
+					jl.setIcon(UtilPC.createIcon(3, ind));
+				else if (trait.icon != null)
 					jl.setIcon(trait.obtainIcon());
 				return jl;
 			}
