@@ -4,7 +4,7 @@ import common.CommonStatic;
 import common.pack.Identifier;
 import common.pack.PackData;
 import common.pack.UserProfile;
-import common.system.Node;
+import common.system.ENode;
 import common.util.Data;
 import common.util.stage.SCDef.Line;
 import common.util.stage.SCGroup;
@@ -20,6 +20,8 @@ import page.support.EnemyTCR;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StageTable extends AbJTable {
 
@@ -103,13 +105,19 @@ public class StageTable extends AbJTable {
 			if (!(data[r][2] instanceof String))
 				return;
 
-			int[] d = CommonStatic.parseIntsN((String) data[r][2]);
-
-			if(d.length == 1) {
-				MainFrame.changePanel(new EnemyInfoPage(page, Node.getList(UserProfile.getAll(e.id.pack, Enemy.class), e), d[0], d[0]));
-			} else {
-				MainFrame.changePanel(new EnemyInfoPage(page, Node.getList(UserProfile.getAll(e.id.pack, Enemy.class), e), d[0], d[1]));
+			List<Enemy> eList = new ArrayList<>();
+			List<int[]> muls = new ArrayList<>();
+			for (Object[] datum : data) {
+				if (datum[c] instanceof Enemy && !eList.contains(datum[c])) {
+					eList.add((Enemy) datum[c]);
+					int[] b = CommonStatic.parseIntsN((String) datum[2]);
+					if (b.length == 1)
+						muls.add(new int[]{b[0], b[0]});
+					else
+						muls.add(new int[]{b[0], b[1]});
+				}
 			}
+			MainFrame.changePanel(new EnemyInfoPage(page, ENode.getList(eList, e, muls)));
 		} else if(data[r][c] instanceof EneRand) {
 			EneRand e = (EneRand) data[r][c];
 

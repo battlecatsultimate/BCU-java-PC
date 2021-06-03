@@ -3,7 +3,7 @@ package page.view;
 import common.pack.PackData;
 import common.pack.Source;
 import common.pack.UserProfile;
-import common.system.Node;
+import common.system.ENode;
 import common.util.anim.AnimCE;
 import common.util.anim.AnimD;
 import common.util.anim.EAnimI;
@@ -93,7 +93,7 @@ public class EnemyViewPage extends AbViewPage {
 			List<Enemy> lis = new ArrayList<>();
 			for (int i = 0;i < enes.getSize(); i++)
 				lis.add(enes.getElementAt(i));
-			Node<Enemy> n = Node.getList(lis,ene);
+			ENode n = ENode.getList(lis,ene);
 
 			changePanel(new EnemyInfoPage(getThis(), n));
 		});

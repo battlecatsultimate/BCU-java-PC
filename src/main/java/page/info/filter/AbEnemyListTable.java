@@ -3,7 +3,7 @@ package page.info.filter;
 import common.battle.Basis;
 import common.battle.BasisSet;
 import common.pack.UserProfile;
-import common.system.Node;
+import common.system.ENode;
 import common.util.unit.AbEnemy;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
@@ -61,7 +61,7 @@ public class AbEnemyListTable  extends SortTable<AbEnemy> {
         AbEnemy e = list.get(r);
 
         if(e instanceof Enemy)
-            MainFrame.changePanel(new EnemyInfoPage(page, Node.getList(UserProfile.getAll(((Enemy)e).id.pack, Enemy.class), (Enemy)e)));
+            MainFrame.changePanel(new EnemyInfoPage(page, ENode.getList(UserProfile.getAll(((Enemy)e).id.pack, Enemy.class), (Enemy)e)));
         else if(e instanceof EneRand)
             MainFrame.changePanel(new EREditPage(page, UserProfile.getUserPack(e.getID().pack)));
 

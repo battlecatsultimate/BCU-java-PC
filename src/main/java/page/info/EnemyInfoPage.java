@@ -1,8 +1,7 @@
 package page.info;
 
 import common.battle.BasisSet;
-import common.system.Node;
-import common.util.unit.Enemy;
+import common.system.ENode;
 import page.JBTN;
 import page.JTG;
 import page.Page;
@@ -26,17 +25,13 @@ public class EnemyInfoPage extends Page {
 	private final EnemyInfoTable info;
 	private final TreaTable trea;
 
-	private final Node<Enemy> e;
+	private final ENode e;
 
-	public EnemyInfoPage(Page p, Node<Enemy> de) {
-		this(p, de, 100, 100);
-	}
-
-	public EnemyInfoPage(Page p, Node<Enemy> de, int mul, int mula) {
+	public EnemyInfoPage(Page p, ENode de) {
 		super(p);
 		e = de;
 
-		info = new EnemyInfoTable(this, de.val, mul, mula);
+		info = new EnemyInfoTable(this, de.val, de.mul, de.mula);
 		trea = new TreaTable(this, BasisSet.current());
 		ini();
 		resized();
@@ -70,7 +65,7 @@ public class EnemyInfoPage extends Page {
 	private void addListeners() {
 		back.addActionListener(arg0 -> changePanel(getFront()));
 
-		prev.addActionListener(arg0 -> changePanel(new EnemyInfoPage(getFront(), e.prev)));
+		prev.addActionListener(arg0 -> changePanel(new EnemyInfoPage(getFront(), (ENode) e.prev)));
 
 		anim.addActionListener(arg0 -> {
 			if (getFront() instanceof EnemyViewPage)
@@ -79,13 +74,11 @@ public class EnemyInfoPage extends Page {
 				changePanel(new EnemyViewPage(getThis(), e.val));
 		});
 
-		next.addActionListener(arg0 -> changePanel(new EnemyInfoPage(getFront(), e.next)));
+		next.addActionListener(arg0 -> changePanel(new EnemyInfoPage(getFront(), (ENode) e.next)));
 
 		find.addActionListener(arg0 -> changePanel(new StageFilterPage(getThis(), e.val.findApp())));
 
-		extr.addActionListener(arg0 -> {
-			info.setDisplaySpecial(extr.isSelected());
-		});
+		extr.addActionListener(arg0 -> info.setDisplaySpecial(extr.isSelected()));
 	}
 
 	private void ini() {
