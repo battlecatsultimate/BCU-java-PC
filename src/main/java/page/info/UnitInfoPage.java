@@ -43,7 +43,7 @@ public class UnitInfoPage extends Page {
 		info = new UnitInfoTable[n.val.forms.length];
 		for (int i = 0; i < info.length; i++)
 			info[i] = new UnitInfoTable(this, n.val.forms[i], sp);
-		trea = new TreaTable(this, b);
+		trea = new TreaTable(this);
 		extr.setSelected(sp);
 		ini();
 		resized();

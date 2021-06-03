@@ -81,7 +81,7 @@ public class BasisPage extends LubCont {
 
 	private UnitFLUPage ufp;
 
-	private final TreaTable trea = new TreaTable(this, BasisSet.current());
+	private final TreaTable trea = new TreaTable(this);
 	private final JScrollPane jspt = new JScrollPane(trea);
 	private Unit cunit;
 
@@ -555,6 +555,7 @@ public class BasisPage extends LubCont {
 		updateSetC();
 		lub.updateLU();
 		setLvs(lub.sf);
+		trea.callBack(null);
 	}
 
 	private void ini() {
@@ -631,6 +632,7 @@ public class BasisPage extends LubCont {
 		ncb.set(b.nyc);
 		changeLU();
 		callBack(lub.sf);
+		trea.callBack(null);
 	}
 
 	private void setBS(BasisSet bs) {
@@ -640,12 +642,12 @@ public class BasisPage extends LubCont {
 		jlb.setListData(vb);
 		BasisLU b = bs.sele;
 		jlb.setSelectedValue(b, true);
-		trea.setBasis(bs);
 		bsjtf.setText(BasisSet.current().name);
 		bsrem.setEnabled(current() != BasisSet.def());
 		setB(b);
 		jlc.setBasis(bs);
 		jlcn.setBasis(bs);
+		trea.callBack(null);
 	}
 
 	private void setC() {

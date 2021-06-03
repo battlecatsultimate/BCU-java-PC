@@ -35,7 +35,7 @@ public class EnemyInfoPage extends Page {
 		e = de;
 
 		info = new EnemyInfoTable(this, de, mul, mula);
-		trea = new TreaTable(this, b);
+		trea = new TreaTable(this);
 		ini();
 		resized();
 	}

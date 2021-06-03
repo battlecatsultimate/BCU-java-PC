@@ -1,8 +1,10 @@
 package page.info;
 
 import common.CommonStatic;
+import common.battle.BasisLU;
 import common.battle.BasisSet;
 import common.system.Node;
+import common.util.Data;
 import main.MainBCU;
 import page.JTF;
 import page.JTG;
@@ -44,14 +46,17 @@ public class TreaTable extends Page {
 
 	private Node<Integer> nc, cur, colp;
 
-	private BasisSet b;
-
-	public TreaTable(Page p, BasisSet bas) {
+	public TreaTable(Page p) {
 		super(p);
 
-		b = bas;
 		ini();
 		reset();
+	}
+
+	@Override
+	public void callBack(Object o) {
+		if (o == null)
+			reset();
 	}
 
 	@Override
@@ -65,11 +70,6 @@ public class TreaTable extends Page {
 			if (c.hasFocus())
 				return true;
 		return false;
-	}
-
-	public void setBasis(BasisSet bas) {
-		b = bas;
-		reset();
 	}
 
 	@Override
@@ -146,7 +146,7 @@ public class TreaTable extends Page {
 					@Override
 					public void focusLost(FocusEvent e) {
 						int val = Math.abs(CommonStatic.parseIntN(jcf[J].getText()));
-						setComp(J, val, b);
+						setComp(J, val, BasisSet.current());
 						reset();
 						getFront().callBack(null);
 					}
@@ -157,7 +157,7 @@ public class TreaTable extends Page {
 			int ind = TIND[i];
 			int I = i;
 			jln[i] = new JLabel(TREA[ind]);
-			jtf[i] = new JTF(tos(getValue(ind, b.t()), i));
+			jtf[i] = new JTF(tos(getValue(ind, BasisSet.current().t()), i));
 			Node<Integer> temp = new Node<>(i + 1);
 			if (nc == null)
 				cur = nc = temp;
@@ -178,22 +178,54 @@ public class TreaTable extends Page {
 				@Override
 				public void focusLost(FocusEvent e) {
 					int val = Math.abs(CommonStatic.parseIntN(jtf[I].getText()));
-					setValue(ind, val, b);
+					setValue(ind, val, BasisSet.current());
 					reset();
 					getFront().callBack(null);
 				}
 
 			});
-
 		}
-
 	}
 
 	private void reset() {
+		BasisLU b = BasisSet.current().sele;
 		for (int i = 0; i < TREA.length; i++)
 			jtf[i].setText(tos(getValue(TIND[i], b.t()), i + 1));
 		for (int i = 0; i < TCTX.length; i++)
 			jcf[i].setText(tos(getComp(i, b.t()), -i - 1));
+
+		int slowTime = (int) (b.t().getCannonMagnification(1, Data.BASE_SLOW_TIME) * (100 + b.getInc(C_SLOW)) / 100.0);
+
+		int ironWallTime = (int) b.t().getCannonMagnification(2, Data.BASE_WALL_ALIVE_TIME);
+
+		int freezeTime = (int) (b.t().getCannonMagnification(3, Data.BASE_TIME) * (100 + b.getInc(C_STOP)) / 100.0);
+		int freezeAttack = (int) (b.t().getCannonMagnification(3, Data.BASE_ATK_MAGNIFICATION) * 100.0);
+
+		int waterAttack = (int) (b.t().getCannonMagnification(4, Data.BASE_HEALTH_PERCENTAGE) * 100.0);
+
+		int undergroundAttack = (int) (b.t().getCannonMagnification(5, Data.BASE_HOLY_ATK_UNDERGROUND) * 100.0);
+		int surfaceAttack = (int) (b.t().getCannonMagnification(5, Data.BASE_HOLY_ATK_SURFACE) * 100.0);
+		int holyFreezeTime = (int) (b.t().getCannonMagnification(5, Data.BASE_TIME) * (100 + b.getInc(C_STOP)) / 100.0);
+
+		int breakerBlastAttack = (int) (b.t().getCannonMagnification(6, Data.BASE_ATK_MAGNIFICATION) * 100.0);
+		int breakerBlastPiercing = (int) b.t().getCannonMagnification(6, Data.BASE_RANGE);
+
+		int curseTime = (int) b.t().getCannonMagnification(7, Data.BASE_CURSE_TIME);
+
+		jtf[30].setToolTipText("This cannon will slow enemies for " + slowTime + " frames.");
+		jtf[31].setToolTipText("This cannon will summon the Iron Wall that will last " + ironWallTime + " frames after enter animation.");
+		jtf[32].setToolTipText("<html>This cannon has multiple properties.<br>"+
+				"It will freeze enemies for " + freezeTime + " frames.<br>" +
+				"It will deal " + freezeAttack + "% of base cannon damage.</html>");
+		jtf[33].setToolTipText("This cannon will deal " + waterAttack + "% of remaining HP to metals, while dealing 1 damage to all non-metals.");
+		jtf[34].setToolTipText("<html>This cannon has multiple properties.<br>" +
+				"It will deal " + undergroundAttack + "% of maximum HP to burrowing zombies.<br>" +
+				"It will deal " + surfaceAttack + "% of maximum HP is dealt to non-burrowing zombies.<br>" +
+				"It will freeze enemies for " + holyFreezeTime + " frames.</html>");
+		jtf[35].setToolTipText("<html>This cannon has multiple properties.<br>" +
+				"It will knock back enemies with " + breakerBlastPiercing + " piercing range from the frontmost enemy.<br>" +
+				"It will deal " + breakerBlastAttack + "% of base cannon damage.</html>");
+		jtf[36].setToolTipText("This cannon will curse enemies for " + curseTime + " frames.");
 	}
 
 	public int getPWidth() {
