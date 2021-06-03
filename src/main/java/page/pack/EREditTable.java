@@ -4,6 +4,7 @@ import common.CommonStatic;
 import common.pack.Identifier;
 import common.pack.PackData;
 import common.pack.UserProfile;
+import common.system.Node;
 import common.util.EREnt;
 import common.util.unit.AbEnemy;
 import common.util.unit.EneRand;
@@ -153,7 +154,7 @@ class EREditTable extends AbJTable implements Reorderable {
 		EREnt<Identifier<AbEnemy>> er = rand.list.get(r);
 		AbEnemy e = Identifier.get(er.ent);
 		if (e instanceof Enemy)
-			MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, er.multi, er.mula));
+			MainFrame.changePanel(new EnemyInfoPage(page, Node.getList(UserProfile.getAll(((Enemy)e).id.pack, Enemy.class), (Enemy)e), er.multi, er.mula));
 		else if(e instanceof EneRand && pack != null && !e.getID().pack.equals(pack))
 			MainFrame.changePanel(new EREditPage(page, UserProfile.getUserPack(((EneRand) e).id.pack)));
 	}

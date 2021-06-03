@@ -2,6 +2,8 @@ package page.battle;
 
 import common.CommonStatic;
 import common.pack.Identifier;
+import common.pack.UserProfile;
+import common.system.Node;
 import common.util.stage.EStage;
 import common.util.stage.SCDef.Line;
 import common.util.stage.Stage;
@@ -90,7 +92,7 @@ class ComingTable extends AbJTable {
 			return;
 		Enemy e = (Enemy) data[r][c];
 		int[] d = CommonStatic.parseIntsN((String) data[r][2]);
-		MainFrame.changePanel(new EnemyInfoPage(page, e, d[0], d[1]));
+		MainFrame.changePanel(new EnemyInfoPage(page, Node.getList(UserProfile.getAll(e.id.pack, Enemy.class), e), d[0], d[1]));
 
 	}
 

@@ -2,6 +2,7 @@ package page.info.filter;
 
 import common.battle.Basis;
 import common.battle.BasisSet;
+import common.system.Node;
 import common.util.unit.Enemy;
 import page.MainFrame;
 import page.MainLocale;
@@ -55,7 +56,7 @@ public class EnemyListTable extends SortTable<Enemy> {
 		if (r < 0 || r >= list.size() || c != 1)
 			return;
 		Enemy e = list.get(r);
-		MainFrame.changePanel(new EnemyInfoPage(page, e));
+		MainFrame.changePanel(new EnemyInfoPage(page, Node.getList(list, e)));
 
 	}
 

@@ -2,8 +2,9 @@ package page.info.edit;
 
 import common.battle.data.CustomEnemy;
 import common.battle.data.CustomEntity;
-import common.pack.Identifier;
 import common.pack.PackData;
+import common.pack.UserProfile;
+import common.system.Node;
 import common.util.unit.Enemy;
 import org.jcodec.common.tools.MathUtil;
 import page.JBTN;
@@ -84,7 +85,7 @@ public class EnemyEditPage extends EntityEditPage {
 			edesc[i].setLnr(d -> changeDesc(finalI));
 		}
 
-		stat.setLnr(x -> changePanel(new EnemyInfoPage(this, (Enemy) Identifier.get(ce.getPack().getID()))));
+		stat.setLnr(x -> changePanel(new EnemyInfoPage(this, Node.getList(UserProfile.getAll(ene.id.pack, Enemy.class), ene))));
 		subListener(impt, vuni, vene, ene);
 	}
 

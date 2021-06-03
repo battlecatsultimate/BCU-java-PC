@@ -5,6 +5,7 @@ import common.pack.Identifier;
 import common.pack.PackData;
 import common.pack.PackData.UserPack;
 import common.pack.UserProfile;
+import common.system.Node;
 import common.util.Data;
 import common.util.stage.SCDef;
 import common.util.stage.SCDef.Line;
@@ -239,7 +240,7 @@ public class StageEditTable extends AbJTable implements Reorderable {
 		if(button == MouseEvent.BUTTON1) {
 			AbEnemy e = Identifier.get(info[ind].enemy);
 			if (e instanceof Enemy)
-				MainFrame.changePanel(new EnemyInfoPage(page, (Enemy) e, info[ind].multiple, info[ind].mult_atk));
+				MainFrame.changePanel(new EnemyInfoPage(page, Node.getList(UserProfile.getAll(((Enemy)e).id.pack, Enemy.class), (Enemy)e), info[ind].multiple, info[ind].mult_atk));
 			if (e instanceof EneRand)
 				MainFrame.changePanel(new EREditPage(page, pack, (EneRand) e));
 		} else if(button == MouseEvent.BUTTON3) {
