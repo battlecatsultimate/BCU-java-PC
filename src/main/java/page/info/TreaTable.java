@@ -196,6 +196,7 @@ public class TreaTable extends Page {
 
 		int slowTime = (int) (b.t().getCannonMagnification(1, Data.BASE_SLOW_TIME) * (100 + b.getInc(C_SLOW)) / 100.0);
 
+		int ironWallHP = (int) (5 * b.t().getCannonMagnification(BASE_WALL, BASE_WALL_MAGNIFICATION));
 		int ironWallTime = (int) b.t().getCannonMagnification(2, Data.BASE_WALL_ALIVE_TIME);
 
 		int freezeTime = (int) (b.t().getCannonMagnification(3, Data.BASE_TIME) * (100 + b.getInc(C_STOP)) / 100.0);
@@ -213,7 +214,9 @@ public class TreaTable extends Page {
 		int curseTime = (int) b.t().getCannonMagnification(7, Data.BASE_CURSE_TIME);
 
 		jtf[30].setToolTipText("This cannon will slow enemies for " + slowTime + " frames.");
-		jtf[31].setToolTipText("This cannon will summon the Iron Wall that will last " + ironWallTime + " frames after enter animation.");
+		jtf[31].setToolTipText("<html>This cannon has multiple properties.<br>" +
+				"The Iron Wall will have " + ironWallHP + " health.<br>" +
+				"The Iron Wall will last " + ironWallTime + " frames after its enter animation.</html>");
 		jtf[32].setToolTipText("<html>This cannon has multiple properties.<br>"+
 				"It will freeze enemies for " + freezeTime + " frames.<br>" +
 				"It will deal " + freezeAttack + "% of base cannon damage.</html>");
