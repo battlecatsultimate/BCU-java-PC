@@ -502,7 +502,11 @@ public class Interpret extends Data {
 
 		List<MapColc> lis = e.findMap();
 		boolean colab = false;
-		final int recurring = e.findApp(DefMapColc.getMap("N")).size() + e.findApp(DefMapColc.getMap("A")).size();
+		final int recurring;
+		if (e.de instanceof DataEnemy)
+			recurring = e.findApp(DefMapColc.getMap("N")).size() + e.findApp(DefMapColc.getMap("A")).size();
+		else
+			recurring = e.findApp().size();
 		if (lis.contains(DefMapColc.getMap("C")))
 			if (lis.size() == 1)
 				colab = true;
