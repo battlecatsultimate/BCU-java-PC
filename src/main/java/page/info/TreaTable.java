@@ -200,15 +200,15 @@ public class TreaTable extends Page {
 		int ironWallTime = (int) b.t().getCannonMagnification(2, Data.BASE_WALL_ALIVE_TIME);
 
 		int freezeTime = (int) (b.t().getCannonMagnification(3, Data.BASE_TIME) * (100 + b.getInc(C_STOP)) / 100.0);
-		int freezeAttack = (int) (b.t().getCannonMagnification(3, Data.BASE_ATK_MAGNIFICATION) * 100.0);
+		int freezeAttack = (int) (b.t().getCannonMagnification(3, Data.BASE_ATK_MAGNIFICATION));
 
-		int waterAttack = (int) (b.t().getCannonMagnification(4, Data.BASE_HEALTH_PERCENTAGE) * 100.0);
+		int waterAttack = (int) (b.t().getCannonMagnification(4, Data.BASE_HEALTH_PERCENTAGE));
 
 		int undergroundAttack = (int) (b.t().getCannonMagnification(5, Data.BASE_HOLY_ATK_UNDERGROUND) * 100.0);
 		int surfaceAttack = (int) (b.t().getCannonMagnification(5, Data.BASE_HOLY_ATK_SURFACE) * 100.0);
 		int holyFreezeTime = (int) (b.t().getCannonMagnification(5, Data.BASE_TIME) * (100 + b.getInc(C_STOP)) / 100.0);
 
-		int breakerBlastAttack = (int) (b.t().getCannonMagnification(6, Data.BASE_ATK_MAGNIFICATION) * 100.0);
+		int breakerBlastAttack = (int) (b.t().getCannonMagnification(6, Data.BASE_ATK_MAGNIFICATION));
 		int breakerBlastPiercing = (int) b.t().getCannonMagnification(6, Data.BASE_RANGE);
 
 		int curseTime = (int) b.t().getCannonMagnification(7, Data.BASE_CURSE_TIME);
