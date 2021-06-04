@@ -246,10 +246,13 @@ public class StageEditTable extends AbJTable implements Reorderable {
 				List<int[]> muls = new ArrayList<>();
 				for (int i = info.length - 1; i >= 0; i--) {
 					AbEnemy f = Identifier.get(info[i].enemy);
-					if (f instanceof Enemy && !eList.contains(f)) {
-						eList.add((Enemy) f);
+					if (!(f instanceof Enemy) || eList.contains(f))
+						continue;
+					eList.add((Enemy)f);
+					if (f == e)
+						muls.add(new int[]{info[ind].multiple,info[ind].mult_atk});
+					else
 						muls.add(new int[]{info[i].multiple,info[i].mult_atk});
-					}
 				}
 				MainFrame.changePanel(new EnemyInfoPage(page, ENode.getList(eList, (Enemy)e, muls)));
 			} if (e instanceof EneRand)

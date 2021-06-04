@@ -108,14 +108,20 @@ public class StageTable extends AbJTable {
 			List<Enemy> eList = new ArrayList<>();
 			List<int[]> muls = new ArrayList<>();
 			for (Object[] datum : data) {
-				if (datum[c] instanceof Enemy && !eList.contains(datum[c])) {
-					eList.add((Enemy) datum[c]);
-					int[] b = CommonStatic.parseIntsN((String) datum[2]);
-					if (b.length == 1)
-						muls.add(new int[]{b[0], b[0]});
-					else
-						muls.add(new int[]{b[0], b[1]});
-				}
+				if (!(datum[c] instanceof Enemy) || eList.contains(datum[c]))
+					continue;
+				eList.add((Enemy) datum[c]);
+
+				final int[] b;
+				if (datum[c] == e)
+					b = CommonStatic.parseIntsN((String) data[r][2]);
+				else
+					b = CommonStatic.parseIntsN((String) datum[2]);
+
+				if (b.length == 1)
+					muls.add(new int[]{b[0], b[0]});
+				else
+					muls.add(new int[]{b[0], b[1]});
 			}
 			MainFrame.changePanel(new EnemyInfoPage(page, ENode.getList(eList, e, muls)));
 		} else if(data[r][c] instanceof EneRand) {
