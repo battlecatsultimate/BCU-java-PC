@@ -86,7 +86,6 @@ public class AnimGroupTree implements TreeExpansionListener {
     public void handleAnimGroup(DefaultMutableTreeNode root, boolean initial) {
         if(initial) {
             AnimGroup.workspaceGroup.groups.clear();
-
             AnimGroup.workspaceGroup.groups.put("", new ArrayList<>());
         }
 
@@ -197,7 +196,6 @@ public class AnimGroupTree implements TreeExpansionListener {
 
         renewNodes();
     }
-
 
     public DefaultMutableTreeNode getVeryFirstAnimNode() {
         DefaultMutableTreeNode node;

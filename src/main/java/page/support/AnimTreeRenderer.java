@@ -10,6 +10,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class AnimTreeRenderer extends DefaultTreeCellRenderer {
@@ -34,14 +35,22 @@ public class AnimTreeRenderer extends DefaultTreeCellRenderer {
             jl.setBorder(null);
         }
 
-        if(!(value instanceof DefaultMutableTreeNode))
+
+
+        if(!(value instanceof DefaultMutableTreeNode)) {
             return comp;
+        }
 
         if(((DefaultMutableTreeNode) value).getUserObject() instanceof String) {
             ArrayList<AnimCE> anims = AnimGroup.workspaceGroup.groups.get((String) ((DefaultMutableTreeNode) value).getUserObject());
 
             if(anims == null || anims.isEmpty()) {
-                jl.setIcon(UIManager.getIcon("Tree.closedIcon"));
+                Icon i = UIManager.getIcon("Tree.closedIcon");
+
+                jl.setIcon(i);
+                Dimension d = jl.getPreferredSize();
+                d.height = i.getIconHeight() + 10;
+                jl.setPreferredSize(d);
 
                 return comp;
             }
@@ -56,8 +65,14 @@ public class AnimTreeRenderer extends DefaultTreeCellRenderer {
 
         if(anim != null && anim.getEdi() != null) {
             VImg edi = anim.getEdi();
-
-            jl.setIcon(UtilPC.getIcon(edi));
+            Icon i = UtilPC.getIcon(edi);
+            if (i != null) {
+                jl.setIcon(i);
+                Dimension d = jl.getPreferredSize();
+                d.height = i.getIconHeight();
+                jl.setPreferredSize(d);
+            }
+            return comp;
         }
 
         return jl;

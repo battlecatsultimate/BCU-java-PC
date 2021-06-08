@@ -139,8 +139,14 @@ class AtkEditTable extends Page {
 		add(isr);
 		add(spt);
 		ftp.setToolTipText(
-				"<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
-						+ "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost</html>");
+				"<html>" + "+1 for normal attack<br>"
+						+ "+2 to attack kb<br>"
+						+ "+4 to attack underground<br>"
+						+ "+8 to attack corpse<br>"
+						+ "+16 to attack soul<br>"
+						+ "+32 to attack ghost<br>"
+						+ "+64 to attack entities that can revive others<br>"
+						+ "+128 to attack enter animations</html>");
 		fdr.setToolTipText("direction, 1 means attack enemies, 0 means not an attack, -1 means assist allies");
 
 		fpre.setToolTipText(
