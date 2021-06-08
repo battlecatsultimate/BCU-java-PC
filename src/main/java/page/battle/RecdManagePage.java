@@ -3,6 +3,7 @@ package page.battle;
 import common.CommonStatic;
 import common.pack.Source;
 import common.util.stage.Replay;
+import main.MainBCU;
 import main.Opts;
 import page.JBTN;
 import page.JTF;
@@ -88,7 +89,7 @@ public class RecdManagePage extends AbRecdPage {
 			Replay r = jlr.getSelectedValue();
 			if (r == null)
 				return;
-			r.rename(rena.getText().trim());
+			r.rename(MainBCU.validate(rena.getText().trim(),'#'));
 			rena.setText(r.rl.id);
 		});
 

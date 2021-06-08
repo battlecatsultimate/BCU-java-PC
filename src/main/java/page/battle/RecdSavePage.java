@@ -43,9 +43,10 @@ public class RecdSavePage extends Page {
 			@Override
 			public void focusLost(FocusEvent arg0) {
 				String str = jtf.getText().trim();
-				str = MainBCU.validate(str);
 				if (str.length() == 0)
-					str = "new " + recd.st.get().name + " replay";
+					str = "new replay " + recd.st.toString();
+				str = MainBCU.validate(str, '#');
+				jtf.setText(str);
 				recd.rename(str);
 
 			}
@@ -69,7 +70,7 @@ public class RecdSavePage extends Page {
 		add(jtf);
 		add(save);
 		addListeners();
-		String initName = "new " + recd.st.get().name + " replay";
+		String initName = "new replay " + recd.st.toString().replaceAll("/", "#");
 		jtf.setText(initName);
 		recd.rename(initName);
 	}

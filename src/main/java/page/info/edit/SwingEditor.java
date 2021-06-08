@@ -19,7 +19,6 @@ import utilpc.UtilPC;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
-import java.awt.image.BufferedImage;
 import java.util.function.Consumer;
 
 public abstract class SwingEditor extends Editor {

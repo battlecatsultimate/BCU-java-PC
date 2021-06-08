@@ -12,8 +12,6 @@ import page.basis.BasisPage;
 import page.info.StageViewPage;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public abstract class AbRecdPage extends Page {
 

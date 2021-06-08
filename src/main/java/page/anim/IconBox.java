@@ -8,7 +8,6 @@ import page.view.ViewBox;
 import utilpc.PP;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
@@ -25,7 +24,7 @@ public interface IconBox extends ViewBox {
 
 	class IBCtrl extends ViewBox.Controller {
 
-		protected boolean ctrl, drag;
+		protected boolean drag;
 
 		@Override
 		public synchronized void mouseDragged(MouseEvent e) {
@@ -34,8 +33,14 @@ public interface IconBox extends ViewBox {
 				return;
 			}
 			Point t = e.getPoint();
-			line[ctrl ? 2 : 0] += t.x - p.x;
-			line[ctrl ? 3 : 1] += t.y - p.y;
+			int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+			if ((e.getModifiers() & modifier) > 0) {
+				line[2] += t.x - p.x;
+				line[3] += t.y - p.y;
+			} else {
+				line[0] += t.x - p.x;
+				line[1] += t.y - p.y;
+			}
 			p = t;
 		}
 
@@ -98,16 +103,6 @@ public interface IconBox extends ViewBox {
 			}
 		}
 
-		protected synchronized void keyPressed(KeyEvent ke) {
-			if (ke.getKeyCode() == KeyEvent.VK_CONTROL)
-				ctrl = true;
-		}
-
-		protected synchronized void keyReleased(KeyEvent ke) {
-			if (ke.getKeyCode() == KeyEvent.VK_CONTROL)
-				ctrl = false;
-		}
-
 	}
 
 	void changeType();
@@ -116,14 +111,6 @@ public interface IconBox extends ViewBox {
 
 	@Override
 	IBCtrl getCtrl();
-
-	default void keyPressed(KeyEvent ke) {
-		getCtrl().keyPressed(ke);
-	}
-
-	default void keyReleased(KeyEvent ke) {
-		getCtrl().keyReleased(ke);
-	}
 
 	void setBlank(boolean selected);
 
