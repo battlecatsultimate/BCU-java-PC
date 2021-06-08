@@ -23,6 +23,8 @@ class PCoinEditTable extends Page {
     private static final long serialVersionUID = 1L;
 
     private static class talentData {
+
+        private static final long serialVersionUID = 1L;
         private final String name;
         private final int key;
 

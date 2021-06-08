@@ -8,7 +8,6 @@ import common.util.stage.Music;
 import javax.sound.sampled.*;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayDeque;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 

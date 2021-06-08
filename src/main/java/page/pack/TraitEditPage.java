@@ -30,6 +30,9 @@ import java.util.List;
 public class TraitEditPage extends Page {
 
     private static class TraitList extends JList<Trait> {
+
+        private static final long serialVersionUID = 1L;
+
         protected TraitList() {
             if (MainBCU.nimbus)
                 setSelectionBackground(MainBCU.light ? Theme.LIGHT.NIMBUS_SELECT_BG : Theme.DARK.NIMBUS_SELECT_BG);
@@ -48,6 +51,8 @@ public class TraitEditPage extends Page {
             });
         }
     }
+
+    private static final long serialVersionUID = 1L;
 
     private final TraitList jlct = new TraitList();
     private final JScrollPane jspct = new JScrollPane(jlct);

@@ -141,19 +141,6 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	}
 
 	@Override
-	protected void keyPressed(KeyEvent ke) {
-		super.keyPressed(ke);
-		if (ke.getSource() == sb)
-			sb.keyPressed(ke);
-	}
-
-	@Override
-	protected void keyReleased(KeyEvent ke) {
-		if (ke.getSource() == sb)
-			sb.keyReleased(ke);
-	}
-
-	@Override
 	protected void keyTyped(KeyEvent ke) {
 		if (ke.getSource() == sb)
 			sb.keyTyped(ke);
@@ -162,7 +149,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	@Override
 	protected void mouseDragged(MouseEvent me) {
 		if (me.getSource() == sb)
-			sb.mouseDragged(me.getPoint());
+			sb.mouseDragged(me);
 	}
 
 	@Override
