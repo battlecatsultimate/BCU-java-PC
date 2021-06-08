@@ -3,6 +3,7 @@ package utilpc;
 import common.CommonStatic;
 import common.battle.BasisLU;
 import common.battle.BasisSet;
+import common.battle.CannonLevelCurve;
 import common.battle.Treasure;
 import common.battle.data.*;
 import common.pack.Identifier;
@@ -467,7 +468,18 @@ public class Interpret extends Data {
 
 		if (v < 0)
 			v = 0;
-		v = Math.min(v, TMAX[ind]);
+
+		if(ind >= 29 && ind <= 36) {
+			CannonLevelCurve curve = Treasure.curveData.get(ind - 29);
+
+			if(curve != null) {
+				v = Math.min(v, curve.max);
+			} else {
+				v = Math.min(v, TMAX[ind]);
+			}
+		} else {
+			v = Math.min(v, TMAX[ind]);
+		}
 
 		if (ind == 0)
 			t.tech[LV_RES] = Math.max(v, 1);
