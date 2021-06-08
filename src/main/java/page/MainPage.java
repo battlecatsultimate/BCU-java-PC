@@ -1,6 +1,5 @@
 package page;
 
-import common.debug.DebugCore;
 import common.pack.PackData;
 import common.pack.UserProfile;
 import common.util.stage.MapColc;
@@ -14,7 +13,6 @@ import page.anim.MaModelEditPage;
 import page.basis.BasisPage;
 import page.battle.BattleInfoPage;
 import page.battle.RecdManagePage;
-import page.debug.DebugFrame;
 import page.info.StageViewPage;
 import page.info.filter.EnemyFindPage;
 import page.info.filter.UnitFindPage;
@@ -131,10 +129,6 @@ public class MainPage extends Page {
 		vmsc.setLnr(() -> new MusicPage(this));
 		rply.setLnr(() -> new RecdManagePage(this));
 		allf.setLnr(() -> new ResourcePage(this));
-		dbug.setLnr((e) -> {
-			if (DebugCore.DEBUG_LOCK == null)
-				new DebugFrame();
-		});
 		auth.setLnr(e -> {
 			String author = Opts.read("Decide your author name");
 
