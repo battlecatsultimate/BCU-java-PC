@@ -16,8 +16,9 @@ public abstract class ProcTable extends Page {
 		private static final long serialVersionUID = 1L;
 
 		private static final int SEC = 16;
-		private static final int[] INDS = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 20, 27, 29, 31, 32, 21, 22, 23, 24, 25,
-				26, 35, 36, 37 };
+		private static final int[] INDS = new int[] { Data.P_KB, Data.P_STOP, Data.P_SLOW, Data.P_CRIT, Data.P_WAVE, Data.P_WEAK, Data.P_BREAK, Data.P_WARP,
+				Data.P_CURSE, Data.P_SNIPER, Data.P_BOSS, Data.P_SATK, Data.P_POIATK, Data.P_VOLC, Data.P_TIME, Data.P_SEAL, Data.P_SUMMON, Data.P_MOVEWAVE,
+				Data.P_THEME, Data.P_POISON, Data.P_ARMOR, Data.P_SPEED, Data.P_MINIWAVE };
 
 		protected AtkProcTable(Page p, boolean edit, boolean unit) {
 			super(p, INDS, edit, unit);
