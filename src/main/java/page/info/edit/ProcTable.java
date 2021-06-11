@@ -82,8 +82,6 @@ public abstract class ProcTable extends Page {
 	protected final SwingEditor.SwingEG[] group;
 	private final boolean editable, isUnit;
 
-	private Proc proc;
-
 	protected ProcTable(Page p, int[] ind, boolean edit, boolean unit) {
 		super(p);
 		editable = edit;
@@ -102,9 +100,8 @@ public abstract class ProcTable extends Page {
 	}
 
 	protected void setData(Proc ints) {
-		proc = ints;
 		for (int i = 0; i < inds.length; i++)
-			group[i].setData(proc.getArr(inds[i]));
+			group[i].setData(ints.getArr(inds[i]));
 	}
 
 	private void ini() {
