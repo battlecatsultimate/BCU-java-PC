@@ -27,6 +27,7 @@ import utilpc.PP;
 
 import java.awt.*;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public interface BattleBox {
 
@@ -95,6 +96,8 @@ public interface BattleBox {
 		public boolean dragging = false;
 
 		private final BCAuxAssets aux = CommonStatic.getBCAssets();
+
+		private final ArrayList<ContAb> efList = new ArrayList<>();
 
 		private final SymCoord sym = new SymCoord(null, 0, 0, 0, 0);
 		private final P p = new P(0, 0);
@@ -464,11 +467,19 @@ public interface BattleBox {
 			Res.getBase(sb.ubase, setSym(gra, siz, posx, posy, 1), false);
 		}
 
+		@SuppressWarnings("UseBulkOperation")
 		private void drawEntity(FakeGraphics gra) {
+			for(int i = 0; i < sb.lw.size(); i++) {
+				efList.add(sb.lw.get(i));
+			}
+
 			int w = box.getWidth();
 			int h = box.getHeight();
+
 			FakeTransform at = gra.getTransform();
+
 			double psiz = siz * sprite;
+
 			CommonStatic.getConfig().battle = true;
 
 			for(int i = 0; i < sb.le.size(); i++) {
@@ -476,27 +487,31 @@ public interface BattleBox {
 
 				int dep = e.layer * DEP;
 
-				for(int j = 0; j < sb.lw.size(); j++) {
-					ContAb wc = sb.lw.get(j);
+				while(efList.size() > 0) {
+					ContAb wc = efList.get(0);
 
-					if(!wc.drawn && wc.layer == e.layer) {
-						gra.setTransform(at);
-						double p = (wc.pos * ratio + off) * siz + pos;
-
-						if(wc instanceof ContWaveAb)
-							p -= wave * siz;
-
-						double y = midh - (road_h - dep) * siz;
-						wc.draw(gra, setP(p, y), psiz);
-					}
+					if(wc.layer + 1 <= e.layer) {
+						drawEff(gra, wc, at, psiz);
+						efList.remove(0);
+					} else
+						break;
 				}
 
 				gra.setTransform(at);
+
 				double p = getX(e.pos);
 				double y = midh - (road_h - dep) * siz;
+
 				e.anim.draw(gra, setP(p, y), psiz);
+
 				gra.setTransform(at);
+
 				e.anim.drawEff(gra, setP(p, y), siz);
+			}
+
+			while(efList.size() > 0) {
+				drawEff(gra, efList.get(0), at, psiz);
+				efList.remove(0);
 			}
 
 			for(int i = 0; i < sb.lea.size(); i++) {
@@ -587,6 +602,21 @@ public interface BattleBox {
 			}
 			gra.setTransform(at);
 			CommonStatic.getConfig().battle = false;
+		}
+
+		private void drawEff(FakeGraphics g, ContAb wc, FakeTransform at, double pSiz) {
+			int dep = wc.layer * DEP;
+
+			g.setTransform(at);
+
+			double p = (wc.pos * ratio + off) * siz * pos;
+
+			if(wc instanceof ContWaveAb)
+				p -= wave * siz;
+
+			double y = midh - (road_h - dep) * siz;
+
+			wc.draw(g, setP(p, y), pSiz);
 		}
 
 		private void drawTop(FakeGraphics g) {
