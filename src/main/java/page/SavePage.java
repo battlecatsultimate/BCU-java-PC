@@ -31,12 +31,18 @@ public class SavePage extends Page {
     }
 
     private void finishJob() {
-        CommonStatic.def.exit(true);
+        try {
+            CommonStatic.def.exit(true);
 
-        MainFrame.exitAll();
+            MainFrame.exitAll();
 
-        setVisible(false);
+            setVisible(false);
 
-        changePanel(null);
+            changePanel(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            System.exit(0);
+        }
     }
 }
