@@ -406,6 +406,8 @@ public abstract class EntityEditPage extends Page {
 		fwp.setText("" + (ce.will + 1));
 		cdps.setText("" + (int) (Math.round(getLvAtk() * ce.allAtk()) * getAtk()) * 30 / ce.getItv());
 		comm.setSelected(data.common);
+		if (!comm.isSelected())
+			ce.updateAllProc();
 		mpt.setData(ce.rep.proc);
 		int[][] raw = ce.rawAtkData();
 		int pre = 0;
