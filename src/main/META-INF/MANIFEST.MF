@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Main-Class: main.MainBCU
 Class-Path: . BCU_lib/annotations-13.0.jar BCU_lib/checker-compat-qual-2.5.5.jar BCU_lib/commons-cod
- ec-1.10.jar BCU_lib/commons-io-2.6.jar BCU_lib/commons-logging-1.2.jar BCU_lib/error_prone_annotatio
+ ec-1.10.jar BCU_lib/commons-io-2.7.jar BCU_lib/commons-logging-1.2.jar BCU_lib/error_prone_annotatio
  ns-2.3.4.jar BCU_lib/failureaccess-1.0.1.jar BCU_lib/gluegen-rt-2.3.2-natives-android-aarch64.jar BC
  U_lib/gluegen-rt-2.3.2-natives-android-armv6.jar BCU_lib/gluegen-rt-2.3.2-natives-linux-amd64.jar BC
  U_lib/gluegen-rt-2.3.2-natives-linux-armv6.jar BCU_lib/gluegen-rt-2.3.2-natives-linux-armv6hf.jar BC
@@ -13,7 +13,7 @@ Class-Path: . BCU_lib/annotations-13.0.jar BCU_lib/checker-compat-qual-2.5.5.jar
  ib/google-http-client-1.24.1.jar BCU_lib/google-http-client-jackson2-1.24.1.jar BCU_lib/google-http-
  client-jackson2-1.36.0.jar BCU_lib/google-oauth-client-1.24.1.jar BCU_lib/google-oauth-client-1.31.0
  .jar BCU_lib/google-oauth-client-java6-1.23.0.jar BCU_lib/google-oauth-client-jetty-1.23.0.jar BCU_l
- ib/gson-2.8.6.jar BCU_lib/guava-20.0.jar BCU_lib/guava-29.0-android.jar BCU_lib/httpclient-4.5.6.jar
+ ib/gson-2.8.6.jar BCU_lib/guava-20.0.jar BCU_lib/guava-29.0-android.jar BCU_lib/httpclient-4.5.14.jar
   BCU_lib/httpcore-4.4.10.jar BCU_lib/httpmime-4.5.6.jar BCU_lib/j2objc-annotations-1.3.jar BCU_lib/j
  ackson-core-2.11.1.jar BCU_lib/jackson-core-2.9.2.jar BCU_lib/jcodec-0.2.3.jar BCU_lib/jcodec-javase
  -0.2.3.jar BCU_lib/jetty-6.1.26.jar BCU_lib/jetty-util-6.1.26.jar BCU_lib/jogl-all-2.3.2-natives-and

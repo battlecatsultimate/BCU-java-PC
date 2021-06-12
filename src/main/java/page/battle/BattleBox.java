@@ -604,19 +604,19 @@ public interface BattleBox {
 			CommonStatic.getConfig().battle = false;
 		}
 
-		private void drawEff(FakeGraphics g, ContAb wc, FakeTransform at, double pSiz) {
+		private void drawEff(FakeGraphics gra, ContAb wc, FakeTransform at, double pSiz) {
 			int dep = wc.layer * DEP;
 
-			g.setTransform(at);
+			gra.setTransform(at);
 
-			double p = (wc.pos * ratio + off) * siz * pos;
+			double p = (wc.pos * ratio + off) * siz + pos;
 
 			if(wc instanceof ContWaveAb)
 				p -= wave * siz;
 
 			double y = midh - (road_h - dep) * siz;
 
-			wc.draw(g, setP(p, y), pSiz);
+			wc.draw(gra, setP(p, y), pSiz);
 		}
 
 		private void drawTop(FakeGraphics g) {
