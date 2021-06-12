@@ -77,7 +77,7 @@ public class UtilPC {
 		private static class PCAL implements Source.AnimLoader {
 
 			private String name;
-			private FakeImage num;
+			private final FakeImage num;
 			private final ImgCut imgcut;
 			private final MaModel mamodel;
 			private final MaAnim[] anims;

@@ -144,7 +144,7 @@ public class MainBCU {
 		}
 	}
 
-	public static final int ver = 50029;
+	public static final int ver = 50100;
 
 	public static int FILTER_TYPE = 1, prefLevel = 50;
 	public static final boolean WRITE = !new File("./.project").exists();

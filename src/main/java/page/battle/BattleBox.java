@@ -468,10 +468,11 @@ public interface BattleBox {
 
 		private final ArrayList<ContAb> efList = new ArrayList<>();
 
+		@SuppressWarnings("UseBulkOperation")
 		private void drawEntity(FakeGraphics gra) {
-			for(int i = 0; i < sb.lw.size(); i++) {
+			for(int i = 0; i < sb.lw.size(); i++)
 				efList.add(sb.lw.get(i));
-			}
+
 			int w = box.getWidth();
 			int h = box.getHeight();
 			FakeTransform at = gra.getTransform();
