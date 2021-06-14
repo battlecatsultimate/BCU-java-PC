@@ -1,11 +1,13 @@
 package page.info;
 
 import common.util.stage.MapColc;
+import common.util.stage.RandStage;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
 import main.Opts;
 import page.JBTN;
 import page.Page;
+import page.battle.BattleSetupPage;
 import page.battle.StRecdPage;
 
 import javax.swing.*;
@@ -124,7 +126,15 @@ public class StageViewPage extends StagePage {
 			Stage.CLIPSM.add(stage.copy(Stage.CLIPSM));
 		});
 
-		dgen.setLnr(x -> changePanel(new StageRandPage(getThis())));
+		dgen.setLnr(x -> {
+			StageMap sm = jlsm.getSelectedValue();
+			if (sm == null)
+				changePanel(new StageRandPage(getThis(), jlmc.getSelectedValue()));
+			else {
+				Stage s = RandStage.getStage(sm);
+				changePanel(new BattleSetupPage(getThis(), s, 0));
+			}
+		});
 
 	}
 

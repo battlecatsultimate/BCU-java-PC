@@ -34,9 +34,9 @@ public class BattleSetupPage extends LubCont {
 
 	private final Stage st;
 
-	private final int[] conf;
+	private final int conf;
 
-	public BattleSetupPage(Page p, Stage s, int... confs) {
+	public BattleSetupPage(Page p, Stage s, int confs) {
 		super(p);
 		st = s;
 		conf = confs;
@@ -75,54 +75,35 @@ public class BattleSetupPage extends LubCont {
 	}
 
 	private void addListeners() {
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
+		back.addActionListener(arg0 -> changePanel(getFront()));
+
+		jls.addListSelectionListener(arg0 -> {
+			if (arg0.getValueIsAdjusting())
+				return;
+			if (jls.getSelectedIndex() == -1)
+				jls.setSelectedIndex(0);
 		});
 
-		jls.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (arg0.getValueIsAdjusting())
-					return;
-				if (jls.getSelectedIndex() == -1)
-					jls.setSelectedIndex(0);
+		jlu.addActionListener(arg0 -> changePanel(new BasisPage(getThis())));
+
+		strt.addActionListener(arg0 -> {
+			int star = jls.getSelectedIndex();
+			int[] ints = new int[1];
+			if (rich.isSelected())
+				ints[0] |= 1;
+			if (snip.isSelected())
+				ints[0] |= 2;
+			BasisLU b = BasisSet.current().sele;
+			if (conf == 0) {
+				b = RandStage.getLU(star);
+				star = 0;
 			}
+			changePanel(new BattleInfoPage(getThis(), st, star, b, ints));
 		});
 
-		jlu.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new BasisPage(getThis()));
-			}
-		});
-
-		strt.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				int star = jls.getSelectedIndex();
-				int[] ints = new int[1];
-				if (rich.isSelected())
-					ints[0] |= 1;
-				if (snip.isSelected())
-					ints[0] |= 2;
-				BasisLU b = BasisSet.current().sele;
-				if (conf.length == 1 && conf[0] == 0) {
-					b = RandStage.getLU(star);
-					star = 0;
-				}
-				changePanel(new BattleInfoPage(getThis(), st, star, b, ints));
-			}
-		});
-
-		tmax.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				st.lim.lvr.validate(BasisSet.current().sele.lu);
-				renew();
-			}
+		tmax.addActionListener(arg0 -> {
+			st.lim.lvr.validate(BasisSet.current().sele.lu);
+			renew();
 		});
 
 	}
@@ -137,13 +118,13 @@ public class BattleSetupPage extends LubCont {
 		add(snip);
 		add(tmax);
 		add(lub);
-		if (conf.length == 0) {
+		if (conf == 1) {
 			String[] tit = new String[st.getCont().stars.length];
 			String star = get(1, "star");
 			for (int i = 0; i < st.getCont().stars.length; i++)
 				tit[i] = (i + 1) + star + ": " + st.getCont().stars[i] + "%";
 			jls.setListData(tit);
-		} else if (conf.length == 1 && conf[0] == 0) {
+		} else if (conf == 0) {
 			String[] tit = new String[5];
 			String star = get(1, "attempt");
 			for (int i = 0; i < 5; i++)
