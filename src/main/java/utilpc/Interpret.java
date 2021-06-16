@@ -6,6 +6,7 @@ import common.battle.BasisSet;
 import common.battle.Treasure;
 import common.battle.data.*;
 import common.pack.Identifier;
+import common.pack.UserProfile;
 import common.util.Data;
 import common.util.Data.Proc.ProcItem;
 import common.util.lang.Formatter;
@@ -506,7 +507,7 @@ public class Interpret extends Data {
 		if (e.de instanceof DataEnemy)
 			recurring = e.findApp(DefMapColc.getMap("N")).size() + e.findApp(DefMapColc.getMap("A")).size();
 		else
-			recurring = e.findApp().size();
+			recurring = e.findApp(UserProfile.getUserPack(e.id.pack).mc).size();
 		if (lis.contains(DefMapColc.getMap("C")))
 			if (lis.size() == 1)
 				colab = true;

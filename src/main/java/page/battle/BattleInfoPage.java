@@ -65,6 +65,12 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	private int spe = 0, upd = 0;
 	private boolean musicChanged = false;
 
+	/**
+	 * Creates a new Battle Page
+	 * @param p The previous page
+	 * @param rec Will be null if this battle is not began from a replay
+	 * @param conf If the value is 0, lineup will be randomized, if it's 1, lineup won't be changed
+	 */
 	public BattleInfoPage(Page p, Replay rec, int conf) {
 		super(p);
 		recd = rec;
