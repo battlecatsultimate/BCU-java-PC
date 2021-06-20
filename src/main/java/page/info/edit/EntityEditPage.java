@@ -246,9 +246,11 @@ public abstract class EntityEditPage extends Page {
 			add(jcba);
 			Vector<AnimCE> vda = new Vector<>();
 			AnimCE ac = ((AnimCE) ce.getPack().anim);
-			if (!ac.inPool())
+			if (ac != null && !ac.inPool())
 				vda.add(ac);
 			vda.addAll(AnimCE.map().values());
+			if (ac == null)
+				ce.getPack().anim = vda.get(0);
 			jcba.setModel(new DefaultComboBoxModel<>(vda));
 		}
 		setFocusTraversalPolicy(ljp);
