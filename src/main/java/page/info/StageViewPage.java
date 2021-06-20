@@ -29,6 +29,7 @@ public class StageViewPage extends StagePage {
 	private final JBTN dgen = new JBTN(0, "dungeon");
 	private final JBTN recd = new JBTN(0, "replay");
 	private final JBTN info = new JBTN(0, "info");
+	private final JBTN search = new JBTN(0, "search");
 
 	public StageViewPage(Page p, Collection<MapColc> collection) {
 		super(p);
@@ -59,6 +60,7 @@ public class StageViewPage extends StagePage {
 		set(strt, x, y, 400, 0, 200, 50);
 		set(recd, x, y, 1850, 350, 200, 50);
 		set(info, x, y, 1600, 350, 200, 50);
+		set(search, x, y, 1350, 350, 200, 50);
 	}
 
 	@Override
@@ -136,6 +138,8 @@ public class StageViewPage extends StagePage {
 			}
 		});
 
+		search.setLnr(x -> changePanel(new StageSearchPage(getThis(), jlmc.getSelectedIndex())));
+
 	}
 
 	private void ini() {
@@ -147,6 +151,7 @@ public class StageViewPage extends StagePage {
 		add(cpst);
 		add(dgen);
 		add(info);
+		add(search);
 		cpsm.setEnabled(false);
 		cpst.setEnabled(false);
 		recd.setEnabled(false);

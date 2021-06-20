@@ -377,8 +377,7 @@ class UFBList extends UnitFilterBox {
 			trlis.add(BCtraits.get(i));
 			vt.add(TRAIT[i]);
 		}
-		Collection<PackData.UserPack> pacs = UserProfile.getUserPacks();
-		for (PackData.UserPack pacc : pacs)
+		for (PackData.UserPack pacc : UserProfile.getUserPacks())
 			for (Trait ctra : pacc.traits)
 				if (pack == null || ctra.id.pack.equals(pack) || parents.contains(ctra.id.pack)) {
 					trlis.add(ctra);
