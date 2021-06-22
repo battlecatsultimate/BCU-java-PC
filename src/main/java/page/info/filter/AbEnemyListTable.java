@@ -73,6 +73,9 @@ public class AbEnemyListTable  extends SortTable<AbEnemy> {
         if (c == 0) {
             return e0.compareTo(e1);
         }
+        if (c == 8) {
+            return Double.compare((double) get(e0, c), (double) get(e1, c));
+        }
 
         if(e0 instanceof EneRand)
             if(e1 instanceof Enemy)
@@ -112,7 +115,7 @@ public class AbEnemyListTable  extends SortTable<AbEnemy> {
             else if (c == 7)
                 return e.de.getSpeed();
             else if (c == 8)
-                return (int) (e.de.getDrop() * b.t().getDropMulti());
+                return Math.floor(e.de.getDrop() * b.t().getDropMulti()) / 100;
             else if (c == 9)
                 return e.de.rawAtkData()[0][1];
             else if (c == 10)

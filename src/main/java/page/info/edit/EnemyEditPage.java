@@ -105,7 +105,7 @@ public class EnemyEditPage extends EntityEditPage {
 		super.setData(data);
 		fbd.setText(ce.getLim() + "");
 		fsr.setText("star: " + ce.star);
-		fdr.setText("" + (int) (ce.getDrop() * bas.t().getDropMulti()));
+		fdr.setText("" + Math.floor(ce.getDrop() * bas.t().getDropMulti()) / 100);
 		int imu = 0;
 		for (int j : EABIIND)
 			if (j > 100) {
