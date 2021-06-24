@@ -50,8 +50,8 @@ public abstract class ProcTable extends Page {
 		private static final int[] INDS = { Data.P_STRONG, Data.P_LETHAL, Data.P_BURROW, Data.P_REVIVE, Data.P_CRITI,
 				Data.P_IMUATK, Data.P_DMGCUT, Data.P_DMGCAP, Data.P_IMUKB, Data.P_IMUSTOP,
 				Data.P_IMUSLOW, Data.P_IMUWAVE, Data.P_IMUWEAK, Data.P_IMUWARP, Data.P_IMUCURSE,
-				Data.P_IMUSEAL, Data.P_IMUMOVING, Data.P_IMUPOI,
-				Data.P_IMUPOIATK, Data.P_IMUVOLC, Data.P_IMUSUMMON
+				Data.P_IMUSEAL, Data.P_IMUMOVING, Data.P_IMUARMOR, Data.P_IMUPOI,
+				Data.P_IMUPOIATK, Data.P_IMUVOLC, Data.P_IMUSPEED, Data.P_IMUSUMMON
 		};
 
 		protected MainProcTable(Page p, boolean edit, boolean unit) {
