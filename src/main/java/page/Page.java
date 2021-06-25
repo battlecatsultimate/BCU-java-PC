@@ -148,12 +148,6 @@ public abstract class Page extends JPanel implements RetFunc {
 	}
 
 	protected void keyPressed(KeyEvent e) {
-		int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-		char key = e.getKeyChar();
-		if ((e.getModifiers() & modifier) > 0 && key == 's') {
-			BCUWriter.writeData();
-			Opts.pop("Successfully saved data.", "Save Confirmation");
-		}
 	}
 
 	protected void keyReleased(KeyEvent e) {

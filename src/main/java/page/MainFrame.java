@@ -1,6 +1,7 @@
 package page;
 
 import common.system.P;
+import io.BCUWriter;
 import main.Opts;
 import main.Printer;
 import utilpc.PP;
@@ -116,7 +117,11 @@ public class MainFrame extends JFrame {
 
 			@Override
 			public void windowClosing(WindowEvent arg0) {
-				if(!closeClicked) {
+				JMenuItem menu = MenuBarHandler.getMenuItem("Save");
+				if (menu != null)
+					menu.setEnabled(false);
+
+				if (!closeClicked) {
 					changePanel(new SavePage());
 				} else {
 					Opts.warnPop("Saving progress...\nPlease wait!", "Saving");
