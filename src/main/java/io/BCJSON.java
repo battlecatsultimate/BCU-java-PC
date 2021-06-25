@@ -1,6 +1,7 @@
 package io;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import common.CommonStatic;
 import common.io.assets.AssetLoader;
@@ -38,11 +39,18 @@ public class BCJSON {
 
 		int music = json != null ? json.music : Data.SE_ALL[Data.SE_ALL.length - 1] + 1;
 		musics = UpdateCheck.checkMusic(music);
-		String[] langs = new String[PC_LANG_CODES.length * PC_LANG_FILES.length];
-		for (int i = 0; i < PC_LANG_CODES.length; i++)
-			for (int j = 0; j < PC_LANG_FILES.length; j++)
-				langs[i * PC_LANG_FILES.length + j] = PC_LANG_CODES[i] + "/" + PC_LANG_FILES[j];
-		lang = Data.err(UpdateCheck.checkLang(langs));
+		ArrayList<String> langList = new ArrayList<>();
+		for (String pcLangCode : PC_LANG_CODES) {
+			for (String pcLangFile : PC_LANG_FILES)
+				langList.add(pcLangCode + "/" + pcLangFile);
+		}
+
+		langList.add("fr/StageName.txt");
+		langList.add("it/StageName.txt");
+		langList.add("es/StageName.txt");
+		langList.add("de/StageName.txt");
+
+		lang = Data.err(UpdateCheck.checkLang(langList.toArray(new String[0])));
 		clearList(libs, true);
 		clearList(assets, true);
 		clearList(musics, false);

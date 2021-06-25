@@ -172,9 +172,9 @@ public class ConfigPage extends Page {
 				return;
 			changing = true;
 			if (jls.getSelectedIndex() == -1) {
-				jls.setSelectedIndex(cfg().lang);
+				jls.setSelectedIndex(localeIndexOf(cfg().lang));
 			}
-			cfg().lang = jls.getSelectedIndex();
+			cfg().lang = MainLocale.LOC_INDEX[jls.getSelectedIndex()];
 			Page.renewLoc(getThis());
 			changing = false;
 		});
@@ -244,7 +244,7 @@ public class ConfigPage extends Page {
 		add(nimbus);
 		add(theme);
 		add(row);
-		jls.setSelectedIndex(cfg().lang);
+		jls.setSelectedIndex(localeIndexOf(cfg().lang));
 		jsmin.setValue(cfg().deadOpa);
 		jsmax.setValue(cfg().fullOpa);
 		jsbg.setValue(BCMusic.VOL_BG);
@@ -287,4 +287,13 @@ public class ConfigPage extends Page {
 		sl.setPaintLabels(true);
 	}
 
+
+	private int localeIndexOf(int elem) {
+		for(int i = 0; i < MainLocale.LOC_INDEX.length; i++) {
+			if(MainLocale.LOC_INDEX[i] == elem)
+				return i;
+		}
+
+		return -1;
+	}
 }
