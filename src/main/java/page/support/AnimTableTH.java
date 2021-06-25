@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DragSource;
+import java.util.Arrays;
 
 import static page.support.AnimTransfer.DFS;
 
@@ -48,8 +49,9 @@ public class AnimTableTH<T> extends TransferHandler {
 			} else {
 				@SuppressWarnings("unchecked")
 				T[] data = (T[]) info.getTransferable().getTransferData(DFS[type]);
+				String[] names;
 				int row = table.getSelectedRow() + 1;
-				return table.insert(row, data);
+				return table.insert(row, data, rows);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
