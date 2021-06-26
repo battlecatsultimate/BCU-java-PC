@@ -191,7 +191,7 @@ public class MainBCU {
 
 		BCUReader.getData$1();
 		loaded = true;
-		JMenuItem menu = MenuBarHandler.getMenuItem("Save");
+		JMenuItem menu = MenuBarHandler.getFileItem("Save All");
 			if (menu != null)
 				menu.setEnabled(true);
 		MainFrame.changePanel(new MainPage());

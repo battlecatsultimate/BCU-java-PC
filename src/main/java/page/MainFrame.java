@@ -1,7 +1,6 @@
 package page;
 
 import common.system.P;
-import io.BCUWriter;
 import main.Opts;
 import main.Printer;
 import utilpc.PP;
@@ -117,7 +116,7 @@ public class MainFrame extends JFrame {
 
 			@Override
 			public void windowClosing(WindowEvent arg0) {
-				JMenuItem menu = MenuBarHandler.getMenuItem("Save");
+				JMenuItem menu = MenuBarHandler.getFileItem("Save All");
 				if (menu != null)
 					menu.setEnabled(false);
 
