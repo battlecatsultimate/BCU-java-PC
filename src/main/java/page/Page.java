@@ -82,7 +82,8 @@ public abstract class Page extends JPanel implements RetFunc {
 		if (resizing)
 			return;
 		resizing = true;
-		resized(x, y);
+		int barHeight = MenuBarHandler.getBar().getHeight();
+		resized(x, y - barHeight);
 		if (front != null)
 			front.componentResized(x, y);
 		Component[] cs = getComponents();
