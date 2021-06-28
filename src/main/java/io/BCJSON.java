@@ -16,7 +16,7 @@ import page.LoadPage;
 
 public class BCJSON {
 
-	public static final String[] PC_LANG_CODES = { "en", "jp", "kr", "zh" };
+	public static final String[] PC_LANG_CODES = { "en", "jp", "kr", "zh", "fr", "it", "es", "de" };
 	public static final String[] PC_LANG_FILES = { "util.properties", "page.properties", "info.properties",
 			"StageName.txt", "UnitName.txt", "EnemyName.txt", "ComboName.txt", "proc.json", "animation_type.json" };
 	public static final String JAR_LINK = "https://github.com/battlecatsultimate/bcu-assets/raw/master/jar/BCU-";
@@ -44,11 +44,6 @@ public class BCJSON {
 			for (String pcLangFile : PC_LANG_FILES)
 				langList.add(pcLangCode + "/" + pcLangFile);
 		}
-
-		langList.add("fr/StageName.txt");
-		langList.add("it/StageName.txt");
-		langList.add("es/StageName.txt");
-		langList.add("de/StageName.txt");
 
 		lang = Data.err(UpdateCheck.checkLang(langList.toArray(new String[0])));
 		clearList(libs, true);
