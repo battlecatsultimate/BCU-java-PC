@@ -3,7 +3,6 @@ package page.basis;
 import common.CommonStatic;
 import common.battle.BasisSet;
 import common.battle.LineUp;
-import common.util.Data;
 import common.util.unit.Form;
 import common.util.unit.Level;
 import main.Opts;
@@ -302,10 +301,8 @@ public class LevelEditPage extends Page {
 	}
 
 	private String getType(int type) {
-		if (type == 0) {
-			return MainLocale.getLoc(MainLocale.UTIL, "ot0");
-		} else if (type == 1) {
-			return MainLocale.getLoc(MainLocale.UTIL, "ot1");
+		if (type <= 4) {
+			return MainLocale.getLoc(MainLocale.UTIL, "ot"+type);
 		} else {
 			return "Unknown Type " + type;
 		}
@@ -347,22 +344,29 @@ public class LevelEditPage extends Page {
 	}
 
 	private void initializeDrops(int[] data) {
+		CommonStatic.BCAuxAssets aux = CommonStatic.getBCAssets();
+
 		updating = true;
 
 		if (f.orbs == null) {
 			return;
 		}
 
-		String[] types;
+		ArrayList<String> typeText = new ArrayList<>();
 
 		if (f.orbs.getSlots() == -1) {
-			types = new String[] { MainLocale.getLoc(MainLocale.UTIL, "ot0"), MainLocale.getLoc(MainLocale.UTIL, "ot1") };
+			for(int i = 0; i < 5; i++) {
+				typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot"+i));
+			}
 		} else {
-			types = new String[] { "None", MainLocale.getLoc(MainLocale.UTIL, "ot0"), MainLocale.getLoc(MainLocale.UTIL, "ot1") };
+			typeText.add("None");
+			for(int i = 0; i < 5; i++) {
+				typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot"+i));
+			}
 		}
 
 		if (f.orbs.getSlots() != -1 && data.length == 0) {
-			type.setModel(new DefaultComboBoxModel<>(types));
+			type.setModel(new DefaultComboBoxModel<>(typeText.toArray(new String[0])));
 
 			type.setSelectedIndex(0);
 
@@ -388,8 +392,8 @@ public class LevelEditPage extends Page {
 		String[] traits;
 		String[] grades;
 
-		if (data[0] == Data.ORB_ATK) {
-			traitData = new ArrayList<>(CommonStatic.getBCAssets().ATKORB.keySet());
+		if(aux.ORB.containsKey(data[0])) {
+			traitData = new ArrayList<>(aux.ORB.get(data[0]).keySet());
 
 			traits = new String[traitData.size()];
 
@@ -401,41 +405,22 @@ public class LevelEditPage extends Page {
 				data[1] = traitData.get(0);
 			}
 
-			gradeData = CommonStatic.getBCAssets().ATKORB.get(data[1]);
+			gradeData = aux.ORB.get(data[0]).get(data[1]);
 
 			grades = new String[gradeData.size()];
 
 			for (int i = 0; i < grades.length; i++) {
 				grades[i] = getGrade(gradeData.get(i));
 			}
-
 		} else {
-			traitData = new ArrayList<>(CommonStatic.getBCAssets().RESORB.keySet());
-
-			traits = new String[traitData.size()];
-
-			for (int i = 0; i < traits.length; i++) {
-				traits[i] = getTrait(traitData.get(i));
-			}
-
-			if (!traitData.contains(data[1])) {
-				data[1] = traitData.get(0);
-			}
-
-			gradeData = CommonStatic.getBCAssets().RESORB.get(data[1]);
-
-			grades = new String[gradeData.size()];
-
-			for (int i = 0; i < grades.length; i++) {
-				grades[i] = getGrade(gradeData.get(i));
-			}
+			return;
 		}
 
 		if (!gradeData.contains(data[2])) {
 			data[2] = gradeData.get(2);
 		}
 
-		type.setModel(new DefaultComboBoxModel<>(types));
+		type.setModel(new DefaultComboBoxModel<>(typeText.toArray(new String[0])));
 		trait.setModel(new DefaultComboBoxModel<>(traits));
 		grade.setModel(new DefaultComboBoxModel<>(grades));
 
