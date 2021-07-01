@@ -3,6 +3,7 @@ package page.basis;
 import common.CommonStatic;
 import common.battle.BasisSet;
 import common.battle.LineUp;
+import common.util.Data;
 import common.util.unit.Form;
 import common.util.unit.Level;
 import main.Opts;
@@ -43,6 +44,7 @@ public class LevelEditPage extends Page {
 	private final JComboBox<String> trait = new JComboBox<>();
 	private final JComboBox<String> grade = new JComboBox<>();
 
+	private List<Integer> typeData = new ArrayList<>();
 	private List<Integer> traitData = new ArrayList<>();
 	private List<Integer> gradeData = new ArrayList<>();
 
@@ -161,10 +163,10 @@ public class LevelEditPage extends Page {
 							data = new int[] { 0, 0, 0 };
 						}
 
-						data[0] = type.getSelectedIndex() - 1;
+						data[0] = typeData.get(type.getSelectedIndex() - 1);
 					}
 				} else {
-					data[0] = type.getSelectedIndex();
+					data[0] = typeData.get(type.getSelectedIndex());
 				}
 
 				orbs.set(orbList.getSelectedIndex(), data);
@@ -354,15 +356,49 @@ public class LevelEditPage extends Page {
 
 		ArrayList<String> typeText = new ArrayList<>();
 
-		if (f.orbs.getSlots() == -1) {
-			for(int i = 0; i < 5; i++) {
-				typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot"+i));
+		boolean str = false;
+		boolean mas = false;
+		boolean res = false;
+
+		if(f.unit == null)
+			return;
+
+		if(f.orbs.getSlots() == -1) {
+			for(Form form : f.unit.forms) {
+				str |= (form.du.getAbi() & Data.AB_GOOD) != 0;
+				mas |= (form.du.getAbi() & Data.AB_MASSIVE) != 0;
+				res |= (form.du.getAbi() & Data.AB_RESIST) != 0;
 			}
 		} else {
+			str = (f.du.getAbi() & Data.AB_GOOD) != 0;
+			mas = (f.du.getAbi() & Data.AB_MASSIVE) != 0;
+			res = (f.du.getAbi() & Data.AB_RESIST) != 0;
+		}
+
+		if (f.orbs.getSlots() != -1) {
 			typeText.add("None");
-			for(int i = 0; i < 5; i++) {
-				typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot"+i));
-			}
+		}
+
+		typeData = new ArrayList<>();
+
+		typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot0"));
+		typeData.add(Data.ORB_ATK);
+		typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot1"));
+		typeData.add(Data.ORB_RES);
+
+		if(str) {
+			typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot2"));
+			typeData.add(Data.ORB_STRONG);
+		}
+
+		if(mas) {
+			typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot3"));
+			typeData.add(Data.ORB_MASSIVE);
+		}
+
+		if(res) {
+			typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot4"));
+			typeData.add(Data.ORB_RESISTANT);
 		}
 
 		if (f.orbs.getSlots() != -1 && data.length == 0) {
@@ -425,9 +461,9 @@ public class LevelEditPage extends Page {
 		grade.setModel(new DefaultComboBoxModel<>(grades));
 
 		if (f.orbs.getSlots() != -1) {
-			type.setSelectedIndex(data[0] + 1);
+			type.setSelectedIndex(typeData.indexOf(data[0]) + 1);
 		} else {
-			type.setSelectedIndex(data[0]);
+			type.setSelectedIndex(typeData.indexOf(data[0]));
 		}
 
 		trait.setSelectedIndex(traitData.indexOf(data[1]));
