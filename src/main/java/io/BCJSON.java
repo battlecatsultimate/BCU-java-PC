@@ -1,6 +1,7 @@
 package io;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import common.CommonStatic;
 import common.io.assets.AssetLoader;
@@ -15,7 +16,7 @@ import page.LoadPage;
 
 public class BCJSON {
 
-	public static final String[] PC_LANG_CODES = { "en", "jp", "kr", "zh" };
+	public static final String[] PC_LANG_CODES = { "en", "jp", "kr", "zh", "fr", "it", "es", "de" };
 	public static final String[] PC_LANG_FILES = { "util.properties", "page.properties", "info.properties",
 			"StageName.txt", "UnitName.txt", "EnemyName.txt", "ComboName.txt", "proc.json", "animation_type.json" };
 	public static final String JAR_LINK = "https://github.com/battlecatsultimate/bcu-assets/raw/master/jar/BCU-";
@@ -38,11 +39,13 @@ public class BCJSON {
 
 		int music = json != null ? json.music : Data.SE_ALL[Data.SE_ALL.length - 1] + 1;
 		musics = UpdateCheck.checkMusic(music);
-		String[] langs = new String[PC_LANG_CODES.length * PC_LANG_FILES.length];
-		for (int i = 0; i < PC_LANG_CODES.length; i++)
-			for (int j = 0; j < PC_LANG_FILES.length; j++)
-				langs[i * PC_LANG_FILES.length + j] = PC_LANG_CODES[i] + "/" + PC_LANG_FILES[j];
-		lang = Data.err(UpdateCheck.checkLang(langs));
+		ArrayList<String> langList = new ArrayList<>();
+		for (String pcLangCode : PC_LANG_CODES) {
+			for (String pcLangFile : PC_LANG_FILES)
+				langList.add(pcLangCode + "/" + pcLangFile);
+		}
+
+		lang = Data.err(UpdateCheck.checkLang(langList.toArray(new String[0])));
 		clearList(libs, true);
 		clearList(assets, true);
 		clearList(musics, false);

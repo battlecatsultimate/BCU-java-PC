@@ -6,7 +6,7 @@ public abstract class AnimTable<T> extends AbJTable {
 
 	public abstract T[] getSelected();
 
-	public abstract boolean insert(int dst, T[] data);
+	public abstract boolean insert(int dst, T[] data, int[] rows);
 
 	public abstract boolean reorder(int dst, int[] ori);
 

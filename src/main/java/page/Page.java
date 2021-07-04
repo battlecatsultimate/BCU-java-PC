@@ -82,7 +82,8 @@ public abstract class Page extends JPanel implements RetFunc {
 		if (resizing)
 			return;
 		resizing = true;
-		resized(x, y);
+		int barHeight = MenuBarHandler.getBar().getHeight();
+		resized(x, y - barHeight);
 		if (front != null)
 			front.componentResized(x, y);
 		Component[] cs = getComponents();
@@ -148,12 +149,6 @@ public abstract class Page extends JPanel implements RetFunc {
 	}
 
 	protected void keyPressed(KeyEvent e) {
-		int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-		char key = e.getKeyChar();
-		if ((e.getModifiers() & modifier) > 0 && key == 's') {
-			BCUWriter.writeData();
-			Opts.pop("Successfully saved data.", "Save Confirmation");
-		}
 	}
 
 	protected void keyReleased(KeyEvent e) {

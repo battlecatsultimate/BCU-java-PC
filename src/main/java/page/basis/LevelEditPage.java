@@ -44,6 +44,7 @@ public class LevelEditPage extends Page {
 	private final JComboBox<String> trait = new JComboBox<>();
 	private final JComboBox<String> grade = new JComboBox<>();
 
+	private List<Integer> typeData = new ArrayList<>();
 	private List<Integer> traitData = new ArrayList<>();
 	private List<Integer> gradeData = new ArrayList<>();
 
@@ -162,10 +163,10 @@ public class LevelEditPage extends Page {
 							data = new int[] { 0, 0, 0 };
 						}
 
-						data[0] = type.getSelectedIndex() - 1;
+						data[0] = typeData.get(type.getSelectedIndex() - 1);
 					}
 				} else {
-					data[0] = type.getSelectedIndex();
+					data[0] = typeData.get(type.getSelectedIndex());
 				}
 
 				orbs.set(orbList.getSelectedIndex(), data);
@@ -302,10 +303,8 @@ public class LevelEditPage extends Page {
 	}
 
 	private String getType(int type) {
-		if (type == 0) {
-			return MainLocale.getLoc(MainLocale.UTIL, "ot0");
-		} else if (type == 1) {
-			return MainLocale.getLoc(MainLocale.UTIL, "ot1");
+		if (type <= 4) {
+			return MainLocale.getLoc(MainLocale.UTIL, "ot"+type);
 		} else {
 			return "Unknown Type " + type;
 		}
@@ -347,22 +346,63 @@ public class LevelEditPage extends Page {
 	}
 
 	private void initializeDrops(int[] data) {
+		CommonStatic.BCAuxAssets aux = CommonStatic.getBCAssets();
+
 		updating = true;
 
 		if (f.orbs == null) {
 			return;
 		}
 
-		String[] types;
+		ArrayList<String> typeText = new ArrayList<>();
 
-		if (f.orbs.getSlots() == -1) {
-			types = new String[] { MainLocale.getLoc(MainLocale.UTIL, "ot0"), MainLocale.getLoc(MainLocale.UTIL, "ot1") };
+		boolean str = false;
+		boolean mas = false;
+		boolean res = false;
+
+		if(f.unit == null)
+			return;
+
+		if(f.orbs.getSlots() == -1) {
+			for(Form form : f.unit.forms) {
+				str |= (form.du.getAbi() & Data.AB_GOOD) != 0;
+				mas |= (form.du.getAbi() & Data.AB_MASSIVE) != 0;
+				res |= (form.du.getAbi() & Data.AB_RESIST) != 0;
+			}
 		} else {
-			types = new String[] { "None", MainLocale.getLoc(MainLocale.UTIL, "ot0"), MainLocale.getLoc(MainLocale.UTIL, "ot1") };
+			str = (f.du.getAbi() & Data.AB_GOOD) != 0;
+			mas = (f.du.getAbi() & Data.AB_MASSIVE) != 0;
+			res = (f.du.getAbi() & Data.AB_RESIST) != 0;
+		}
+
+		if (f.orbs.getSlots() != -1) {
+			typeText.add("None");
+		}
+
+		typeData = new ArrayList<>();
+
+		typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot0"));
+		typeData.add(Data.ORB_ATK);
+		typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot1"));
+		typeData.add(Data.ORB_RES);
+
+		if(str) {
+			typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot2"));
+			typeData.add(Data.ORB_STRONG);
+		}
+
+		if(mas) {
+			typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot3"));
+			typeData.add(Data.ORB_MASSIVE);
+		}
+
+		if(res) {
+			typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot4"));
+			typeData.add(Data.ORB_RESISTANT);
 		}
 
 		if (f.orbs.getSlots() != -1 && data.length == 0) {
-			type.setModel(new DefaultComboBoxModel<>(types));
+			type.setModel(new DefaultComboBoxModel<>(typeText.toArray(new String[0])));
 
 			type.setSelectedIndex(0);
 
@@ -388,8 +428,8 @@ public class LevelEditPage extends Page {
 		String[] traits;
 		String[] grades;
 
-		if (data[0] == Data.ORB_ATK) {
-			traitData = new ArrayList<>(CommonStatic.getBCAssets().ATKORB.keySet());
+		if(aux.ORB.containsKey(data[0])) {
+			traitData = new ArrayList<>(aux.ORB.get(data[0]).keySet());
 
 			traits = new String[traitData.size()];
 
@@ -401,48 +441,29 @@ public class LevelEditPage extends Page {
 				data[1] = traitData.get(0);
 			}
 
-			gradeData = CommonStatic.getBCAssets().ATKORB.get(data[1]);
+			gradeData = aux.ORB.get(data[0]).get(data[1]);
 
 			grades = new String[gradeData.size()];
 
 			for (int i = 0; i < grades.length; i++) {
 				grades[i] = getGrade(gradeData.get(i));
 			}
-
 		} else {
-			traitData = new ArrayList<>(CommonStatic.getBCAssets().RESORB.keySet());
-
-			traits = new String[traitData.size()];
-
-			for (int i = 0; i < traits.length; i++) {
-				traits[i] = getTrait(traitData.get(i));
-			}
-
-			if (!traitData.contains(data[1])) {
-				data[1] = traitData.get(0);
-			}
-
-			gradeData = CommonStatic.getBCAssets().RESORB.get(data[1]);
-
-			grades = new String[gradeData.size()];
-
-			for (int i = 0; i < grades.length; i++) {
-				grades[i] = getGrade(gradeData.get(i));
-			}
+			return;
 		}
 
 		if (!gradeData.contains(data[2])) {
 			data[2] = gradeData.get(2);
 		}
 
-		type.setModel(new DefaultComboBoxModel<>(types));
+		type.setModel(new DefaultComboBoxModel<>(typeText.toArray(new String[0])));
 		trait.setModel(new DefaultComboBoxModel<>(traits));
 		grade.setModel(new DefaultComboBoxModel<>(grades));
 
 		if (f.orbs.getSlots() != -1) {
-			type.setSelectedIndex(data[0] + 1);
+			type.setSelectedIndex(typeData.indexOf(data[0]) + 1);
 		} else {
-			type.setSelectedIndex(data[0]);
+			type.setSelectedIndex(typeData.indexOf(data[0]));
 		}
 
 		trait.setSelectedIndex(traitData.indexOf(data[1]));
