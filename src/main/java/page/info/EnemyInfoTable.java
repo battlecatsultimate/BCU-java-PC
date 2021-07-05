@@ -65,8 +65,8 @@ public class EnemyInfoTable extends Page {
 		double mul = multi * e.de.multi(b) / 100;
 		double mula = mulatk * e.de.multi(b) / 100;
 		main[1][3].setText("" + (int) (e.de.getHp() * mul));
-		main[1][7].setText("" + (int) Math.floor(e.de.getDrop() * b.t().getDropMulti()) / 100);
-		main[2][3].setText("" + e.de.allAtk() * mula * 30 / e.de.getItv());
+		main[1][7].setText("" + Math.floor(e.de.getDrop() * b.t().getDropMulti()) / 100);
+		main[2][3].setText("" + (int) (e.de.allAtk() * mula * 30 / e.de.getItv()));
 		int[][] atkData = e.de.rawAtkData();
 		for (int i = 0; i < atks.length; i++)
 			atks[i][1].setText("" + Math.round(atkData[i][0] * mula));
