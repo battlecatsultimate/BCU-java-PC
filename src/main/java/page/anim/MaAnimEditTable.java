@@ -85,7 +85,7 @@ public class MaAnimEditTable extends AnimTable<Part> {
 	}
 
 	@Override
-	public boolean insert(int dst, Part[] data) {
+	public boolean insert(int dst, Part[] data, int[] rows) {
 		List<Part> l = new ArrayList<>();
 		for (Part p : ma.parts)
 			if (p != null)

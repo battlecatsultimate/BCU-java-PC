@@ -1,5 +1,6 @@
 package page.anim;
 
+import common.CommonStatic;
 import common.util.anim.AnimCE;
 import common.util.anim.MaModel;
 import page.Page;
@@ -94,7 +95,31 @@ class MaModelEditTable extends AnimTable<int[]> {
 	}
 
 	@Override
-	public boolean insert(int dst, int[][] data) {
+	public boolean insert(int dst, int[][] data, int[] rows) {
+		String[] names = new String[data.length];
+
+		if(rows == null) {
+			Arrays.fill(names, "copied");
+		} else {
+			for(int i = 0; i < names.length; i++) {
+				if(i >= rows.length)
+					names[i] = "copied";
+				else {
+					if(mm.strs0[rows[i]].endsWith("_copied")) {
+						names[i] = mm.strs0[rows[i]]+"0";
+					} else if(mm.strs0[rows[i]].matches("(.+)?_copied\\d?$")) {
+						String[] split = mm.strs0[rows[i]].split("_copied");
+
+						int value = CommonStatic.safeParseInt(split[1]) + 1;
+
+						names[i] = mm.strs0[rows[i]].replaceAll("_copied\\d?$", "_copied"+value);
+					} else {
+						names[i] = mm.strs0[rows[i]]+"_copied";
+					}
+				}
+			}
+		}
+
 		int[] inds = new int[mm.n];
 		int[] move = new int[mm.n + data.length];
 		int ind = 0;
@@ -121,7 +146,7 @@ class MaModelEditTable extends AnimTable<int[]> {
 			int par = data[i][0];
 			if (par <= -10)
 				data[i][0] = dst - par - 10;
-			mm.strs0[mm.n + i] = "copied";
+			mm.strs0[mm.n + i] = names[i];
 		}
 		mm.n = mm.n + data.length;
 		mm.reorder(move);

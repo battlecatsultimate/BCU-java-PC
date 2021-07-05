@@ -1,5 +1,6 @@
 package page.info.edit;
 
+import common.battle.BasisSet;
 import common.battle.data.CustomEntity;
 import common.battle.data.CustomUnit;
 import common.pack.Identifier;
@@ -68,6 +69,15 @@ public class FormEditPage extends EntityEditPage {
 		double mul = form.unit.lv.getMult(lv);
 		double def = bas.t().getDefMulti();
 		return mul * def;
+	}
+
+	@Override
+	public void callBack(Object o) {
+		super.callBack(o);
+
+		if(o instanceof int[]) {
+			BasisSet.synchronizeOrb(form.unit);
+		}
 	}
 
 	@Override
@@ -211,7 +221,7 @@ public class FormEditPage extends EntityEditPage {
 			fdesc[i].setText("" + (uniDesc[i].length() > 0 ? uniDesc[i] : "Description Line " + (i + 1)));
 		flv.setText("" + lv);
 		frs.setText("" + bas.t().getFinRes(cu.getRespawn()));
-		fdr.setText("" + (int) (cu.getPrice() * 1.5));
+		fdr.setText("" + (int) Math.round(cu.getPrice() * 1.5));
 		flr.setText(interpretLayer(cu.back, cu.front));
 		int imu = 0;
 		for (int j : EABIIND)

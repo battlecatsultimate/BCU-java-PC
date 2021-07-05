@@ -129,7 +129,7 @@ public interface BattleBox {
 			P rect = setP(box.getWidth(), box.getHeight());
 			sb.bg.draw(g, rect, pos, midh, siz, (int) (groundHeight + (CommonStatic.getConfig().twoRow ? (h * 0.75 / 10.0) : 0)));
 			drawCastle(g);
-			if(sb.can == sb.max_can && sb.canon.id == 0) {
+			if(sb.cannon == sb.maxCannon && sb.canon.id == 0) {
 				drawCannonRange(g);
 			}
 			drawEntity(g);
@@ -222,11 +222,11 @@ public interface BattleBox {
 			int h = box.getHeight();
 			int cw = 0;
 			int time = (sb.time / 5) % 2;
-			int mtype = sb.mon < sb.next_lv ? 0 : time == 0 ? 1 : 2;
+			int mtype = sb.money < sb.upgradeCost ? 0 : time == 0 ? 1 : 2;
 			if (sb.work_lv == 8)
 				mtype = 2;
 			FakeImage left = aux.battle[0][mtype].getImg();
-			int ctype = sb.can == sb.max_can && time == 0 ? 1 : 0;
+			int ctype = sb.cannon == sb.maxCannon && time == 0 ? 1 : 0;
 			FakeImage right = aux.battle[1][ctype].getImg();
 			cw += left.getWidth();
 			cw += right.getWidth();
@@ -241,12 +241,12 @@ public interface BattleBox {
 			iw = (int) (hr * right.getWidth());
 			ih = (int) (hr * right.getHeight());
 			g.drawImage(right, w - iw + BOTTOM_GAP * hr, h - ih, iw, ih);
-			Res.getCost(sb.next_lv, mtype > 0, setSym(g, hr, hr * 5, h - hr * 5, 2));
+			Res.getCost(sb.getUpgradeCost(), mtype > 0, setSym(g, hr, hr * 5, h - hr * 5, 2));
 			Res.getWorkerLv(sb.work_lv, mtype > 0, setSym(g, hr, hr * 5, h - hr * 130, 0));
 			int hi = h;
 			double marg = 0;
 			if (ctype == 0)
-				for (int i = 0; i < 10 * sb.can / sb.max_can; i++) {
+				for (int i = 0; i < 10 * sb.cannon / sb.maxCannon; i++) {
 					FakeImage img = aux.battle[1][2 + i].getImg();
 					iw = (int) (hr * img.getWidth());
 					ih = (int) (hr * img.getHeight());
@@ -258,7 +258,7 @@ public interface BattleBox {
 					hi -= ih;
 					g.drawImage(img, w - iw + BOTTOM_GAP * hr, hi, iw, ih);
 				}
-			if(sb.can == sb.max_can) {
+			if(sb.cannon == sb.maxCannon) {
 				FakeImage fire = aux.battle[1][getFireLang()+ctype].getImg();
 
 				int fw = (int) (hr * fire.getWidth());
@@ -326,7 +326,7 @@ public interface BattleBox {
 					if (pri == -1)
 						g.colRect(x, y, iw, ih, 255, 0, 0, 100);
 					int cool = sb.elu.cool[i][j];
-					boolean b = pri > sb.mon || cool > 0;
+					boolean b = pri > sb.money || cool > 0;
 					if (b)
 						g.colRect(x, y, iw, ih, 0, 0, 0, 100);
 					if (sb.locks[i][j])
@@ -339,7 +339,7 @@ public interface BattleBox {
 						g.colRect(x + iw - dw - xw, y + ih - dh * 2, xw, dh, 0, 0, 0, -1);
 						g.colRect(x + dw, y + ih - dh * 2, iw - dw * 2 - xw, dh, 100, 212, 255, -1);
 					} else
-						Res.getCost(pri, !b, setSym(g, hr, x + iw, y + ih, 3));
+						Res.getCost(pri / 100, !b, setSym(g, hr, x + iw, y + ih, 3));
 				}
 			}
 		}
@@ -376,7 +376,7 @@ public interface BattleBox {
 				if (pri == -1)
 					g.colRect(x, y, iw, ih, 255, 0, 0, 100);
 				int cool = sb.elu.cool[index][i];
-				boolean b = isBehind || pri > sb.mon || cool > 0;
+				boolean b = isBehind || pri > sb.money || cool > 0;
 				if (b)
 					g.colRect(x, y, iw, ih, 0, 0, 0, 100);
 				if (sb.locks[index][i])
@@ -608,7 +608,7 @@ public interface BattleBox {
 		private void drawTop(FakeGraphics g) {
 			int w = box.getWidth();
 			SymCoord sym = setSym(g, 1, w-aux.num[0][0].getImg().getHeight()*0.2, aux.num[0][0].getImg().getHeight()*0.2, 1);
-			P p = Res.getMoney((int) sb.mon, sb.max_mon, sym);
+			P p = Res.getMoney(sb.getMoney(), sb.getMaxMoney(), sym);
 			int ih = (int) p.y + (int) (aux.num[0][0].getImg().getHeight()*0.2);
 			int n = 0;
 			FakeImage bimg = aux.battle[2][1].getImg();

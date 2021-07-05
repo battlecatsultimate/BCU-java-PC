@@ -36,7 +36,7 @@ class PartEditTable extends AnimTable<int[]> {
 	public boolean editCellAt(int row, int column, EventObject e) {
 		boolean result = super.editCellAt(row, column, e);
 		final Component editor = getEditorComponent();
-		if (editor == null || !(editor instanceof JTextComponent))
+		if (!(editor instanceof JTextComponent))
 			return result;
 		if (e instanceof KeyEvent)
 			((JTextComponent) editor).selectAll();
@@ -84,20 +84,19 @@ class PartEditTable extends AnimTable<int[]> {
 	}
 
 	@Override
-	public boolean insert(int dst, int[][] data) {
+	public boolean insert(int dst, int[][] data, int[] rows) {
 		List<int[]> l = new ArrayList<>();
-		int ind = dst;
 		for (int[] p : part.moves)
 			if (p != null)
 				l.add(p);
 		for (int i = 0; i < data.length; i++)
-			l.add(i + ind, data[i]);
+			l.add(i + dst, data[i]);
 		part.moves = l.toArray(new int[0][]);
 		part.n = part.moves.length;
 		part.validate();
 		part.check(anim);
 		anim.unSave("maanim paste line");
-		page.callBack(new int[] { 1, ind, ind + data.length - 1 });
+		page.callBack(new int[] { 1, dst, dst + data.length - 1 });
 		return true;
 	}
 

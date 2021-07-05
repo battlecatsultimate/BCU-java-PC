@@ -10,6 +10,7 @@ import common.util.unit.Enemy;
 import common.util.unit.Trait;
 import page.JL;
 import page.JTF;
+import page.MainLocale;
 import page.Page;
 import utilpc.Interpret;
 import utilpc.UtilPC;
@@ -64,7 +65,7 @@ public class EnemyInfoTable extends Page {
 		double mul = multi * e.de.multi(b) / 100;
 		double mula = mulatk * e.de.multi(b) / 100;
 		main[1][3].setText("" + (int) (e.de.getHp() * mul));
-		main[1][7].setText("" + (int) (e.de.getDrop() * b.t().getDropMulti()));
+		main[1][7].setText("" + (int) Math.floor(e.de.getDrop() * b.t().getDropMulti()) / 100);
 		main[2][3].setText("" + (int) (e.de.allAtk() * mula * 30 / e.de.getItv()));
 		int[][] atkData = e.de.rawAtkData();
 		for (int i = 0; i < atks.length; i++)
@@ -185,50 +186,50 @@ public class EnemyInfoTable extends Page {
 		main[0][1].setText("" + e.id);
 		if (e.anim.getEdi() != null && e.anim.getEdi().getImg() != null)
 			main[0][2].setIcon(UtilPC.getIcon(e.anim.getEdi()));
-		main[0][3].setText(1, "trait");
+		main[0][3].setText(MainLocale.INFO, "trait");
 		main[0][4].setText(Interpret.getTrait(TraitBox, e.de.getStar()));
-		main[1][0].setText(1, "mult");
-		main[1][2].setText(1, "HP");
-		main[1][4].setText(1, "HB");
+		main[1][0].setText(MainLocale.INFO, "mult");
+		main[1][2].setText(MainLocale.INFO, "HP");
+		main[1][4].setText(MainLocale.INFO, "HB");
 		main[1][5].setText("" + e.de.getHb());
-		main[1][6].setText(1, "drop");
-		main[1][7].setText("" + (int) (e.de.getDrop() * b.t().getDropMulti()));
-		main[2][0].setText(1, "range");
+		main[1][6].setText(MainLocale.INFO, "drop");
+		main[1][7].setText("" + (int) Math.floor(e.de.getDrop() * b.t().getDropMulti()) / 100);
+		main[2][0].setText(MainLocale.INFO, "range");
 		main[2][1].setText("" + e.de.getRange());
 		main[2][2].setText("dps");
-		main[2][4].setText(1, "speed");
+		main[2][4].setText(MainLocale.INFO, "speed");
 		main[2][5].setText("" + e.de.getSpeed());
-		main[2][6].setText(1, "atkf");
+		main[2][6].setText(MainLocale.INFO, "atkf");
 		main[2][7].setText(itv + "f");
-		main[3][0].setText(1, "atktype");
+		main[3][0].setText(MainLocale.INFO, "atktype");
 		if (e.de.isRange()) {
-			main[3][1].setText(1, "isr");
+			main[3][1].setText(MainLocale.INFO, "isr");
 			main[3][1].setIcon(UtilPC.createIcon(2, Data.ATK_AREA));
 		} else {
-			main[3][1].setText(1, "single");
+			main[3][1].setText(MainLocale.INFO, "single");
 			main[3][1].setIcon(UtilPC.createIcon(2, Data.ATK_SINGLE));
 		}
-		main[3][2].setText(1, "shield");
+		main[3][2].setText(MainLocale.INFO, "shield");
 		main[3][3].setText("" + e.de.getShield());
-		main[3][4].setText(1, "TBA");
+		main[3][4].setText(MainLocale.INFO, "TBA");
 		main[3][5].setText(e.de.getTBA() + "f");
-		main[3][6].setText(1, "postaa");
-		special[0][0].setText(1, "count");
+		main[3][6].setText(MainLocale.INFO, "postaa");
+		special[0][0].setText(MainLocale.INFO, "count");
 		special[0][1].setText(e.de.getAtkLoop() < 0 ? "infinite" : e.de.getAtkLoop() + "");
-		special[0][2].setText(1, "width");
+		special[0][2].setText(MainLocale.INFO, "width");
 		special[0][3].setText(e.de.getWidth() + "");
-		special[0][4].setText(1, "limit");
+		special[0][4].setText(MainLocale.INFO, "limit");
 		special[0][5].setText(e.de.getLim() + "");
-		special[0][6].setText(1, "will");
+		special[0][6].setText(MainLocale.INFO, "will");
 		special[0][7].setText("" + (e.de.getWill() + 1));
 		int[][] atkData = e.de.rawAtkData();
 		for (int i = 0; i < atks.length; i++) {
-			atks[i][0].setText(1, "atk");
-			atks[i][2].setText(1, "preaa");
+			atks[i][0].setText(MainLocale.INFO, "atk");
+			atks[i][2].setText(MainLocale.INFO, "preaa");
 			atks[i][3].setText(atkData[i][1] + "f");
 			atks[i][4].setText(0, atkData[i][3] == -1 ? "igtr" : "cntr");
 			atks[i][5].setText("" + (!(e.de instanceof DataEnemy) && ((CustomEnemy)e.de).atks[i].specialTrait));
-			atks[i][6].setText(1, "dire");
+			atks[i][6].setText(MainLocale.INFO, "dire");
 			atks[i][7].setText("" + atkData[i][3]);
 			itv -= atkData[i][1];
 		}
