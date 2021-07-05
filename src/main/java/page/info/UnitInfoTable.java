@@ -111,7 +111,7 @@ public class UnitInfoTable extends Page {
 		main[2][3].setText("" + (attack * 30 / ef.du.getItv()));
 		main[2][5].setText("" + (int) (ef.du.getSpeed() * (1 + b.getInc(Data.C_SPE) * 0.01)));
 		main[1][5].setText(b.t().getFinRes(ef.du.getRespawn()) + "f");
-		main[1][7].setText("" + (int) ef.getPrice(1));
+		main[1][7].setText("" + ef.getPrice(1));
 		main[0][4].setText(Interpret.getTrait(TraitBox, 0));
 		int[][] atkData = ef.du.rawAtkData();
 		StringBuilder satk = new StringBuilder();
