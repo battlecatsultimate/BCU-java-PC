@@ -19,16 +19,13 @@ import utilpc.UtilPC;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class BGEditPage extends Page {
 
 	private static final long serialVersionUID = 1L;
@@ -100,74 +97,40 @@ public class BGEditPage extends Page {
 	}
 
 	private void addListeners$0() {
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
+		back.addActionListener(arg0 -> changePanel(getFront()));
+
+		addc.addActionListener(arg0 -> getFile("Choose your file", null));
+
+		remc.addActionListener(arg0 -> {
+			pack.bgs.remove(bgr);
+
+			((Workspace) pack.source).getBGFile(bgr.getID()).delete();
+
+			setList(null);
 		});
 
-		addc.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				getFile("Choose your file", null);
-			}
+		impc.addActionListener(arg0 -> getFile("Choose your file", bgr));
+
+		expc.addActionListener(arg0 -> {
+			if (bgr != null)
+				new Exporter((BufferedImage) bgr.img.getImg().bimg(), Exporter.EXP_IMG);
 		});
 
-		remc.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				pack.bgs.remove(bgr);
-				((Workspace) pack.source).getBGFile(bgr.getID()).delete();
-				setList(null);
-			}
-		});
+		copy.addActionListener(arg0 -> changePanel(bvp = new BGViewPage(getThis(), null)));
 
-		impc.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				getFile("Choose your file", bgr);
-			}
-		});
-
-		expc.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (bgr != null)
-					new Exporter((BufferedImage) bgr.img.getImg().bimg(), Exporter.EXP_IMG);
-			}
-		});
-
-		copy.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(bvp = new BGViewPage(getThis(), null));
-			}
-		});
-
-		jlst.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (changing || jlst.getValueIsAdjusting())
-					return;
-				setBG(jlst.getSelectedValue());
-			}
-
+		jlst.addListSelectionListener(arg0 -> {
+			if (changing || jlst.getValueIsAdjusting())
+				return;
+			setBG(jlst.getSelectedValue());
 		});
 
 	}
 
 	private void addListeners$1() {
-		top.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				bgr.top = top.isSelected();
-				bgr.ic = 1;
-				bgr.load();
-				cs[0].setEnabled(!bgr.top);
-				cs[1].setEnabled(!bgr.top);
-			}
+		top.addActionListener(arg0 -> {
+			bgr.top = top.isSelected();
+			bgr.ic = 1;
+			bgr.load();
 		});
 
 		for (int i = 0; i < 4; i++) {
@@ -256,10 +219,6 @@ public class BGEditPage extends Page {
 			top.setSelected(bgr.top);
 			for (int i = 0; i < 4; i++)
 				setCSText(i);
-			if (bgr.top) {
-				cs[0].setEnabled(false);
-				cs[1].setEnabled(false);
-			}
 		} else {
 			top.setSelected(false);
 			for (int i = 0; i < 4; i++)
