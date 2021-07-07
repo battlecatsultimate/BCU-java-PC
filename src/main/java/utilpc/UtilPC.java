@@ -217,13 +217,20 @@ public class UtilPC {
 	}
 
 	public static ImageIcon getBg(Background bg, int w, int h) {
-		double r = h / 1428.0;
+		bg.check();
+
+		int groundHeight = ((BufferedImage) bg.parts[Background.BG].bimg()).getHeight();
+		int skyHeight = bg.top ? ((BufferedImage) bg.parts[Background.TOP].bimg()).getHeight() : 1020 - groundHeight;
+
+		if(skyHeight < 0)
+			skyHeight = 0;
+
+		double r = h / (double) (groundHeight + skyHeight + 408);
 
 		int fw = (int) (768 * r);
-		int fh = (int) (510 * r);
+		int sh = (int) (skyHeight * r);
+		int gh = (int) (groundHeight * r);
 		int skyGround = (int) (204 * r);
-
-		bg.check();
 
 		BufferedImage temp = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 
@@ -233,17 +240,17 @@ public class UtilPC {
 
 		if (bg.top && bg.parts.length > Background.TOP) {
 			for (int i = 0; i * fw < w; i++)
-				fg.drawImage(bg.parts[Background.TOP], fw * i, skyGround, fw, fh);
+				fg.drawImage(bg.parts[Background.TOP], fw * i, skyGround, fw, sh);
 
 			fg.gradRect(0, 0, w, skyGround, 0, 0, bg.cs[0], 0, skyGround, bg.cs[1]);
 		} else {
-			fg.gradRect(0, 0, w, fh + skyGround, 0, 0, bg.cs[0], 0, fh + skyGround, bg.cs[1]);
+			fg.gradRect(0, 0, w, sh + skyGround, 0, 0, bg.cs[0], 0, sh + skyGround, bg.cs[1]);
 		}
 
 		for (int i = 0; i * fw < w; i++)
-			fg.drawImage(bg.parts[Background.BG], fw * i, fh + skyGround, fw, fh);
+			fg.drawImage(bg.parts[Background.BG], fw * i, sh + skyGround, fw, gh);
 
-		fg.gradRect(0, fh * 2 + skyGround, w, skyGround, 0, fh * 2 + skyGround, bg.cs[2], 0, h, bg.cs[3]);
+		fg.gradRect(0, sh + gh + skyGround, w, skyGround, 0, sh + gh + skyGround, bg.cs[2], 0, h, bg.cs[3]);
 
 		g.dispose();
 		return new ImageIcon(temp);
