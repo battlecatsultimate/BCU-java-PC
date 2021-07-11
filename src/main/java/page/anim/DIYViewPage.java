@@ -20,6 +20,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
@@ -168,6 +169,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		set(group, x, y, 50, 1150, 300, 50);
 		set(remgroup, x, y, 50, 1200, 300, 50);
 		SwingUtilities.invokeLater(() -> jlt.setUI(new TreeNodeExpander(jlt)));
+		ib.updateControllerDimension(((Canvas) vb).getWidth(), ((Canvas) vb).getHeight());
 	}
 
 	@Override
