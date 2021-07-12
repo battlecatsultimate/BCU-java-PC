@@ -48,7 +48,7 @@ public class EnemyEditPage extends EntityEditPage {
 			ce.limit = v[0];
 		}
 		if (jtf == fdr) {
-			ce.drop = (int) (v[0] / bas.t().getDropMulti());
+			ce.drop = (int) Math.round(v[0] / bas.t().getDropMulti());
 		}
 		if (jtf == fsr) {
 			if (v[0] < 0)
