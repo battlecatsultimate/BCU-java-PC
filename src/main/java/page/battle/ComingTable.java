@@ -8,6 +8,7 @@ import common.util.stage.SCDef.Line;
 import common.util.stage.Stage;
 import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
+import main.MainBCU;
 import page.MainFrame;
 import page.MainLocale;
 import page.Page;
@@ -127,7 +128,10 @@ class ComingTable extends AbJTable {
 	protected synchronized void update(EStage est) {
 		for (int i = 0; i < link.length; i++)
 			if (link[i] != -1) {
-				data[link[i]][5] = est.rem[i];
+				if (MainBCU.seconds)
+					data[link[i]][5] = MainBCU.toSeconds(est.rem[i]);
+				else
+					data[link[i]][5] = est.rem[i] + "f";
 				data[link[i]][3] = est.num[i] == 0 ? "infinite" : est.num[i];
 				if (est.num[i] == -1)
 					data[link[i]] = null;

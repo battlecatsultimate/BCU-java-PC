@@ -24,6 +24,9 @@ public interface IconBox extends ViewBox {
 
 	class IBCtrl extends ViewBox.Controller {
 
+		public int w = 1;
+		public int h = 1;
+
 		protected boolean drag;
 
 		@Override
@@ -37,10 +40,39 @@ public interface IconBox extends ViewBox {
 			if ((e.getModifiers() & modifier) > 0) {
 				line[2] += t.x - p.x;
 				line[3] += t.y - p.y;
+
+				if(line[2] < 1)
+					line[2] = 1;
+
+				if(line[3] < 1)
+					line[3] = 1;
+
+				if(line[0] + line[2] >= w) {
+					line[2] = w - line[0];
+				}
+
+				if(line[1] + line[3] >= h) {
+					line[3] = h - line[1];
+				}
 			} else {
 				line[0] += t.x - p.x;
 				line[1] += t.y - p.y;
+
+				if(line[0] < 0)
+					line[0] = 0;
+
+				if(line[1] < 0)
+					line[1] = 0;
+
+				if(line[0] + line[2] >= w) {
+					line[0] = w - line[2];
+				}
+
+				if(line[1] + line[3] >= h) {
+					line[1] = h - line[3];
+				}
 			}
+
 			p = t;
 		}
 
@@ -75,11 +107,11 @@ public interface IconBox extends ViewBox {
 				}
 				if (mode == 0 && type > 1) {
 					bimg = aux.ico[0][5].getImg();
-					gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r));
 				} else {
 					bimg = aux.ico[mode][t].getImg();
-					gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r));
 				}
+
+				gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r));
 
 			}
 		}
@@ -103,6 +135,31 @@ public interface IconBox extends ViewBox {
 			}
 		}
 
+		public void synchronizeDimension() {
+			if(line[0] + line[2] >= w) {
+				line[0] = w - line[2];
+
+				if(line[0] < 0) {
+					line[2] += line[0];
+					line[0] = 0;
+
+					if(line[2] < 1)
+						line[2] = 1;
+				}
+			}
+
+			if(line[1] + line[3] >= h) {
+				line[1] = h - line[3];
+
+				if(line[1] < 0) {
+					line[3] += line[1];
+					line[1] = 0;
+
+					if(line[3] < 1)
+						line[3] = 1;
+				}
+			}
+		}
 	}
 
 	void changeType();
@@ -113,5 +170,7 @@ public interface IconBox extends ViewBox {
 	IBCtrl getCtrl();
 
 	void setBlank(boolean selected);
+
+	void updateControllerDimension(int w, int h);
 
 }

@@ -3,6 +3,7 @@ package page.info.edit;
 import common.util.Data;
 import common.util.Data.Proc;
 import common.util.lang.Formatter;
+import main.MainBCU;
 import page.JTF;
 import page.Page;
 import page.support.ListJtfPolicy;
@@ -105,7 +106,7 @@ public abstract class ProcTable extends Page {
 	}
 
 	private void ini() {
-		Formatter.Context ctx = new Formatter.Context(!isUnit, false);
+		Formatter.Context ctx = new Formatter.Context(!isUnit, MainBCU.seconds);
 		for (int i = 0; i < group.length; i++) {
 			group[i] = new SwingEditor.SwingEG(inds[i], editable, () -> getFront().callBack(null), ctx);
 			add(group[i].jlm);

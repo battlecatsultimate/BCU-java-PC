@@ -15,6 +15,7 @@ import common.util.stage.MapColc;
 import common.util.stage.MapColc.DefMapColc;
 import common.util.unit.Combo;
 import common.util.unit.Enemy;
+import main.MainBCU;
 import page.MainLocale;
 import page.Page;
 
@@ -271,7 +272,7 @@ public class Interpret extends Data {
 	}
 
 	public static List<ProcDisplay> getProc(MaskEntity du, boolean isEnemy) {
-		Formatter.Context ctx = new Formatter.Context(isEnemy, false);
+		Formatter.Context ctx = new Formatter.Context(isEnemy, MainBCU.seconds);
 		final boolean common;
 
 		if(du instanceof CustomEntity) {

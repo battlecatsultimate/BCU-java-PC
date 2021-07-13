@@ -65,6 +65,7 @@ public class BCUReader extends DataIO {
 				MainBCU.preload = jo.get("preload").getAsBoolean();
 				ViewBox.Conf.white = jo.get("transparent").getAsBoolean();
 				MainBCU.USE_JOGL = jo.get("JOGL").getAsBoolean();
+				MainBCU.seconds = jo.get("seconds").getAsBoolean();
 				MainBCU.prefLevel = jo.get("prefLv").getAsInt();
 				MainBCU.FILTER_TYPE = jo.get("filter").getAsInt();
 				BCMusic.play = jo.get("play_sound").getAsBoolean();

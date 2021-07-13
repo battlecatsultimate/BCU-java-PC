@@ -32,6 +32,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -145,16 +146,21 @@ public class MainBCU {
 	}
 
 	public static final int ver = 50100;
+	private static final DecimalFormat df = new DecimalFormat("#.##");
 
 	public static int FILTER_TYPE = 1, prefLevel = 50;
 	public static final boolean WRITE = !new File("./.project").exists();
 	public static boolean preload = false, trueRun = true, loaded = false, USE_JOGL = false;
-	public static boolean light = true, nimbus = false;
+	public static boolean light = true, nimbus = false, seconds = false;
 	public static String author = "";
 	public static ImageBuilder<BufferedImage> builder;
 
 	public static String getTime() {
 		return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+	}
+
+	public static String toSeconds(int in) {
+		return df.format(in / 30.0) + "s";
 	}
 
 	public static void main(String[] args) {

@@ -8,6 +8,7 @@ import common.util.Data;
 import common.util.unit.EForm;
 import common.util.unit.Form;
 import common.util.unit.Trait;
+import main.MainBCU;
 import page.JL;
 import page.JTF;
 import page.MainLocale;
@@ -241,15 +242,24 @@ public class UnitInfoTable extends Page {
 		main[2][2].setText("dps");
 		main[2][4].setText(MainLocale.INFO, "speed");
 		main[2][6].setText(MainLocale.INFO, "atkf");
-		main[2][7].setText(f.du.getItv() + "f");
+
 		main[3][0].setText(MainLocale.INFO, "isr");
 		main[3][1].setText("" + f.du.isRange());
 		main[3][2].setText(MainLocale.INFO, "shield");
 		main[3][3].setText("" + f.du.getShield());
 		main[3][4].setText(MainLocale.INFO, "TBA");
-		main[3][5].setText(f.du.getTBA() + "f");
 		main[3][6].setText(MainLocale.INFO, "postaa");
-		main[3][7].setText(f.du.getPost() + "f");
+
+		if (MainBCU.seconds) {
+			main[2][7].setText(MainBCU.toSeconds(f.du.getItv()));
+			main[3][5].setText(MainBCU.toSeconds(f.du.getTBA()));
+			main[3][7].setText(MainBCU.toSeconds(f.du.getPost()));
+		} else {
+			main[2][7].setText(f.du.getItv() + "f");
+			main[3][5].setText(f.du.getTBA() + "f");
+			main[3][7].setText(f.du.getPost() + "f");
+		}
+
 		special[0][0].setText(MainLocale.INFO, "count");
 		special[0][1].setText(f.du.getAtkLoop() < 0 ? "infinite" : f.du.getAtkLoop() + "");
 		special[0][2].setText(MainLocale.INFO, "width");
@@ -274,7 +284,12 @@ public class UnitInfoTable extends Page {
 				pre.append(" / ");
 			if (use.length() > 0)
 				use.append(" / ");
-			pre.append(atkDatum[1]).append("f");
+
+			if (MainBCU.seconds)
+				pre.append(MainBCU.toSeconds(atkDatum[1]));
+			else
+				pre.append(atkDatum[1]).append("f");
+
 			use.append(atkDatum[3]);
 
 		}

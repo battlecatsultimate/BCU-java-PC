@@ -8,6 +8,7 @@ import common.pack.UserProfile;
 import common.util.Data;
 import common.util.unit.Enemy;
 import common.util.unit.Trait;
+import main.MainBCU;
 import page.JL;
 import page.JTF;
 import page.MainLocale;
@@ -200,7 +201,7 @@ public class EnemyInfoTable extends Page {
 		main[2][4].setText(MainLocale.INFO, "speed");
 		main[2][5].setText("" + e.de.getSpeed());
 		main[2][6].setText(MainLocale.INFO, "atkf");
-		main[2][7].setText(itv + "f");
+
 		main[3][0].setText(MainLocale.INFO, "atktype");
 		if (e.de.isRange()) {
 			main[3][1].setText(MainLocale.INFO, "isr");
@@ -212,8 +213,8 @@ public class EnemyInfoTable extends Page {
 		main[3][2].setText(MainLocale.INFO, "shield");
 		main[3][3].setText("" + e.de.getShield());
 		main[3][4].setText(MainLocale.INFO, "TBA");
-		main[3][5].setText(e.de.getTBA() + "f");
 		main[3][6].setText(MainLocale.INFO, "postaa");
+
 		special[0][0].setText(MainLocale.INFO, "count");
 		special[0][1].setText(e.de.getAtkLoop() < 0 ? "infinite" : e.de.getAtkLoop() + "");
 		special[0][2].setText(MainLocale.INFO, "width");
@@ -222,18 +223,30 @@ public class EnemyInfoTable extends Page {
 		special[0][5].setText(e.de.getLim() + "");
 		special[0][6].setText(MainLocale.INFO, "will");
 		special[0][7].setText("" + (e.de.getWill() + 1));
+
+		if (MainBCU.seconds) {
+			main[2][7].setText(MainBCU.toSeconds(itv));
+			main[3][5].setText(MainBCU.toSeconds(e.de.getTBA()));
+			main[3][7].setText(MainBCU.toSeconds(e.de.getPost()));
+		} else {
+			main[2][7].setText(itv + "f");
+			main[3][5].setText(e.de.getTBA() + "f");
+			main[3][7].setText(e.de.getPost() + "f");
+		}
+
 		int[][] atkData = e.de.rawAtkData();
 		for (int i = 0; i < atks.length; i++) {
 			atks[i][0].setText(MainLocale.INFO, "atk");
 			atks[i][2].setText(MainLocale.INFO, "preaa");
-			atks[i][3].setText(atkData[i][1] + "f");
+			if (MainBCU.seconds)
+				atks[i][3].setText(MainBCU.toSeconds(atkData[i][1]));
+			else
+				atks[i][3].setText(atkData[i][1] + "f");
 			atks[i][4].setText(0, atkData[i][3] == -1 ? "igtr" : "cntr");
 			atks[i][5].setText("" + (!(e.de instanceof DataEnemy) && ((CustomEnemy)e.de).atks[i].specialTrait));
 			atks[i][6].setText(MainLocale.INFO, "dire");
 			atks[i][7].setText("" + atkData[i][3]);
-			itv -= atkData[i][1];
 		}
-		main[3][7].setText(e.de.getPost() + "f");
 		if (e.de.getLim() >= 100)
 			special[0][5].setToolTipText("<html>"
 					+ "This enemy, if it's a boss, will always stay at least"

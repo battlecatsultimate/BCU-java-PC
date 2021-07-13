@@ -8,6 +8,7 @@ import common.util.Data;
 import common.util.stage.Replay;
 import common.util.stage.Stage;
 import io.BCMusic;
+import main.MainBCU;
 import main.Opts;
 import page.*;
 import page.awt.BBBuilder;
@@ -209,7 +210,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			set(respawn, x, y, 0, 0, 0, 0);
 			set(jsl, x, y, 0, 0, 0, 0);
 		} else {
-			set(ctp, x, y, 50, 850, 1200, 400);
+			set(ctp, x, y, 50, 850, 1450, 400);
 			set(eep, x, y, 50, 100, 600, 700);
 			set((Canvas) bb, x, y, 700, 300, 800, 500);
 			set(row, x, y , 1300, 200, 200, 50);
@@ -264,7 +265,10 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		timer.setText(sb.time + "f");
 		ecount.setText(sb.entityCount(1) + "/" + sb.st.max);
 		ucount.setText(sb.entityCount(-1) + "/" + sb.max_num);
-		respawn.setText("respawn timer: " + sb.respawnTime + "f");
+		if (MainBCU.seconds)
+			respawn.setText("respawn timer: " + MainBCU.toSeconds(sb.respawnTime));
+		else
+			respawn.setText("respawn timer: " + sb.respawnTime + "f");
 		resized();
 		if (basis.sb.getEBHP() < basis.sb.st.bgh && basis.sb.st.bg1 != null) {
 			if (!changedBG) {
