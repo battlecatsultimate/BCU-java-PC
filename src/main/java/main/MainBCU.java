@@ -18,15 +18,14 @@ import io.BCUReader;
 import io.BCUWriter;
 import jogl.GLBBB;
 import jogl.util.GLIB;
-import page.LoadPage;
-import page.MainFrame;
-import page.MainPage;
-import page.Page;
+import page.*;
 import page.awt.AWTBBB;
 import page.awt.BBBuilder;
 import utilpc.Theme;
 import utilpc.UtilPC;
 import utilpc.awt.FIBI;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -143,7 +142,7 @@ public class MainBCU {
 		}
 	}
 
-	public static final int ver = 50029;
+	public static final int ver = 50038;
 
 	public static int FILTER_TYPE = 1;
 	public static final boolean WRITE = !new File("./.project").exists();
@@ -182,14 +181,19 @@ public class MainBCU {
 			Page.BGCOLOR = new Color(255, 255, 255);
 		}
 
-		new MainFrame(Data.revVer(MainBCU.ver)).initialize();
+		MainFrame frame = new MainFrame(Data.revVer(MainBCU.ver));
+		frame.initialize();
 		new Timer().start();
 
+		MenuBarHandler.initialize();
 		BCJSON.check();
 		CommonStatic.ctx.initProfile();
 
 		BCUReader.getData$1();
 		loaded = true;
+		JMenuItem menu = MenuBarHandler.getFileItem("Save All");
+			if (menu != null)
+				menu.setEnabled(true);
 		MainFrame.changePanel(new MainPage());
 	}
 

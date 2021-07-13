@@ -116,7 +116,11 @@ public class MainFrame extends JFrame {
 
 			@Override
 			public void windowClosing(WindowEvent arg0) {
-				if(!closeClicked) {
+				JMenuItem menu = MenuBarHandler.getFileItem("Save All");
+				if (menu != null)
+					menu.setEnabled(false);
+
+				if (!closeClicked) {
 					changePanel(new SavePage());
 				} else {
 					Opts.warnPop("Saving progress...\nPlease wait!", "Saving");

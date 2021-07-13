@@ -48,7 +48,7 @@ public class EnemyEditPage extends EntityEditPage {
 			ce.limit = v[0];
 		}
 		if (jtf == fdr) {
-			ce.drop = (int) (v[0] / bas.t().getDropMulti());
+			ce.drop = (int) Math.round(v[0] / bas.t().getDropMulti());
 		}
 		if (jtf == fsr) {
 			if (v[0] < 0)
@@ -105,7 +105,7 @@ public class EnemyEditPage extends EntityEditPage {
 		super.setData(data);
 		fbd.setText(ce.getLim() + "");
 		fsr.setText("star: " + ce.star);
-		fdr.setText("" + (int) (ce.getDrop() * bas.t().getDropMulti()));
+		fdr.setText("" + Math.floor(ce.getDrop() * bas.t().getDropMulti()) / 100);
 		int imu = 0;
 		for (int j : EABIIND)
 			if (j > 100) {

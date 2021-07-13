@@ -64,4 +64,11 @@ class IconBoxDef extends ViewBoxDef implements IconBox {
 		blank = selected;
 	}
 
+	@Override
+	public void updateControllerDimension(int w, int h) {
+		getCtrl().w = w;
+		getCtrl().h = h;
+		getCtrl().synchronizeDimension();
+	}
+
 }

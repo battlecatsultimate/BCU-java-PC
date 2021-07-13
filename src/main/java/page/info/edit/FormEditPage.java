@@ -1,5 +1,6 @@
 package page.info.edit;
 
+import common.battle.BasisSet;
 import common.battle.data.CustomEntity;
 import common.battle.data.CustomUnit;
 import common.pack.Identifier;
@@ -65,6 +66,15 @@ public class FormEditPage extends EntityEditPage {
 		double mul = form.unit.lv.getMult(lv);
 		double def = bas.t().getDefMulti();
 		return mul * def;
+	}
+
+	@Override
+	public void callBack(Object o) {
+		super.callBack(o);
+
+		if(o instanceof int[]) {
+			BasisSet.synchronizeOrb(form.unit);
+		}
 	}
 
 	@Override

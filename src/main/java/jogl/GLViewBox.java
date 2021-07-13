@@ -92,6 +92,13 @@ class GLIconBox extends GLViewBox implements IconBox {
 		blank = selected;
 	}
 
+	@Override
+	public void updateControllerDimension(int w, int h) {
+		getCtrl().w = w;
+		getCtrl().h = h;
+		getCtrl().synchronizeDimension();
+	}
+
 }
 
 class GLVBExporter implements ViewBox.VBExporter {
@@ -227,5 +234,4 @@ class GLViewBox extends GLCstd implements ViewBox, GLEventListener {
 		if (ent != null)
 			ent.draw(g, ctrl.ori.copy().times(-1), ctrl.siz);
 	}
-
 }

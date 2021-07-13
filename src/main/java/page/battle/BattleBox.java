@@ -27,6 +27,7 @@ import utilpc.PP;
 
 import java.awt.*;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public interface BattleBox {
 
@@ -95,6 +96,8 @@ public interface BattleBox {
 		public boolean dragging = false;
 
 		private final BCAuxAssets aux = CommonStatic.getBCAssets();
+
+		private final ArrayList<ContAb> efList = new ArrayList<>();
 
 		private final SymCoord sym = new SymCoord(null, 0, 0, 0, 0);
 		private final P p = new P(0, 0);
@@ -220,7 +223,7 @@ public interface BattleBox {
 			int h = box.getHeight();
 			int cw = 0;
 			int time = (sb.time / 5) % 2;
-			int mtype = sb.mon < sb.next_lv ? 0 : time == 0 ? 1 : 2;
+			int mtype = sb.money < sb.upgradeCost ? 0 : time == 0 ? 1 : 2;
 			if (sb.work_lv == 8)
 				mtype = 2;
 			FakeImage left = aux.battle[0][mtype].getImg();
@@ -239,7 +242,7 @@ public interface BattleBox {
 			iw = (int) (hr * right.getWidth());
 			ih = (int) (hr * right.getHeight());
 			g.drawImage(right, w - iw + BOTTOM_GAP * hr, h - ih, iw, ih);
-			Res.getCost(sb.next_lv, mtype > 0, setSym(g, hr, hr * 5, h - hr * 5, 2));
+			Res.getCost(sb.getUpgradeCost(), mtype > 0, setSym(g, hr, hr * 5, h - hr * 5, 2));
 			Res.getWorkerLv(sb.work_lv, mtype > 0, setSym(g, hr, hr * 5, h - hr * 130, 0));
 			int hi = h;
 			double marg = 0;
@@ -324,7 +327,7 @@ public interface BattleBox {
 					if (pri == -1)
 						g.colRect(x, y, iw, ih, 255, 0, 0, 100);
 					int cool = sb.elu.cool[i][j];
-					boolean b = pri > sb.mon || cool > 0;
+					boolean b = pri > sb.money || cool > 0;
 					if (b)
 						g.colRect(x, y, iw, ih, 0, 0, 0, 100);
 					if (sb.locks[i][j])
@@ -337,7 +340,7 @@ public interface BattleBox {
 						g.colRect(x + iw - dw - xw, y + ih - dh * 2, xw, dh, 0, 0, 0, -1);
 						g.colRect(x + dw, y + ih - dh * 2, iw - dw * 2 - xw, dh, 100, 212, 255, -1);
 					} else
-						Res.getCost(pri, !b, setSym(g, hr, x + iw, y + ih, 3));
+						Res.getCost(pri == -1 ? -1 : pri / 100, !b, setSym(g, hr, x + iw, y + ih, 3));
 				}
 			}
 		}
@@ -374,7 +377,7 @@ public interface BattleBox {
 				if (pri == -1)
 					g.colRect(x, y, iw, ih, 255, 0, 0, 100);
 				int cool = sb.elu.cool[index][i];
-				boolean b = isBehind || pri > sb.mon || cool > 0;
+				boolean b = isBehind || pri > sb.money || cool > 0;
 				if (b)
 					g.colRect(x, y, iw, ih, 0, 0, 0, 100);
 				if (sb.locks[index][i])
@@ -388,7 +391,7 @@ public interface BattleBox {
 						g.colRect(x + iw - dw - xw, y + ih - dh * 2, xw, dh, 0, 0, 0, -1);
 						g.colRect(x + dw, y + ih - dh * 2, iw - dw * 2 - xw, dh, 100, 212, 255, -1);
 					} else
-						Res.getCost(pri, !b, setSym(g, hr, x + iw, y + ih, 3));
+						Res.getCost(pri == -1 ? -1 : pri / 100, !b, setSym(g, hr, x + iw, y + ih, 3));
 				}
 			}
 		}
@@ -464,11 +467,19 @@ public interface BattleBox {
 			Res.getBase(sb.ubase, setSym(gra, siz, posx, posy, 1), false);
 		}
 
+		@SuppressWarnings("UseBulkOperation")
 		private void drawEntity(FakeGraphics gra) {
+			for(int i = 0; i < sb.lw.size(); i++) {
+				efList.add(sb.lw.get(i));
+			}
+
 			int w = box.getWidth();
 			int h = box.getHeight();
+
 			FakeTransform at = gra.getTransform();
+
 			double psiz = siz * sprite;
+
 			CommonStatic.getConfig().battle = true;
 
 			for(int i = 0; i < sb.le.size(); i++) {
@@ -476,27 +487,31 @@ public interface BattleBox {
 
 				int dep = e.layer * DEP;
 
-				for(int j = 0; j < sb.lw.size(); j++) {
-					ContAb wc = sb.lw.get(j);
+				while(efList.size() > 0) {
+					ContAb wc = efList.get(0);
 
-					if(!wc.drawn && wc.layer == e.layer) {
-						gra.setTransform(at);
-						double p = (wc.pos * ratio + off) * siz + pos;
-
-						if(wc instanceof ContWaveAb)
-							p -= wave * siz;
-
-						double y = midh - (road_h - dep) * siz;
-						wc.draw(gra, setP(p, y), psiz);
-					}
+					if(wc.layer + 1 <= e.layer) {
+						drawEff(gra, wc, at, psiz);
+						efList.remove(0);
+					} else
+						break;
 				}
 
 				gra.setTransform(at);
+
 				double p = getX(e.pos);
 				double y = midh - (road_h - dep) * siz;
+
 				e.anim.draw(gra, setP(p, y), psiz);
+
 				gra.setTransform(at);
+
 				e.anim.drawEff(gra, setP(p, y), siz);
+			}
+
+			while(efList.size() > 0) {
+				drawEff(gra, efList.get(0), at, psiz);
+				efList.remove(0);
 			}
 
 			for(int i = 0; i < sb.lea.size(); i++) {
@@ -589,10 +604,25 @@ public interface BattleBox {
 			CommonStatic.getConfig().battle = false;
 		}
 
+		private void drawEff(FakeGraphics gra, ContAb wc, FakeTransform at, double pSiz) {
+			int dep = wc.layer * DEP;
+
+			gra.setTransform(at);
+
+			double p = (wc.pos * ratio + off) * siz + pos;
+
+			if(wc instanceof ContWaveAb)
+				p -= wave * siz;
+
+			double y = midh - (road_h - dep) * siz;
+
+			wc.draw(gra, setP(p, y), pSiz);
+		}
+
 		private void drawTop(FakeGraphics g) {
 			int w = box.getWidth();
 			SymCoord sym = setSym(g, 1, w-aux.num[0][0].getImg().getHeight()*0.2, aux.num[0][0].getImg().getHeight()*0.2, 1);
-			P p = Res.getMoney((int) sb.mon, sb.max_mon, sym);
+			P p = Res.getMoney(sb.getMoney(), sb.getMaxMoney(), sym);
 			int ih = (int) p.y + (int) (aux.num[0][0].getImg().getHeight()*0.2);
 			int n = 0;
 			FakeImage bimg = aux.battle[2][1].getImg();

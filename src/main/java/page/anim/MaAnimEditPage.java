@@ -384,6 +384,12 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			@Override
 			public void focusLost(FocusEvent e) {
 				double d = CommonStatic.parseIntN(tmul.getText()) * 0.01;
+
+				if(d <= 0) {
+					tmul.setText("");
+					return;
+				}
+
 				if (!Opts.conf("times animation length by " + d))
 					return;
 				for (Part p : maet.ma.parts) {
