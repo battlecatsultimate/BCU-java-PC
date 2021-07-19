@@ -389,6 +389,9 @@ public class GLGraphics implements GeoAuto {
 			} else if (comp.p1 == -1) {// d-s*a
 				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 				g.glUniform1i(tm.mode, 3);// sA=-sA*p
+			} else if (comp.p1 == -2) {
+				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				g.glUniform1i(tm.mode, 1);
 			}
 		}
 	}

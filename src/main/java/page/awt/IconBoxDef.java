@@ -32,12 +32,17 @@ class IconBoxDef extends ViewBoxDef implements IconBox {
 	@Override
 	public synchronized void draw(FakeGraphics gra) {
 		Config cfg = CommonStatic.getConfig();
+
 		boolean b = cfg.ref;
+
 		cfg.ref = false;
+
 		getCtrl().predraw(gra);
+
 		FakeTransform at = gra.getTransform();
 		super.draw(gra);
 		gra.setTransform(at);
+
 		cfg.ref = b;
 		getCtrl().postdraw(gra);
 	}
