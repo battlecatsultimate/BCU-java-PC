@@ -5,7 +5,6 @@ import common.battle.data.CustomUnit;
 import common.pack.UserProfile;
 import common.util.Data;
 import common.util.lang.ProcLang;
-import common.util.unit.Trait;
 import main.MainBCU;
 import org.jcodec.common.tools.MathUtil;
 import page.*;
@@ -173,6 +172,8 @@ class PCoinEditTable extends Page {
                 changing = true;
                 String txt = tchance[finalI - 2].getText().trim();
                 int[] v = CommonStatic.parseIntsN(txt);
+
+
                 if (v.length == 0) {
                     tchance[finalI - 2].setText("" + unit.pcoin.info.get(talent)[finalI]);
                     changing = false;
@@ -195,15 +196,12 @@ class PCoinEditTable extends Page {
                     }
                 }
 
-                if (finalI < 4 || finalI < 6 && !(vals[1] == Data.P_SATK || vals[1] == Data.P_VOLC || vals[1] == Data.P_CRIT)) {
-                    int min = vals[0] == Data.PC_BASE || unit.getProc().getArr(vals[1]).get((finalI - 2) / 2) == 0 ? 1 : 0;
-                    v[0] = Math.max(min, v[0]);
-                    if (v.length > 1)
-                        v[1] = Math.max(min, v[1]);
-                } else if (finalI >= 8 && vals[1] == Data.P_VOLC) {
+                if (finalI < 6 && !(vals[1] == Data.P_SATK || vals[1] == Data.P_VOLC || vals[1] == Data.P_CRIT)) {
+                    v[0] = Math.max(0, v[0]);
+                    w = Math.max(0, w);
+                } else if (finalI >= 8) {
                     v[0] = Math.max(1, v[0] / Data.VOLC_ITV) * Data.VOLC_ITV;
-                    if (v.length > 1)
-                        v[1] = Math.max(1, v[1] / Data.VOLC_ITV) * Data.VOLC_ITV;
+                    w = Math.max(1, w / Data.VOLC_ITV) * Data.VOLC_ITV;
                 }
 
                 if (tchance[finalI - 2 + ind].isEnabled())
@@ -340,10 +338,8 @@ class PCoinEditTable extends Page {
                         }
                     }
                 } else {
-                    Trait tr = UserProfile.getBCData().traits.get(pdata[1]);
-                    pCoin.setText(Interpret.TRAIT[tr.id.id]);
-                    if (tr.icon != null)
-                        pCoin.setIcon(tr.obtainIcon());
+                    pCoin.setText(Interpret.TRAIT[pdata[1]]);
+                    pCoin.setIcon(UtilPC.createIcon(3,pdata[1]));
                 }
             else {
                 pCoin.setText("(None)");

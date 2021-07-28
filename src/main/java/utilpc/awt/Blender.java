@@ -48,10 +48,19 @@ public class Blender implements Composite, CompositeContext {
 					else if (glow == 2)
 						dsts[ind * 3 + k] -= dsts[ind * 3 + k] * (255 - srcs[ind << 2 | k]) * a >> 16;
 					else if (glow == 3)
-						dsts[ind * 3 + k] += (255 - dsts[ind * 3 + k]) * srcs[ind << 2 | k] * a >> 16;
+						dsts[ind * 3 + k] = ((255 - a) * dsts[ind * 3 + k] + a * (dsts[ind * 3 + k] + ((255 - dsts[ind * 3 + k]) * srcs[ind << 2 | k] * a >> 16))) >> 8;
 					else if (glow == -1)
 						dsts[ind * 3 + k] = Math.max(0, dsts[ind * 3 + k] - (srcs[ind << 2 | k] * a >> 8));
-					else
+					else if(glow == -2) {
+						float d = dsts[ind * 3 + k] / 255f;
+						float s = (srcs[ind << 2 | k] * a >> 8) / 255f;
+
+						if(d > 0.5f) {
+							dsts[ind * 3 + k] = (int) ((255 - a) * d + a * (1 - ( 1- 2 * (d - 0.5)) * (1 - s)));
+						} else {
+							dsts[ind * 3 + k] = (int) ((255 - a) * d + a * 2 * d * s);
+						}
+					} else
 						dsts[ind * 3 + k] = dsts[ind * 3 + k] * (255 - a) + srcs[ind << 2 | k] * a >> 8;
 				}
 			}
@@ -75,15 +84,26 @@ public class Blender implements Composite, CompositeContext {
 						dsts[idx] -= dsts[idx] * (255 - srcs[idx]) * a >> 16;
 					else if (glow == 3)
 						dsts[idx] += (255 - dsts[idx]) * srcs[idx] * a >> 16;
-					else
+					else if (glow == -1)
+						dsts[idx] = Math.max(0, dsts[idx] - (srcs[idx] * a >> 8));
+					else if (glow == -2) {
+						float d = dsts[idx] / 255f;
+						float s = (srcs[idx] * a >> 8) / 255f;
+
+						if(d > 0.5f) {
+							dsts[idx] = (int) ((255 - a) * d + a * (1 - (1 - 2 * (d - 0.5)) * (1 - s)));
+						} else {
+							dsts[idx] = (int) ((255 - a) * d + a * 2 * d * s);
+						}
+					} else
 						dsts[idx] = (dsts[idx] * (255 - a) + srcs[idx] * a >> 8);
 				}
 
 				if (glow == 1) {
 					a = (srcs[ind << 2] + srcs[ind << 2 | 1] + srcs[ind << 2 | 2]) * a / 3 >> 8;
-					dsts[ind << 2 | 3] = (dsts[ind << 2 | 3] * (255 - a) >> 8) + a;
-				} else
-					dsts[ind << 2 | 3] = (dsts[ind << 2 | 3] * (255 - a) >> 8) + a;
+				}
+
+				dsts[ind << 2 | 3] = (dsts[ind << 2 | 3] * (255 - a) >> 8) + a;
 			}
 		out.setPixels(0, 0, w, h, dsts);
 	}

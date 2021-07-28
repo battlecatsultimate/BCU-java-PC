@@ -20,7 +20,7 @@ class ViewBoxDef extends Canvas implements ViewBox, ViewBox.VBExporter {
 	protected BufferedImage prev = null;
 	protected boolean blank;
 
-	private EAnimI ent;
+	protected EAnimI ent;
 	protected Controller ctrl;
 	private Queue<BufferedImage> lbimg = null;
 	private Loader loader = null;
@@ -38,7 +38,7 @@ class ViewBoxDef extends Canvas implements ViewBox, ViewBox.VBExporter {
 	public void draw(FakeGraphics gra) {
 		int w = getWidth();
 		int h = getHeight();
-		gra.translate(w / 2, h * 3 / 4);
+		gra.translate(w / 2.0, h * 3 / 4.0);
 		if (ent != null)
 			ent.draw(gra, ctrl.ori.copy().times(-1), ctrl.siz);
 	}
@@ -141,7 +141,7 @@ class ViewBoxDef extends Canvas implements ViewBox, ViewBox.VBExporter {
 			img = (BufferedImage) createImage(w, h);
 			gra = (Graphics2D) img.getGraphics();
 			if (!blank) {
-				GradientPaint gdt = new GradientPaint(w / 2, 0, c0, w / 2, h / 2, c1, true);
+				GradientPaint gdt = new GradientPaint(w / 2f, 0, c0, w / 2f, h / 2f, c1, true);
 				Paint p = gra.getPaint();
 				gra.setPaint(gdt);
 				gra.fillRect(0, 0, w, h);
