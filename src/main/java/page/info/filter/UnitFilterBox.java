@@ -233,13 +233,17 @@ class UFBList extends UnitFilterBox {
 	private final JList<String> rare = new JList<>(RARITY);
 	private final Vector<String> vt = new Vector<>();
 	private final Vector<String> va = new Vector<>();
-	private final AttList trait = new AttList(3, 0);
+	private final AttList trait = new AttList(3, 0, 1, 2, 3, 4, 5, 6, 7, 8, 12);
 	private final AttList abis = new AttList(0, 0);
 	private final AttList atkt = new AttList(2, 0);
 	private final JScrollPane jr = new JScrollPane(rare);
 	private final JScrollPane jt = new JScrollPane(trait);
 	private final JScrollPane jab = new JScrollPane(abis);
 	private final JScrollPane jat = new JScrollPane(atkt);
+
+	private final int[] traitIndex = {0, 1, 2, 3, 4, 5, 6, 7, 8, 12};
+
+	private final ArrayList<Integer> traitMask = new ArrayList<>();
 
 	protected UFBList(Page p) {
 		super(p);
@@ -289,9 +293,9 @@ class UFBList extends UnitFilterBox {
 					boolean b1 = !orop[0].isSelected();
 					for (int i : trait.getSelectedIndices())
 						if (orop[0].isSelected())
-							b1 |= ((t >> i) & 1) == 1;
+							b1 |= ((t >> traitIndex[i]) & 1) == 1;
 						else
-							b1 &= ((t >> i) & 1) == 1;
+							b1 &= ((t >> traitIndex[i]) & 1) == 1;
 					boolean b2 = !orop[1].isSelected();
 					int len = SABIS.length;
 					for (int i : abis.getSelectedIndices())
@@ -347,7 +351,15 @@ class UFBList extends UnitFilterBox {
 	private void ini() {
 		for (int i = 0; i < orop.length; i++)
 			set(orop[i] = new JTG(get(0, "orop")));
-		vt.addAll(Arrays.asList(TRAIT).subList(0, 9));
+
+		List<String> traitList = new ArrayList<>();
+
+		for(int i : traitIndex ) {
+			traitList.add(TRAIT[i]);
+			traitMask.add(1 << i);
+		}
+
+		vt.addAll(traitList);
 		Collections.addAll(va, SABIS);
 		for (int i = 0; i < Data.PROC_TOT; i++)
 			va.add(ProcLang.get().get(i).abbr_name);

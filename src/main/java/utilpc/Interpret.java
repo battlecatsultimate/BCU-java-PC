@@ -110,7 +110,7 @@ public class Interpret extends Data {
 				far.add(atk.getLongPoint());
 			}
 
-			if (near.isEmpty() && far.isEmpty()) {
+			if (near.isEmpty()) {
 				return true;
 			}
 
@@ -423,7 +423,7 @@ public class Interpret extends Data {
 	public static void redefine() {
 		ERARE = Page.get(MainLocale.UTIL, "er", 6);
 		RARITY = Page.get(MainLocale.UTIL, "r", 6);
-		TRAIT = Page.get(MainLocale.UTIL, "c", 12);
+		TRAIT = Page.get(MainLocale.UTIL, "c", 13);
 		STAR = Page.get(MainLocale.UTIL, "s", 5);
 		ABIS = Page.get(MainLocale.UTIL, "a", 22);
 		SABIS = Page.get(MainLocale.UTIL, "sa", 22);
@@ -433,7 +433,7 @@ public class Interpret extends Data {
 		COMF = Page.get(MainLocale.UTIL, "na", 6);
 		COMN = Page.get(MainLocale.UTIL, "nb", 25);
 		TCTX = Page.get(MainLocale.UTIL, "tc", 6);
-		PCTX = Page.get(MainLocale.UTIL, "aq", 57);
+		PCTX = Page.get(MainLocale.UTIL, "aq", 58);
 		EABI = new String[EABIIND.length];
 		for (int i = 0; i < EABI.length; i++) {
 			if (EABIIND[i] < 100)
