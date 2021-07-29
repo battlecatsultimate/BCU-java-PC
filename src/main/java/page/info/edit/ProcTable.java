@@ -17,8 +17,8 @@ public abstract class ProcTable extends Page {
 		private static final long serialVersionUID = 1L;
 
 		private static final int SEC = 16;
-		private static final int[] INDS = new int[] { Data.P_KB, Data.P_STOP, Data.P_SLOW, Data.P_CRIT, Data.P_WAVE, Data.P_WEAK, Data.P_BREAK, Data.P_WARP,
-				Data.P_CURSE, Data.P_SNIPER, Data.P_BOSS, Data.P_SATK, Data.P_POIATK, Data.P_VOLC, Data.P_TIME, Data.P_SEAL, Data.P_SUMMON, Data.P_MOVEWAVE,
+		private static final int[] INDS = new int[] { Data.P_KB, Data.P_STOP, Data.P_SLOW, Data.P_CRIT, Data.P_WAVE, Data.P_WEAK, Data.P_BREAK, Data.P_SHIELDBREAK,
+				Data.P_WARP, Data.P_CURSE, Data.P_SNIPER, Data.P_BOSS, Data.P_SATK, Data.P_POIATK, Data.P_VOLC, Data.P_TIME, Data.P_SEAL, Data.P_SUMMON, Data.P_MOVEWAVE,
 				Data.P_THEME, Data.P_POISON, Data.P_ARMOR, Data.P_SPEED, Data.P_MINIWAVE };
 
 		protected AtkProcTable(Page p, boolean edit, boolean unit) {
@@ -51,8 +51,8 @@ public abstract class ProcTable extends Page {
 		private static final int[] INDS = { Data.P_STRONG, Data.P_LETHAL, Data.P_BURROW, Data.P_REVIVE, Data.P_CRITI,
 				Data.P_IMUATK, Data.P_DMGCUT, Data.P_DMGCAP, Data.P_IMUKB, Data.P_IMUSTOP,
 				Data.P_IMUSLOW, Data.P_IMUWAVE, Data.P_IMUWEAK, Data.P_IMUWARP, Data.P_IMUCURSE,
-				Data.P_IMUSEAL, Data.P_IMUMOVING, Data.P_IMUARMOR, Data.P_IMUPOI,
-				Data.P_IMUPOIATK, Data.P_IMUVOLC, Data.P_IMUSPEED, Data.P_IMUSUMMON
+				Data.P_IMUSEAL, Data.P_IMUMOVING, Data.P_IMUARMOR, Data.P_IMUPOI, Data.P_IMUPOIATK,
+				Data.P_IMUVOLC, Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_BARRIER, Data.P_DEMONSHIELD
 		};
 
 		protected MainProcTable(Page p, boolean edit, boolean unit) {

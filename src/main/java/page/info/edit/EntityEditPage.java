@@ -52,7 +52,6 @@ public abstract class EntityEditPage extends Page {
 	private final JL lsp = new JL(1, "speed");
 	private final JL lra = new JL(1, "range");
 	private final JL lwd = new JL(1, "width");
-	private final JL lsh = new JL(1, "shield");
 	private final JL ltb = new JL(1, "TBA");
 	private final JL lbs = new JL(1, "tbase");
 	private final JL ltp = new JL(1, "type");
@@ -65,7 +64,6 @@ public abstract class EntityEditPage extends Page {
 	private final JTF fsp = new JTF();
 	private final JTF fra = new JTF();
 	private final JTF fwd = new JTF();
-	private final JTF fsh = new JTF();
 	private final JTF ftb = new JTF();
 	private final JTF fbs = new JTF();
 	private final JTF ftp = new JTF();
@@ -198,7 +196,6 @@ public abstract class EntityEditPage extends Page {
 		set(lhb);
 		set(lsp);
 		set(lwd);
-		set(lsh);
 		set(lra);
 		set(ltb);
 		set(lbs);
@@ -207,7 +204,6 @@ public abstract class EntityEditPage extends Page {
 		set(fhp);
 		set(fhb);
 		set(fsp);
-		set(fsh);
 		set(fwd);
 		set(fra);
 		set(ftb);
@@ -314,8 +310,8 @@ public abstract class EntityEditPage extends Page {
 		set(fhb, x, y, 150, 150, 200, 50);
 		set(lsp, x, y, 50, 200, 100, 50);
 		set(fsp, x, y, 150, 200, 200, 50);
-		set(lsh, x, y, 50, 250, 100, 50);
-		set(fsh, x, y, 150, 250, 200, 50);
+		set(lwp, x, y, 50, 250, 100, 50);
+		set(fwp, x, y, 150, 250, 200, 50);
 		set(lwd, x, y, 50, 300, 100, 50);
 		set(fwd, x, y, 150, 300, 200, 50);
 
@@ -340,8 +336,6 @@ public abstract class EntityEditPage extends Page {
 		set(ftp, x, y, 150, 550, 200, 50);
 		set(lct, x, y, 50, 600, 100, 50);
 		set(fct, x, y, 150, 600, 200, 50);
-		set(lwp, x, y, 1400, 1000, 200, 50);
-		set(fwp, x, y, 1600, 1000, 200, 50);
 
 		set(aet, x, y, 650, 100, 400, 500);
 
@@ -398,7 +392,6 @@ public abstract class EntityEditPage extends Page {
 		fsp.setText("" + ce.speed);
 		fra.setText("" + ce.range);
 		fwd.setText("" + ce.width);
-		fsh.setText("" + ce.shield);
 		ftb.setText("" + ce.tba);
 		fbs.setText("" + ce.base);
 		vpst.setText("" + ce.getPost());
@@ -635,11 +628,6 @@ public abstract class EntityEditPage extends Page {
 				if (v[0] <= 0)
 					v[0] = 1;
 				ce.width = v[0];
-			}
-			if (jtf == fsh) {
-				if (v[0] < 0)
-					v[0] = 0;
-				ce.shield = v[0];
 			}
 			if (jtf == ftb) {
 				if (v[0] < 0)

@@ -552,7 +552,7 @@ public class Interpret extends Data {
 	public static void redefine() {
 		ERARE = Page.get(MainLocale.UTIL, "er", 7);
 		RARITY = Page.get(MainLocale.UTIL, "r", 6);
-		TRAIT = Page.get(MainLocale.UTIL, "c", 12);
+		TRAIT = Page.get(MainLocale.UTIL, "c", 13);
 		STAR = Page.get(MainLocale.UTIL, "s", 5);
 		ABIS = Page.get(MainLocale.UTIL, "a", 19);
 		SABIS = Page.get(MainLocale.UTIL, "sa", 19);
@@ -562,7 +562,7 @@ public class Interpret extends Data {
 		COMF = Page.get(MainLocale.UTIL, "na", 6);
 		COMN = Page.get(MainLocale.UTIL, "nb", 25);
 		TCTX = Page.get(MainLocale.UTIL, "tc", 6);
-		PCTX = Page.get(MainLocale.UTIL, "aq", 57);
+		PCTX = Page.get(MainLocale.UTIL, "aq", 58);
 		EABI = new String[EABIIND.length];
 		for (int i = 0; i < EABI.length; i++) {
 			if (EABIIND[i] < 100)

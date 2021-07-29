@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class BCMusic extends Data {
 	private static final int INVALID = 0, CANNON_CHARGE = 1, TOUCH = 2;
-	private static final int FACTOR = 20, TOT = 125;
+	private static final int FACTOR = 20, TOT = 140;
 	private static final byte[][] CACHE = new byte[TOT][];
 
 	public static boolean play = true;

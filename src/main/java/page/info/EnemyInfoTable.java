@@ -210,8 +210,8 @@ public class EnemyInfoTable extends Page {
 			main[3][1].setText(MainLocale.INFO, "single");
 			main[3][1].setIcon(UtilPC.createIcon(2, Data.ATK_SINGLE));
 		}
-		main[3][2].setText(MainLocale.INFO, "shield");
-		main[3][3].setText("" + e.de.getShield());
+		main[3][2].setText(MainLocale.INFO, "will");
+		main[3][3].setText("" + (e.de.getWill() + 1));
 		main[3][4].setText(MainLocale.INFO, "TBA");
 		main[3][6].setText(MainLocale.INFO, "postaa");
 
@@ -221,8 +221,6 @@ public class EnemyInfoTable extends Page {
 		special[0][3].setText(e.de.getWidth() + "");
 		special[0][4].setText(MainLocale.INFO, "limit");
 		special[0][5].setText(e.de.getLim() + "");
-		special[0][6].setText(MainLocale.INFO, "will");
-		special[0][7].setText("" + (e.de.getWill() + 1));
 
 		if (MainBCU.seconds) {
 			main[2][7].setText(MainBCU.toSeconds(itv));

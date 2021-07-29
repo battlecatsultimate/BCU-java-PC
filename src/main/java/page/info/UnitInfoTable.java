@@ -245,8 +245,8 @@ public class UnitInfoTable extends Page {
 
 		main[3][0].setText(MainLocale.INFO, "isr");
 		main[3][1].setText("" + f.du.isRange());
-		main[3][2].setText(MainLocale.INFO, "shield");
-		main[3][3].setText("" + f.du.getShield());
+		main[3][2].setText(MainLocale.INFO, "will");
+		main[3][3].setText("" + (f.du.getWill() + 1));
 		main[3][4].setText(MainLocale.INFO, "TBA");
 		main[3][6].setText(MainLocale.INFO, "postaa");
 
@@ -271,8 +271,6 @@ public class UnitInfoTable extends Page {
 			special[0][5].setText(back + "");
 		else
 			special[0][5].setText(Math.min(back, front) + " ~ " + Math.max(back, front));
-		special[0][6].setText(1, "will");
-		special[0][7].setText("" + (f.du.getWill() + 1));
 		atks[0].setText(1, "atk");
 		atks[2].setText(1, "preaa");
 		atks[4].setText(1, "dire");
