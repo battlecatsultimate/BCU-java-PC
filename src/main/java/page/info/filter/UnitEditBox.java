@@ -4,7 +4,6 @@ import page.Page;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Vector;
 
@@ -56,7 +55,7 @@ public class UnitEditBox extends Page {
 
 	private void confirm() {
 		int[] ans = new int[3];
-		for (int i = 0; i < 9; i++)
+		for (int i = 0; i < traitIndex.length; i++)
 			if (trait.isSelectedIndex(i))
 				ans[0] |= 1 << traitIndex[i];
 		int lev = SABIS.length;

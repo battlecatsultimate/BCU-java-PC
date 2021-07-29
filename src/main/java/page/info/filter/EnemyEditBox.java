@@ -37,7 +37,7 @@ public class EnemyEditBox extends Page {
 	public void setData(int[] vals) {
 		changing = true;
 		trait.clearSelection();
-		for (int i = 0; i < 9; i++)
+		for (int i = 0; i < traitIndex.length; i++)
 			if (((vals[0] >> traitIndex[i]) & 1) > 0)
 				trait.addSelectionInterval(i, i);
 		abis.clearSelection();
@@ -57,7 +57,7 @@ public class EnemyEditBox extends Page {
 
 	private void confirm() {
 		int[] ans = new int[3];
-		for (int i = 0; i < 9; i++)
+		for (int i = 0; i < traitIndex.length; i++)
 			if (trait.isSelectedIndex(i))
 				ans[0] |= 1 << traitIndex[i];
 
