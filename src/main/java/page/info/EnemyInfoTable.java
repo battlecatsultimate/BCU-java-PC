@@ -44,7 +44,7 @@ public class EnemyInfoTable extends Page {
 			add(abis[i] = new JLabel(ls.get(i)));
 			abis[i].setBorder(BorderFactory.createEtchedBorder());
 		}
-		ls = Interpret.getProc(e.de, true);
+		ls = Interpret.getProc(e.de, true, multi / 100.0);
 		proc = new JLabel[ls.size()];
 		for (int i = 0; i < ls.size(); i++) {
 			add(proc[i] = new JLabel(ls.get(i)));
@@ -62,6 +62,11 @@ public class EnemyInfoTable extends Page {
 		int[][] atkData = e.de.rawAtkData();
 		for (int i = 0; i < atks.length; i++)
 			atks[i][1].setText("" + Math.round(atkData[i][0] * mula));
+
+		List<String> ls = Interpret.getProc(e.de, true, multi / 100.0);
+		for(int i = 0; i < ls.size(); i++) {
+			proc[i].setText(ls.get(i));
+		}
 	}
 
 	@Override

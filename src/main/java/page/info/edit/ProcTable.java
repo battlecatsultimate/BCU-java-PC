@@ -105,7 +105,7 @@ public abstract class ProcTable extends Page {
 	}
 
 	private void ini() {
-		Formatter.Context ctx = new Formatter.Context(!isUnit, false);
+		Formatter.Context ctx = new Formatter.Context(!isUnit, false, 1.0);
 		for (int i = 0; i < group.length; i++) {
 			group[i] = new SwingEditor.SwingEG(inds[i], editable, () -> getFront().callBack(null), ctx);
 			add(group[i].jlm);
