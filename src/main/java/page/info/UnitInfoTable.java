@@ -52,7 +52,8 @@ public class UnitInfoTable extends Page {
 		atks = new JL[6];
 		MaskUnit du = f.maxu();
 		List<Interpret.ProcDisplay> ls = Interpret.getAbi(du);
-		ls.addAll(Interpret.getProc(du, false));
+		double mul = f.unit.lv.getMult(multi[0]);
+		ls.addAll(Interpret.getProc(du, false, new double[]{Math.round(du.getHp() * mul) * b.t().getDefMulti(), multi[0]}));
 		boolean pc = de.du.getPCoin() != null;
 		if (pc)
 			ls.add(new Interpret.ProcDisplay("",null));
@@ -131,7 +132,7 @@ public class UnitInfoTable extends Page {
 		atks[1].setText(satk.toString());
 
 		List<Interpret.ProcDisplay> ls = Interpret.getAbi(ef.du);
-		ls.addAll(Interpret.getProc(ef.du, false));
+		ls.addAll(Interpret.getProc(ef.du, false, new double[]{mul,multi[0]}));
 		for (JLabel l : proc)
 			if (l != pcoin) {
 				l.setText("");
@@ -144,6 +145,7 @@ public class UnitInfoTable extends Page {
 			else
 				proc[i].setIcon(null);
 		}
+		updateTooltips();
 	}
 
 	@Override
@@ -294,12 +296,16 @@ public class UnitInfoTable extends Page {
 		atks[3].setText(pre.toString());
 		atks[5].setText(use.toString());
 		String fDesc = f.descriptionGet().replace("<br>", "\n");
-		if (fDesc.replace("\n","").length() > 0)
+		if (fDesc.replace("\n", "").length() > 0)
 			add(desc);
 		descr.setText(f.toString().replace((f.uid == null ? "NULL" : f.uid.id) + "-" + f.fid + " ", "") + "\n" + fDesc);
 		descr.setEditable(false);
 		reset();
 		addListeners();
+		updateTooltips();
+	}
+
+	private void updateTooltips() {
 		for (JLabel jl : proc) {
 			String str = jl.getText();
 			StringBuilder sb = new StringBuilder();

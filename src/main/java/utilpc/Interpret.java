@@ -271,8 +271,8 @@ public class Interpret extends Data {
 		return ans;
 	}
 
-	public static List<ProcDisplay> getProc(MaskEntity du, boolean isEnemy) {
-		Formatter.Context ctx = new Formatter.Context(isEnemy, MainBCU.seconds);
+	public static List<ProcDisplay> getProc(MaskEntity du, boolean isEnemy, double[] magnification) {
+		Formatter.Context ctx = new Formatter.Context(isEnemy, MainBCU.seconds, magnification);
 		final boolean common;
 
 		if(du instanceof CustomEntity) {

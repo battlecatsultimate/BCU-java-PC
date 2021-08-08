@@ -51,7 +51,7 @@ public class EnemyInfoTable extends Page {
 		mulatk = mula;
 		atks = new JL[e.de.rawAtkData().length][8];
 		List<Interpret.ProcDisplay> ls = Interpret.getAbi(e.de);
-		ls.addAll(Interpret.getProc(e.de, true));
+		ls.addAll(Interpret.getProc(e.de, true, new double[]{multi  * e.de.multi(b) / 100, mulatk  * e.de.multi(b) / 100}));
 		proc = new JLabel[ls.size()];
 		for (int i = 0; i < ls.size(); i++) {
 			Interpret.ProcDisplay disp = ls.get(i);
@@ -71,6 +71,15 @@ public class EnemyInfoTable extends Page {
 		int[][] atkData = e.de.rawAtkData();
 		for (int i = 0; i < atks.length; i++)
 			atks[i][1].setText("" + Math.round(atkData[i][0] * mula));
+		if (e.de.getAllProc().SUMMON.exists() || e.de.getAllProc().DEMONSHIELD.exists()) {
+			List<Interpret.ProcDisplay> ls = Interpret.getAbi(e.de);
+			ls.addAll(Interpret.getProc(e.de, true, new double[]{mul, mula}));
+			for (int i = 0; i < ls.size(); i++) {
+				Interpret.ProcDisplay disp = ls.get(i);
+				proc[i].setText(disp.toString());
+				updateTooltips();
+			}
+		}
 	}
 
 	@Override
@@ -241,7 +250,7 @@ public class EnemyInfoTable extends Page {
 			else
 				atks[i][3].setText(atkData[i][1] + "f");
 			atks[i][4].setText(0, atkData[i][3] == -1 ? "igtr" : "cntr");
-			atks[i][5].setText("" + (!(e.de instanceof DataEnemy) && ((CustomEnemy)e.de).atks[i].specialTrait));
+			atks[i][5].setText("" + (!(e.de instanceof DataEnemy) && ((CustomEnemy) e.de).atks[i].specialTrait));
 			atks[i][6].setText(MainLocale.INFO, "dire");
 			atks[i][7].setText("" + atkData[i][3]);
 		}
@@ -258,12 +267,16 @@ public class EnemyInfoTable extends Page {
 					+ " units inside the base<br>once it passes that threshold."
 					+ "</html>");
 		String eDesc = e.descriptionGet().replace("<br>", "\n");
-		if (eDesc.replace("\n","").length() > 0)
+		if (eDesc.replace("\n", "").length() > 0)
 			add(desc);
 		descr.setText(e.toString().replace(Data.trio(e.id.id) + " - ", "") + (e.de.getTraits().size() > 0 && !e.de.getTraits().contains(UserProfile.getBCData().traits.get(Data.TRAIT_WHITE)) ? " (" + Interpret.getTrait(TraitBox, 0) + ")" : "") + (e.de.getStar() >= 2 ? " (Cool Dude)" : "") + "\n" + eDesc);
 		descr.setEditable(false);
 		reset();
 		addListeners();
+		updateTooltips();
+	}
+
+	private void updateTooltips() {
 		for (JLabel jl : proc) {
 			String str = jl.getText();
 			StringBuilder sb = new StringBuilder();

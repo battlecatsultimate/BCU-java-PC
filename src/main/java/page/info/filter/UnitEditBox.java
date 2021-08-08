@@ -9,6 +9,8 @@ import page.Page;
 import javax.swing.*;
 import java.util.*;
 
+import static common.util.Data.TRAIT_EVA;
+import static common.util.Data.TRAIT_RED;
 import static utilpc.Interpret.SABIS;
 
 public class UnitEditBox extends Page {
@@ -31,7 +33,7 @@ public class UnitEditBox extends Page {
 	public UnitEditBox(Page p, UserPack pack, CustomUnit cun) {
 		super(p);
 		editable = pack.editable;
-		traitList = new ArrayList<>(UserProfile.getBCData().traits.getList().subList(0,9));
+		traitList = new ArrayList<>(UserProfile.getBCData().traits.getList().subList(TRAIT_RED,TRAIT_EVA));
 		traitList.addAll(pack.traits.getList());
 		for (UserPack pacc : UserProfile.getUserPacks())
 			if (pack.desc.dependency.contains(pacc.desc.id))

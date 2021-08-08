@@ -31,7 +31,7 @@ public class EnemyEditBox extends Page {
 	public EnemyEditBox(Page p, UserPack pack, CustomEnemy cen) {
 		super(p);
 		editable = pack.editable;
-		traitList = new ArrayList<>(UserProfile.getBCData().traits.getList().subList(0,9));
+		traitList = new ArrayList<>(UserProfile.getBCData().traits.getList().subList(TRAIT_RED,TRAIT_EVA));
 		traitList.addAll(pack.traits.getList());
 		for (UserPack pacc : UserProfile.getUserPacks())
 			if (pack.desc.dependency.contains(pacc.desc.id))
