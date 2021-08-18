@@ -62,6 +62,7 @@ public class PackEditPage extends Page {
 	private final JBTN remp = new JBTN(0, "rem");
 	private final JBTN adde = new JBTN(0, "add");
 	private final JBTN reme = new JBTN(0, "rem");
+	private final JBTN erea = new JBTN(0, "reassign");
 	private final JBTN adds = new JBTN(0, "add");
 	private final JBTN rems = new JBTN(0, "rem");
 	private final JBTN addr = new JBTN(0, "add");
@@ -131,6 +132,7 @@ public class PackEditPage extends Page {
 
 		set(lbe, x, y, w, 100, 300, 50);
 		set(jspe, x, y, w, 150, 300, 600);
+		set(erea, x, y, w, 750, 300, 50);
 		set(adde, x, y, w, 800, 150, 50);
 		set(reme, x, y, w + dw, 800, 150, 50);
 		set(jtfe, x, y, w, 850, 300, 50);
@@ -214,6 +216,7 @@ public class PackEditPage extends Page {
 			if (jld.getValueIsAdjusting())
 				return;
 			adde.setEnabled(pac != null && jld.getSelectedValue() != null && pac.editable);
+			erea.setEnabled(pac != null && jle.getSelectedValue() != null && jld.getSelectedValue() != null && pac.editable);
 		});
 
 	}
@@ -350,6 +353,34 @@ public class PackEditPage extends Page {
 				return;
 
 			changePanel(new EnemyEditPage(getThis(), ene, pack));
+		});
+
+		erea.setLnr(a -> {
+			if(jle.getSelectedValue() == null || !(jle.getSelectedValue().de instanceof CustomEnemy))
+				return;
+
+			if(jld.getSelectedValue() == null)
+				return;
+
+			if(Opts.conf(get(MainLocale.PAGE, "reasanim"))) {
+				changing = true;
+
+				Enemy e = jle.getSelectedValue();
+				AnimCE anim = jld.getSelectedValue();
+
+				((CustomEnemy) e.de).limit = Math.abs(anim.mamodel.parts[0][6] * 6);
+				e.anim = anim;
+
+				edit.setEnabled(pac != null && jle.getSelectedValue() != null && jle.getSelectedValue().anim != null && pac.editable);
+
+				if(e.anim == null) {
+					edit.setToolTipText(get(MainLocale.PAGE, "corrrea"));
+				} else {
+					edit.setToolTipText(null);
+				}
+
+				changing = false;
+			}
 		});
 
 		jtfe.setLnr(e -> ene.name = jtfe.getText().trim());
@@ -532,6 +563,7 @@ public class PackEditPage extends Page {
 		add(jtfp);
 		add(adde);
 		add(reme);
+		add(erea);
 		add(jtfe);
 		add(edit);
 		add(sdiy);
@@ -576,7 +608,15 @@ public class PackEditPage extends Page {
 	private void setEnemy(Enemy e) {
 		ene = e;
 		boolean b = e != null && pac.editable;
-		edit.setEnabled(e != null && e.de instanceof CustomEnemy);
+		edit.setEnabled(e != null && e.de instanceof CustomEnemy && e.anim != null);
+		erea.setEnabled(e != null && jld.getSelectedValue() != null && pac != null && pac.editable);
+
+		if(e != null && e.anim == null) {
+			edit.setToolTipText(get(MainLocale.PAGE, "corrrea"));
+		} else {
+			edit.setToolTipText(null);
+		}
+
 		jtfe.setEnabled(b);
 		reme.setEnabled(b);
 		if (b) {

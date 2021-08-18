@@ -9,10 +9,7 @@ import common.util.unit.Form;
 import common.util.unit.Unit;
 import common.util.unit.UnitLevel;
 import main.Opts;
-import page.JBTN;
-import page.JL;
-import page.JTF;
-import page.Page;
+import page.*;
 import page.info.edit.FormEditPage;
 import page.support.AnimLCR;
 import page.support.ReorderList;
@@ -50,6 +47,7 @@ public class UnitManagePage extends Page {
 	private final JBTN addl = new JBTN(0, "add");
 	private final JBTN reml = new JBTN(0, "rem");
 	private final JBTN edit = new JBTN(0, "edit");
+	private final JBTN frea = new JBTN(0, "reassign");
 	private final JBTN vuni = new JBTN(0, "vuni");
 
 	private final JTF jtff = new JTF();
@@ -103,9 +101,11 @@ public class UnitManagePage extends Page {
 		set(lbf, x, y, w, 100, 300, 50);
 		set(jspf, x, y, w, 150, 300, 600);
 		set(jtff, x, y, w, 850, 300, 50);
+		set(frea, x, y, w, 750, 300, 50);
 		set(addf, x, y, w, 800, 150, 50);
 		set(remf, x, y, w + dw, 800, 150, 50);
 		set(edit, x, y, w, 950, 300, 50);
+
 		w += 300;
 		set(lbd, x, y, w, 100, 300, 50);
 		set(jspd, x, y, w, 150, 300, 600);
@@ -134,6 +134,7 @@ public class UnitManagePage extends Page {
 			boolean edi = pac != null && pac.editable && jld.getSelectedValue() != null;
 			addu.setEnabled(edi);
 			addf.setEnabled(edi && uni != null);
+			frea.setEnabled(edi && jlf.getSelectedValue() != null);
 		});
 
 		jlp.addListSelectionListener(arg0 -> {
@@ -253,6 +254,30 @@ public class UnitManagePage extends Page {
 			setLevel(ul);
 		});
 
+		frea.setLnr(a -> {
+			if(jlf.getSelectedValue() == null || (!(jlf.getSelectedValue().du instanceof CustomUnit)))
+				return;
+
+			if(jld.getSelectedValue() == null)
+				return;
+
+			if(Opts.conf(get(MainLocale.PAGE, "reasanim"))) {
+				changing = true;
+
+				Form f = jlf.getSelectedValue();
+
+				f.anim = jld.getSelectedValue();
+
+				edit.setEnabled(jlf.getSelectedValue() != null && jlf.getSelectedValue().anim != null && pac.editable);
+
+				if(f.anim == null)
+					edit.setToolTipText(get(MainLocale.PAGE, "corrrea"));
+				else
+					edit.setToolTipText(null);
+
+				changing = false;
+			}
+		});
 	}
 
 	private void addListeners$2() {
@@ -367,6 +392,7 @@ public class UnitManagePage extends Page {
 		add(vuni);
 		add(jspf);
 		add(jtff);
+		add(frea);
 		add(addf);
 		add(remf);
 		add(edit);
@@ -404,7 +430,15 @@ public class UnitManagePage extends Page {
 			changing = boo;
 		}
 		boolean b = frm != null && pac.editable;
-		edit.setEnabled(frm != null && frm.du instanceof CustomUnit);
+		edit.setEnabled(b && frm.du instanceof CustomUnit && frm.anim != null);
+		frea.setEnabled(jld.getSelectedValue() != null && b);
+
+		if(frm != null && frm.anim == null) {
+			edit.setToolTipText(get(MainLocale.PAGE, "corrrea"));
+		} else {
+			edit.setToolTipText(null);
+		}
+
 		remf.setEnabled(b && frm.fid > 0);
 		jtff.setEnabled(b);
 		if (frm != null) {
