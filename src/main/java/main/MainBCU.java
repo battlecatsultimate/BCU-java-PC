@@ -123,10 +123,9 @@ public class MainBCU {
 			}
 
 			(t == ErrType.INFO ? System.out : System.err).println(str);
+
 			if (t != ErrType.INFO)
-				Opts.pop(str, "ERROR");
-			if (t == ErrType.FATAL)
-				CommonStatic.def.exit(false);
+				Opts.errOnce(str, "ERROR", t == ErrType.FATAL);
 		}
 
 		@Override

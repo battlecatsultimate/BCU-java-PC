@@ -1,5 +1,6 @@
 package main;
 
+import common.CommonStatic;
 import page.JTF;
 import page.MainLocale;
 import page.Page;
@@ -16,6 +17,7 @@ public class Opts {
 	public static final int MEMORY = 1001, SECTY = 1002, REQITN = 1003, INSTALL = 1004;
 
 	private static boolean nshowi, nshowu;
+	private static boolean popped = false;
 
 	public static void animErr(String f) {
 		if (nshowi)
@@ -70,6 +72,22 @@ public class Opts {
 	public static void pop(String text, String title) {
 		int opt = JOptionPane.PLAIN_MESSAGE;
 		JOptionPane.showMessageDialog(null, text, title, opt);
+	}
+
+	public static void errOnce(String text, String title, boolean fatal) {
+		if(popped)
+			return;
+
+		popped = true;
+
+		int opt = JOptionPane.DEFAULT_OPTION;
+		int result = JOptionPane.showOptionDialog(null, text, title, opt, JOptionPane.INFORMATION_MESSAGE, null, null, null);
+
+		if(result == JOptionPane.OK_OPTION || result == JOptionPane.NO_OPTION) {
+			if(fatal)
+				CommonStatic.def.exit(false);
+			popped = false;
+		}
 	}
 
 	public static void warnPop(String text, String title) {
