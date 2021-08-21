@@ -104,10 +104,15 @@ public class CastleEditPage extends Page {
 		spwn.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
+				if (jlst.isSelectionEmpty())
+					return;
 				changing = true;
-				int spawn = CommonStatic.parseIntN(spwn.getText());
-				jlst.getSelectedValue().boss_spawn = spawn;
-				spwn.setText("Boss Spawn: " + spawn);
+				int[] spawn = CommonStatic.parseIntsN(spwn.getText());
+				int first = spawn[0];
+				double decimal = spawn.length > 1 ? ((int) 25.0 * Math.floor(spawn[1] / 25.0)) / 100 : 0.0;
+				double result = first + decimal;
+				jlst.getSelectedValue().boss_spawn = result;
+				spwn.setText("Boss Spawn: " + result);
 				changing = false;
 			}
 		});
