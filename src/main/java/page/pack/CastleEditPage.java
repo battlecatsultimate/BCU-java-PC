@@ -109,7 +109,7 @@ public class CastleEditPage extends Page {
 				changing = true;
 				int[] spawn = CommonStatic.parseIntsN(spwn.getText());
 				int first = spawn[0];
-				int decimal = spawn.length > 1 ? spawn[1] : 0;
+				int decimal = spawn.length > 1 ? Math.min(spawn[1], 99) : 0;
 				if (decimal > 0 && decimal < 10)
 					decimal *= 10;
 				double result = first + ((int) 25.0 * Math.floor(decimal / 25.0)) / 100;
