@@ -674,11 +674,17 @@ public interface BattleBox {
 			String time = df.format(timeLeft);
 
 			for(int i = 0; i < time.length(); i++) {
-				if((time.charAt(i)) == '.') {
+				if((time.charAt(i)) == '.' || (time.charAt(i)) == ',') {
 					g.drawImage(separator, p.x, p.y, separator.getWidth() * ratio, separator.getHeight() * ratio);
 					p.x += separator.getWidth() * ratio;
 				} else {
-					m = aux.timer[Character.getNumericValue(time.charAt(i))].getImg();
+					int index = Character.getNumericValue(time.charAt(i));
+
+					if(index == -1) {
+						throw new IllegalStateException("Invalid index : "+index+" | Tried to convert char : " + time.charAt(i));
+					}
+
+					m = aux.timer[index].getImg();
 
 					g.drawImage(m, p.x, p.y, m.getWidth()*ratio, m.getHeight()*ratio);
 					p.x += m.getWidth() * ratio;

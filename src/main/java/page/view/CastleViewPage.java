@@ -4,14 +4,12 @@ import common.pack.Identifier;
 import common.util.stage.CastleImg;
 import common.util.stage.CastleList;
 import page.JBTN;
+import page.JL;
+import page.MainLocale;
 import page.Page;
 import utilpc.UtilPC;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.Vector;
 
@@ -25,6 +23,8 @@ public class CastleViewPage extends Page {
 	private final JList<CastleImg> jlst = new JList<>();
 	private final JScrollPane jspst = new JScrollPane(jlst);
 	private final JLabel jl = new JLabel();
+	private final JL jbs = new JL();
+	private final JL bs = new JL();
 
 	public CastleViewPage(Page p) {
 		this(p, CastleList.map().values());
@@ -64,44 +64,34 @@ public class CastleViewPage extends Page {
 		set(jspsm, x, y, 50, 100, 300, 1100);
 		set(jspst, x, y, 400, 550, 300, 650);
 		set(jl, x, y, 800, 50, 1000, 1000);
+		set(jbs, x, y, 400, 500, 200, 50);
+		set(bs, x, y, 400, 500, 100, 50);
 	}
 
 	private void addListeners() {
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
+		back.addActionListener(arg0 -> changePanel(getFront()));
+
+		jlsm.addListSelectionListener(arg0 -> {
+			if (arg0.getValueIsAdjusting())
+				return;
+			CastleList sm = jlsm.getSelectedValue();
+			if (sm == null)
+				return;
+			jlst.setListData(new Vector<>(sm.getList()));
+			jlst.setSelectedIndex(0);
 		});
 
-		jlsm.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (arg0.getValueIsAdjusting())
-					return;
-				CastleList sm = jlsm.getSelectedValue();
-				if (sm == null)
-					return;
-				jlst.setListData(new Vector<>(sm.getList()));
-				jlst.setSelectedIndex(0);
+		jlst.addListSelectionListener(arg0 -> {
+			if (arg0.getValueIsAdjusting())
+				return;
+			CastleImg s = jlst.getSelectedValue();
+			if (s == null)
+				jl.setIcon(null);
+			else {
+				jl.setIcon(UtilPC.getIcon(s.img));
+				jbs.setText(MainLocale.PAGE, "bspawn");
+				bs.setText("" + s.boss_spawn);
 			}
-
-		});
-
-		jlst.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (arg0.getValueIsAdjusting())
-					return;
-				CastleImg s = jlst.getSelectedValue();
-				if (s == null)
-					jl.setIcon(null);
-				else
-					jl.setIcon(UtilPC.getIcon(s.img));
-			}
-
 		});
 
 	}

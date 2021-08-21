@@ -1,5 +1,6 @@
 package page.pack;
 
+import common.CommonStatic;
 import common.pack.PackData.UserPack;
 import common.pack.Source.Workspace;
 import common.system.VImg;
@@ -7,18 +8,15 @@ import common.util.Data;
 import common.util.stage.CastleImg;
 import common.util.stage.CastleList;
 import main.MainBCU;
-import page.JBTN;
-import page.Page;
+import page.*;
 import page.support.Exporter;
 import page.support.Importer;
 import utilpc.UtilPC;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -32,10 +30,12 @@ public class CastleEditPage extends Page {
 	private final JScrollPane jspst = new JScrollPane(jlst);
 	private final JLabel jl = new JLabel();
 
-	private final JBTN addc = new JBTN(0, "add");
-	private final JBTN remc = new JBTN(0, "rem");
-	private final JBTN impc = new JBTN(0, "import");
-	private final JBTN expc = new JBTN(0, "export");
+	private final JBTN addc = new JBTN(MainLocale.PAGE, "add");
+	private final JBTN remc = new JBTN(MainLocale.PAGE, "rem");
+	private final JBTN impc = new JBTN(MainLocale.PAGE, "import");
+	private final JBTN expc = new JBTN(MainLocale.PAGE, "export");
+	private final JL jspwn = new JL(MainLocale.PAGE, "bspwn");
+	private final JTF spwn = new JTF();
 
 	private final UserPack pack;
 	private final CastleList cas;
@@ -60,82 +60,77 @@ public class CastleEditPage extends Page {
 		set(impc, x, y, 400, 200, 200, 50);
 		set(expc, x, y, 400, 300, 200, 50);
 		set(remc, x, y, 400, 400, 200, 50);
+		set(jspwn, x, y, 400, 500, 200, 50);
+		set(spwn, x, y, 400, 600, 200, 50);
 		set(jl, x, y, 800, 50, 1000, 1000);
 
 	}
 
 	private void addListeners() {
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
+		back.addActionListener(arg0 -> changePanel(getFront()));
+
+		jlst.addListSelectionListener(arg0 -> {
+			if (changing || arg0.getValueIsAdjusting())
+				return;
+			CastleImg img = jlst.getSelectedValue();
+			ImageIcon ic = null;
+			if (img != null) {
+				VImg s = img.img;
+				if (s != null)
+					ic = UtilPC.getIcon(s);
+				spwn.setEnabled(true);
+				spwn.setText("" + img.boss_spawn);
+			} else {
+				spwn.setEnabled(false);
 			}
+			jl.setIcon(ic);
 		});
 
-		jlst.addListSelectionListener(new ListSelectionListener() {
-
+		spwn.addFocusListener(new FocusAdapter() {
 			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (changing || arg0.getValueIsAdjusting())
+			public void focusLost(FocusEvent e) {
+				if (jlst.isSelectionEmpty())
 					return;
-				CastleImg img = jlst.getSelectedValue();
-				ImageIcon ic = null;
-				if (img != null) {
-					VImg s = img.img;
-					if (s != null)
-						ic = UtilPC.getIcon(s);
-				}
-				jl.setIcon(ic);
-
-			}
-
-		});
-
-		addc.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				getFile("Choose your file", null);
+				changing = true;
+				int spawn = CommonStatic.parseIntN(spwn.getText());
+				jlst.getSelectedValue().boss_spawn = spawn;
+				spwn.setText("" + spawn);
+				changing = false;
 			}
 		});
 
-		impc.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				CastleImg img = jlst.getSelectedValue();
-				if (img != null)
-					getFile("Choose your file", img);
+		addc.addActionListener(arg0 -> getFile("Choose your file", null));
+
+		impc.addActionListener(arg0 -> {
+			CastleImg img = jlst.getSelectedValue();
+			if (img != null)
+				getFile("Choose your file", img);
+		});
+
+		expc.addActionListener(arg0 -> {
+			CastleImg img = jlst.getSelectedValue();
+			if (img != null) {
+				VImg s = img.img;
+				if (s != null)
+					new Exporter((BufferedImage) s.getImg().bimg(), Exporter.EXP_IMG);
 			}
 		});
 
-		expc.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				CastleImg img = jlst.getSelectedValue();
-				if (img != null) {
-					VImg s = img.img;
-					if (s != null)
-						new Exporter((BufferedImage) s.getImg().bimg(), Exporter.EXP_IMG);
-				}
-			}
-		});
-
-		remc.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				CastleImg img = jlst.getSelectedValue();
-				if (img != null) {
-					cas.remove(img);
-					((Workspace) pack.source).getCasFile(img.getID()).delete();
-					changing = true;
-					setList();
-					changing = false;
-				}
+		remc.addActionListener(arg0 -> {
+			CastleImg img = jlst.getSelectedValue();
+			if (img != null) {
+				cas.remove(img);
+				((Workspace) pack.source).getCasFile(img.getID()).delete();
+				changing = true;
+				setList();
+				changing = false;
 			}
 		});
 
 	}
 
 	private void getFile(String str, CastleImg vimg) {
+		changing = true;
 		BufferedImage bimg = new Importer(str).getImg();
 		if (bimg == null)
 			return;
@@ -143,9 +138,11 @@ public class CastleEditPage extends Page {
 			getFile("Wrong img size. Img size: w=128, h=256", vimg);
 			return;
 		}
-		if (vimg == null)
-			cas.add(vimg = new CastleImg(cas.getNextID(CastleImg.class), MainBCU.builder.toVImg(bimg)));
-		else
+		if (vimg == null) {
+			CastleImg castle = new CastleImg(cas.getNextID(CastleImg.class), MainBCU.builder.toVImg(bimg));
+			castle.boss_spawn = 3314;
+			cas.add(vimg = castle);
+		} else
 			vimg.img.setImg(MainBCU.builder.build(bimg));
 		try {
 			OutputStream os = ((Workspace) pack.source).writeFile("castles/" + Data.trio(vimg.id.id) + ".png");
@@ -156,7 +153,7 @@ public class CastleEditPage extends Page {
 			getFile("Failed to save file", vimg);
 			return;
 		}
-		changing = true;
+
 		setList();
 		changing = false;
 	}
@@ -169,6 +166,9 @@ public class CastleEditPage extends Page {
 		add(remc);
 		add(impc);
 		add(expc);
+		add(jspwn);
+		add(spwn);
+		spwn.setEnabled(false);
 		setList();
 		addListeners();
 
@@ -183,7 +183,14 @@ public class CastleEditPage extends Page {
 			ind = cas.size() - 1;
 		jlst.setSelectedIndex(ind);
 		CastleImg img = jlst.getSelectedValue();
-		jl.setIcon(img == null ? null : UtilPC.getIcon(img.img));
+		if (img != null) {
+			jl.setIcon(UtilPC.getIcon(img.img));
+			spwn.setEnabled(true);
+			jspwn.setText("" + img.boss_spawn);
+		} else {
+			jl.setIcon(null);
+			spwn.setEnabled(false);
+		}
 
 	}
 
