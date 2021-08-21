@@ -25,6 +25,7 @@ public class CastleViewPage extends Page {
 	private final JList<CastleImg> jlst = new JList<>();
 	private final JScrollPane jspst = new JScrollPane(jlst);
 	private final JLabel jl = new JLabel();
+	private final JLabel bs = new JLabel();
 
 	public CastleViewPage(Page p) {
 		this(p, CastleList.map().values());
@@ -64,6 +65,7 @@ public class CastleViewPage extends Page {
 		set(jspsm, x, y, 50, 100, 300, 1100);
 		set(jspst, x, y, 400, 550, 300, 650);
 		set(jl, x, y, 800, 50, 1000, 1000);
+		set(bs, x, y, 400, 500, 300, 50);
 	}
 
 	private void addListeners() {
@@ -98,8 +100,10 @@ public class CastleViewPage extends Page {
 				CastleImg s = jlst.getSelectedValue();
 				if (s == null)
 					jl.setIcon(null);
-				else
+				else {
 					jl.setIcon(UtilPC.getIcon(s.img));
+					bs.setText("Boss Spawn: " + s.boss_spawn + "");
+				}
 			}
 
 		});
@@ -111,6 +115,7 @@ public class CastleViewPage extends Page {
 		add(jspsm);
 		add(jspst);
 		add(jl);
+		add(bs);
 		addListeners();
 
 	}
