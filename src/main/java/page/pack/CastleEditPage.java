@@ -1,5 +1,6 @@
 package page.pack;
 
+import common.CommonStatic;
 import common.pack.PackData.UserPack;
 import common.pack.Source.Workspace;
 import common.system.VImg;
@@ -8,6 +9,7 @@ import common.util.stage.CastleImg;
 import common.util.stage.CastleList;
 import main.MainBCU;
 import page.JBTN;
+import page.JTF;
 import page.Page;
 import page.support.Exporter;
 import page.support.Importer;
@@ -19,6 +21,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -31,6 +35,7 @@ public class CastleEditPage extends Page {
 	private final JList<CastleImg> jlst = new JList<>();
 	private final JScrollPane jspst = new JScrollPane(jlst);
 	private final JLabel jl = new JLabel();
+	private final JTF spwn = new JTF();
 
 	private final JBTN addc = new JBTN(0, "add");
 	private final JBTN remc = new JBTN(0, "rem");
@@ -60,6 +65,7 @@ public class CastleEditPage extends Page {
 		set(impc, x, y, 400, 200, 200, 50);
 		set(expc, x, y, 400, 300, 200, 50);
 		set(remc, x, y, 400, 400, 200, 50);
+		set(spwn, x, y, 400, 500, 200, 50);
 		set(jl, x, y, 800, 50, 1000, 1000);
 
 	}
@@ -84,11 +90,26 @@ public class CastleEditPage extends Page {
 					VImg s = img.img;
 					if (s != null)
 						ic = UtilPC.getIcon(s);
+					spwn.setEnabled(true);
+					spwn.setText("Boss Spawn: " + img.boss_spawn);
+				} else {
+					spwn.setEnabled(false);
+					spwn.setText("Boss Spawn:");
 				}
 				jl.setIcon(ic);
-
 			}
 
+		});
+
+		spwn.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				changing = true;
+				int spawn = CommonStatic.parseIntN(spwn.getText());
+				jlst.getSelectedValue().boss_spawn = spawn;
+				spwn.setText("Boss Spawn: " + spawn);
+				changing = false;
+			}
 		});
 
 		addc.addActionListener(new ActionListener() {
@@ -169,6 +190,9 @@ public class CastleEditPage extends Page {
 		add(remc);
 		add(impc);
 		add(expc);
+		add(spwn);
+		spwn.setEnabled(false);
+		spwn.setText("Boss Spawn:");
 		setList();
 		addListeners();
 
@@ -183,7 +207,15 @@ public class CastleEditPage extends Page {
 			ind = cas.size() - 1;
 		jlst.setSelectedIndex(ind);
 		CastleImg img = jlst.getSelectedValue();
-		jl.setIcon(img == null ? null : UtilPC.getIcon(img.img));
+		if (img != null) {
+			jl.setIcon(UtilPC.getIcon(img.img));
+			spwn.setEnabled(true);
+			spwn.setText("Boss Spawn: " + img.boss_spawn);
+		} else {
+			jl.setIcon(null);
+			spwn.setEnabled(false);
+			spwn.setText("Boss Spawn: ");
+		}
 
 	}
 
