@@ -102,7 +102,7 @@ public class CastleViewPage extends Page {
 					jl.setIcon(null);
 				else {
 					jl.setIcon(UtilPC.getIcon(s.img));
-					bs.setText("Boss Spawn: " + s.boss_spawn + "");
+					bs.setText("Boss Spawn: " + s.boss_spawn);
 				}
 			}
 

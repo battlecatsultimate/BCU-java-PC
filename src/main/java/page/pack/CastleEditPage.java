@@ -164,6 +164,7 @@ public class CastleEditPage extends Page {
 	}
 
 	private void getFile(String str, CastleImg vimg) {
+		changing = true;
 		BufferedImage bimg = new Importer(str).getImg();
 		if (bimg == null)
 			return;
@@ -171,10 +172,15 @@ public class CastleEditPage extends Page {
 			getFile("Wrong img size. Img size: w=128, h=256", vimg);
 			return;
 		}
-		if (vimg == null)
-			cas.add(vimg = new CastleImg(cas.getNextID(CastleImg.class), MainBCU.builder.toVImg(bimg)));
-		else
+
+		if (vimg == null) {
+			CastleImg castle = new CastleImg(cas.getNextID(CastleImg.class), MainBCU.builder.toVImg(bimg));
+			castle.boss_spawn = 828.5;
+			cas.add(vimg = castle);
+		} else {
 			vimg.img.setImg(MainBCU.builder.build(bimg));
+		}
+
 		try {
 			OutputStream os = ((Workspace) pack.source).writeFile("castles/" + Data.trio(vimg.id.id) + ".png");
 			ImageIO.write(bimg, "PNG", os);
@@ -184,7 +190,7 @@ public class CastleEditPage extends Page {
 			getFile("Failed to save file", vimg);
 			return;
 		}
-		changing = true;
+
 		setList();
 		changing = false;
 	}
