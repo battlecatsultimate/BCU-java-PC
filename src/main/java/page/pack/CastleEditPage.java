@@ -111,7 +111,7 @@ public class CastleEditPage extends Page {
 					return;
 				changing = true;
 
-				int d = (int) (Interpret.formatDouble(spwn.getText(), 2) * 100);
+				int d = (int) (Interpret.formatDouble(spwn.getText(), 2) * 100); // TODO: fix if text includes non-number
 				double result = ((int) 25.0 * Math.floor(d / 25.0)) / 100;
 
 				jlst.getSelectedValue().boss_spawn = result;
