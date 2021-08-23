@@ -18,10 +18,9 @@ import common.util.unit.Enemy;
 import page.MainLocale;
 import page.Page;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.*;
 
 public class Interpret extends Data {
 
@@ -96,8 +95,13 @@ public class Interpret extends Data {
 	public static final int[] EABIIND = { 5, 7, 8, 9, 10, 11, 12, 15, 16, 18 };
 	public static final int IMUSFT = 13, EFILTER = 8;
 
+	private static final DecimalFormat df;
+
 	static {
 		redefine();
+
+		NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+		df = (DecimalFormat) nf;
 	}
 
 	public static boolean allRangeSame(MaskEntity me) {
@@ -616,5 +620,11 @@ public class Interpret extends Data {
 		} else {
 			return i + "th";
 		}
+	}
+
+	public static double formatDouble(String str, int d) {
+		String format = "#." + new String(new char[d]).replace("\0", "#");
+		df.applyPattern(format);
+		return Double.parseDouble(df.format(Double.parseDouble(str)));
 	}
 }

@@ -1,6 +1,5 @@
 package page.pack;
 
-import common.CommonStatic;
 import common.pack.PackData.UserPack;
 import common.pack.Source.Workspace;
 import common.system.VImg;
@@ -9,10 +8,12 @@ import common.util.stage.CastleImg;
 import common.util.stage.CastleList;
 import main.MainBCU;
 import page.JBTN;
+import page.JL;
 import page.JTF;
 import page.Page;
 import page.support.Exporter;
 import page.support.Importer;
+import utilpc.Interpret;
 import utilpc.UtilPC;
 
 import javax.imageio.ImageIO;
@@ -34,7 +35,8 @@ public class CastleEditPage extends Page {
 	private final JBTN back = new JBTN(0, "back");
 	private final JList<CastleImg> jlst = new JList<>();
 	private final JScrollPane jspst = new JScrollPane(jlst);
-	private final JLabel jl = new JLabel();
+	private final JL jl = new JL();
+	private final JL sp = new JL("Boss Spawn");
 	private final JTF spwn = new JTF();
 
 	private final JBTN addc = new JBTN(0, "add");
@@ -65,7 +67,8 @@ public class CastleEditPage extends Page {
 		set(impc, x, y, 400, 200, 200, 50);
 		set(expc, x, y, 400, 300, 200, 50);
 		set(remc, x, y, 400, 400, 200, 50);
-		set(spwn, x, y, 400, 500, 200, 50);
+		set(sp, x, y, 400, 500, 200, 50);
+		set(spwn, x, y, 400, 550, 200, 50);
 		set(jl, x, y, 800, 50, 1000, 1000);
 
 	}
@@ -91,7 +94,7 @@ public class CastleEditPage extends Page {
 					if (s != null)
 						ic = UtilPC.getIcon(s);
 					spwn.setEnabled(true);
-					spwn.setText("Boss Spawn: " + img.boss_spawn);
+					spwn.setText(img.boss_spawn + "");
 				} else {
 					spwn.setEnabled(false);
 					spwn.setText("Boss Spawn:");
@@ -107,14 +110,12 @@ public class CastleEditPage extends Page {
 				if (jlst.isSelectionEmpty())
 					return;
 				changing = true;
-				int[] spawn = CommonStatic.parseIntsN(spwn.getText());
-				int first = spawn[0];
-				int decimal = spawn.length > 1 ? Math.min(spawn[1], 99) : 0;
-				if (decimal > 0 && decimal < 10)
-					decimal *= 10;
-				double result = first + ((int) 25.0 * Math.floor(decimal / 25.0)) / 100;
+
+				int d = (int) (Interpret.formatDouble(spwn.getText(), 2) * 100); // TODO: fix if text includes non-number
+				double result = ((int) 25.0 * Math.floor(d / 25.0)) / 100;
+
 				jlst.getSelectedValue().boss_spawn = result;
-				spwn.setText("Boss Spawn: " + result);
+				spwn.setText(result + "");
 				changing = false;
 			}
 		});
@@ -199,13 +200,13 @@ public class CastleEditPage extends Page {
 		add(back);
 		add(jspst);
 		add(jl);
+		add(sp);
 		add(addc);
 		add(remc);
 		add(impc);
 		add(expc);
 		add(spwn);
 		spwn.setEnabled(false);
-		spwn.setText("Boss Spawn:");
 		setList();
 		addListeners();
 
@@ -223,7 +224,7 @@ public class CastleEditPage extends Page {
 		if (img != null) {
 			jl.setIcon(UtilPC.getIcon(img.img));
 			spwn.setEnabled(true);
-			spwn.setText("Boss Spawn: " + img.boss_spawn);
+			spwn.setText(img.boss_spawn + "");
 		} else {
 			jl.setIcon(null);
 			spwn.setEnabled(false);
