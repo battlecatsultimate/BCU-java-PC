@@ -1,5 +1,6 @@
 package page.pack;
 
+import common.CommonStatic;
 import common.pack.PackData.UserPack;
 import common.pack.Source.Workspace;
 import common.system.VImg;
@@ -111,8 +112,9 @@ public class CastleEditPage extends Page {
 					return;
 				changing = true;
 
-				int d = (int) (Interpret.formatDouble(spwn.getText(), 2) * 100); // TODO: fix if text includes non-number
-				double result = ((int) 25.0 * Math.floor(d / 25.0)) / 100;
+				double firstDouble = CommonStatic.parseDoubleN(spwn.getText());
+				int formatDouble = (int) (Interpret.formatDouble(firstDouble, 2) * 100);
+				double result = ((int) 25.0 * Math.floor(formatDouble / 25.0)) / 100;
 
 				jlst.getSelectedValue().boss_spawn = result;
 				spwn.setText(result + "");

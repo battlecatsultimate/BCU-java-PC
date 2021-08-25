@@ -622,9 +622,9 @@ public class Interpret extends Data {
 		}
 	}
 
-	public static double formatDouble(String str, int d) {
-		String format = "#." + new String(new char[d]).replace("\0", "#");
+	public static double formatDouble(double number, int decimalPlaces) {
+		String format = "#." + new String(new char[decimalPlaces]).replace("\0", "#");
 		df.applyPattern(format);
-		return Double.parseDouble(df.format(Double.parseDouble(str)));
+		return Double.parseDouble(df.format(number));
 	}
 }
