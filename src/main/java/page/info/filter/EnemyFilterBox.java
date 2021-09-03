@@ -303,6 +303,7 @@ class EFBList extends EnemyFilterBox {
 						b1 &= ((t >> i) & 1) == 1;
 				boolean b2 = !orop[1].isSelected();
 				int len = EFILTER;
+				//FIXME Fix filter problem for death surge
 				for (int i : abis.getSelectedIndices())
 					if (i < len) {
 						boolean bind = ((a >> EABIIND[i]) & 1) == 1;

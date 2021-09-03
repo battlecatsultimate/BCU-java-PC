@@ -298,6 +298,7 @@ class UFBList extends UnitFilterBox {
 							b1 &= ((t >> traitIndex[i]) & 1) == 1;
 					boolean b2 = !orop[1].isSelected();
 					int len = SABIS.length;
+					//FIXME Fix filter problem for death surge
 					for (int i : abis.getSelectedIndices())
 						if (i < len) {
 							boolean bind = ((a >> i) & 1) == 1;
