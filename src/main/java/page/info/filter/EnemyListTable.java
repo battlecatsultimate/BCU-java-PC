@@ -56,8 +56,9 @@ public class EnemyListTable extends SortTable<Enemy> {
 		if (r < 0 || r >= list.size() || c != 1)
 			return;
 		Enemy e = list.get(r);
-		MainFrame.changePanel(new EnemyInfoPage(page, ENode.getList(list, e)));
 
+		if(e.anim != null)
+			MainFrame.changePanel(new EnemyInfoPage(page, ENode.getList(list, e)));
 	}
 
 	@Override
@@ -88,7 +89,7 @@ public class EnemyListTable extends SortTable<Enemy> {
 		else if (c == 5)
 			return e.de.getRange();
 		else if (c == 6)
-			return e.de.getItv();
+			return e.anim != null ? e.de.getItv() : "Corrupted";
 		else if (c == 7)
 			return e.de.getSpeed();
 		else if (c == 8)

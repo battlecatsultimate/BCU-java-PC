@@ -23,7 +23,6 @@ class PCoinEditTable extends Page {
 
     private static class talentData {
 
-        private static final long serialVersionUID = 1L;
         private final String name;
         private final int key;
 
@@ -37,6 +36,7 @@ class PCoinEditTable extends Page {
         private int getValue() { return key; }
     }
     private static class NPList extends JList<talentData> {
+
         protected NPList() {
             if (MainBCU.nimbus)
                 setSelectionBackground(MainBCU.light ? Theme.LIGHT.NIMBUS_SELECT_BG : Theme.DARK.NIMBUS_SELECT_BG);

@@ -102,6 +102,9 @@ public class StageTable extends AbJTable {
 		if(data[r][c] instanceof Enemy) {
 			Enemy e = (Enemy) data[r][c];
 
+			if(e.anim == null)
+				return;
+
 			if (!(data[r][2] instanceof String))
 				return;
 

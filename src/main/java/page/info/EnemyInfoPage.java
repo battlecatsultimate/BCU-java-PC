@@ -1,6 +1,5 @@
 package page.info;
 
-import common.battle.BasisSet;
 import common.system.ENode;
 import page.JBTN;
 import page.JTG;

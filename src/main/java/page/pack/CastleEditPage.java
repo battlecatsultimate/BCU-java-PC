@@ -190,7 +190,7 @@ public class CastleEditPage extends Page {
 		if (img != null) {
 			jl.setIcon(UtilPC.getIcon(img.img));
 			spwn.setEnabled(true);
-			jspwn.setText("" + img.boss_spawn);
+			spwn.setText("" + img.boss_spawn);
 		} else {
 			jl.setIcon(null);
 			spwn.setEnabled(false);
