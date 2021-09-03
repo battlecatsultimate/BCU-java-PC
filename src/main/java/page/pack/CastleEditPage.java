@@ -11,6 +11,7 @@ import main.MainBCU;
 import page.*;
 import page.support.Exporter;
 import page.support.Importer;
+import utilpc.Interpret;
 import utilpc.UtilPC;
 
 import javax.imageio.ImageIO;
@@ -92,9 +93,12 @@ public class CastleEditPage extends Page {
 				if (jlst.isSelectionEmpty())
 					return;
 				changing = true;
-				int spawn = CommonStatic.parseIntN(spwn.getText());
-				jlst.getSelectedValue().boss_spawn = spawn;
-				spwn.setText("" + spawn);
+				double firstDouble = CommonStatic.parseDoubleN(spwn.getText());
+				int formatDouble = (int) (Interpret.formatDouble(firstDouble, 2) * 100);
+				double result = ((int) 25.0 * Math.floor(formatDouble / 25.0)) / 100;
+
+				jlst.getSelectedValue().boss_spawn = result;
+				spwn.setText("" + result);
 				changing = false;
 			}
 		});
@@ -140,7 +144,7 @@ public class CastleEditPage extends Page {
 		}
 		if (vimg == null) {
 			CastleImg castle = new CastleImg(cas.getNextID(CastleImg.class), MainBCU.builder.toVImg(bimg));
-			castle.boss_spawn = 3314;
+			castle.boss_spawn = 828.5;
 			cas.add(vimg = castle);
 		} else
 			vimg.img.setImg(MainBCU.builder.build(bimg));

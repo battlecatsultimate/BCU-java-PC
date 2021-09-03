@@ -21,6 +21,8 @@ import page.Page;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 
 public class Interpret extends Data {
@@ -96,8 +98,13 @@ public class Interpret extends Data {
 	public static final int[] EABIIND = { ABI_BASE, ABI_WAVES, ABI_SNIPERI, ABI_TIMEI, ABI_GHOST, ABI_GLASS, ABI_THEMEI };
 	public static final int IMUSFT = 13, EFILTER = 7;
 
+	private static final DecimalFormat df;
+
 	static {
 		redefine();
+
+		NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
+		df = (DecimalFormat) nf;
 	}
 
 	public static boolean allRangeSame(MaskEntity me) {
@@ -734,5 +741,11 @@ public class Interpret extends Data {
 		} else {
 			return i + "th";
 		}
+	}
+
+	public static double formatDouble(double number, int decimalPlaces) {
+		String format = "#." + new String(new char[decimalPlaces]).replace("\0", "#");
+		df.applyPattern(format);
+		return Double.parseDouble(df.format(number));
 	}
 }

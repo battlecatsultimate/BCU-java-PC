@@ -9,6 +9,7 @@ import page.Page;
 import page.support.ListJtfPolicy;
 
 import java.awt.*;
+import java.util.Arrays;
 
 public abstract class ProcTable extends Page {
 
@@ -49,10 +50,10 @@ public abstract class ProcTable extends Page {
 		private static final long serialVersionUID = 1L;
 
 		private static final int[] INDS = { Data.P_STRONG, Data.P_LETHAL, Data.P_BURROW, Data.P_REVIVE, Data.P_CRITI,
-				Data.P_IMUATK, Data.P_DMGCUT, Data.P_DMGCAP, Data.P_IMUKB, Data.P_IMUSTOP,
+				Data.P_COUNTER, Data.P_IMUATK, Data.P_DMGCUT, Data.P_DMGCAP, Data.P_IMUKB, Data.P_IMUSTOP,
 				Data.P_IMUSLOW, Data.P_IMUWAVE, Data.P_IMUWEAK, Data.P_IMUWARP, Data.P_IMUCURSE,
 				Data.P_IMUSEAL, Data.P_IMUMOVING, Data.P_IMUARMOR, Data.P_IMUPOI, Data.P_IMUPOIATK,
-				Data.P_IMUVOLC, Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_BARRIER, Data.P_DEMONSHIELD
+				Data.P_IMUVOLC, Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_BARRIER, Data.P_DEMONSHIELD, Data.P_DEATHSURGE
 		};
 
 		protected MainProcTable(Page p, boolean edit, boolean unit) {
@@ -65,6 +66,8 @@ public abstract class ProcTable extends Page {
 			for (int i = 0; i < INDS.length; i++) {
 				set(group[i].jlm, x, y, 0, h, 300, 50);
 				h += 50;
+				if (INDS[i] == Data.P_COUNTER)
+					System.out.println(Arrays.toString(group[i].list));
 				for (int j = 0; j < group[i].list.length; j++) {
 					SwingEditor se = (SwingEditor) group[i].list[j];
 					se.resize(x, y, 0, h, 300, 50);

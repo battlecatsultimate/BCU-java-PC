@@ -253,7 +253,8 @@ public abstract class EntityEditPage extends Page {
 		setFocusCycleRoot(true);
 		addListeners();
 		atkn.setToolTipText("<html>use name \"revenge\" for attack during HB animation<br>"
-				+ "use name \"resurrection\" for attack during death animation</html>");
+				+ "use name \"resurrection\" for attack during death animation"
+				+ "use name \"counterattack\" for a more customizable counterattack (Needs Counter proc parameters still)</html>");
 		ftp.setToolTipText(
 				"<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
 						+ "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost<br>" +
@@ -411,6 +412,8 @@ public abstract class EntityEditPage extends Page {
 			n++;
 		if (ce.res != null)
 			n++;
+		if (ce.cntr != null)
+			n++;
 		String[] ints = new String[n];
 		for (int i = 0; i < ce.atks.length; i++) {
 			ints[i] = i + 1 + " " + ce.atks[i].str;
@@ -422,7 +425,9 @@ public abstract class EntityEditPage extends Page {
 		if (ce.rev != null)
 			ints[ix++] = ce.rev.str;
 		if (ce.res != null)
-			ints[ix] = ce.res.str;
+			ints[ix++] = ce.res.str;
+		if (ce.cntr != null)
+			ints[ix] = ce.cntr.str;
 		int ind = jli.getSelectedIndex();
 		jli.setListData(ints);
 		if (ind < 0)
@@ -574,9 +579,10 @@ public abstract class EntityEditPage extends Page {
 		if (ind < ce.atks.length)
 			return ce.atks[ind];
 		else if (ind == ce.atks.length)
-			return ce.rev == null ? ce.res : ce.rev;
-		else
-			return ce.res;
+			return ce.rev == null ? ce.res == null ? ce.cntr : ce.res : ce.rev;
+		else if (ind == ce.atks.length + 1)
+			return ce.res == null ? ce.cntr : ce.res;
+		return ce.cntr;
 	}
 
 	protected void input(JTF jtf, String text) {
@@ -594,6 +600,10 @@ public abstract class EntityEditPage extends Page {
 			if (text.equals("resurrection")) {
 				remAtk(adm);
 				ce.res = adm;
+			}
+			if (text.equals("counterattack")) {
+				remAtk(adm);
+				ce.cntr = adm;
 			}
 			return;
 		}
@@ -674,10 +684,17 @@ public abstract class EntityEditPage extends Page {
 			if (ind == n)
 				if (ce.rev != null)
 					ce.rev = null;
-				else
+				else if (ce.res != null)
 					ce.res = null;
+				else
+					ce.cntr = null;
+			else if (ind == n + 1)
+				if (ce.res != null)
+					ce.res = null;
+				else
+					ce.cntr = null;
 			else
-				ce.res = null;
+				ce.cntr = null;
 		} else if (n > 1) {
 			AtkDataModel[] datas = new AtkDataModel[n - 1];
 			if (ind >= 0)

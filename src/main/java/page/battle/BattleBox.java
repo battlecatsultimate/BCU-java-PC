@@ -497,7 +497,48 @@ public interface BattleBox {
 				e.anim.draw(gra, setP(p, y), psiz);
 				gra.setTransform(at);
 				e.anim.drawEff(gra, setP(p, y), siz);
+
+				if(e.anim.smoke != null && !e.anim.smoke.done()) {
+					gra.setTransform(at);
+
+					double sx = getX(e.anim.smokeX);
+					double sy = midh - (road_h - e.anim.smokeLayer * DEP + 75.0) * siz;
+
+					e.anim.smoke.draw(gra, setP(sx, sy), psiz * 1.2);
+				}
 			}
+			if(sb.ebase instanceof Entity) {
+				if(sb.s_stop == 0 || (sb.ebase.getAbi() & Data.AB_TIMEI) > 0) {
+					if(((Entity) sb.ebase).anim.smoke != null && !((Entity) sb.ebase).anim.smoke.done()) {
+						gra.setTransform(at);
+
+						double sx = getX(((Entity) sb.ebase).anim.smokeX);
+						double sy = midh - (road_h - ((Entity) sb.ebase).anim.smokeLayer * DEP + 100.0) * siz;
+
+						((Entity) sb.ebase).anim.smoke.draw(gra, setP(sx, sy), psiz * 1.2);
+					}
+				}
+			} else if(sb.ebase instanceof ECastle) {
+				if(sb.s_stop == 0 && ((ECastle) sb.ebase).smoke != null && !((ECastle) sb.ebase).smoke.done()) {
+					gra.setTransform(at);
+
+					double sx = getX(((ECastle) sb.ebase).smokeX);
+					double sy = midh - (road_h - ((ECastle) sb.ebase).smokeLayer * DEP + 100.0) * siz;
+
+					((ECastle) sb.ebase).smoke.draw(gra, setP(sx, sy), psiz * 1.2);
+				}
+			}
+			if(sb.ubase instanceof ECastle) {
+				if(sb.s_stop == 0 && ((ECastle) sb.ubase).smoke != null && !((ECastle) sb.ubase).smoke.done()) {
+					gra.setTransform(at);
+
+					double sx = getX(((ECastle) sb.ubase).smokeX);
+					double sy = midh - (road_h - ((ECastle) sb.ubase).smokeLayer * DEP + 100.0) * siz;
+
+					((ECastle) sb.ubase).smoke.draw(gra, setP(sx, sy), psiz * 1.2);
+				}
+			}
+
 			while (efList.size() > 0) {
 				drawEff(gra, efList.get(0), at, psiz);
 				efList.remove(0); //If the list isn't empty, draw the remaining items and empty the list
@@ -521,22 +562,26 @@ public interface BattleBox {
 			}
 
 			if(sb.ebase.health <= 0) {
-				for(EAnimCont eac : sb.ebaseSmoke) {
+				for(int i = 0; i < sb.ebaseSmoke.size(); i++) {
+					EAnimCont eac = sb.ebaseSmoke.get(i);
+
 					gra.setTransform(at);
 					double p = getX(eac.pos);
 					double y = midh - (road_h - DEP * eac.layer) * siz;
 
-					eac.draw(gra, setP(p, y), psiz);
+					eac.draw(gra, setP(p, y), psiz * 1.2);
 				}
 			}
 
 			if(sb.ubase.health <= 0) {
-				for(EAnimCont eac : sb.ubaseSmoke) {
+				for(int i = 0; i < sb.ubaseSmoke.size(); i++) {
+					EAnimCont eac = sb.ubaseSmoke.get(i);
+
 					gra.setTransform(at);
 					double p = getX(eac.pos);
 					double y = midh - (road_h - DEP * eac.layer) * siz;
 
-					eac.draw(gra, setP(p, y), psiz);
+					eac.draw(gra, setP(p, y), psiz * 1.2);
 				}
 			}
 
@@ -569,7 +614,7 @@ public interface BattleBox {
 						shake = (2 + (sb.time % 2 * -4)) * siz;
 					}
 
-					((Entity)sb.ebase).anim.draw(gra, setP(posx + shake, posy), siz * sprite);
+					((Entity)sb.ebase).anim.smoke.draw(gra, setP(posx + shake, posy), siz * sprite);
 					if(sb.ebase.health > 0)
 						((Entity) sb.ebase).anim.drawEff(gra, setP(posx + shake, posy), siz * sprite);
 				}
@@ -581,10 +626,20 @@ public interface BattleBox {
 						int dep = e.layer * DEP;
 
 						gra.setTransform(at);
+
 						double p = getX(e.pos);
 						double y = midh - (road_h - dep) * siz;
+
 						e.anim.draw(gra, setP(p, y), psiz);
+
+						if(e.anim.smoke != null && e.anim.smokeLayer != -1 && !e.anim.smoke.done()) {
+							gra.setTransform(at);
+
+							e.anim.smoke.draw(gra, setP(p, midh - (road_h - e.anim.smokeLayer * DEP + 75.0) * siz), psiz);
+						}
+
 						gra.setTransform(at);
+
 						e.anim.drawEff(gra, setP(p, y), siz);
 					}
 				}
