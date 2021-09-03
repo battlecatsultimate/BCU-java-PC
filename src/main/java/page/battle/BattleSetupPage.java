@@ -145,6 +145,7 @@ public class BattleSetupPage extends LubCont {
 			plus.setToolTipText(MainLocale.getLoc(MainLocale.PAGE, "plusunlocktip"));
 			lvlim.setToolTipText(MainLocale.getLoc(MainLocale.PAGE, "levellimit"));
 
+			plus.setEnabled(CommonStatic.getConfig().levelLimit != 0);
 			plus.setSelected(CommonStatic.getConfig().plus);
 			lvlim.setSelectedIndex(CommonStatic.getConfig().levelLimit);
 		}
