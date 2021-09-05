@@ -66,8 +66,6 @@ public abstract class ProcTable extends Page {
 			for (int i = 0; i < INDS.length; i++) {
 				set(group[i].jlm, x, y, 0, h, 300, 50);
 				h += 50;
-				if (INDS[i] == Data.P_COUNTER)
-					System.out.println(Arrays.toString(group[i].list));
 				for (int j = 0; j < group[i].list.length; j++) {
 					SwingEditor se = (SwingEditor) group[i].list[j];
 					se.resize(x, y, 0, h, 300, 50);
