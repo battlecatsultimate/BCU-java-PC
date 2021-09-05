@@ -34,7 +34,6 @@ public class MainFrame extends JFrame {
 	private static Page mainPanel = null;
 
 	public static void changePanel(Page p) {
-		BCMusic.clickSound();
 		F.FchangePanel(p);
 	}
 

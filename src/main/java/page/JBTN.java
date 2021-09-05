@@ -1,9 +1,11 @@
 package page;
 
 import common.util.lang.LocaleCenter.Binder;
+import io.BCMusic;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -37,7 +39,10 @@ public class JBTN extends JButton implements LocComp {
 	}
 
 	public void setLnr(Consumer<ActionEvent> c) {
-		addActionListener(c::accept);
+		addActionListener(e -> {
+			BCMusic.clickSound();
+			c.accept(e);
+		});
 	}
 
 	public void setLnr(Supplier<Page> s) {
