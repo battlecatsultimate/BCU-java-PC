@@ -1,17 +1,14 @@
 package page;
 
 import common.system.P;
-import io.BCMusic;
 import main.Opts;
 import main.Printer;
 import utilpc.PP;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Enumeration;
