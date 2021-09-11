@@ -27,10 +27,12 @@ public class FormEditPage extends EntityEditPage {
 	private final JL ldr = new JL(1, "price");
 	private final JL lrs = new JL(1, "CD");
 	private final JL llr = new JL(1, "t7");
+	private final JL lli = new JL(1, "limit");
 	private final JTF fdr = new JTF();
 	private final JTF flv = new JTF();
 	private final JTF frs = new JTF();
 	private final JTF flr = new JTF();
+	private final JTF fli = new JTF();
 	private final JBTN vuni = new JBTN(0, "vuni");
 	private final JBTN stat = new JBTN(0, "stat");
 	private final JBTN impt = new JBTN(0, "import");
@@ -114,6 +116,9 @@ public class FormEditPage extends EntityEditPage {
 				flr.setText(interpretLayer(cu.back, cu.front));
 			} catch (Exception ignored) { }
 		}
+		if (jtf == fli) {
+			cu.limit = v[0];
+		}
 	}
 
 	@Override
@@ -124,6 +129,7 @@ public class FormEditPage extends EntityEditPage {
 		set(llv);
 		set(lrs);
 		set(llr);
+		set(lli);
 
 		set(flv);
 
@@ -132,6 +138,7 @@ public class FormEditPage extends EntityEditPage {
 		super.ini();
 
 		set(flr);
+		set(fli);
 
 		add(ueb);
 
@@ -164,9 +171,13 @@ public class FormEditPage extends EntityEditPage {
 		if (editable) {
 			set(vuni, x, y, 650, 800, 200, 50);
 			set(stat, x, y, 850, 800, 200, 50);
+			set(lli, x, y, 650, 1000, 200, 50);
+			set(fli, x, y, 850, 1000, 200, 50);
 		} else {
 			set(vuni, x, y, 650, 750, 200, 50);
 			set(stat, x, y, 850, 750, 200, 50);
+			set(lli, x, y, 650, 950, 200, 50);
+			set(fli, x, y, 850, 950, 200, 50);
 		}
 		set(impt, x, y, 50, 1150, 200, 50);
 		set(vene, x, y, 250, 1150, 200, 50);
@@ -178,10 +189,14 @@ public class FormEditPage extends EntityEditPage {
 	@Override
 	protected void setData(CustomEntity data) {
 		super.setData(data);
-		flv.setText("" + lv);
-		frs.setText("" + bas.t().getFinRes(cu.getRespawn()));
-		fdr.setText("" + (int) (cu.getPrice() * 1.5));
+		flv.setText(lv + "");
+		frs.setText(bas.t().getFinRes(cu.getRespawn()) + "");
+		fdr.setText((int) (cu.getPrice() * 1.5) + "");
 		flr.setText(interpretLayer(cu.back, cu.front));
+		fli.setText(cu.getLim() + "");
+		fli.setToolTipText("<html>This unit will always stay at least "
+				+ cu.getLim()
+				+ " units away from the max stage length<br>once it passes that threshold.");
 		int imu = 0;
 		for (int j : EABIIND)
 			if (j > 100) {
