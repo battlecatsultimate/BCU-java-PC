@@ -219,10 +219,14 @@ public class FormEditPage extends EntityEditPage {
 		uniDesc = form.descriptionGet().split("<br>",4);
 		for (int i = 0; i < fdesc.length; i++)
 			fdesc[i].setText("" + (uniDesc[i].length() > 0 ? uniDesc[i] : "Description Line " + (i + 1)));
-		flv.setText("" + lv);
-		frs.setText("" + bas.t().getFinRes(cu.getRespawn()));
-		fdr.setText("" + (int) Math.round(cu.getPrice() * 1.5));
+		flv.setText(lv + "");
+		frs.setText(bas.t().getFinRes(cu.getRespawn()) + "");
+		fdr.setText((int) Math.round(cu.getPrice() * 1.5) + "");
 		flr.setText(interpretLayer(cu.back, cu.front));
+		fli.setText(cu.getLim() + "");
+		fli.setToolTipText("<html>This unit will always stay at least "
+				+ cu.getLim()
+				+ " units away from the max stage length<br>once it passes that threshold.");
 		int imu = 0;
 		for (int j : EABIIND)
 			if (j > 100) {

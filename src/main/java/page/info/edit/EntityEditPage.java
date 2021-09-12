@@ -47,17 +47,18 @@ public abstract class EntityEditPage extends Page {
 
 	private final JBTN back = new JBTN(0, "back");
 
-	private final JL lhp = new JL(1, "HP");
-	private final JL lhb = new JL(1, "HB");
-	private final JL lsp = new JL(1, "speed");
-	private final JL lra = new JL(1, "range");
-	private final JL lwd = new JL(1, "width");
-	private final JL ltb = new JL(1, "TBA");
-	private final JL lbs = new JL(1, "tbase");
-	private final JL ltp = new JL(1, "type");
-	private final JL lct = new JL(1, "count");
-	private final JL ldps = new JL(1,"DPS");
-	private final JL lwp = new JL(1,"will");
+	private final JL lhp = new JL(MainLocale.INFO, "HP");
+	private final JL lhb = new JL(MainLocale.INFO, "HB");
+	private final JL lsp = new JL(MainLocale.INFO, "speed");
+	private final JL lra = new JL(MainLocale.INFO, "range");
+	private final JL lwd = new JL(MainLocale.INFO, "width");
+	private final JL ltb = new JL(MainLocale.INFO, "TBA");
+	private final JL lbs = new JL(MainLocale.INFO, "tbase");
+	private final JL ltp = new JL(MainLocale.INFO, "type");
+	private final JL lct = new JL(MainLocale.INFO, "count");
+	private final JL ldps = new JL(MainLocale.INFO,"DPS");
+	private final JL lwp = new JL(MainLocale.INFO,"will");
+	private final JL lli = new JL(MainLocale.INFO, "limit");
 	private final JL cdps = new JL();
 	private final JTF fhp = new JTF();
 	private final JTF fhb = new JTF();
@@ -69,19 +70,20 @@ public abstract class EntityEditPage extends Page {
 	private final JTF ftp = new JTF();
 	private final JTF fct = new JTF();
 	private final JTF fwp = new JTF();
+	protected final JTF fli = new JTF();
 	private final ReorderList<String> jli = new ReorderList<>();
 	private final JScrollPane jspi = new JScrollPane(jli);
-	private final JBTN add = new JBTN(0, "add");
-	private final JBTN rem = new JBTN(0, "rem");
-	private final JBTN copy = new JBTN(0, "copy");
-	private final JBTN link = new JBTN(0, "link");
-	private final JTG comm = new JTG(1, "common");
+	private final JBTN add = new JBTN(MainLocale.PAGE, "add");
+	private final JBTN rem = new JBTN(MainLocale.PAGE, "rem");
+	private final JBTN copy = new JBTN(MainLocale.PAGE, "copy");
+	private final JBTN link = new JBTN(MainLocale.PAGE, "link");
+	private final JTG comm = new JTG(MainLocale.INFO, "common");
 	private final JTF atkn = new JTF();
-	private final JL lpst = new JL(1, "postaa");
+	private final JL lpst = new JL(MainLocale.INFO, "postaa");
 	private final JL vpst = new JL();
-	private final JL litv = new JL(1, "atkf");
-	private final JL lrev = new JL(1, "post-HB");
-	private final JL lres = new JL(1, "post-death");
+	private final JL litv = new JL(MainLocale.INFO, "atkf");
+	private final JL lrev = new JL(MainLocale.INFO, "post-HB");
+	private final JL lres = new JL(MainLocale.INFO, "post-death");
 	private final JL vrev = new JL();
 	private final JL vres = new JL();
 	private final JL vitv = new JL();
@@ -214,6 +216,8 @@ public abstract class EntityEditPage extends Page {
 		set(fwp);
 		set(ldps);
 		set(cdps);
+		set(lli);
+		set(fli);
 		ljp.end();
 		add(jspi);
 		add(aet);
@@ -347,6 +351,8 @@ public abstract class EntityEditPage extends Page {
 		set(litv, x, y, 650, 700, 200, 50);
 		set(vitv, x, y, 850, 700, 200, 50);
 		set(jcba, x, y, 650, 750, 400, 50);
+		set(lli, x, y, 1400, 1050, 200, 50);
+		set(fli, x, y, 1600, 1050, 200, 50);
 
 		if (editable) {
 			set(lrev, x, y, 650, 850, 200, 50);
@@ -400,6 +406,7 @@ public abstract class EntityEditPage extends Page {
 		ftp.setText("" + ce.touch);
 		fct.setText("" + ce.loop);
 		fwp.setText("" + (ce.will + 1));
+		fli.setText(ce.getLim() + "");
 		cdps.setText("" + (int) (Math.round(getLvAtk() * ce.allAtk()) * getAtk()) * 30 / ce.getItv());
 		comm.setSelected(data.common);
 		if (!comm.isSelected())
@@ -665,6 +672,9 @@ public abstract class EntityEditPage extends Page {
 				if (v[0] > 50)
 					v[0] = 50;
 				ce.will = v[0] - 1;
+			}
+			if (jtf == fli) {
+				ce.limit = v[0];
 			}
 			getInput(jtf, v);
 		}

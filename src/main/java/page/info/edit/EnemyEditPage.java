@@ -7,10 +7,7 @@ import common.pack.UserProfile;
 import common.system.ENode;
 import common.util.unit.Enemy;
 import org.jcodec.common.tools.MathUtil;
-import page.JBTN;
-import page.JL;
-import page.JTF;
-import page.Page;
+import page.*;
 import page.info.EnemyInfoPage;
 import page.info.filter.EnemyEditBox;
 
@@ -21,15 +18,13 @@ public class EnemyEditPage extends EntityEditPage {
 
 	private static final long serialVersionUID = 1L;
 
-	private final JL lbd = new JL(1, "limit");
-	private final JL ldr = new JL(1, "drop");
-	private final JTF fbd = new JTF();
+	private final JL ldr = new JL(MainLocale.INFO, "drop");
 	private final JTF fdr = new JTF();
 	private final JTF fsr = new JTF();
-	private final JBTN vene = new JBTN(0, "vene");
-	private final JBTN stat = new JBTN(0, "stat");
-	private final JBTN impt = new JBTN(0, "import");
-	private final JBTN vuni = new JBTN(0, "unit");
+	private final JBTN vene = new JBTN(MainLocale.PAGE, "vene");
+	private final JBTN stat = new JBTN(MainLocale.PAGE, "stat");
+	private final JBTN impt = new JBTN(MainLocale.PAGE, "import");
+	private final JBTN vuni = new JBTN(MainLocale.PAGE, "unit");
 	private final JTF[] edesc = new JTF[4];
 	private final EnemyEditBox eeb;
 	private final Enemy ene;
@@ -48,9 +43,6 @@ public class EnemyEditPage extends EntityEditPage {
 
 	@Override
 	protected void getInput(JTF jtf, int[] v) {
-		if (jtf == fbd) {
-			ce.limit = v[0];
-		}
 		if (jtf == fdr) {
 			ce.drop = (int) Math.round(v[0] / bas.t().getDropMulti());
 		}
@@ -63,10 +55,8 @@ public class EnemyEditPage extends EntityEditPage {
 	@Override
 	protected void ini() {
 
-		set(lbd);
 		set(ldr);
 		set(fdr);
-		set(fbd);
 		set(fsr);
 		super.ini();
 		add(eeb);
@@ -122,8 +112,6 @@ public class EnemyEditPage extends EntityEditPage {
 			set(vene, x, y, 650, 750, 200, 50);
 			set(stat, x, y, 850, 750, 200, 50);
 		}
-		set(lbd, x, y, 1400, 1050, 200, 50);
-		set(fbd, x, y, 1600, 1050, 200, 50);
 
 		set(impt, x, y, 250, 1150, 200, 50);
 		set(vuni, x, y, 450, 1150, 200, 50);
@@ -139,7 +127,6 @@ public class EnemyEditPage extends EntityEditPage {
 	@Override
 	protected void setData(CustomEntity data) {
 		super.setData(data);
-		fbd.setText(ce.getLim() + "");
 		eneDesc = ene.descriptionGet().split("<br>",4);
 		for (int i = 0; i < edesc.length; i++)
 			edesc[i].setText("" + (eneDesc[i].length() > 0 ? eneDesc[i] : "Description Line " + (i + 1)));
@@ -153,13 +140,13 @@ public class EnemyEditPage extends EntityEditPage {
 					imu |= 1 << id - IMUSFT;
 			}
 		if (ce.getLim() >= 100)
-			fbd.setToolTipText("<html>"
+			fli.setToolTipText("<html>"
 					+ "This enemy, if it's a boss, will always stay at least "
 					+ (ce.getLim() - 100)
 					+ " units from the base<br>once it passes that threshold."
 					+ "</html>");
 		else
-			fbd.setToolTipText("<html>"
+			fli.setToolTipText("<html>"
 					+ "This enemy, if it's a boss, will always stay at least "
 					+ (100 - ce.getLim())
 					+ " units inside the base<br>once it passes that threshold."

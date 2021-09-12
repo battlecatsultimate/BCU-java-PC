@@ -185,7 +185,9 @@ public class UnitManagePage extends Page {
 		addu.addActionListener(arg0 -> {
 			changing = true;
 			CustomUnit cu = new CustomUnit();
-			Unit u = new Unit(pac.getNextID(Unit.class), jld.getSelectedValue(), cu);
+			AnimCE anim = jld.getSelectedValue();
+			cu.limit = (int) Math.max(0, 5 * Math.round((9.0 / 5.0) * anim.mamodel.confs[1][2] - 1));
+			Unit u = new Unit(pac.getNextID(Unit.class), anim, cu);
 			pac.units.add(u);
 			jlu.setListData(pac.units.toRawArray());
 			jlu.setSelectedValue(u, true);
@@ -300,6 +302,7 @@ public class UnitManagePage extends Page {
 			changing = true;
 			CustomUnit cu = new CustomUnit();
 			AnimCE ac = jld.getSelectedValue();
+			cu.limit = (int) Math.max(0, 5 * Math.round((9.0 / 5.0) * ac.mamodel.confs[1][2] - 1));
 			frm = new Form(uni, uni.forms.length, "new form", ac, cu);
 			uni.forms = Arrays.copyOf(uni.forms, uni.forms.length + 1);
 			uni.forms[uni.forms.length - 1] = frm;
