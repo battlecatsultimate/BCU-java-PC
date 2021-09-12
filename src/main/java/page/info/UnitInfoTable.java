@@ -222,7 +222,7 @@ public class UnitInfoTable extends Page {
 		special[0][1].setText(f.du.getAtkLoop() < 0 ? "infinite" : f.du.getAtkLoop() + "");
 		special[0][2].setText(MainLocale.INFO, "width");
 		special[0][3].setText(f.du.getWidth() + "");
-		special[0][4].setText(MainLocale.INFO, "limit");
+		special[0][4].setText(MainLocale.INFO, "minpos");
 		special[0][5].setText(f.du.getLim() + "");
 		special[0][6].setText(MainLocale.INFO, "t7");
 		int back = Math.min(f.du.getBack(), f.du.getFront());

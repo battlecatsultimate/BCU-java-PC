@@ -19,7 +19,7 @@ public class EnemyEditPage extends EntityEditPage {
 
 	private static final long serialVersionUID = 1L;
 
-	private final JL lli = new JL(1, "limit");
+	private final JL lli = new JL(1, "minpos");
 	private final JL ldr = new JL(1, "drop");
 	private final JTF fli = new JTF();
 	private final JTF fdr = new JTF();
@@ -103,7 +103,7 @@ public class EnemyEditPage extends EntityEditPage {
 	@Override
 	protected void setData(CustomEntity data) {
 		super.setData(data);
-		fli.setText(ce.getLim() + "");
+		fli.setText(ce.getLimit() + "");
 		fsr.setText("star: " + ce.star);
 		fdr.setText("" + Math.floor(ce.getDrop() * bas.t().getDropMulti()) / 100);
 		int imu = 0;
@@ -113,18 +113,11 @@ public class EnemyEditPage extends EntityEditPage {
 				if (ce.getProc().getArr(id).exists())
 					imu |= 1 << id - IMUSFT;
 			}
-		if (ce.getLim() >= 100)
-			fli.setToolTipText("<html>"
-				+ "This enemy, if it's a boss, will always stay at least "
-				+ (ce.getLim() - 100)
-				+ " units from the base<br>once it passes that threshold."
+		fli.setToolTipText("<html>"
+				+ "This enemy will stay at least "
+				+ (ce.getLimit() - 100)
+				+ " units from position 0. If the enemy is a boss,<br>the value will be added by the boss spawn point determined by the stage castle."
 				+ "</html>");
-		else
-			fli.setToolTipText("<html>"
-					+ "This enemy, if it's a boss, will always stay at least "
-					+ (100 - ce.getLim())
-					+ " units inside the base<br>once it passes that threshold."
-					+ "</html>");
 		eeb.setData(new int[] { ce.type, ce.abi, imu });
 	}
 

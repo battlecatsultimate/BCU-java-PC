@@ -27,7 +27,7 @@ public class FormEditPage extends EntityEditPage {
 	private final JL ldr = new JL(1, "price");
 	private final JL lrs = new JL(1, "CD");
 	private final JL llr = new JL(1, "t7");
-	private final JL lli = new JL(1, "limit");
+	private final JL lli = new JL(1, "minpos");
 	private final JTF fdr = new JTF();
 	private final JTF flv = new JTF();
 	private final JTF frs = new JTF();
