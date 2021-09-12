@@ -24,7 +24,7 @@ public class EnemyListTable extends SortTable<Enemy> {
 
 	public static void redefine() {
 		tit = new String[] { "ID", "", "HP", "HB", "atk", Page.get(MainLocale.INFO, "range"), Page.get(MainLocale.INFO, "atkf"),
-				Page.get(MainLocale.INFO, "speed"), Page.get(MainLocale.INFO, "drop"), Page.get(MainLocale.INFO, "preaa"), "hp/dps", "HP/HB/dps" };
+				Page.get(MainLocale.INFO, "speed"), Page.get(MainLocale.INFO, "drop"), Page.get(MainLocale.INFO, "preaa"), Page.get(MainLocale.INFO, "minpos"), "HP/HB/dps" };
 	}
 
 	private final Page page;
@@ -67,7 +67,7 @@ public class EnemyListTable extends SortTable<Enemy> {
 		if (c == 0) {
 			return e0.compareTo(e1);
 		}
-		if (c == 8) {
+		if (c == 8 || c == 10) {
 			return Double.compare((double) get(e0, c), (double) get(e1, c));
 		}
 		int i0 = (int) get(e0, c);
@@ -98,9 +98,11 @@ public class EnemyListTable extends SortTable<Enemy> {
 		else if (c == 9)
 			return e.de.rawAtkData()[0][1];
 		else if (c == 10)
-			return e.de.allAtk() == 0 ? Integer.MAX_VALUE : (int) ((long) e.de.getHp() * e.de.getItv() / e.de.allAtk());
-		else if (c == 11)
-			return e.de.getHb() < 2 ? (int) get(e, 10) : (int) get(e, 10) / e.de.getHb();
+			return e.de.getLimit();
+		else if (c == 11) {
+			int v = e.de.allAtk() == 0 ? Integer.MAX_VALUE : (int) ((long) e.de.getHp() * e.de.getItv() / e.de.allAtk());
+			return e.de.getHb() < 2 ? v : v / e.de.getHb();
+		}
 		else
 			return null;
 	}
