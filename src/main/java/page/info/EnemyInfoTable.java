@@ -204,18 +204,11 @@ public class EnemyInfoTable extends Page {
 			itv -= atkData[i][1];
 		}
 		main[3][7].setText(e.de.getPost() + "f");
-		if (e.de.getLimit() >= 100)
-			special[0][5].setToolTipText("<html>"
-					+ "This enemy, if it's a boss, will always stay at least "
-					+ (e.de.getLimit() - 100)
-					+ " units from the base<br>once it passes that threshold."
-					+ "</html>");
-		else
-			special[0][5].setToolTipText("<html>"
-					+ "This enemy, if it's a boss, will always stay at least "
-					+ (100 - e.de.getLimit())
-					+ " units inside the base<br>once it passes that threshold."
-					+ "</html>");
+		special[0][5].setToolTipText("<html>"
+				+ "This enemy will stay at least "
+				+ e.de.getLimit()
+				+ " units from position 0. If the enemy is a boss,<br>the value will be added by the boss spawn point determined by the stage castle."
+				+ "</html>");
 		reset();
 		addListeners();
 	}

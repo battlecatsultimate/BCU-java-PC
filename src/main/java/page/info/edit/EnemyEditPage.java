@@ -115,7 +115,7 @@ public class EnemyEditPage extends EntityEditPage {
 			}
 		fli.setToolTipText("<html>"
 				+ "This enemy will stay at least "
-				+ (ce.getLimit() - 100)
+				+ ce.getLimit()
 				+ " units from position 0. If the enemy is a boss,<br>the value will be added by the boss spawn point determined by the stage castle."
 				+ "</html>");
 		eeb.setData(new int[] { ce.type, ce.abi, imu });
