@@ -1,5 +1,6 @@
 package page.info.edit;
 
+import common.CommonStatic;
 import common.battle.data.CustomEnemy;
 import common.battle.data.CustomEntity;
 import common.pack.Identifier;
@@ -11,6 +12,7 @@ import page.JTF;
 import page.Page;
 import page.info.EnemyInfoPage;
 import page.info.filter.EnemyEditBox;
+import utilpc.Interpret;
 
 import static utilpc.Interpret.EABIIND;
 import static utilpc.Interpret.IMUSFT;
@@ -45,7 +47,12 @@ public class EnemyEditPage extends EntityEditPage {
 	@Override
 	protected void getInput(JTF jtf, int[] v) {
 		if (jtf == fli) {
-			ce.limit = v[0];
+			double firstDouble = CommonStatic.parseDoubleN(fli.getText());
+			int formatDouble = (int) (Interpret.formatDouble(firstDouble, 1) * 10);
+			double result = (25 * Math.floor(formatDouble / 25.0)) / 10;
+
+			ce.limit = result;
+			fli.setText(result + "");
 		}
 		if (jtf == fdr) {
 			ce.drop = (int) Math.round(v[0] / bas.t().getDropMulti());
