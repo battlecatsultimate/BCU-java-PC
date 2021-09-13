@@ -114,7 +114,7 @@ public class CastleEditPage extends Page {
 
 				double firstDouble = CommonStatic.parseDoubleN(spwn.getText());
 				int formatDouble = (int) (Interpret.formatDouble(firstDouble, 2) * 100);
-				double result = ((int) 25.0 * Math.floor(formatDouble / 25.0)) / 100;
+				double result = (25 * Math.floor(formatDouble / 25.0)) / 100;
 
 				jlst.getSelectedValue().boss_spawn = result;
 				spwn.setText(result + "");
