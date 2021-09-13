@@ -24,8 +24,8 @@ public class EnemyListTable extends SortTable<Enemy> {
 	}
 
 	public static void redefine() {
-		tit = new String[] { "ID", "", Page.get(MainLocale.INFO, "HP"), Page.get(MainLocale.INFO, "HB"), Page.get(MainLocale.INFO, "atk"), Page.get(MainLocale.INFO, "range"), Page.get(MainLocale.INFO, "atkf"),
-				Page.get(MainLocale.INFO, "speed"), Page.get(MainLocale.INFO, "drop"), Page.get(MainLocale.INFO, "preaa"), "dps", Page.get(MainLocale.INFO, "will") };
+		tit = new String[] { "ID", "", Page.get(MainLocale.INFO, "HP"), Page.get(MainLocale.INFO, "hb"), Page.get(MainLocale.INFO, "atk"), Page.get(MainLocale.INFO, "range"), Page.get(MainLocale.INFO, "atkf"),
+				Page.get(MainLocale.INFO, "speed"), Page.get(MainLocale.INFO, "drop"), Page.get(MainLocale.INFO, "preaa"), "dps", Page.get(MainLocale.INFO, "minpos"), Page.get(MainLocale.INFO, "will") };
 	}
 
 	private final Page page;
@@ -67,7 +67,7 @@ public class EnemyListTable extends SortTable<Enemy> {
 			c--;
 		if (c == 0)
 			return e0.compareTo(e1);
-		if (c == 8)
+		if (c == 8 || c == 11)
 			return Double.compare((double) get(e0, c), (double) get(e1, c));
 		int i0 = (int) get(e0, c);
 		int i1 = (int) get(e1, c);
@@ -99,6 +99,8 @@ public class EnemyListTable extends SortTable<Enemy> {
 		else if (c == 10)
 			return (int) ((long) e.de.allAtk() * 30 / e.de.getItv());
 		else if (c == 11)
+			return e.de.getLimit();
+		else if (c == 12)
 			return e.de.getWill() + 1;
 		return null;
 	}

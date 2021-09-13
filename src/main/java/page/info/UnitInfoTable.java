@@ -236,7 +236,7 @@ public class UnitInfoTable extends Page {
 			main[0][2].setIcon(UtilPC.getIcon(f.anim.getEdi()));
 		main[0][3].setText(MainLocale.INFO, "trait");
 		main[1][0].setText(Interpret.RARITY[f.unit.rarity]);
-		main[1][2].setText(MainLocale.INFO, "HPB");
+		main[1][2].setText(MainLocale.INFO, "hphb");
 		main[1][4].setText(MainLocale.INFO, "cdo");
 		main[1][6].setText(MainLocale.INFO, "price");
 		main[2][0].setText(MainLocale.INFO, "range");
@@ -266,8 +266,8 @@ public class UnitInfoTable extends Page {
 		special[0][1].setText(f.du.getAtkLoop() < 0 ? "infinite" : f.du.getAtkLoop() + "");
 		special[0][2].setText(MainLocale.INFO, "width");
 		special[0][3].setText(f.du.getWidth() + "");
-		special[0][4].setText(MainLocale.INFO, "limit");
-		special[0][5].setText(f.du.getLim() + "");
+		special[0][4].setText(MainLocale.INFO, "minpos");
+		special[0][5].setText(f.du.getLimit() + "");
 		special[0][6].setText(MainLocale.INFO, "t7");
 		int back = Math.min(f.du.getBack(), f.du.getFront());
 		int front = Math.max(f.du.getBack(), f.du.getFront());

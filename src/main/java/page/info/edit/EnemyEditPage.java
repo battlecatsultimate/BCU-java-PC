@@ -139,18 +139,11 @@ public class EnemyEditPage extends EntityEditPage {
 				if (ce.getProc().getArr(id).exists())
 					imu |= 1 << id - IMUSFT;
 			}
-		if (ce.getLim() >= 100)
-			fli.setToolTipText("<html>"
-					+ "This enemy, if it's a boss, will always stay at least "
-					+ (ce.getLim() - 100)
-					+ " units from the base<br>once it passes that threshold."
-					+ "</html>");
-		else
-			fli.setToolTipText("<html>"
-					+ "This enemy, if it's a boss, will always stay at least "
-					+ (100 - ce.getLim())
-					+ " units inside the base<br>once it passes that threshold."
-					+ "</html>");
+		fli.setToolTipText("<html>"
+				+ "This enemy will stay at least "
+				+ (ce.getLimit() - 100)
+				+ " units from position 0. If the enemy is a boss,<br>the value will be added by the boss spawn point determined by the stage castle."
+				+ "</html>");
 		eeb.setData(new int[] { ce.abi, imu }, data.traits);
 	}
 

@@ -27,7 +27,7 @@ public class UnitListTable extends SortTable<Form> {
 	}
 
 	public static void redefine() {
-		tit = new String[] { "ID", "name", Page.get(MainLocale.INFO, "pref"), "HP", "HB", "atk", Page.get(MainLocale.INFO, "range"),
+		tit = new String[] { "ID", "name", Page.get(MainLocale.INFO, "pref"), "HP", Page.get(MainLocale.INFO,"hb"), "atk", Page.get(MainLocale.INFO, "range"),
 				Page.get(MainLocale.INFO, "speed"), "dps", Page.get(MainLocale.INFO, "preaa"), "CD", Page.get(MainLocale.INFO, "price"), Page.get(MainLocale.INFO, "atkf"), Page.get(MainLocale.INFO, "will") };
 	}
 

@@ -223,9 +223,9 @@ public class FormEditPage extends EntityEditPage {
 		frs.setText(bas.t().getFinRes(cu.getRespawn()) + "");
 		fdr.setText((int) Math.round(cu.getPrice() * 1.5) + "");
 		flr.setText(interpretLayer(cu.back, cu.front));
-		fli.setText(cu.getLim() + "");
+		fli.setText(cu.getLimit() + "");
 		fli.setToolTipText("<html>This unit will always stay at least "
-				+ cu.getLim()
+				+ cu.getLimit()
 				+ " units away from the max stage length<br>once it passes that threshold.");
 		int imu = 0;
 		for (int j : EABIIND)

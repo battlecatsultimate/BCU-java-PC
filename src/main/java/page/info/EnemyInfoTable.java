@@ -200,7 +200,7 @@ public class EnemyInfoTable extends Page {
 		main[0][4].setText(Interpret.getTrait(TraitBox, e.de.getStar()));
 		main[1][0].setText(MainLocale.INFO, "mult");
 		main[1][2].setText(MainLocale.INFO, "HP");
-		main[1][4].setText(MainLocale.INFO, "HB");
+		main[1][4].setText(MainLocale.INFO, "hb");
 		main[1][5].setText("" + e.de.getHb());
 		main[1][6].setText(MainLocale.INFO, "drop");
 		main[1][7].setText("" + Math.floor(e.de.getDrop() * b.t().getDropMulti()) / 100);
@@ -228,8 +228,8 @@ public class EnemyInfoTable extends Page {
 		special[0][1].setText(e.de.getAtkLoop() < 0 ? "infinite" : e.de.getAtkLoop() + "");
 		special[0][2].setText(MainLocale.INFO, "width");
 		special[0][3].setText(e.de.getWidth() + "");
-		special[0][4].setText(MainLocale.INFO, "limit");
-		special[0][5].setText(e.de.getLim() + "");
+		special[0][4].setText(MainLocale.INFO, "minpos");
+		special[0][5].setText(e.de.getLimit() + "");
 
 		if (MainBCU.seconds) {
 			main[2][7].setText(MainBCU.toSeconds(itv));
@@ -254,16 +254,16 @@ public class EnemyInfoTable extends Page {
 			atks[i][6].setText(MainLocale.INFO, "dire");
 			atks[i][7].setText("" + atkData[i][3]);
 		}
-		if (e.de.getLim() >= 100)
+		if (e.de.getLimit() >= 100)
 			special[0][5].setToolTipText("<html>"
 					+ "This enemy, if it's a boss, will always stay at least"
-					+ (e.de.getLim() - 100)
+					+ (e.de.getLimit() - 100)
 					+ " units from the base<br>once it passes that threshold."
 					+ "</html>");
 		else
 			special[0][5].setToolTipText("<html>"
 					+ "This enemy, if it's a boss, will always stay at least"
-					+ (100 - e.de.getLim())
+					+ (100 - e.de.getLimit())
 					+ " units inside the base<br>once it passes that threshold."
 					+ "</html>");
 		String eDesc = e.descriptionGet().replace("<br>", "\n");

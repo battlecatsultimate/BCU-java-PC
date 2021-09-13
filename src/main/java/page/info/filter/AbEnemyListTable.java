@@ -28,7 +28,7 @@ public class AbEnemyListTable  extends SortTable<AbEnemy> {
     }
 
     public static void redefine() {
-        tit = new String[] { "ID", "", "HP", "HB", "atk", Page.get(MainLocale.INFO, "range"), Page.get(MainLocale.INFO, "atkf"),
+        tit = new String[] { "ID", "", "HP", "hb", "atk", Page.get(MainLocale.INFO, "range"), Page.get(MainLocale.INFO, "atkf"),
                 Page.get(MainLocale.INFO, "speed"), Page.get(MainLocale.INFO, "drop"), Page.get(MainLocale.INFO, "preaa"), "hp/dps", "HP/HB/dps" };
     }
 

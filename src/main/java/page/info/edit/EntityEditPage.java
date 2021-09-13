@@ -48,7 +48,7 @@ public abstract class EntityEditPage extends Page {
 	private final JBTN back = new JBTN(0, "back");
 
 	private final JL lhp = new JL(MainLocale.INFO, "HP");
-	private final JL lhb = new JL(MainLocale.INFO, "HB");
+	private final JL lhb = new JL(MainLocale.INFO, "hb");
 	private final JL lsp = new JL(MainLocale.INFO, "speed");
 	private final JL lra = new JL(MainLocale.INFO, "range");
 	private final JL lwd = new JL(MainLocale.INFO, "width");
@@ -58,7 +58,7 @@ public abstract class EntityEditPage extends Page {
 	private final JL lct = new JL(MainLocale.INFO, "count");
 	private final JL ldps = new JL(MainLocale.INFO,"DPS");
 	private final JL lwp = new JL(MainLocale.INFO,"will");
-	private final JL lli = new JL(MainLocale.INFO, "limit");
+	private final JL lli = new JL(MainLocale.INFO, "minpos");
 	private final JL cdps = new JL();
 	private final JTF fhp = new JTF();
 	private final JTF fhb = new JTF();
@@ -406,7 +406,7 @@ public abstract class EntityEditPage extends Page {
 		ftp.setText("" + ce.touch);
 		fct.setText("" + ce.loop);
 		fwp.setText("" + (ce.will + 1));
-		fli.setText(ce.getLim() + "");
+		fli.setText(ce.getLimit() + "");
 		cdps.setText("" + (int) (Math.round(getLvAtk() * ce.allAtk()) * getAtk()) * 30 / ce.getItv());
 		comm.setSelected(data.common);
 		if (!comm.isSelected())
