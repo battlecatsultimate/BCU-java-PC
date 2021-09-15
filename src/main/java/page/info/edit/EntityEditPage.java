@@ -35,6 +35,7 @@ import page.support.ReorderListener;
 import page.view.BGViewPage;
 import page.view.EnemyViewPage;
 import page.view.UnitViewPage;
+import utilpc.Interpret;
 
 import javax.swing.*;
 import java.util.*;
@@ -674,7 +675,12 @@ public abstract class EntityEditPage extends Page {
 				ce.will = v[0] - 1;
 			}
 			if (jtf == fli) {
-				ce.limit = v[0];
+				double firstDouble = CommonStatic.parseDoubleN(fli.getText());
+				int formatDouble = (int) (Interpret.formatDouble(firstDouble, 1) * 10);
+				double result = (25 * Math.floor(formatDouble / 25.0)) / 10;
+
+				ce.limit = result;
+				fli.setText(result + "");
 			}
 			getInput(jtf, v);
 		}

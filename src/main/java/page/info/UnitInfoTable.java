@@ -297,6 +297,9 @@ public class UnitInfoTable extends Page {
 		}
 		atks[3].setText(pre.toString());
 		atks[5].setText(use.toString());
+		special[0][5].setToolTipText("<html>This unit will stay at least "
+				+ f.du.getLimit()
+				+ " units away from the max stage length<br>once it passes that threshold.");
 		String fDesc = f.descriptionGet().replace("<br>", "\n");
 		if (fDesc.replace("\n", "").length() > 0)
 			add(desc);
