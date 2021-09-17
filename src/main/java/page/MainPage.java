@@ -123,6 +123,7 @@ public class MainPage extends Page {
 		vmsc.setLnr(() -> new MusicPage(this));
 		rply.setLnr(() -> new RecdManagePage(this));
 		allf.setLnr(() -> new ResourcePage(this));
+		bckp.setLnr(() -> new BackupPage(this, true));
 		auth.setLnr(e -> {
 			String author = Opts.read("Decide your author name");
 

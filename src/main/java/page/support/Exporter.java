@@ -1,6 +1,8 @@
 package page.support;
 
+import common.CommonStatic;
 import common.io.OutStream;
+import common.pack.Context;
 import io.BCUWriter;
 import main.Opts;
 
@@ -8,6 +10,9 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class Exporter extends JFileChooser {
 
@@ -35,7 +40,6 @@ public class Exporter extends JFileChooser {
 			curs[t] = getCurrentDirectory();
 			BCUWriter.writeImage(bimg, file);
 		}
-
 	}
 
 	public Exporter(int t) {
@@ -49,7 +53,6 @@ public class Exporter extends JFileChooser {
 			if (!file.isDirectory())
 				file = file.getParentFile();
 		}
-
 	}
 
 	public Exporter(OutStream os, int t) {
@@ -63,4 +66,61 @@ public class Exporter extends JFileChooser {
 		}
 	}
 
+	public Exporter(InputStream ins, String name) {
+		setFileSelectionMode(DIRECTORIES_ONLY);
+		setCurrentDirectory(curs[EXP_BAC]);
+		setDragEnabled(true);
+
+		int returnval = showSaveDialog(null);
+
+		if(returnval == JFileChooser.APPROVE_OPTION) {
+			file = getSelectedFile();
+
+			String[] f = name.split("\\.");
+
+			File target = getSafeFile(file, f[0], f[1]);
+
+			CommonStatic.ctx.noticeErr(() -> {
+				if(!target.exists() && !target.createNewFile())
+					throw new IOException("Couldn't create file : "+target);
+
+				FileOutputStream fos = new FileOutputStream(target);
+
+				byte[] b = new byte[65536];
+				int len;
+
+				while((len = ins.read(b)) != -1) {
+					fos.write(b, 0, len);
+				}
+
+				fos.close();
+
+				Opts.pop(target.getName()+" is successfully exported", "Exporting complete");
+			}, Context.ErrType.WARN, "Failed to export file");
+		}
+	}
+
+	private File getSafeFile(File folder, String name, String extension) {
+		int i = 0;
+
+		while(true) {
+			if(i == 0) {
+				String fileName = name+"."+extension;
+
+				File f = new File(folder, fileName);
+
+				if(!f.exists())
+					return f;
+			} else {
+				String fileName = name+"-"+i+"."+extension;
+
+				File f = new File(folder, fileName);
+
+				if(!f.exists())
+					return f;
+			}
+
+			i++;
+		}
+	}
 }
