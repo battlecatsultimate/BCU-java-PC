@@ -2,6 +2,7 @@ package main;
 
 import common.CommonStatic;
 import common.battle.BasisSet;
+import common.io.Backup;
 import common.io.PackLoader.ZipDesc.FileDesc;
 import common.io.assets.Admin;
 import common.io.assets.AssetLoader;
@@ -10,6 +11,7 @@ import common.pack.Source.Workspace;
 import common.pack.UserProfile;
 import common.pack.Context.ErrType;
 import common.system.fake.ImageBuilder;
+import common.system.files.VFile;
 import common.util.AnimGroup;
 import common.util.Data;
 import common.util.stage.Replay;
@@ -21,6 +23,7 @@ import jogl.util.GLIB;
 import page.*;
 import page.awt.AWTBBB;
 import page.awt.BBBuilder;
+import page.support.DateComparator;
 import utilpc.Theme;
 import utilpc.UtilPC;
 import utilpc.awt.FIBI;
@@ -28,11 +31,10 @@ import utilpc.awt.FIBI;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.function.Consumer;
 
 public class MainBCU {
 
@@ -79,6 +81,16 @@ public class MainBCU {
 			return new File("./workspace/" + relativePath);
 		}
 
+		@Override
+		public File getBackupFile(String string) {
+			return new File("./backups/"+string);
+		}
+
+		@Override
+		public String getAuthor() {
+			return author;
+		}
+
 		@SuppressWarnings("deprecation")
 		@Override
 		public void initProfile() {
@@ -86,6 +98,20 @@ public class MainBCU {
 			AssetLoader.load(LoadPage::prog);
 			LoadPage.prog("read BC data");
 			UserProfile.getBCData().load(LoadPage::prog, LoadPage::prog);
+			LoadPage.prog("read backups");
+			Backup.loadBackups();
+
+			Backup restore = Backup.checkRestore();
+
+			if(restore != null) {
+				LoadPage.prog("restoring data");
+				boolean result = CommonStatic.ctx.restore(restore, LoadPage::prog);
+
+				if(!result) {
+					Opts.pop("Failed to restore data", "Restoration failed");
+				}
+			}
+
 			LoadPage.prog("read local animations");
 			Workspace.loadAnimations(null);
 			LoadPage.prog("read local animation group data");
@@ -138,6 +164,106 @@ public class MainBCU {
 				return true;
 			else
 				return !(t == ErrType.CORRUPT || t == ErrType.ERROR || t == ErrType.FATAL || t == ErrType.WARN || !MainBCU.WRITE);
+		}
+
+		@Override
+		public boolean restore(Backup b, Consumer<Double> prog) {
+			if(CommonStatic.getConfig().backupPath == null) {
+				File packs = CommonStatic.ctx.getAuxFile("./packs");
+				File workspace = CommonStatic.ctx.getWorkspaceFile("");
+				File user = CommonStatic.ctx.getUserFile("");
+
+				try {
+					if(packs.exists())
+						Context.delete(packs);
+
+					if(workspace.exists())
+						Context.delete(workspace);
+
+					if(user.exists())
+						Context.delete(user);
+				} catch (Exception e) {
+					e.printStackTrace();
+					return false;
+				}
+
+				boolean result = CommonStatic.ctx.noticeErr(() -> b.backup.unzip(path -> new File("./"+path), prog), ErrType.ERROR, "Failed to restore files");
+
+				DateComparator comparator = new DateComparator();
+
+				Backup.backups.removeIf(ba -> comparator.compare(b, ba) < 1 && ba.safeDelete());
+
+				return result;
+			} else {
+				VFile vf = b.backup.tree.find(CommonStatic.getConfig().backupPath);
+
+				CommonStatic.getConfig().backupPath = null;
+
+				if(vf == null)
+					return false;
+
+				try {
+					extractData(vf, prog);
+				} catch (Exception e) {
+					return false;
+				}
+
+				return true;
+			}
+		}
+
+		private void extractData(VFile vf, Consumer<Double> prog) throws IOException {
+			if(vf.getData() != null) {
+				double max = vf.getData().size();
+				double progress = 0;
+
+				File f = new File(vf.getPath());
+
+				if(!f.exists() && !f.createNewFile()) {
+					return;
+				}
+
+				FileOutputStream fos = new FileOutputStream(f);
+				InputStream ins = vf.getData().getStream();
+				byte[] b = new byte[65536];
+				int len;
+
+				while((len = ins.read(b)) != -1) {
+					fos.write(b, 0, len);
+					progress += len;
+
+					prog.accept(progress/max);
+				}
+
+				fos.close();
+			} else {
+				int num = getFileNumber(vf);
+				int progress = 0;
+
+				for(VFile v : vf.list()) {
+					extractData(v, prog);
+
+					progress += getFileNumber(v);
+
+					prog.accept(progress * 1.0 / num);
+				}
+			}
+		}
+
+		private int getFileNumber(VFile vf) {
+			if(vf.getData() != null)
+				return 1;
+
+			int result = 0;
+
+			for(VFile v : vf.list()) {
+				if(v.getData() != null)
+					result++;
+				else
+					result += getFileNumber(v);
+			}
+
+			return result;
 		}
 	}
 

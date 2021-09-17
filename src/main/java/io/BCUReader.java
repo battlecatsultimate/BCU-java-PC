@@ -81,6 +81,11 @@ public class BCUReader extends DataIO {
 				if(jo.has("rowlayout")) {
 					CommonStatic.getConfig().twoRow = jo.get("rowlayout").getAsBoolean();
 				}
+				if(jo.has("backup_file")) {
+					String value = jo.get("backup_file").getAsString();
+
+					CommonStatic.getConfig().backupFile = value.equals("None") ? null : value;
+				}
 				String[] exp = JsonDecoder.decode(jo.get("export_paths"), String[].class);
 				String[] imp = JsonDecoder.decode(jo.get("import_paths"), String[].class);
 				for (int i = 0; i < Exporter.curs.length; i++)

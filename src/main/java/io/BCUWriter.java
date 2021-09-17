@@ -3,6 +3,7 @@ package io;
 import com.google.gson.JsonObject;
 import common.CommonStatic;
 import common.battle.BasisSet;
+import common.io.Backup;
 import common.io.DataIO;
 import common.io.OutStream;
 import common.io.json.JsonEncoder;
@@ -31,6 +32,7 @@ import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -174,6 +176,13 @@ public class BCUWriter extends DataIO {
 		Source.Workspace.saveWorkspace();
 		AnimGroup.writeAnimGroup();
 		writeOptions();
+		Backup.createBackup(null, new ArrayList<>(
+				Arrays.asList(
+						CommonStatic.ctx.getWorkspaceFile(""),
+						CommonStatic.ctx.getUserFile(""),
+						CommonStatic.ctx.getAuxFile("./packs")
+				)
+		));
 	}
 
 	public static void writeGIF(AnimatedGifEncoder age, String path) {
@@ -268,6 +277,7 @@ public class BCUWriter extends DataIO {
 		jo.addProperty("style_nimbus", MainBCU.nimbus);
 		jo.addProperty("author", MainBCU.author);
 		jo.addProperty("rowlayout", CommonStatic.getConfig().twoRow);
+		jo.addProperty("backup_file", CommonStatic.getConfig().backupFile == null ? "None" : CommonStatic.getConfig().backupFile);
 		String[] exp = new String[Exporter.curs.length];
 		for (int i = 0; i < exp.length; i++)
 			exp[i] = Exporter.curs[i] == null ? null : Exporter.curs[i].toString();
