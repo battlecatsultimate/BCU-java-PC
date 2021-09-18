@@ -65,8 +65,12 @@ public class BCUReader extends DataIO {
 				MainBCU.preload = jo.get("preload").getAsBoolean();
 				ViewBox.Conf.white = jo.get("transparent").getAsBoolean();
 				MainBCU.USE_JOGL = jo.get("JOGL").getAsBoolean();
-				MainBCU.seconds = jo.get("seconds").getAsBoolean();
-				MainBCU.prefLevel = jo.get("prefLv").getAsInt();
+				if(jo.has("seconds")) {
+					MainBCU.seconds = jo.get("seconds").getAsBoolean();
+				}
+				if (jo.has("preflv")) {
+					MainBCU.prefLevel = jo.get("prefLv").getAsInt();
+				}
 				MainBCU.FILTER_TYPE = jo.get("filter").getAsInt();
 				BCMusic.play = jo.get("play_sound").getAsBoolean();
 				BCMusic.VOL_BG = jo.get("volume_BG").getAsInt();
@@ -84,6 +88,11 @@ public class BCUReader extends DataIO {
 				}
 				if(jo.has("rowlayout")) {
 					CommonStatic.getConfig().twoRow = jo.get("rowlayout").getAsBoolean();
+				}
+				if(jo.has("backup_file")) {
+					String value = jo.get("backup_file").getAsString();
+
+					CommonStatic.getConfig().backupFile = value.equals("None") ? null : value;
 				}
 				String[] exp = JsonDecoder.decode(jo.get("export_paths"), String[].class);
 				String[] imp = JsonDecoder.decode(jo.get("import_paths"), String[].class);

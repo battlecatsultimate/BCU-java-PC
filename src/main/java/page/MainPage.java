@@ -49,9 +49,9 @@ public class MainPage extends Page {
 	private final JBTN camm = new JBTN(0, "camm");
 	private final JBTN cama = new JBTN(0, "cama");
 	private final JBTN save = new JBTN(0, "save");
+	private final JBTN bckp = new JBTN(0, "backup");
 	private final JBTN allf = new JBTN(0, "all file");
 	private final JBTN auth = new JBTN(0, "author");
-	private final JBTN dbug = new JBTN(0, "debug");
 
 	private final JBTN refr = new JBTN(0, "refrtips");
 	private final JLabel tips = new JLabel();
@@ -91,7 +91,7 @@ public class MainPage extends Page {
 		set(conf, x, y, 900, 200, 200, 50);
 		set(save, x, y, 900, 300, 200, 50);
 		set(bass, x, y, 900, 400, 200, 50);
-		set(dbug, x, y, 900, 500, 200, 50);
+		set(bckp, x, y, 900, 500, 200, 50);
 		set(curr, x, y, 900, 600, 200, 50);
 		set(auth, x, y, 900, 700, 200, 50);
 		set(refr, x, y, 900, 800, 200, 50);
@@ -129,6 +129,7 @@ public class MainPage extends Page {
 		vmsc.setLnr(() -> new MusicPage(this));
 		rply.setLnr(() -> new RecdManagePage(this));
 		allf.setLnr(() -> new ResourcePage(this));
+		bckp.setLnr(() -> new BackupPage(this, true));
 		auth.setLnr(e -> {
 			String author = Opts.read("Decide your author name");
 
@@ -179,9 +180,9 @@ public class MainPage extends Page {
 		add(sgifau);
 		add(welcome);
 		add(rply);
+		add(bckp);
 		add(allf);
 		add(auth);
-		add(dbug);
 		add(refr);
 		add(tips);
 		tips.setText("<html>" + ALLTIPS[(int)(Math.random() * ALLTIPS.length)] + "</html>");

@@ -2,6 +2,7 @@ package page;
 
 import common.CommonStatic;
 import common.CommonStatic.Config;
+import common.io.Backup;
 import common.util.ImgCore;
 import common.util.lang.MultiLangCont;
 import io.BCMusic;
@@ -44,6 +45,7 @@ public class ConfigPage extends Page {
 	private final JL jlbg = new JL(MainLocale.PAGE, "BGvol");
 	private final JL jlse = new JL(MainLocale.PAGE, "SEvol");
 	private final JL jlui = new JL(MainLocale.PAGE, "UIvol");
+	private final JL mbac = new JL(MainLocale.PAGE, "maxback");
 	private final JBTN theme = new JBTN(MainLocale.PAGE, MainBCU.light ? "themel" : "themed");
 	private final JBTN nimbus = new JBTN(MainLocale.PAGE, MainBCU.nimbus ? "nimbus" : "tdefault");
 	private final JSlider jsmin = new JSlider(0, 100);
@@ -51,6 +53,7 @@ public class ConfigPage extends Page {
 	private final JSlider jsbg = new JSlider(0, 100);
 	private final JSlider jsse = new JSlider(0, 100);
 	private final JSlider jsui = new JSlider(0, 100);
+	private final JSlider jsba = new JSlider(0, 50);
 	private final JList<String> jls = new JList<>(MainLocale.LOC_NAME);
 	private final JBTN row = new JBTN(MainLocale.PAGE, CommonStatic.getConfig().twoRow ? "tworow" : "onerow");
 
@@ -100,17 +103,19 @@ public class ConfigPage extends Page {
 		set(jsse, x, y, 50, 1000, 1000, 100);
 		set(jlui, x, y, 50, 1100, 400, 50);
 		set(jsui, x, y, 50, 1150, 1000, 100);
-		set(filt, x, y, 1100, 550, 200, 50);
-		set(musc, x, y, 1350, 550, 200, 50);
-		set(exla, x, y, 1100, 625, 450, 50);
-		set(extt, x, y, 1100, 700, 450, 50);
-		set(rlla, x, y, 1100, 775, 450, 50);
-		set(nimbus, x, y, 1100, 850, 200, 50);
-		set(theme, x, y, 1350, 850, 200, 50);
-		set(row, x, y, 1100, 925, 450, 50);
-		set(secs, x, y, 1100, 1000, 450, 50);
-		set(preflv, x, y, 1100, 1075, 225, 50);
-		set(prlvmd, x, y, 1325, 1075, 225, 50);
+		set(filt, x, y, 1350, 100, 200, 50);
+		set(musc, x, y, 1350, 200, 200, 50);
+		set(exla, x, y, 1100, 550, 450, 50);
+		set(extt, x, y, 1100, 650, 450, 50);
+		set(rlla, x, y, 1100, 750, 450, 50);
+		set(nimbus, x, y, 1350, 300, 200, 50);
+		set(theme, x, y, 1350, 400, 200, 50);
+		set(row, x, y, 1100, 850, 450, 50);
+		set(secs, x, y, 1100, 950, 450, 50);
+		set(mbac, x, y, 1100, 1100, 400, 50);
+		set(jsba, x, y, 1100, 1150, 1000, 100);
+		set(preflv, x, y, 1100, 1050, 225, 50);
+		set(prlvmd, x, y, 1325, 1050, 225, 50);
 	}
 
 	private void addListeners() {
@@ -174,6 +179,29 @@ public class ConfigPage extends Page {
 		jsse.addChangeListener(arg0 -> BCMusic.setSEVol(jsse.getValue()));
 
 		jsui.addChangeListener(arg0 -> BCMusic.setUIVol(jsui.getValue()));
+
+		jsba.addChangeListener(arg0 -> {
+			if(!jsba.getValueIsAdjusting()) {
+				int back = Backup.backups.size();
+				int pre = CommonStatic.getConfig().maxBackup;
+
+				if(pre >= back && back > jsba.getValue() && jsba.getValue() != 0) {
+					if(Opts.conf((back-jsba.getValue())+" "+get(MainLocale.PAGE, "backremwarn"))) {
+						CommonStatic.getConfig().maxBackup = jsba.getValue();
+					} else {
+						jsba.setValue(CommonStatic.getConfig().maxBackup);
+					}
+				} else if(jsba.getValue() == 0) {
+					if(Opts.conf((get(MainLocale.PAGE, "backinfwarn")))) {
+						CommonStatic.getConfig().maxBackup = jsba.getValue();
+					} else {
+						jsba.setValue(CommonStatic.getConfig().maxBackup);
+					}
+				} else {
+					CommonStatic.getConfig().maxBackup = jsba.getValue();
+				}
+			}
+		});
 
 		jls.addListSelectionListener(arg0 -> {
 			if (changing)
@@ -254,6 +282,8 @@ public class ConfigPage extends Page {
 		add(nimbus);
 		add(theme);
 		add(row);
+		set(jsba);
+		add(mbac);
 		add(secs);
 		add(preflv);
 		add(prlvmd);
@@ -289,6 +319,7 @@ public class ConfigPage extends Page {
 		refe.setSelected(cfg().ref);
 		musc.setSelected(BCMusic.play);
 		jogl.setSelected(MainBCU.USE_JOGL);
+		jsba.setValue(CommonStatic.getConfig().maxBackup);
 		if (!MainBCU.nimbus) {
 			theme.setEnabled(false);
 		}
