@@ -6,6 +6,7 @@ import page.*;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UnitFindPage extends Page implements SupPage<Unit> {
@@ -28,7 +29,7 @@ public class UnitFindPage extends Page implements SupPage<Unit> {
 		resized();
 	}
 
-	public UnitFindPage(Page p, String pack, String... parent) {
+	public UnitFindPage(Page p, String pack, ArrayList<String> parent) {
 		super(p);
 
 		ufb = UnitFilterBox.getNew(this, pack, parent);
