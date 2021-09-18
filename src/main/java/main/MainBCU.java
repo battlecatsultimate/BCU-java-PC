@@ -23,7 +23,7 @@ import jogl.util.GLIB;
 import page.*;
 import page.awt.AWTBBB;
 import page.awt.BBBuilder;
-import page.support.DateComparator;
+import common.system.DateComparator;
 import utilpc.Theme;
 import utilpc.UtilPC;
 import utilpc.awt.FIBI;
