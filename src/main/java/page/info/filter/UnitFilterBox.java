@@ -32,7 +32,7 @@ public abstract class UnitFilterBox extends Page {
 		return null;
 	}
 
-	public static UnitFilterBox getNew(Page p, String pack, String... parent) {
+	public static UnitFilterBox getNew(Page p, String pack, ArrayList<String> parent) {
 		if(MainBCU.FILTER_TYPE == 0) {
 			return new UFBButton(p, pack, parent);
 		} else if(MainBCU.FILTER_TYPE == 1) {
@@ -53,11 +53,11 @@ public abstract class UnitFilterBox extends Page {
 		parents = null;
 	}
 
-	protected UnitFilterBox(Page p, String pack, String... parent) {
+	protected UnitFilterBox(Page p, String pack, ArrayList<String> parent) {
 		super(p);
 
 		this.pack = pack;
-		this.parents = Arrays.asList(parent);
+		this.parents = parent;
 	}
 
 	public abstract int[] getSizer();
@@ -82,7 +82,7 @@ class UFBButton extends UnitFilterBox {
 		confirm();
 	}
 
-	protected UFBButton(Page p, String pack, String... parent) {
+	protected UFBButton(Page p, String pack, ArrayList<String> parent) {
 		super(p, pack, parent);
 
 		ini();
@@ -252,7 +252,7 @@ class UFBList extends UnitFilterBox {
 		confirm();
 	}
 
-	protected UFBList(Page p, String pack, String... parent) {
+	protected UFBList(Page p, String pack, ArrayList<String> parent) {
 		super(p, pack, parent);
 
 		ini();

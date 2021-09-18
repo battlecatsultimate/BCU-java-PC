@@ -169,7 +169,7 @@ public abstract class EntityEditPage extends Page {
 		SupPage<Unit> ans;
 
 		if(p != null) {
-			ans = new UnitFindPage(this, pack, p.desc.dependency.toArray(new String[0]));
+			ans = new UnitFindPage(this, pack, p.desc.dependency);
 		} else {
 			ans = new UnitFindPage(this);
 		}
