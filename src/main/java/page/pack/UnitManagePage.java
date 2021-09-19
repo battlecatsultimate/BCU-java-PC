@@ -186,7 +186,7 @@ public class UnitManagePage extends Page {
 			changing = true;
 			CustomUnit cu = new CustomUnit();
 			AnimCE anim = jld.getSelectedValue();
-			cu.limit = Math.max(0, 5 * Math.round((9.0 / 5.0) * anim.mamodel.confs[1][2] - 1));
+				cu.limit = CommonStatic.customEntityMinPos(anim.mamodel);
 			Unit u = new Unit(pac.getNextID(Unit.class), anim, cu);
 			pac.units.add(u);
 			jlu.setListData(pac.units.toRawArray());
