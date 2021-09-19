@@ -23,7 +23,7 @@ public class ComparePage extends Page {
 
     private final JL[] names = new JL[2];
 
-    private final JL[][] main = new JL[3][3]; // comparing any two entities
+    private final JL[][] main = new JL[4][3]; // comparing any two entities
     private final JL[][] unit = new JL[2][3]; // comparing for two units
     // private final JL[][] enem = new JL[1][1]; // comparing for two enemies
 
@@ -92,14 +92,16 @@ public class ComparePage extends Page {
         main[0][0].setText("HP");
         main[1][0].setText("atk");
         main[2][0].setText("dps");
+        main[3][0].setText(MainLocale.INFO, "speed");
         boxes[0].setText("HP");
         boxes[1].setText("atk");
         boxes[2].setText("dps");
+        boxes[3].setText(MainLocale.INFO, "speed");
 
         unit[0][0].setText("CD");
         unit[1][0].setText(MainLocale.INFO, "price");
-        boxes[3].setText("CD");
-        boxes[4].setText(MainLocale.INFO, "price");
+        boxes[main.length].setText("CD");
+        boxes[main.length + 1].setText(MainLocale.INFO, "price");
 
         addListeners();
     }
@@ -147,7 +149,6 @@ public class ComparePage extends Page {
             StringBuilder atkString = new StringBuilder();
 
             if (m instanceof MaskEnemy) {
-                atk = m.allAtk();
                 for (int[] atkDatum : atkData) {
                     if (atkString.length() > 0)
                         atkString.append(" / ");
@@ -157,6 +158,7 @@ public class ComparePage extends Page {
                 }
 
                 main[0][index].setText(hp + "");
+                main[2][index].setText((int) (m.allAtk() * 30.0 / m.getItv()) + "");
             } else if (m instanceof MaskUnit) {
                 Form f = ((MaskUnit) m).getPack();
                 int[] multi = f.unit.getPrefLvs();
@@ -165,6 +167,13 @@ public class ComparePage extends Page {
                 double mul = f.unit.lv.getMult(multi[0]);
                 double atkLv = b.t().getAtkMulti();
                 double defLv = b.t().getDefMulti();
+
+                MaskEnemy e = maskEntities[index % 2] instanceof MaskEnemy
+                        ? (MaskEnemy) maskEntities[index % 2]
+                        : null;
+                int overlap = e != null ? e.getType() & f.du.getType() : 0;
+                int checkHealth = (Data.AB_GOOD | Data.AB_RESIST);
+                int checkAttack = (Data.AB_GOOD | Data.AB_MASSIVE);
 
                 hp = (int) (Math.round(hp * mul) * defLv);
                 if (f.getPCoin() != null)
@@ -180,32 +189,53 @@ public class ComparePage extends Page {
 
                     atkString.append(a);
                     atk += a;
+
+                    if (overlap > 0 && (f.du.getAbi() & checkAttack) > 0) {
+                        int effectiveDMG = a;
+                        if ((f.du.getAbi() & Data.AB_MASSIVE) > 0)
+                            effectiveDMG *= b.t().getMASSIVEATK(overlap);
+                        if ((f.du.getAbi() & Data.AB_GOOD) > 0) {
+                            effectiveDMG *= b.t().getGOODATK(overlap);
+                        }
+                        atkString.append(" (").append(effectiveDMG).append(")");
+                    }
                 }
 
                 unit[0][index].setText(b.t().getFinRes(f.du.getRespawn()) + "f");
                 unit[1][index].setText(ef.getPrice(1) + "");
 
-                if (maskEntities[index % 2] instanceof MaskEnemy) {
-                    MaskEnemy e = (MaskEnemy) maskEntities[index % 2];
-                    int overlap = e.getType() & f.du.getType();
-                    if (overlap > 0) {
-                        int effective = hp;
-                        if ((f.du.getAbi() & Data.AB_GOOD) > 0)
-                            effective /= b.t().getGOODDEF(overlap, f.du, new Level(multi));
-                        if ((f.du.getAbi() & Data.AB_RESIST) > 0)
-                            effective /= b.t().getRESISTDEF(overlap, f.du, new Level(multi));
-                        main[0][index].setText(hp + " (" + effective + ")");
+                if (overlap > 0 && (f.du.getAbi() & checkHealth) > 0) {
+                    int effectiveHP = hp;
+
+                    if ((f.du.getAbi() & Data.AB_RESIST) > 0)
+                        effectiveHP /= b.t().getRESISTDEF(overlap, f.du, new Level(multi));
+                    if ((f.du.getAbi() & Data.AB_GOOD) > 0) {
+                        effectiveHP /= b.t().getGOODDEF(overlap, f.du, new Level(multi));
                     }
+
+                    main[0][index].setText(hp + " (" + effectiveHP + ")");
                 } else {
                     main[0][index].setText(hp + "");
+                }
+                if (overlap > 0 && (f.du.getAbi() & checkAttack) > 0) {
+                    int effectiveDMG = atk;
+                    if ((f.du.getAbi() & Data.AB_MASSIVE) > 0)
+                        effectiveDMG *= b.t().getMASSIVEATK(overlap);
+                    if ((f.du.getAbi() & Data.AB_GOOD) > 0) {
+                        effectiveDMG *= b.t().getGOODATK(overlap);
+                    }
+                    main[2][index].setText((int) (atk * 30.0 / m.getItv())
+                            + " (" + (int) (effectiveDMG * 30.0 / m.getItv()) + ")");
+                } else {
+                    main[2][index].setText((int) (atk * 30.0 / m.getItv()) + "");
                 }
             }
 
             names[i].setIcon(UtilPC.getIcon(m.getPack().anim.getEdi()));
             names[i].setText(m.getPack().toString());
 
-            main[1][index].setText(atkString + "");
-            main[2][index].setText((int) (atk * 30.0 / m.getItv()) + "");
+            main[1][index].setText(atkString.toString());
+            main[3][index].setText(m.getSpeed() + "");
         }
     }
 
@@ -233,20 +263,22 @@ public class ComparePage extends Page {
 
         set(back, x, y, 0, 0, 200, 50);
 
-        set(sl1e, x, y, 325, 50, 200, 50);
-        set(sl1u, x, y, 325, 100, 200, 50);
-        set(sl2e, x, y, 650, 50, 200, 50);
-        set(sl2u, x, y, 650, 100, 200, 50);
+        int width = 650;
+
+        set(sl1e, x, y, 475, 50, 200, 50);
+        set(sl1u, x, y, 475, 100, 200, 50);
+        set(sl2e, x, y, 475 + width, 50, 200, 50);
+        set(sl2u, x, y, 475 + width, 100, 200, 50);
 
         int posY = 150;
 
         for (JCheckBox b : boxes) {
             posY += 50;
-            set(b, x, y, 300 + ((main[0].length - 1) * 350), posY, 200, 50);
+            set(b, x, y, 300 + ((main[0].length - 1) * width), posY, 200, 50);
         }
 
         for (int i = 0; i < names.length; i++)
-            set(names[i], x, y, 250 + (i * 350), 150, 350, 50);
+            set(names[i], x, y, 250 + (i * width), 150, 650, 50);
 
         posY = 150;
         for (int i = 0; i < main.length; i++) {
@@ -260,11 +292,11 @@ public class ComparePage extends Page {
             int posX = 50;
             posY += 50;
             for (int j = 0; j < d.length; j++) {
-                set(d[j], x, y, posX, posY, j == 0 ? 200 : 350, 50);
+                set(d[j], x, y, posX, posY, j == 0 ? 200 : width, 50);
                 if (j == 0)
                     posX += 200;
                 else
-                    posX += 350;
+                    posX += width;
             }
         }
 
@@ -275,18 +307,19 @@ public class ComparePage extends Page {
         } else {
             for (int i = 0; i < unit.length; i++) {
                 JL[] d = unit[i];
-                if (!boxes[i].isSelected())
-                    for (JL ex : d) {
-
-                    }
+                if (!boxes[i + main.length].isSelected()) {
+                    for (JL ex : d)
+                        set(ex, x, y, 0, 0, 0, 0);
+                    continue;
+                }
                 int posX = 50;
                 posY += 50;
                 for (int j = 0; j < d.length; j++) {
-                    set(d[j], x, y, posX, posY, j == 0 ? 200 : 350, 50);
+                    set(d[j], x, y, posX, posY, j == 0 ? 200 : width, 50);
                     if (j == 0)
                         posX += 200;
                     else
-                        posX += 350;
+                        posX += width;
                 }
             }
         }
