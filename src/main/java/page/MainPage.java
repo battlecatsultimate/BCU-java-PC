@@ -13,6 +13,7 @@ import page.anim.MaModelEditPage;
 import page.basis.BasisPage;
 import page.battle.BattleInfoPage;
 import page.battle.RecdManagePage;
+import page.info.ComparePage;
 import page.info.StageViewPage;
 import page.info.filter.EnemyFindPage;
 import page.info.filter.UnitFindPage;
@@ -52,6 +53,7 @@ public class MainPage extends Page {
 	private final JBTN bckp = new JBTN(0, "backup");
 	private final JBTN allf = new JBTN(0, "all file");
 	private final JBTN auth = new JBTN(0, "author");
+	private final JBTN comp = new JBTN(0, "compare");
 
 	public MainPage() {
 		super(null);
@@ -93,8 +95,9 @@ public class MainPage extends Page {
 		set(vsta, x, y, 1200, 200, 200, 50);
 		set(veif, x, y, 1200, 300, 200, 50);
 		set(vuif, x, y, 1200, 400, 200, 50);
-		set(pcus, x, y, 1200, 500, 200, 50);
-		set(rply, x, y, 1200, 600, 200, 50);
+		set(comp, x, y, 1200, 500, 200, 50);
+		set(pcus, x, y, 1200, 600, 200, 50);
+		set(rply, x, y, 1200, 700, 200, 50);
 
 		set(vdiy, x, y, 1500, 200, 200, 50);
 		set(caic, x, y, 1500, 300, 200, 50);
@@ -147,6 +150,7 @@ public class MainPage extends Page {
 				welcome.setVisible(false);
 			}
 		});
+		comp.setLnr(() -> new ComparePage(this));
 	}
 
 	private void ini() {
@@ -176,6 +180,7 @@ public class MainPage extends Page {
 		add(bckp);
 		add(allf);
 		add(auth);
+		add(comp);
 
 		welcome.setVisible(!MainBCU.author.isEmpty());
 
