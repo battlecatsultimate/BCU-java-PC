@@ -150,12 +150,12 @@ class HeadEditTable extends Page {
 		set(con, x, y, w * 6, 50, w, 50);
 		set(bg, x, y, 0, 100, w, 50);
 		set(jbg, x, y, w, 100, w, 50);
-		set(jbgh, x, y, w * 6, 100, w, 50);
-		set(jbg1, x, y, w * 7, 100, w, 50);
-		set(cas, x, y, w * 2, 100, w, 50);
-		set(jcas, x, y, w * 3, 100, w, 50);
-		set(minres, x, y, w * 4, 100, w, 50);
-		set(minrest, x, y, w * 5, 100, w, 50);
+		set(jbgh, x, y, w * 2, 100, w, 50);
+		set(jbg1, x, y, w * 3, 100, w, 50);
+		set(cas, x, y, w * 4, 100, w, 50);
+		set(jcas, x, y, w * 5, 100, w, 50);
+		set(minres, x, y, w * 6, 100, w, 50);
+		set(minrest, x, y, w * 7, 100, w, 50);
 		set(cost, x, y, w * 6, 0, w, 50);
 		set(cos, x, y, w * 7, 0, w, 50);
 		set(mus, x, y, 0, 150, w, 50);

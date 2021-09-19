@@ -101,6 +101,8 @@ public class CastleViewPage extends Page {
 		add(jspsm);
 		add(jspst);
 		add(jl);
+		add(jbs);
+		add(bs);
 		addListeners();
 
 	}
