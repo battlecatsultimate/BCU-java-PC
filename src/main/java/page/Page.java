@@ -1,13 +1,10 @@
 package page;
 
-import io.BCUWriter;
 import main.MainBCU;
-import main.Opts;
 import utilpc.PP;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;

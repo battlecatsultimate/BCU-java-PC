@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DragSource;
-import java.util.Arrays;
 
 import static page.support.AnimTransfer.DFS;
 
