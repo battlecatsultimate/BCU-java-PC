@@ -48,7 +48,6 @@ public class AnimTableTH<T> extends TransferHandler {
 			} else {
 				@SuppressWarnings("unchecked")
 				T[] data = (T[]) info.getTransferable().getTransferData(DFS[type]);
-				String[] names;
 				int row = table.getSelectedRow() + 1;
 				return table.insert(row, data, rows);
 			}

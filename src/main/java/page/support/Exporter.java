@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 
 public class Exporter extends JFileChooser {
 
@@ -32,6 +33,14 @@ public class Exporter extends JFileChooser {
 		int returnVal = showSaveDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			file = getSelectedFile();
+			String s = file.getName();
+			if (!s.toLowerCase(Locale.ROOT).endsWith(".png")) {
+				File fpng = new File(s + ".png");
+				boolean success = file.renameTo(fpng);
+				if (!success)
+					System.out.println("Failed to add .png extension to file");
+				fpng.delete();
+			}
 			if (file.exists()) {
 				boolean verifyFile = Opts.conf("A file with this name already exists. Save anyway?");
 				if (!verifyFile)

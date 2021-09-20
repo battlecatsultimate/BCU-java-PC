@@ -127,7 +127,7 @@ public class CGLREditPage extends Page {
 
 		vuif.addActionListener(arg0 -> {
 			if (ufp == null)
-				ufp = new UnitFindPage(getThis(),pack.getSID(), pack.desc.dependency);
+				ufp = new UnitFindPage(getThis(), pack.getSID(), pack.desc.dependency);
 			changePanel(ufp);
 		});
 

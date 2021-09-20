@@ -1,3 +1,4 @@
+
 package page.pack;
 
 import common.CommonStatic;
@@ -49,6 +50,7 @@ public class UnitManagePage extends Page {
 	private final JBTN edit = new JBTN(0, "edit");
 	private final JBTN frea = new JBTN(0, "reassign");
 	private final JBTN vuni = new JBTN(0, "vuni");
+	private final JBTN cmbo = new JBTN(0, "combo");
 
 	private final JTF jtff = new JTF();
 	private final JTF maxl = new JTF();
@@ -114,8 +116,9 @@ public class UnitManagePage extends Page {
 		set(maxl, x, y, w, 150, 300, 50);
 		set(lbmp, x, y, w, 200, 300, 50);
 		set(maxp, x, y, w, 250, 300, 50);
-		set(rar, x, y, w, 350, 300, 50);
-		set(cbl, x, y, w, 450, 300, 50);
+		set(rar, x, y, w, 300, 300, 50);
+		set(cbl, x, y, w, 400, 300, 50);
+		set(cmbo, x, y, w, 500, 300, 50);
 		w += 500;
 		set(jspl, x, y, w, 150, 300, 500);
 		set(jtfl, x, y, w, 700, 300, 50);
@@ -182,7 +185,9 @@ public class UnitManagePage extends Page {
 		addu.addActionListener(arg0 -> {
 			changing = true;
 			CustomUnit cu = new CustomUnit();
-			Unit u = new Unit(pac.getNextID(Unit.class), jld.getSelectedValue(), cu);
+			AnimCE anim = jld.getSelectedValue();
+			cu.limit = (int) Math.max(0, 5 * Math.round((9.0 / 5.0) * anim.mamodel.confs[1][2] - 1));
+			Unit u = new Unit(pac.getNextID(Unit.class), anim, cu);
 			pac.units.add(u);
 			jlu.setListData(pac.units.toRawArray());
 			jlu.setSelectedValue(u, true);
@@ -278,6 +283,9 @@ public class UnitManagePage extends Page {
 				changing = false;
 			}
 		});
+
+		cmbo.addActionListener(x -> changePanel(new ComboEditPage(getThis(), pac)));
+
 	}
 
 	private void addListeners$2() {
@@ -294,6 +302,7 @@ public class UnitManagePage extends Page {
 			changing = true;
 			CustomUnit cu = new CustomUnit();
 			AnimCE ac = jld.getSelectedValue();
+			cu.limit = (int) Math.max(0, 5 * Math.round((9.0 / 5.0) * ac.mamodel.confs[1][2] - 1));
 			frm = new Form(uni, uni.forms.length, "new form", ac, cu);
 			uni.forms = Arrays.copyOf(uni.forms, uni.forms.length + 1);
 			uni.forms[uni.forms.length - 1] = frm;
@@ -411,6 +420,7 @@ public class UnitManagePage extends Page {
 		add(addl);
 		add(reml);
 		add(jtfl);
+		add(cmbo);
 		jlu.setCellRenderer(new UnitLCR());
 		jlf.setCellRenderer(new AnimLCR());
 		jld.setCellRenderer(new AnimLCR());
@@ -438,7 +448,6 @@ public class UnitManagePage extends Page {
 		} else {
 			edit.setToolTipText(null);
 		}
-
 		remf.setEnabled(b && frm.fid > 0);
 		jtff.setEnabled(b);
 		if (frm != null) {

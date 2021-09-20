@@ -265,6 +265,8 @@ public class BCUWriter extends DataIO {
 		jo.addProperty("preload", MainBCU.preload);
 		jo.addProperty("transparent", ViewBox.Conf.white);
 		jo.addProperty("JOGL", MainBCU.USE_JOGL);
+		jo.addProperty("seconds", MainBCU.seconds);
+		jo.addProperty("prefLv", MainBCU.prefLevel);
 		jo.addProperty("filter", MainBCU.FILTER_TYPE);
 		jo.addProperty("play_sound", BCMusic.play);
 		jo.addProperty("volume_BG", BCMusic.VOL_BG);
@@ -278,6 +280,7 @@ public class BCUWriter extends DataIO {
 		jo.addProperty("author", MainBCU.author);
 		jo.addProperty("rowlayout", CommonStatic.getConfig().twoRow);
 		jo.addProperty("backup_file", CommonStatic.getConfig().backupFile == null ? "None" : CommonStatic.getConfig().backupFile);
+		jo.addProperty("buttonSound", MainBCU.buttonSound);
 		String[] exp = new String[Exporter.curs.length];
 		for (int i = 0; i < exp.length; i++)
 			exp[i] = Exporter.curs[i] == null ? null : Exporter.curs[i].toString();

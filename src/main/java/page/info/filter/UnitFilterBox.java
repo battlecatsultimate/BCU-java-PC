@@ -1,12 +1,14 @@
 package page.info.filter;
 
 import common.battle.data.MaskUnit;
+import common.pack.FixIndexList;
 import common.pack.Identifier;
 import common.pack.PackData;
 import common.pack.UserProfile;
 import common.util.Data;
 import common.util.lang.MultiLangCont;
 import common.util.lang.ProcLang;
+import common.util.unit.Trait;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import main.MainBCU;
@@ -32,13 +34,11 @@ public abstract class UnitFilterBox extends Page {
 		return null;
 	}
 
-	public static UnitFilterBox getNew(Page p, String pack, ArrayList<String> parent) {
-		if(MainBCU.FILTER_TYPE == 0) {
-			return new UFBButton(p, pack, parent);
-		} else if(MainBCU.FILTER_TYPE == 1) {
-			return new UFBList(p, pack, parent);
-		}
-
+	public static UnitFilterBox getNew(Page p, String pack, List<String> parents) {
+		if (MainBCU.FILTER_TYPE == 0)
+			return new UFBButton(p, pack, parents);
+		if (MainBCU.FILTER_TYPE == 1)
+			return new UFBList(p, pack, parents);
 		return null;
 	}
 
@@ -53,7 +53,7 @@ public abstract class UnitFilterBox extends Page {
 		parents = null;
 	}
 
-	protected UnitFilterBox(Page p, String pack, ArrayList<String> parent) {
+	protected UnitFilterBox(Page p, String pack, List<String> parent) {
 		super(p);
 
 		this.pack = pack;
@@ -82,8 +82,8 @@ class UFBButton extends UnitFilterBox {
 		confirm();
 	}
 
-	protected UFBButton(Page p, String pack, ArrayList<String> parent) {
-		super(p, pack, parent);
+	protected UFBButton(Page p, String pack, List<String> parents) {
+		super(p, pack, parents);
 
 		ini();
 		confirm();
@@ -105,22 +105,32 @@ class UFBButton extends UnitFilterBox {
 		AttList.btnDealer(x, y, btns, orop, -1, 0, 1, -1, 2);
 	}
 
+	private final List<Trait> trlis = new ArrayList<>();
+
 	private void confirm() {
 		List<Form> ans = new ArrayList<>();
 		for(PackData p : UserProfile.getAllPacks()) {
 			for (Unit u : p.units.getList())
 				for (Form f : u.forms) {
 					MaskUnit du = f.maxu();
-					int t = du.getType();
+					List<Trait> ct = f.du.getTraits();
 					int a = du.getAbi();
 					boolean b0 = rare[u.rarity].isSelected();
 					boolean b1 = !orop[0].isSelected();
 					for (int i = 0; i < trait.length; i++)
-						if (trait[i].isSelected())
+						if (ct.size() > 0) {
 							if (orop[0].isSelected())
-								b1 |= ((t >> i) & 1) == 1;
-							else
-								b1 &= ((t >> i) & 1) == 1;
+								for (Trait diyt : ct) {
+									b1 |= trlis.get(i).equals(diyt);
+									if (b1)
+										break;
+								}
+							else {
+								b1 &= ct.contains(trlis.get(i));
+								if (!b1)
+									break;
+							}
+						} else b1 = false;
 					boolean b2 = !orop[1].isSelected();
 					for (int i = 0; i < abis.length; i++)
 						if (abis[i].isSelected()) {
@@ -187,6 +197,9 @@ class UFBButton extends UnitFilterBox {
 				continue;
 			trait[i].setIcon(new ImageIcon(v));
 		}
+		FixIndexList.FixIndexMap<Trait> BCtraits = UserProfile.getBCData().traits;
+		for (int i = 0 ; i < BCtraits.size() - 4 ; i++)
+			trlis.add(BCtraits.get(i));
 		for (int i = 0; i < abis.length; i++) {
 			set(abis[i] = new JTG(SABIS[i]));
 			BufferedImage v = UtilPC.getIcon(0, i);
@@ -233,17 +246,13 @@ class UFBList extends UnitFilterBox {
 	private final JList<String> rare = new JList<>(RARITY);
 	private final Vector<String> vt = new Vector<>();
 	private final Vector<String> va = new Vector<>();
-	private final AttList trait = new AttList(3, 0, 1, 2, 3, 4, 5, 6, 7, 8, 12);
+	private final AttList trait = new AttList();
 	private final AttList abis = new AttList(0, 0);
 	private final AttList atkt = new AttList(2, 0);
 	private final JScrollPane jr = new JScrollPane(rare);
-	private final JScrollPane jt = new JScrollPane(trait);
+	private final JScrollPane jt  = new JScrollPane(trait);
 	private final JScrollPane jab = new JScrollPane(abis);
 	private final JScrollPane jat = new JScrollPane(atkt);
-
-	private final int[] traitIndex = {0, 1, 2, 3, 4, 5, 6, 7, 8, 12};
-
-	private final ArrayList<Integer> traitMask = new ArrayList<>();
 
 	protected UFBList(Page p) {
 		super(p);
@@ -252,8 +261,8 @@ class UFBList extends UnitFilterBox {
 		confirm();
 	}
 
-	protected UFBList(Page p, String pack, ArrayList<String> parent) {
-		super(p, pack, parent);
+	protected UFBList(Page p, String pack, List<String> parents) {
+		super(p, pack, parents);
 
 		ini();
 		confirm();
@@ -281,21 +290,32 @@ class UFBList extends UnitFilterBox {
 		set(jat, x, y, 0, 850, 200, 300);
 	}
 
+	private final List<Trait> trlis = new ArrayList<>();
+
 	private void confirm() {
 		List<Form> ans = new ArrayList<>();
 		for(PackData p : UserProfile.getAllPacks()) {
 			for (Unit u : p.units.getList())
 				for (Form f : u.forms) {
 					MaskUnit du = f.maxu();
-					int t = du.getType();
 					int a = du.getAbi();
+					List<Trait> ct = du.getTraits();
 					boolean b0 = rare.isSelectedIndex(u.rarity);
 					boolean b1 = !orop[0].isSelected();
 					for (int i : trait.getSelectedIndices())
-						if (orop[0].isSelected())
-							b1 |= ((t >> traitIndex[i]) & 1) == 1;
-						else
-							b1 &= ((t >> traitIndex[i]) & 1) == 1;
+						if (ct.size() > 0) {
+							if (orop[0].isSelected())
+								for (Trait diyt : ct) {
+									b1 |= trlis.get(i).equals(diyt);
+									if (b1)
+										break;
+								}
+							else {
+								b1 &= ct.contains(trlis.get(i));
+								if (!b1)
+									break;
+							}
+						} else b1 = false;
 					boolean b2 = !orop[1].isSelected();
 					int len = SABIS.length;
 					for (int i : abis.getSelectedIndices())
@@ -344,6 +364,7 @@ class UFBList extends UnitFilterBox {
 					if (b0 & b1 & b2 & b3 & b4 & b5)
 						ans.add(f);
 				}
+
 		}
 		getFront().callBack(ans);
 	}
@@ -351,15 +372,18 @@ class UFBList extends UnitFilterBox {
 	private void ini() {
 		for (int i = 0; i < orop.length; i++)
 			set(orop[i] = new JTG(get(0, "orop")));
-
-		List<String> traitList = new ArrayList<>();
-
-		for(int i : traitIndex ) {
-			traitList.add(TRAIT[i]);
-			traitMask.add(1 << i);
+		FixIndexList.FixIndexMap<Trait> BCtraits = UserProfile.getBCData().traits;
+		for (int i = 0 ; i < BCtraits.size() - 4 ; i++) {
+			trlis.add(BCtraits.get(i));
+			vt.add(TRAIT[i]);
 		}
-
-		vt.addAll(traitList);
+		for (PackData.UserPack pacc : UserProfile.getUserPacks())
+			for (Trait ctra : pacc.traits)
+				if (pack == null || ctra.id.pack.equals(pack) || parents.contains(ctra.id.pack)) {
+					trlis.add(ctra);
+					vt.add(ctra.name);
+				}
+		trait.setIcons(trlis);
 		Collections.addAll(va, SABIS);
 		for (int i = 0; i < Data.PROC_TOT; i++)
 			va.add(ProcLang.get().get(i).abbr_name);

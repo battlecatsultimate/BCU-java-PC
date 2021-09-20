@@ -32,6 +32,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.function.Consumer;
@@ -94,11 +95,11 @@ public class MainBCU {
 		@SuppressWarnings("deprecation")
 		@Override
 		public void initProfile() {
-			LoadPage.prog("read assets");
+			LoadPage.prog("reading assets");
 			AssetLoader.load(LoadPage::prog);
-			LoadPage.prog("read BC data");
+			LoadPage.prog("reading BC data");
 			UserProfile.getBCData().load(LoadPage::prog, LoadPage::prog);
-			LoadPage.prog("read backups");
+			LoadPage.prog("reading backups");
 			Backup.loadBackups();
 
 			Backup restore = Backup.checkRestore();
@@ -112,17 +113,17 @@ public class MainBCU {
 				}
 			}
 
-			LoadPage.prog("read local animations");
+			LoadPage.prog("reading local animations");
 			Workspace.loadAnimations(null);
-			LoadPage.prog("read local animation group data");
+			LoadPage.prog("reading local animation group data");
 			AnimGroup.readGroupData();
-			LoadPage.prog("read packs");
+			LoadPage.prog("reading packs");
 			UserProfile.loadPacks(LoadPage::prog);
-			LoadPage.prog("read basis");
+			LoadPage.prog("reading basis");
 			BasisSet.read();
-			LoadPage.prog("read replays");
+			LoadPage.prog("reading replays");
 			Replay.read();
-			LoadPage.prog("finish reading");
+			LoadPage.prog("finished reading");
 		}
 
 		@Override
@@ -268,16 +269,21 @@ public class MainBCU {
 	}
 
 	public static final int ver = 50047;
+	private static final DecimalFormat df = new DecimalFormat("#.##");
 
-	public static int FILTER_TYPE = 1;
+	public static int FILTER_TYPE = 1, prefLevel = 50;
 	public static final boolean WRITE = !new File("./.project").exists();
 	public static boolean preload = false, trueRun = true, loaded = false, USE_JOGL = false;
-	public static boolean light = true, nimbus = false;
+	public static boolean light = true, nimbus = false, seconds = false, buttonSound = false;
 	public static String author = "";
 	public static ImageBuilder<BufferedImage> builder;
 
 	public static String getTime() {
 		return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+	}
+
+	public static String toSeconds(int in) {
+		return df.format(in / 30.0) + "s";
 	}
 
 	public static void main(String[] args) {
@@ -306,8 +312,7 @@ public class MainBCU {
 			Page.BGCOLOR = new Color(255, 255, 255);
 		}
 
-		MainFrame frame = new MainFrame(Data.revVer(MainBCU.ver));
-		frame.initialize();
+		new MainFrame(Data.revVer(MainBCU.ver)).initialize();
 		new Timer().start();
 
 		MenuBarHandler.initialize();
