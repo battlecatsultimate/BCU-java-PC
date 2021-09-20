@@ -15,27 +15,31 @@ import page.info.filter.UnitFindPage;
 import utilpc.UtilPC;
 
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 public class ComparePage extends Page {
 
     private static final long serialVersionUID = 1L;
 
-    private final JL[] names = new JL[2];
+    private final JL[] names = new JL[3];
+    private final JTF[] lvl = new JTF[names.length];
 
-    private final JL[][] main = new JL[10][3]; // comparing both
-    private final JL[][] unit = new JL[2][3]; // comparing unit
-    private final JL[][] enem = new JL[2][3]; // comparing enemy
+    private final JL[][] main = new JL[10][names.length + 1]; // comparing both
+    private final JL[][] unit = new JL[2][names.length + 1]; // comparing unit
+    private final JL[][] enem = new JL[2][names.length + 1]; // comparing enemy
 
     private final JCB[] boxes = new JCB[main.length + unit.length + enem.length];
 
     private final JBTN back = new JBTN(0, "back");
 
-    private final JBTN sl1e = new JBTN(0, "veif");
-    private final JBTN sl1u = new JBTN(0, "vuif");
-    private final JBTN sl2e = new JBTN(0, "veif");
-    private final JBTN sl2u = new JBTN(0, "vuif");
+    private final JBTN[][] sele = new JBTN[names.length][2];
 
-    private final MaskEntity[] maskEntities = new MaskEntity[2];
+    private final MaskEntity[] maskEntities = new MaskEntity[names.length];
+    private final JL[][] abis = new JL[maskEntities.length][];
+    private final JL[][] proc = new JL[maskEntities.length][];
 
     private EnemyFindPage efp = null;
     private UnitFindPage ufp = null;
@@ -53,10 +57,10 @@ public class ComparePage extends Page {
     private void ini() {
         add(back);
 
-        add(sl1e);
-        add(sl1u);
-        add(sl2e);
-        add(sl2u);
+        for (int i = 0; i < sele.length; i++) {
+            add(sele[i][0] = new JBTN(0, "veif"));
+            add(sele[i][1] = new JBTN(0, "vuif"));
+        }
 
         for (int i = 0; i < boxes.length; i++) {
             boxes[i] = new JCB();
@@ -130,7 +134,7 @@ public class ComparePage extends Page {
         enem[1][0].setText(MainLocale.INFO, "shield");
 
         boxes[main.length + unit.length].setText(MainLocale.INFO, "drop");
-        boxes[1 + main.length + unit.length].setText(MainLocale.INFO, "drop");
+        boxes[1 + main.length + unit.length].setText(MainLocale.INFO, "shield");
 
         addListeners();
     }
@@ -138,22 +142,17 @@ public class ComparePage extends Page {
     private void addListeners() {
         back.addActionListener(x -> changePanel(getFront()));
 
-        sl1e.addActionListener(x -> {
-            changePanel(efp = new EnemyFindPage(getThis()));
-            s = 0;
-        });
-        sl1u.addActionListener(x -> {
-            changePanel(ufp = new UnitFindPage(getThis()));
-            s = 0;
-        });
-        sl2e.addActionListener(x -> {
-            changePanel(efp = new EnemyFindPage(getThis()));
-            s = 1;
-        });
-        sl2u.addActionListener(x -> {
-            changePanel(ufp = new UnitFindPage(getThis()));
-            s = 1;
-        });
+        for (int i = 0; i < sele.length; i++) {
+            int finalI = i;
+            sele[i][0].addActionListener(x -> {
+                changePanel(efp = new EnemyFindPage(getThis()));
+                s = finalI;
+            });
+            sele[i][1].addActionListener(x -> {
+                changePanel(ufp = new UnitFindPage(getThis()));
+                s = finalI;
+            });
+        }
     }
 
     private void reset() {
@@ -208,9 +207,11 @@ public class ComparePage extends Page {
                 double atkLv = b.t().getAtkMulti();
                 double defLv = b.t().getDefMulti();
 
-                MaskEnemy e = maskEntities[index % 2] instanceof MaskEnemy
-                        ? (MaskEnemy) maskEntities[index % 2]
-                        : null;
+                MaskEnemy e = (MaskEnemy) Arrays.stream(maskEntities)
+                        .filter(c -> c instanceof MaskEnemy)
+                        .findFirst()
+                        .orElse(null);
+
                 int overlap = e != null ? e.getType() & f.du.getType() : 0;
                 int checkHealth = (Data.AB_GOOD | Data.AB_RESIST | Data.AB_RESISTS);
                 int checkAttack = (Data.AB_GOOD | Data.AB_MASSIVE | Data.AB_MASSIVES);
@@ -319,25 +320,26 @@ public class ComparePage extends Page {
 
         set(back, x, y, 0, 0, 200, 50);
 
-        int width = 650;
+        int width = 600;
 
-        set(sl1e, x, y, 475, 50, 200, 50);
-        set(sl1u, x, y, 475, 100, 200, 50);
-        set(sl2e, x, y, 475 + width, 50, 200, 50);
-        set(sl2u, x, y, 475 + width, 100, 200, 50);
+        for (int i = 0; i < sele.length; i++) {
+            int w = (width * 3 / 4) + width * i;
+            set(sele[i][0], x, y, w, 50, 200, 50);
+            set(sele[i][1], x, y, w, 100, 200, 50);
+        }
 
         int posY = 150;
 
-        for (JCheckBox b : boxes) {
+        for (JCB b : boxes) {
             posY += 50;
             set(b, x, y, 300 + ((main[0].length - 1) * width), posY, 200, 50);
         }
 
         for (int i = 0; i < names.length; i++)
-            set(names[i], x, y, 250 + (i * width), 150, 650, 50);
+            set(names[i], x, y, 250 + (i * width), 150, width, 50);
 
         posY = 150;
-        for (int i = 0; i < main.length; i++) {
+        for (int i = 0; i < main.length; i++) { // 9
             JL[] d = main[i];
             if (!boxes[i].isSelected()) {
                 for (JL ex : d)
