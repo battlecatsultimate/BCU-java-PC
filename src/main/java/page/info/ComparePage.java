@@ -1,5 +1,6 @@
 package page.info;
 
+import common.CommonStatic;
 import common.battle.BasisSet;
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskEntity;
@@ -15,31 +16,30 @@ import page.info.filter.UnitFindPage;
 import utilpc.UtilPC;
 
 import javax.swing.*;
-import java.util.ArrayList;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 public class ComparePage extends Page {
 
     private static final long serialVersionUID = 1L;
 
     private final JL[] names = new JL[3];
-    private final JTF[] lvl = new JTF[names.length];
+    private final JTF[] level = new JTF[names.length];
 
     private final JL[][] main = new JL[10][names.length + 1]; // comparing both
     private final JL[][] unit = new JL[2][names.length + 1]; // comparing unit
     private final JL[][] enem = new JL[2][names.length + 1]; // comparing enemy
 
-    private final JCB[] boxes = new JCB[main.length + unit.length + enem.length];
+    private final JCB[] boxes = new JCB[main.length + unit.length + enem.length + 1];
 
     private final JBTN back = new JBTN(0, "back");
 
     private final JBTN[][] sele = new JBTN[names.length][2];
 
     private final MaskEntity[] maskEntities = new MaskEntity[names.length];
-    private final JL[][] abis = new JL[maskEntities.length][];
-    private final JL[][] proc = new JL[maskEntities.length][];
+    private final int[][] maskEntityLvl = new int[names.length][6];
 
     private EnemyFindPage efp = null;
     private UnitFindPage ufp = null;
@@ -70,6 +70,12 @@ public class ComparePage extends Page {
 
         for (int i = 0; i < names.length; i++) {
             add(names[i] = new JL("-"));
+        }
+
+        for (int i = 0; i < level.length; i++) {
+            JTF jtf = new JTF("-");
+            jtf.setEnabled(false);
+            add(level[i] = jtf);
         }
 
         for (int i = 0; i < main.length; i++) {
@@ -136,6 +142,8 @@ public class ComparePage extends Page {
         boxes[main.length + unit.length].setText(MainLocale.INFO, "drop");
         boxes[1 + main.length + unit.length].setText(MainLocale.INFO, "shield");
 
+        boxes[boxes.length - 1].setText("ability");
+
         addListeners();
     }
 
@@ -153,6 +161,43 @@ public class ComparePage extends Page {
                 s = finalI;
             });
         }
+
+        for (int i = 0; i < level.length; i++) {
+            JTF jtf = level[i];
+            int finalI = i;
+            jtf.addFocusListener(new FocusAdapter() {
+                @Override
+                public void focusLost(FocusEvent e) {
+                    int[] data = CommonStatic.parseIntsN(jtf.getText().trim().replace("%", ""));
+
+                    if (maskEntities[finalI] instanceof MaskEnemy) {
+                        if (data.length == 1) {
+                            if (data[0] != -1)
+                                maskEntityLvl[finalI][0] = maskEntityLvl[finalI][1] = data[0];
+
+                            jtf.setText(CommonStatic.toArrayFormat(data[0], data[0]) + "%");
+                        } else if (data.length == 2) {
+                            if (data[0] != -1)
+                                maskEntityLvl[finalI][0] = data[0];
+                            if (data[1] != -1)
+                                maskEntityLvl[finalI][1] = data[1];
+
+                            jtf.setText(CommonStatic.toArrayFormat(data[0], data[1]) + "%");
+                        } else {
+                            jtf.setText(CommonStatic.toArrayFormat(maskEntityLvl[finalI][0], maskEntityLvl[finalI][1]) + "%");
+                        }
+                    } else {
+                        Form f = ((MaskUnit) maskEntities[finalI]).getPack();
+                        maskEntityLvl[finalI] = f.regulateLv(data, maskEntityLvl[finalI]);
+                        String[] strs = UtilPC.lvText(f, maskEntityLvl[finalI]);
+                        jtf.setText(strs[0]);
+                    }
+
+
+                    reset();
+                }
+            });
+        }
     }
 
     private void reset() {
@@ -164,12 +209,18 @@ public class ComparePage extends Page {
             if (m == null) {
                 names[i].setIcon(null);
                 names[i].setText("-");
+                level[i].setEnabled(false);
+                level[i].setText("-");
                 for (JL[] jls : main)
                     jls[index].setText("-");
                 for (JL[] jls : unit)
                     jls[index].setText("-");
+                for (JL[] jls : enem)
+                    jls[index].setText("-");
                 continue;
             }
+
+            boolean state = level[i].isEnabled();
 
             int hp = m.getHp();
             int atk = 0;
@@ -179,19 +230,23 @@ public class ComparePage extends Page {
 
             if (m instanceof MaskEnemy) {
                 MaskEnemy enemy = (MaskEnemy) m;
+
+                int[] multi = state ? maskEntityLvl[i] : (maskEntityLvl[i] = new int[]{100, 100, 0, 0, 0, 0});
+                double mul = (multi[0] * enemy.multi(b)) / 100.0;
+                double mula = (multi[1] * enemy.multi(b)) / 100.0;
+
                 for (int[] atkDatum : atkData) {
                     if (atkString.length() > 0) {
                         atkString.append(" / ");
                         preString.append(" / ");
                     }
 
-                    int a = Math.round(atkDatum[0]);
-                    atkString.append(a);
+                    atkString.append(Math.round(atkDatum[0] * mula));
                     preString.append(atkDatum[1]).append("f");
                 }
 
-                main[0][index].setText(hp + "");
-                main[4][index].setText((int) (m.allAtk() * 30.0 / m.getItv()) + "");
+                main[0][index].setText((int) (hp * mul) + "");
+                main[4][index].setText((int) (m.allAtk() * mula * 30.0 / m.getItv()) + "");
 
                 enem[0][index].setText(Math.floor(enemy.getDrop() * b.t().getDropMulti()) / 100 + "");
                 enem[1][index].setText(enemy.getShield() + "");
@@ -200,7 +255,7 @@ public class ComparePage extends Page {
                     jls[index].setText("-");
             } else if (m instanceof MaskUnit) {
                 Form f = ((MaskUnit) m).getPack();
-                int[] multi = f.unit.getPrefLvs();
+                int[] multi = state ? maskEntityLvl[i] : (maskEntityLvl[i] = f.unit.getPrefLvs());
                 EForm ef = new EForm(f, multi);
 
                 double mul = f.unit.lv.getMult(multi[0]);
@@ -282,6 +337,8 @@ public class ComparePage extends Page {
                 }
             }
 
+            level[i].setEnabled(true);
+
             names[i].setIcon(UtilPC.getIcon(m.getPack().anim.getEdi()));
             names[i].setText(m.getPack().toString());
 
@@ -301,16 +358,44 @@ public class ComparePage extends Page {
         if (s == -1)
             return;
 
-        if (efp != null) {
-            Enemy e = efp.getSelected();
-            maskEntities[s] = e == null ? null : e.de;
-            efp = null;
-        } else if (ufp != null) {
-            Form f = ufp.getForm();
-            maskEntities[s] = f == null ? null : f.du;
-            ufp = null;
+        MaskEntity ent = (efp != null && efp.getSelected() != null)
+                ? efp.getSelected().de
+                : (ufp != null && ufp.getForm() != null)
+                ? ufp.getForm().du
+                : null;
+
+        if (ent instanceof MaskEnemy) {
+            int[] data = maskEntities[s] instanceof MaskEnemy
+                    ? CommonStatic.parseIntsN(level[s].getText().trim().replace("%", ""))
+                    : new int[]{100, 100};
+            if (data.length == 1) {
+                if (data[0] != -1)
+                    maskEntityLvl[s][0] = maskEntityLvl[s][1] = data[0];
+
+                level[s].setText(CommonStatic.toArrayFormat(data[0], data[0]) + "%");
+            } else if (data.length == 2) {
+                if (data[0] != -1)
+                    maskEntityLvl[s][0] = data[0];
+                if (data[1] != -1)
+                    maskEntityLvl[s][1] = data[1];
+
+                level[s].setText(CommonStatic.toArrayFormat(data[0], data[1]) + "%");
+            } else {
+                level[s].setText(CommonStatic.toArrayFormat(maskEntityLvl[s][0], maskEntityLvl[s][1]) + "%");
+            }
+        } else if (ent != null) {
+            Form f = ((MaskUnit) ent).getPack();
+            int[] data = maskEntities[s] instanceof MaskUnit
+                    ? CommonStatic.parseIntsN(level[s].getText())
+                    : f.unit.getPrefLvs();
+            maskEntityLvl[s] = f.regulateLv(data, maskEntityLvl[s]);
+            String[] strs = UtilPC.lvText(f, maskEntityLvl[s]);
+            level[s].setText(strs[0]);
         }
 
+        maskEntities[s] = ent;
+        efp = null;
+        ufp = null;
         reset();
     }
 
@@ -328,17 +413,19 @@ public class ComparePage extends Page {
             set(sele[i][1], x, y, w, 100, 200, 50);
         }
 
-        int posY = 150;
+        int posY = 200;
 
         for (JCB b : boxes) {
             posY += 50;
-            set(b, x, y, 300 + ((main[0].length - 1) * width), posY, 200, 50);
+            set(b, x, y, 275 + ((main[0].length - 1) * width), posY, 200, 50);
         }
 
         for (int i = 0; i < names.length; i++)
-            set(names[i], x, y, 250 + (i * width), 150, width, 50);
+            set(names[i], x, y, 250 + (i * width), 200, width, 50);
+        for (int i = 0; i < level.length; i++)
+            set(level[i], x, y, 250 + (i * width), 150, width, 50);
 
-        posY = 150;
+        posY = 200;
         for (int i = 0; i < main.length; i++) { // 9
             JL[] d = main[i];
             if (!boxes[i].isSelected()) {
