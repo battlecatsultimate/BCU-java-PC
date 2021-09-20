@@ -326,6 +326,7 @@ public class ConfigPage extends Page {
 		refe.setSelected(cfg().ref);
 		musc.setSelected(BCMusic.play);
 		jogl.setSelected(MainBCU.USE_JOGL);
+		btnsnd.setSelected(MainBCU.buttonSound);
 		jsba.setValue(CommonStatic.getConfig().maxBackup);
 		if (!MainBCU.nimbus) {
 			theme.setEnabled(false);
