@@ -11,6 +11,7 @@ import common.util.unit.EForm;
 import common.util.unit.Form;
 import common.util.unit.Level;
 import common.util.unit.Trait;
+import main.MainBCU;
 import page.*;
 import page.info.filter.EnemyFindPage;
 import page.info.filter.UnitFindPage;
@@ -155,10 +156,10 @@ public class ComparePage extends Page {
         boxes[8].setText("TBA");
         boxes[9].setText(MainLocale.INFO, "speed");
 
-        unit[0][0].setText("CD");
+        unit[0][0].setText(MainLocale.INFO, "cdo");
         unit[1][0].setText(MainLocale.INFO, "price");
 
-        boxes[main.length].setText("CD");
+        boxes[main.length].setText(MainLocale.INFO, "cdo");
         boxes[1 + main.length].setText(MainLocale.INFO, "price");
 
         enem[0][0].setText(MainLocale.INFO, "drop");
@@ -278,7 +279,11 @@ public class ComparePage extends Page {
                     }
 
                     atkString.append(Math.round(atkDatum[0] * mula));
-                    preString.append(atkDatum[1]).append("f");
+
+                    if (MainBCU.seconds)
+                        preString.append(MainBCU.toSeconds(atkDatum[1]));
+                    else
+                        preString.append(atkDatum[1]).append("f");
                 }
 
                 main[0][index].setText((int) (hp * mul) + "");
@@ -332,7 +337,10 @@ public class ComparePage extends Page {
                         a = (int) (a * mu.getPCoin().getAtkMultiplication(multi));
 
                     atkString.append(a);
-                    preString.append(atkDatum[1]).append("f");
+                    if (MainBCU.seconds)
+                        preString.append(MainBCU.toSeconds(atkDatum[1]));
+                    else
+                        preString.append(atkDatum[1]).append("f");
                     atk += a;
 
                     if (overlap && (mu.getAbi() & checkAttack) > 0) {
@@ -348,7 +356,11 @@ public class ComparePage extends Page {
                     }
                 }
 
-                unit[0][index].setText(b.t().getFinRes(mu.getRespawn()) + "f");
+                int respawn = b.t().getFinRes(mu.getRespawn());
+                if (MainBCU.seconds)
+                    unit[0][index].setText(MainBCU.toSeconds(respawn));
+                else
+                    unit[0][index].setText(respawn + "f");
                 unit[1][index].setText(ef.getPrice(1) + "");
 
                 for (JL[] jls : enem)
@@ -394,9 +406,15 @@ public class ComparePage extends Page {
             main[2][index].setText(m.getRange() + "");
             main[3][index].setText(atkString.toString());
             main[5][index].setText(preString.toString());
-            main[6][index].setText(m.getPost() + "f");
-            main[7][index].setText(m.getItv() + "f");
-            main[8][index].setText(m.getTBA() + "f");
+            if (MainBCU.seconds) {
+                main[6][index].setText(MainBCU.toSeconds(m.getPost()));
+                main[7][index].setText(MainBCU.toSeconds(m.getItv()));
+                main[8][index].setText(MainBCU.toSeconds(m.getTBA()));
+            } else {
+                main[6][index].setText(m.getPost() + "f");
+                main[7][index].setText(m.getItv() + "f");
+                main[8][index].setText(m.getTBA() + "f");
+            }
             main[9][index].setText(m.getSpeed() + "");
 
             ArrayList<Trait> trs = m.getTraits();
