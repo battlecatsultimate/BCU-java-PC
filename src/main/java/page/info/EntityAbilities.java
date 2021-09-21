@@ -20,9 +20,11 @@ public class EntityAbilities extends Page {
     private JLabel[] abis, proc;
     private JLabel pcoin;
 
-    public EntityAbilities(Page p, MaskEntity entity, int[] lv) {
+    public EntityAbilities(Page p, MaskEntity me, int[] lv) {
         super(p);
-        me = entity;
+        this.me = (me instanceof MaskUnit && ((MaskUnit) me).getPack().getPCoin() != null)
+                ? ((MaskUnit) me).getPack().getPCoin().improve(lv)
+                : me;
         lvl = lv;
 
         ini();
@@ -30,6 +32,7 @@ public class EntityAbilities extends Page {
     }
 
     private void ini() {
+        boolean isEnemy = me instanceof MaskEnemy;
         List<String> a = Interpret.getAbi(me);
         abis = new JLabel[a.size()];
         for (int i = 0; i < a.size(); i++) {
@@ -37,29 +40,18 @@ public class EntityAbilities extends Page {
             abis[i].setBorder(BorderFactory.createEtchedBorder());
         }
 
-        if (me instanceof MaskEnemy) {
-            List<String> ls = Interpret.getProc(me, true, lvl[0] / 100.0);
-            proc = new JLabel[ls.size()];
-            for (int i = 0; i < ls.size(); i++) {
-                add(proc[i] = new JLabel(ls.get(i)));
-                proc[i].setBorder(BorderFactory.createEtchedBorder());
-            }
-        } else {
-            boolean pc = ((MaskUnit) me).getPack().getPCoin() != null;
-            MaskUnit mu = pc ? ((MaskUnit) me).getPack().getPCoin().improve(lvl) : ((MaskUnit) me);
+        List<String> ls = Interpret.getProc(me, isEnemy, lvl[0] / 100.0);
+        proc = new JLabel[ls.size()];
+        for (int i = 0; i < ls.size(); i++) {
+            add(proc[i] = new JLabel(ls.get(i)));
+            proc[i].setBorder(BorderFactory.createEtchedBorder());
+        }
 
-            List<String> ls = Interpret.getProc(mu, false, 1.0);
-            proc = new JLabel[ls.size()];
-            for (int i = 0; i < ls.size(); i++) {
-                add(proc[i] = new JLabel(ls.get(i)));
-                proc[i].setBorder(BorderFactory.createEtchedBorder());
-            }
-            if (pc) {
-                String[] strs = UtilPC.lvText(mu.getPack(), lvl);
-                add(pcoin = new JLabel(strs[1]));
+        if (!isEnemy && ((MaskUnit) me).getPack().getPCoin() != null) {
+            String[] strs = UtilPC.lvText(((MaskUnit) me).getPack(), lvl);
+            add(pcoin = new JLabel(strs[1]));
 
-                pcoin.setBorder(BorderFactory.createEtchedBorder());
-            }
+            pcoin.setBorder(BorderFactory.createEtchedBorder());
         }
 
         for (JLabel jl : abis) add(jl);

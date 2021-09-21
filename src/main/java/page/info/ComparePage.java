@@ -266,8 +266,13 @@ public class ComparePage extends Page {
                 for (JL[] jls : unit)
                     jls[index].setText("-");
             } else if (m instanceof MaskUnit) {
-                Form f = ((MaskUnit) m).getPack();
-                int[] multi = state ? maskEntityLvl[i] : (maskEntityLvl[i] = f.unit.getPrefLvs());
+                int[] multi = state
+                        ? maskEntityLvl[i]
+                        : (maskEntityLvl[i] = ((MaskUnit) m).getPack().unit.getPrefLvs());
+                MaskUnit mu = ((MaskUnit) m).getPack().getPCoin() != null
+                        ? ((MaskUnit) m).getPack().getPCoin().improve(multi)
+                        : ((MaskUnit) m);
+                Form f = mu.getPack();
                 EForm ef = new EForm(f, multi);
 
                 abilityPanes[i].setViewportView(abilities[i] = new EntityAbilities(getFront(), m, multi));
@@ -281,7 +286,7 @@ public class ComparePage extends Page {
                         .findFirst()
                         .orElse(null);
 
-                int overlap = e != null ? e.getType() & f.du.getType() : 0;
+                int overlap = e != null ? e.getType() & mu.getType() : 0;
                 int checkHealth = (Data.AB_GOOD | Data.AB_RESIST | Data.AB_RESISTS);
                 int checkAttack = (Data.AB_GOOD | Data.AB_MASSIVE | Data.AB_MASSIVES);
 
@@ -303,45 +308,45 @@ public class ComparePage extends Page {
                     preString.append(atkDatum[1]).append("f");
                     atk += a;
 
-                    if (overlap > 0 && (f.du.getAbi() & checkAttack) > 0) {
+                    if (overlap > 0 && (mu.getAbi() & checkAttack) > 0) {
                         int effectiveDMG = a;
-                        if ((f.du.getAbi() & Data.AB_MASSIVES) > 0)
+                        if ((mu.getAbi() & Data.AB_MASSIVES) > 0)
                             effectiveDMG *= b.t().getMASSIVESATK(overlap);
-                        if ((f.du.getAbi() & Data.AB_MASSIVE) > 0)
+                        if ((mu.getAbi() & Data.AB_MASSIVE) > 0)
                             effectiveDMG *= b.t().getMASSIVEATK(overlap);
-                        if ((f.du.getAbi() & Data.AB_GOOD) > 0) {
+                        if ((mu.getAbi() & Data.AB_GOOD) > 0) {
                             effectiveDMG *= b.t().getGOODATK(overlap);
                         }
                         atkString.append(" (").append(effectiveDMG).append(")");
                     }
                 }
 
-                unit[0][index].setText(b.t().getFinRes(f.du.getRespawn()) + "f");
+                unit[0][index].setText(b.t().getFinRes(mu.getRespawn()) + "f");
                 unit[1][index].setText(ef.getPrice(1) + "");
 
                 for (JL[] jls : enem)
                     jls[index].setText("-");
 
-                if (overlap > 0 && (f.du.getAbi() & checkHealth) > 0) {
+                if (overlap > 0 && (mu.getAbi() & checkHealth) > 0) {
                     int effectiveHP = hp;
 
-                    if ((f.du.getAbi() & Data.AB_RESISTS) > 0)
+                    if ((mu.getAbi() & Data.AB_RESISTS) > 0)
                         effectiveHP /= b.t().getRESISTSDEF(overlap);
-                    if ((f.du.getAbi() & Data.AB_RESIST) > 0)
-                        effectiveHP /= b.t().getRESISTDEF(overlap, f.du, new Level(multi));
-                    if ((f.du.getAbi() & Data.AB_GOOD) > 0) {
-                        effectiveHP /= b.t().getGOODDEF(overlap, f.du, new Level(multi));
+                    if ((mu.getAbi() & Data.AB_RESIST) > 0)
+                        effectiveHP /= b.t().getRESISTDEF(overlap, mu, new Level(multi));
+                    if ((mu.getAbi() & Data.AB_GOOD) > 0) {
+                        effectiveHP /= b.t().getGOODDEF(overlap, mu, new Level(multi));
                     }
 
                     main[0][index].setText(hp + " (" + effectiveHP + ")");
                 } else {
                     main[0][index].setText(hp + "");
                 }
-                if (overlap > 0 && (f.du.getAbi() & checkAttack) > 0) {
+                if (overlap > 0 && (mu.getAbi() & checkAttack) > 0) {
                     int effectiveDMG = atk;
-                    if ((f.du.getAbi() & Data.AB_MASSIVE) > 0)
+                    if ((mu.getAbi() & Data.AB_MASSIVE) > 0)
                         effectiveDMG *= b.t().getMASSIVEATK(overlap);
-                    if ((f.du.getAbi() & Data.AB_GOOD) > 0) {
+                    if ((mu.getAbi() & Data.AB_GOOD) > 0) {
                         effectiveDMG *= b.t().getGOODATK(overlap);
                     }
                     main[4][index].setText((int) (atk * 30.0 / m.getItv())
