@@ -5,10 +5,12 @@ import common.battle.BasisSet;
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskEntity;
 import common.battle.data.MaskUnit;
+import common.battle.entity.EUnit;
 import common.util.Data;
 import common.util.unit.EForm;
 import common.util.unit.Form;
 import common.util.unit.Level;
+import common.util.unit.Trait;
 import page.*;
 import page.info.filter.EnemyFindPage;
 import page.info.filter.UnitFindPage;
@@ -18,7 +20,9 @@ import utilpc.UtilPC;
 import javax.swing.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 public class ComparePage extends Page {
@@ -33,7 +37,7 @@ public class ComparePage extends Page {
     private final JL[][] main = new JL[10][names.length + 1]; // stats on both
     private final JL[][] seco = new JL[1][names.length + 1]; // stats after others
     private final JL[][] unit = new JL[2][names.length + 1]; // stats on unit
-    private final JL[][] enem = new JL[2][names.length + 1]; // stats on enemy
+    private final JL[][] enem = new JL[1][names.length + 1]; // stats on enemy
 
     private final JCB[] boxes = new JCB[main.length + unit.length + enem.length + seco.length + 1];
 
@@ -158,10 +162,8 @@ public class ComparePage extends Page {
         boxes[1 + main.length].setText(MainLocale.INFO, "price");
 
         enem[0][0].setText(MainLocale.INFO, "drop");
-        enem[1][0].setText(MainLocale.INFO, "shield");
 
         boxes[main.length + unit.length].setText(MainLocale.INFO, "drop");
-        boxes[1 + main.length + unit.length].setText(MainLocale.INFO, "shield");
 
         seco[0][0].setText(MainLocale.INFO, "trait");
 
@@ -283,16 +285,15 @@ public class ComparePage extends Page {
                 main[4][index].setText((int) (m.allAtk() * mula * 30.0 / m.getItv()) + "");
 
                 enem[0][index].setText(Math.floor(enemy.getDrop() * b.t().getDropMulti()) / 100 + "");
-                enem[1][index].setText(enemy.getShield() + "");
 
                 for (JL[] jls : unit)
                     jls[index].setText("-");
             } else if (m instanceof MaskUnit) {
                 int[] multi = state
                         ? maskEntityLvl[i]
-                        : (maskEntityLvl[i] = ((MaskUnit) m).getPack().unit.getPrefLvs());
-                MaskUnit mu = (MaskUnit) (m = ((MaskUnit) m).getPack().getPCoin() != null
-                                        ? ((MaskUnit) m).getPack().getPCoin().improve(multi)
+                        : (maskEntityLvl[i] = ((MaskUnit) m).getPack().getPrefLvs());
+                MaskUnit mu = (MaskUnit) (m = ((MaskUnit) m).getPCoin() != null
+                                        ? ((MaskUnit) m).getPCoin().improve(multi)
                                         : ((MaskUnit) m));
                 Form f = mu.getPack();
                 EForm ef = new EForm(f, multi);
@@ -308,13 +309,17 @@ public class ComparePage extends Page {
                         .findFirst()
                         .orElse(null);
 
-                int overlap = e != null ? e.getType() & mu.getType() : 0;
+                ArrayList<Trait> traits = e != null ? new ArrayList<>(e.getTraits()) : null;
+                if (traits != null)
+                    traits.retainAll(mu.getTraits());
+                boolean overlap = traits != null && traits.size() > 0;
+
                 int checkHealth = (Data.AB_GOOD | Data.AB_RESIST | Data.AB_RESISTS);
                 int checkAttack = (Data.AB_GOOD | Data.AB_MASSIVE | Data.AB_MASSIVES);
 
                 hp = (int) (Math.round(hp * mul) * defLv);
-                if (f.getPCoin() != null)
-                    hp = (int) (hp * f.getPCoin().getHPMultiplication(multi));
+                if (mu.getPCoin() != null)
+                    hp = (int) (hp * mu.getPCoin().getHPMultiplication(multi));
 
                 for (int[] atkDatum : atkData) {
                     if (atkString.length() > 0) {
@@ -323,21 +328,21 @@ public class ComparePage extends Page {
                     }
 
                     int a = (int) (Math.round(atkDatum[0] * mul) * atkLv);
-                    if (f.getPCoin() != null)
-                        a = (int) (a * f.getPCoin().getAtkMultiplication(multi));
+                    if (mu.getPCoin() != null)
+                        a = (int) (a * mu.getPCoin().getAtkMultiplication(multi));
 
                     atkString.append(a);
                     preString.append(atkDatum[1]).append("f");
                     atk += a;
 
-                    if (overlap > 0 && (mu.getAbi() & checkAttack) > 0) {
+                    if (overlap && (mu.getAbi() & checkAttack) > 0) {
                         int effectiveDMG = a;
                         if ((mu.getAbi() & Data.AB_MASSIVES) > 0)
-                            effectiveDMG *= b.t().getMASSIVESATK(overlap);
+                            effectiveDMG *= b.t().getMASSIVESATK(traits);
                         if ((mu.getAbi() & Data.AB_MASSIVE) > 0)
-                            effectiveDMG *= b.t().getMASSIVEATK(overlap);
+                            effectiveDMG *= b.t().getMASSIVEATK(traits);
                         if ((mu.getAbi() & Data.AB_GOOD) > 0) {
-                            effectiveDMG *= b.t().getGOODATK(overlap);
+                            effectiveDMG *= b.t().getGOODATK(traits);
                         }
                         atkString.append(" (").append(effectiveDMG).append(")");
                     }
@@ -349,27 +354,29 @@ public class ComparePage extends Page {
                 for (JL[] jls : enem)
                     jls[index].setText("-");
 
-                if (overlap > 0 && (mu.getAbi() & checkHealth) > 0) {
+                if (traits != null && traits.size() > 0 && (mu.getAbi() & checkHealth) > 0) {
                     int effectiveHP = hp;
 
                     if ((mu.getAbi() & Data.AB_RESISTS) > 0)
-                        effectiveHP /= b.t().getRESISTSDEF(overlap);
+                        effectiveHP /= b.t().getRESISTSDEF(traits);
                     if ((mu.getAbi() & Data.AB_RESIST) > 0)
-                        effectiveHP /= b.t().getRESISTDEF(overlap, mu, new Level(multi));
+                        effectiveHP /= b.t().getRESISTDEF(e.getTraits(), mu.getTraits(), null, new Level(multi));
                     if ((mu.getAbi() & Data.AB_GOOD) > 0) {
-                        effectiveHP /= b.t().getGOODDEF(overlap, mu, new Level(multi));
+                        effectiveHP /= b.t().getGOODDEF(e.getTraits(), mu.getTraits(), null, new Level(multi));
                     }
 
                     main[0][index].setText(hp + " (" + effectiveHP + ")");
                 } else {
                     main[0][index].setText(hp + "");
                 }
-                if (overlap > 0 && (mu.getAbi() & checkAttack) > 0) {
+                if (overlap && (mu.getAbi() & checkAttack) > 0) {
                     int effectiveDMG = atk;
+                    if ((mu.getAbi() & Data.AB_MASSIVES) > 0)
+                        effectiveDMG *= b.t().getMASSIVESATK(traits);
                     if ((mu.getAbi() & Data.AB_MASSIVE) > 0)
-                        effectiveDMG *= b.t().getMASSIVEATK(overlap);
+                        effectiveDMG *= b.t().getMASSIVEATK(traits);
                     if ((mu.getAbi() & Data.AB_GOOD) > 0) {
-                        effectiveDMG *= b.t().getGOODATK(overlap);
+                        effectiveDMG *= b.t().getGOODATK(traits);
                     }
                     main[4][index].setText((int) (atk * 30.0 / m.getItv())
                             + " (" + (int) (effectiveDMG * 30.0 / m.getItv()) + ")");
@@ -392,7 +399,20 @@ public class ComparePage extends Page {
             main[8][index].setText(m.getTBA() + "f");
             main[9][index].setText(m.getSpeed() + "");
 
-            seco[0][index].setText(Interpret.getTrait(m.getType(), m instanceof MaskEnemy ? ((MaskEnemy) m).getStar() : 0));
+            ArrayList<Trait> trs = m.getTraits();
+            trs.sort(Comparator.comparingInt(t -> t.id.id));
+            trs.sort(Comparator.comparing(t -> t.id.pack));
+            trs.sort(Comparator.comparing(t -> !t.BCTrait));
+            String[] TraitBox = new String[trs.size()];
+            for (int t = 0; t < trs.size(); t++) {
+                Trait trait = m.getTraits().get(t);
+                if (trait.BCTrait)
+                    TraitBox[t] = Interpret.TRAIT[trait.id.id];
+                else
+                    TraitBox[t] = trait.name;
+            }
+
+            seco[0][index].setText(Interpret.getTrait(TraitBox, m instanceof MaskEnemy ? ((MaskEnemy) m).getStar() : 0));
         }
 
         requireResize();
@@ -432,7 +452,7 @@ public class ComparePage extends Page {
             Form f = ((MaskUnit) ent).getPack();
             int[] data = maskEntities[s] instanceof MaskUnit
                     ? CommonStatic.parseIntsN(level[s].getText())
-                    : f.unit.getPrefLvs();
+                    : f.getPrefLvs();
             maskEntityLvl[s] = f.regulateLv(data, maskEntityLvl[s]);
             String[] strs = UtilPC.lvText(f, maskEntityLvl[s]);
             level[s].setText(strs[0]);

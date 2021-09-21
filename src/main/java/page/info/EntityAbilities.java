@@ -9,6 +9,7 @@ import utilpc.Interpret;
 import utilpc.UtilPC;
 
 import javax.swing.*;
+import java.util.Arrays;
 import java.util.List;
 
 public class EntityAbilities extends Page {
@@ -17,13 +18,13 @@ public class EntityAbilities extends Page {
 
     private final MaskEntity me;
     private final int[] lvl;
-    private JLabel[] abis, proc;
+    private JLabel[] proc;
     private JLabel pcoin;
 
     public EntityAbilities(Page p, MaskEntity me, int[] lv) {
         super(p);
-        this.me = (me instanceof MaskUnit && ((MaskUnit) me).getPack().getPCoin() != null)
-                ? ((MaskUnit) me).getPack().getPCoin().improve(lv)
+        this.me = (me instanceof MaskUnit && ((MaskUnit) me).getPCoin() != null)
+                ? ((MaskUnit) me).getPCoin().improve(lv)
                 : me;
         lvl = lv;
 
@@ -33,28 +34,22 @@ public class EntityAbilities extends Page {
 
     private void ini() {
         boolean isEnemy = me instanceof MaskEnemy;
-        List<String> a = Interpret.getAbi(me);
-        abis = new JLabel[a.size()];
-        for (int i = 0; i < a.size(); i++) {
-            add(abis[i] = new JLabel(a.get(i)));
-            abis[i].setBorder(BorderFactory.createEtchedBorder());
-        }
-
-        List<String> ls = Interpret.getProc(me, isEnemy, lvl[0] / 100.0);
+        List<Interpret.ProcDisplay> ls = Interpret.getAbi(me);
+        ls.addAll(Interpret.getProc(me, isEnemy, Arrays.stream(lvl).mapToDouble(x -> x).toArray()));
         proc = new JLabel[ls.size()];
         for (int i = 0; i < ls.size(); i++) {
-            add(proc[i] = new JLabel(ls.get(i)));
+            Interpret.ProcDisplay disp = ls.get(i);
+            add(proc[i] = new JLabel(disp.toString()));
             proc[i].setBorder(BorderFactory.createEtchedBorder());
+            proc[i].setIcon(disp.getIcon());
         }
 
-        if (!isEnemy && ((MaskUnit) me).getPack().getPCoin() != null) {
+        if (!isEnemy && ((MaskUnit) me).getPCoin() != null) {
             String[] strs = UtilPC.lvText(((MaskUnit) me).getPack(), lvl);
             add(pcoin = new JLabel(strs[1]));
 
             pcoin.setBorder(BorderFactory.createEtchedBorder());
         }
-
-        for (JLabel jl : abis) add(jl);
         for (JLabel jl : proc) add(jl);
     }
 
@@ -63,10 +58,6 @@ public class EntityAbilities extends Page {
         setBounds(0, 0, x, y);
 
         int posY = 0;
-        for (JLabel abi : abis) {
-            set(abi, x, y, 0, posY, 550, 50);
-            posY += 50;
-        }
         for (JLabel jLabel : proc) {
             set(jLabel, x, y, 0, posY, 550, 50);
             posY += 50;
@@ -77,10 +68,10 @@ public class EntityAbilities extends Page {
     }
 
     public int getPWidth() {
-        return (abis.length + proc.length + (pcoin != null ? 1 : 0)) > 0 ? 550 : 0;
+        return (proc.length + (pcoin != null ? 1 : 0)) > 0 ? 550 : 0;
     }
 
     public int getPHeight() {
-        return (abis.length + proc.length + (pcoin != null ? 1 : 0)) * 50;
+        return (proc.length + (pcoin != null ? 1 : 0)) * 50;
     }
 }
