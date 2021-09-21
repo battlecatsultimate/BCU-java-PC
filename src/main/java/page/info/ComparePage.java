@@ -287,15 +287,13 @@ public class ComparePage extends Page {
 
                 for (JL[] jls : unit)
                     jls[index].setText("-");
-
-                seco[0][index].setText(Interpret.getTrait(m.getType(), enemy.getStar()));
             } else if (m instanceof MaskUnit) {
                 int[] multi = state
                         ? maskEntityLvl[i]
                         : (maskEntityLvl[i] = ((MaskUnit) m).getPack().unit.getPrefLvs());
-                MaskUnit mu = ((MaskUnit) m).getPack().getPCoin() != null
-                        ? ((MaskUnit) m).getPack().getPCoin().improve(multi)
-                        : ((MaskUnit) m);
+                MaskUnit mu = (MaskUnit) (m = ((MaskUnit) m).getPack().getPCoin() != null
+                                        ? ((MaskUnit) m).getPack().getPCoin().improve(multi)
+                                        : ((MaskUnit) m));
                 Form f = mu.getPack();
                 EForm ef = new EForm(f, multi);
 
@@ -378,8 +376,6 @@ public class ComparePage extends Page {
                 } else {
                     main[4][index].setText((int) (atk * 30.0 / m.getItv()) + "");
                 }
-
-                seco[0][index].setText(Interpret.getTrait(mu.getType(), 0));
             }
 
             level[i].setEnabled(true);
@@ -395,6 +391,8 @@ public class ComparePage extends Page {
             main[7][index].setText(m.getItv() + "f");
             main[8][index].setText(m.getTBA() + "f");
             main[9][index].setText(m.getSpeed() + "");
+
+            seco[0][index].setText(Interpret.getTrait(m.getType(), m instanceof MaskEnemy ? ((MaskEnemy) m).getStar() : 0));
         }
 
         requireResize();
