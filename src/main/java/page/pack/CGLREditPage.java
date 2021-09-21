@@ -15,10 +15,6 @@ import page.info.filter.UnitFindPage;
 import page.support.UnitLCR;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.ArrayList;
@@ -131,7 +127,7 @@ public class CGLREditPage extends Page {
 
 		vuif.addActionListener(arg0 -> {
 			if (ufp == null)
-				ufp = new UnitFindPage(getThis(),pack.getSID(), pack.desc.dependency);
+				ufp = new UnitFindPage(getThis(), pack.getSID(), pack.desc.dependency);
 			changePanel(ufp);
 		});
 

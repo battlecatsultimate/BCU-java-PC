@@ -1,5 +1,6 @@
 package page.info;
 
+import common.util.stage.MapColc;
 import common.util.stage.RandStage;
 import common.util.stage.Stage;
 import page.JBTN;
@@ -7,8 +8,6 @@ import page.Page;
 import page.battle.BattleSetupPage;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 public class StageRandPage extends Page {
 
@@ -19,9 +18,11 @@ public class StageRandPage extends Page {
 
 	private final JList<String> jls = new JList<>();
 	private final JScrollPane jsps = new JScrollPane(jls);
+	private final MapColc stages;
 
-	protected StageRandPage(Page p) {
+	protected StageRandPage(Page p, MapColc mc) {
 		super(p);
+		stages = mc == null ? MapColc.DefMapColc.getMap("N") : mc;
 
 		ini();
 		resized();
@@ -38,21 +39,16 @@ public class StageRandPage extends Page {
 	private void addListeners() {
 		back.setLnr(e -> changePanel(getFront()));
 
-		jls.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (jls.getValueIsAdjusting())
-					return;
-				if (jls.getSelectedValue() == null)
-					jls.setSelectedIndex(0);
-			}
-
+		jls.addListSelectionListener(e -> {
+			if (jls.getValueIsAdjusting())
+				return;
+			if (jls.getSelectedValue() == null)
+				jls.setSelectedIndex(0);
 		});
 
 		strt.setLnr(x -> {
 			int s = jls.getSelectedIndex();
-			Stage sta = RandStage.getStage(s);
+			Stage sta = RandStage.getStage(stages, s);
 			changePanel(new BattleSetupPage(getThis(), sta, 0));
 		});
 	}
@@ -61,8 +57,8 @@ public class StageRandPage extends Page {
 		add(back);
 		add(strt);
 		add(jsps);
-		String[] as = new String[48];
-		for (int i = 0; i < 48; i++)
+		String[] as = new String[stages.maps.size()];
+		for (int i = 0; i < as.length; i++)
 			as[i] = "level " + (i + 1);
 		jls.setListData(as);
 		String[] ts = new String[5];

@@ -159,7 +159,7 @@ public class StageEditPage extends Page {
 
 		back.setLnr(x -> changePanel(getFront()));
 
-		strt.setLnr(x -> changePanel(new BattleSetupPage(getThis(), stage)));
+		strt.setLnr(x -> changePanel(new BattleSetupPage(getThis(), stage, 1)));
 
 		advs.setLnr(x -> changePanel(new AdvStEditPage(getThis(), stage)));
 

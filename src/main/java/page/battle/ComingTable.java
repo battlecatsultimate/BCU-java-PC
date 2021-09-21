@@ -2,11 +2,13 @@ package page.battle;
 
 import common.CommonStatic;
 import common.pack.Identifier;
+import common.system.ENode;
 import common.util.stage.EStage;
 import common.util.stage.SCDef.Line;
 import common.util.stage.Stage;
 import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
+import main.MainBCU;
 import page.MainFrame;
 import page.MainLocale;
 import page.Page;
@@ -15,6 +17,8 @@ import page.support.AbJTable;
 import page.support.EnemyTCR;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 class ComingTable extends AbJTable {
 
@@ -89,8 +93,17 @@ class ComingTable extends AbJTable {
 		if (r < 0 || r >= data.length || c != 1)
 			return;
 		Enemy e = (Enemy) data[r][c];
-		int[] d = CommonStatic.parseIntsN((String) data[r][2]);
-		MainFrame.changePanel(new EnemyInfoPage(page, e, d[0], d[1]));
+		List<Enemy> eList = new ArrayList<>();
+		List<int[]> muls = new ArrayList<>();
+		for (int i = data.length - 1; i >= 0; i--) {
+			Enemy f = (Enemy) data[i][c];
+			if (!eList.contains(f)) {
+				int[] d = CommonStatic.parseIntsN((String) data[i][2]);
+				eList.add(f);
+				muls.add(new int[]{d[0],d[1]});
+			}
+		}
+		MainFrame.changePanel(new EnemyInfoPage(page, ENode.getList(eList, e, muls)));
 
 	}
 
@@ -115,7 +128,10 @@ class ComingTable extends AbJTable {
 	protected synchronized void update(EStage est) {
 		for (int i = 0; i < link.length; i++)
 			if (link[i] != -1) {
-				data[link[i]][5] = est.rem[i];
+				if (MainBCU.seconds)
+					data[link[i]][5] = MainBCU.toSeconds(est.rem[i]);
+				else
+					data[link[i]][5] = est.rem[i] + "f";
 				data[link[i]][3] = est.num[i] == 0 ? "infinite" : est.num[i];
 				if (est.num[i] == -1)
 					data[link[i]] = null;

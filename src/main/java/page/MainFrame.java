@@ -73,10 +73,21 @@ public class MainFrame extends JFrame {
 
 	public MainFrame(String ver) {
 		super(Page.get(MainLocale.PAGE, "title") + " Ver " + ver);
+		//setIcon();
 		setLayout(null);
 		addListener();
 		sizer();
 	}
+
+	// Currently unused function used to officially add an icon to BCU, it currently works but will be left unused until an icon is oficially added to BCU assets
+	/*private void setIcon() {
+		try {
+			Image icons = ImageIO.read(new File("IconDirectoryHere.png"));
+			super.setIconImage(icons);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}*/
 
 	public void initialize() {
 		F = this;

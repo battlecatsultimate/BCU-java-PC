@@ -3,9 +3,12 @@ package page.info;
 import common.CommonStatic;
 import common.battle.BasisSet;
 import common.battle.data.MaskUnit;
+import common.battle.data.PCoin;
 import common.util.Data;
 import common.util.unit.EForm;
 import common.util.unit.Form;
+import common.util.unit.Trait;
+import main.MainBCU;
 import page.JL;
 import page.JTF;
 import page.MainLocale;
@@ -14,8 +17,11 @@ import utilpc.Interpret;
 import utilpc.UtilPC;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class UnitInfoTable extends Page {
@@ -28,6 +34,8 @@ public class UnitInfoTable extends Page {
 	private final JLabel[] proc;
 	private final JTF jtf = new JTF();
 	private final JLabel pcoin;
+	private final JTextArea descr = new JTextArea();
+	private final JScrollPane desc = new JScrollPane(descr);
 
 	private final BasisSet b;
 	private final Form f;
@@ -40,18 +48,24 @@ public class UnitInfoTable extends Page {
 
 		f = de;
 		displaySpecial = sp;
-		multi = de.unit.getPrefLvs();
+		multi = de.getPrefLvs();
 		atks = new JL[6];
 		MaskUnit du = f.maxu();
-		List<String> ls = Interpret.getAbi(du);
-		ls.addAll(Interpret.getProc(du, false, 1.0));
-		boolean pc = de.getPCoin() != null;
+		List<Interpret.ProcDisplay> ls = Interpret.getAbi(du);
+		double mul = f.unit.lv.getMult(multi[0]);
+		ls.addAll(Interpret.getProc(du, false, new double[]{Math.round(du.getHp() * mul) * b.t().getDefMulti(), multi[0]}));
+		boolean pc = de.du.getPCoin() != null;
 		if (pc)
-			ls.add("");
+			ls.add(new Interpret.ProcDisplay("",null));
 		proc = new JLabel[ls.size()];
 		for (int i = 0; i < ls.size(); i++) {
-			add(proc[i] = new JLabel(ls.get(i)));
+			Interpret.ProcDisplay display = ls.get(i);
+			add(proc[i] = new JLabel(display.toString()));
 			proc[i].setBorder(BorderFactory.createEtchedBorder());
+			if (display.getIcon() != null)
+				proc[i].setIcon(display.getIcon());
+			else
+				proc[i].setIcon(null);
 		}
 		if (pc)
 			pcoin = proc[ls.size() - 1];
@@ -64,7 +78,7 @@ public class UnitInfoTable extends Page {
 		int l = main.length + 1;
 		if (displaySpecial)
 			l += special.length;
-		return (l + (proc.length + 1) / 2) * 50;
+		return (l + (proc.length + 1) / 2) * 50 + (f.descriptionGet().replace("<br>", "").length() > 0 ? 200 : 0);
 	}
 
 	protected void reset() {
@@ -77,17 +91,30 @@ public class UnitInfoTable extends Page {
 
 		int hp = (int) (Math.round(ef.du.getHp() * mul) * def);
 
-		if(f.getPCoin() != null) {
-			attack = (int) (attack * f.getPCoin().getAtkMultiplication(multi));
-			hp = (int) (hp * f.getPCoin().getHPMultiplication(multi));
+		PCoin pc = f.du.getPCoin();
+		if(pc != null) {
+			attack = (int) (attack * pc.getAtkMultiplication(multi));
+			hp = (int) (hp * pc.getHPMultiplication(multi));
 		}
 
+		ArrayList<Trait> trs = ef.du.getTraits();
+		trs.sort(Comparator.comparingInt(t -> t.id.id));
+		trs.sort(Comparator.comparing(t -> t.id.pack));
+		trs.sort(Comparator.comparing(t -> !t.BCTrait));
+		String[] TraitBox = new String[trs.size()];
+		for (int i = 0; i < trs.size(); i++) {
+			Trait trait = ef.du.getTraits().get(i);
+			if (trait.BCTrait)
+				TraitBox[i] = Interpret.TRAIT[trait.id.id];
+			else
+				TraitBox[i] = trait.name;
+		}
 		main[1][3].setText(hp + " / " + ef.du.getHb());
 		main[2][3].setText("" + (attack * 30 / ef.du.getItv()));
 		main[2][5].setText("" + (int) (ef.du.getSpeed() * (1 + b.getInc(Data.C_SPE) * 0.01)));
 		main[1][5].setText(b.t().getFinRes(ef.du.getRespawn()) + "f");
 		main[1][7].setText("" + ef.getPrice(1));
-		main[0][4].setText(Interpret.getTrait(ef.du.getType(), 0));
+		main[0][4].setText(Interpret.getTrait(TraitBox, 0));
 		int[][] atkData = ef.du.rawAtkData();
 		StringBuilder satk = new StringBuilder();
 		for (int[] atkDatum : atkData) {
@@ -96,22 +123,29 @@ public class UnitInfoTable extends Page {
 
 			int a = (int) (Math.round(atkDatum[0] * mul) * b.t().getAtkMulti());
 
-			if(f.getPCoin() != null) {
-				a = (int) (a * f.getPCoin().getAtkMultiplication(multi));
+			if(pc != null) {
+				a = (int) (a * pc.getAtkMultiplication(multi));
 			}
 
 			satk.append(a);
 		}
 		atks[1].setText(satk.toString());
 
-		List<String> ls = Interpret.getAbi(ef.du);
-		ls.addAll(Interpret.getProc(ef.du, false, 1.0));
+		List<Interpret.ProcDisplay> ls = Interpret.getAbi(ef.du);
+		ls.addAll(Interpret.getProc(ef.du, false, new double[]{mul,multi[0]}));
 		for (JLabel l : proc)
-			if (l != pcoin)
+			if (l != pcoin) {
 				l.setText("");
-		for (int i = 0; i < ls.size(); i++)
-			proc[i].setText(ls.get(i));
-
+			}
+		for (int i = 0; i < ls.size(); i++) {
+			Interpret.ProcDisplay display = ls.get(i);
+			proc[i].setText(display.toString());
+			if (display.getIcon() != null)
+				proc[i].setIcon(display.getIcon());
+			else
+				proc[i].setIcon(null);
+		}
+		updateTooltips();
 	}
 
 	@Override
@@ -144,8 +178,9 @@ public class UnitInfoTable extends Page {
 		set(atks[5], x, y, 1400, h, 200, 50);
 		h += 50;
 		for (int i = 0; i < proc.length; i++)
-			set(proc[i], x, y, i % 2 * 800, h + 50 * (i / 2), 800, 50);
-
+			set(proc[i], x, y, i % 2 * 800, h + 50 * (i / 2), i % 2 == 0 && i + 1 == proc.length ? 1600 : 800, 50);
+		h += proc.length * 25 + (proc.length % 2 == 1 ? 25 : 0);
+		set(desc, x, y, 0, h, 1600, 200);
 	}
 
 	private void addListeners() {
@@ -174,7 +209,7 @@ public class UnitInfoTable extends Page {
 					if (i != 0 && j % 2 == 0 || i == 0 && j < 4)
 						main[i][j].setHorizontalAlignment(SwingConstants.CENTER);
 				}
-		for (int i = 0; i < 6; i++) {
+		for (int i = 0; i < atks.length; i++) {
 			add(atks[i] = new JL());
 			atks[i].setBorder(BorderFactory.createEtchedBorder());
 			if (i % 2 == 0)
@@ -202,22 +237,31 @@ public class UnitInfoTable extends Page {
 		main[0][3].setText(MainLocale.INFO, "trait");
 		main[1][0].setText(Interpret.RARITY[f.unit.rarity]);
 		main[1][2].setText(MainLocale.INFO, "hphb");
-		main[1][4].setText("CD");
+		main[1][4].setText(MainLocale.INFO, "cdo");
 		main[1][6].setText(MainLocale.INFO, "price");
 		main[2][0].setText(MainLocale.INFO, "range");
 		main[2][1].setText("" + f.du.getRange());
 		main[2][2].setText("dps");
 		main[2][4].setText(MainLocale.INFO, "speed");
 		main[2][6].setText(MainLocale.INFO, "atkf");
-		main[2][7].setText(f.du.getItv() + "f");
+
 		main[3][0].setText(MainLocale.INFO, "isr");
 		main[3][1].setText("" + f.du.isRange());
-		main[3][2].setText(MainLocale.INFO, "shield");
-		main[3][3].setText("" + f.du.getShield());
+		main[3][2].setText(MainLocale.INFO, "will");
+		main[3][3].setText("" + (f.du.getWill() + 1));
 		main[3][4].setText(MainLocale.INFO, "TBA");
-		main[3][5].setText(f.du.getTBA() + "f");
 		main[3][6].setText(MainLocale.INFO, "postaa");
-		main[3][7].setText(f.du.getPost() + "f");
+
+		if (MainBCU.seconds) {
+			main[2][7].setText(MainBCU.toSeconds(f.du.getItv()));
+			main[3][5].setText(MainBCU.toSeconds(f.du.getTBA()));
+			main[3][7].setText(MainBCU.toSeconds(f.du.getPost()));
+		} else {
+			main[2][7].setText(f.du.getItv() + "f");
+			main[3][5].setText(f.du.getTBA() + "f");
+			main[3][7].setText(f.du.getPost() + "f");
+		}
+
 		special[0][0].setText(MainLocale.INFO, "count");
 		special[0][1].setText(f.du.getAtkLoop() < 0 ? "infinite" : f.du.getAtkLoop() + "");
 		special[0][2].setText(MainLocale.INFO, "width");
@@ -231,9 +275,9 @@ public class UnitInfoTable extends Page {
 			special[0][7].setText(back + "");
 		else
 			special[0][7].setText(Math.min(back, front) + " ~ " + Math.max(back, front));
-		atks[0].setText("atk");
-		atks[2].setText(MainLocale.INFO, "preaa");
-		atks[4].setText(MainLocale.INFO, "use");
+		atks[0].setText(1, "atk");
+		atks[2].setText(1, "preaa");
+		atks[4].setText(1, "dire");
 		int[][] atkData = f.du.rawAtkData();
 		StringBuilder pre = new StringBuilder();
 		StringBuilder use = new StringBuilder();
@@ -242,8 +286,13 @@ public class UnitInfoTable extends Page {
 				pre.append(" / ");
 			if (use.length() > 0)
 				use.append(" / ");
-			pre.append(atkDatum[1]).append("f");
-			use.append(atkDatum[2] == 1);
+
+			if (MainBCU.seconds)
+				pre.append(MainBCU.toSeconds(atkDatum[1]));
+			else
+				pre.append(atkDatum[1]).append("f");
+
+			use.append(atkDatum[3]);
 
 		}
 		atks[3].setText(pre.toString());
@@ -251,8 +300,43 @@ public class UnitInfoTable extends Page {
 		special[0][5].setToolTipText("<html>This unit will stay at least "
 				+ f.du.getLimit()
 				+ " units away from the max stage length<br>once it passes that threshold.");
+		String fDesc = f.descriptionGet().replace("<br>", "\n");
+		if (fDesc.replace("\n", "").length() > 0)
+			add(desc);
+		descr.setText(f.toString().replace((f.uid == null ? "NULL" : f.uid.id) + "-" + f.fid + " ", "") + "\n" + fDesc);
+		descr.setEditable(false);
 		reset();
 		addListeners();
+		updateTooltips();
+	}
+
+	private void updateTooltips() {
+		for (JLabel jl : proc) {
+			String str = jl.getText();
+			StringBuilder sb = new StringBuilder();
+			FontMetrics fm = jl.getFontMetrics(jl.getFont());
+			while (fm.stringWidth(str) >= 400) {
+				int i = 1;
+				String wrapped = str.substring(0, i);
+				while (fm.stringWidth(wrapped) < 400)
+					wrapped = str.substring(0, i++);
+
+				int maximum; //JP proc texts don't count with space, this is here to prevent it from staying in while loop forever
+				if (CommonStatic.getConfig().lang == 3)
+					maximum = Math.max(wrapped.lastIndexOf("。"),wrapped.lastIndexOf("、"));
+				else
+					maximum = Math.max(Math.max(wrapped.lastIndexOf(" "), wrapped.lastIndexOf(".")), wrapped.lastIndexOf(","));
+
+				if (maximum <= 0)
+					maximum = Math.min(i,wrapped.length());
+
+				wrapped = wrapped.substring(0, maximum);
+				sb.append(wrapped).append("<br>");
+				str = str.substring(wrapped.length());
+			}
+			sb.append(str);
+			jl.setToolTipText("<html>" + sb.toString() + "</html>");
+		}
 	}
 
 	public void setDisplaySpecial(boolean s) {

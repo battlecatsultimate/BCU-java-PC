@@ -406,7 +406,7 @@ public class BackupPage extends Page {
         ti.add(new DefaultMutableTreeNode("hb: " + ce.getHb()));
         ti.add(new DefaultMutableTreeNode("speed: " + ce.getSpeed()));
         ti.add(new DefaultMutableTreeNode("range: " + ce.getRange()));
-        ti.add(new DefaultMutableTreeNode("barrier: " + ce.getShield()));
+        ti.add(new DefaultMutableTreeNode("barrier: " + ce.getProc().BARRIER.health));
 
         for (int i = 0; i < ce.getAtkCount(); i++) {
             AtkDataModel am = (AtkDataModel) ce.getAtkModel(i);

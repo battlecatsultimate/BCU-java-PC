@@ -131,7 +131,7 @@ public interface BattleBox {
 			P rect = setP(box.getWidth(), box.getHeight());
 			sb.bg.draw(g, rect, pos, midh, siz, (int) (groundHeight + (CommonStatic.getConfig().twoRow ? (h * 0.75 / 10.0) : 0)));
 			drawCastle(g);
-			if(sb.can == sb.max_can && sb.canon.id == 0) {
+			if(sb.cannon == sb.maxCannon && sb.canon.id == 0) {
 				drawCannonRange(g);
 			}
 			drawEntity(g);
@@ -228,7 +228,7 @@ public interface BattleBox {
 			if (sb.work_lv == 8)
 				mtype = 2;
 			FakeImage left = aux.battle[0][mtype].getImg();
-			int ctype = sb.can == sb.max_can && time == 0 ? 1 : 0;
+			int ctype = sb.cannon == sb.maxCannon && time == 0 ? 1 : 0;
 			FakeImage right = aux.battle[1][ctype].getImg();
 			cw += left.getWidth();
 			cw += right.getWidth();
@@ -248,7 +248,7 @@ public interface BattleBox {
 			int hi = h;
 			double marg = 0;
 			if (ctype == 0)
-				for (int i = 0; i < 10 * sb.can / sb.max_can; i++) {
+				for (int i = 0; i < 10 * sb.cannon / sb.maxCannon; i++) {
 					FakeImage img = aux.battle[1][2 + i].getImg();
 					iw = (int) (hr * img.getWidth());
 					ih = (int) (hr * img.getHeight());
@@ -260,7 +260,7 @@ public interface BattleBox {
 					hi -= ih;
 					g.drawImage(img, w - iw + BOTTOM_GAP * hr, hi, iw, ih);
 				}
-			if(sb.can == sb.max_can) {
+			if(sb.cannon == sb.maxCannon) {
 				FakeImage fire = aux.battle[1][getFireLang()+ctype].getImg();
 
 				int fw = (int) (hr * fire.getWidth());
@@ -433,7 +433,7 @@ public interface BattleBox {
 
 			double shake = 0.0;
 
-			if(sb.ebase.health <= 0) {
+			if(sb.ebase.health <= 0 || (!drawCast && ((ECastle)sb.ebase).hit > 0)) {
 				shake = (2 + (sb.time % 2 * -4)) * siz;
 			}
 
@@ -460,7 +460,7 @@ public interface BattleBox {
 
 			shake = 0.0;
 
-			if(sb.ubase.health <= 0) {
+			if(sb.ubase.health <= 0 || ((ECastle)sb.ubase).hit > 0) {
 				shake = (2 + (sb.time % 2 * -4)) * siz;
 			}
 
@@ -628,11 +628,11 @@ public interface BattleBox {
 
 					double shake = 0.0;
 
-					if(sb.ebase.health <= 0) {
+					if(sb.ebase.health <= 0 || ((ECastle)sb.ebase).hit > 0) {
 						shake = (2 + (sb.time % 2 * -4)) * siz;
 					}
 
-					((Entity) sb.ebase).anim.draw(gra, setP(posx + shake, posy), siz * sprite);
+					((Entity)sb.ebase).anim.smoke.draw(gra, setP(posx + shake, posy), siz * sprite);
 					if(sb.ebase.health > 0)
 						((Entity) sb.ebase).anim.drawEff(gra, setP(posx + shake, posy), siz * sprite);
 				}
@@ -640,7 +640,7 @@ public interface BattleBox {
 				for(int i = 0; i < sb.le.size(); i ++) {
 					Entity e = sb.le.get(i);
 
-					if((e.getAbi() & Data.AB_TIMEI) > 0) {
+					if ((e.getAbi() & Data.AB_TIMEI) > 0) {
 						int dep = e.layer * DEP;
 
 						gra.setTransform(at);

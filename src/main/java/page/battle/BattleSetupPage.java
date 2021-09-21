@@ -35,9 +35,9 @@ public class BattleSetupPage extends LubCont {
 
 	private final Stage st;
 
-	private final int[] conf;
+	private final int conf;
 
-	public BattleSetupPage(Page p, Stage s, int... confs) {
+	public BattleSetupPage(Page p, Stage s, int confs) {
 		super(p);
 		st = s;
 		conf = confs;
@@ -97,7 +97,7 @@ public class BattleSetupPage extends LubCont {
 			if (snip.isSelected())
 				ints[0] |= 2;
 			BasisLU b = BasisSet.current().sele;
-			if (conf.length == 1 && conf[0] == 0) {
+			if (conf == 0) {
 				b = RandStage.getLU(star);
 				star = 0;
 			}
@@ -136,7 +136,7 @@ public class BattleSetupPage extends LubCont {
 
 			levLimitText.add(get(MainLocale.PAGE, "levlimoff"));
 
-			for(int i = 1; i < 51; i++) {
+			for(int i = 1; i < 50; i++) {
 				levLimitText.add(Integer.toString(i));
 			}
 
@@ -145,17 +145,16 @@ public class BattleSetupPage extends LubCont {
 			plus.setToolTipText(MainLocale.getLoc(MainLocale.PAGE, "plusunlocktip"));
 			lvlim.setToolTipText(MainLocale.getLoc(MainLocale.PAGE, "levellimit"));
 
-			plus.setEnabled(CommonStatic.getConfig().levelLimit != 0);
 			plus.setSelected(CommonStatic.getConfig().plus);
 			lvlim.setSelectedIndex(CommonStatic.getConfig().levelLimit);
 		}
-		if (conf.length == 0) {
+		if (conf == 1) {
 			String[] tit = new String[st.getCont().stars.length];
 			String star = get(1, "star");
 			for (int i = 0; i < st.getCont().stars.length; i++)
 				tit[i] = (i + 1) + star + ": " + st.getCont().stars[i] + "%";
 			jls.setListData(tit);
-		} else if (conf.length == 1 && conf[0] == 0) {
+		} else if (conf == 0) {
 			String[] tit = new String[5];
 			String star = get(1, "attempt");
 			for (int i = 0; i < 5; i++)

@@ -1,5 +1,6 @@
 package page.battle;
 
+import common.CommonStatic;
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskUnit;
 import common.battle.entity.Entity;
@@ -46,6 +47,8 @@ class EntityTable extends SortTable<Entity> {
 
 	@Override
 	protected int compare(Entity e0, Entity e1, int c) {
+		if (c == 0)
+			return Long.compare(CommonStatic.parseLongN(get(e0,c).toString()),CommonStatic.parseLongN(get(e1,c).toString()));
 		if (c == 1)
 			return getID(e0).compareTo(getID(e1));
 		else
@@ -55,7 +58,7 @@ class EntityTable extends SortTable<Entity> {
 	@Override
 	protected Object get(Entity t, int c) {
 		if (c == 0)
-			return t.health;
+			return t.currentShield > 0 ? t.health + " (+" + t.currentShield + ")" : t.health;
 		else if (c == 1)
 			return t.data.getPack();
 		else if (c == 2)

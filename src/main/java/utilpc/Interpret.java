@@ -3,10 +3,10 @@ package utilpc;
 import common.CommonStatic;
 import common.battle.BasisLU;
 import common.battle.BasisSet;
-import common.battle.CannonLevelCurve;
 import common.battle.Treasure;
 import common.battle.data.*;
 import common.pack.Identifier;
+import common.pack.UserProfile;
 import common.util.Data;
 import common.util.Data.Proc.ProcItem;
 import common.util.lang.Formatter;
@@ -15,9 +15,12 @@ import common.util.stage.MapColc;
 import common.util.stage.MapColc.DefMapColc;
 import common.util.unit.Combo;
 import common.util.unit.Enemy;
+import main.MainBCU;
 import page.MainLocale;
 import page.Page;
 
+import javax.swing.*;
+import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
@@ -92,8 +95,8 @@ public class Interpret extends Data {
 			{}, { 1, 1 }, { 1, 1 }, { 2, 2 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 },
 			{ 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 } };
 
-	public static final int[] EABIIND = { 5, 7, 8, 9, 10, 11, 12, 15, 16, 18 };
-	public static final int IMUSFT = 13, EFILTER = 8;
+	public static final int[] EABIIND = { ABI_BASE, ABI_WAVES, ABI_SNIPERI, ABI_TIMEI, ABI_GHOST, ABI_GLASS, ABI_THEMEI };
+	public static final int IMUSFT = 13, EFILTER = 7;
 
 	private static final DecimalFormat df;
 
@@ -138,7 +141,20 @@ public class Interpret extends Data {
 		return combo(c.type, CommonStatic.getBCAssets().values[c.type][c.lv], b);
 	}
 
-	public static List<String> getAbi(MaskEntity me) {
+	public static class ProcDisplay {
+		private String text;
+		private ImageIcon icon = null;
+		public ProcDisplay(String desc, BufferedImage img) {
+			text = desc;
+			if (img != null)
+				icon = new ImageIcon(img);
+		}
+		@Override
+		public String toString() { return text; }
+		public ImageIcon getIcon() { return icon; }
+	}
+
+	public static List<ProcDisplay> getAbi(MaskEntity me) {
 		int tb = me.touchBase();
 		final MaskAtk ma;
 
@@ -159,24 +175,86 @@ public class Interpret extends Data {
 			ldr = ma.getLongPoint() - ma.getShortPoint();
 		}
 
-		List<String> l = new ArrayList<>();
+		List<ProcDisplay> l = new ArrayList<>();
 		if (lds != 0 || ldr != 0) {
 			int p0 = Math.min(lds, lds + ldr);
 			int p1 = Math.max(lds, lds + ldr);
 			int r = Math.abs(ldr);
-			l.add(Page.get(MainLocale.UTIL, "ld0") + ": " + tb + ", " + Page.get(MainLocale.UTIL, "ld1") + ": " + p0 + "~" + p1 + ", "
-					+ Page.get(MainLocale.UTIL, "ld2") + ": " + r);
+			BufferedImage bi;
+			if (me.isOmni()) {
+				bi = UtilPC.getIcon(2, ATK_OMNI);
+			} else {
+				bi = UtilPC.getIcon(2, ATK_LD);
+			}
+			l.add(new ProcDisplay(Page.get(MainLocale.UTIL, "ld0") + ": " + tb + ", " + Page.get(MainLocale.UTIL, "ld1") + ": " + p0 + "~" + p1 + ", "
+					+ Page.get(MainLocale.UTIL, "ld2") + ": " + r, bi));
+		} else if (!allRangeSame(me)) {
+			LinkedHashMap<String, List<Integer>> LDInts = new LinkedHashMap<>();
+			AtkDataModel[] atks = ((CustomEntity)me).atks;
+			List<BufferedImage> ics = new ArrayList<>();
+
+			for (int i = 0; i < atks.length ; i++ ) {
+				int rs = atks[i].getShortPoint();
+				int rl = atks[i].getLongPoint();
+				if (rs == 0 && rl == 0)
+					continue;
+				String LDData = Page.get(MainLocale.UTIL, "ld0") + ": " + tb + ", " + Page.get(MainLocale.UTIL, "ld1")
+						+ ": " + rs + "~" + rl + ", " + Page.get(MainLocale.UTIL, "ld2") + ": " + (rl - rs);
+				if (LDInts.containsKey(LDData)) {
+					List<Integer> li = LDInts.get(LDData);
+					li.add(i + 1);
+				} else {
+					List<Integer> li = new ArrayList<>();
+					li.add(i + 1);
+
+					LDInts.put(LDData, li);
+				}
+				if (atks[i].isOmni())
+					ics.add(UtilPC.getIcon(2, ATK_OMNI));
+				else
+					ics.add(UtilPC.getIcon(2, ATK_LD));
+			}
+
+			int i = 0;
+			for (String key : LDInts.keySet()) {
+				List<Integer> inds = LDInts.get(key);
+				if (inds == null) {
+					l.add(new ProcDisplay(key, ics.get(i++)));
+				} else {
+					if (inds.size() == me.getAtkCount()) {
+						l.add(new ProcDisplay(key, ics.get(i++)));
+					} else {
+						l.add(new ProcDisplay(key + " " + getAtkNumbers(inds), ics.get(i++)));
+					}
+				}
+			}
 		}
-		StringBuilder imu = new StringBuilder(Page.get(MainLocale.UTIL, "imu"));
+		AtkDataModel rev = me.getRevenge();
+		for (int z = 0; z < 2; z++) {
+			if (rev != null) {
+				int revs = rev.getShortPoint();
+				int revl = rev.getLongPoint();
+				if (revs != 0 || revl != 0) {
+					BufferedImage bi;
+					if (rev.isOmni())
+						bi = (UtilPC.getIcon(2, ATK_OMNI));
+					else
+						bi = (UtilPC.getIcon(2, ATK_LD));
+					l.add(new ProcDisplay(Page.get(MainLocale.UTIL, "ld1") + ": " + revs + "~" + revl +
+							", " + Page.get(MainLocale.UTIL, "ld2") + ": " + (revl - revs) +
+							" [" + Page.get(MainLocale.UTIL, "aa" + (z + 6)) + "]", bi));
+				}
+			}
+			rev = me.getResurrection();
+		}
+		String imu = Page.get(MainLocale.UTIL, "imu");
 		for (int i = 0; i < ABIS.length; i++)
 			if (((me.getAbi() >> i) & 1) > 0)
 				if (ABIS[i].startsWith("IMU"))
-					imu.append(ABIS[i].substring(3)).append(", ");
-				else
-					l.add(ABIS[i]);
-
-		if (imu.length() > 10)
-			l.add(imu.toString());
+					l.add(new ProcDisplay(imu + ABIS[i].substring(3), UtilPC.getIcon(0, i)));
+				else {
+					l.add(new ProcDisplay(ABIS[i], UtilPC.getIcon(0, i)));
+				}
 		return l;
 	}
 
@@ -200,9 +278,9 @@ public class Interpret extends Data {
 		return ans;
 	}
 
-	public static List<String> getProc(MaskEntity du, boolean isEnemy, double multi) {
-		Formatter.Context ctx = new Formatter.Context(isEnemy, false, multi);
-		boolean common;
+	public static List<ProcDisplay> getProc(MaskEntity du, boolean isEnemy, double[] magnification) {
+		Formatter.Context ctx = new Formatter.Context(isEnemy, MainBCU.seconds, magnification);
+		final boolean common;
 
 		if(du instanceof CustomEntity) {
 			common = ((CustomEntity) du).common;
@@ -210,7 +288,8 @@ public class Interpret extends Data {
 			common = true;
 		}
 
-		ArrayList<String> l = new ArrayList<>();
+		ArrayList<ProcDisplay> l = new ArrayList<>();
+		List<Boolean> share = new ArrayList<>();
 
 		if(common) {
 			MaskAtk ma = du.getRepAtk();
@@ -221,13 +300,16 @@ public class Interpret extends Data {
 				if(!item.exists())
 					continue;
 
+				share.add(ma.getProc().sharable(i));
 				String format = ProcLang.get().get(i).format;
 				String formatted = Formatter.format(format, item, ctx);
-				l.add(formatted);
+
+				l.add(new ProcDisplay(formatted, UtilPC.getIcon(1, i)));
 			}
 
 		} else {
-			Map<String, List<Integer>> atkMap = new HashMap<>();
+			LinkedHashMap<String, List<Integer>> atkMap = new LinkedHashMap<>();
+			List<BufferedImage> procIcons = new ArrayList<>();
 
 			MaskAtk ma = du.getRepAtk();
 
@@ -239,7 +321,7 @@ public class Interpret extends Data {
 
 				String format = ProcLang.get().get(i).format;
 				String formatted = Formatter.format(format, item, ctx);
-				l.add(formatted);
+				l.add(new ProcDisplay(formatted, UtilPC.getIcon(1, i)));
 			}
 
 			for (int i = 0; i < du.getAtkCount(); i++) {
@@ -264,33 +346,71 @@ public class Interpret extends Data {
 						inds.add(i + 1);
 
 						atkMap.put(formatted, inds);
+						procIcons.add(UtilPC.getIcon(1, j));
 					}
 				}
 			}
 
+			int i = 0;
 			for (String key : atkMap.keySet()) {
 				List<Integer> inds = atkMap.get(key);
 
 				if (inds == null) {
-					l.add(key);
+					l.add(new ProcDisplay(key, procIcons.get(i++)));
 				} else {
 					if (inds.size() == du.getAtkCount()) {
-						l.add(key);
+						l.add(new ProcDisplay(key, procIcons.get(i++)));
 					} else {
-						l.add(key + " " + getAtkNumbers(inds));
+						l.add(new ProcDisplay(key + " " + getAtkNumbers(inds), procIcons.get(i++)));
 					}
 				}
+			}
+		}
+
+		if (du instanceof DefaultData && !((DefaultData)du).isCommon()) {
+			int[][] atkData = du.rawAtkData();
+			List<Integer> atks = new ArrayList<>();
+			for (int i = 0; i < atkData.length; i++)
+				if (atkData[i][2] == 1)
+					atks.add(i + 1);
+			for (int i = 0; i < l.size(); i++)
+				if (!share.get(i))
+					l.get(i).text = l.get(i).text + " " + getAtkNumbers(atks);
+		}
+
+		MaskAtk revenge = du.getRevenge();
+		if (revenge != null) {
+			for(int i = 0; i < Data.PROC_TOT; i++) {
+				ProcItem item = revenge.getProc().getArr(i);
+
+				if(!item.exists() || revenge.getProc().sharable(i))
+					continue;
+
+				String format = ProcLang.get().get(i).format;
+				String formatted = Formatter.format(format, item, ctx);
+				l.add(new ProcDisplay(formatted + " [" + Page.get(MainLocale.UTIL, "aa6") + "]", UtilPC.getIcon(1, i)));
+			}
+		}
+		MaskAtk resurrection = du.getResurrection();
+		if (resurrection != null) {
+			for(int i = 0; i < Data.PROC_TOT; i++) {
+				ProcItem item = resurrection.getProc().getArr(i);
+
+				if(!item.exists() || resurrection.getProc().sharable(i))
+					continue;
+
+				String format = ProcLang.get().get(i).format;
+				String formatted = Formatter.format(format, item, ctx);
+				l.add(new ProcDisplay(formatted + " [" + Page.get(MainLocale.UTIL, "aa7") + "]", UtilPC.getIcon(1, i)));
 			}
 		}
 
 		return l;
 	}
 
-	public static String getTrait(int type, int star) {
+	public static String getTrait(String[] cTraits, int star) {
 		StringBuilder ans = new StringBuilder();
-		for (int i = 0; i < TRAIT.length; i++)
-			if (((type >> i) & 1) > 0)
-				ans.append(TRAIT[i]).append(", ");
+		for (String cTrait : cTraits) ans.append(cTrait).append(", ");
 		if (star > 0)
 			ans.append(STAR[star]);
 
@@ -391,20 +511,28 @@ public class Interpret extends Data {
 
 		List<MapColc> lis = e.findMap();
 		boolean colab = false;
+		final int recurring;
+		if (e.de instanceof DataEnemy)
+			recurring = e.findApp(DefMapColc.getMap("N")).size() + e.findApp(DefMapColc.getMap("A")).size();
+		else
+			recurring = e.findApp(UserProfile.getUserPack(e.id.pack).mc).size();
 		if (lis.contains(DefMapColc.getMap("C")))
 			if (lis.size() == 1)
 				colab = true;
-			else if (lis.size() == 2)
-				colab = lis.contains(DefMapColc.getMap("R")) || lis.contains(DefMapColc.getMap("CH"));
-
+			else {
+				colab = lis.contains(DefMapColc.getMap("R")) || lis.contains(DefMapColc.getMap("CH")) || lis.contains(DefMapColc.getMap("CA"));
+				if (lis.size() > 2)
+					colab &= recurring == 0;
+			}
 		if (t == 2)
 			return !colab;
 		else if (t == 3)
-			return !colab && !e.inDic;
+			return e.id.pack.equals(Identifier.DEF) && !e.inDic;
 		else if (t == 4)
 			return colab;
-		else
-			return false;
+		else if (t == 6)
+			return recurring > 1;
+		return false;
 	}
 
 	public static boolean isType(MaskEntity de, int type) {
@@ -421,17 +549,21 @@ public class Interpret extends Data {
 			return de.isOmni();
 		else if (type == 5)
 			return de.getTBA() + raw[0][1] < de.getItv() / 2;
+		else if (type == 6)
+			return de.getRevenge() != null;
+		else if (type == 7)
+			return de.getResurrection() != null;
 		return false;
 	}
 
 	public static void redefine() {
-		ERARE = Page.get(MainLocale.UTIL, "er", 6);
+		ERARE = Page.get(MainLocale.UTIL, "er", 7);
 		RARITY = Page.get(MainLocale.UTIL, "r", 6);
 		TRAIT = Page.get(MainLocale.UTIL, "c", 13);
 		STAR = Page.get(MainLocale.UTIL, "s", 5);
-		ABIS = Page.get(MainLocale.UTIL, "a", 22);
-		SABIS = Page.get(MainLocale.UTIL, "sa", 22);
-		ATKCONF = Page.get(MainLocale.UTIL, "aa", 6);
+		ABIS = Page.get(MainLocale.UTIL, "a", 19);
+		SABIS = Page.get(MainLocale.UTIL, "sa", 19);
+		ATKCONF = Page.get(MainLocale.UTIL, "aa", 8);
 		TREA = Page.get(MainLocale.UTIL, "t", 37);
 		TEXT = Page.get(MainLocale.UTIL, "d", 9);
 		COMF = Page.get(MainLocale.UTIL, "na", 6);
@@ -472,18 +604,7 @@ public class Interpret extends Data {
 
 		if (v < 0)
 			v = 0;
-
-		if(ind >= 29 && ind <= 36) {
-			CannonLevelCurve curve = Treasure.curveData.get(ind - 29);
-
-			if(curve != null) {
-				v = Math.min(v, curve.max);
-			} else {
-				v = Math.min(v, TMAX[ind]);
-			}
-		} else {
-			v = Math.min(v, TMAX[ind]);
-		}
+		v = Math.min(v, TMAX[ind]);
 
 		if (ind == 0)
 			t.tech[LV_RES] = Math.max(v, 1);
@@ -569,7 +690,7 @@ public class Interpret extends Data {
 				builder.append("第 ");
 
 				for(int i = 0; i < inds.size(); i++) {
-					builder.append(i);
+					builder.append(inds.get(i));
 
 					if(i < inds.size() -1) {
 						builder.append(", ");
@@ -579,7 +700,7 @@ public class Interpret extends Data {
 				return builder.append(" 次攻擊]").toString();
 			case 2:
 				for(int i = 0; i < inds.size(); i++) {
-					builder.append(i);
+					builder.append(inds.get(i));
 
 					if(i < inds.size() - 1) {
 						builder.append(", ");
@@ -589,7 +710,7 @@ public class Interpret extends Data {
 				return builder.append(" 번째 공격]").toString();
 			case 3:
 				for(int i = 0; i < inds.size(); i++) {
-					builder.append(i);
+					builder.append(inds.get(i));
 
 					if(i < inds.size() - 1) {
 						builder.append(", ");
