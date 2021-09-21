@@ -45,17 +45,17 @@ public class EntityAbilities extends Page {
                 proc[i].setBorder(BorderFactory.createEtchedBorder());
             }
         } else {
-            Form f = ((MaskUnit) me).getPack();
+            boolean pc = ((MaskUnit) me).getPack().getPCoin() != null;
+            MaskUnit mu = pc ? ((MaskUnit) me).getPack().getPCoin().improve(lvl) : ((MaskUnit) me);
 
-            List<String> ls = Interpret.getProc(me, false, 1.0);
-            boolean pc = f.getPCoin() != null;
+            List<String> ls = Interpret.getProc(mu, false, 1.0);
             proc = new JLabel[ls.size()];
             for (int i = 0; i < ls.size(); i++) {
                 add(proc[i] = new JLabel(ls.get(i)));
                 proc[i].setBorder(BorderFactory.createEtchedBorder());
             }
             if (pc) {
-                String[] strs = UtilPC.lvText(f, lvl);
+                String[] strs = UtilPC.lvText(mu.getPack(), lvl);
                 add(pcoin = new JLabel(strs[1]));
 
                 pcoin.setBorder(BorderFactory.createEtchedBorder());
@@ -72,20 +72,20 @@ public class EntityAbilities extends Page {
 
         int posY = 0;
         for (JLabel abi : abis) {
-            set(abi, x, y, 0, posY, 600, 50);
+            set(abi, x, y, 0, posY, 550, 50);
             posY += 50;
         }
         for (JLabel jLabel : proc) {
-            set(jLabel, x, y, 0, posY, 600, 50);
+            set(jLabel, x, y, 0, posY, 550, 50);
             posY += 50;
         }
 
         if (pcoin != null)
-            set(pcoin, x, y, 0, posY, 600, 50);
+            set(pcoin, x, y, 0, posY, 550, 50);
     }
 
     public int getPWidth() {
-        return 600;
+        return (abis.length + proc.length + (pcoin != null ? 1 : 0)) > 0 ? 550 : 0;
     }
 
     public int getPHeight() {
