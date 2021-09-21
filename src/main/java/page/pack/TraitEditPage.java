@@ -45,7 +45,7 @@ public class TraitEditPage extends Page {
                     JLabel jl = (JLabel) super.getListCellRendererComponent(l, o, ind, s, f);
                     Trait trait = (Trait)o;
                     if (trait.icon != null)
-                        jl.setIcon(trait.obtainIcon());
+                        jl.setIcon(new ImageIcon((BufferedImage)trait.icon.getImg()));
                     return jl;
                 }
             });
@@ -189,7 +189,7 @@ public class TraitEditPage extends Page {
             ctrna.setText(t.name);
             altrg.setSelected(t.targetType);
             if (t.icon != null)
-                jl.setIcon(t.obtainIcon());
+                jl.setIcon(new ImageIcon((BufferedImage)t.icon.getImg()));
             else
                 jl.setIcon(null);
         }
