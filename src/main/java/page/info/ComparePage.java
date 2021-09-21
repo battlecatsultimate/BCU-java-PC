@@ -7,7 +7,6 @@ import common.battle.data.MaskEntity;
 import common.battle.data.MaskUnit;
 import common.util.Data;
 import common.util.unit.EForm;
-import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Level;
 import page.*;
@@ -18,7 +17,6 @@ import utilpc.UtilPC;
 import javax.swing.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.util.Arrays;
 
 public class ComparePage extends Page {
@@ -27,10 +25,12 @@ public class ComparePage extends Page {
 
     private final JL[] names = new JL[3];
     private final JTF[] level = new JTF[names.length];
+    private final EntityAbilities[] abilities = new EntityAbilities[names.length];
+    private final JScrollPane[] abilityPanes = new JScrollPane[names.length];
 
-    private final JL[][] main = new JL[10][names.length + 1]; // comparing both
-    private final JL[][] unit = new JL[2][names.length + 1]; // comparing unit
-    private final JL[][] enem = new JL[2][names.length + 1]; // comparing enemy
+    private final JL[][] main = new JL[10][names.length + 1]; // stats on both
+    private final JL[][] unit = new JL[2][names.length + 1]; // stats on unit
+    private final JL[][] enem = new JL[2][names.length + 1]; // stats on enemy
 
     private final JCB[] boxes = new JCB[main.length + unit.length + enem.length + 1];
 
@@ -44,6 +44,8 @@ public class ComparePage extends Page {
     private EnemyFindPage efp = null;
     private UnitFindPage ufp = null;
     private int s = -1;
+
+    private boolean resize = true;
 
     private final BasisSet b = BasisSet.current();
 
@@ -76,6 +78,12 @@ public class ComparePage extends Page {
             JTF jtf = new JTF("-");
             jtf.setEnabled(false);
             add(level[i] = jtf);
+        }
+
+        for (int i = 0; i < abilityPanes.length; i++) {
+            JScrollPane p = new JScrollPane();
+            p.setEnabled(false);
+            add(abilityPanes[i] = p);
         }
 
         for (int i = 0; i < main.length; i++) {
@@ -235,6 +243,8 @@ public class ComparePage extends Page {
                 double mul = (multi[0] * enemy.multi(b)) / 100.0;
                 double mula = (multi[1] * enemy.multi(b)) / 100.0;
 
+                abilityPanes[i].setViewportView(abilities[i] = new EntityAbilities(getFront(), m, multi));
+
                 for (int[] atkDatum : atkData) {
                     if (atkString.length() > 0) {
                         atkString.append(" / ");
@@ -257,6 +267,8 @@ public class ComparePage extends Page {
                 Form f = ((MaskUnit) m).getPack();
                 int[] multi = state ? maskEntityLvl[i] : (maskEntityLvl[i] = f.unit.getPrefLvs());
                 EForm ef = new EForm(f, multi);
+
+                abilityPanes[i].setViewportView(abilities[i] = new EntityAbilities(getFront(), m, multi));
 
                 double mul = f.unit.lv.getMult(multi[0]);
                 double atkLv = b.t().getAtkMulti();
@@ -351,6 +363,8 @@ public class ComparePage extends Page {
             main[8][index].setText(m.getTBA() + "f");
             main[9][index].setText(m.getSpeed() + "");
         }
+
+        requireResize();
     }
 
     @Override
@@ -416,8 +430,8 @@ public class ComparePage extends Page {
         int posY = 200;
 
         for (JCB b : boxes) {
-            posY += 50;
             set(b, x, y, 275 + ((main[0].length - 1) * width), posY, 200, 50);
+            posY += 50;
         }
 
         for (int i = 0; i < names.length; i++)
@@ -425,7 +439,8 @@ public class ComparePage extends Page {
         for (int i = 0; i < level.length; i++)
             set(level[i], x, y, 250 + (i * width), 150, width, 50);
 
-        posY = 200;
+        posY = 250;
+
         for (int i = 0; i < main.length; i++) { // 9
             JL[] d = main[i];
             if (!boxes[i].isSelected()) {
@@ -435,7 +450,6 @@ public class ComparePage extends Page {
             }
 
             int posX = 50;
-            posY += 50;
             for (int j = 0; j < d.length; j++) {
                 set(d[j], x, y, posX, posY, j == 0 ? 200 : width, 50);
                 if (j == 0)
@@ -443,6 +457,7 @@ public class ComparePage extends Page {
                 else
                     posX += width;
             }
+            posY += 50;
         }
 
         for (int i = 0; i < unit.length; i++) {
@@ -453,7 +468,6 @@ public class ComparePage extends Page {
                 continue;
             }
             int posX = 50;
-            posY += 50;
             for (int j = 0; j < d.length; j++) {
                 set(d[j], x, y, posX, posY, j == 0 ? 200 : width, 50);
                 if (j == 0)
@@ -461,6 +475,7 @@ public class ComparePage extends Page {
                 else
                     posX += width;
             }
+            posY += 50;
         }
 
         for (int i = 0; i < enem.length; i++) {
@@ -471,7 +486,6 @@ public class ComparePage extends Page {
                 continue;
             }
             int posX = 50;
-            posY += 50;
             for (int j = 0; j < d.length; j++) {
                 set(d[j], x, y, posX, posY, j == 0 ? 200 : width, 50);
                 if (j == 0)
@@ -479,6 +493,28 @@ public class ComparePage extends Page {
                 else
                     posX += width;
             }
+            posY += 50;
         }
+
+        int posX = 250;
+        for (int i = 0; i < abilityPanes.length; i++) {
+            JScrollPane pane = abilityPanes[i];
+            if (resize) {
+                EntityAbilities e = abilities[i];
+                if (e != null) {
+                    e.setPreferredSize(size(x, y, e.getPWidth(), e.getPHeight()).toDimension());
+                    pane.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
+                    pane.revalidate();
+                }
+            }
+            set(pane, x, y, posX, posY, width, 200);
+            posX += 600;
+        }
+
+        resize = false;
+    }
+
+    public void requireResize() {
+        resize = true;
     }
 }
