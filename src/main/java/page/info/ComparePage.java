@@ -215,6 +215,8 @@ public class ComparePage extends Page {
             MaskEntity m = maskEntities[i];
             int index = i + 1;
             if (m == null) {
+                abilityPanes[i].setViewportView(null);
+                abilityPanes[i].setEnabled(false);
                 names[i].setIcon(null);
                 names[i].setText("-");
                 level[i].setEnabled(false);
@@ -499,6 +501,11 @@ public class ComparePage extends Page {
         int posX = 250;
         for (int i = 0; i < abilityPanes.length; i++) {
             JScrollPane pane = abilityPanes[i];
+            if (!boxes[boxes.length - 1].isSelected()) {
+                set(pane, x, y, 0, 0, 0, 0);
+                continue;
+            }
+
             if (resize) {
                 EntityAbilities e = abilities[i];
                 if (e != null) {
@@ -507,6 +514,7 @@ public class ComparePage extends Page {
                     pane.revalidate();
                 }
             }
+
             set(pane, x, y, posX, posY, width, 200);
             posX += 600;
         }
