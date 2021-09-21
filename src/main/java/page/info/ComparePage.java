@@ -12,6 +12,7 @@ import common.util.unit.Level;
 import page.*;
 import page.info.filter.EnemyFindPage;
 import page.info.filter.UnitFindPage;
+import utilpc.Interpret;
 import utilpc.UtilPC;
 
 import javax.swing.*;
@@ -29,10 +30,11 @@ public class ComparePage extends Page {
     private final JScrollPane[] abilityPanes = new JScrollPane[names.length];
 
     private final JL[][] main = new JL[10][names.length + 1]; // stats on both
+    private final JL[][] seco = new JL[1][names.length + 1]; // stats after others
     private final JL[][] unit = new JL[2][names.length + 1]; // stats on unit
     private final JL[][] enem = new JL[2][names.length + 1]; // stats on enemy
 
-    private final JCB[] boxes = new JCB[main.length + unit.length + enem.length + 1];
+    private final JCB[] boxes = new JCB[main.length + unit.length + enem.length + seco.length + 1];
 
     private final JBTN back = new JBTN(0, "back");
 
@@ -116,6 +118,16 @@ public class ComparePage extends Page {
             }
         }
 
+        for (int i = 0; i < seco.length; i++) {
+            for (int j = 0; j < seco[i].length; j++) {
+                seco[i][j] = new JL("-");
+                if (j == 0)
+                    seco[i][j].setHorizontalAlignment(SwingConstants.CENTER);
+
+                add(seco[i][j]);
+            }
+        }
+
         main[0][0].setText("HP");
         main[1][0].setText(MainLocale.INFO, "hb");
         main[2][0].setText(MainLocale.INFO, "range");
@@ -149,6 +161,10 @@ public class ComparePage extends Page {
 
         boxes[main.length + unit.length].setText(MainLocale.INFO, "drop");
         boxes[1 + main.length + unit.length].setText(MainLocale.INFO, "shield");
+
+        seco[0][0].setText(MainLocale.INFO, "trait");
+
+        boxes[main.length + unit.length + enem.length].setText(MainLocale.INFO, "trait");
 
         boxes[boxes.length - 1].setText("ability");
 
@@ -226,6 +242,8 @@ public class ComparePage extends Page {
                 for (JL[] jls : unit)
                     jls[index].setText("-");
                 for (JL[] jls : enem)
+                    jls[index].setText("-");
+                for (JL[] jls : seco)
                     jls[index].setText("-");
                 continue;
             }
@@ -369,6 +387,8 @@ public class ComparePage extends Page {
             main[7][index].setText(m.getItv() + "f");
             main[8][index].setText(m.getTBA() + "f");
             main[9][index].setText(m.getSpeed() + "");
+
+            seco[0][index].setText(Interpret.getTrait(m.getType(), m instanceof MaskEnemy ? ((MaskEnemy) m).getStar() : 0));
         }
 
         requireResize();
@@ -488,6 +508,24 @@ public class ComparePage extends Page {
         for (int i = 0; i < enem.length; i++) {
             JL[] d = enem[i];
             if (!boxes[i + main.length + unit.length].isSelected()) {
+                for (JL ex : d)
+                    set(ex, x, y, 0, 0, 0, 0);
+                continue;
+            }
+            int posX = 50;
+            for (int j = 0; j < d.length; j++) {
+                set(d[j], x, y, posX, posY, j == 0 ? 200 : width, 50);
+                if (j == 0)
+                    posX += 200;
+                else
+                    posX += width;
+            }
+            posY += 50;
+        }
+
+        for (int i = 0; i < seco.length; i++) {
+            JL[] d = seco[i];
+            if (!boxes[i + main.length + unit.length + enem.length].isSelected()) {
                 for (JL ex : d)
                     set(ex, x, y, 0, 0, 0, 0);
                 continue;
