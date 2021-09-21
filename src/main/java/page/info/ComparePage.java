@@ -19,6 +19,7 @@ import javax.swing.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class ComparePage extends Page {
 
@@ -222,6 +223,9 @@ public class ComparePage extends Page {
                 }
             });
         }
+
+        for (JCB b : boxes)
+            b.addActionListener(x -> requireResize());
     }
 
     private void reset() {
@@ -283,6 +287,8 @@ public class ComparePage extends Page {
 
                 for (JL[] jls : unit)
                     jls[index].setText("-");
+
+                seco[0][index].setText(Interpret.getTrait(m.getType(), enemy.getStar()));
             } else if (m instanceof MaskUnit) {
                 int[] multi = state
                         ? maskEntityLvl[i]
@@ -372,6 +378,8 @@ public class ComparePage extends Page {
                 } else {
                     main[4][index].setText((int) (atk * 30.0 / m.getItv()) + "");
                 }
+
+                seco[0][index].setText(Interpret.getTrait(mu.getType(), 0));
             }
 
             level[i].setEnabled(true);
@@ -387,8 +395,6 @@ public class ComparePage extends Page {
             main[7][index].setText(m.getItv() + "f");
             main[8][index].setText(m.getTBA() + "f");
             main[9][index].setText(m.getSpeed() + "");
-
-            seco[0][index].setText(Interpret.getTrait(m.getType(), m instanceof MaskEnemy ? ((MaskEnemy) m).getStar() : 0));
         }
 
         requireResize();
@@ -454,7 +460,7 @@ public class ComparePage extends Page {
             set(sele[i][1], x, y, w, 100, 200, 50);
         }
 
-        int posY = 200;
+        int posY = 250;
 
         for (JCB b : boxes) {
             set(b, x, y, 275 + ((main[0].length - 1) * width), posY, 200, 50);
@@ -558,7 +564,8 @@ public class ComparePage extends Page {
                 }
             }
 
-            set(pane, x, y, posX, posY, width, 200);
+            int unselected = ((int) Arrays.stream(boxes).filter(b -> !b.isSelected()).count());
+            set(pane, x, y, posX, posY, width, 200 + unselected * 50);
             posX += 600;
         }
 
