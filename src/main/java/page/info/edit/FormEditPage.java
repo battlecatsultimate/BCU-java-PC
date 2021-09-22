@@ -15,7 +15,6 @@ import page.JTF;
 import page.Page;
 import page.info.UnitInfoPage;
 import page.info.filter.UnitEditBox;
-import utilpc.UtilPC;
 
 import static utilpc.Interpret.EABIIND;
 import static utilpc.Interpret.IMUSFT;
@@ -48,7 +47,7 @@ public class FormEditPage extends EntityEditPage {
 		super(p, pac.desc.id, (CustomEntity) f.du, pac.editable, false);
 		form = f;
 		cu = (CustomUnit) form.du;
-		lv = UtilPC.getPreferredLv(f.unit);
+		lv = f.unit.getPrefLv();
 		ueb = new UnitEditBox(this, pac, cu);
 		ini();
 		setData((CustomUnit) f.du);
