@@ -271,7 +271,7 @@ public class MainBCU {
 	public static final int ver = 50047;
 	private static final DecimalFormat df = new DecimalFormat("#.##");
 
-	public static int FILTER_TYPE = 1, prefLevel = 50;
+	public static int FILTER_TYPE = 1;
 	public static final boolean WRITE = !new File("./.project").exists();
 	public static boolean preload = false, trueRun = true, loaded = false, USE_JOGL = false;
 	public static boolean light = true, nimbus = false, seconds = false, buttonSound = false;

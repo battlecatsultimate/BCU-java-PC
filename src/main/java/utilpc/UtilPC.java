@@ -25,6 +25,7 @@ import common.util.unit.Trait;
 import io.BCMusic;
 import io.BCUReader;
 import io.BCUWriter;
+import main.MainBCU;
 import utilpc.awt.FG2D;
 
 import javax.swing.*;
