@@ -7,6 +7,7 @@ import common.CommonStatic.Itf;
 import common.battle.data.PCoin;
 import common.io.InStream;
 import common.pack.Context;
+import common.pack.Identifier;
 import common.pack.Source;
 import common.pack.Source.ResourceLocation;
 import common.system.VImg;
@@ -213,6 +214,11 @@ public class UtilPC {
 		@Override
 		public void setSE(int ind) {
 			BCMusic.setSE(ind);
+		}
+
+		@Override
+		public void setBGM(Identifier<Music> mus, long loop) {
+			BCMusic.play(mus, loop);
 		}
 
 	}
