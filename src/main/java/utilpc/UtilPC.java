@@ -22,6 +22,7 @@ import common.util.pack.Background;
 import common.util.stage.Music;
 import common.util.unit.Form;
 import common.util.unit.Trait;
+import common.util.unit.Unit;
 import io.BCMusic;
 import io.BCUReader;
 import io.BCUWriter;
@@ -324,5 +325,9 @@ public class UtilPC {
 			return null;
 
 		return Interpret.PCTX[pc.info.get(index)[0]];
+	}
+
+	public static int getPreferredLv(Unit u) {
+		return Math.min(MainBCU.prefLevel, u.max) + Math.min((u.rarity < 2 && u.maxp > 0 ? (int)((MainBCU.prefLevel - 1) / 49.0) * u.maxp : 0),u.maxp);
 	}
 }

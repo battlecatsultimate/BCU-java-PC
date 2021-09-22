@@ -295,7 +295,7 @@ public class ConfigPage extends Page {
 		set(jsba);
 		add(mbac);
 		add(btnsnd);
-		prlvmd.setText("" + CommonStatic.getConfig().prefLevel);
+		prlvmd.setText("" + MainBCU.prefLevel);
 		jls.setSelectedIndex(localeIndexOf(cfg().lang));
 		jsmin.setValue(cfg().deadOpa);
 		jsmax.setValue(cfg().fullOpa);
@@ -339,8 +339,8 @@ public class ConfigPage extends Page {
 			String text = jtf.getText().trim();
 			if (text.length() > 0) {
 				int[] v = CommonStatic.parseIntsN(text);
-				CommonStatic.getConfig().prefLevel = Math.max(1, v[0]);
-				jtf.setText("" + CommonStatic.getConfig().prefLevel);
+				MainBCU.prefLevel = Math.max(1, v[0]);
+				jtf.setText("" + MainBCU.prefLevel);
 			}
 		});
 	}

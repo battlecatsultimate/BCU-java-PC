@@ -69,7 +69,7 @@ public class BCUReader extends DataIO {
 					MainBCU.seconds = jo.get("seconds").getAsBoolean();
 				}
 				if(jo.has("prefLV")) {
-					CommonStatic.getConfig().prefLevel = jo.get("prefLv").getAsInt();
+					MainBCU.prefLevel = jo.get("prefLv").getAsInt();
 				}
 				if(jo.has("buttonSound")) {
 					MainBCU.buttonSound = jo.get("buttonSound").getAsBoolean();

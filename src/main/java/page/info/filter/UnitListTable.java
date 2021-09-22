@@ -13,6 +13,7 @@ import page.Page;
 import page.info.UnitInfoPage;
 import page.support.SortTable;
 import page.support.UnitTCR;
+import utilpc.UtilPC;
 
 import java.awt.*;
 
@@ -79,7 +80,7 @@ public class UnitListTable extends SortTable<Form> {
 	protected Object get(Form e, int c) {
 		Basis b = BasisSet.current();
 		MaskUnit du = e.maxu();
-		double mul = e.unit.lv.getMult(e.unit.getPrefLv());
+		double mul = e.unit.lv.getMult(UtilPC.getPreferredLv(e.unit));
 		double atk = b.t().getAtkMulti();
 		double def = b.t().getDefMulti();
 		int itv = e.anim != null ? du.getItv() : -1;
@@ -88,7 +89,7 @@ public class UnitListTable extends SortTable<Form> {
 		else if (c == 1)
 			return e;
 		else if (c == 2)
-			return e.unit.getPrefLv();
+			return UtilPC.getPreferredLv(e.unit);
 		else if (c == 3)
 			return (int) (du.getHp() * mul * def);
 		else if (c == 4)
