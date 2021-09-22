@@ -134,26 +134,26 @@ public class ComparePage extends Page {
             }
         }
 
-        main[0][0].setText("HP");
+        main[0][0].setText(MainLocale.INFO, "HP");
         main[1][0].setText(MainLocale.INFO, "hb");
         main[2][0].setText(MainLocale.INFO, "range");
-        main[3][0].setText("atk");
+        main[3][0].setText(MainLocale.INFO, "atk");
         main[4][0].setText("dps");
         main[5][0].setText(MainLocale.INFO, "preaa");
         main[6][0].setText(MainLocale.INFO, "postaa");
         main[7][0].setText(MainLocale.INFO, "atkf");
-        main[8][0].setText("TBA");
+        main[8][0].setText(MainLocale.INFO, "TBA");
         main[9][0].setText(MainLocale.INFO, "speed");
 
-        boxes[0].setText("HP");
+        boxes[0].setText(MainLocale.INFO, "HP");
         boxes[1].setText(MainLocale.INFO, "hb");
         boxes[2].setText(MainLocale.INFO, "range");
-        boxes[3].setText("atk");
+        boxes[3].setText(MainLocale.INFO, "atk");
         boxes[4].setText("dps");
         boxes[5].setText(MainLocale.INFO, "preaa");
         boxes[6].setText(MainLocale.INFO, "postaa");
         boxes[7].setText(MainLocale.INFO, "atkf");
-        boxes[8].setText("TBA");
+        boxes[8].setText(MainLocale.INFO, "TBA");
         boxes[9].setText(MainLocale.INFO, "speed");
 
         unit[0][0].setText(MainLocale.INFO, "cdo");
