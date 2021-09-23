@@ -168,7 +168,7 @@ public class StageEditPage extends Page {
 		elim.setLnr(x -> changePanel(new LimitEditPage(getThis(), stage)));
 
 		addl.addActionListener(arg0 -> {
-			int ind = jt.addLine(jle.getSelectedValue());
+			int ind = jt.addLine(jle.getSelectedValue() != null ? jle.getSelectedValue() : jle.getModel().getElementAt(0));
 			setData(stage);
 			if (ind < 0)
 				jt.clearSelection();
