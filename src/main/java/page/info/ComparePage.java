@@ -1,6 +1,7 @@
 package page.info;
 
 import common.CommonStatic;
+import common.battle.BasisLU;
 import common.battle.BasisSet;
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskEntity;
@@ -55,7 +56,7 @@ public class ComparePage extends Page {
 
     private boolean resize = true;
 
-    private final BasisSet b = BasisSet.current();
+    private final BasisLU b = BasisSet.current().sele;
 
     public ComparePage(Page p) {
         super(p);
