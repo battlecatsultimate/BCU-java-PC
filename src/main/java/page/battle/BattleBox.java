@@ -117,14 +117,16 @@ public interface BattleBox {
 			int w = box.getWidth();
 			int h = box.getHeight();
 
+			sb = bf.sb;
+
 			calculateSiz(w, h);
 
-			sb = bf.sb;
 			if (prew != w || preh != h) {
 				clear();
 				prew = w;
 				preh = h;
 			}
+
 			regulate();
 
 			ImgCore.set(g);
@@ -483,6 +485,10 @@ public interface BattleBox {
 			double psiz = siz * sprite;
 
 			CommonStatic.getConfig().battle = true;
+
+			if(sb.bgEffect != null) {
+				sb.bgEffect.preDraw(gra, setP(pos, 0), siz);
+			}
 
 			for(int i = 0; i < sb.le.size(); i++) {
 				Entity e = sb.le.get(i);

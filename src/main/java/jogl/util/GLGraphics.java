@@ -140,7 +140,7 @@ public class GLGraphics implements GeoAuto {
 				float[] cs = new float[3];
 				for (int j = 0; j < 3; j++)
 					cs[j] = c[j] + cx * (f[j] - c[j]);
-				setColor(cs[0], cs[1], cs[2]);
+				applyColor(cs[0], cs[1], cs[2]);
 				addP(px, py);
 			}
 			g.glEnd();
@@ -175,13 +175,16 @@ public class GLGraphics implements GeoAuto {
 		private void setColor() {
 			if (color == null)
 				return;
-			setColor(color >> 16 & 255, color >> 8 & 255, color & 255);
+			applyColor(color >> 16 & 255, color >> 8 & 255, color & 255);
 		}
 
-		private void setColor(float c0, float c1, float c2) {
+		public void setColor(int r, int g, int b) {
+			color = (r << 16) + (g << 8) + b;
+		}
+
+		private void applyColor(float c0, float c1, float c2) {
 			g.glColor3f(c0 / 256f, c1 / 256f, c2 / 256f);
 		}
-
 	}
 
 	private static class GLC {
@@ -299,6 +302,11 @@ public class GLGraphics implements GeoAuto {
 		trans[3] *= hf;
 		trans[1] *= vf;
 		trans[4] *= vf;
+	}
+
+	@Override
+	public void setColor(int r, int g, int b) {
+
 	}
 
 	@Override

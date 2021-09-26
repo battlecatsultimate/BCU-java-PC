@@ -123,6 +123,11 @@ public class FG2D implements FakeGraphics {
 	}
 
 	@Override
+	public void setColor(int r, int g, int b) {
+		this.g.setColor(new Color(r, g, b));
+	}
+
+	@Override
 	public void setComposite(int mode, int p0, int p1) {
 		if (mode == DEF)
 			g.setComposite(comp);
