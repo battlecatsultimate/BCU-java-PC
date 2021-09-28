@@ -173,14 +173,19 @@ public interface BattleBox {
 		public void regulate() {
 			int w = box.getWidth();
 			int h = box.getHeight();
+
 			if (siz < minSiz)
 				siz = minSiz;
+
 			if (siz >= maxSiz)
 				siz = maxSiz;
+
 			if (pos > 0)
 				pos = 0;
+
 			if (maxW * siz + pos < w)
 				pos = (int) (w - maxW * siz);
+
 			midh = h + (int) (groundHeight * (siz - maxSiz) / (maxSiz - minSiz));
 
 			if(CommonStatic.getConfig().twoRow)
@@ -193,8 +198,23 @@ public interface BattleBox {
 		}
 
 		private void adjust(int w, int s) {
+			int h = box.getHeight();
+
 			pos += w;
+
 			siz *= Math.pow(exp, s);
+
+			if(siz * minH > h) {
+				siz = maxSiz;
+			}
+
+			if(siz * maxH < h) {
+				siz = minSiz;
+			}
+
+			if(siz * maxW < w) {
+				siz = w * 1.0 / maxW;
+			}
 		}
 
 		private void clear() {
@@ -487,7 +507,8 @@ public interface BattleBox {
 			CommonStatic.getConfig().battle = true;
 
 			if(sb.bgEffect != null) {
-				sb.bgEffect.preDraw(gra, setP(pos, 0), siz);
+				double y = maxH * siz - midh;
+				sb.bgEffect.preDraw(gra, setP(pos, y), siz);
 			}
 
 			for(int i = 0; i < sb.le.size(); i++) {
@@ -799,9 +820,17 @@ public interface BattleBox {
 			int w = box.getWidth();
 			int h = box.getHeight();
 			double psiz = siz * Math.pow(exp, ind);
-			if (psiz * minH > h || psiz * maxH < h || psiz * maxW < w)
-				return;
-			int dif = -(int) ((p.x - pos) * (Math.pow(exp, ind) - 1));
+
+			if(psiz * minH > h)
+				psiz = maxSiz / siz;
+			else if(psiz * maxH < h)
+				psiz = minSiz / siz;
+			else if(psiz * maxW < w)
+				psiz = minSiz / siz;
+			else
+				psiz = Math.pow(exp, ind);
+
+			int dif = -(int) ((p.x - pos) * (psiz - 1));
 			adjust(dif, ind);
 			reset();
 		}
