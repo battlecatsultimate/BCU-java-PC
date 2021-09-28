@@ -132,11 +132,27 @@ public interface BattleBox {
 			ImgCore.set(g);
 			P rect = setP(box.getWidth(), box.getHeight());
 			sb.bg.draw(g, rect, pos, midh, siz, (int) (groundHeight + (CommonStatic.getConfig().twoRow ? (h * 0.75 / 10.0) : 0)));
+
+			double y = maxH * siz - midh;
+			double midY = groundHeight / minSiz;
+
+			if(CommonStatic.getConfig().twoRow)
+				midY += (h * 0.75 / 10.0);
+
+			if(sb.bgEffect != null) {
+				sb.bgEffect.preDraw(g, setP(pos, y), siz, midY);
+			}
+
 			drawCastle(g);
 			if(sb.cannon == sb.maxCannon && sb.canon.id == 0) {
 				drawCannonRange(g);
 			}
 			drawEntity(g);
+
+			if(sb.bgEffect != null) {
+				sb.bgEffect.postDraw(g, setP(pos, y), siz, midY);
+			}
+
 			drawBtm(g);
 			drawTop(g);
 			if(bf.sb.st.timeLimit != 0) {
@@ -505,11 +521,6 @@ public interface BattleBox {
 			double psiz = siz * sprite;
 
 			CommonStatic.getConfig().battle = true;
-
-			if(sb.bgEffect != null) {
-				double y = maxH * siz - midh;
-				sb.bgEffect.preDraw(gra, setP(pos, y), siz);
-			}
 
 			for(int i = 0; i < sb.le.size(); i++) {
 				Entity e = sb.le.get(i);
