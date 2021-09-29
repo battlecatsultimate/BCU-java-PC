@@ -82,7 +82,7 @@ class AttList extends JList<String> {
 				if (trait.BCTrait)
 					jl.setIcon(UtilPC.createIcon(3, ind));
 				else if (trait.icon != null)
-					jl.setIcon(new ImageIcon((BufferedImage)trait.icon.getImg()));
+					jl.setIcon(new ImageIcon((BufferedImage)trait.icon.getImg().bimg()));
 				return jl;
 			}
 		});
