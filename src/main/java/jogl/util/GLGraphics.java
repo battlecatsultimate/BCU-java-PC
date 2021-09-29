@@ -180,6 +180,7 @@ public class GLGraphics implements GeoAuto {
 
 		public void setColor(int r, int g, int b) {
 			color = (r << 16) + (g << 8) + b;
+			setColor();
 		}
 
 		private void applyColor(float c0, float c1, float c2) {
