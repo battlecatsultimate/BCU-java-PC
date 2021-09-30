@@ -147,6 +147,36 @@ public class GLGraphics implements GeoAuto {
 			color = null;
 		}
 
+		protected void gradRectAlpha(int x, int y, int w, int h, int a, int b, int al, int[] c, int d, int e, int al2, int[] f) {
+			checkMode();
+			P vec = new P(d - a, e - b);
+			double l = vec.abs();
+			l *= l;
+			g.glBegin(GL2ES3.GL_QUADS);
+
+			for (int i = 0; i < 4; i++) {
+				int px = x, py = y;
+				if (i == 2 || i == 3)
+					px += w;
+				if (i == 1 || i == 2)
+					py += h;
+				int alpha;
+				if( i == 0 || i == 2)
+					alpha = al;
+				else
+					alpha = al2;
+				float cx = (float) (vec.dotP(new P(px - a, py - b)) / l);
+				cx = P.reg(cx);
+				float[] cs = new float[3];
+				for (int j = 0; j < 3; j++)
+					cs[j] = c[j] + cx * (f[j] - c[j]);
+				applyColorWithOpacity(cs[0], cs[1], cs[2], alpha);
+				addP(px, py);
+			}
+			g.glEnd();
+			color = null;
+		}
+
 		protected void setColor(int c) {
 			if (c == RED)
 				color = Color.RED.getRGB();
@@ -185,6 +215,10 @@ public class GLGraphics implements GeoAuto {
 
 		private void applyColor(float c0, float c1, float c2) {
 			g.glColor3f(c0 / 256f, c1 / 256f, c2 / 256f);
+		}
+
+		private void applyColorWithOpacity(float c0, float c1, float c2, float c3) {
+			g.glColor4f(c0 / 256f, c1 / 256f, c2 / 256f, c3 / 256f);
 		}
 	}
 
@@ -444,6 +478,11 @@ interface GeoAuto extends FakeGraphics {
 	@Override
 	default void gradRect(int x, int y, int w, int h, int a, int b, int[] c, int d, int e, int[] f) {
 		getGeo().gradRect(x, y, w, h, a, b, c, d, e, f);
+	}
+
+	@Override
+	default void gradRectAlpha(int x, int y, int w, int h, int a, int b, int al, int[] c, int d, int e, int al2, int[] f) {
+		getGeo().gradRectAlpha(x, y, w, h, a, b, al, c, d, e, al2, f);
 	}
 
 	@Override

@@ -147,12 +147,16 @@ public interface BattleBox {
 			if(sb.cannon == sb.maxCannon && sb.canon.id == 0) {
 				drawCannonRange(g);
 			}
+
 			drawEntity(g);
 
 			if(sb.bgEffect != null) {
 				sb.bgEffect.postDraw(g, setP(pos, y), siz, midY);
 			}
 
+			if(sb.bg.overlay != null) {
+				drawBGOverlay(g, midY);
+			}
 			drawBtm(g);
 			drawTop(g);
 			if(bf.sb.st.timeLimit != 0) {
@@ -806,6 +810,13 @@ public interface BattleBox {
 			}
 
 			P.delete(p);
+		}
+
+		protected synchronized void drawBGOverlay(FakeGraphics gra, double midY) {
+			if(sb.bg.overlay == null)
+				return;
+
+			gra.gradRectAlpha(pos, - (int) (maxH * siz - midh - midY * siz), (int) ((sb.st.len * ratio + 400) * siz), (int) ((1530 + midY) * siz), pos, 0, sb.bg.overlayAlpha, sb.bg.overlay[1], pos, (int) (1530 * siz - maxH * siz + midh + midY * siz), sb.bg.overlayAlpha, sb.bg.overlay[0]);
 		}
 
 		protected synchronized void drag(Point p) {
