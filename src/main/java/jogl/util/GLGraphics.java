@@ -391,7 +391,7 @@ public class GLGraphics implements GeoAuto {
 			g.glDisable(GL_TEXTURE_2D);
 			g.glUseProgram(0);
 			g.glEnable(GL_BLEND);
-			g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			g.glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 		}
 		if (mode == IMG) {
 			g.glEnable(GL_TEXTURE_2D);
@@ -407,18 +407,18 @@ public class GLGraphics implements GeoAuto {
 		comp.done = true;
 		if (mode == DEF) {
 			// sC *sA + dC *(1-sA)
-			g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			g.glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			g.glUniform1i(tm.mode, 0);
 		}
 		if (mode == TRANS) {
-			g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			g.glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			g.glUniform1i(tm.mode, 1);
 			g.glUniform1f(tm.para, comp.p0 * 1.0f / 256);
 		}
 		if (mode == BLEND) {
 			g.glUniform1f(tm.para, comp.p0 * 1.0f / 256);
 			if (comp.p1 == 0) {
-				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				g.glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 				g.glUniform1i(tm.mode, 1);
 			} else if (comp.p1 == 1) {// d+s*a
 				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE);

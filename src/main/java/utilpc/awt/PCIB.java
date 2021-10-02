@@ -21,8 +21,8 @@ public class PCIB extends ImageBuilder<BufferedImage> {
 		if(o == null)
 			return new FIBI(o);
 
-		if(o.getType() != BufferedImage.TYPE_INT_ARGB) {
-			BufferedImage temp = new BufferedImage(o.getWidth(), o.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		if(o.getType() != BufferedImage.TYPE_INT_ARGB_PRE) {
+			BufferedImage temp = new BufferedImage(o.getWidth(), o.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
 
 			for(int x = 0; x < o.getWidth(); x++) {
 				for(int y = 0; y < o.getHeight(); y++) {
@@ -40,8 +40,8 @@ public class PCIB extends ImageBuilder<BufferedImage> {
 	public FakeImage build(File f) throws IOException {
 		BufferedImage o = ImageIO.read(f);
 
-		if(o.getType() != BufferedImage.TYPE_INT_ARGB) {
-			BufferedImage temp = new BufferedImage(o.getWidth(), o.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		if(o.getType() != BufferedImage.TYPE_INT_ARGB_PRE) {
+			BufferedImage temp = new BufferedImage(o.getWidth(), o.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
 
 			for(int x = 0; x < o.getWidth(); x++) {
 				for(int y = 0; y < o.getHeight(); y++) {
@@ -66,8 +66,8 @@ public class PCIB extends ImageBuilder<BufferedImage> {
 		if(o == null)
 			return build(o);
 
-		if(o.getType() != BufferedImage.TYPE_INT_ARGB) {
-			BufferedImage temp = new BufferedImage(o.getWidth(), o.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		if(o.getType() != BufferedImage.TYPE_INT_ARGB_PRE) {
+			BufferedImage temp = new BufferedImage(o.getWidth(), o.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
 
 			for(int x = 0; x < o.getWidth(); x++) {
 				for(int y = 0; y < o.getHeight(); y++) {
