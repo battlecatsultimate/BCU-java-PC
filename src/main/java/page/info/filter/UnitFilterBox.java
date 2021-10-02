@@ -306,12 +306,12 @@ class UFBList extends UnitFilterBox {
 						if (ct.size() > 0) {
 							if (orop[0].isSelected())
 								for (Trait diyt : ct) {
-									b1 |= trlis.get(i).equals(diyt);
+									b1 |= trlis.get(i).equals(diyt) || trlis.get(i).others.contains(f);
 									if (b1)
 										break;
 								}
 							else {
-								b1 &= ct.contains(trlis.get(i));
+								b1 &= ct.contains(trlis.get(i)) || trlis.get(i).others.contains(f);
 								if (!b1)
 									break;
 							}
