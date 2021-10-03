@@ -6,7 +6,6 @@ import common.battle.BasisSet;
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskEntity;
 import common.battle.data.MaskUnit;
-import common.battle.entity.EUnit;
 import common.util.Data;
 import common.util.unit.EForm;
 import common.util.unit.Form;
@@ -20,12 +19,14 @@ import utilpc.Interpret;
 import utilpc.UtilPC;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.stream.Collectors;
 
 public class ComparePage extends Page {
 
@@ -95,45 +96,7 @@ public class ComparePage extends Page {
             add(abilityPanes[i] = p);
         }
 
-        for (int i = 0; i < main.length; i++) {
-            for (int j = 0; j < main[i].length; j++) {
-                main[i][j] = new JL("-");
-                if (j == 0)
-                    main[i][j].setHorizontalAlignment(SwingConstants.CENTER);
-
-                add(main[i][j]);
-            }
-        }
-
-        for (int i = 0; i < unit.length; i++) {
-            for (int j = 0; j < unit[i].length; j++) {
-                unit[i][j] = new JL("-");
-                if (j == 0)
-                    unit[i][j].setHorizontalAlignment(SwingConstants.CENTER);
-
-                add(unit[i][j]);
-            }
-        }
-
-        for (int i = 0; i < enem.length; i++) {
-            for (int j = 0; j < enem[i].length; j++) {
-                enem[i][j] = new JL("-");
-                if (j == 0)
-                    enem[i][j].setHorizontalAlignment(SwingConstants.CENTER);
-
-                add(enem[i][j]);
-            }
-        }
-
-        for (int i = 0; i < seco.length; i++) {
-            for (int j = 0; j < seco[i].length; j++) {
-                seco[i][j] = new JL("-");
-                if (j == 0)
-                    seco[i][j].setHorizontalAlignment(SwingConstants.CENTER);
-
-                add(seco[i][j]);
-            }
-        }
+        addStatLabels();
 
         main[0][0].setText(MainLocale.INFO, "HP");
         main[1][0].setText(MainLocale.INFO, "hb");
@@ -481,6 +444,76 @@ public class ComparePage extends Page {
         efp = null;
         ufp = null;
         reset();
+    }
+
+    private void setUnderline(JLabel label) {
+        label.addMouseListener(new MouseAdapter() {
+            String text;
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                JLabel j = (JLabel) e.getComponent();
+
+                if (text == null || !j.getText().equals("<html><u>" + text + "</u></html>")) {
+                    text = j.getText();
+                    j.setText("<html><u>" + j.getText() + "</u></html>");
+                } else {
+                    j.setText(text);
+                }
+            }
+        });
+
+        label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }
+
+    private void addStatLabels() {
+        for (int i = 0; i < main.length; i++) {
+            for (int j = 0; j < main[i].length; j++) {
+                main[i][j] = new JL("-");
+                if (j == 0)
+                    main[i][j].setHorizontalAlignment(SwingConstants.CENTER);
+                else
+                    setUnderline(main[i][j]);
+
+                add(main[i][j]);
+            }
+        }
+
+        for (int i = 0; i < unit.length; i++) {
+            for (int j = 0; j < unit[i].length; j++) {
+                unit[i][j] = new JL("-");
+                if (j == 0)
+                    unit[i][j].setHorizontalAlignment(SwingConstants.CENTER);
+                else
+                    setUnderline(unit[i][j]);
+
+                add(unit[i][j]);
+            }
+        }
+
+        for (int i = 0; i < enem.length; i++) {
+            for (int j = 0; j < enem[i].length; j++) {
+                enem[i][j] = new JL("-");
+                if (j == 0)
+                    enem[i][j].setHorizontalAlignment(SwingConstants.CENTER);
+                else
+                    setUnderline(enem[i][j]);
+
+                add(enem[i][j]);
+            }
+        }
+
+        for (int i = 0; i < seco.length; i++) {
+            for (int j = 0; j < seco[i].length; j++) {
+                seco[i][j] = new JL("-");
+                if (j == 0)
+                    seco[i][j].setHorizontalAlignment(SwingConstants.CENTER);
+                else
+                    setUnderline(seco[i][j]);
+
+                add(seco[i][j]);
+            }
+        }
     }
 
     @Override
