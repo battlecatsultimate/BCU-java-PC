@@ -275,7 +275,8 @@ public class ComparePage extends Page {
                         .findFirst()
                         .orElse(null);
 
-                ArrayList<Trait> traits = e != null ? e.getTraits() : null;
+                // prevent changing trait
+                ArrayList<Trait> traits = e != null ? new ArrayList<>(e.getTraits()) : null;
                 if (traits != null)
                     traits.retainAll(mu.getTraits());
                 boolean overlap = traits != null && traits.size() > 0;
