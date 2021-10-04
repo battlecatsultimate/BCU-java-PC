@@ -607,7 +607,7 @@ public class ComparePage extends Page {
                 EntityAbilities e = abilities[i];
                 if (e != null) {
                     e.setPreferredSize(size(x, y, e.getPWidth(), e.getPHeight()).toDimension());
-                    pane.getHorizontalScrollBar().setUnitIncrement(size(x, y, 50));
+                    pane.getHorizontalScrollBar().setUnitIncrement(size(x, y, 20));
                     pane.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
                     pane.revalidate();
                 }

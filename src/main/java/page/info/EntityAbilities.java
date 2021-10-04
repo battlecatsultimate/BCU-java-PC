@@ -65,7 +65,7 @@ public class EntityAbilities extends Page {
 
         int posY = 0;
         for (JLabel jLabel : proc) {
-            set(jLabel, x, y, 0, posY, 750, 50);
+            set(jLabel, x, y, 0, posY, 1200, 50);
             posY += 50;
         }
 
@@ -74,7 +74,7 @@ public class EntityAbilities extends Page {
     }
 
     public int getPWidth() {
-        return (proc.length + (pcoin != null ? 1 : 0)) > 0 ? 750 : 0;
+        return (proc.length + (pcoin != null ? 1 : 0)) > 0 ? 1200 : 0;
     }
 
     public int getPHeight() {
