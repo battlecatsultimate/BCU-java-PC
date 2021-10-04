@@ -19,11 +19,8 @@ import utilpc.Interpret;
 import utilpc.UtilPC;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -361,6 +358,7 @@ public class ComparePage extends Page {
                 }
             }
 
+            abilityPanes[i].setEnabled(true);
             level[i].setEnabled(true);
 
             names[i].setIcon(UtilPC.getIcon(m.getPack().anim.getEdi()));
@@ -446,26 +444,6 @@ public class ComparePage extends Page {
         reset();
     }
 
-    private void setUnderline(JLabel label) {
-        label.addMouseListener(new MouseAdapter() {
-            String text;
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                JLabel j = (JLabel) e.getComponent();
-
-                if (text == null || !j.getText().equals("<html><u>" + text + "</u></html>")) {
-                    text = j.getText();
-                    j.setText("<html><u>" + j.getText() + "</u></html>");
-                } else {
-                    j.setText(text);
-                }
-            }
-        });
-
-        label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-    }
-
     private void addStatLabels() {
         for (int i = 0; i < main.length; i++) {
             for (int j = 0; j < main[i].length; j++) {
@@ -473,7 +451,7 @@ public class ComparePage extends Page {
                 if (j == 0)
                     main[i][j].setHorizontalAlignment(SwingConstants.CENTER);
                 else
-                    setUnderline(main[i][j]);
+                    Interpret.setUnderline(main[i][j]);
 
                 add(main[i][j]);
             }
@@ -485,7 +463,7 @@ public class ComparePage extends Page {
                 if (j == 0)
                     unit[i][j].setHorizontalAlignment(SwingConstants.CENTER);
                 else
-                    setUnderline(unit[i][j]);
+                    Interpret.setUnderline(unit[i][j]);
 
                 add(unit[i][j]);
             }
@@ -497,7 +475,7 @@ public class ComparePage extends Page {
                 if (j == 0)
                     enem[i][j].setHorizontalAlignment(SwingConstants.CENTER);
                 else
-                    setUnderline(enem[i][j]);
+                    Interpret.setUnderline(enem[i][j]);
 
                 add(enem[i][j]);
             }
@@ -509,7 +487,7 @@ public class ComparePage extends Page {
                 if (j == 0)
                     seco[i][j].setHorizontalAlignment(SwingConstants.CENTER);
                 else
-                    setUnderline(seco[i][j]);
+                    Interpret.setUnderline(seco[i][j]);
 
                 add(seco[i][j]);
             }
@@ -629,6 +607,7 @@ public class ComparePage extends Page {
                 EntityAbilities e = abilities[i];
                 if (e != null) {
                     e.setPreferredSize(size(x, y, e.getPWidth(), e.getPHeight()).toDimension());
+                    pane.getHorizontalScrollBar().setUnitIncrement(size(x, y, 50));
                     pane.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
                     pane.revalidate();
                 }
