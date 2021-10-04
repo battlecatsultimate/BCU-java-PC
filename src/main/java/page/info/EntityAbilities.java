@@ -1,5 +1,6 @@
 package page.info;
 
+import common.battle.BasisSet;
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskEntity;
 import common.battle.data.MaskUnit;
@@ -34,7 +35,12 @@ public class EntityAbilities extends Page {
     private void ini() {
         boolean isEnemy = me instanceof MaskEnemy;
         List<Interpret.ProcDisplay> ls = Interpret.getAbi(me);
-        ls.addAll(Interpret.getProc(me, isEnemy, Arrays.stream(lvl).mapToDouble(x -> x).toArray()));
+        ls.addAll(Interpret.getProc(me, isEnemy, Arrays.stream(lvl).mapToDouble(x -> {
+            if (isEnemy)
+                return x * ((MaskEnemy) me).multi(BasisSet.current()) / 100;
+            else
+                return x;
+        }).toArray()));
         proc = new JLabel[ls.size()];
         for (int i = 0; i < ls.size(); i++) {
             Interpret.ProcDisplay disp = ls.get(i);
