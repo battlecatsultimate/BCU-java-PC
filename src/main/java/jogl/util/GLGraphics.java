@@ -391,7 +391,7 @@ public class GLGraphics implements GeoAuto {
 			g.glDisable(GL_TEXTURE_2D);
 			g.glUseProgram(0);
 			g.glEnable(GL_BLEND);
-			g.glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+			g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		}
 		if (mode == IMG) {
 			g.glEnable(GL_TEXTURE_2D);
