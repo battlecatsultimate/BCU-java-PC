@@ -61,6 +61,11 @@ class BattleBoxDef extends Canvas implements BattleBox {
 		prev = null;
 	}
 
+	@Override
+	public void releaseData() {
+		bbp.bf.sb.release();
+	}
+
 	protected BufferedImage getImage() {
 		int w = getWidth();
 		int h = getHeight();

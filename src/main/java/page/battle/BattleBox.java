@@ -21,6 +21,8 @@ import common.system.fake.FakeTransform;
 import common.util.Data;
 import common.util.ImgCore;
 import common.util.Res;
+import common.util.pack.bgeffect.BackgroundEffect;
+import common.util.pack.bgeffect.JsonBGEffect;
 import common.util.stage.CastleImg;
 import common.util.unit.Form;
 import page.RetFunc;
@@ -133,8 +135,10 @@ public interface BattleBox {
 			P rect = setP(box.getWidth(), box.getHeight());
 			sb.bg.draw(g, rect, pos, midh, siz, (int) (groundHeight + (CommonStatic.getConfig().twoRow ? (h * 0.75 / 10.0) : 0)));
 
-			double y = maxH * siz - midh;
 			double midY = groundHeight / minSiz;
+			double y = maxH * siz - midh;
+
+			sb.registerBattleDimension(midY, h / minSiz);
 
 			if(CommonStatic.getConfig().twoRow)
 				midY += (h * 0.75 / 10.0);
@@ -816,7 +820,7 @@ public interface BattleBox {
 			if(sb.bg.overlay == null)
 				return;
 
-			gra.gradRectAlpha(pos, - (int) (maxH * siz - midh - midY * siz), (int) ((sb.st.len * ratio + 400) * siz), (int) ((1530 + midY) * siz), pos, 0, sb.bg.overlayAlpha, sb.bg.overlay[1], pos, (int) (1530 * siz - maxH * siz + midh + midY * siz), sb.bg.overlayAlpha, sb.bg.overlay[0]);
+			gra.gradRectAlpha(pos, - (int) (maxH * siz - midh - midY * siz), (int) ((sb.st.len * ratio + 400) * siz), (int) ((BackgroundEffect.BGHeight * 3 + midY) * siz), pos, 0, sb.bg.overlayAlpha, sb.bg.overlay[1], pos, (int) (BackgroundEffect.BGHeight * 3 * siz - maxH * siz + midh + midY * siz), sb.bg.overlayAlpha, sb.bg.overlay[0]);
 		}
 
 		protected synchronized void drag(Point p) {
@@ -895,4 +899,5 @@ public interface BattleBox {
 		getPainter().wheeled(p, ind);
 	}
 
+	void releaseData();
 }

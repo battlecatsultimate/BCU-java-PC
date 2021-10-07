@@ -51,6 +51,11 @@ public class GLBattleBox extends GLCstd implements BattleBox, GLEventListener {
 	}
 
 	@Override
+	public void releaseData() {
+		bbp.bf.sb.release();
+	}
+
+	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 		bbp.reset();
 	}

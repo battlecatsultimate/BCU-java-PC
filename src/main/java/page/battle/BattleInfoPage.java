@@ -361,6 +361,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 					bbr.quit();
 				}
 			}
+			bb.releaseData();
 			changePanel(getFront());
 		});
 
