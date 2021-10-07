@@ -375,7 +375,7 @@ public class ComparePage extends Page {
                     unit[0][index].setText(respawn + "f");
 
                 double price = ef.getPrice(1);
-                unit[1][index].setText(price + " (" + (int) (price / (respawn / 30)) + ")");
+                unit[1][index].setText(price + "");
 
                 for (JL[] jls : enem)
                     jls[index].setText("-");
