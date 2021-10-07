@@ -20,10 +20,14 @@ import page.MainLocale;
 import page.Page;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
+import java.util.List;
 
 public class Interpret extends Data {
 
@@ -747,5 +751,25 @@ public class Interpret extends Data {
 		String format = "#." + new String(new char[decimalPlaces]).replace("\0", "#");
 		df.applyPattern(format);
 		return Double.parseDouble(df.format(number));
+	}
+
+	public static void setUnderline(JLabel label) {
+		label.addMouseListener(new MouseAdapter() {
+			String text;
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				JLabel j = (JLabel) e.getComponent();
+
+				if (text == null || !j.getText().equals("<html><u>" + text + "</u></html>")) {
+					text = j.getText();
+					j.setText("<html><u>" + j.getText() + "</u></html>");
+				} else {
+					j.setText(text);
+				}
+			}
+		});
+
+		label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 	}
 }

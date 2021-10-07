@@ -11,10 +11,6 @@ import page.Page;
 import page.support.UnitLCR;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Collection;
 
 public class CharaGroupPage extends Page {
@@ -69,46 +65,26 @@ public class CharaGroupPage extends Page {
 
 	private void addListeners() {
 
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
+		back.addActionListener(arg0 -> changePanel(getFront()));
+
+		cglr.addActionListener(arg0 -> changePanel(new CGLREditPage(getThis(), (UserPack) pack)));
+
+		jlpk.addListSelectionListener(arg0 -> {
+			if (changing || jlpk.getValueIsAdjusting())
+				return;
+			changing = true;
+			pack = jlpk.getSelectedValue();
+			updatePack();
+			changing = false;
 		});
 
-		cglr.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new CGLREditPage(getThis(), (UserPack) pack));
-			}
-		});
-
-		jlpk.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (changing || jlpk.getValueIsAdjusting())
-					return;
-				changing = true;
-				pack = jlpk.getSelectedValue();
-				updatePack();
-				changing = false;
-			}
-
-		});
-
-		jlcg.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (changing || jlcg.getValueIsAdjusting())
-					return;
-				changing = true;
-				cg = jlcg.getSelectedValue();
-				updateCG();
-				changing = false;
-			}
-
+		jlcg.addListSelectionListener(arg0 -> {
+			if (changing || jlcg.getValueIsAdjusting())
+				return;
+			changing = true;
+			cg = jlcg.getSelectedValue();
+			updateCG();
+			changing = false;
 		});
 	}
 

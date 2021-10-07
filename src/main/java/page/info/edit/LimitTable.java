@@ -8,8 +8,6 @@ import page.pack.CharaGroupPage;
 import page.pack.LvRestrictPage;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
@@ -131,43 +129,26 @@ public class LimitTable extends Page {
 
 	private void addListeners() {
 
-		one.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				lim.line = one.isSelected() ? 1 : 0;
-
-			}
-		});
+		one.addActionListener(arg0 -> lim.line = one.isSelected() ? 1 : 0);
 
 		for (int i = 0; i < brars.length; i++) {
 			int I = i;
-			brars[i].addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if (par.isAdj())
-						return;
-					lim.rare ^= 1 << I;
-					par.callBack(lim);
-				}
-
+			brars[i].addActionListener(e -> {
+				if (par.isAdj())
+					return;
+				lim.rare ^= 1 << I;
+				par.callBack(lim);
 			});
 		}
 
-		cgb.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				cgp = new CharaGroupPage(main, pac, false);
-				changePanel(cgp);
-			}
+		cgb.addActionListener(arg0 -> {
+			cgp = new CharaGroupPage(main, pac, false);
+			changePanel(cgp);
 		});
 
-		lrb.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				lrp = new LvRestrictPage(main, pac, false);
-				changePanel(lrp);
-			}
+		lrb.addActionListener(arg0 -> {
+			lrp = new LvRestrictPage(main, pac, false);
+			changePanel(lrp);
 		});
 	}
 

@@ -1,9 +1,9 @@
 package page.info;
 
+import common.battle.BasisSet;
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskEntity;
 import common.battle.data.MaskUnit;
-import common.util.unit.Form;
 import page.Page;
 import utilpc.Interpret;
 import utilpc.UtilPC;
@@ -35,13 +35,19 @@ public class EntityAbilities extends Page {
     private void ini() {
         boolean isEnemy = me instanceof MaskEnemy;
         List<Interpret.ProcDisplay> ls = Interpret.getAbi(me);
-        ls.addAll(Interpret.getProc(me, isEnemy, Arrays.stream(lvl).mapToDouble(x -> x).toArray()));
+        ls.addAll(Interpret.getProc(me, isEnemy, Arrays.stream(lvl).mapToDouble(x -> {
+            if (isEnemy)
+                return x * ((MaskEnemy) me).multi(BasisSet.current()) / 100;
+            else
+                return x;
+        }).toArray()));
         proc = new JLabel[ls.size()];
         for (int i = 0; i < ls.size(); i++) {
             Interpret.ProcDisplay disp = ls.get(i);
             add(proc[i] = new JLabel(disp.toString()));
             proc[i].setBorder(BorderFactory.createEtchedBorder());
             proc[i].setIcon(disp.getIcon());
+            Interpret.setUnderline(proc[i]);
         }
 
         if (!isEnemy && ((MaskUnit) me).getPCoin() != null) {
@@ -59,16 +65,16 @@ public class EntityAbilities extends Page {
 
         int posY = 0;
         for (JLabel jLabel : proc) {
-            set(jLabel, x, y, 0, posY, 550, 50);
+            set(jLabel, x, y, 0, posY, 1200, 50);
             posY += 50;
         }
 
         if (pcoin != null)
-            set(pcoin, x, y, 0, posY, 550, 50);
+            set(pcoin, x, y, 0, posY, 750, 50);
     }
 
     public int getPWidth() {
-        return (proc.length + (pcoin != null ? 1 : 0)) > 0 ? 550 : 0;
+        return (proc.length + (pcoin != null ? 1 : 0)) > 0 ? 1200 : 0;
     }
 
     public int getPHeight() {

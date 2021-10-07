@@ -6,7 +6,6 @@ import common.battle.BasisSet;
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskEntity;
 import common.battle.data.MaskUnit;
-import common.battle.entity.EUnit;
 import common.util.Data;
 import common.util.unit.EForm;
 import common.util.unit.Form;
@@ -25,6 +24,7 @@ import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ComparePage extends Page {
@@ -46,6 +46,7 @@ public class ComparePage extends Page {
     private final JBTN back = new JBTN(0, "back");
 
     private final JBTN[][] sele = new JBTN[names.length][2];
+    private final JBTN[][] swap = new JBTN[names.length][2];
 
     private final MaskEntity[] maskEntities = new MaskEntity[names.length];
     private final int[][] maskEntityLvl = new int[names.length][6];
@@ -73,6 +74,15 @@ public class ComparePage extends Page {
             add(sele[i][1] = new JBTN(0, "vuif"));
         }
 
+        for (int i = 0; i < swap.length; i++) {
+            JBTN left = new JBTN(0, "<");
+            JBTN right = new JBTN(0, ">");
+            left.setEnabled(false);
+            right.setEnabled(false);
+            add(swap[i][0] = left);
+            add(swap[i][1] = right);
+        }
+
         for (int i = 0; i < boxes.length; i++) {
             boxes[i] = new JCB();
             boxes[i].setSelected(true);
@@ -95,45 +105,7 @@ public class ComparePage extends Page {
             add(abilityPanes[i] = p);
         }
 
-        for (int i = 0; i < main.length; i++) {
-            for (int j = 0; j < main[i].length; j++) {
-                main[i][j] = new JL("-");
-                if (j == 0)
-                    main[i][j].setHorizontalAlignment(SwingConstants.CENTER);
-
-                add(main[i][j]);
-            }
-        }
-
-        for (int i = 0; i < unit.length; i++) {
-            for (int j = 0; j < unit[i].length; j++) {
-                unit[i][j] = new JL("-");
-                if (j == 0)
-                    unit[i][j].setHorizontalAlignment(SwingConstants.CENTER);
-
-                add(unit[i][j]);
-            }
-        }
-
-        for (int i = 0; i < enem.length; i++) {
-            for (int j = 0; j < enem[i].length; j++) {
-                enem[i][j] = new JL("-");
-                if (j == 0)
-                    enem[i][j].setHorizontalAlignment(SwingConstants.CENTER);
-
-                add(enem[i][j]);
-            }
-        }
-
-        for (int i = 0; i < seco.length; i++) {
-            for (int j = 0; j < seco[i].length; j++) {
-                seco[i][j] = new JL("-");
-                if (j == 0)
-                    seco[i][j].setHorizontalAlignment(SwingConstants.CENTER);
-
-                add(seco[i][j]);
-            }
-        }
+        addStatLabels();
 
         main[0][0].setText(MainLocale.INFO, "HP");
         main[1][0].setText(MainLocale.INFO, "hb");
@@ -191,6 +163,43 @@ public class ComparePage extends Page {
             });
         }
 
+        for (int i = 0; i < swap.length; i++) {
+            int finalI = i;
+            swap[i][0].addActionListener(x -> {
+                if (!(maskEntities[finalI] instanceof MaskUnit))
+                    return;
+
+                Form oldf = (Form) maskEntities[finalI].getPack();
+                Form[] forms = oldf.uid.get().forms;
+                int fid = oldf.fid;
+                Form f = (fid - 1) < 0 ? forms[forms.length - 1] : forms[fid - 1];
+
+                int[] data = CommonStatic.parseIntsN(level[finalI].getText());
+                maskEntityLvl[finalI] = f.regulateLv(data, maskEntityLvl[finalI]);
+                String[] strs = UtilPC.lvText(f, maskEntityLvl[finalI]);
+                level[finalI].setText(strs[0]);
+
+                maskEntities[finalI] = f.du;
+                reset();
+            });
+            swap[i][1].addActionListener(x -> {
+                if (!(maskEntities[finalI] instanceof MaskUnit))
+                    return;
+
+                Form oldf = (Form) maskEntities[finalI].getPack();
+                int fid = oldf.fid;
+                Form f = oldf.uid.get().forms[(fid + 1) % 3];
+
+                int[] data = CommonStatic.parseIntsN(level[finalI].getText());
+                maskEntityLvl[finalI] = f.regulateLv(data, maskEntityLvl[finalI]);
+                String[] strs = UtilPC.lvText(f, maskEntityLvl[finalI]);
+                level[finalI].setText(strs[0]);
+
+                maskEntities[finalI] = f.du;
+                reset();
+            });
+        }
+
         for (int i = 0; i < level.length; i++) {
             JTF jtf = level[i];
             int finalI = i;
@@ -245,6 +254,8 @@ public class ComparePage extends Page {
                 names[i].setText("-");
                 level[i].setEnabled(false);
                 level[i].setText("-");
+                for (JBTN btn : swap[i])
+                    btn.setEnabled(false);
                 for (JL[] jls : main)
                     jls[index].setText("-");
                 for (JL[] jls : unit)
@@ -294,6 +305,8 @@ public class ComparePage extends Page {
 
                 for (JL[] jls : unit)
                     jls[index].setText("-");
+                for (JBTN btn : swap[i])
+                    btn.setEnabled(false);
             } else if (m instanceof MaskUnit) {
                 int[] multi = state
                         ? maskEntityLvl[i]
@@ -310,15 +323,13 @@ public class ComparePage extends Page {
                 double atkLv = b.t().getAtkMulti();
                 double defLv = b.t().getDefMulti();
 
-                MaskEnemy e = (MaskEnemy) Arrays.stream(maskEntities)
+                ArrayList<Trait> traits = Arrays.stream(maskEntities)
                         .filter(c -> c instanceof MaskEnemy)
-                        .findFirst()
-                        .orElse(null);
+                        .flatMap(c -> c.getTraits().stream())
+                        .collect(Collectors.toCollection(ArrayList::new));
 
-                ArrayList<Trait> traits = e != null ? new ArrayList<>(e.getTraits()) : null;
-                if (traits != null)
-                    traits.retainAll(mu.getTraits());
-                boolean overlap = traits != null && traits.size() > 0;
+                traits.retainAll(mu.getTraits());
+                boolean overlap = traits.size() > 0;
 
                 int checkHealth = (Data.AB_GOOD | Data.AB_RESIST | Data.AB_RESISTS);
                 int checkAttack = (Data.AB_GOOD | Data.AB_MASSIVE | Data.AB_MASSIVES);
@@ -362,20 +373,22 @@ public class ComparePage extends Page {
                     unit[0][index].setText(MainBCU.toSeconds(respawn));
                 else
                     unit[0][index].setText(respawn + "f");
-                unit[1][index].setText(ef.getPrice(1) + "");
+
+                double price = ef.getPrice(1);
+                unit[1][index].setText(price + "");
 
                 for (JL[] jls : enem)
                     jls[index].setText("-");
 
-                if (traits != null && traits.size() > 0 && (mu.getAbi() & checkHealth) > 0) {
+                if (traits.size() > 0 && (mu.getAbi() & checkHealth) > 0) {
                     int effectiveHP = hp;
 
                     if ((mu.getAbi() & Data.AB_RESISTS) > 0)
                         effectiveHP /= b.t().getRESISTSDEF(traits);
                     if ((mu.getAbi() & Data.AB_RESIST) > 0)
-                        effectiveHP /= b.t().getRESISTDEF(e.getTraits(), mu.getTraits(), null, new Level(multi));
+                        effectiveHP /= b.t().getRESISTDEF(traits, traits, null, new Level(multi));
                     if ((mu.getAbi() & Data.AB_GOOD) > 0) {
-                        effectiveHP /= b.t().getGOODDEF(e.getTraits(), mu.getTraits(), null, new Level(multi));
+                        effectiveHP /= b.t().getGOODDEF(traits, traits, null, new Level(multi));
                     }
 
                     main[0][index].setText(hp + " (" + effectiveHP + ")");
@@ -396,8 +409,12 @@ public class ComparePage extends Page {
                 } else {
                     main[4][index].setText((int) (atk * 30.0 / m.getItv()) + "");
                 }
+
+                for (JBTN btn : swap[i])
+                    btn.setEnabled(true);
             }
 
+            abilityPanes[i].setEnabled(true);
             level[i].setEnabled(true);
 
             names[i].setIcon(UtilPC.getIcon(m.getPack().anim.getEdi()));
@@ -483,6 +500,56 @@ public class ComparePage extends Page {
         reset();
     }
 
+    private void addStatLabels() {
+        for (int i = 0; i < main.length; i++) {
+            for (int j = 0; j < main[i].length; j++) {
+                main[i][j] = new JL("-");
+                if (j == 0)
+                    main[i][j].setHorizontalAlignment(SwingConstants.CENTER);
+                else
+                    Interpret.setUnderline(main[i][j]);
+
+                add(main[i][j]);
+            }
+        }
+
+        for (int i = 0; i < unit.length; i++) {
+            for (int j = 0; j < unit[i].length; j++) {
+                unit[i][j] = new JL("-");
+                if (j == 0)
+                    unit[i][j].setHorizontalAlignment(SwingConstants.CENTER);
+                else
+                    Interpret.setUnderline(unit[i][j]);
+
+                add(unit[i][j]);
+            }
+        }
+
+        for (int i = 0; i < enem.length; i++) {
+            for (int j = 0; j < enem[i].length; j++) {
+                enem[i][j] = new JL("-");
+                if (j == 0)
+                    enem[i][j].setHorizontalAlignment(SwingConstants.CENTER);
+                else
+                    Interpret.setUnderline(enem[i][j]);
+
+                add(enem[i][j]);
+            }
+        }
+
+        for (int i = 0; i < seco.length; i++) {
+            for (int j = 0; j < seco[i].length; j++) {
+                seco[i][j] = new JL("-");
+                if (j == 0)
+                    seco[i][j].setHorizontalAlignment(SwingConstants.CENTER);
+                else
+                    Interpret.setUnderline(seco[i][j]);
+
+                add(seco[i][j]);
+            }
+        }
+    }
+
     @Override
     protected void resized(int x, int y) {
         setBounds(0, 0, x, y);
@@ -492,9 +559,15 @@ public class ComparePage extends Page {
         int width = 600;
 
         for (int i = 0; i < sele.length; i++) {
-            int w = (width * 3 / 4) + width * i;
-            set(sele[i][0], x, y, w, 50, 200, 50);
-            set(sele[i][1], x, y, w, 100, 200, 50);
+            int p = (width * 3 / 4) + width * i;
+            set(sele[i][0], x, y, p, 50, 200, 50);
+            set(sele[i][1], x, y, p, 100, 200, 50);
+        }
+
+        for (int i = 0; i < swap.length; i++) {
+            int p = (width * 3 / 4) + width * i;
+            set(swap[i][0], x, y, p - 100, 100, 100, 50);
+            set(swap[i][1], x, y, p + 200, 100, 100, 50);
         }
 
         int posY = 250;
@@ -596,6 +669,7 @@ public class ComparePage extends Page {
                 EntityAbilities e = abilities[i];
                 if (e != null) {
                     e.setPreferredSize(size(x, y, e.getPWidth(), e.getPHeight()).toDimension());
+                    pane.getHorizontalScrollBar().setUnitIncrement(size(x, y, 20));
                     pane.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
                     pane.revalidate();
                 }

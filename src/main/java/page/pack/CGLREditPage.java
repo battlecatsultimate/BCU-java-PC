@@ -10,6 +10,7 @@ import common.util.unit.Form;
 import common.util.unit.Unit;
 import page.JBTN;
 import page.JTF;
+import page.MainLocale;
 import page.Page;
 import page.info.filter.UnitFindPage;
 import page.support.UnitLCR;
@@ -26,7 +27,7 @@ public class CGLREditPage extends Page {
 
 	private static final long serialVersionUID = 1L;
 
-	private final JBTN back = new JBTN(0, "back");
+	private final JBTN back = new JBTN(MainLocale.PAGE, "back");
 	private final JList<CharaGroup> jlcg = new JList<>();
 	private final JList<CharaGroup> jlsb = new JList<>();
 	private final JList<LvRestrict> jllr = new JList<>();
@@ -38,16 +39,16 @@ public class CGLREditPage extends Page {
 	private final JScrollPane jspus = new JScrollPane(jlus);
 	private final JScrollPane jspua = new JScrollPane(jlua);
 
-	private final JBTN cgt = new JBTN(0, "include");
+	private final JBTN cgt = new JBTN(MainLocale.PAGE, "include");
 
-	private final JBTN addcg = new JBTN(0, "add");
-	private final JBTN remcg = new JBTN(0, "rem");
-	private final JBTN addus = new JBTN(0, "add");
-	private final JBTN remus = new JBTN(0, "rem");
-	private final JBTN addlr = new JBTN(0, "add");
-	private final JBTN remlr = new JBTN(0, "rem");
-	private final JBTN addsb = new JBTN(0, "add");
-	private final JBTN remsb = new JBTN(0, "rem");
+	private final JBTN addcg = new JBTN(MainLocale.PAGE, "add");
+	private final JBTN remcg = new JBTN(MainLocale.PAGE, "rem");
+	private final JBTN addus = new JBTN(MainLocale.PAGE, "add");
+	private final JBTN remus = new JBTN(MainLocale.PAGE, "rem");
+	private final JBTN addlr = new JBTN(MainLocale.PAGE, "add");
+	private final JBTN remlr = new JBTN(MainLocale.PAGE, "rem");
+	private final JBTN addsb = new JBTN(MainLocale.PAGE, "add");
+	private final JBTN remsb = new JBTN(MainLocale.PAGE, "rem");
 
 	private final JTF jtfsb = new JTF();
 	private final JTF jtfal = new JTF();

@@ -11,11 +11,11 @@ import common.pack.PackData.UserPack;
 import common.util.unit.Trait;
 import common.pack.FixIndexList.FixIndexMap;
 import main.MainBCU;
-import page.JBTN;
-import page.JTF;
-import page.JTG;
-import page.Page;
+import page.*;
+import page.info.filter.UnitFindPage;
+import page.support.AnimLCR;
 import page.support.Importer;
+import page.support.ReorderList;
 import utilpc.Theme;
 
 import javax.imageio.ImageIO;
@@ -24,6 +24,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -59,16 +60,26 @@ public class TraitEditPage extends Page {
 
     private final JLabel jl = new JLabel();
 
-    private final JBTN back = new JBTN(0, "back");
-    private final JBTN addct = new JBTN(0, "add");
-    private final JBTN remct = new JBTN(0, "rem");
-    private final JBTN adicn = new JBTN(0, "icon");
-    private final JBTN reicn = new JBTN(0, "remicon");
-    private final JTG altrg = new JTG(0, "traitfect");
+    private final JBTN back = new JBTN(MainLocale.PAGE, "back");
+    private final JBTN addct = new JBTN(MainLocale.PAGE, "add");
+    private final JBTN remct = new JBTN(MainLocale.PAGE, "rem");
+    private final JBTN adicn = new JBTN(MainLocale.PAGE, "icon");
+    private final JBTN reicn = new JBTN(MainLocale.PAGE, "remicon");
+    private final JBTN addu = new JBTN(MainLocale.PAGE, "add");
+    private final JBTN remu = new JBTN(MainLocale.PAGE, "rem");
+    private final JBTN vuif = new JBTN(MainLocale.PAGE, "vuif");
+    private final JTG altrg = new JTG(MainLocale.PAGE, "traitfect");
+    private final JL adv = new JL(MainLocale.PAGE, "advtrt");
     private final JTF ctrna = new JTF();
+
+    private final ReorderList<Form> jlf = new ReorderList<>();
+    private final JScrollPane jspf = new JScrollPane(jlf);
+    private final ReorderList<Form> tlf = new ReorderList<>();
+    private final JScrollPane tspf = new JScrollPane(tlf);
 
     private final UserPack packpack;
     private final FixIndexMap<Trait> pct;
+    private UnitFindPage ufp;
 
     private boolean changing = false;
     private final boolean editable;
@@ -83,6 +94,23 @@ public class TraitEditPage extends Page {
     }
 
     @Override
+    protected void renew() {
+        if (ufp != null && ufp.getList() != null) {
+            changing = true;
+            ArrayList<Form> list = new ArrayList<>(ufp.getList());
+            if (t != null)
+                list.removeAll(t.others);
+            jlf.setListData(list.toArray(new Form[0]));
+            jlf.clearSelection();
+            if (list.size() > 0)
+                jlf.setSelectedIndex(0);
+            else
+                jlf.clearSelection();
+            changing = false;
+        }
+    }
+
+    @Override
     protected synchronized void resized(int x, int y) {
         setBounds(0, 0, x, y);
         set(back, x, y, 0, 0, 200, 50);
@@ -94,6 +122,12 @@ public class TraitEditPage extends Page {
         set(adicn, x, y, 350, 100, 250, 50);
         set(jl, x, y, 450, 150, 50, 50);
         set(reicn, x, y, 350, 200, 250, 50);
+        set(adv, x, y, 650, 50, 300, 50);
+        set(jspf, x, y, 650, 100, 300, 800);
+        set(vuif, x, y, 650, 900, 300, 50);
+        set(addu, x, y, 650, 950, 150, 50);
+        set(remu, x, y, 800, 950, 150, 50);
+        set(tspf, x, y, 1000, 100, 300, 800);
     }
 
     private void addListeners$0() {
@@ -123,6 +157,7 @@ public class TraitEditPage extends Page {
             jlct.setSelectedValue(t, true);
             changing = false;
         });
+
         remct.addActionListener(arg0 -> {
             if (t == null)
                 return;
@@ -142,6 +177,7 @@ public class TraitEditPage extends Page {
             updateCTL();
             changing = false;
         });
+
         altrg.addActionListener(arg0 -> {
             if (t == null)
                 return;
@@ -150,6 +186,7 @@ public class TraitEditPage extends Page {
             updateCTL();
             changing = false;
         });
+
         jlct.addListSelectionListener(arg0 -> {
             if (changing || jlct.getValueIsAdjusting())
                 return;
@@ -168,6 +205,32 @@ public class TraitEditPage extends Page {
                 return;
             }
             t.name = str;
+        });
+
+        addu.addActionListener(arg0 -> {
+            List<Form> formList = jlf.getSelectedValuesList();
+            if (formList.size() == 0 || changing || jlct.getValueIsAdjusting())
+                return;
+            changing = true;
+            t.others.addAll(formList);
+            updateCT();
+            changing = false;
+        });
+
+        remu.addActionListener(arg0 -> {
+            List<Form> formList = tlf.getSelectedValuesList();
+            if (formList.size() == 0 ||changing || jlct.getValueIsAdjusting())
+                return;
+            changing = true;
+            t.others.removeAll(formList);
+            updateCT();
+            changing = false;
+        });
+
+        vuif.addActionListener(arg0 -> {
+            if (ufp == null)
+                ufp = new UnitFindPage(getThis(), packpack.getSID(), packpack.desc.dependency);
+            changePanel(ufp);
         });
     }
 
@@ -188,12 +251,19 @@ public class TraitEditPage extends Page {
         if (t != null) {
             ctrna.setText(t.name);
             altrg.setSelected(t.targetType);
+            tlf.setListData(t.others.toArray(new Form[0]));
             if (t.icon != null)
                 jl.setIcon(new ImageIcon((BufferedImage)t.icon.getImg().bimg()));
             else
                 jl.setIcon(null);
+        } else {
+            tlf.clearSelection();
+            tlf.setListData(new Form[0]);
         }
+        renew();
         reicn.setEnabled(t != null && t.icon != null && editable);
+        addu.setEnabled(editable && t != null);
+        remu.setEnabled(editable && t != null);
     }
 
     private boolean isUsedTrait(Trait tr) {
@@ -222,6 +292,14 @@ public class TraitEditPage extends Page {
         add(adicn);
         add(jl);
         add(reicn);
+        add(adv);
+        add(addu);
+        add(remu);
+        add(vuif);
+        add(jspf);
+        add(tspf);
+        jlf.setCellRenderer(new AnimLCR());
+        tlf.setCellRenderer(new AnimLCR());
         jl.setIcon(null);
         addListeners$0();
         addListeners$CG();

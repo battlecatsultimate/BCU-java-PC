@@ -22,8 +22,6 @@ import utilpc.Interpret;
 import utilpc.UtilPC;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -215,37 +213,23 @@ public class BasisPage extends LubCont {
 
 	private void addListeners$0() {
 
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
+		back.addActionListener(arg0 -> changePanel(getFront()));
+
+		unit.addActionListener(e -> {
+			if (ufp == null)
+				ufp = new UnitFLUPage(getThis());
+			changePanel(ufp);
 		});
 
-		unit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (ufp == null)
-					ufp = new UnitFLUPage(getThis());
-				changePanel(ufp);
-			}
+		ul.addListSelectionListener(e -> {
+			changing = true;
+			lub.select(ul.getSelectedValue());
+			changing = false;
 		});
 
-		ul.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				changing = true;
-				lub.select(ul.getSelectedValue());
-				changing = false;
-			}
-		});
-
-		form.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				lub.adjForm();
-				changeLU();
-			}
+		form.addActionListener(arg0 -> {
+			lub.adjForm();
+			changeLU();
 		});
 
 		lvjtf.addFocusListener(new FocusAdapter() {
@@ -284,32 +268,26 @@ public class BasisPage extends LubCont {
 
 	private void addListeners$1() {
 
-		jlbs.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (jlb.getValueIsAdjusting() || changing)
-					return;
-				changing = true;
-				if (jlbs.getSelectedValue() == null)
-					jlbs.setSelectedValue(BasisSet.current(), true);
-				else
-					setBS(jlbs.getSelectedValue());
-				changing = false;
-			}
+		jlbs.addListSelectionListener(e -> {
+			if (jlb.getValueIsAdjusting() || changing)
+				return;
+			changing = true;
+			if (jlbs.getSelectedValue() == null)
+				jlbs.setSelectedValue(BasisSet.current(), true);
+			else
+				setBS(jlbs.getSelectedValue());
+			changing = false;
 		});
 
-		jlb.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (jlb.getValueIsAdjusting() || changing)
-					return;
-				changing = true;
-				if (jlb.getSelectedValue() == null)
-					jlb.setSelectedValue(BasisSet.current().sele, true);
-				else
-					setB(jlb.getSelectedValue());
-				changing = false;
-			}
+		jlb.addListSelectionListener(e -> {
+			if (jlb.getValueIsAdjusting() || changing)
+				return;
+			changing = true;
+			if (jlb.getSelectedValue() == null)
+				jlb.setSelectedValue(BasisSet.current().sele, true);
+			else
+				setB(jlb.getSelectedValue());
+			changing = false;
 		});
 
 		jlbs.list = new ReorderListener<BasisSet>() {
@@ -352,89 +330,71 @@ public class BasisPage extends LubCont {
 
 		};
 
-		bsadd.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				BasisSet b = new BasisSet();
-				vbs.clear();
-				vbs.addAll(BasisSet.list());
-				jlbs.setListData(vbs);
-				jlbs.setSelectedValue(b, true);
-				setBS(b);
-				changing = false;
-			}
+		bsadd.addActionListener(arg0 -> {
+			changing = true;
+			BasisSet b = new BasisSet();
+			vbs.clear();
+			vbs.addAll(BasisSet.list());
+			jlbs.setListData(vbs);
+			jlbs.setSelectedValue(b, true);
+			setBS(b);
+			changing = false;
 		});
 
-		bsrem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				BasisSet.list().remove(current());
-				vbs.clear();
-				vbs.addAll(BasisSet.list());
-				jlbs.setListData(vbs);
-				BasisSet b = BasisSet.list().get(BasisSet.list().size() - 1);
-				jlbs.setSelectedValue(b, true);
-				setBS(b);
-				changing = false;
-			}
+		bsrem.addActionListener(arg0 -> {
+			changing = true;
+			BasisSet.list().remove(current());
+			vbs.clear();
+			vbs.addAll(BasisSet.list());
+			jlbs.setListData(vbs);
+			BasisSet b = BasisSet.list().get(BasisSet.list().size() - 1);
+			jlbs.setSelectedValue(b, true);
+			setBS(b);
+			changing = false;
 		});
 
-		bscop.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				BasisSet b = new BasisSet(current());
-				vbs.clear();
-				vbs.addAll(BasisSet.list());
-				jlbs.setListData(vbs);
-				jlbs.setSelectedValue(b, true);
-				setBS(b);
-				changing = false;
-			}
+		bscop.addActionListener(arg0 -> {
+			changing = true;
+			BasisSet b = new BasisSet(current());
+			vbs.clear();
+			vbs.addAll(BasisSet.list());
+			jlbs.setListData(vbs);
+			jlbs.setSelectedValue(b, true);
+			setBS(b);
+			changing = false;
 		});
 
-		badd.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				BasisLU b = current().add();
-				vb.clear();
-				vb.addAll(current().lb);
-				jlb.setListData(vb);
-				jlb.setSelectedValue(b, true);
-				setB(b);
-				changing = false;
-			}
+		badd.addActionListener(arg0 -> {
+			changing = true;
+			BasisLU b = current().add();
+			vb.clear();
+			vb.addAll(current().lb);
+			jlb.setListData(vb);
+			jlb.setSelectedValue(b, true);
+			setB(b);
+			changing = false;
 		});
 
-		brem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				BasisLU b = current().remove();
-				vb.clear();
-				vb.addAll(current().lb);
-				jlb.setListData(vb);
-				jlb.setSelectedValue(b, true);
-				setB(b);
-				changing = false;
-			}
+		brem.addActionListener(arg0 -> {
+			changing = true;
+			BasisLU b = current().remove();
+			vb.clear();
+			vb.addAll(current().lb);
+			jlb.setListData(vb);
+			jlb.setSelectedValue(b, true);
+			setB(b);
+			changing = false;
 		});
 
-		bcop.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				BasisLU b = current().copyCurrent();
-				vb.clear();
-				vb.addAll(current().lb);
-				jlb.setListData(vb);
-				jlb.setSelectedValue(b, true);
-				setB(b);
-				changing = false;
-			}
+		bcop.addActionListener(arg0 -> {
+			changing = true;
+			BasisLU b = current().copyCurrent();
+			vb.clear();
+			vb.addAll(current().lb);
+			jlb.setListData(vb);
+			jlb.setSelectedValue(b, true);
+			setB(b);
+			changing = false;
 		});
 
 		bsjtf.addFocusListener(new FocusAdapter() {
@@ -462,63 +422,46 @@ public class BasisPage extends LubCont {
 	}
 
 	private void addListeners$2() {
-		jlcs.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (changing || e.getValueIsAdjusting())
-					return;
-				changing = true;
-				if (jlcs.getSelectedValue() == null)
-					jlcs.setSelectedIndex(0);
-				setCS(jlcs.getSelectedIndex());
-				changing = false;
-			}
+		jlcs.addListSelectionListener(e -> {
+			if (changing || e.getValueIsAdjusting())
+				return;
+			changing = true;
+			if (jlcs.getSelectedValue() == null)
+				jlcs.setSelectedIndex(0);
+			setCS(jlcs.getSelectedIndex());
+			changing = false;
 		});
 
-		jlcl.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (changing || e.getValueIsAdjusting())
-					return;
-				changing = true;
-				setCL(jlcs.getSelectedIndex());
-				changing = false;
-			}
+		jlcl.addListSelectionListener(e -> {
+			if (changing || e.getValueIsAdjusting())
+				return;
+			changing = true;
+			setCL(jlcs.getSelectedIndex());
+			changing = false;
 		});
 
-		jlcn.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (changing || e.getValueIsAdjusting())
-					return;
-				changing = true;
-				setCN();
-				changing = false;
-			}
+		jlcn.addListSelectionListener(e -> {
+			if (changing || e.getValueIsAdjusting())
+				return;
+			changing = true;
+			setCN();
+			changing = false;
 		});
 
-		jlc.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (changing || arg0.getValueIsAdjusting())
-					return;
-				changing = true;
-				setC();
-				changing = false;
-			}
+		jlc.getSelectionModel().addListSelectionListener(arg0 -> {
+			if (changing || arg0.getValueIsAdjusting())
+				return;
+			changing = true;
+			setC();
+			changing = false;
 		});
 
-		setc.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				lu().set(jlc.list.get(jlc.getSelectedRow()).forms);
-				changeLU();
-			}
+		setc.addActionListener(arg0 -> {
+			lu().set(jlc.list.get(jlc.getSelectedRow()).forms);
+			changeLU();
 		});
 
-		reset.addActionListener(x -> {
-			lub.resetBackup();
-		});
+		reset.addActionListener(x -> lub.resetBackup());
 
 		search.addActionListener(x -> {
 			comboName = cjtf.getText();
