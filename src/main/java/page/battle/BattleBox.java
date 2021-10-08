@@ -21,6 +21,8 @@ import common.system.fake.FakeTransform;
 import common.util.Data;
 import common.util.ImgCore;
 import common.util.Res;
+import common.util.pack.bgeffect.BackgroundEffect;
+import common.util.pack.bgeffect.JsonBGEffect;
 import common.util.stage.CastleImg;
 import common.util.unit.Form;
 import page.RetFunc;
@@ -132,11 +134,33 @@ public interface BattleBox {
 			ImgCore.set(g);
 			P rect = setP(box.getWidth(), box.getHeight());
 			sb.bg.draw(g, rect, pos, midh, siz, (int) (groundHeight + (CommonStatic.getConfig().twoRow ? (h * 0.75 / 10.0) : 0)));
+
+			double midY = groundHeight / minSiz;
+			double y = maxH * siz - midh;
+
+			sb.registerBattleDimension(midY, h / minSiz);
+
+			if(CommonStatic.getConfig().twoRow)
+				midY += (h * 0.75 / 10.0);
+
+			if(sb.bgEffect != null) {
+				sb.bgEffect.preDraw(g, setP(pos, y), siz, midY);
+			}
+
 			drawCastle(g);
 			if(sb.cannon == sb.maxCannon && sb.canon.id == 0) {
 				drawCannonRange(g);
 			}
+
 			drawEntity(g);
+
+			if(sb.bgEffect != null) {
+				sb.bgEffect.postDraw(g, setP(pos, y), siz, midY);
+			}
+
+			if(sb.bg.overlay != null) {
+				drawBGOverlay(g, midY);
+			}
 			drawBtm(g);
 			drawTop(g);
 			if(bf.sb.st.timeLimit != 0) {
@@ -173,14 +197,19 @@ public interface BattleBox {
 		public void regulate() {
 			int w = box.getWidth();
 			int h = box.getHeight();
+
 			if (siz < minSiz)
 				siz = minSiz;
+
 			if (siz >= maxSiz)
 				siz = maxSiz;
+
 			if (pos > 0)
 				pos = 0;
+
 			if (maxW * siz + pos < w)
 				pos = (int) (w - maxW * siz);
+
 			midh = h + (int) (groundHeight * (siz - maxSiz) / (maxSiz - minSiz));
 
 			if(CommonStatic.getConfig().twoRow)
@@ -193,8 +222,23 @@ public interface BattleBox {
 		}
 
 		private void adjust(int w, int s) {
+			int h = box.getHeight();
+
 			pos += w;
+
 			siz *= Math.pow(exp, s);
+
+			if(siz * minH > h) {
+				siz = maxSiz;
+			}
+
+			if(siz * maxH < h) {
+				siz = minSiz;
+			}
+
+			if(siz * maxW < w) {
+				siz = w * 1.0 / maxW;
+			}
 		}
 
 		private void clear() {
@@ -486,10 +530,6 @@ public interface BattleBox {
 
 			CommonStatic.getConfig().battle = true;
 
-			if(sb.bgEffect != null) {
-				sb.bgEffect.preDraw(gra, setP(pos, 0), siz);
-			}
-
 			for(int i = 0; i < sb.le.size(); i++) {
 				Entity e = sb.le.get(i);
 
@@ -776,6 +816,13 @@ public interface BattleBox {
 			P.delete(p);
 		}
 
+		protected synchronized void drawBGOverlay(FakeGraphics gra, double midY) {
+			if(sb.bg.overlay == null)
+				return;
+
+			gra.gradRectAlpha(pos, - (int) (maxH * siz - midh - midY * siz), (int) ((sb.st.len * ratio + 400) * siz), (int) ((BackgroundEffect.BGHeight * 3 + midY) * siz), pos, 0, sb.bg.overlayAlpha, sb.bg.overlay[1], pos, (int) (BackgroundEffect.BGHeight * 3 * siz - maxH * siz + midh + midY * siz), sb.bg.overlayAlpha, sb.bg.overlay[0]);
+		}
+
 		protected synchronized void drag(Point p) {
 			if (mouse != null) {
 				P temp = new PP(p);
@@ -799,9 +846,17 @@ public interface BattleBox {
 			int w = box.getWidth();
 			int h = box.getHeight();
 			double psiz = siz * Math.pow(exp, ind);
-			if (psiz * minH > h || psiz * maxH < h || psiz * maxW < w)
-				return;
-			int dif = -(int) ((p.x - pos) * (Math.pow(exp, ind) - 1));
+
+			if(psiz * minH > h)
+				psiz = maxSiz / siz;
+			else if(psiz * maxH < h)
+				psiz = minSiz / siz;
+			else if(psiz * maxW < w)
+				psiz = minSiz / siz;
+			else
+				psiz = Math.pow(exp, ind);
+
+			int dif = -(int) ((p.x - pos) * (psiz - 1));
 			adjust(dif, ind);
 			reset();
 		}
@@ -844,4 +899,5 @@ public interface BattleBox {
 		getPainter().wheeled(p, ind);
 	}
 
+	void releaseData();
 }
