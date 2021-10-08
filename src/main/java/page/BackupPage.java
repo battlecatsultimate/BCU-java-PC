@@ -29,6 +29,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import java.awt.event.WindowEvent;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -128,7 +129,7 @@ public class BackupPage extends Page {
 
             if(Opts.conf("Are you sure that you want to restore this backup? This cannot be undone and restart is required")) {
                 CommonStatic.getConfig().backupFile = jlm.getSelectedValue().getName();
-                CommonStatic.def.exit(true);
+                changePanel(new SavePage());
             }
         });
 
@@ -197,7 +198,7 @@ public class BackupPage extends Page {
             if(Opts.conf("Are you sure that you want to restore specific file(s)? This cannot be undone and restart is required")) {
                 CommonStatic.getConfig().backupFile = jlm.getSelectedValue().getName();
                 CommonStatic.getConfig().backupPath = sel.getPath();
-                CommonStatic.def.exit(true);
+                changePanel(new SavePage());
             }
         });
 

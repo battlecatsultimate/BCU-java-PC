@@ -160,9 +160,11 @@ public class UtilPC {
 		}
 
 		@Override
-		public void exit(boolean save) {
+		public void save(boolean save, boolean exit) {
 			CommonStatic.ctx.noticeErr(() -> BCUWriter.logClose(save), Context.ErrType.ERROR, "Save failed...");
-			System.exit(0);
+
+			if(exit)
+				System.exit(0);
 		}
 
 		@Override

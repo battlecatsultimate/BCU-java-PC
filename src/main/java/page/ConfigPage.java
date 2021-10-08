@@ -14,6 +14,7 @@ import utilpc.Theme;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
 
 public class ConfigPage extends Page {
 
@@ -150,7 +151,7 @@ public class ConfigPage extends Page {
 		jogl.addActionListener(arg0 -> {
 			MainBCU.USE_JOGL = jogl.isSelected();
 			if (Opts.conf("This requires restart to apply. Do you want to restart?"))
-				CommonStatic.def.exit(true);
+				changePanel(new SavePage());
 		});
 
 		for (int i = 0; i < 4; i++) {
@@ -228,7 +229,7 @@ public class ConfigPage extends Page {
 			MainBCU.nimbus = !MainBCU.nimbus;
 
 			if (Opts.conf("This requires restart to apply. Do you want to restart?"+(MainBCU.nimbus ? "\n\nWarning : Using Nimbus theme may result in high CPU usage" : "")))
-				CommonStatic.def.exit(true);
+				changePanel(new SavePage());
 		});
 
 		theme.setLnr((b) -> {

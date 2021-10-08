@@ -85,7 +85,7 @@ public class Opts {
 
 		if(result == JOptionPane.OK_OPTION || result == JOptionPane.NO_OPTION) {
 			if(fatal)
-				CommonStatic.def.exit(false);
+				CommonStatic.def.save(false, true);
 			popped = false;
 		}
 	}

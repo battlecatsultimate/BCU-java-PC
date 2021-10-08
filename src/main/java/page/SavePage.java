@@ -32,13 +32,19 @@ public class SavePage extends Page {
 
     private void finishJob() {
         try {
-            CommonStatic.def.exit(true);
-
-            MainFrame.exitAll();
+            CommonStatic.def.save(true, false);
 
             setVisible(false);
 
+            MainFrame.exitAll();
+
             changePanel(null);
+
+            MainFrame.F.dispose();
+
+            Thread.sleep(5000);
+
+            System.exit(0);
         } catch (Exception e) {
             e.printStackTrace();
 
