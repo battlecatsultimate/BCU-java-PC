@@ -421,7 +421,7 @@ public class GLGraphics implements GeoAuto {
 				g.glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 				g.glUniform1i(tm.mode, 1);
 			} else if (comp.p1 == 1) {// d+s*a
-				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+				g.glBlendFunc(GL_ONE, GL_ONE);
 				g.glUniform1i(tm.mode, 1);// sA=sA*p
 			} else if (comp.p1 == 2) {// d*(1-a+s*a)
 				g.glBlendFunc(GL_ZERO, GL_SRC_COLOR);
