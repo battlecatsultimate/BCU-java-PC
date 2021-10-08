@@ -14,7 +14,6 @@ import utilpc.Theme;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowEvent;
 
 public class ConfigPage extends Page {
 
@@ -36,6 +35,7 @@ public class ConfigPage extends Page {
 	private final JTG extt = new JTG(MainLocale.PAGE, "extip");
 	private final JTG secs = new JTG(MainLocale.PAGE, "secs");
 	private final JTG btnsnd = new JTG(MainLocale.PAGE, "btnsnd");
+	private final JTG bgeff = new JTG(MainLocale.PAGE, "bgeff");
 	private final JL preflv = new JL(MainLocale.PAGE, "preflv");
 	private final JTF prlvmd = new JTF();
 	private final JBTN[] left = new JBTN[4];
@@ -118,7 +118,8 @@ public class ConfigPage extends Page {
 		set(prlvmd, x, y, 1800, 550, 250, 50);
 		set(mbac, x, y, 1100, 1100, 400, 50);
 		set(jsba, x, y, 1100, 1150, 1000, 100);
-		set(btnsnd, x, y, 1600, 625, 450, 50);
+		set(btnsnd, x, y, 1600, 625, 200, 50);
+		set(bgeff, x, y, 1850, 625, 200, 50);
 	}
 
 	private void addListeners() {
@@ -262,6 +263,8 @@ public class ConfigPage extends Page {
 			if(MainBCU.buttonSound)
 				BCMusic.clickSound();
 		});
+
+		bgeff.addActionListener(a -> CommonStatic.getConfig().drawBGEffect = !CommonStatic.getConfig().drawBGEffect);
 	}
 
 	private void ini() {
@@ -296,6 +299,7 @@ public class ConfigPage extends Page {
 		set(jsba);
 		add(mbac);
 		add(btnsnd);
+		add(bgeff);
 		prlvmd.setText("" + CommonStatic.getConfig().prefLevel);
 		jls.setSelectedIndex(localeIndexOf(cfg().lang));
 		jsmin.setValue(cfg().deadOpa);
@@ -329,6 +333,7 @@ public class ConfigPage extends Page {
 		jogl.setSelected(MainBCU.USE_JOGL);
 		btnsnd.setSelected(MainBCU.buttonSound);
 		jsba.setValue(CommonStatic.getConfig().maxBackup);
+		bgeff.setSelected(CommonStatic.getConfig().drawBGEffect);
 		if (!MainBCU.nimbus) {
 			theme.setEnabled(false);
 		}

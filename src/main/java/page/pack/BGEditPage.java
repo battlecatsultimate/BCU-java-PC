@@ -7,11 +7,9 @@ import common.pack.PackData.UserPack;
 import common.pack.Source.Workspace;
 import common.system.fake.FakeImage;
 import common.util.pack.Background;
+import common.util.pack.bgeffect.BackgroundEffect;
 import main.MainBCU;
-import page.JBTN;
-import page.JTF;
-import page.JTG;
-import page.Page;
+import page.*;
 import page.support.Exporter;
 import page.support.Importer;
 import page.view.BGViewPage;
@@ -24,8 +22,9 @@ import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Vector;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
+@SuppressWarnings({"ResultOfMethodCallIgnored", "ForLoopReplaceableByForEach"})
 public class BGEditPage extends Page {
 
 	private static final long serialVersionUID = 1L;
@@ -42,7 +41,12 @@ public class BGEditPage extends Page {
 	private final JBTN copy = new JBTN(0, "copy");
 
 	private final JTG top = new JTG("top");
+	private final JTG overlay = new JTG(MainLocale.PAGE, "overlay");
+	private final JL[] cl = new JL[5];
 	private final JTF[] cs = new JTF[4];
+	private final JL[] ol = new JL[3];
+	private final JTF[] os = new JTF[3];
+	private final JComboBox<String> eff = new JComboBox<>();
 
 	private final UserPack pack;
 	private BGViewPage bvp;
@@ -88,9 +92,21 @@ public class BGEditPage extends Page {
 		set(remc, x, y, 400, 400, 200, 50);
 		set(copy, x, y, 400, 500, 200, 50);
 		set(top, x, y, 650, 50, 200, 50);
-		for (int i = 0; i < 4; i++)
+		set(overlay, x, y, 650, 1200, 200, 50);
+		set(eff, x, y , 1900, 50, 200, 50);
+		for (int i = 0; i < 4; i++) {
 			set(cs[i], x, y, 900 + 250 * i, 50, 200, 50);
+		}
+
+		for(int i = 0; i < 5; i++) {
+			set(cl[i], x, y, 900 + 250 * i, 0, 200, 50);
+		}
 		set(jl, x, y, 650, 150, 1600, 1000);
+
+		for(int i = 0; i < 3; i++) {
+			set(ol[i], x, y, 900 + 250 * i, 1150, 200, 50);
+			set(os[i], x, y, 900 + 250 * i, 1200, 200, 50);
+		}
 		if (bgr != null)
 			jl.setIcon(UtilPC.getBg(bgr, jl.getWidth(), jl.getHeight()));
 
@@ -148,9 +164,62 @@ public class BGEditPage extends Page {
 				}
 
 			});
-
 		}
 
+		for(int i = 0; i < 3; i++) {
+			final int I = i;
+
+			os[i].addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					if(I % 3 != 2) {
+						int[] inp = CommonStatic.parseIntsN(os[I].getText());
+
+						if(inp.length == 3)
+							bgr.overlay[I / 2] = filterRGB(inp);
+					} else {
+						int alpha = CommonStatic.parseIntN(os[I].getText());
+
+						bgr.overlayAlpha = filterRGB(alpha);
+					}
+
+					setOSText(I, I % 3 == 2);
+				}
+			});
+		}
+
+		eff.addActionListener(e -> {
+			if(eff.getSelectedIndex() == 0) {
+				bgr.effect = -1;
+			} else {
+				bgr.effect = eff.getSelectedIndex() - 1;
+			}
+		});
+
+		overlay.setLnr(c -> {
+			if(overlay.isSelected()) {
+				if(bgr.overlay == null) {
+					bgr.overlayAlpha = 55;
+					bgr.overlay = new int[][] {
+							{ 0, 0, 0 },
+							{ 0, 0, 0 }
+					};
+				}
+
+				for(int i = 0; i < 3; i++) {
+					os[i].setEnabled(true);
+					setOSText(i, i % 3 == 2);
+				}
+			} else {
+				bgr.overlay = null;
+				bgr.overlayAlpha = 0;
+
+				for(int i = 0; i < os.length; i++) {
+					os[i].setText(null);
+					os[i].setEnabled(false);
+				}
+			}
+		});
 	}
 
 	private void getFile(String str, Background bgr) {
@@ -190,8 +259,32 @@ public class BGEditPage extends Page {
 		add(expc);
 		add(copy);
 		add(top);
-		for (int i = 0; i < 4; i++)
+		add(eff);
+		add(overlay);
+		for (int i = 0; i < 4; i++) {
 			add(cs[i] = new JTF());
+		}
+		for(int i = 0; i < 5; i++) {
+			add(cl[i] = new JL(MainLocale.PAGE, "bgcl"+i));
+		}
+		for(int i = 0; i < 3; i++) {
+			add(os[i] = new JTF());
+			add(ol[i] = new JL(MainLocale.PAGE, "bgcl"+(i+5)));
+		}
+		Vector<String> effVector = new Vector<>();
+
+		effVector.add(get(MainLocale.PAGE, "none"));
+
+		for(int i = 0; i < 10; i++) {
+			effVector.add(get(MainLocale.PAGE, "bgeff"+i));
+		}
+
+		for(int i = 0; i < BackgroundEffect.jsonList.length; i++) {
+			effVector.add(get(MainLocale.PAGE, "bgeff10").replace("_", ""+BackgroundEffect.jsonList[i]));
+		}
+
+		eff.setModel(new DefaultComboBoxModel<>(effVector));
+
 		setList(null);
 		addListeners$0();
 		addListeners$1();
@@ -212,25 +305,72 @@ public class BGEditPage extends Page {
 		impc.setEnabled(b);
 		expc.setEnabled(b);
 		top.setEnabled(b);
-		for (int i = 0; i < 4; i++)
+		overlay.setEnabled(b);
+		eff.setEnabled(b);
+
+		for (int i = 0; i < 4; i++) {
 			cs[i].setEnabled(b);
+		}
+
+		for(int i = 0; i < 5; i++) {
+			cl[i].setEnabled(b);
+		}
+
+		for(int i = 0; i < 3; i++) {
+			os[i].setEnabled(b);
+			ol[i].setEnabled(b);
+		}
 
 		if (bgr != null) {
 			top.setSelected(bgr.top);
-			for (int i = 0; i < 4; i++)
-				setCSText(i);
-		} else {
-			top.setSelected(false);
-			for (int i = 0; i < 4; i++)
-				cs[i].setText("");
-		}
 
+			for (int i = 0; i < 4; i++) {
+				setCSText(i);
+			}
+
+			if(bgr.overlay != null) {
+				for(int i = 0; i < 3; i++) {
+					setOSText(i, i % 3 == 0);
+				}
+			} else {
+				for(int i = 0; i < 3; i++) {
+					os[i].setText(null);
+					os[i].setEnabled(false);
+				}
+			}
+
+			if(bgr.effect == -1) {
+				eff.setSelectedIndex(0);
+			} else {
+				eff.setSelectedIndex(bgr.effect + 1);
+			}
+		} else {
+			for (int i = 0; i < 4; i++) {
+				cs[i].setText(null);
+			}
+			for(int i = 0; i < 3; i++) {
+				os[i].setText(null);
+			}
+		}
 	}
 
 	private void setCSText(int i) {
 		int[] is = bgr.cs[i];
 		String str = is[0] + "," + is[1] + "," + is[2];
 		cs[i].setText(str);
+	}
+
+	private void setOSText(int i, boolean alpha) {
+		if(bgr.overlay == null) {
+			os[i].setText(null);
+			return;
+		}
+
+		if(alpha) {
+			os[i].setText(""+bgr.overlayAlpha);
+		} else {
+			os[i].setText(bgr.overlay[i][0]+","+bgr.overlay[i][1]+","+bgr.overlay[i][2]);
+		}
 	}
 
 	private void setList(Background bcgr) {
@@ -252,4 +392,14 @@ public class BGEditPage extends Page {
 		setBG(bgr);
 	}
 
+	private int[] filterRGB(int[] inp) {
+		for(int i = 0; i < inp.length; i++)
+			inp[i] = filterRGB(inp[i]);
+
+		return inp;
+	}
+
+	private int filterRGB(int i) {
+		return Math.max(0, Math.min(i, 255));
+	}
 }

@@ -22,7 +22,6 @@ import common.util.Data;
 import common.util.ImgCore;
 import common.util.Res;
 import common.util.pack.bgeffect.BackgroundEffect;
-import common.util.pack.bgeffect.JsonBGEffect;
 import common.util.stage.CastleImg;
 import common.util.unit.Form;
 import page.RetFunc;
@@ -138,12 +137,13 @@ public interface BattleBox {
 			double midY = groundHeight / minSiz;
 			double y = maxH * siz - midh;
 
-			sb.registerBattleDimension(midY, h / minSiz);
+			if(CommonStatic.getConfig().drawBGEffect)
+				sb.registerBattleDimension(midY, h / minSiz);
 
 			if(CommonStatic.getConfig().twoRow)
 				midY += (h * 0.75 / 10.0);
 
-			if(sb.bgEffect != null) {
+			if(CommonStatic.getConfig().drawBGEffect && sb.bgEffect != null) {
 				sb.bgEffect.preDraw(g, setP(pos, y), siz, midY);
 			}
 
@@ -154,13 +154,14 @@ public interface BattleBox {
 
 			drawEntity(g);
 
-			if(sb.bgEffect != null) {
+			if(CommonStatic.getConfig().drawBGEffect && sb.bgEffect != null) {
 				sb.bgEffect.postDraw(g, setP(pos, y), siz, midY);
 			}
 
 			if(sb.bg.overlay != null) {
 				drawBGOverlay(g, midY);
 			}
+
 			drawBtm(g);
 			drawTop(g);
 			if(bf.sb.st.timeLimit != 0) {
