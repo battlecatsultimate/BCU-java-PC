@@ -176,7 +176,7 @@ public class BGEditPage extends Page {
 						int[] inp = CommonStatic.parseIntsN(os[I].getText());
 
 						if(inp.length == 3)
-							bgr.overlay[I / 2] = filterRGB(inp);
+							bgr.overlay[I] = filterRGB(inp);
 					} else {
 						int alpha = CommonStatic.parseIntN(os[I].getText());
 
