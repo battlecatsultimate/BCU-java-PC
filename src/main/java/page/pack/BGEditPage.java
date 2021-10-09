@@ -330,7 +330,7 @@ public class BGEditPage extends Page {
 
 			if(bgr.overlay != null) {
 				for(int i = 0; i < 3; i++) {
-					setOSText(i, i % 3 == 0);
+					setOSText(i, i % 3 == 2);
 				}
 			} else {
 				for(int i = 0; i < 3; i++) {
