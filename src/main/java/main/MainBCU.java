@@ -123,6 +123,14 @@ public class MainBCU {
 			BasisSet.read();
 			LoadPage.prog("reading replays");
 			Replay.read();
+			LoadPage.prog("remove old files");
+			CommonStatic.ctx.noticeErr(() -> {
+				Context.delete(new File("./user/backup.zip"));
+				Context.delete(new File("./user/basis.v"));
+				Context.delete(new File("./user/data.ini"));
+				Context.delete(new File("./assets/assets.zip"));
+				Context.delete(new File("./assets/calendar/"));
+			}, ErrType.WARN, "Failed to delete old files");
 			LoadPage.prog("finished reading");
 		}
 
@@ -277,6 +285,7 @@ public class MainBCU {
 	public static boolean light = true, nimbus = false, seconds = false, buttonSound = false;
 	public static String author = "";
 	public static ImageBuilder<BufferedImage> builder;
+	public static boolean announce0510 = false;
 
 	public static String getTime() {
 		return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
@@ -315,6 +324,12 @@ public class MainBCU {
 		new MainFrame(Data.revVer(MainBCU.ver)).initialize();
 		new Timer().start();
 
+		if(!announce0510 && checkOldFileExisting()) {
+			Opts.popAgreement("Before migrating v5", "<html><p style=\"width:500px\">This BCU version has completely different code structure from previous version (0-4-10-9), so others data will get reformatted. This process cannot be undone, and it may cause error while reformatting. We recommend you to backup your files (user/replays/res folder) before migrating v5. Agree on this text to continue.</p></html>");
+		} else {
+			announce0510 = true;
+		}
+
 		MenuBarHandler.initialize();
 		BCJSON.check();
 		CommonStatic.ctx.initProfile();
@@ -342,4 +357,10 @@ public class MainBCU {
 		e.printStackTrace();
 	}
 
+	private static boolean checkOldFileExisting() {
+		File res = new File("./res");
+		File assets = new File("./assets/assets/zip");
+
+		return res.exists() && assets.exists();
+	}
 }

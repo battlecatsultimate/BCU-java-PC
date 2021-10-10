@@ -1,9 +1,8 @@
 package main;
 
+import com.sun.deploy.panel.JavaPanel;
 import common.CommonStatic;
-import page.JTF;
-import page.MainLocale;
-import page.Page;
+import page.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -199,5 +198,82 @@ public class Opts {
 		} else {
 			return null;
 		}
+	}
+
+	public static void popAgreement(String title, String text) {
+		Icon warnIcon = UIManager.getIcon("OptionPane.warningIcon");
+		JLabel content = new JLabel(text);
+		JBTN okay = new JBTN("OK");
+		JBTN cancel = new JBTN("Cancel");
+		JCheckBox agree = new JCheckBox();
+
+		Border b = content.getBorder();
+		Border eb = new EmptyBorder(8, 0, 8, 0);
+
+		if(b == null) {
+			content.setBorder(eb);
+		} else {
+			content.setBorder(new CompoundBorder(eb, b));
+		}
+
+		okay.addActionListener(a -> {
+			JOptionPane pane = getOptionPane((JComponent) a.getSource());
+
+			pane.setValue(okay);
+
+			MainBCU.announce0510 = true;
+		});
+
+		okay.setEnabled(false);
+
+		cancel.addActionListener(a -> {
+			JOptionPane pane = getOptionPane((JComponent) a.getSource());
+
+			pane.setValue(cancel);
+
+			CommonStatic.def.save(false, true);
+		});
+
+		agree.setText("I read this warning and agree to proceed");
+
+		agree.addActionListener(a -> okay.setEnabled(agree.isSelected()));
+
+		Border cb = content.getBorder();
+		Border ecb = new EmptyBorder(0, 0, 8, 0);
+
+		if(cb == null) {
+			agree.setBorder(ecb);
+		} else {
+			agree.setBorder(new CompoundBorder(ecb, cb));
+		}
+
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+		panel.add(content);
+		panel.add(agree);
+
+		JOptionPane.showOptionDialog(
+				null,
+				panel,
+				title,
+				JOptionPane.OK_CANCEL_OPTION,
+				JOptionPane.QUESTION_MESSAGE,
+				warnIcon,
+				new Object[] {okay, cancel},
+				cancel
+		);
+	}
+
+	private static JOptionPane getOptionPane(JComponent parent) {
+		JOptionPane pane;
+
+		if (!(parent instanceof JOptionPane)) {
+			pane = getOptionPane((JComponent) parent.getParent());
+		} else {
+			pane = (JOptionPane) parent;
+		}
+
+		return pane;
 	}
 }
