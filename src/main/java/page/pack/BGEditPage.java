@@ -176,7 +176,7 @@ public class BGEditPage extends Page {
 						int[] inp = CommonStatic.parseIntsN(os[I].getText());
 
 						if(inp.length == 3)
-							bgr.overlay[I / 2] = filterRGB(inp);
+							bgr.overlay[I] = filterRGB(inp);
 					} else {
 						int alpha = CommonStatic.parseIntN(os[I].getText());
 
@@ -330,7 +330,7 @@ public class BGEditPage extends Page {
 
 			if(bgr.overlay != null) {
 				for(int i = 0; i < 3; i++) {
-					setOSText(i, i % 3 == 0);
+					setOSText(i, i % 3 == 2);
 				}
 			} else {
 				for(int i = 0; i < 3; i++) {

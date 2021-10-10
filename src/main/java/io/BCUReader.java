@@ -74,6 +74,9 @@ public class BCUReader extends DataIO {
 				if(jo.has("buttonSound")) {
 					MainBCU.buttonSound = jo.get("buttonSound").getAsBoolean();
 				}
+				if (jo.has("drawBGEffect")) {
+					CommonStatic.getConfig().drawBGEffect = jo.get("drawBGEffect").getAsBoolean();
+				}
 				MainBCU.FILTER_TYPE = jo.get("filter").getAsInt();
 				BCMusic.play = jo.get("play_sound").getAsBoolean();
 				BCMusic.VOL_BG = jo.get("volume_BG").getAsInt();
