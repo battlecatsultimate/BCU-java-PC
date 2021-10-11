@@ -23,7 +23,6 @@ import utilpc.Interpret;
 import utilpc.UtilPC;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.*;
@@ -58,7 +57,7 @@ public class ComparePage extends Page {
 
     private final AttList trait = new AttList();
     private final Vector<String> vt = new Vector<>();
-    private final JScrollPane jt = new JScrollPane(trait);
+    private final JScrollPane tlst = new JScrollPane(trait);
     private final List<Trait> tList = new ArrayList<>();
 
     private EnemyFindPage efp = null;
@@ -78,7 +77,7 @@ public class ComparePage extends Page {
 
     private void ini() {
         add(back);
-        add(jt);
+        add(tlst);
 
         for (int i = 0; i < sele.length; i++) {
             add(sele[i][0] = new JBTN(0, "veif"));
@@ -176,8 +175,6 @@ public class ComparePage extends Page {
 
         trait.setIcons(tList);
         trait.setListData(vt);
-        trait.setVisibleRowCount(0);
-        trait.setLayoutOrientation(JList.HORIZONTAL_WRAP);
         trait.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         trait.addListSelectionListener(x -> reset());
@@ -692,6 +689,9 @@ public class ComparePage extends Page {
         }
 
         int posX = 250;
+        int unselected = ((int) Arrays.stream(boxes).filter(b -> !b.isSelected()).count());
+        int height = 200 + unselected * 50;
+
         for (int i = 0; i < abilityPanes.length; i++) {
             JScrollPane pane = abilityPanes[i];
             if (!boxes[boxes.length - 1].isSelected()) {
@@ -709,14 +709,12 @@ public class ComparePage extends Page {
                 }
             }
 
-            int unselected = ((int) Arrays.stream(boxes).filter(b -> !b.isSelected()).count());
-            int height = 200 + Math.min(3, unselected) * 50;
             set(pane, x, y, posX + i * 600, posY, width, height);
-
-            set(jt, x, y, posX, posY + height, width * 3, 100 + Math.max(0, unselected - 3) * 50);
-            if (resize)
-                jt.revalidate();
         }
+
+        set(tlst, x, y, 50, posY, 200, height);
+        if (resize)
+            tlst.revalidate();
 
         resize = false;
     }
