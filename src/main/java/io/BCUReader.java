@@ -101,7 +101,7 @@ public class BCUReader extends DataIO {
 					CommonStatic.getConfig().backupFile = value.equals("None") ? null : value;
 				}
 				if(jo.has("ann0510")) {
-					MainBCU.announce0510 = jo.get("ann05010").getAsBoolean();
+					MainBCU.announce0510 = jo.get("ann0510").getAsBoolean();
 				}
 				String[] exp = JsonDecoder.decode(jo.get("export_paths"), String[].class);
 				String[] imp = JsonDecoder.decode(jo.get("import_paths"), String[].class);
