@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
 
 import static utilpc.Interpret.*;
 
-class AttList extends JList<String> {
+public class AttList extends JList<String> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -37,7 +37,7 @@ class AttList extends JList<String> {
 
 	}
 
-	protected AttList() {
+	public AttList() {
 		if (MainBCU.nimbus) {
 			setSelectionBackground(MainBCU.light ? Theme.LIGHT.NIMBUS_SELECT_BG : Theme.DARK.NIMBUS_SELECT_BG);
 		}
@@ -70,7 +70,7 @@ class AttList extends JList<String> {
 		});
 	}
 
-	protected void setIcons(List<Trait> diyTraits) {
+	public void setIcons(List<Trait> diyTraits) {
 		setCellRenderer(new DefaultListCellRenderer() {
 
 			private static final long serialVersionUID = 1L;

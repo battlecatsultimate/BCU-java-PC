@@ -6,6 +6,9 @@ import common.battle.BasisSet;
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskEntity;
 import common.battle.data.MaskUnit;
+import common.pack.FixIndexList;
+import common.pack.PackData;
+import common.pack.UserProfile;
 import common.util.Data;
 import common.util.unit.EForm;
 import common.util.unit.Form;
@@ -13,19 +16,21 @@ import common.util.unit.Level;
 import common.util.unit.Trait;
 import main.MainBCU;
 import page.*;
+import page.info.filter.AttList;
 import page.info.filter.EnemyFindPage;
 import page.info.filter.UnitFindPage;
 import utilpc.Interpret;
 import utilpc.UtilPC;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static utilpc.Interpret.TRAIT;
 
 public class ComparePage extends Page {
 
@@ -51,6 +56,11 @@ public class ComparePage extends Page {
     private final MaskEntity[] maskEntities = new MaskEntity[names.length];
     private final int[][] maskEntityLvl = new int[names.length][6];
 
+    private final AttList trait = new AttList();
+    private final Vector<String> vt = new Vector<>();
+    private final JScrollPane jt = new JScrollPane(trait);
+    private final List<Trait> tList = new ArrayList<>();
+
     private EnemyFindPage efp = null;
     private UnitFindPage ufp = null;
     private int s = -1;
@@ -68,6 +78,7 @@ public class ComparePage extends Page {
 
     private void ini() {
         add(back);
+        add(jt);
 
         for (int i = 0; i < sele.length; i++) {
             add(sele[i][0] = new JBTN(0, "veif"));
@@ -146,6 +157,30 @@ public class ComparePage extends Page {
         boxes[boxes.length - 1].setText("ability");
 
         addListeners();
+        setTraits();
+    }
+
+    private void setTraits() {
+        FixIndexList.FixIndexMap<Trait> BCtraits = UserProfile.getBCData().traits;
+        for (int i = 0 ; i < BCtraits.size() - 1 ; i++) {
+            tList.add(BCtraits.get(i));
+            vt.add(TRAIT[i]);
+        }
+        Collection<PackData.UserPack> pacs = UserProfile.getUserPacks();
+        for (PackData.UserPack pack : pacs) {
+            for (Trait t : pack.traits) {
+                tList.add(t);
+                vt.add(t.name);
+            }
+        }
+
+        trait.setIcons(tList);
+        trait.setListData(vt);
+        trait.setVisibleRowCount(0);
+        trait.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+        trait.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+        trait.addListSelectionListener(x -> reset());
     }
 
     private void addListeners() {
@@ -323,9 +358,8 @@ public class ComparePage extends Page {
                 double atkLv = b.t().getAtkMulti();
                 double defLv = b.t().getDefMulti();
 
-                ArrayList<Trait> traits = Arrays.stream(maskEntities)
-                        .filter(c -> c instanceof MaskEnemy)
-                        .flatMap(c -> c.getTraits().stream())
+                ArrayList<Trait> traits = Arrays.stream(trait.getSelectedIndices())
+                        .mapToObj(t -> UserProfile.getBCData().traits.get(t))
                         .collect(Collectors.toCollection(ArrayList::new));
 
                 traits.retainAll(mu.getTraits());
@@ -676,8 +710,12 @@ public class ComparePage extends Page {
             }
 
             int unselected = ((int) Arrays.stream(boxes).filter(b -> !b.isSelected()).count());
-            set(pane, x, y, posX, posY, width, 200 + unselected * 50);
-            posX += 600;
+            int height = 200 + Math.min(3, unselected) * 50;
+            set(pane, x, y, posX + i * 600, posY, width, height);
+
+            set(jt, x, y, posX, posY + height, width * 3, 100 + Math.max(0, unselected - 3) * 50);
+            if (resize)
+                jt.revalidate();
         }
 
         resize = false;
