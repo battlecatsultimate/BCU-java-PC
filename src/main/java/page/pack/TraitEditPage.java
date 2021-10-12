@@ -11,6 +11,7 @@ import common.pack.PackData.UserPack;
 import common.util.unit.Trait;
 import common.pack.FixIndexList.FixIndexMap;
 import main.MainBCU;
+import main.Opts;
 import page.*;
 import page.info.filter.UnitFindPage;
 import page.support.AnimLCR;
@@ -47,6 +48,8 @@ public class TraitEditPage extends Page {
                     Trait trait = (Trait)o;
                     if (trait.icon != null)
                         jl.setIcon(new ImageIcon((BufferedImage)trait.icon.getImg().bimg()));
+                    else
+                        jl.setIcon(new ImageIcon((BufferedImage)CommonStatic.getBCAssets().dummyTrait.getImg().bimg()));
                     return jl;
                 }
             });
@@ -167,7 +170,9 @@ public class TraitEditPage extends Page {
             if (ind < 0 && list.size() > 1)
                 ind = 0;
             File file = ((Source.Workspace) packpack.source).getTraitIconFile(t.id);
-            file.delete();
+            if(!file.delete()) {
+                Opts.warnPop("Failed to delete file : "+file.getAbsolutePath(), "Delete Failed");
+            }
             list.remove(t);
             pct.remove(t);
             if (ind >= 0)

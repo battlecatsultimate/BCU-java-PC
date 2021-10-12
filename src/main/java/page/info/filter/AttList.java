@@ -1,5 +1,6 @@
 package page.info.filter;
 
+import common.CommonStatic;
 import common.util.unit.Trait;
 import main.MainBCU;
 import page.JTG;
@@ -83,6 +84,8 @@ public class AttList extends JList<String> {
 					jl.setIcon(UtilPC.createIcon(3, ind));
 				else if (trait.icon != null)
 					jl.setIcon(new ImageIcon((BufferedImage)trait.icon.getImg().bimg()));
+				else
+					jl.setIcon(new ImageIcon((BufferedImage) CommonStatic.getBCAssets().dummyTrait.getImg().bimg()));
 				return jl;
 			}
 		});
