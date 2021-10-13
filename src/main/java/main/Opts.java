@@ -1,6 +1,5 @@
 package main;
 
-import com.sun.deploy.panel.JavaPanel;
 import common.CommonStatic;
 import page.*;
 
