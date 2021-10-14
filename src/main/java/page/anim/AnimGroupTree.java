@@ -58,6 +58,8 @@ public class AnimGroupTree implements TreeExpansionListener {
         }
 
         animTree.setModel(new DefaultTreeModel(nodes));
+
+        animTree.setRowHeight(0);
     }
 
     public void applyNewNodes() {
