@@ -256,13 +256,13 @@ public class EnemyInfoTable extends Page {
 		}
 		if (e.de.getLimit() >= 100)
 			special[0][5].setToolTipText("<html>"
-					+ "This enemy, if it's a boss, will always stay at least"
+					+ "This enemy, if it's a boss, will always stay at least "
 					+ (e.de.getLimit() - 100)
 					+ " units from the base<br>once it passes that threshold."
 					+ "</html>");
 		else
 			special[0][5].setToolTipText("<html>"
-					+ "This enemy, if it's a boss, will always stay at least"
+					+ "This enemy, if it's a boss, will always stay at least "
 					+ (100 - e.de.getLimit())
 					+ " units inside the base<br>once it passes that threshold."
 					+ "</html>");
