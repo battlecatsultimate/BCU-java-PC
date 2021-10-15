@@ -262,7 +262,7 @@ public class UtilPC {
 		fg.gradRect(0, sh + gh + skyGround, w, skyGround, 0, sh + gh + skyGround, bg.cs[2], 0, h, bg.cs[3]);
 
 		if(bg.overlay != null) {
-			fg.gradRectAlpha(0, 0, w, h, 0, 0, bg.overlayAlpha, bg.overlay[0], 0, h, bg.overlayAlpha, bg.overlay[1]);
+			fg.gradRectAlpha(0, 0, w, h, 0, 0, bg.overlayAlpha, bg.overlay[1], 0, h, bg.overlayAlpha, bg.overlay[0]);
 		}
 
 		g.dispose();
