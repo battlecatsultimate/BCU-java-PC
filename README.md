@@ -4,7 +4,7 @@
 ## Installing BCU Version 5 for Windows, macOS, or Linux
 
 1. Download and install [the JRE](https://www.java.com/en/download/manual.jsp) that corresponds to your operating system.
-    - For macOS users, you might want to download [JDK 8](https://drive.google.com/file/d/1ZH6lJ5StHGPZB994oXej53KysDQzmKhc/view?usp=sharing) as well in the case that BCU fails to work properly, especially if JOGL is enabled.
+    - For macOS users, you might want to download [JDK 8](https://drive.google.com/file/d/1tX-LQygjt3w0x3uQnyHBC2O-uePUQrPn/view?usp=sharing) as well in the case that BCU fails to work properly, especially if JOGL is enabled.
 2. Download [BCU-Initializer.jar](https://github.com/battlecatsultimate/bcu-assets/raw/master/jar/BCU-Initializer.jar)
 3. Move the jar to a new, empty folder, then run the jar.
 
@@ -13,7 +13,7 @@
 Refer to the links below with the label "BCU Tutorial" under the **Links & Resources** section.
 
 ### Common Issues/Errors
-If none of these apply to your situation, you can report it through GitHub Issues or the BCU Discord server, linked below. Make sure to include the most recent error log.
+If none of these apply to your situation, you can report it through GitHub Issues or the BCU Discord server, linked below. Make sure to include the most recent error log, which should be the newest .log file in the `log` folder.
 
 #### All Platforms
 - *Another BCU is running or last BCU didn't close properly*
