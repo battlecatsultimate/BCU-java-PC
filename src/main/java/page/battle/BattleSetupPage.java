@@ -136,7 +136,7 @@ public class BattleSetupPage extends LubCont {
 
 			levLimitText.add(get(MainLocale.PAGE, "levlimoff"));
 
-			for(int i = 1; i < 50; i++) {
+			for(int i = 1; i < 51; i++) {
 				levLimitText.add(Integer.toString(i));
 			}
 
