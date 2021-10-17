@@ -149,6 +149,7 @@ public class EnemyEditPage extends EntityEditPage {
 				if (ce.getProc().getArr(id).exists())
 					imu |= 1 << id - IMUSFT;
 			}
+		fli.setText(ce.getLimit() + "");
 		fli.setToolTipText("<html>"
 				+ "This enemy will stay at least "
 				+ (ce.getLimit() - 100)
