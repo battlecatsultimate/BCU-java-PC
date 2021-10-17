@@ -187,7 +187,7 @@ public class ComboEditPage extends Page {
                 return;
             changing = true;
             Combo combo = jlc.list.get(jlc.getSelectedRow());
-            combo.removeForm(combo.forms.length - 1);
+            combo.removeForm(jlc.getSelectedColumn() - 4 >= combo.forms.length || jlc.getSelectedColumn() - 4 < 0 ? combo.forms.length - 1 : jlc.getSelectedColumn() - 4);
             updateC();
             changing = false;
         });
