@@ -79,8 +79,10 @@ public class HeadTable extends AbJTable {
 		if (r == 3 && c == 1)
 			MainFrame.changePanel(new BGViewPage(page, null, sta.bg));
 		if (r == 3 && c == 3)
+			MainFrame.changePanel(new BGViewPage(page, null, sta.bg1));
+		if (r == 3 && c == 5)
 			MainFrame.changePanel(new CastleViewPage(page, CastleList.from(sta), sta.castle));
-		if (r == 3 && c == 5 && data[r][c] != null && data[r][c] instanceof LvRestrict)
+		if (r == 4 && c == 7 && data[r][c] instanceof LvRestrict)
 			MainFrame.changePanel(new LvRestrictPage(page, (LvRestrict) data[r][c]));
 		if (r == 3 && c == 7 && data[r][c] != null)
 			MainFrame.changePanel(new CharaGroupPage(page, (CharaGroup) data[r][c]));
@@ -142,8 +144,8 @@ public class HeadTable extends AbJTable {
 						rar[j++] = rarity[i];
 			}
 			if (lim.lvr != null) {
-				img[4] = limits[6];
-				img[5] = lim.lvr;
+				rar[6] = limits[6];
+				rar[7] = lim.lvr;
 			}
 			if (lim.group != null) {
 				img[6] = limits[5];
