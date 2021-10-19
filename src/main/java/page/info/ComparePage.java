@@ -490,11 +490,12 @@ public class ComparePage extends Page {
         if (s == -1)
             return;
 
-        MaskEntity ent = (efp != null && efp.getSelected() != null)
-                ? efp.getSelected().de
-                : (ufp != null && ufp.getForm() != null)
-                ? ufp.getForm().du
-                : null;
+        MaskEntity ent = null;
+
+        if (efp != null && efp.getSelected() != null)
+            ent = efp.getSelected().de;
+        else if (ufp != null && ufp.getForm() != null)
+            ent = ufp.getForm().du;
 
         if (ent instanceof MaskEnemy) {
             int[] data = maskEntities[s] instanceof MaskEnemy

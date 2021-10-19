@@ -24,6 +24,25 @@ If none of these apply to your situation, you can report it through GitHub Issue
     - Open up BCU again. In the main menu, If the number on the top left says `# / 247 MB` and your computer is 64-bit, you installed the wrong Java. Install 64-bit Java instead.
     - If the above fails, you may need to use run.bat, which is available in the BCU Discord server, linked below.
 
+#### Windows Issues and Warnings
+
+Don't install `Windiws Online` installer if your OS type is 64-bit. You will have to download `Windows Offline (64-bit)` one.
+It's fine to install `Windows Online` or `Windows Offline` if your OS type is 32-bit. If you install incorrect JRE, BCU will have memory space issue.
+
+**Do not run BCU with `Open with Java` option!** This will connect BCU with `system32` folder, and BCU will try to create subfolders in there.
+
+Below is issue related with Windows that commonly happens.
+
+- Windows open jar file with incorrect program such as WinRAR, etc
+    - First of all, do not extract jar file. Jar files are executable file like exe, not something supposed to be extracted.
+    - Follow steps below to change program connection.
+    1. Click BCU jar file once
+    2. Put mouse on jar file, and right click it
+    3. Click `Properties`
+    4. Click `Change...` next to `Open With`
+    5. Program list will appear, select Java
+    6. Close properties windows by clicking `Apply` and `OK`
+
 #### macOS Issues
 Some issues below can be fixed by running the jar via Terminal. If it suggests doing this, follow these instructions.
 1. Open Launchpad and search up "Terminal", then open up the program.
