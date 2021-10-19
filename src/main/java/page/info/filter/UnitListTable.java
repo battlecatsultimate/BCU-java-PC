@@ -27,8 +27,8 @@ public class UnitListTable extends SortTable<Form> {
 	}
 
 	public static void redefine() {
-		tit = new String[] { "ID", "name", Page.get(MainLocale.INFO, "pref"), "HP", "HB", "atk", Page.get(MainLocale.INFO, "range"),
-				Page.get(MainLocale.INFO, "speed"), "dps", Page.get(MainLocale.INFO, "preaa"), "CD", Page.get(MainLocale.INFO, "price"), Page.get(MainLocale.INFO, "atkf") };
+		tit = new String[] { "ID", "name", Page.get(MainLocale.INFO, "pref"), "HP", Page.get(MainLocale.INFO,"hb"), "atk", Page.get(MainLocale.INFO, "range"),
+				Page.get(MainLocale.INFO, "speed"), "dps", Page.get(MainLocale.INFO, "preaa"), "CD", Page.get(MainLocale.INFO, "price"), Page.get(MainLocale.INFO, "atkf"), Page.get(MainLocale.INFO, "will") };
 	}
 
 	private final Page page;
@@ -82,7 +82,7 @@ public class UnitListTable extends SortTable<Form> {
 		double mul = e.unit.lv.getMult(e.unit.getPrefLv());
 		double atk = b.t().getAtkMulti();
 		double def = b.t().getDefMulti();
-		int itv = du.getItv();
+		int itv = e.anim != null ? du.getItv() : -1;
 		if (c == 0)
 			return e.uid + "-" + e.fid;
 		else if (c == 1)
@@ -100,7 +100,7 @@ public class UnitListTable extends SortTable<Form> {
 		else if (c == 7)
 			return du.getSpeed();
 		else if (c == 8)
-			return (int) (du.allAtk() * mul * atk * 30 / itv);
+			return itv == -1 ? "Corrupted" : (int) (du.allAtk() * mul * atk * 30 / itv);
 		else if (c == 9)
 			return du.rawAtkData()[0][1];
 		else if (c == 10)
@@ -109,8 +109,9 @@ public class UnitListTable extends SortTable<Form> {
 			return e.getDefaultPrice(1);
 		else if (c == 12)
 			return du.getItv();
-		else
-			return null;
+		else if (c == 13)
+			return du.getWill() + 1;
+		return null;
 	}
 
 	@Override

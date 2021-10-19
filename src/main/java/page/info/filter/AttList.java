@@ -1,10 +1,13 @@
 package page.info.filter;
 
+import common.CommonStatic;
+import common.util.unit.Trait;
 import main.MainBCU;
 import page.JTG;
 import page.Page;
 import utilpc.Theme;
 import utilpc.UtilPC;
+import java.util.List;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +15,7 @@ import java.awt.image.BufferedImage;
 
 import static utilpc.Interpret.*;
 
-class AttList extends JList<String> {
+public class AttList extends JList<String> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -35,10 +38,17 @@ class AttList extends JList<String> {
 
 	}
 
+	public AttList() {
+		if (MainBCU.nimbus) {
+			setSelectionBackground(MainBCU.light ? Theme.LIGHT.NIMBUS_SELECT_BG : Theme.DARK.NIMBUS_SELECT_BG);
+		}
+	}
+
 	protected AttList(int type, int para) {
 		if (MainBCU.nimbus) {
 			setSelectionBackground(MainBCU.light ? Theme.LIGHT.NIMBUS_SELECT_BG : Theme.DARK.NIMBUS_SELECT_BG);
 		}
+
 		setCellRenderer(new DefaultListCellRenderer() {
 
 			private static final long serialVersionUID = 1L;
@@ -58,8 +68,26 @@ class AttList extends JList<String> {
 				jl.setIcon(new ImageIcon(v));
 				return jl;
 			}
-
 		});
 	}
 
+	public void setIcons(List<Trait> diyTraits) {
+		setCellRenderer(new DefaultListCellRenderer() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getListCellRendererComponent(JList<?> l, Object o, int ind, boolean s, boolean f) {
+				JLabel jl = (JLabel) super.getListCellRendererComponent(l, o, ind, s, f);
+				Trait trait = diyTraits.get(ind);
+				if (trait.BCTrait)
+					jl.setIcon(UtilPC.createIcon(3, ind));
+				else if (trait.icon != null)
+					jl.setIcon(new ImageIcon((BufferedImage)trait.icon.getImg().bimg()));
+				else
+					jl.setIcon(new ImageIcon((BufferedImage) CommonStatic.getBCAssets().dummyTrait.getImg().bimg()));
+				return jl;
+			}
+		});
+	}
 }

@@ -4,8 +4,8 @@ import common.CommonStatic;
 import common.battle.BasisLU;
 import common.battle.BasisSet;
 import common.battle.LineUp;
+import common.pack.UserProfile;
 import common.system.Node;
-import common.util.lang.MultiLangCont;
 import common.util.pack.NyCastle;
 import common.util.unit.Combo;
 import common.util.unit.Form;
@@ -22,8 +22,6 @@ import utilpc.Interpret;
 import utilpc.UtilPC;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -178,9 +176,9 @@ public class BasisPage extends LubCont {
 		set(jspt, x, y, 1600, 150, 450, 600);
 		set(lub, x, y, 500, 150, 600, 300);
 		set(unit, x, y, 1350, 100, 200, 50);
-		set(jspcs, x, y, 1300, 800, 300, 450);
-		set(jspcl, x, y, 1600, 800, 300, 450);
-		set(jspc, x, y, 50, 800, 1250, 450);
+		set(jspcs, x, y, 1500, 800, 300, 450);
+		set(jspcl, x, y, 1800, 800, 300, 450);
+		set(jspc, x, y, 50, 800, 1450, 450);
 		set(cjtf, x, y, 500, 750, 400, 50);
 		set(search, x, y, 900, 750, 200, 50);
 		set(setc, x, y, 1100, 750, 200, 50);
@@ -197,7 +195,7 @@ public class BasisPage extends LubCont {
 		for (int i = 0; i < jbcsR.length; i++)
 			set(jbcsR[i], x, y, 1170, 500 + 103 * i, 100, 50);
 		jlc.setRowHeight(50);
-		jlc.getColumnModel().getColumn(1).setPreferredWidth(size(x, y, 300));
+		jlc.getColumnModel().getColumn(2).setPreferredWidth(size(x, y, 300));
 		trea.resized(x, y);
 		if (resize) {
 			trea.setPreferredSize(size(x, y, trea.getPWidth(), trea.getPHeight()).toDimension());
@@ -215,37 +213,23 @@ public class BasisPage extends LubCont {
 
 	private void addListeners$0() {
 
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
+		back.addActionListener(arg0 -> changePanel(getFront()));
+
+		unit.addActionListener(e -> {
+			if (ufp == null)
+				ufp = new UnitFLUPage(getThis());
+			changePanel(ufp);
 		});
 
-		unit.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (ufp == null)
-					ufp = new UnitFLUPage(getThis());
-				changePanel(ufp);
-			}
+		ul.addListSelectionListener(e -> {
+			changing = true;
+			lub.select(ul.getSelectedValue());
+			changing = false;
 		});
 
-		ul.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				changing = true;
-				lub.select(ul.getSelectedValue());
-				changing = false;
-			}
-		});
-
-		form.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				lub.adjForm();
-				changeLU();
-			}
+		form.addActionListener(arg0 -> {
+			lub.adjForm();
+			changeLU();
 		});
 
 		lvjtf.addFocusListener(new FocusAdapter() {
@@ -260,7 +244,7 @@ public class BasisPage extends LubCont {
 
 		lvorb.setLnr(x -> {
 			if (lub.sf != null) {
-				changePanel(new LevelEditPage(this, lu().getLv(lub.sf.unit), lub.sf));
+				changePanel(new LevelEditPage(this, lu().getLv(lub.sf), lub.sf));
 			}
 		});
 
@@ -284,32 +268,26 @@ public class BasisPage extends LubCont {
 
 	private void addListeners$1() {
 
-		jlbs.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (jlb.getValueIsAdjusting() || changing)
-					return;
-				changing = true;
-				if (jlbs.getSelectedValue() == null)
-					jlbs.setSelectedValue(BasisSet.current(), true);
-				else
-					setBS(jlbs.getSelectedValue());
-				changing = false;
-			}
+		jlbs.addListSelectionListener(e -> {
+			if (jlb.getValueIsAdjusting() || changing)
+				return;
+			changing = true;
+			if (jlbs.getSelectedValue() == null)
+				jlbs.setSelectedValue(BasisSet.current(), true);
+			else
+				setBS(jlbs.getSelectedValue());
+			changing = false;
 		});
 
-		jlb.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (jlb.getValueIsAdjusting() || changing)
-					return;
-				changing = true;
-				if (jlb.getSelectedValue() == null)
-					jlb.setSelectedValue(BasisSet.current().sele, true);
-				else
-					setB(jlb.getSelectedValue());
-				changing = false;
-			}
+		jlb.addListSelectionListener(e -> {
+			if (jlb.getValueIsAdjusting() || changing)
+				return;
+			changing = true;
+			if (jlb.getSelectedValue() == null)
+				jlb.setSelectedValue(BasisSet.current().sele, true);
+			else
+				setB(jlb.getSelectedValue());
+			changing = false;
 		});
 
 		jlbs.list = new ReorderListener<BasisSet>() {
@@ -352,89 +330,71 @@ public class BasisPage extends LubCont {
 
 		};
 
-		bsadd.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				BasisSet b = new BasisSet();
-				vbs.clear();
-				vbs.addAll(BasisSet.list());
-				jlbs.setListData(vbs);
-				jlbs.setSelectedValue(b, true);
-				setBS(b);
-				changing = false;
-			}
+		bsadd.addActionListener(arg0 -> {
+			changing = true;
+			BasisSet b = new BasisSet();
+			vbs.clear();
+			vbs.addAll(BasisSet.list());
+			jlbs.setListData(vbs);
+			jlbs.setSelectedValue(b, true);
+			setBS(b);
+			changing = false;
 		});
 
-		bsrem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				BasisSet.list().remove(current());
-				vbs.clear();
-				vbs.addAll(BasisSet.list());
-				jlbs.setListData(vbs);
-				BasisSet b = BasisSet.list().get(BasisSet.list().size() - 1);
-				jlbs.setSelectedValue(b, true);
-				setBS(b);
-				changing = false;
-			}
+		bsrem.addActionListener(arg0 -> {
+			changing = true;
+			BasisSet.list().remove(current());
+			vbs.clear();
+			vbs.addAll(BasisSet.list());
+			jlbs.setListData(vbs);
+			BasisSet b = BasisSet.list().get(BasisSet.list().size() - 1);
+			jlbs.setSelectedValue(b, true);
+			setBS(b);
+			changing = false;
 		});
 
-		bscop.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				BasisSet b = new BasisSet(current());
-				vbs.clear();
-				vbs.addAll(BasisSet.list());
-				jlbs.setListData(vbs);
-				jlbs.setSelectedValue(b, true);
-				setBS(b);
-				changing = false;
-			}
+		bscop.addActionListener(arg0 -> {
+			changing = true;
+			BasisSet b = new BasisSet(current());
+			vbs.clear();
+			vbs.addAll(BasisSet.list());
+			jlbs.setListData(vbs);
+			jlbs.setSelectedValue(b, true);
+			setBS(b);
+			changing = false;
 		});
 
-		badd.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				BasisLU b = current().add();
-				vb.clear();
-				vb.addAll(current().lb);
-				jlb.setListData(vb);
-				jlb.setSelectedValue(b, true);
-				setB(b);
-				changing = false;
-			}
+		badd.addActionListener(arg0 -> {
+			changing = true;
+			BasisLU b = current().add();
+			vb.clear();
+			vb.addAll(current().lb);
+			jlb.setListData(vb);
+			jlb.setSelectedValue(b, true);
+			setB(b);
+			changing = false;
 		});
 
-		brem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				BasisLU b = current().remove();
-				vb.clear();
-				vb.addAll(current().lb);
-				jlb.setListData(vb);
-				jlb.setSelectedValue(b, true);
-				setB(b);
-				changing = false;
-			}
+		brem.addActionListener(arg0 -> {
+			changing = true;
+			BasisLU b = current().remove();
+			vb.clear();
+			vb.addAll(current().lb);
+			jlb.setListData(vb);
+			jlb.setSelectedValue(b, true);
+			setB(b);
+			changing = false;
 		});
 
-		bcop.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changing = true;
-				BasisLU b = current().copyCurrent();
-				vb.clear();
-				vb.addAll(current().lb);
-				jlb.setListData(vb);
-				jlb.setSelectedValue(b, true);
-				setB(b);
-				changing = false;
-			}
+		bcop.addActionListener(arg0 -> {
+			changing = true;
+			BasisLU b = current().copyCurrent();
+			vb.clear();
+			vb.addAll(current().lb);
+			jlb.setListData(vb);
+			jlb.setSelectedValue(b, true);
+			setB(b);
+			changing = false;
 		});
 
 		bsjtf.addFocusListener(new FocusAdapter() {
@@ -462,63 +422,46 @@ public class BasisPage extends LubCont {
 	}
 
 	private void addListeners$2() {
-		jlcs.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (changing || e.getValueIsAdjusting())
-					return;
-				changing = true;
-				if (jlcs.getSelectedValue() == null)
-					jlcs.setSelectedIndex(0);
-				setCS(jlcs.getSelectedIndex());
-				changing = false;
-			}
+		jlcs.addListSelectionListener(e -> {
+			if (changing || e.getValueIsAdjusting())
+				return;
+			changing = true;
+			if (jlcs.getSelectedValue() == null)
+				jlcs.setSelectedIndex(0);
+			setCS(jlcs.getSelectedIndex());
+			changing = false;
 		});
 
-		jlcl.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (changing || e.getValueIsAdjusting())
-					return;
-				changing = true;
-				setCL(jlcs.getSelectedIndex());
-				changing = false;
-			}
+		jlcl.addListSelectionListener(e -> {
+			if (changing || e.getValueIsAdjusting())
+				return;
+			changing = true;
+			setCL(jlcs.getSelectedIndex());
+			changing = false;
 		});
 
-		jlcn.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (changing || e.getValueIsAdjusting())
-					return;
-				changing = true;
-				setCN();
-				changing = false;
-			}
+		jlcn.addListSelectionListener(e -> {
+			if (changing || e.getValueIsAdjusting())
+				return;
+			changing = true;
+			setCN();
+			changing = false;
 		});
 
-		jlc.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (changing || arg0.getValueIsAdjusting())
-					return;
-				changing = true;
-				setC();
-				changing = false;
-			}
+		jlc.getSelectionModel().addListSelectionListener(arg0 -> {
+			if (changing || arg0.getValueIsAdjusting())
+				return;
+			changing = true;
+			setC();
+			changing = false;
 		});
 
-		setc.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				lu().set(jlc.list.get(jlc.getSelectedRow()).units);
-				changeLU();
-			}
+		setc.addActionListener(arg0 -> {
+			lu().set(jlc.list.get(jlc.getSelectedRow()).forms);
+			changeLU();
 		});
 
-		reset.addActionListener(x -> {
-			lub.resetBackup();
-		});
+		reset.addActionListener(x -> lub.resetBackup());
 
 		search.addActionListener(x -> {
 			comboName = cjtf.getText();
@@ -645,7 +588,6 @@ public class BasisPage extends LubCont {
 		bsjtf.setText(BasisSet.current().name);
 		bsrem.setEnabled(current() != BasisSet.def());
 		setB(b);
-		jlc.setBasis(bs);
 		jlcn.setBasis(bs);
 		trea.callBack(null);
 	}
@@ -661,17 +603,25 @@ public class BasisPage extends LubCont {
 	private void setCL(int cs) {
 		int[] cls = jlcl.getSelectedIndices();
 		List<Combo> lc = new ArrayList<>();
+		List<Combo> comboList = UserProfile.getBCData().combos.getList();
+		UserProfile.getUserPacks().forEach(p -> comboList.addAll(p.combos.getList()));
 		if (cls.length == 0) {
-			for (int i = 0; i < CommonStatic.getBCAssets().filter[cs].length; i++)
-				for (Combo c : CommonStatic.getBCAssets().combos[CommonStatic.getBCAssets().filter[cs][i]]) {
-					String name = MultiLangCont.getStatic().COMNAME.getCont(c.name);
+			for (int i = 0; i < CommonStatic.getBCAssets().filter[cs].length; i++) {
+				int finalI = i;
+				for (Combo c : comboList.stream()
+						.filter(c -> c.type == CommonStatic.getBCAssets().filter[cs][finalI])
+						.collect(Collectors.toList())) {
+					String name = c.getName();
 					if (name != null && name.toLowerCase().contains(comboName.toLowerCase()))
 						lc.add(c);
 				}
+			}
 		} else {
 			for (int val : cls)
-				for (Combo c : CommonStatic.getBCAssets().combos[CommonStatic.getBCAssets().filter[cs][val]]) {
-					String name = MultiLangCont.getStatic().COMNAME.getCont(c.name);
+				for (Combo c : comboList.stream()
+						.filter(c -> c.type == CommonStatic.getBCAssets().filter[cs][val])
+						.collect(Collectors.toList())) {
+					String name = c.getName();
 					if (name != null && name.toLowerCase().contains(comboName.toLowerCase()))
 						lc.add(c);
 				}
@@ -706,7 +656,7 @@ public class BasisPage extends LubCont {
 
 		lvorb.setEnabled(f.orbs != null);
 
-		String[] strs = UtilPC.lvText(f, lu().getLv(f.unit).getLvs());
+		String[] strs = UtilPC.lvText(f, lu().getLv(f).getLvs());
 		lvjtf.setText(strs[0]);
 		pcoin.setText(strs[1]);
 	}
@@ -721,5 +671,4 @@ public class BasisPage extends LubCont {
 		setc.setText(0, "set" + (b ? "1" : "0"));
 
 	}
-
 }

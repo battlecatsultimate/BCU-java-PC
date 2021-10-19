@@ -1,21 +1,20 @@
 package page.battle;
 
+import common.CommonStatic;
 import common.battle.BasisLU;
 import common.battle.BasisSet;
 import common.util.stage.RandStage;
 import common.util.stage.Stage;
 import page.JBTN;
 import page.JTG;
+import page.MainLocale;
 import page.Page;
 import page.basis.BasisPage;
 import page.basis.LineUpBox;
 import page.basis.LubCont;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.Vector;
 
 public class BattleSetupPage extends LubCont {
 
@@ -26,6 +25,8 @@ public class BattleSetupPage extends LubCont {
 	private final JBTN tmax = new JBTN(0, "tomax");
 	private final JTG rich = new JTG(0, "rich");
 	private final JTG snip = new JTG(0, "sniper");
+	private final JTG plus = new JTG(MainLocale.PAGE, "plusunlock");
+	private final JComboBox<String> lvlim = new JComboBox<>();
 	private final JList<String> jls = new JList<>();
 	private final JScrollPane jsps = new JScrollPane(jls);
 	private final JLabel jl = new JLabel();
@@ -34,9 +35,9 @@ public class BattleSetupPage extends LubCont {
 
 	private final Stage st;
 
-	private final int[] conf;
+	private final int conf;
 
-	public BattleSetupPage(Page p, Stage s, int... confs) {
+	public BattleSetupPage(Page p, Stage s, int confs) {
 		super(p);
 		st = s;
 		conf = confs;
@@ -72,59 +73,49 @@ public class BattleSetupPage extends LubCont {
 		set(snip, x, y, 300, 200, 200, 50);
 		set(tmax, x, y, 300, 500, 200, 50);
 		set(lub, x, y, 550, 50, 600, 300);
+		set(plus, x, y, 1200, 100, 200, 50);
+		set(lvlim, x, y, 1200, 200, 200, 50);
 	}
 
 	private void addListeners() {
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
+		back.addActionListener(arg0 -> changePanel(getFront()));
+
+		jls.addListSelectionListener(arg0 -> {
+			if (arg0.getValueIsAdjusting())
+				return;
+			if (jls.getSelectedIndex() == -1)
+				jls.setSelectedIndex(0);
 		});
 
-		jls.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (arg0.getValueIsAdjusting())
-					return;
-				if (jls.getSelectedIndex() == -1)
-					jls.setSelectedIndex(0);
+		jlu.addActionListener(arg0 -> changePanel(new BasisPage(getThis())));
+
+		strt.addActionListener(arg0 -> {
+			int star = jls.getSelectedIndex();
+			int[] ints = new int[1];
+			if (rich.isSelected())
+				ints[0] |= 1;
+			if (snip.isSelected())
+				ints[0] |= 2;
+			BasisLU b = BasisSet.current().sele;
+			if (conf == 0) {
+				b = RandStage.getLU(star);
+				star = 0;
 			}
+			changePanel(new BattleInfoPage(getThis(), st, star, b, ints));
 		});
 
-		jlu.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(new BasisPage(getThis()));
-			}
+		tmax.addActionListener(arg0 -> {
+			st.lim.lvr.validate(BasisSet.current().sele.lu);
+			renew();
 		});
 
-		strt.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				int star = jls.getSelectedIndex();
-				int[] ints = new int[1];
-				if (rich.isSelected())
-					ints[0] |= 1;
-				if (snip.isSelected())
-					ints[0] |= 2;
-				BasisLU b = BasisSet.current().sele;
-				if (conf.length == 1 && conf[0] == 0) {
-					b = RandStage.getLU(star);
-					star = 0;
-				}
-				changePanel(new BattleInfoPage(getThis(), st, star, b, ints));
-			}
-		});
+		plus.setLnr(a -> CommonStatic.getConfig().plus = plus.isSelected());
 
-		tmax.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				st.lim.lvr.validate(BasisSet.current().sele.lu);
-				renew();
-			}
-		});
+		lvlim.addActionListener(a -> {
+			CommonStatic.getConfig().levelLimit = lvlim.getSelectedIndex();
 
+			plus.setEnabled(CommonStatic.getConfig().levelLimit != 0);
+		});
 	}
 
 	private void ini() {
@@ -137,13 +128,33 @@ public class BattleSetupPage extends LubCont {
 		add(snip);
 		add(tmax);
 		add(lub);
-		if (conf.length == 0) {
+		if(st.isAkuStage()) {
+			add(plus);
+			add(lvlim);
+
+			Vector<String> levLimitText = new Vector<>();
+
+			levLimitText.add(get(MainLocale.PAGE, "levlimoff"));
+
+			for(int i = 1; i < 51; i++) {
+				levLimitText.add(Integer.toString(i));
+			}
+
+			lvlim.setModel(new DefaultComboBoxModel<>(levLimitText));
+
+			plus.setToolTipText(MainLocale.getLoc(MainLocale.PAGE, "plusunlocktip"));
+			lvlim.setToolTipText(MainLocale.getLoc(MainLocale.PAGE, "levellimit"));
+
+			plus.setSelected(CommonStatic.getConfig().plus);
+			lvlim.setSelectedIndex(CommonStatic.getConfig().levelLimit);
+		}
+		if (conf == 1) {
 			String[] tit = new String[st.getCont().stars.length];
 			String star = get(1, "star");
 			for (int i = 0; i < st.getCont().stars.length; i++)
 				tit[i] = (i + 1) + star + ": " + st.getCont().stars[i] + "%";
 			jls.setListData(tit);
-		} else if (conf.length == 1 && conf[0] == 0) {
+		} else if (conf == 0) {
 			String[] tit = new String[5];
 			String star = get(1, "attempt");
 			for (int i = 0; i < 5; i++)

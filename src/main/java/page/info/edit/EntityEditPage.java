@@ -34,6 +34,7 @@ import page.support.ReorderListener;
 import page.view.BGViewPage;
 import page.view.EnemyViewPage;
 import page.view.UnitViewPage;
+import utilpc.Interpret;
 
 import javax.swing.*;
 import java.util.*;
@@ -46,41 +47,43 @@ public abstract class EntityEditPage extends Page {
 
 	private final JBTN back = new JBTN(0, "back");
 
-	private final JL lhp = new JL(1, "HP");
-	private final JL lhb = new JL(1, "HB");
-	private final JL lsp = new JL(1, "speed");
-	private final JL lra = new JL(1, "range");
-	private final JL lwd = new JL(1, "width");
-	private final JL lsh = new JL(1, "shield");
-	private final JL ltb = new JL(1, "TBA");
-	private final JL lbs = new JL(1, "tbase");
-	private final JL ltp = new JL(1, "type");
-	private final JL lct = new JL(1, "count");
-	private final JL ldps = new JL(1,"DPS");
+	private final JL lhp = new JL(MainLocale.INFO, "HP");
+	private final JL lhb = new JL(MainLocale.INFO, "hb");
+	private final JL lsp = new JL(MainLocale.INFO, "speed");
+	private final JL lra = new JL(MainLocale.INFO, "range");
+	private final JL lwd = new JL(MainLocale.INFO, "width");
+	private final JL ltb = new JL(MainLocale.INFO, "TBA");
+	private final JL lbs = new JL(MainLocale.INFO, "tbase");
+	private final JL ltp = new JL(MainLocale.INFO, "type");
+	private final JL lct = new JL(MainLocale.INFO, "count");
+	private final JL ldps = new JL(MainLocale.INFO,"DPS");
+	private final JL lwp = new JL(MainLocale.INFO,"will");
+	private final JL lli = new JL(MainLocale.INFO, "minpos");
 	private final JL cdps = new JL();
 	private final JTF fhp = new JTF();
 	private final JTF fhb = new JTF();
 	private final JTF fsp = new JTF();
 	private final JTF fra = new JTF();
 	private final JTF fwd = new JTF();
-	private final JTF fsh = new JTF();
 	private final JTF ftb = new JTF();
 	private final JTF fbs = new JTF();
 	private final JTF ftp = new JTF();
 	private final JTF fct = new JTF();
+	private final JTF fwp = new JTF();
+	protected final JTF fli = new JTF();
 	private final ReorderList<String> jli = new ReorderList<>();
 	private final JScrollPane jspi = new JScrollPane(jli);
-	private final JBTN add = new JBTN(0, "add");
-	private final JBTN rem = new JBTN(0, "rem");
-	private final JBTN copy = new JBTN(0, "copy");
-	private final JBTN link = new JBTN(0, "link");
-	private final JTG comm = new JTG(1, "common");
+	private final JBTN add = new JBTN(MainLocale.PAGE, "add");
+	private final JBTN rem = new JBTN(MainLocale.PAGE, "rem");
+	private final JBTN copy = new JBTN(MainLocale.PAGE, "copy");
+	private final JBTN link = new JBTN(MainLocale.PAGE, "link");
+	private final JTG comm = new JTG(MainLocale.INFO, "common");
 	private final JTF atkn = new JTF();
-	private final JL lpst = new JL(1, "postaa");
+	private final JL lpst = new JL(MainLocale.INFO, "postaa");
 	private final JL vpst = new JL();
-	private final JL litv = new JL(1, "atkf");
-	private final JL lrev = new JL(1, "post-HB");
-	private final JL lres = new JL(1, "post-death");
+	private final JL litv = new JL(MainLocale.INFO, "atkf");
+	private final JL lrev = new JL(MainLocale.INFO, "post-HB");
+	private final JL lres = new JL(MainLocale.INFO, "post-death");
 	private final JL vrev = new JL();
 	private final JL vres = new JL();
 	private final JL vitv = new JL();
@@ -126,9 +129,8 @@ public abstract class EntityEditPage extends Page {
 	public void callBack(Object o) {
 		if (o instanceof int[]) {
 			int[] vals = (int[]) o;
-			if (vals.length == 3) {
-				ce.type = vals[0];
-				ce.abi = vals[1];
+			if (vals.length == 2) {
+				ce.abi = vals[0];
 				ce.loop = (ce.abi & AB_GLASS) > 0 ? 1 : -1;
 			}
 		}
@@ -168,7 +170,7 @@ public abstract class EntityEditPage extends Page {
 		SupPage<Unit> ans;
 
 		if(p != null) {
-			ans = new UnitFindPage(this, pack, p.desc.dependency.toArray(new String[0]));
+			ans = new UnitFindPage(this, pack, p.desc.dependency);
 		} else {
 			ans = new UnitFindPage(this);
 		}
@@ -196,7 +198,6 @@ public abstract class EntityEditPage extends Page {
 		set(lhb);
 		set(lsp);
 		set(lwd);
-		set(lsh);
 		set(lra);
 		set(ltb);
 		set(lbs);
@@ -205,15 +206,18 @@ public abstract class EntityEditPage extends Page {
 		set(fhp);
 		set(fhb);
 		set(fsp);
-		set(fsh);
 		set(fwd);
 		set(fra);
 		set(ftb);
 		set(fbs);
 		set(ftp);
 		set(fct);
+		set(lwp);
+		set(fwp);
 		set(ldps);
 		set(cdps);
+		set(lli);
+		set(fli);
 		ljp.end();
 		add(jspi);
 		add(aet);
@@ -242,25 +246,26 @@ public abstract class EntityEditPage extends Page {
 			add(jcba);
 			Vector<AnimCE> vda = new Vector<>();
 			AnimCE ac = ((AnimCE) ce.getPack().anim);
-			if (!ac.inPool())
+			if (ac != null && !ac.inPool())
 				vda.add(ac);
 			vda.addAll(AnimCE.map().values());
+			if (ac == null)
+				ce.getPack().anim = vda.get(0);
 			jcba.setModel(new DefaultComboBoxModel<>(vda));
 		}
 		setFocusTraversalPolicy(ljp);
 		setFocusCycleRoot(true);
 		addListeners();
 		atkn.setToolTipText("<html>use name \"revenge\" for attack during HB animation<br>"
-				+ "use name \"resurrection\" for attack during death animation</html>");
+				+ "use name \"resurrection\" for attack during death animation"
+				+ "use name \"counterattack\" for a more customizable counterattack (Needs Counter proc parameters still)</html>");
 		ftp.setToolTipText(
-				"<html>" + "+1 for normal attack<br>"
-						+ "+2 to attack kb<br>"
-						+ "+4 to attack underground<br>"
-						+ "+8 to attack corpse<br>"
-						+ "+16 to attack soul<br>"
-						+ "+32 to attack ghost<br>"
-						+ "+64 to attack entities that can revive others<br>"
-						+ "+128 to attack enter animations</html>");
+				"<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
+						+ "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost<br>" +
+						"+64 to attack entities that can revive others<br>" + "+128 to attack enter animations</html>");
+		fwp.setToolTipText(
+				"<html>" + "The amount of slots this entity will take of the limit"
+				+ " when spawned</html>");
 
 		add.setEnabled(editable);
 		rem.setEnabled(editable);
@@ -310,8 +315,8 @@ public abstract class EntityEditPage extends Page {
 		set(fhb, x, y, 150, 150, 200, 50);
 		set(lsp, x, y, 50, 200, 100, 50);
 		set(fsp, x, y, 150, 200, 200, 50);
-		set(lsh, x, y, 50, 250, 100, 50);
-		set(fsh, x, y, 150, 250, 200, 50);
+		set(lwp, x, y, 50, 250, 100, 50);
+		set(fwp, x, y, 150, 250, 200, 50);
 		set(lwd, x, y, 50, 300, 100, 50);
 		set(fwd, x, y, 150, 300, 200, 50);
 
@@ -346,6 +351,8 @@ public abstract class EntityEditPage extends Page {
 		set(litv, x, y, 650, 700, 200, 50);
 		set(vitv, x, y, 850, 700, 200, 50);
 		set(jcba, x, y, 650, 750, 400, 50);
+		set(lli, x, y, 1400, 1050, 200, 50);
+		set(fli, x, y, 1600, 1050, 200, 50);
 
 		if (editable) {
 			set(lrev, x, y, 650, 850, 200, 50);
@@ -392,15 +399,17 @@ public abstract class EntityEditPage extends Page {
 		fsp.setText("" + ce.speed);
 		fra.setText("" + ce.range);
 		fwd.setText("" + ce.width);
-		fsh.setText("" + ce.shield);
 		ftb.setText("" + ce.tba);
 		fbs.setText("" + ce.base);
 		vpst.setText("" + ce.getPost());
 		vitv.setText("" + ce.getItv());
 		ftp.setText("" + ce.touch);
 		fct.setText("" + ce.loop);
+		fwp.setText("" + (ce.will + 1));
 		cdps.setText("" + (int) (Math.round(getLvAtk() * ce.allAtk()) * getAtk()) * 30 / ce.getItv());
 		comm.setSelected(data.common);
+		if (!comm.isSelected())
+			ce.updateAllProc();
 		mpt.setData(ce.rep.proc);
 		int[][] raw = ce.rawAtkData();
 		int pre = 0;
@@ -408,6 +417,8 @@ public abstract class EntityEditPage extends Page {
 		if (ce.rev != null)
 			n++;
 		if (ce.res != null)
+			n++;
+		if (ce.cntr != null)
 			n++;
 		String[] ints = new String[n];
 		for (int i = 0; i < ce.atks.length; i++) {
@@ -420,7 +431,9 @@ public abstract class EntityEditPage extends Page {
 		if (ce.rev != null)
 			ints[ix++] = ce.rev.str;
 		if (ce.res != null)
-			ints[ix] = ce.res.str;
+			ints[ix++] = ce.res.str;
+		if (ce.cntr != null)
+			ints[ix] = ce.cntr.str;
 		int ind = jli.getSelectedIndex();
 		jli.setListData(ints);
 		if (ind < 0)
@@ -572,9 +585,10 @@ public abstract class EntityEditPage extends Page {
 		if (ind < ce.atks.length)
 			return ce.atks[ind];
 		else if (ind == ce.atks.length)
-			return ce.rev == null ? ce.res : ce.rev;
-		else
-			return ce.res;
+			return ce.rev == null ? ce.res == null ? ce.cntr : ce.res : ce.rev;
+		else if (ind == ce.atks.length + 1)
+			return ce.res == null ? ce.cntr : ce.res;
+		return ce.cntr;
 	}
 
 	protected void input(JTF jtf, String text) {
@@ -592,6 +606,10 @@ public abstract class EntityEditPage extends Page {
 			if (text.equals("resurrection")) {
 				remAtk(adm);
 				ce.res = adm;
+			}
+			if (text.equals("counterattack")) {
+				remAtk(adm);
+				ce.cntr = adm;
 			}
 			return;
 		}
@@ -627,11 +645,6 @@ public abstract class EntityEditPage extends Page {
 					v[0] = 1;
 				ce.width = v[0];
 			}
-			if (jtf == fsh) {
-				if (v[0] < 0)
-					v[0] = 0;
-				ce.shield = v[0];
-			}
 			if (jtf == ftb) {
 				if (v[0] < 0)
 					v[0] = 0;
@@ -652,6 +665,13 @@ public abstract class EntityEditPage extends Page {
 					v[0] = -1;
 				ce.loop = v[0];
 			}
+			if (jtf == fwp) {
+				if (v[0] < 0)
+					v[0] = 0;
+				if (v[0] > 50)
+					v[0] = 50;
+				ce.will = v[0] - 1;
+			}
 			getInput(jtf, v);
 		}
 		setData(ce);
@@ -670,10 +690,17 @@ public abstract class EntityEditPage extends Page {
 			if (ind == n)
 				if (ce.rev != null)
 					ce.rev = null;
-				else
+				else if (ce.res != null)
 					ce.res = null;
+				else
+					ce.cntr = null;
+			else if (ind == n + 1)
+				if (ce.res != null)
+					ce.res = null;
+				else
+					ce.cntr = null;
 			else
-				ce.res = null;
+				ce.cntr = null;
 		} else if (n > 1) {
 			AtkDataModel[] datas = new AtkDataModel[n - 1];
 			if (ind >= 0)

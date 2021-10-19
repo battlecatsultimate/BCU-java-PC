@@ -2,6 +2,7 @@ package main;
 
 import common.CommonStatic;
 import common.battle.BasisSet;
+import common.io.Backup;
 import common.io.PackLoader.ZipDesc.FileDesc;
 import common.io.assets.Admin;
 import common.io.assets.AssetLoader;
@@ -10,6 +11,7 @@ import common.pack.Source.Workspace;
 import common.pack.UserProfile;
 import common.pack.Context.ErrType;
 import common.system.fake.ImageBuilder;
+import common.system.files.VFile;
 import common.util.AnimGroup;
 import common.util.Data;
 import common.util.stage.Replay;
@@ -21,6 +23,7 @@ import jogl.util.GLIB;
 import page.*;
 import page.awt.AWTBBB;
 import page.awt.BBBuilder;
+import common.system.DateComparator;
 import utilpc.Theme;
 import utilpc.UtilPC;
 import utilpc.awt.FIBI;
@@ -28,11 +31,11 @@ import utilpc.awt.FIBI;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.*;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.function.Consumer;
 
 public class MainBCU {
 
@@ -79,24 +82,56 @@ public class MainBCU {
 			return new File("./workspace/" + relativePath);
 		}
 
+		@Override
+		public File getBackupFile(String string) {
+			return new File("./backups/"+string);
+		}
+
+		@Override
+		public String getAuthor() {
+			return author;
+		}
+
 		@SuppressWarnings("deprecation")
 		@Override
 		public void initProfile() {
-			LoadPage.prog("read assets");
+			LoadPage.prog("reading assets");
 			AssetLoader.load(LoadPage::prog);
-			LoadPage.prog("read BC data");
+			LoadPage.prog("reading BC data");
 			UserProfile.getBCData().load(LoadPage::prog, LoadPage::prog);
-			LoadPage.prog("read local animations");
+			LoadPage.prog("reading backups");
+			Backup.loadBackups();
+
+			Backup restore = Backup.checkRestore();
+
+			if(restore != null) {
+				LoadPage.prog("restoring data");
+				boolean result = CommonStatic.ctx.restore(restore, LoadPage::prog);
+
+				if(!result) {
+					Opts.pop("Failed to restore data", "Restoration failed");
+				}
+			}
+
+			LoadPage.prog("reading local animations");
 			Workspace.loadAnimations(null);
-			LoadPage.prog("read local animation group data");
+			LoadPage.prog("reading local animation group data");
 			AnimGroup.readGroupData();
-			LoadPage.prog("read packs");
+			LoadPage.prog("reading packs");
 			UserProfile.loadPacks(LoadPage::prog);
-			LoadPage.prog("read basis");
+			LoadPage.prog("reading basis");
 			BasisSet.read();
-			LoadPage.prog("read replays");
+			LoadPage.prog("reading replays");
 			Replay.read();
-			LoadPage.prog("finish reading");
+			LoadPage.prog("remove old files");
+			CommonStatic.ctx.noticeErr(() -> {
+				Context.delete(new File("./user/backup.zip"));
+				Context.delete(new File("./user/basis.v"));
+				Context.delete(new File("./user/data.ini"));
+				Context.delete(new File("./assets/assets.zip"));
+				Context.delete(new File("./assets/calendar/"));
+			}, ErrType.WARN, "Failed to delete old files");
+			LoadPage.prog("finished reading");
 		}
 
 		@Override
@@ -123,10 +158,9 @@ public class MainBCU {
 			}
 
 			(t == ErrType.INFO ? System.out : System.err).println(str);
+
 			if (t != ErrType.INFO)
-				Opts.pop(str, "ERROR");
-			if (t == ErrType.FATAL)
-				CommonStatic.def.exit(false);
+				Opts.errOnce(str, "ERROR", t == ErrType.FATAL);
 		}
 
 		@Override
@@ -140,19 +174,125 @@ public class MainBCU {
 			else
 				return !(t == ErrType.CORRUPT || t == ErrType.ERROR || t == ErrType.FATAL || t == ErrType.WARN || !MainBCU.WRITE);
 		}
+
+		@Override
+		public boolean restore(Backup b, Consumer<Double> prog) {
+			if(CommonStatic.getConfig().backupPath == null) {
+				File packs = CommonStatic.ctx.getAuxFile("./packs");
+				File workspace = CommonStatic.ctx.getWorkspaceFile("");
+				File user = CommonStatic.ctx.getUserFile("");
+
+				try {
+					if(packs.exists())
+						Context.delete(packs);
+
+					if(workspace.exists())
+						Context.delete(workspace);
+
+					if(user.exists())
+						Context.delete(user);
+				} catch (Exception e) {
+					e.printStackTrace();
+					return false;
+				}
+
+				boolean result = CommonStatic.ctx.noticeErr(() -> b.backup.unzip(path -> new File("./"+path), prog), ErrType.ERROR, "Failed to restore files");
+
+				DateComparator comparator = new DateComparator();
+
+				Backup.backups.removeIf(ba -> comparator.compare(b, ba) < 1 && ba.safeDelete());
+
+				return result;
+			} else {
+				VFile vf = b.backup.tree.find(CommonStatic.getConfig().backupPath);
+
+				CommonStatic.getConfig().backupPath = null;
+
+				if(vf == null)
+					return false;
+
+				try {
+					extractData(vf, prog);
+				} catch (Exception e) {
+					return false;
+				}
+
+				return true;
+			}
+		}
+
+		private void extractData(VFile vf, Consumer<Double> prog) throws IOException {
+			if(vf.getData() != null) {
+				double max = vf.getData().size();
+				double progress = 0;
+
+				File f = new File(vf.getPath());
+
+				if(!f.exists() && !f.createNewFile()) {
+					return;
+				}
+
+				FileOutputStream fos = new FileOutputStream(f);
+				InputStream ins = vf.getData().getStream();
+				byte[] b = new byte[65536];
+				int len;
+
+				while((len = ins.read(b)) != -1) {
+					fos.write(b, 0, len);
+					progress += len;
+
+					prog.accept(progress/max);
+				}
+
+				fos.close();
+			} else {
+				int num = getFileNumber(vf);
+				int progress = 0;
+
+				for(VFile v : vf.list()) {
+					extractData(v, prog);
+
+					progress += getFileNumber(v);
+
+					prog.accept(progress * 1.0 / num);
+				}
+			}
+		}
+
+		private int getFileNumber(VFile vf) {
+			if(vf.getData() != null)
+				return 1;
+
+			int result = 0;
+
+			for(VFile v : vf.list()) {
+				if(v.getData() != null)
+					result++;
+				else
+					result += getFileNumber(v);
+			}
+
+			return result;
+		}
 	}
 
-	public static final int ver = 50038;
+	public static final int ver = 50102;
+	private static final DecimalFormat df = new DecimalFormat("#.##");
 
 	public static int FILTER_TYPE = 1;
 	public static final boolean WRITE = !new File("./.project").exists();
 	public static boolean preload = false, trueRun = true, loaded = false, USE_JOGL = false;
-	public static boolean light = true, nimbus = false;
+	public static boolean light = true, nimbus = false, seconds = false, buttonSound = false;
 	public static String author = "";
 	public static ImageBuilder<BufferedImage> builder;
+	public static boolean announce0510 = false;
 
 	public static String getTime() {
 		return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+	}
+
+	public static String toSeconds(int in) {
+		return df.format(in / 30.0) + "s";
 	}
 
 	public static void main(String[] args) {
@@ -181,9 +321,14 @@ public class MainBCU {
 			Page.BGCOLOR = new Color(255, 255, 255);
 		}
 
-		MainFrame frame = new MainFrame(Data.revVer(MainBCU.ver));
-		frame.initialize();
+		new MainFrame(Data.revVer(MainBCU.ver)).initialize();
 		new Timer().start();
+
+		if(!announce0510 && checkOldFileExisting()) {
+			Opts.popAgreement("Before migrating v5", "<html><p style=\"width:500px\">This BCU version has completely different code structure from previous version (0-4-10-9), so others data will get reformatted. This process cannot be undone, and it may cause error while reformatting. We recommend you to backup your files (user/replays/res folder) before migrating v5. Agree on this text to continue.</p></html>");
+		} else {
+			announce0510 = true;
+		}
 
 		MenuBarHandler.initialize();
 		BCJSON.check();
@@ -212,4 +357,10 @@ public class MainBCU {
 		e.printStackTrace();
 	}
 
+	private static boolean checkOldFileExisting() {
+		File res = new File("./res");
+		File assets = new File("./assets/assets/zip");
+
+		return res.exists() && assets.exists();
+	}
 }

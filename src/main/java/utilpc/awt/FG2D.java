@@ -95,6 +95,12 @@ public class FG2D implements FakeGraphics {
 	}
 
 	@Override
+	public void gradRectAlpha(int x, int y, int w, int h, int a, int b, int al, int[] c, int d, int e, int al2, int[] f) {
+		g.setPaint(new GradientPaint(a, b, new Color(c[0], c[1], c[2], al), d, e, new Color(f[0], f[1], f[2], al2)));
+		g.fillRect(x, y, w, h);
+	}
+
+	@Override
 	public void rotate(double d) {
 		g.rotate(d);
 	}
@@ -120,6 +126,11 @@ public class FG2D implements FakeGraphics {
 			g.setColor(Color.CYAN);
 		if (c == WHITE)
 			g.setColor(Color.WHITE);
+	}
+
+	@Override
+	public void setColor(int r, int g, int b) {
+		this.g.setColor(new Color(r, g, b));
 	}
 
 	@Override

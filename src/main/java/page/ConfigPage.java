@@ -2,6 +2,7 @@ package page;
 
 import common.CommonStatic;
 import common.CommonStatic.Config;
+import common.io.Backup;
 import common.util.ImgCore;
 import common.util.lang.MultiLangCont;
 import io.BCMusic;
@@ -22,32 +23,39 @@ public class ConfigPage extends Page {
 		return CommonStatic.getConfig();
 	}
 
-	private final JBTN back = new JBTN(0, "back");
-	private final JBTN filt = new JBTN(0, "filter" + MainBCU.FILTER_TYPE);
-	private final JBTN rlla = new JBTN(0, "rllang");
-	private final JTG prel = new JTG(0, "preload");
-	private final JTG whit = new JTG(0, "white");
-	private final JTG refe = new JTG(0, "axis");
-	private final JTG jogl = new JTG(0, "JOGL");
-	private final JTG musc = new JTG(0, "musc");
-	private final JTG exla = new JTG(0, "exlang");
-	private final JTG extt = new JTG(0, "extip");
+	private final JBTN back = new JBTN(MainLocale.PAGE, "back");
+	private final JBTN filt = new JBTN(MainLocale.PAGE, "filter" + MainBCU.FILTER_TYPE);
+	private final JBTN rlla = new JBTN(MainLocale.PAGE, "rllang");
+	private final JTG prel = new JTG(MainLocale.PAGE, "preload");
+	private final JTG whit = new JTG(MainLocale.PAGE, "white");
+	private final JTG refe = new JTG(MainLocale.PAGE, "axis");
+	private final JTG jogl = new JTG(MainLocale.PAGE, "JOGL");
+	private final JTG musc = new JTG(MainLocale.PAGE, "musc");
+	private final JTG exla = new JTG(MainLocale.PAGE, "exlang");
+	private final JTG extt = new JTG(MainLocale.PAGE, "extip");
+	private final JTG secs = new JTG(MainLocale.PAGE, "secs");
+	private final JTG btnsnd = new JTG(MainLocale.PAGE, "btnsnd");
+	private final JTG bgeff = new JTG(MainLocale.PAGE, "bgeff");
+	private final JL preflv = new JL(MainLocale.PAGE, "preflv");
+	private final JTF prlvmd = new JTF();
 	private final JBTN[] left = new JBTN[4];
 	private final JBTN[] right = new JBTN[4];
 	private final JL[] name = new JL[4];
 	private final JL[] vals = new JL[4];
-	private final JL jlmin = new JL(0, "opamin");
-	private final JL jlmax = new JL(0, "opamax");
-	private final JL jlbg = new JL(0, "BGvol");
-	private final JL jlse = new JL(0, "SEvol");
-	private final JL jlui = new JL(0, "UIvol");
-	private final JBTN theme = new JBTN(0, MainBCU.light ? "themel" : "themed");
-	private final JBTN nimbus = new JBTN(0, MainBCU.nimbus ? "nimbus" : "tdefault");
+	private final JL jlmin = new JL(MainLocale.PAGE, "opamin");
+	private final JL jlmax = new JL(MainLocale.PAGE, "opamax");
+	private final JL jlbg = new JL(MainLocale.PAGE, "BGvol");
+	private final JL jlse = new JL(MainLocale.PAGE, "SEvol");
+	private final JL jlui = new JL(MainLocale.PAGE, "UIvol");
+	private final JL mbac = new JL(MainLocale.PAGE, "maxback");
+	private final JBTN theme = new JBTN(MainLocale.PAGE, MainBCU.light ? "themel" : "themed");
+	private final JBTN nimbus = new JBTN(MainLocale.PAGE, MainBCU.nimbus ? "nimbus" : "tdefault");
 	private final JSlider jsmin = new JSlider(0, 100);
 	private final JSlider jsmax = new JSlider(0, 100);
 	private final JSlider jsbg = new JSlider(0, 100);
 	private final JSlider jsse = new JSlider(0, 100);
 	private final JSlider jsui = new JSlider(0, 100);
+	private final JSlider jsba = new JSlider(0, 50);
 	private final JList<String> jls = new JList<>(MainLocale.LOC_NAME);
 	private final JBTN row = new JBTN(MainLocale.PAGE, CommonStatic.getConfig().twoRow ? "tworow" : "onerow");
 
@@ -99,16 +107,25 @@ public class ConfigPage extends Page {
 		set(jsui, x, y, 50, 1150, 1000, 100);
 		set(filt, x, y, 1100, 550, 200, 50);
 		set(musc, x, y, 1350, 550, 200, 50);
-		set(exla, x, y, 1100, 650, 450, 50);
-		set(extt, x, y, 1100, 750, 450, 50);
-		set(rlla, x, y, 1100, 850, 450, 50);
-		set(nimbus, x, y, 1100, 950, 200, 50);
-		set(theme, x, y, 1350, 950, 200, 50);
-		set(row, x, y, 1100, 1050, 400, 50);
+		set(exla, x, y, 1100, 625, 450, 50);
+		set(extt, x, y, 1100, 700, 450, 50);
+		set(rlla, x, y, 1100, 775, 450, 50);
+		set(nimbus, x, y, 1100, 850, 200, 50);
+		set(theme, x, y, 1350, 850, 200, 50);
+		set(row, x, y, 1100, 925, 450, 50);
+		set(secs, x, y, 1100, 1000, 450, 50);
+		set(preflv, x, y, 1600, 550, 200, 50);
+		set(prlvmd, x, y, 1800, 550, 250, 50);
+		set(mbac, x, y, 1100, 1100, 400, 50);
+		set(jsba, x, y, 1100, 1150, 1000, 100);
+		set(btnsnd, x, y, 1600, 625, 200, 50);
+		set(bgeff, x, y, 1850, 625, 200, 50);
 	}
 
 	private void addListeners() {
 		back.addActionListener(arg0 -> changePanel(getFront()));
+
+		secs.addActionListener(arg0 -> MainBCU.seconds = secs.isSelected());
 
 		prel.addActionListener(arg0 -> MainBCU.preload = prel.isSelected());
 
@@ -135,7 +152,7 @@ public class ConfigPage extends Page {
 		jogl.addActionListener(arg0 -> {
 			MainBCU.USE_JOGL = jogl.isSelected();
 			if (Opts.conf("This requires restart to apply. Do you want to restart?"))
-				CommonStatic.def.exit(true);
+				changePanel(new SavePage());
 		});
 
 		for (int i = 0; i < 4; i++) {
@@ -167,6 +184,29 @@ public class ConfigPage extends Page {
 
 		jsui.addChangeListener(arg0 -> BCMusic.setUIVol(jsui.getValue()));
 
+		jsba.addChangeListener(arg0 -> {
+			if(!jsba.getValueIsAdjusting()) {
+				int back = Backup.backups.size();
+				int pre = CommonStatic.getConfig().maxBackup;
+
+				if(pre >= back && back > jsba.getValue() && jsba.getValue() != 0) {
+					if(Opts.conf((back-jsba.getValue())+" "+get(MainLocale.PAGE, "backremwarn"))) {
+						CommonStatic.getConfig().maxBackup = jsba.getValue();
+					} else {
+						jsba.setValue(CommonStatic.getConfig().maxBackup);
+					}
+				} else if(jsba.getValue() == 0) {
+					if(Opts.conf((get(MainLocale.PAGE, "backinfwarn")))) {
+						CommonStatic.getConfig().maxBackup = jsba.getValue();
+					} else {
+						jsba.setValue(CommonStatic.getConfig().maxBackup);
+					}
+				} else {
+					CommonStatic.getConfig().maxBackup = jsba.getValue();
+				}
+			}
+		});
+
 		jls.addListSelectionListener(arg0 -> {
 			if (changing)
 				return;
@@ -190,7 +230,7 @@ public class ConfigPage extends Page {
 			MainBCU.nimbus = !MainBCU.nimbus;
 
 			if (Opts.conf("This requires restart to apply. Do you want to restart?"+(MainBCU.nimbus ? "\n\nWarning : Using Nimbus theme may result in high CPU usage" : "")))
-				CommonStatic.def.exit(true);
+				changePanel(new SavePage());
 		});
 
 		theme.setLnr((b) -> {
@@ -217,6 +257,14 @@ public class ConfigPage extends Page {
 			CommonStatic.getConfig().twoRow = !CommonStatic.getConfig().twoRow;
 			row.setText(MainLocale.PAGE, CommonStatic.getConfig().twoRow ? "tworow" : "onerow");
 		});
+
+		btnsnd.addActionListener(a -> {
+			MainBCU.buttonSound = !MainBCU.buttonSound;
+			if(MainBCU.buttonSound)
+				BCMusic.clickSound();
+		});
+
+		bgeff.addActionListener(a -> CommonStatic.getConfig().drawBGEffect = !CommonStatic.getConfig().drawBGEffect);
 	}
 
 	private void ini() {
@@ -244,6 +292,15 @@ public class ConfigPage extends Page {
 		add(nimbus);
 		add(theme);
 		add(row);
+		add(secs);
+		add(preflv);
+		add(prlvmd);
+		set(prlvmd);
+		set(jsba);
+		add(mbac);
+		add(btnsnd);
+		add(bgeff);
+		prlvmd.setText("" + CommonStatic.getConfig().prefLevel);
 		jls.setSelectedIndex(localeIndexOf(cfg().lang));
 		jsmin.setValue(cfg().deadOpa);
 		jsmax.setValue(cfg().fullOpa);
@@ -268,15 +325,30 @@ public class ConfigPage extends Page {
 		}
 		exla.setSelected(MainLocale.exLang);
 		extt.setSelected(MainLocale.exTTT);
+		secs.setSelected(MainBCU.seconds);
 		prel.setSelected(MainBCU.preload);
 		whit.setSelected(ViewBox.Conf.white);
 		refe.setSelected(cfg().ref);
 		musc.setSelected(BCMusic.play);
 		jogl.setSelected(MainBCU.USE_JOGL);
+		btnsnd.setSelected(MainBCU.buttonSound);
+		jsba.setValue(CommonStatic.getConfig().maxBackup);
+		bgeff.setSelected(CommonStatic.getConfig().drawBGEffect);
 		if (!MainBCU.nimbus) {
 			theme.setEnabled(false);
 		}
 		addListeners();
+	}
+
+	protected void set(JTF jtf) {
+		jtf.setLnr(e -> {
+			String text = jtf.getText().trim();
+			if (text.length() > 0) {
+				int[] v = CommonStatic.parseIntsN(text);
+				CommonStatic.getConfig().prefLevel = Math.max(1, v[0]);
+				jtf.setText("" + CommonStatic.getConfig().prefLevel);
+			}
+		});
 	}
 
 	private void set(JSlider sl) {
@@ -286,7 +358,6 @@ public class ConfigPage extends Page {
 		sl.setPaintTicks(true);
 		sl.setPaintLabels(true);
 	}
-
 
 	private int localeIndexOf(int elem) {
 		for(int i = 0; i < MainLocale.LOC_INDEX.length; i++) {

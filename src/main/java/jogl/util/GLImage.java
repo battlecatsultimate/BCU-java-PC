@@ -8,6 +8,7 @@ import common.system.fake.FakeImage;
 import jogl.GLStatic;
 import main.Printer;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -24,11 +25,40 @@ public class GLImage implements FakeImage {
 			TextureData data = null;
 			if (o instanceof byte[])
 				o = new ByteArrayInputStream((byte[]) o);
-			if (o instanceof File)
-				data = TextureIO.newTextureData(GLStatic.GLP, (File) o, GLStatic.MIP, "PNG");
-			if (o instanceof InputStream)
-				data = TextureIO.newTextureData(GLP, (InputStream) o, MIP, "PNG");
-			if (o instanceof BufferedImage) {
+			if (o instanceof File) {
+				BufferedImage img = ImageIO.read((File) o);
+
+				if(img.getType() != BufferedImage.TYPE_INT_ARGB_PRE) {
+					BufferedImage temp = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
+
+					for(int x = 0; x < img.getWidth(); x++) {
+						for(int y = 0; y < img.getHeight(); y++) {
+							temp.setRGB(x, y, img.getRGB(x, y));
+						}
+					}
+
+					img = temp;
+				}
+
+				data = AWTTextureIO.newTextureData(GLP, img, MIP);
+			}
+			if (o instanceof InputStream) {
+				BufferedImage img = ImageIO.read((InputStream) o);
+
+				if(img.getType() != BufferedImage.TYPE_INT_ARGB_PRE) {
+					BufferedImage temp = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_INT_ARGB_PRE);
+
+					for(int x = 0; x < img.getWidth(); x++) {
+						for(int y = 0; y < img.getHeight(); y++) {
+							temp.setRGB(x, y, img.getRGB(x, y));
+						}
+					}
+
+					img = temp;
+				}
+
+				data = AWTTextureIO.newTextureData(GLP, img, MIP);
+			} if (o instanceof BufferedImage) {
 				BufferedImage bimg = (BufferedImage) o;
 				bimg = check(bimg);
 				data = AWTTextureIO.newTextureData(GLP, bimg, MIP);

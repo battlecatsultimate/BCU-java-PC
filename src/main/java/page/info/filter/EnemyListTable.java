@@ -2,6 +2,7 @@ package page.info.filter;
 
 import common.battle.Basis;
 import common.battle.BasisSet;
+import common.system.ENode;
 import common.util.unit.Enemy;
 import page.MainFrame;
 import page.MainLocale;
@@ -23,8 +24,8 @@ public class EnemyListTable extends SortTable<Enemy> {
 	}
 
 	public static void redefine() {
-		tit = new String[] { "ID", "", "HP", "HB", "atk", Page.get(MainLocale.INFO, "range"), Page.get(MainLocale.INFO, "atkf"),
-				Page.get(MainLocale.INFO, "speed"), Page.get(MainLocale.INFO, "drop"), Page.get(MainLocale.INFO, "preaa"), "hp/dps", "HP/HB/dps" };
+		tit = new String[] { "ID", "", Page.get(MainLocale.INFO, "HP"), Page.get(MainLocale.INFO, "hb"), Page.get(MainLocale.INFO, "atk"), Page.get(MainLocale.INFO, "range"), Page.get(MainLocale.INFO, "atkf"),
+				Page.get(MainLocale.INFO, "speed"), Page.get(MainLocale.INFO, "drop"), Page.get(MainLocale.INFO, "preaa"), "dps", Page.get(MainLocale.INFO, "minpos"), Page.get(MainLocale.INFO, "will") };
 	}
 
 	private final Page page;
@@ -55,20 +56,19 @@ public class EnemyListTable extends SortTable<Enemy> {
 		if (r < 0 || r >= list.size() || c != 1)
 			return;
 		Enemy e = list.get(r);
-		MainFrame.changePanel(new EnemyInfoPage(page, e));
 
+		if(e.anim != null)
+			MainFrame.changePanel(new EnemyInfoPage(page, ENode.getList(list, e)));
 	}
 
 	@Override
 	protected int compare(Enemy e0, Enemy e1, int c) {
 		if (c == 1)
 			c--;
-		if (c == 0) {
+		if (c == 0)
 			return e0.compareTo(e1);
-		}
-		if (c == 8) {
+		if (c == 8 || c == 11)
 			return Double.compare((double) get(e0, c), (double) get(e1, c));
-		}
 		int i0 = (int) get(e0, c);
 		int i1 = (int) get(e1, c);
 		return Integer.compare(i0, i1);
@@ -89,7 +89,7 @@ public class EnemyListTable extends SortTable<Enemy> {
 		else if (c == 5)
 			return e.de.getRange();
 		else if (c == 6)
-			return e.de.getItv();
+			return e.anim != null ? e.de.getItv() : "Corrupted";
 		else if (c == 7)
 			return e.de.getSpeed();
 		else if (c == 8)
@@ -97,11 +97,12 @@ public class EnemyListTable extends SortTable<Enemy> {
 		else if (c == 9)
 			return e.de.rawAtkData()[0][1];
 		else if (c == 10)
-			return e.de.allAtk() == 0 ? Integer.MAX_VALUE : (int) ((long) e.de.getHp() * e.de.getItv() / e.de.allAtk());
+			return (int) ((long) e.de.allAtk() * 30 / e.de.getItv());
 		else if (c == 11)
-			return e.de.getHb() < 2 ? (int) get(e, 10) : (int) get(e, 10) / e.de.getHb();
-		else
-			return null;
+			return e.de.getLimit();
+		else if (c == 12)
+			return e.de.getWill() + 1;
+		return null;
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package page.info.edit;
 import common.util.Data;
 import common.util.Data.Proc;
 import common.util.lang.Formatter;
+import main.MainBCU;
 import page.JTF;
 import page.Page;
 import page.support.ListJtfPolicy;
@@ -16,8 +17,9 @@ public abstract class ProcTable extends Page {
 		private static final long serialVersionUID = 1L;
 
 		private static final int SEC = 16;
-		private static final int[] INDS = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 20, 27, 29, 31, 32, 21, 22, 23, 24, 25,
-				26, 35, 36, 37 };
+		private static final int[] INDS = new int[] { Data.P_KB, Data.P_STOP, Data.P_SLOW, Data.P_CRIT, Data.P_WAVE, Data.P_WEAK, Data.P_BREAK, Data.P_SHIELDBREAK,
+				Data.P_WARP, Data.P_CURSE, Data.P_SNIPER, Data.P_BOSS, Data.P_SATK, Data.P_POIATK, Data.P_VOLC, Data.P_TIME, Data.P_SEAL, Data.P_SUMMON, Data.P_MOVEWAVE,
+				Data.P_THEME, Data.P_POISON, Data.P_ARMOR, Data.P_SPEED, Data.P_MINIWAVE };
 
 		protected AtkProcTable(Page p, boolean edit, boolean unit) {
 			super(p, INDS, edit, unit);
@@ -46,9 +48,11 @@ public abstract class ProcTable extends Page {
 
 		private static final long serialVersionUID = 1L;
 
-		private static final int[] INDS = { 9, 10, 11, 12, 28, 30, Data.P_IMUKB, Data.P_IMUSTOP,
+		private static final int[] INDS = { Data.P_STRONG, Data.P_LETHAL, Data.P_BURROW, Data.P_REVIVE, Data.P_CRITI,
+				Data.P_COUNTER, Data.P_IMUATK, Data.P_DMGCUT, Data.P_DMGCAP, Data.P_IMUKB, Data.P_IMUSTOP,
 				Data.P_IMUSLOW, Data.P_IMUWAVE, Data.P_IMUWEAK, Data.P_IMUWARP, Data.P_IMUCURSE,
-				Data.P_IMUPOIATK, Data.P_IMUVOLC
+				Data.P_IMUSEAL, Data.P_IMUMOVING, Data.P_IMUARMOR, Data.P_IMUPOI, Data.P_IMUPOIATK,
+				Data.P_IMUVOLC, Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_BARRIER, Data.P_DEMONSHIELD, Data.P_DEATHSURGE
 		};
 
 		protected MainProcTable(Page p, boolean edit, boolean unit) {
@@ -79,8 +83,6 @@ public abstract class ProcTable extends Page {
 	protected final SwingEditor.SwingEG[] group;
 	private final boolean editable, isUnit;
 
-	private Proc proc;
-
 	protected ProcTable(Page p, int[] ind, boolean edit, boolean unit) {
 		super(p);
 		editable = edit;
@@ -99,13 +101,12 @@ public abstract class ProcTable extends Page {
 	}
 
 	protected void setData(Proc ints) {
-		proc = ints;
 		for (int i = 0; i < inds.length; i++)
-			group[i].setData(proc.getArr(inds[i]));
+			group[i].setData(ints.getArr(inds[i]));
 	}
 
 	private void ini() {
-		Formatter.Context ctx = new Formatter.Context(!isUnit, false);
+		Formatter.Context ctx = new Formatter.Context(!isUnit, MainBCU.seconds, new double[]{1.0, 1.0});
 		for (int i = 0; i < group.length; i++) {
 			group[i] = new SwingEditor.SwingEG(inds[i], editable, () -> getFront().callBack(null), ctx);
 			add(group[i].jlm);

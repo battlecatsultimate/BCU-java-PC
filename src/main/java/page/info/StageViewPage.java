@@ -1,11 +1,13 @@
 package page.info;
 
 import common.util.stage.MapColc;
+import common.util.stage.RandStage;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
 import main.Opts;
 import page.JBTN;
 import page.Page;
+import page.battle.BattleSetupPage;
 import page.battle.StRecdPage;
 
 import javax.swing.*;
@@ -27,6 +29,7 @@ public class StageViewPage extends StagePage {
 	private final JBTN dgen = new JBTN(0, "dungeon");
 	private final JBTN recd = new JBTN(0, "replay");
 	private final JBTN info = new JBTN(0, "info");
+	private final JBTN search = new JBTN(0, "search");
 
 	public StageViewPage(Page p, Collection<MapColc> collection) {
 		super(p);
@@ -57,6 +60,7 @@ public class StageViewPage extends StagePage {
 		set(strt, x, y, 400, 0, 200, 50);
 		set(recd, x, y, 1850, 350, 200, 50);
 		set(info, x, y, 1600, 350, 200, 50);
+		set(search, x, y, 1350, 350, 200, 50);
 	}
 
 	@Override
@@ -124,7 +128,17 @@ public class StageViewPage extends StagePage {
 			Stage.CLIPSM.add(stage.copy(Stage.CLIPSM));
 		});
 
-		dgen.setLnr(x -> changePanel(new StageRandPage(getThis())));
+		dgen.setLnr(x -> {
+			StageMap sm = jlsm.getSelectedValue();
+			if (sm == null)
+				changePanel(new StageRandPage(getThis(), jlmc.getSelectedValue()));
+			else {
+				Stage s = RandStage.getStage(sm);
+				changePanel(new BattleSetupPage(getThis(), s, 0));
+			}
+		});
+
+		search.setLnr(x -> changePanel(new StageSearchPage(getThis(), jlmc.getSelectedIndex())));
 
 	}
 
@@ -137,6 +151,7 @@ public class StageViewPage extends StagePage {
 		add(cpst);
 		add(dgen);
 		add(info);
+		add(search);
 		cpsm.setEnabled(false);
 		cpst.setEnabled(false);
 		recd.setEnabled(false);

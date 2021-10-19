@@ -62,6 +62,7 @@ public class PackEditPage extends Page {
 	private final JBTN remp = new JBTN(0, "rem");
 	private final JBTN adde = new JBTN(0, "add");
 	private final JBTN reme = new JBTN(0, "rem");
+	private final JBTN erea = new JBTN(0, "reassign");
 	private final JBTN adds = new JBTN(0, "add");
 	private final JBTN rems = new JBTN(0, "rem");
 	private final JBTN addr = new JBTN(0, "add");
@@ -75,6 +76,7 @@ public class PackEditPage extends Page {
 	private final JBTN vrcg = new JBTN(0, "recg");
 	private final JBTN vrlr = new JBTN(0, "relr");
 	private final JBTN cunt = new JBTN(0, "cunt");
+	private final JBTN tdiy = new JBTN(0, "ctrt");
 	private final JBTN ener = new JBTN(0, "ener");
 	private final JBTN vmsc = new JBTN(0, "vmsc");
 	private final JBTN unpk = new JBTN(0, "unpack");
@@ -132,6 +134,7 @@ public class PackEditPage extends Page {
 
 		set(lbe, x, y, w, 100, 300, 50);
 		set(jspe, x, y, w, 150, 300, 600);
+		set(erea, x, y, w, 750, 300, 50);
 		set(adde, x, y, w, 800, 150, 50);
 		set(reme, x, y, w + dw, 800, 150, 50);
 		set(jtfe, x, y, w, 850, 300, 50);
@@ -171,6 +174,7 @@ public class PackEditPage extends Page {
 
 		set(recd, x, y, w, 950, 300, 50);
 		set(csol, x, y, w, 1050, 300, 50);
+		set(tdiy, x, y, w, 1050, 300, 50);
 
 		w += 350;
 
@@ -218,6 +222,7 @@ public class PackEditPage extends Page {
 			if (jld.getValueIsAdjusting())
 				return;
 			adde.setEnabled(pac != null && jld.getSelectedValue() != null && pac.editable);
+			erea.setEnabled(pac != null && jle.getSelectedValue() != null && jld.getSelectedValue() != null && pac.editable);
 		});
 
 	}
@@ -324,7 +329,7 @@ public class PackEditPage extends Page {
 			changing = true;
 			CustomEnemy ce = new CustomEnemy();
 			AnimCE anim = jld.getSelectedValue();
-			ce.limit = Math.abs(anim.mamodel.parts[0][6] * 6);
+			ce.limit = CommonStatic.customEnemyMinPos(anim.mamodel);
 			Enemy e = new Enemy(pac.getNextID(Enemy.class), anim, ce);
 			pac.enemies.add(e);
 			jle.setListData(pac.enemies.toRawArray());
@@ -356,6 +361,34 @@ public class PackEditPage extends Page {
 			changePanel(new EnemyEditPage(getThis(), ene, pack));
 		});
 
+		erea.setLnr(a -> {
+			if(jle.getSelectedValue() == null || !(jle.getSelectedValue().de instanceof CustomEnemy))
+				return;
+
+			if(jld.getSelectedValue() == null)
+				return;
+
+			if(Opts.conf(get(MainLocale.PAGE, "reasanim"))) {
+				changing = true;
+
+				Enemy e = jle.getSelectedValue();
+				AnimCE anim = jld.getSelectedValue();
+
+				((CustomEnemy) e.de).limit = Math.abs(anim.mamodel.parts[0][6] * 6);
+				e.anim = anim;
+
+				edit.setEnabled(pac != null && jle.getSelectedValue() != null && jle.getSelectedValue().anim != null && pac.editable);
+
+				if(e.anim == null) {
+					edit.setToolTipText(get(MainLocale.PAGE, "corrrea"));
+				} else {
+					edit.setToolTipText(null);
+				}
+
+				changing = false;
+			}
+		});
+
 		jtfe.setLnr(e -> ene.name = jtfe.getText().trim());
 
 		vene.setLnr(() -> new EnemyViewPage(getThis(), pac.getSID()));
@@ -376,6 +409,10 @@ public class PackEditPage extends Page {
 		});
 
 		cunt.addActionListener(arg0 -> changePanel(new UnitManagePage(getThis(), pac)));
+
+		tdiy.addActionListener(arg0 -> {
+			changePanel(new TraitEditPage(getThis(), pac));
+		});
 
 		vmsc.setLnr(() -> pac.editable ? new MusicEditPage(getThis(), pac)
 				: new MusicPage(getThis(), pac.musics.getList()));
@@ -536,6 +573,7 @@ public class PackEditPage extends Page {
 		add(jtfp);
 		add(adde);
 		add(reme);
+		add(erea);
 		add(jtfe);
 		add(edit);
 		add(sdiy);
@@ -556,6 +594,7 @@ public class PackEditPage extends Page {
 		add(lbr);
 		add(lbt);
 		add(cunt);
+		add(tdiy);
 		add(vcas);
 		add(vrcg);
 		add(vrlr);
@@ -581,7 +620,15 @@ public class PackEditPage extends Page {
 	private void setEnemy(Enemy e) {
 		ene = e;
 		boolean b = e != null && pac.editable;
-		edit.setEnabled(e != null && e.de instanceof CustomEnemy);
+		edit.setEnabled(e != null && e.de instanceof CustomEnemy && e.anim != null);
+		erea.setEnabled(e != null && jld.getSelectedValue() != null && pac != null && pac.editable);
+
+		if(e != null && e.anim == null) {
+			edit.setToolTipText(get(MainLocale.PAGE, "corrrea"));
+		} else {
+			edit.setToolTipText(null);
+		}
+
 		jtfe.setEnabled(b);
 		reme.setEnabled(b);
 		if (b) {
@@ -645,6 +692,7 @@ public class PackEditPage extends Page {
 		checkAddr();
 		boolean b0 = pac != null;
 		sdiy.setEnabled(b0);
+		tdiy.setEnabled(b0);
 		if (b0) {
 			jls.setListData(pac.mc, pac.mc.maps);
 			jls.clearSelection();

@@ -18,7 +18,7 @@ public class BCJSON {
 
 	public static final String[] PC_LANG_CODES = { "en", "jp", "kr", "zh", "fr", "it", "es", "de" };
 	public static final String[] PC_LANG_FILES = { "util.properties", "page.properties", "info.properties",
-			"StageName.txt", "UnitName.txt", "EnemyName.txt", "ComboName.txt", "proc.json", "animation_type.json" };
+			"StageName.txt", "UnitName.txt", "UnitExplanation.txt", "EnemyName.txt", "EnemyExplanation.txt", "ComboName.txt", "proc.json", "animation_type.json" };
 	public static final String JAR_LINK = "https://github.com/battlecatsultimate/bcu-assets/raw/master/jar/BCU-";
 	public static final String ALT_LINK = "https://gitee.com/lcy0x1/bcu-assets/raw/master/jar/BCU-";
 
@@ -34,7 +34,7 @@ public class BCJSON {
 		} catch (Exception e) {
 			Opts.pop(e.getMessage(), "FATAL ERROR");
 			e.printStackTrace();
-			CommonStatic.def.exit(false);
+			CommonStatic.def.save(false, true);
 		}
 
 		int music = json != null ? json.music : Data.SE_ALL[Data.SE_ALL.length - 1] + 1;
@@ -52,7 +52,7 @@ public class BCJSON {
 		clearList(lang, false);
 		while (!Data.err(AssetLoader::merge))
 			if (!Opts.conf("failed to process assets, retry?"))
-				CommonStatic.def.exit(false);
+				CommonStatic.def.save(false, true);
 
 		if (jar != null) {
 			boolean updateIt = Opts.conf("New jar file update found. " + jar.desc + " Do you want to update jar file?");
@@ -79,7 +79,7 @@ public class BCJSON {
 					Opts.pop("Finished downloading BCU-" + ver + ".jar. Run this jar file from now on",
 							"Download finished");
 
-					CommonStatic.def.exit(false);
+					CommonStatic.def.save(false, true);
 				}
 			}
 		}
@@ -95,7 +95,7 @@ public class BCJSON {
 						"failed to download")))
 					if (!Opts.conf("failed to download, retry?"))
 						if (quit)
-							CommonStatic.def.exit(false);
+							CommonStatic.def.save(false, true);
 						else
 							break;
 				load |= l;

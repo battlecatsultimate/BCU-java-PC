@@ -67,7 +67,7 @@ public class StagePage extends Page {
 		strt.addActionListener(arg0 -> {
 			if (stage == null)
 				return;
-			changePanel(new BattleSetupPage(getThis(), stage));
+			changePanel(new BattleSetupPage(getThis(), stage, 1));
 		});
 
 	}

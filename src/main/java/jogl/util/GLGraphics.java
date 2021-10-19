@@ -140,7 +140,37 @@ public class GLGraphics implements GeoAuto {
 				float[] cs = new float[3];
 				for (int j = 0; j < 3; j++)
 					cs[j] = c[j] + cx * (f[j] - c[j]);
-				setColor(cs[0], cs[1], cs[2]);
+				applyColor(cs[0], cs[1], cs[2]);
+				addP(px, py);
+			}
+			g.glEnd();
+			color = null;
+		}
+
+		protected void gradRectAlpha(int x, int y, int w, int h, int a, int b, int al, int[] c, int d, int e, int al2, int[] f) {
+			checkMode();
+			P vec = new P(d - a, e - b);
+			double l = vec.abs();
+			l *= l;
+			g.glBegin(GL2ES3.GL_QUADS);
+
+			for (int i = 0; i < 4; i++) {
+				int px = x, py = y;
+				if (i == 2 || i == 3)
+					px += w;
+				if (i == 1 || i == 2)
+					py += h;
+				int alpha;
+				if( i == 0 || i == 2)
+					alpha = al;
+				else
+					alpha = al2;
+				float cx = (float) (vec.dotP(new P(px - a, py - b)) / l);
+				cx = P.reg(cx);
+				float[] cs = new float[3];
+				for (int j = 0; j < 3; j++)
+					cs[j] = c[j] + cx * (f[j] - c[j]);
+				applyColorWithOpacity(cs[0], cs[1], cs[2], alpha);
 				addP(px, py);
 			}
 			g.glEnd();
@@ -175,13 +205,21 @@ public class GLGraphics implements GeoAuto {
 		private void setColor() {
 			if (color == null)
 				return;
-			setColor(color >> 16 & 255, color >> 8 & 255, color & 255);
+			applyColor(color >> 16 & 255, color >> 8 & 255, color & 255);
 		}
 
-		private void setColor(float c0, float c1, float c2) {
+		public void setColor(int r, int g, int b) {
+			color = (r << 16) + (g << 8) + b;
+			setColor();
+		}
+
+		private void applyColor(float c0, float c1, float c2) {
 			g.glColor3f(c0 / 256f, c1 / 256f, c2 / 256f);
 		}
 
+		private void applyColorWithOpacity(float c0, float c1, float c2, float c3) {
+			g.glColor4f(c0 / 256f, c1 / 256f, c2 / 256f, c3 / 256f);
+		}
 	}
 
 	private static class GLC {
@@ -302,6 +340,11 @@ public class GLGraphics implements GeoAuto {
 	}
 
 	@Override
+	public void setColor(int r, int g, int b) {
+
+	}
+
+	@Override
 	public void setComposite(int mode, int p0, int p1) {
 		if (mode == GRAY) { // 1-d
 			checkMode(PURE);
@@ -364,21 +407,21 @@ public class GLGraphics implements GeoAuto {
 		comp.done = true;
 		if (mode == DEF) {
 			// sC *sA + dC *(1-sA)
-			g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			g.glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			g.glUniform1i(tm.mode, 0);
 		}
 		if (mode == TRANS) {
-			g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			g.glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			g.glUniform1i(tm.mode, 1);
 			g.glUniform1f(tm.para, comp.p0 * 1.0f / 256);
 		}
 		if (mode == BLEND) {
 			g.glUniform1f(tm.para, comp.p0 * 1.0f / 256);
 			if (comp.p1 == 0) {
-				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				g.glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 				g.glUniform1i(tm.mode, 1);
 			} else if (comp.p1 == 1) {// d+s*a
-				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+				g.glBlendFunc(GL_ONE, GL_ONE);
 				g.glUniform1i(tm.mode, 1);// sA=sA*p
 			} else if (comp.p1 == 2) {// d*(1-a+s*a)
 				g.glBlendFunc(GL_ZERO, GL_SRC_COLOR);
@@ -389,6 +432,9 @@ public class GLGraphics implements GeoAuto {
 			} else if (comp.p1 == -1) {// d-s*a
 				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 				g.glUniform1i(tm.mode, 3);// sA=-sA*p
+			} else if (comp.p1 == -2) {
+				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				g.glUniform1i(tm.mode, 1);
 			}
 		}
 	}
@@ -432,6 +478,11 @@ interface GeoAuto extends FakeGraphics {
 	@Override
 	default void gradRect(int x, int y, int w, int h, int a, int b, int[] c, int d, int e, int[] f) {
 		getGeo().gradRect(x, y, w, h, a, b, c, d, e, f);
+	}
+
+	@Override
+	default void gradRectAlpha(int x, int y, int w, int h, int a, int b, int al, int[] c, int d, int e, int al2, int[] f) {
+		getGeo().gradRectAlpha(x, y, w, h, a, b, al, c, d, e, al2, f);
 	}
 
 	@Override

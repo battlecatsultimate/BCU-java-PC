@@ -334,7 +334,7 @@ public class LevelEditPage extends Page {
 
 		add(clear);
 
-		String[] strs = UtilPC.lvText(f, lu().getLv(f.unit).getLvs());
+		String[] strs = UtilPC.lvText(f, lu().getLv(f).getLvs());
 
 		levels.setText(strs[0]);
 		pcoin.setText(strs[1]);
@@ -432,7 +432,7 @@ public class LevelEditPage extends Page {
 		String[] traits;
 		String[] grades;
 
-		if(aux.ORB.containsKey(data[0])) {
+		if (aux.ORB.containsKey(data[0])) {
 			traitData = new ArrayList<>(aux.ORB.get(data[0]).keySet());
 
 			traits = new String[traitData.size()];
