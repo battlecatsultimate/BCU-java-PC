@@ -4,11 +4,12 @@ import common.CommonStatic;
 import common.pack.UserProfile;
 import common.util.Animable;
 import common.util.anim.AnimI;
+import common.util.anim.AnimU;
+import common.util.anim.EAnimI;
 import page.Page;
 
 import javax.swing.*;
-import java.util.Collections;
-import java.util.Vector;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class EffectViewPage extends AbViewPage {
@@ -24,8 +25,9 @@ public class EffectViewPage extends AbViewPage {
 		Vector<AnimI<?, ?>> va = new Vector<>();
 		Collections.addAll(va, CommonStatic.getBCAssets().effas.values());
 		Collections.addAll(va, CommonStatic.getBCAssets().atks);
-		va.addAll(UserProfile.getBCData().souls.getList());
-		va.addAll(UserProfile.getBCData().demonSouls.getList());
+		// TODO: fix soul name bug
+		va.addAll(UserProfile.getBCData().souls.getList().stream().map(s -> s.anim).collect(Collectors.toList()));
+		va.addAll(UserProfile.getBCData().demonSouls.getList().stream().map(s -> s.anim).collect(Collectors.toList()));
 		jlu.setListData(va);
 		ini();
 		resized();
