@@ -25,7 +25,6 @@ public class EffectViewPage extends AbViewPage {
 		Vector<AnimI<?, ?>> va = new Vector<>();
 		Collections.addAll(va, CommonStatic.getBCAssets().effas.values());
 		Collections.addAll(va, CommonStatic.getBCAssets().atks);
-		// TODO: fix soul name bug
 		va.addAll(UserProfile.getBCData().souls.getList().stream().map(s -> s.anim).collect(Collectors.toList()));
 		va.addAll(UserProfile.getBCData().demonSouls.getList().stream().map(s -> s.anim).collect(Collectors.toList()));
 		jlu.setListData(va);
