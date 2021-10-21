@@ -173,8 +173,8 @@ public class PackEditPage extends Page {
 		set(remr, x, y, w + 175, 800, 175, 50);
 
 		set(recd, x, y, w, 950, 300, 50);
-		set(csol, x, y, w, 1050, 300, 50);
 		set(tdiy, x, y, w, 1050, 300, 50);
+		set(csol, x, y, w, 1150, 300, 50);
 
 		w += 350;
 
