@@ -4,6 +4,7 @@ package page.pack;
 import common.CommonStatic;
 import common.battle.data.CustomUnit;
 import common.pack.PackData.UserPack;
+import common.pack.Source;
 import common.pack.UserProfile;
 import common.util.anim.AnimCE;
 import common.util.unit.Form;
@@ -23,6 +24,7 @@ import javax.swing.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class UnitManagePage extends Page {
 
@@ -36,7 +38,7 @@ public class UnitManagePage extends Page {
 	private final JScrollPane jspu = new JScrollPane(jlu);
 	private final ReorderList<Form> jlf = new ReorderList<>();
 	private final JScrollPane jspf = new JScrollPane(jlf);
-	private final JList<AnimCE> jld = new JList<>(new Vector<>(AnimCE.map().values()));
+	private final JList<AnimCE> jld = new JList<>(new Vector<>(AnimCE.map().values().stream().filter(a -> a.id.base.equals(Source.BasePath.ANIM)).collect(Collectors.toList())));
 	private final JScrollPane jspd = new JScrollPane(jld);
 	private final JList<UnitLevel> jll = new JList<>();
 	private final JScrollPane jspl = new JScrollPane(jll);
@@ -134,7 +136,7 @@ public class UnitManagePage extends Page {
 		jld.addListSelectionListener(arg0 -> {
 			if (jld.getValueIsAdjusting())
 				return;
-			boolean edi = pac != null && pac.editable && jld.getSelectedValue() != null;
+			boolean edi = pac != null && pac.editable && jld.getSelectedValue() != null && jld.getSelectedValue().id.base.equals(Source.BasePath.ANIM);
 			addu.setEnabled(edi);
 			addf.setEnabled(edi && uni != null);
 			frea.setEnabled(edi && jlf.getSelectedValue() != null);
@@ -483,7 +485,7 @@ public class UnitManagePage extends Page {
 			changing = boo;
 		}
 		boolean b = pac != null && pac.editable;
-		addu.setEnabled(b && jld.getSelectedValue() != null);
+		addu.setEnabled(b && jld.getSelectedValue() != null && jld.getSelectedValue().id.base.equals(Source.BasePath.ANIM));
 		edit.setEnabled(b);
 		addl.setEnabled(b);
 		vuni.setEnabled(pac != null);
@@ -523,7 +525,7 @@ public class UnitManagePage extends Page {
 		remu.setEnabled(b);
 		rar.setEnabled(b);
 		cbl.setEnabled(b);
-		addf.setEnabled(b && jld.getSelectedValue() != null && unit.forms.length < 3);
+		addf.setEnabled(b && jld.getSelectedValue() != null && jld.getSelectedValue().id.base.equals(Source.BasePath.ANIM) && unit.forms.length < 3);
 		maxl.setEditable(b);
 		maxp.setEditable(b);
 		boolean boo = changing;

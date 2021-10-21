@@ -1,14 +1,19 @@
 package page.pack;
 
+import common.pack.Identifier;
 import common.pack.PackData;
+import common.pack.Source;
 import common.pack.UserProfile;
+import common.util.anim.AnimCE;
 import common.util.pack.Soul;
 import page.JBTN;
 import page.JL;
 import page.Page;
+import page.support.AnimLCR;
 
 import javax.swing.*;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 public class SoulEditPage extends Page {
 
@@ -19,10 +24,16 @@ public class SoulEditPage extends Page {
     private final JList<Soul> jls = new JList<>();
     private final JScrollPane jsps = new JScrollPane(jls);
 
+    private final JList<AnimCE> jld = new JList<>(new Vector<>(AnimCE.map().values().stream().filter(a -> a.id.base.equals(Source.BasePath.SOUL)).collect(Collectors.toList())));
+    private final JScrollPane jspd = new JScrollPane(jld);
+
     private final JBTN back = new JBTN(0, "back");
+    private final JBTN adds = new JBTN(0, "add");
+    private final JBTN rems = new JBTN(0, "rem");
 
     private final JL lbp = new JL(0, "pack");
     private final JL lbs = new JL(0, "soul");
+    private final JL lbd = new JL(0, "seleanim");
 
     private PackData.UserPack pac;
     private Soul soul;
@@ -45,7 +56,7 @@ public class SoulEditPage extends Page {
         setBounds(0, 0, x, y);
         set(back, x, y, 0, 0, 200, 50);
 
-        int w = 50;
+        int w = 50, dw = 150;
 
         set(lbp, x, y, w, 100, 400, 50);
         set(jspp, x, y, w, 150, 400, 600);
@@ -54,10 +65,66 @@ public class SoulEditPage extends Page {
 
         set(lbs, x, y, w, 100, 300, 50);
         set(jsps, x, y, w, 150, 300, 600);
+        set(adds, x, y, w, 800, 150, 50);
+        set(rems, x, y, w + dw, 800, 150, 50);
+
+        w += 300;
+
+        set(lbd, x, y, w, 100, 300, 50);
+        set(jspd, x, y, w, 150, 300, 600);
     }
 
     private void addListeners() {
         back.setLnr(x -> changePanel(getFront()));
+
+        jls.addListSelectionListener(x -> {
+            if (changing || jls.getValueIsAdjusting())
+                return;
+            changing = true;
+            setSoul(jls.getSelectedValue());
+            changing = false;
+        });
+
+        jlp.addListSelectionListener(arg0 -> {
+            if (changing || jlp.getValueIsAdjusting())
+                return;
+            changing = true;
+            setPack(jlp.getSelectedValue());
+            changing = false;
+        });
+
+        jld.addListSelectionListener(x -> {
+            if (jld.getValueIsAdjusting())
+                return;
+            boolean editable = pac != null && pac.editable;
+            boolean selected = jld.getSelectedValue() != null && jld.getSelectedValue().id.base.equals(Source.BasePath.SOUL);
+            adds.setEnabled(editable && selected);
+            rems.setEnabled(editable);
+        });
+    }
+
+    private void addListeners$1() {
+        adds.addActionListener(x -> {
+            changing = true;
+            Soul s = new Soul(pac.getNextID(Soul.class), jld.getSelectedValue());
+            pac.souls.add(s);
+            jls.setListData(pac.souls.toRawArray());
+            jls.setSelectedValue(s, true);
+            setSoul(s);
+            changing = false;
+        });
+
+        rems.addActionListener(x -> {
+            changing = true;
+            int ind = jls.getSelectedIndex();
+            pac.souls.remove(soul);
+            jls.setListData(pac.souls.toRawArray());
+            if (ind >= 0)
+                ind--;
+            jls.setSelectedIndex(ind);
+            setSoul(jls.getSelectedValue());
+            changing = false;
+        });
     }
 
     private void ini(PackData.UserPack pack) {
@@ -65,20 +132,59 @@ public class SoulEditPage extends Page {
 
         add(lbp);
         add(jspp);
+
         add(lbs);
         add(jsps);
+        add(lbd);
+        add(jspd);
+
+        add(adds);
+        add(rems);
+
+        jls.setCellRenderer(new AnimLCR());
+        jld.setCellRenderer(new AnimLCR());
 
         setPack(pack);
         addListeners();
+        addListeners$1();
     }
 
     private void setPack(PackData.UserPack pack) {
         pac = pack;
-        if (jlp.getSelectedValue() != pack) {
-            boolean boo = changing;
-            changing = true;
+        boolean boo = changing;
+        boolean exists = pac != null;
+        changing = true;
+        if (jlp.getSelectedValue() != pack)
             jlp.setSelectedValue(pac, true);
-            changing = boo;
+
+        if (exists) {
+            jls.setListData(pac.souls.toRawArray());
+        } else {
+            jls.setListData(new Soul[0]);
         }
-    };
+
+        boolean editable = exists && pac.editable;
+        boolean selected = jld.getSelectedValue() != null && jld.getSelectedValue().id.base.equals(Source.BasePath.SOUL);
+        adds.setEnabled(editable && selected);
+        rems.setEnabled(editable && soul != null);
+
+        if (!exists || !pac.souls.contains(soul))
+            soul = null;
+        setSoul(soul);
+
+        changing = boo;
+    }
+
+    private void setSoul(Soul s) {
+        soul = s;
+        boolean boo = changing;
+        changing = true;
+        if (jls.getSelectedValue() != s)
+            jls.setSelectedValue(s, true);
+
+        boolean editable = s != null && pac.editable;
+        rems.setEnabled(editable && soul != null);
+
+        changing = boo;
+    }
 }

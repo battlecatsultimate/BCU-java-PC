@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 public class PackEditPage extends Page {
 
@@ -48,7 +49,7 @@ public class PackEditPage extends Page {
 	private final JScrollPane jspp = new JScrollPane(jlp);
 	private final JList<Enemy> jle = new JList<>();
 	private final JScrollPane jspe = new JScrollPane(jle);
-	private final JList<AnimCE> jld = new JList<>(new Vector<>(AnimCE.map().values()));
+	private final JList<AnimCE> jld = new JList<>(new Vector<>(AnimCE.map().values().stream().filter(a -> a.id.base.equals(Source.BasePath.ANIM)).collect(Collectors.toList())));
 	private final JScrollPane jspd = new JScrollPane(jld);
 	private final RLFIM<StageMap> jls = new RLFIM<>(() -> this.changing = true, () -> changing = false, this::setMap,
 			StageMap::new);
@@ -221,8 +222,9 @@ public class PackEditPage extends Page {
 		jld.addListSelectionListener(arg0 -> {
 			if (jld.getValueIsAdjusting())
 				return;
-			adde.setEnabled(pac != null && jld.getSelectedValue() != null && pac.editable);
-			erea.setEnabled(pac != null && jle.getSelectedValue() != null && jld.getSelectedValue() != null && pac.editable);
+			boolean editable = pac != null && jld.getSelectedValue() != null && jld.getSelectedValue().id.base.equals(Source.BasePath.ANIM) && pac.editable;
+			adde.setEnabled(editable);
+			erea.setEnabled(editable && jle.getSelectedValue() != null);
 		});
 
 	}
@@ -666,7 +668,7 @@ public class PackEditPage extends Page {
 			}
 
 		jtfp.setEnabled(b);
-		adde.setEnabled(b && jld.getSelectedValue() != null);
+		adde.setEnabled(b && jld.getSelectedValue() != null && jld.getSelectedValue().id.base.equals(Source.BasePath.ANIM));
 		adds.setEnabled(b);
 		extr.setEnabled(pac != null);
 		vcas.setEnabled(pac != null);
