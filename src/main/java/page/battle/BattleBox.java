@@ -676,9 +676,11 @@ public interface BattleBox {
 						shake = (2 + (sb.time % 2 * -4)) * siz;
 					}
 
-					((Entity)sb.ebase).anim.smoke.draw(gra, setP(posx + shake, posy), siz * sprite);
-					if(sb.ebase.health > 0)
-						((Entity) sb.ebase).anim.drawEff(gra, setP(posx + shake, posy), siz * sprite);
+					if (sb.ebase instanceof Entity) {
+						((Entity) sb.ebase).anim.smoke.draw(gra, setP(posx + shake, posy), siz * sprite);
+						if (sb.ebase.health > 0)
+							((Entity) sb.ebase).anim.drawEff(gra, setP(posx + shake, posy), siz * sprite);
+					}
 				}
 
 				for(int i = 0; i < sb.le.size(); i ++) {
