@@ -44,7 +44,7 @@ public class UnitFindPage extends Page implements SupPage<Unit> {
 	}
 
 	public Form getForm() {
-		if (ult.getSelectedRow() == -1)
+		if (ult.getSelectedRow() == -1 || ult.getSelectedRow() > ult.list.size() - 1)
 			return null;
 		return ult.list.get(ult.getSelectedRow());
 	}
