@@ -1,15 +1,19 @@
 package page.pack;
 
-import common.pack.Identifier;
+import common.battle.data.CustomUnit;
 import common.pack.PackData;
 import common.pack.Source;
 import common.pack.UserProfile;
 import common.util.anim.AnimCE;
 import common.util.pack.Soul;
+import common.util.unit.Form;
+import main.Opts;
 import page.JBTN;
 import page.JL;
+import page.MainLocale;
 import page.Page;
 import page.support.AnimLCR;
+import page.support.SoulLCR;
 
 import javax.swing.*;
 import java.util.Vector;
@@ -18,6 +22,7 @@ import java.util.stream.Collectors;
 public class SoulEditPage extends Page {
 
     private static final long serialVersionUID = 1L;
+
     private final Vector<PackData.UserPack> vpack = new Vector<>(UserProfile.getUserPacks());
     private final JList<PackData.UserPack> jlp = new JList<>(vpack);
     private final JScrollPane jspp = new JScrollPane(jlp);
@@ -30,6 +35,7 @@ public class SoulEditPage extends Page {
     private final JBTN back = new JBTN(0, "back");
     private final JBTN adds = new JBTN(0, "add");
     private final JBTN rems = new JBTN(0, "rem");
+    private final JBTN srea = new JBTN(0, "reassign");
 
     private final JL lbp = new JL(0, "pack");
     private final JL lbs = new JL(0, "soul");
@@ -65,6 +71,7 @@ public class SoulEditPage extends Page {
 
         set(lbs, x, y, w, 100, 300, 50);
         set(jsps, x, y, w, 150, 300, 600);
+        set(srea, x, y, w, 750, 300, 50);
         set(adds, x, y, w, 800, 150, 50);
         set(rems, x, y, w + dw, 800, 150, 50);
 
@@ -104,6 +111,20 @@ public class SoulEditPage extends Page {
     }
 
     private void addListeners$1() {
+        srea.addActionListener(x -> {
+            if (jls.getSelectedValue() == null || jld.getSelectedValue() == null)
+                return;
+
+            if (Opts.conf(get(MainLocale.PAGE, "reasanim"))) {
+                changing = true;
+
+                Soul s = jls.getSelectedValue();
+                s.anim = jld.getSelectedValue();
+
+                changing = false;
+            }
+        });
+
         adds.addActionListener(x -> {
             changing = true;
             Soul s = new Soul(pac.getNextID(Soul.class), jld.getSelectedValue());
@@ -138,10 +159,11 @@ public class SoulEditPage extends Page {
         add(lbd);
         add(jspd);
 
+        add(srea);
         add(adds);
         add(rems);
 
-        jls.setCellRenderer(new AnimLCR());
+        jls.setCellRenderer(new SoulLCR());
         jld.setCellRenderer(new AnimLCR());
 
         setPack(pack);
@@ -167,6 +189,7 @@ public class SoulEditPage extends Page {
         boolean selected = jld.getSelectedValue() != null && jld.getSelectedValue().id.base.equals(Source.BasePath.SOUL);
         adds.setEnabled(editable && selected);
         rems.setEnabled(editable && soul != null);
+        srea.setEnabled(editable && soul != null);
 
         if (!exists || !pac.souls.contains(soul))
             soul = null;
@@ -183,7 +206,8 @@ public class SoulEditPage extends Page {
             jls.setSelectedValue(s, true);
 
         boolean editable = s != null && pac.editable;
-        rems.setEnabled(editable && soul != null);
+        rems.setEnabled(editable);
+        srea.setEnabled(editable);
 
         changing = boo;
     }
