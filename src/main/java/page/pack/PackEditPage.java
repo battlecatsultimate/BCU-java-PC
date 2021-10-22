@@ -79,7 +79,7 @@ public class PackEditPage extends Page {
 	private final JBTN cunt = new JBTN(0, "cunt");
 	private final JBTN tdiy = new JBTN(0, "ctrt");
 	private final JBTN ener = new JBTN(0, "ener");
-	private final JBTN vmsc = new JBTN(0, "vmsc");
+	private final JBTN vmsc = new JBTN(0, "cmsc");
 	private final JBTN unpk = new JBTN(0, "unpack");
 	private final JBTN recd = new JBTN(0, "replay");
 	private final JBTN csol = new JBTN(0, "csoul");
