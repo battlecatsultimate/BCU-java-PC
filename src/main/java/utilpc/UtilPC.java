@@ -219,6 +219,11 @@ public class UtilPC {
 		}
 
 		@Override
+		public void setSE(Identifier<Music> mus) {
+			BCMusic.setSE(mus);
+		}
+
+		@Override
 		public void setBGM(Identifier<Music> mus, long loop) {
 			BCMusic.play(mus, loop);
 		}

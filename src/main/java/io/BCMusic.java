@@ -1,6 +1,8 @@
 package io;
 
+import common.battle.data.CustomEntity;
 import common.pack.Identifier;
+import common.pack.PackData;
 import common.pack.UserProfile;
 import common.util.Data;
 import common.util.stage.Music;
@@ -9,12 +11,14 @@ import javax.sound.sampled.*;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayDeque;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class BCMusic extends Data {
 	private static final int INVALID = 0, CANNON_CHARGE = 1, TOUCH = 2;
 	private static final int FACTOR = 20, TOT = 144;
 	private static final byte[][] CACHE = new byte[TOT][];
+	public final static Map<Identifier<Music>, byte[]> CACHE_CUSTOM = new LinkedHashMap<>();
 
 	public static boolean play = true;
 	public static Identifier<Music> music = null;
@@ -249,6 +253,23 @@ public class BCMusic extends Data {
 		if (!play || VOL_SE == 0)
 			return;
 		secall[ind] = true;
+	}
+
+	public static synchronized void setSE(Identifier<Music> mus) {
+		if (!play || VOL_SE == 0)
+			return;
+
+		try {
+			Music m = Identifier.get(mus);
+			if (m == null)
+				return;
+			if (CACHE_CUSTOM.containsKey(mus))
+				loadSound(-1, CACHE_CUSTOM.get(mus), getVol(VOL_SE), false, 0);
+			else
+				loadSound(-1, CACHE_CUSTOM.put(mus, m.data.getBytes()), getVol(VOL_SE), false, 0); // TODO fix cache for long audio file
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static synchronized void setSEVol(int vol) {
