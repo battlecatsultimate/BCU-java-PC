@@ -207,7 +207,7 @@ public class SoulEditPage extends Page {
 
         boolean editable = s != null && pac.editable;
         rems.setEnabled(editable);
-        srea.setEnabled(editable);
+        srea.setEnabled(editable && jld.getSelectedValue() != null);
 
         changing = boo;
     }
