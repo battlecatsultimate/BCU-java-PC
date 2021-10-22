@@ -1,12 +1,12 @@
 package page.pack;
 
-import common.battle.data.CustomUnit;
+import common.pack.Identifier;
 import common.pack.PackData;
 import common.pack.Source;
 import common.pack.UserProfile;
 import common.util.anim.AnimCE;
 import common.util.pack.Soul;
-import common.util.unit.Form;
+import common.util.stage.Music;
 import main.Opts;
 import page.JBTN;
 import page.JL;
@@ -30,6 +30,7 @@ public class SoulEditPage extends Page {
     private final JScrollPane jsps = new JScrollPane(jls);
 
     private final JList<AnimCE> jld = new JList<>(new Vector<>(AnimCE.map().values().stream().filter(a -> a.id.base.equals(Source.BasePath.SOUL)).collect(Collectors.toList())));
+    private final JComboBox<Music> jcbm = new JComboBox<>();
     private final JScrollPane jspd = new JScrollPane(jld);
 
     private final JBTN back = new JBTN(0, "back");
@@ -74,6 +75,7 @@ public class SoulEditPage extends Page {
         set(srea, x, y, w, 750, 300, 50);
         set(adds, x, y, w, 800, 150, 50);
         set(rems, x, y, w + dw, 800, 150, 50);
+        set(jcbm, x, y, w, 850, 300, 50);
 
         w += 300;
 
@@ -148,6 +150,20 @@ public class SoulEditPage extends Page {
         });
     }
 
+    private void addListeners$2() {
+        jcbm.addActionListener(x -> {
+            if (changing || soul == null)
+                return;
+
+            changing = true;
+
+            Music m = (Music) jcbm.getSelectedItem();
+            soul.audio = m != null ? m.getID() : null;
+
+            changing = false;
+        });
+    }
+
     private void ini(PackData.UserPack pack) {
         add(back);
 
@@ -163,12 +179,15 @@ public class SoulEditPage extends Page {
         add(adds);
         add(rems);
 
+        add(jcbm);
+
         jls.setCellRenderer(new SoulLCR());
         jld.setCellRenderer(new AnimLCR());
 
         setPack(pack);
         addListeners();
         addListeners$1();
+        addListeners$2();
     }
 
     private void setPack(PackData.UserPack pack) {
@@ -181,8 +200,14 @@ public class SoulEditPage extends Page {
 
         if (exists) {
             jls.setListData(pac.souls.toRawArray());
+
+            Vector<Music> vs = new Vector<>();
+            vs.add(null);
+            vs.addAll(UserProfile.getAll(pac.getSID(), Music.class));
+            jcbm.setModel(new DefaultComboBoxModel<>(vs));
         } else {
             jls.setListData(new Soul[0]);
+            jcbm.removeAllItems();
         }
 
         boolean editable = exists && pac.editable;
@@ -190,6 +215,7 @@ public class SoulEditPage extends Page {
         adds.setEnabled(editable && selected);
         rems.setEnabled(editable && soul != null);
         srea.setEnabled(editable && soul != null);
+        jcbm.setEnabled(editable && soul != null);
 
         if (!exists || !pac.souls.contains(soul))
             soul = null;
@@ -205,9 +231,13 @@ public class SoulEditPage extends Page {
         if (jls.getSelectedValue() != s)
             jls.setSelectedValue(s, true);
 
+        if (s != null)
+            jcbm.setSelectedItem(Identifier.get(s.audio));
+
         boolean editable = s != null && pac.editable;
         rems.setEnabled(editable);
         srea.setEnabled(editable && jld.getSelectedValue() != null);
+        jcbm.setEnabled(editable);
 
         changing = boo;
     }
