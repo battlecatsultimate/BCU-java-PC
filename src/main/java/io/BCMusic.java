@@ -259,14 +259,24 @@ public class BCMusic extends Data {
 		if (!play || VOL_SE == 0)
 			return;
 
+		if (mus.pack.equals(Identifier.DEF)) {
+			setSE(mus.id);
+			return;
+		}
+
 		try {
 			Music m = Identifier.get(mus);
 			if (m == null)
 				return;
-			if (CACHE_CUSTOM.containsKey(mus))
+			if (CACHE_CUSTOM.containsKey(mus)) {
 				loadSound(-1, CACHE_CUSTOM.get(mus), getVol(VOL_SE), false, 0);
-			else
-				loadSound(-1, CACHE_CUSTOM.put(mus, m.data.getBytes()), getVol(VOL_SE), false, 0); // TODO fix cache for long audio file
+			} else {
+				Clip c = openFile(m);
+				if (c.getMicrosecondLength() < 10_000_000L)
+					loadSound(-1, CACHE_CUSTOM.put(mus, m.data.getBytes()), getVol(VOL_SE), false, 0);
+				else
+					loadSound(-1, c, false); // TODO stop audio if battle is exited after
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
