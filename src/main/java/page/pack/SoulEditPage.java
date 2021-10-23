@@ -109,6 +109,7 @@ public class SoulEditPage extends Page {
             boolean selected = jld.getSelectedValue() != null && jld.getSelectedValue().id.base.equals(Source.BasePath.SOUL);
             adds.setEnabled(editable && selected);
             rems.setEnabled(editable);
+            srea.setEnabled(editable && selected);
         });
     }
 
