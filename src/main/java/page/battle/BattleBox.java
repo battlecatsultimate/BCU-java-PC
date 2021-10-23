@@ -7,10 +7,7 @@ import common.battle.BattleField;
 import common.battle.StageBasis;
 import common.battle.attack.ContAb;
 import common.battle.attack.ContWaveAb;
-import common.battle.entity.EAnimCont;
-import common.battle.entity.ECastle;
-import common.battle.entity.Entity;
-import common.battle.entity.WaprCont;
+import common.battle.entity.*;
 import common.pack.Identifier;
 import common.system.P;
 import common.system.SymCoord;
@@ -480,7 +477,7 @@ public interface BattleBox {
 
 			double shake = 0.0;
 
-			if(sb.ebase.health <= 0 || (!drawCast && ((ECastle)sb.ebase).hit > 0)) {
+			if(sb.ebase.health <= 0 || (drawCast ? ((EEnemy) sb.ebase).hit : ((ECastle) sb.ebase).hit) > 0) {
 				shake = (2 + (sb.time % 2 * -4)) * siz;
 			}
 
@@ -679,9 +676,11 @@ public interface BattleBox {
 						shake = (2 + (sb.time % 2 * -4)) * siz;
 					}
 
-					((Entity)sb.ebase).anim.smoke.draw(gra, setP(posx + shake, posy), siz * sprite);
-					if(sb.ebase.health > 0)
-						((Entity) sb.ebase).anim.drawEff(gra, setP(posx + shake, posy), siz * sprite);
+					if (sb.ebase instanceof Entity) {
+						((Entity) sb.ebase).anim.smoke.draw(gra, setP(posx + shake, posy), siz * sprite);
+						if (sb.ebase.health > 0)
+							((Entity) sb.ebase).anim.drawEff(gra, setP(posx + shake, posy), siz * sprite);
+					}
 				}
 
 				for(int i = 0; i < sb.le.size(); i ++) {
