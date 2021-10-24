@@ -8,10 +8,7 @@ import common.util.anim.AnimCE;
 import common.util.pack.Soul;
 import common.util.stage.Music;
 import main.Opts;
-import page.JBTN;
-import page.JL;
-import page.MainLocale;
-import page.Page;
+import page.*;
 import page.support.AnimLCR;
 import page.support.SoulLCR;
 
@@ -23,6 +20,17 @@ public class SoulEditPage extends Page {
 
     private static final long serialVersionUID = 1L;
 
+    private final JBTN back = new JBTN(0, "back");
+    private final JBTN adds = new JBTN(0, "add");
+    private final JBTN rems = new JBTN(0, "rem");
+    private final JBTN srea = new JBTN(0, "reassign");
+
+    private final JL lbp = new JL(0, "pack");
+    private final JL lbs = new JL(0, "soul");
+    private final JL lbd = new JL(0, "seleanim");
+
+    private final JTF jtfs = new JTF();
+
     private final Vector<PackData.UserPack> vpack = new Vector<>(UserProfile.getUserPacks());
     private final JList<PackData.UserPack> jlp = new JList<>(vpack);
     private final JScrollPane jspp = new JScrollPane(jlp);
@@ -32,15 +40,6 @@ public class SoulEditPage extends Page {
     private final JList<AnimCE> jld = new JList<>(new Vector<>(AnimCE.map().values().stream().filter(a -> a.id.base.equals(Source.BasePath.SOUL)).collect(Collectors.toList())));
     private final JComboBox<Music> jcbm = new JComboBox<>();
     private final JScrollPane jspd = new JScrollPane(jld);
-
-    private final JBTN back = new JBTN(0, "back");
-    private final JBTN adds = new JBTN(0, "add");
-    private final JBTN rems = new JBTN(0, "rem");
-    private final JBTN srea = new JBTN(0, "reassign");
-
-    private final JL lbp = new JL(0, "pack");
-    private final JL lbs = new JL(0, "soul");
-    private final JL lbd = new JL(0, "seleanim");
 
     private PackData.UserPack pac;
     private Soul soul;
@@ -75,7 +74,8 @@ public class SoulEditPage extends Page {
         set(srea, x, y, w, 750, 300, 50);
         set(adds, x, y, w, 800, 150, 50);
         set(rems, x, y, w + dw, 800, 150, 50);
-        set(jcbm, x, y, w, 850, 300, 50);
+        set(jtfs, x, y, w, 850, 300, 50);
+        set(jcbm, x, y, w, 900, 300, 50);
 
         w += 300;
 
@@ -139,6 +139,9 @@ public class SoulEditPage extends Page {
         });
 
         rems.addActionListener(x -> {
+            if (!Opts.conf())
+                return;
+
             changing = true;
             int ind = jls.getSelectedIndex();
             pac.souls.remove(soul);
@@ -152,6 +155,8 @@ public class SoulEditPage extends Page {
     }
 
     private void addListeners$2() {
+        jtfs.setLnr(x -> soul.name = jtfs.getText().trim());
+
         jcbm.addActionListener(x -> {
             if (changing || soul == null)
                 return;
@@ -180,6 +185,7 @@ public class SoulEditPage extends Page {
         add(adds);
         add(rems);
 
+        add(jtfs);
         add(jcbm);
 
         jls.setCellRenderer(new SoulLCR());
@@ -232,13 +238,16 @@ public class SoulEditPage extends Page {
         if (jls.getSelectedValue() != s)
             jls.setSelectedValue(s, true);
 
-        if (s != null)
+        if (s != null) {
+            jtfs.setText(soul.name);
             jcbm.setSelectedItem(Identifier.get(s.audio));
+        }
 
         boolean editable = s != null && pac.editable;
         rems.setEnabled(editable);
         srea.setEnabled(editable && jld.getSelectedValue() != null);
         jcbm.setEnabled(editable);
+        jtfs.setEnabled(editable);
 
         changing = boo;
     }
