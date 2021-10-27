@@ -42,6 +42,7 @@ public abstract class AbViewPage extends Page {
 	private final JTG gif = new JTG(0, "gif");
 	private final JBTN png = new JBTN(0, "png");
 	private final JBTN camres = new JBTN(0, "rescam");
+	private final JTG larges = new JTG("larges");
 	private final JLabel scale = new JLabel(MainLocale.getLoc(MainLocale.PAGE, "zoom"));
 
 	protected final ViewBox vb;
@@ -118,6 +119,7 @@ public abstract class AbViewPage extends Page {
 		add(gif);
 		add(png);
 		add(scale);
+		add(larges);
 		jst.setPaintLabels(true);
 		jst.setPaintTicks(true);
 		jst.setMajorTickSpacing(100);
@@ -134,17 +136,28 @@ public abstract class AbViewPage extends Page {
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);
-		set(camres, x ,y, 525, 0, 200, 50);
-		set(copy, x, y, 250, 0, 200, 50);
-		set((Canvas) vb, x, y, 1000, 100, 1000, 600);
-		set(jspt, x, y, 400, 550, 300, 400);
-		set(jst, x, y, 1000, 750, 1000, 100);
-		set(jtl, x, y, 1000, 900, 1000, 100);
-		set(jtb, x, y, 1300, 1050, 200, 50);
-		set(nex, x, y, 1600, 1050, 200, 50);
-		set(png, x, y, 1300, 1150, 200, 50);
-		set(gif, x, y, 1600, 1150, 400, 50);
-		set(scale, x, y, 1000, 50, 200, 50);
+		set(camres, x ,y, 400, 0, 200, 50);
+		set(copy, x, y, 200, 0, 200, 50);
+		set(larges, x, y , 600, 0, 200, 50);
+		if (larges.isSelected()) {
+			set((Canvas) vb, x, y, 500, 50, 2000, 1200);
+			set(jspt, x, y, 100, 100, 300, 400);
+			set(jtb, x, y, 0, 550, 200, 50);
+			set(nex, x, y, 250, 550, 200, 50);
+			set(png, x, y, 0, 650, 200, 50);
+			set(gif, x, y, 200, 650, 300, 50);
+			set(scale, x, y, 125, 50, 250, 50);
+		} else {
+			set((Canvas) vb, x, y, 1000, 100, 1000, 600);
+			set(jspt, x, y, 400, 550, 300, 400);
+			set(jst, x, y, 1000, 750, 1000, 100);
+			set(jtl, x, y, 1000, 900, 1000, 100);
+			set(jtb, x, y, 1300, 1050, 200, 50);
+			set(nex, x, y, 1600, 1050, 200, 50);
+			set(png, x, y, 1300, 1150, 200, 50);
+			set(gif, x, y, 1600, 1150, 400, 50);
+			set(scale, x, y, 1000, 50, 200, 50);
+		}
 	}
 
 	protected <T extends Enum<T> & AnimI.AnimType<?, T>> void setAnim(AnimI<?, T> a) {
