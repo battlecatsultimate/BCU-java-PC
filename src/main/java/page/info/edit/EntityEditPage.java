@@ -616,6 +616,9 @@ public abstract class EntityEditPage extends Page {
 		}
 		if (text.length() > 0) {
 			int[] v = CommonStatic.parseIntsN(text);
+			if (v.length == 0)
+				return;
+
 			if (jtf == fhp) {
 				v[0] /= getDef();
 				if (v[0] <= 0)
