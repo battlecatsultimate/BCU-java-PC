@@ -71,14 +71,13 @@ public class EnemyInfoTable extends Page {
 		int[][] atkData = e.de.rawAtkData();
 		for (int i = 0; i < atks.length; i++)
 			atks[i][1].setText("" + Math.round(atkData[i][0] * mula));
-		if (e.de.getAllProc().SUMMON.exists() || e.de.getAllProc().DEMONSHIELD.exists()) {
-			List<Interpret.ProcDisplay> ls = Interpret.getAbi(e.de);
-			ls.addAll(Interpret.getProc(e.de, true, new double[]{mul, mula}));
-			for (int i = 0; i < ls.size(); i++) {
-				Interpret.ProcDisplay disp = ls.get(i);
-				proc[i].setText(disp.toString());
-				updateTooltips();
-			}
+		List<Interpret.ProcDisplay> ls = Interpret.getAbi(e.de);
+		ls.addAll(Interpret.getProc(e.de, true, new double[]{mul, mula}));
+
+		for (int i = 0; i < ls.size(); i++) {
+			Interpret.ProcDisplay disp = ls.get(i);
+			proc[i].setText(disp.toString());
+			updateTooltips();
 		}
 	}
 
