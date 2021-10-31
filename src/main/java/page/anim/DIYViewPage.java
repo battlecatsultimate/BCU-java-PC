@@ -164,7 +164,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		set(camres, x ,y, 400, 0, 200, 50);
 		set(copy, x, y, 200, 0, 200, 50);
 		set(larges, x, y , 600, 0, 200, 50);
-		set(aep, x, y, 800, 0, 1750, 50);
+		set(aep, x, y, 800, 0, 1500, 50);
 		if (!larges.isSelected()) {
 			set(jspu, x, y, 50, 100, 300, 1050);
 			set(ics, x, y, 1000, 1050, 200, 50);

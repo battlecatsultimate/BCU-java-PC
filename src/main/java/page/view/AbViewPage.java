@@ -140,7 +140,7 @@ public abstract class AbViewPage extends Page {
 		set(copy, x, y, 300, 0, 200, 50);
 		set(larges, x, y , 900, 0, 200, 50);
 		if (larges.isSelected()) {
-			set((Canvas) vb, x, y, 500, 50, 1920, 1200);
+			set((Canvas) vb, x, y, 500, 50, 1800, 1200);
 			set(jspt, x, y, 100, 100, 300, 400);
 			set(jtb, x, y, 25, 550, 200, 50);
 			set(jtl, x, y, 0, 700, 500, 100);
