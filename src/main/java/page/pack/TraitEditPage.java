@@ -92,8 +92,8 @@ public class TraitEditPage extends Page {
         super(p);
         packpack = pac;
         pct = pac.traits;
-        ini();
         editable = pac.editable;
+        ini();
     }
 
     @Override
