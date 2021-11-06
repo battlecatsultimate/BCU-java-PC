@@ -57,9 +57,7 @@ public class RecdManagePage extends AbRecdPage {
 
 	@Override
 	protected void setRecd(Replay r) {
-		try {
-			int check = r == null || r.st == null ? 0 : r.st.get().health;
-		} catch (Exception e) {
+		if (r != null && r.st != null && r.st.get() == null) {
 			Opts.pop("Please change the stage to a new one","Replay stage not found");
 			r.st = null;
 			r.marked = false;
@@ -72,15 +70,10 @@ public class RecdManagePage extends AbRecdPage {
 
 	private void addListeners() {
 
-		jlr.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (isAdj() || jlr.getValueIsAdjusting())
-					return;
-				setRecd(jlr.getSelectedValue());
-			}
-
+		jlr.addListSelectionListener(arg0 -> {
+			if (isAdj() || jlr.getValueIsAdjusting())
+				return;
+			setRecd(jlr.getSelectedValue());
 		});
 
 		rena.setLnr(x -> {
@@ -93,19 +86,16 @@ public class RecdManagePage extends AbRecdPage {
 			rena.setText(r.rl.id);
 		});
 
-		dele.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Replay r = jlr.getSelectedValue();
-				File f = CommonStatic.ctx.getWorkspaceFile(r.rl.getPath(Source.REPLAY) + ".replay");
-				if (f.exists())
-					f.delete();
-				if (!f.exists()) {
-					Replay.getMap().remove(r.rl.id);
-					setList();
-				}
-				setRecd(null);
+		dele.addActionListener(arg0 -> {
+			Replay r = jlr.getSelectedValue();
+			File f = CommonStatic.ctx.getWorkspaceFile(r.rl.getPath(Source.REPLAY) + ".replay");
+			if (f.exists())
+				f.delete();
+			if (!f.exists()) {
+				Replay.getMap().remove(r.rl.id);
+				setList();
 			}
+			setRecd(null);
 		});
 
 	}

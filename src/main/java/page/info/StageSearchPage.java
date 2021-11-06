@@ -16,6 +16,8 @@ import java.util.Vector;
 
 public class StageSearchPage extends StagePage {
 
+    private static final long serialVersionUID = 1L;
+
     private final JList<MapColc> jlmc = new JList<>();
     private final JScrollPane jspmc = new JScrollPane(jlmc);
     private final JList<Stage> jlst = new JList<>();
