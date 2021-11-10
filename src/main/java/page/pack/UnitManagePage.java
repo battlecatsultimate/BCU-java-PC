@@ -208,7 +208,10 @@ public class UnitManagePage extends Page {
 					if (c.forms[i] == null)
 						break;
 					if (c.forms[i].unit == uni) {
-						c.removeForm(i);
+						if (c.forms.length == 1)
+							pac.combos.remove(c);
+						else
+							c.removeForm(i);
 						break;
 					}
 				}
