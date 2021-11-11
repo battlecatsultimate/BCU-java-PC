@@ -202,7 +202,7 @@ public class ComparePage extends Page {
                     return;
 
                 Form oldf = (Form) maskEntities[finalI].getPack();
-                Form[] forms = oldf.uid.get().forms;
+                Form[] forms = oldf.unit.forms;
                 int fid = oldf.fid;
                 Form f = (fid - 1) < 0 ? forms[forms.length - 1] : forms[fid - 1];
 
@@ -220,7 +220,7 @@ public class ComparePage extends Page {
 
                 Form oldf = (Form) maskEntities[finalI].getPack();
                 int fid = oldf.fid;
-                Form f = oldf.uid.get().forms[(fid + 1) % 3];
+                Form f = oldf.uid.get().forms[(fid + 1) % oldf.unit.forms.length];
 
                 int[] data = CommonStatic.parseIntsN(level[finalI].getText());
                 maskEntityLvl[finalI] = f.regulateLv(data, maskEntityLvl[finalI]);
