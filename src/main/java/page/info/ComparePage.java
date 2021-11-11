@@ -355,9 +355,9 @@ public class ComparePage extends Page {
                 double atkLv = b.t().getAtkMulti();
                 double defLv = b.t().getDefMulti();
 
-                ArrayList<Trait> traits = Arrays.stream(trait.getSelectedIndices())
-                        .mapToObj(t -> UserProfile.getBCData().traits.get(t))
-                        .collect(Collectors.toCollection(ArrayList::new));
+                ArrayList<Trait> traits = new ArrayList<>();
+                for (int j = 0; j < trait.getSelectedIndices().length; j++)
+                    traits.add(tList.get(trait.getSelectedIndices()[i]));
 
                 traits.retainAll(mu.getTraits());
                 boolean overlap = traits.size() > 0;

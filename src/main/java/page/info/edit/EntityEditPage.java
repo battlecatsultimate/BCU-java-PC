@@ -35,7 +35,6 @@ import page.support.ReorderListener;
 import page.view.BGViewPage;
 import page.view.EnemyViewPage;
 import page.view.UnitViewPage;
-import utilpc.Interpret;
 
 import javax.swing.*;
 import java.util.*;
