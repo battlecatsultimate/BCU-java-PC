@@ -150,9 +150,11 @@ public class ConfigPage extends Page {
 		refe.addActionListener(arg0 -> cfg().ref = refe.isSelected());
 
 		jogl.addActionListener(arg0 -> {
-			MainBCU.USE_JOGL = jogl.isSelected();
-			if (Opts.conf("This requires restart to apply. Do you want to restart?"))
+			if (Opts.conf("This requires restart to apply. Do you want to restart?")) {
+				MainBCU.USE_JOGL = jogl.isSelected();
 				changePanel(new SavePage());
+			} else
+				jogl.setSelected(MainBCU.USE_JOGL);
 		});
 
 		for (int i = 0; i < 4; i++) {
@@ -227,10 +229,10 @@ public class ConfigPage extends Page {
 		musc.addActionListener(arg0 -> BCMusic.play = musc.isSelected());
 
 		nimbus.setLnr((b) -> {
-			MainBCU.nimbus = !MainBCU.nimbus;
-
-			if (Opts.conf("This requires restart to apply. Do you want to restart?"+(MainBCU.nimbus ? "\n\nWarning : Using Nimbus theme may result in high CPU usage" : "")))
+			if (Opts.conf("This requires restart to apply. Do you want to restart?"+(MainBCU.nimbus ? "\n\nWarning : Using Nimbus theme may result in high CPU usage" : ""))) {
+				MainBCU.nimbus = !MainBCU.nimbus;
 				changePanel(new SavePage());
+			}
 		});
 
 		theme.setLnr((b) -> {
