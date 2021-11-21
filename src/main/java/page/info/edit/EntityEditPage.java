@@ -370,7 +370,7 @@ public abstract class EntityEditPage extends Page {
 
 		jsp.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
 		jspm.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
-		apt.setPreferredSize(size(x, y, 750, 2500).toDimension());
+		apt.setPreferredSize(size(x, y, 750, 2550).toDimension()); // TODO dynamic change
 		apt.resized(x, y);
 		set(jsp, x, y, 1050, 100, 800, 900);
 	}
