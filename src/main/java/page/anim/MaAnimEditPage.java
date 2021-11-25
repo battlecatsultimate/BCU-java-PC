@@ -402,7 +402,8 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 					return;
 				}
 
-				if (!Opts.conf("times animation length by " + d))
+				String str = d < 1 ? "Decrease " : "Increase ";
+				if (!Opts.conf(str + "animation speed by " + (d * 100) + "%?"))
 					return;
 				for (Part p : maet.ma.parts) {
 					for (int[] line : p.moves)
