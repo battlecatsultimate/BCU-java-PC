@@ -357,7 +357,7 @@ public class ComparePage extends Page {
 
                 ArrayList<Trait> traits = new ArrayList<>();
                 for (int j = 0; j < trait.getSelectedIndices().length; j++)
-                    traits.add(tList.get(trait.getSelectedIndices()[i]));
+                    traits.add(tList.get(trait.getSelectedIndices()[j]));
 
                 traits.retainAll(mu.getTraits());
                 boolean overlap = traits.size() > 0;
