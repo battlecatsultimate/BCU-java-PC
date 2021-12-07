@@ -351,6 +351,8 @@ public interface BattleBox {
 		private void drawLineupWithTwoRows(FakeGraphics g, int w, int h, double hr, double term, double termh) {
 			int iw;
 			int ih;
+			int imw;
+			int imh;
 
 			for (int i = 0; i < 2; i++) {
 				for(int j = 0; j < 5; j++) {
@@ -360,10 +362,25 @@ public interface BattleBox {
 					iw = (int) (hr * img.getWidth());
 					ih = (int) (hr * img.getHeight());
 
+					imw = iw;
+					imh = ih;
+
+					if(sb.selectedUnit[0] != -1 && sb.selectedUnit[0] == i && sb.selectedUnit[1] == j) {
+						switch (sb.buttonDelay) {
+							case 3:
+								imw *= 0.95;
+								imh *= 0.95;
+								break;
+							case 4:
+								imw *= 1.05;
+								imh *= 1.05;
+						}
+					}
+
 					int x = (w - iw * 5) / 2 + iw * (j % 5) + (int) (term * ((j % 5) - 2));
 					int y = (int) (h - (2 - i) * (ih + termh));
 
-					g.drawImage(img, x, y, iw, ih);
+					g.drawImage(img, x - (imw - iw) / 2.0, y - (imh - ih) / 2.0, imw, imh);
 
 					if(f == null)
 						continue;
@@ -374,9 +391,9 @@ public interface BattleBox {
 					int cool = sb.elu.cool[i][j];
 					boolean b = pri > sb.money || cool > 0;
 					if (b)
-						g.colRect(x, y, iw, ih, 0, 0, 0, 100);
+						g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 0, 0, 0, 100);
 					if (sb.locks[i][j])
-						g.colRect(x, y, iw, ih, 0, 255, 0, 100);
+						g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 0, 255, 0, 100);
 					if (cool > 0) {
 						int dw = (int) (hr * 10);
 						int dh = (int) (hr * 12);
@@ -393,12 +410,30 @@ public interface BattleBox {
 		private void drawLineup(FakeGraphics g, int w, int h, double hr, double term, boolean isBehind, int index) {
 			int iw;
 			int ih;
+			int imw;
+			int imh;
 
 			for (int i = 0; i < 5; i++) {
 				Form f = sb.b.lu.fs[index][i];
 				FakeImage img = f == null ? aux.slot[0].getImg() : f.anim.getUni().getImg();
 				iw = (int) (hr * img.getWidth());
 				ih = (int) (hr * img.getHeight());
+
+				imw = iw;
+				imh = ih;
+
+				if(sb.selectedUnit[0] != -1 && sb.selectedUnit[0] == index && sb.selectedUnit[1] == i) {
+					switch (sb.buttonDelay) {
+						case 3:
+							imw *= 0.95;
+							imh *= 0.95;
+							break;
+						case 4:
+							imw *= 1.05;
+							imh *= 1.05;
+					}
+				}
+
 				int x = (w - iw * 5) / 2 + iw * i + (int) (term * (i - 2) + (index == 0 ? 0 : (term / 2)));
 				int y = h - ih - (isBehind ? 0 : (int) (ih * 0.1));
 
@@ -415,7 +450,7 @@ public interface BattleBox {
 					}
 				}
 
-				g.drawImage(img, x, y, iw, ih);
+				g.drawImage(img, x - (imw - iw) / 2.0, y - (imh - ih) / 2.0, imw, imh);
 				if (f == null)
 					continue;
 				int pri = sb.elu.price[index][i];
@@ -424,9 +459,9 @@ public interface BattleBox {
 				int cool = sb.elu.cool[index][i];
 				boolean b = isBehind || pri > sb.money || cool > 0;
 				if (b)
-					g.colRect(x, y, iw, ih, 0, 0, 0, 100);
+					g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 0, 0, 0, 100);
 				if (sb.locks[index][i])
-					g.colRect(x, y, iw, ih, 0, 255, 0, 100);
+					g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 0, 255, 0, 100);
 				if(!isBehind) {
 					if (cool > 0) {
 						int dw = (int) (hr * 10);
