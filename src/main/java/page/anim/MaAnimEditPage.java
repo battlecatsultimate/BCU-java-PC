@@ -370,6 +370,10 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		}));
 
 		remp.addActionListener(arg0 -> change(0, x -> {
+			if(maet.getCellEditor() != null) {
+				maet.getCellEditor().stopCellEditing();
+			}
+
 			MaAnim ma = maet.ma;
 			int[] rows = maet.getSelectedRows();
 			Part[] data = ma.parts;
