@@ -312,6 +312,8 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			if(!(node.getUserObject() instanceof AnimCE))
 				return;
 
+			maet.clearSelection();
+
 			AnimCE da = (AnimCE) node.getUserObject();
 			int ind = jlt.getSelectedIndex();
 			setB(da, ind);
