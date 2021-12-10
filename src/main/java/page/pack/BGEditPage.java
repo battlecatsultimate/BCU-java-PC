@@ -235,7 +235,7 @@ public class BGEditPage extends Page {
 			pack.bgs.add(bgr);
 		} else {
 			bgr.img.setImg(MainBCU.builder.build(bimg));
-			bgr.load();
+			bgr.forceLoad();
 		}
 		try {
 			File file = ((Workspace) pack.source).getBGFile(bgr.id);
