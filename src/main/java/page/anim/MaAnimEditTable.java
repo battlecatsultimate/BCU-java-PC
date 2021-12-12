@@ -150,6 +150,11 @@ public class MaAnimEditTable extends AnimTable<Part> {
 		if (c == 2 && (v < -1 || v == 0))
 			v = -1;
 		ma.parts[r].ints[c] = v;
+
+		if(ma.parts[r].ints[0] == 0 && ma.parts[r].ints[1] <= 1) {
+			ma.parts[r].ints[1] = 2;
+		}
+
 		ma.parts[r].validate();
 		ma.validate();
 		anim.unSave("maanim edit part");
