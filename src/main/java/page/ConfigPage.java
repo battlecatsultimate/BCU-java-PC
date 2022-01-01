@@ -3,6 +3,7 @@ package page;
 import common.CommonStatic;
 import common.CommonStatic.Config;
 import common.io.Backup;
+import common.pack.UserProfile;
 import common.util.ImgCore;
 import common.util.lang.MultiLangCont;
 import io.BCMusic;
@@ -26,6 +27,7 @@ public class ConfigPage extends Page {
 	private final JBTN back = new JBTN(MainLocale.PAGE, "back");
 	private final JBTN filt = new JBTN(MainLocale.PAGE, "filter" + MainBCU.FILTER_TYPE);
 	private final JBTN rlla = new JBTN(MainLocale.PAGE, "rllang");
+	private final JBTN rlpk = new JBTN(MainLocale.PAGE, "rlpks");
 	private final JTG prel = new JTG(MainLocale.PAGE, "preload");
 	private final JTG whit = new JTG(MainLocale.PAGE, "white");
 	private final JTG refe = new JTG(MainLocale.PAGE, "axis");
@@ -122,6 +124,7 @@ public class ConfigPage extends Page {
 		set(btnsnd, x, y, 1600, 625, 200, 50);
 		set(bgeff, x, y, 1850, 625, 200, 50);
 		set(btdly, x, y, 1600, 700, 450, 50);
+		set(rlpk, x, y, 1600, 775, 450, 50);
 	}
 
 	private void addListeners() {
@@ -271,6 +274,11 @@ public class ConfigPage extends Page {
 		btdly.addActionListener(a -> CommonStatic.getConfig().buttonDelay = !CommonStatic.getConfig().buttonDelay);
 
 		bgeff.addActionListener(a -> CommonStatic.getConfig().drawBGEffect = !CommonStatic.getConfig().drawBGEffect);
+
+		rlpk.addActionListener(l -> {
+			UserProfile.reloadExternalPacks();
+			UserProfile.loadPacks(p -> {});
+		});
 	}
 
 	private void ini() {
@@ -307,6 +315,7 @@ public class ConfigPage extends Page {
 		add(btnsnd);
 		add(bgeff);
 		add(btdly);
+		add(rlpk);
 		prlvmd.setText("" + CommonStatic.getConfig().prefLevel);
 		jls.setSelectedIndex(localeIndexOf(cfg().lang));
 		jsmin.setValue(cfg().deadOpa);
