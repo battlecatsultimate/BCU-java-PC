@@ -277,7 +277,6 @@ public class ConfigPage extends Page {
 
 		rlpk.addActionListener(l -> {
 			UserProfile.reloadExternalPacks();
-			UserProfile.loadPacks(p -> {});
 		});
 	}
 
