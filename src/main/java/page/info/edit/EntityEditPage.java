@@ -34,7 +34,6 @@ import page.support.ReorderListener;
 import page.view.BGViewPage;
 import page.view.EnemyViewPage;
 import page.view.UnitViewPage;
-import utilpc.Interpret;
 
 import javax.swing.*;
 import java.util.*;
@@ -370,7 +369,7 @@ public abstract class EntityEditPage extends Page {
 
 		jsp.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
 		jspm.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
-		apt.setPreferredSize(size(x, y, 750, 2500).toDimension());
+		apt.setPreferredSize(size(x, y, 750, 2550).toDimension()); // TODO dynamic change
 		apt.resized(x, y);
 		set(jsp, x, y, 1050, 100, 800, 900);
 	}
@@ -615,64 +614,66 @@ public abstract class EntityEditPage extends Page {
 		}
 		if (text.length() > 0) {
 			int[] v = CommonStatic.parseIntsN(text);
-			if (jtf == fhp) {
-				v[0] /= getDef();
-				if (v[0] <= 0)
-					v[0] = 1;
-				ce.hp = v[0];
+			if (v.length > 0) {
+				if (jtf == fhp) {
+					v[0] /= getDef();
+					if (v[0] <= 0)
+						v[0] = 1;
+					ce.hp = v[0];
+				}
+				if (jtf == fhb) {
+					if (v[0] <= 0)
+						v[0] = 1;
+					if (v[0] > ce.hp)
+						v[0] = ce.hp;
+					ce.hb = v[0];
+				}
+				if (jtf == fsp) {
+					if (v[0] < 0)
+						v[0] = 0;
+					if (v[0] > 150)
+						v[0] = 150;
+					ce.speed = v[0];
+				}
+				if (jtf == fra) {
+					if (v[0] <= 0)
+						v[0] = 1;
+					ce.range = v[0];
+				}
+				if (jtf == fwd) {
+					if (v[0] <= 0)
+						v[0] = 1;
+					ce.width = v[0];
+				}
+				if (jtf == ftb) {
+					if (v[0] < 0)
+						v[0] = 0;
+					ce.tba = v[0];
+				}
+				if (jtf == fbs) {
+					if (v[0] < 0)
+						v[0] = 0;
+					ce.base = v[0];
+				}
+				if (jtf == ftp) {
+					if (v[0] < 1)
+						v[0] = 1;
+					ce.touch = v[0];
+				}
+				if (jtf == fct) {
+					if (v[0] < -1)
+						v[0] = -1;
+					ce.loop = v[0];
+				}
+				if (jtf == fwp) {
+					if (v[0] < 0)
+						v[0] = 0;
+					if (v[0] > 50)
+						v[0] = 50;
+					ce.will = v[0] - 1;
+				}
+				getInput(jtf, v);
 			}
-			if (jtf == fhb) {
-				if (v[0] <= 0)
-					v[0] = 1;
-				if (v[0] > ce.hp)
-					v[0] = ce.hp;
-				ce.hb = v[0];
-			}
-			if (jtf == fsp) {
-				if (v[0] < 0)
-					v[0] = 0;
-				if (v[0] > 150)
-					v[0] = 150;
-				ce.speed = v[0];
-			}
-			if (jtf == fra) {
-				if (v[0] <= 0)
-					v[0] = 1;
-				ce.range = v[0];
-			}
-			if (jtf == fwd) {
-				if (v[0] <= 0)
-					v[0] = 1;
-				ce.width = v[0];
-			}
-			if (jtf == ftb) {
-				if (v[0] < 0)
-					v[0] = 0;
-				ce.tba = v[0];
-			}
-			if (jtf == fbs) {
-				if (v[0] < 0)
-					v[0] = 0;
-				ce.base = v[0];
-			}
-			if (jtf == ftp) {
-				if (v[0] < 1)
-					v[0] = 1;
-				ce.touch = v[0];
-			}
-			if (jtf == fct) {
-				if (v[0] < -1)
-					v[0] = -1;
-				ce.loop = v[0];
-			}
-			if (jtf == fwp) {
-				if (v[0] < 0)
-					v[0] = 0;
-				if (v[0] > 50)
-					v[0] = 50;
-				ce.will = v[0] - 1;
-			}
-			getInput(jtf, v);
 		}
 		setData(ce);
 	}

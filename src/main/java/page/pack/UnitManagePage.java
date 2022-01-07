@@ -2,11 +2,14 @@
 package page.pack;
 
 import common.CommonStatic;
+import common.battle.BasisLU;
+import common.battle.BasisSet;
 import common.battle.data.CustomUnit;
 import common.pack.PackData.UserPack;
 import common.pack.Source;
 import common.pack.UserProfile;
 import common.util.anim.AnimCE;
+import common.util.unit.Combo;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import common.util.unit.UnitLevel;
@@ -202,6 +205,32 @@ public class UnitManagePage extends Page {
 				return;
 			changing = true;
 			int ind = jlu.getSelectedIndex();
+			for (Combo c : pac.combos)
+				for (int i = 0; i < c.forms.length; i++) {
+					if (c.forms[i] == null)
+						break;
+					if (c.forms[i].unit == uni) {
+						if (c.forms.length == 1)
+							pac.combos.remove(c);
+						else
+							c.removeForm(i);
+						break;
+					}
+				}
+
+			for (BasisSet bs : BasisSet.list())
+				for (BasisLU bl : bs.lb)
+					for (int i = 0; i < 10; i++) {
+						if (bl.lu.fs[i / 5][i % 5] == null)
+							break;
+						if (bl.lu.fs[i / 5][i % 5].unit == uni) {
+							bl.lu.fs[i / 5][i % 5] = null;
+							bl.lu.arrange();
+							bl.lu.renew();
+							break;
+						}
+					}
+
 			pac.units.remove(uni);
 			uni.lv.units.remove(uni);
 			jlu.setListData(pac.units.toRawArray());

@@ -71,14 +71,13 @@ public class EnemyInfoTable extends Page {
 		int[][] atkData = e.de.rawAtkData();
 		for (int i = 0; i < atks.length; i++)
 			atks[i][1].setText("" + Math.round(atkData[i][0] * mula));
-		if (e.de.getAllProc().SUMMON.exists() || e.de.getAllProc().DEMONSHIELD.exists()) {
-			List<Interpret.ProcDisplay> ls = Interpret.getAbi(e.de);
-			ls.addAll(Interpret.getProc(e.de, true, new double[]{mul, mula}));
-			for (int i = 0; i < ls.size(); i++) {
-				Interpret.ProcDisplay disp = ls.get(i);
-				proc[i].setText(disp.toString());
-				updateTooltips();
-			}
+		List<Interpret.ProcDisplay> ls = Interpret.getAbi(e.de);
+		ls.addAll(Interpret.getProc(e.de, true, new double[]{mul, mula}));
+
+		for (int i = 0; i < ls.size(); i++) {
+			Interpret.ProcDisplay disp = ls.get(i);
+			proc[i].setText(disp.toString());
+			updateTooltips();
 		}
 	}
 
@@ -269,7 +268,7 @@ public class EnemyInfoTable extends Page {
 		String eDesc = e.descriptionGet().replace("<br>", "\n");
 		if (eDesc.replace("\n", "").length() > 0)
 			add(desc);
-		descr.setText(e.toString().replace(Data.trio(e.id.id) + " - ", "") + (e.de.getTraits().size() > 0 && !e.de.getTraits().contains(UserProfile.getBCData().traits.get(Data.TRAIT_WHITE)) ? " (" + Interpret.getTrait(TraitBox, 0) + ")" : "") + (e.de.getStar() >= 2 ? " (Cool Dude)" : "") + "\n" + eDesc);
+		descr.setText(e.toString().replace(Data.trio(e.id.id) + " - ", "") + (e.de.getTraits().size() > 0 && !e.de.getTraits().contains(UserProfile.getBCData().traits.get(Data.TRAIT_WHITE)) ? " (" + Interpret.getTrait(TraitBox, 0) + ")" : "") + (e.de.getStar() > 2 ? " (Cool Dude)" : "") + "\n" + eDesc);
 		descr.setEditable(false);
 		reset();
 		addListeners();

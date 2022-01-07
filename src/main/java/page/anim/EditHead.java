@@ -78,93 +78,68 @@ public class EditHead extends Page implements EditLink {
 	private void addListeners() {
 		EditHead thi = this;
 
-		view.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (val == 0)
-					return;
-				changing = true;
-				cur.remove(thi);
-				if (p0 == null)
-					p0 = new DIYViewPage(getFront(), thi);
-				changePanel(cur = p0);
-				cur.add(thi);
-				((AbEditPage) cur).setSelection(anim);
-				val = 0;
-				changing = false;
-			}
-
+		view.addActionListener(arg0 -> {
+			if (val == 0)
+				return;
+			changing = true;
+			cur.remove(thi);
+			if (p0 == null)
+				p0 = new DIYViewPage(getFront(), thi);
+			changePanel(cur = p0);
+			cur.add(thi);
+			((AbEditPage) cur).setSelection(anim);
+			val = 0;
+			changing = false;
 		});
 
-		icut.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (val == 1)
-					return;
-				changing = true;
-				cur.remove(thi);
-				if (p1 == null)
-					p1 = new ImgCutEditPage(getFront(), thi);
-				changePanel(cur = p1);
-				cur.add(thi);
-				((AbEditPage) cur).setSelection(anim);
-				val = 1;
-				changing = false;
-			}
-
+		icut.addActionListener(arg0 -> {
+			if (val == 1)
+				return;
+			changing = true;
+			cur.remove(thi);
+			if (p1 == null)
+				p1 = new ImgCutEditPage(getFront(), thi);
+			changePanel(cur = p1);
+			cur.add(thi);
+			((AbEditPage) cur).setSelection(anim);
+			val = 1;
+			changing = false;
 		});
 
-		mmdl.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (val == 2)
-					return;
-				changing = true;
-				cur.remove(thi);
-				if (p2 == null)
-					p2 = new MaModelEditPage(getFront(), thi);
-				changePanel(cur = p2);
-				cur.add(thi);
-				((AbEditPage) cur).setSelection(anim);
-				val = 2;
-				changing = false;
-			}
-
+		mmdl.addActionListener(arg0 -> {
+			if (val == 2)
+				return;
+			changing = true;
+			cur.remove(thi);
+			if (p2 == null)
+				p2 = new MaModelEditPage(getFront(), thi);
+			changePanel(cur = p2);
+			cur.add(thi);
+			((AbEditPage) cur).setSelection(anim);
+			val = 2;
+			changing = false;
 		});
 
-		manm.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (val == 3)
-					return;
-				changing = true;
-				cur.remove(thi);
-				if (p3 == null)
-					p3 = new MaAnimEditPage(getFront(), thi);
-				changePanel(cur = p3);
-				cur.add(thi);
-				((AbEditPage) cur).setSelection(anim);
-				val = 3;
-				changing = false;
-			}
-
+		manm.addActionListener(arg0 -> {
+			if (val == 3)
+				return;
+			changing = true;
+			cur.remove(thi);
+			if (p3 == null)
+				p3 = new MaAnimEditPage(getFront(), thi);
+			changePanel(cur = p3);
+			cur.add(thi);
+			((AbEditPage) cur).setSelection(anim);
+			val = 3;
+			changing = false;
 		});
 
 		save.setLnr((e) -> BCUWriter.writeData());
 
-		undo.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				anim.restore();
-				review();
-				((AbEditPage) cur).setSelection(anim);
-			}
-
+		undo.addActionListener(arg0 -> {
+			anim.restore();
+			review();
+			((AbEditPage) cur).setSelection(anim);
 		});
 
 	}

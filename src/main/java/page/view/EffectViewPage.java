@@ -35,8 +35,10 @@ public class EffectViewPage extends AbViewPage {
 	@Override
 	protected void resized(int x, int y) {
 		super.resized(x, y);
-		set(jspu, x, y, 50, 100, 300, 1100);
-
+		if (larges.isSelected())
+			set(jspu, x, y, 50, 800, 300, 400);
+		else
+			set(jspu, x, y, 50, 100, 300, 1100);
 	}
 
 	@Override

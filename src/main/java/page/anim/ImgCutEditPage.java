@@ -622,7 +622,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		jtf.setText(anim == null ? "" : anim.id.id);
 		boolean del = anim != null && anim.deletable();
 		rem.setEnabled(aep.focus == null && anim != null && del);
-		loca.setEnabled(aep.focus == null && anim != null && !del && !anim.inPool());
+		loca.setEnabled(aep.focus == null && anim != null && !del && anim.inPool());
 		copy.setEnabled(aep.focus == null && anim != null);
 		impt.setEnabled(anim != null);
 		expt.setEnabled(anim != null);

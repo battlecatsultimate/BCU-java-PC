@@ -36,9 +36,9 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		EntityTable.redefine();
 	}
 
-	private final JBTN back = new JBTN(0, "back");
-	private final JBTN paus = new JBTN(0, "pause");
-	private final JBTN next = new JBTN(0, "nextf");
+	private final JBTN back = new JBTN(MainLocale.PAGE, "back");
+	private final JBTN paus = new JBTN(MainLocale.PAGE, "pause");
+	private final JBTN next = new JBTN(MainLocale.PAGE, "nextf");
 	private final JBTN rply = new JBTN();
 	private final JBTN row = new JBTN();
 	private final EntityTable ut = new EntityTable(-1);
@@ -54,7 +54,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	private final JLabel ucount = new JLabel();
 	private final JLabel stream = new JLabel();
 	private final JLabel respawn = new JLabel();
-	private final JTG jtb = new JTG(0, "larges");
+	private final JTG jtb = new JTG(MainLocale.PAGE, "larges");
 	private final JSlider jsl = new JSlider();
 	private final BattleBox bb;
 	private final BattleField basis;

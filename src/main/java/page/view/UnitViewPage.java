@@ -68,9 +68,15 @@ public class UnitViewPage extends AbViewPage {
 	@Override
 	protected void resized(int x, int y) {
 		super.resized(x, y);
-		set(jspu, x, y, 50, 100, 300, 1100);
-		set(jspf, x, y, 400, 100, 300, 400);
-		set(stat, x, y, 400, 1000, 300, 50);
+		if (!larges.isSelected()) {
+			set(jspu, x, y, 50, 100, 300, 1100);
+			set(jspf, x, y, 400, 100, 300, 400);
+			set(stat, x, y, 400, 1000, 300, 50);
+		} else {
+			set(jspf, x, y, 100, 800, 300, 400);
+			set(stat, x, y, 100, 1200, 300, 50);
+			set(jspu, x, y, 0, 0, 0, 0);
+		}
 	}
 
 	@Override

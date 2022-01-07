@@ -31,17 +31,18 @@ public abstract class AbViewPage extends Page {
 	private static final long serialVersionUID = 1L;
 	private static final double res = 0.95;
 
-	private final JBTN back = new JBTN(0, "back");
-	protected final JBTN copy = new JBTN(0, "copy");
+	private final JBTN back = new JBTN(MainLocale.PAGE, "back");
+	protected final JBTN copy = new JBTN(MainLocale.PAGE, "copy");
 	private final JList<String> jlt = new JList<>();
 	private final JScrollPane jspt = new JScrollPane(jlt);
 	private final JSlider jst = new JSlider(100, 900);
 	private final JSlider jtl = new JSlider();
-	private final JTG jtb = new JTG(0, "pause");
-	private final JBTN nex = new JBTN(0, "nextf");
-	private final JTG gif = new JTG(0, "gif");
-	private final JBTN png = new JBTN(0, "png");
-	private final JBTN camres = new JBTN(0, "rescam");
+	private final JTG jtb = new JTG(MainLocale.PAGE, "pause");
+	private final JBTN nex = new JBTN(MainLocale.PAGE, "nextf");
+	private final JTG gif = new JTG(MainLocale.PAGE, "gif");
+	private final JBTN png = new JBTN(MainLocale.PAGE, "png");
+	protected final JBTN camres = new JBTN(MainLocale.PAGE, "rescam");
+	protected final JTG larges = new JTG(MainLocale.PAGE, "larges");
 	private final JLabel scale = new JLabel(MainLocale.getLoc(MainLocale.PAGE, "zoom"));
 
 	protected final ViewBox vb;
@@ -118,6 +119,7 @@ public abstract class AbViewPage extends Page {
 		add(gif);
 		add(png);
 		add(scale);
+		add(larges);
 		jst.setPaintLabels(true);
 		jst.setPaintTicks(true);
 		jst.setMajorTickSpacing(100);
@@ -134,17 +136,30 @@ public abstract class AbViewPage extends Page {
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);
-		set(camres, x ,y, 525, 0, 200, 50);
-		set(copy, x, y, 250, 0, 200, 50);
-		set((Canvas) vb, x, y, 1000, 100, 1000, 600);
-		set(jspt, x, y, 400, 550, 300, 400);
-		set(jst, x, y, 1000, 750, 1000, 100);
-		set(jtl, x, y, 1000, 900, 1000, 100);
-		set(jtb, x, y, 1300, 1050, 200, 50);
-		set(nex, x, y, 1600, 1050, 200, 50);
-		set(png, x, y, 1300, 1150, 200, 50);
-		set(gif, x, y, 1600, 1150, 400, 50);
-		set(scale, x, y, 1000, 50, 200, 50);
+		set(camres, x ,y, 600, 0, 200, 50);
+		set(copy, x, y, 300, 0, 200, 50);
+		set(larges, x, y , 900, 0, 200, 50);
+		if (larges.isSelected()) {
+			set((Canvas) vb, x, y, 500, 50, 1800, 1200);
+			set(jspt, x, y, 100, 100, 300, 400);
+			set(jtb, x, y, 25, 550, 200, 50);
+			set(jtl, x, y, 0, 700, 500, 100);
+			set(nex, x, y, 275, 550, 200, 50);
+			set(png, x, y, 0, 650, 200, 50);
+			set(gif, x, y, 200, 650, 300, 50);
+			set(scale, x, y, 125, 50, 250, 50);
+			set(jst, x, y, 0, 0, 0, 0);
+		} else {
+			set((Canvas) vb, x, y, 1000, 100, 1000, 600);
+			set(jspt, x, y, 400, 550, 300, 400);
+			set(jst, x, y, 1000, 750, 1000, 100);
+			set(jtl, x, y, 1000, 900, 1000, 100);
+			set(jtb, x, y, 1300, 1050, 200, 50);
+			set(nex, x, y, 1600, 1050, 200, 50);
+			set(png, x, y, 1300, 1150, 200, 50);
+			set(gif, x, y, 1600, 1150, 400, 50);
+			set(scale, x, y, 1000, 50, 200, 50);
+		}
 	}
 
 	protected <T extends Enum<T> & AnimI.AnimType<?, T>> void setAnim(AnimI<?, T> a) {
@@ -256,6 +271,12 @@ public abstract class AbViewPage extends Page {
 				loader = vb.start();
 			else
 				vb.end(gif);
+		});
+
+		larges.setLnr(x -> {
+			remove((Canvas) vb);
+			resized();
+			add((Canvas) vb);
 		});
 
 	}

@@ -92,8 +92,8 @@ public class TraitEditPage extends Page {
         super(p);
         packpack = pac;
         pct = pac.traits;
-        ini();
         editable = pac.editable;
+        ini();
     }
 
     @Override
@@ -170,8 +170,10 @@ public class TraitEditPage extends Page {
             if (ind < 0 && list.size() > 1)
                 ind = 0;
             File file = ((Source.Workspace) packpack.source).getTraitIconFile(t.id);
-            if(!file.delete()) {
-                Opts.warnPop("Failed to delete file : "+file.getAbsolutePath(), "Delete Failed");
+            if (file.exists()) {
+                if (!file.delete()) {
+                    Opts.warnPop("Failed to delete file : " + file.getAbsolutePath(), "Delete Failed");
+                }
             }
             list.remove(t);
             pct.remove(t);
@@ -303,6 +305,7 @@ public class TraitEditPage extends Page {
         add(vuif);
         add(jspf);
         add(tspf);
+        addct.setEnabled(editable);
         jlf.setCellRenderer(new AnimLCR());
         tlf.setCellRenderer(new AnimLCR());
         jl.setIcon(null);

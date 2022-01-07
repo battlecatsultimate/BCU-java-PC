@@ -523,6 +523,7 @@ public class PackEditPage extends Page {
 				}
 			}
 			updateJlr();
+			checkAddr();
 			jlr.setSelectedValue(rel, true);
 			setRely(rel);
 			changing = false;

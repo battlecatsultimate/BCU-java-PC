@@ -53,6 +53,7 @@ public class RecdSavePage extends Page {
 		});
 
 		save.addActionListener(arg0 -> {
+			recd.rename(jtf.getText());
 			recd.write();
 			Replay.getMap().put(recd.rl.id, recd);
 
@@ -72,7 +73,6 @@ public class RecdSavePage extends Page {
 		addListeners();
 		String initName = "new replay " + recd.st.toString().replaceAll("/", "#");
 		jtf.setText(initName);
-		recd.rename(initName);
 	}
 
 }

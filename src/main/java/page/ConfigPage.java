@@ -3,6 +3,7 @@ package page;
 import common.CommonStatic;
 import common.CommonStatic.Config;
 import common.io.Backup;
+import common.pack.UserProfile;
 import common.util.ImgCore;
 import common.util.lang.MultiLangCont;
 import io.BCMusic;
@@ -26,6 +27,7 @@ public class ConfigPage extends Page {
 	private final JBTN back = new JBTN(MainLocale.PAGE, "back");
 	private final JBTN filt = new JBTN(MainLocale.PAGE, "filter" + MainBCU.FILTER_TYPE);
 	private final JBTN rlla = new JBTN(MainLocale.PAGE, "rllang");
+	private final JBTN rlpk = new JBTN(MainLocale.PAGE, "rlpks");
 	private final JTG prel = new JTG(MainLocale.PAGE, "preload");
 	private final JTG whit = new JTG(MainLocale.PAGE, "white");
 	private final JTG refe = new JTG(MainLocale.PAGE, "axis");
@@ -36,6 +38,7 @@ public class ConfigPage extends Page {
 	private final JTG secs = new JTG(MainLocale.PAGE, "secs");
 	private final JTG btnsnd = new JTG(MainLocale.PAGE, "btnsnd");
 	private final JTG bgeff = new JTG(MainLocale.PAGE, "bgeff");
+	private final JTG btdly = new JTG(MainLocale.PAGE, "btdly");
 	private final JL preflv = new JL(MainLocale.PAGE, "preflv");
 	private final JTF prlvmd = new JTF();
 	private final JBTN[] left = new JBTN[4];
@@ -120,6 +123,8 @@ public class ConfigPage extends Page {
 		set(jsba, x, y, 1100, 1150, 1000, 100);
 		set(btnsnd, x, y, 1600, 625, 200, 50);
 		set(bgeff, x, y, 1850, 625, 200, 50);
+		set(btdly, x, y, 1600, 700, 450, 50);
+		set(rlpk, x, y, 1600, 775, 450, 50);
 	}
 
 	private void addListeners() {
@@ -150,9 +155,11 @@ public class ConfigPage extends Page {
 		refe.addActionListener(arg0 -> cfg().ref = refe.isSelected());
 
 		jogl.addActionListener(arg0 -> {
-			MainBCU.USE_JOGL = jogl.isSelected();
-			if (Opts.conf("This requires restart to apply. Do you want to restart?"))
+			if (Opts.conf("This requires restart to apply. Do you want to restart?")) {
+				MainBCU.USE_JOGL = jogl.isSelected();
 				changePanel(new SavePage());
+			} else
+				jogl.setSelected(MainBCU.USE_JOGL);
 		});
 
 		for (int i = 0; i < 4; i++) {
@@ -227,10 +234,10 @@ public class ConfigPage extends Page {
 		musc.addActionListener(arg0 -> BCMusic.play = musc.isSelected());
 
 		nimbus.setLnr((b) -> {
-			MainBCU.nimbus = !MainBCU.nimbus;
-
-			if (Opts.conf("This requires restart to apply. Do you want to restart?"+(MainBCU.nimbus ? "\n\nWarning : Using Nimbus theme may result in high CPU usage" : "")))
+			if (Opts.conf("This requires restart to apply. Do you want to restart?"+(MainBCU.nimbus ? "\n\nWarning : Using Nimbus theme may result in high CPU usage" : ""))) {
+				MainBCU.nimbus = !MainBCU.nimbus;
 				changePanel(new SavePage());
+			}
 		});
 
 		theme.setLnr((b) -> {
@@ -264,7 +271,13 @@ public class ConfigPage extends Page {
 				BCMusic.clickSound();
 		});
 
+		btdly.addActionListener(a -> CommonStatic.getConfig().buttonDelay = !CommonStatic.getConfig().buttonDelay);
+
 		bgeff.addActionListener(a -> CommonStatic.getConfig().drawBGEffect = !CommonStatic.getConfig().drawBGEffect);
+
+		rlpk.addActionListener(l -> {
+			UserProfile.reloadExternalPacks();
+		});
 	}
 
 	private void ini() {
@@ -300,6 +313,8 @@ public class ConfigPage extends Page {
 		add(mbac);
 		add(btnsnd);
 		add(bgeff);
+		add(btdly);
+		add(rlpk);
 		prlvmd.setText("" + CommonStatic.getConfig().prefLevel);
 		jls.setSelectedIndex(localeIndexOf(cfg().lang));
 		jsmin.setValue(cfg().deadOpa);
@@ -334,6 +349,7 @@ public class ConfigPage extends Page {
 		btnsnd.setSelected(MainBCU.buttonSound);
 		jsba.setValue(CommonStatic.getConfig().maxBackup);
 		bgeff.setSelected(CommonStatic.getConfig().drawBGEffect);
+		btdly.setSelected(CommonStatic.getConfig().buttonDelay);
 		if (!MainBCU.nimbus) {
 			theme.setEnabled(false);
 		}

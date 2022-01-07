@@ -312,6 +312,8 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			if(!(node.getUserObject() instanceof AnimCE))
 				return;
 
+			maet.clearSelection();
+
 			AnimCE da = (AnimCE) node.getUserObject();
 			int ind = jlt.getSelectedIndex();
 			setB(da, ind);
@@ -370,6 +372,10 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		}));
 
 		remp.addActionListener(arg0 -> change(0, x -> {
+			if(maet.getCellEditor() != null) {
+				maet.getCellEditor().stopCellEditing();
+			}
+
 			MaAnim ma = maet.ma;
 			int[] rows = maet.getSelectedRows();
 			Part[] data = ma.parts;
@@ -402,7 +408,8 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 					return;
 				}
 
-				if (!Opts.conf("times animation length by " + d))
+				String str = d < 1 ? "Decrease " : "Increase ";
+				if (!Opts.conf(str + "animation speed by " + (d * 100) + "%?"))
 					return;
 				for (Part p : maet.ma.parts) {
 					for (int[] line : p.moves)
