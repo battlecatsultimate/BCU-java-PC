@@ -57,7 +57,7 @@ public class MainPage extends Page {
 
 	private final JBTN refr = new JBTN(0, "refrtips");
 	private final JLabel tips = new JLabel();
-	private final String[] ALLTIPS = Page.get(MainLocale.PAGE, "tip", 16);
+	private final String[] ALLTIPS = Page.get(MainLocale.PAGE, "tip", 17);
 
 	public MainPage() {
 		super(null);
