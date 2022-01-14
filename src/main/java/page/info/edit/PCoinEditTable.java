@@ -37,7 +37,7 @@ class PCoinEditTable extends Page {
     }
 
     private static class NPList extends JList<talentData> {
-
+        private static final long serialVersionUID = 1L;
 
         protected NPList() {
             if (MainBCU.nimbus)

@@ -19,24 +19,22 @@ public class UnitEditBox extends Page {
 
 	private final boolean editable;
 	private final Vector<String> va = new Vector<>();
-	private final TraitList trait = new TraitList();
+	private final TraitList trait = new TraitList(false);
 	private final AttList abis = new AttList(0, 1);
 	private final JScrollPane jt;
 	private final JScrollPane jab = new JScrollPane(abis);
 
 	private boolean changing = false;
-	private final List<Trait> traitList;
 	private final CustomUnit cu;
 
 	public UnitEditBox(Page p, UserPack pack, CustomUnit cun) {
 		super(p);
 		editable = pack.editable;
-		traitList = new ArrayList<>(UserProfile.getBCData().traits.getList().subList(TRAIT_RED,TRAIT_EVA));
-		traitList.addAll(pack.traits.getList());
+		trait.list.addAll(UserProfile.getBCData().traits.getList().subList(TRAIT_RED,TRAIT_EVA));
+		trait.list.addAll(pack.traits.getList());
 		for (UserPack pacc : UserProfile.getUserPacks())
 			if (pack.desc.dependency.contains(pacc.desc.id))
-				traitList.addAll(pacc.traits.getList());
-		trait.setTraitIcons();
+				trait.list.addAll(pacc.traits.getList());
 		jt = new JScrollPane(trait);
 
 		cu = cun;
@@ -45,8 +43,8 @@ public class UnitEditBox extends Page {
 
 	public void setData(int[] vals, ArrayList<Trait> ts) {
 		changing = true;
-		for (int k = 0; k < traitList.size(); k++)
-			if (ts.contains(traitList.get(k)))
+		for (int k = 0; k < trait.list.size(); k++)
+			if (ts.contains(trait.list.get(k)))
 				trait.addSelectionInterval(k, k);
 			else
 				trait.removeSelectionInterval(k, k);
@@ -73,19 +71,19 @@ public class UnitEditBox extends Page {
 		for (int i = 0; i < lev; i++)
 			if (abis.isSelectedIndex(i))
 				ans[0] |= 1 << i;
-		for (int i = 0; i < traitList.size(); i++)
+		for (int i = 0; i < trait.list.size(); i++)
 			if (trait.isSelectedIndex(i)) {
-				if (!cu.traits.contains(traitList.get(i))) {
-					cu.traits.add(traitList.get(i));
+				if (!cu.traits.contains(trait.list.get(i))) {
+					cu.traits.add(trait.list.get(i));
 				}
 			} else
-				cu.traits.remove(traitList.get(i));
+				cu.traits.remove(trait.list.get(i));
 		getFront().callBack(ans);
 	}
 
 	private void ini() {
 		Collections.addAll(va, SABIS);
-		trait.setListData(new Vector<>(traitList));
+		trait.setListData();
 		abis.setListData(va);
 		int m = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
 		trait.setSelectionMode(m);

@@ -198,7 +198,7 @@ class UFBButton extends UnitFilterBox {
 			trait[i].setIcon(new ImageIcon(v));
 		}
 		FixIndexList.FixIndexMap<Trait> BCtraits = UserProfile.getBCData().traits;
-		for (int i = 0 ; i < BCtraits.size() - 4 ; i++)
+		for (int i = 0 ; i < TRAIT_EVA ; i++)
 			trlis.add(BCtraits.get(i));
 		for (int i = 0; i < abis.length; i++) {
 			set(abis[i] = new JTG(SABIS[i]));
@@ -244,9 +244,8 @@ class UFBList extends UnitFilterBox {
 
 	private final JTG[] orop = new JTG[3];
 	private final JList<String> rare = new JList<>(RARITY);
-	private final Vector<String> vt = new Vector<>();
 	private final Vector<String> va = new Vector<>();
-	private final AttList trait = new AttList();
+	private final TraitList trait = new TraitList(false);
 	private final AttList abis = new AttList(0, 0);
 	private final AttList atkt = new AttList(2, 0);
 	private final JScrollPane jr = new JScrollPane(rare);
@@ -290,8 +289,6 @@ class UFBList extends UnitFilterBox {
 		set(jat, x, y, 0, 850, 200, 300);
 	}
 
-	private final List<Trait> trlis = new ArrayList<>();
-
 	private void confirm() {
 		List<Form> ans = new ArrayList<>();
 		for(PackData p : UserProfile.getAllPacks()) {
@@ -299,19 +296,19 @@ class UFBList extends UnitFilterBox {
 				for (Form f : u.forms) {
 					MaskUnit du = f.maxu();
 					int a = du.getAbi();
-					List<Trait> ct = du.getTraits();
+					List<Trait> traits = du.getTraits();
 					boolean b0 = rare.isSelectedIndex(u.rarity);
 					boolean b1 = !orop[0].isSelected();
 					for (int i : trait.getSelectedIndices())
-						if (ct.size() > 0) {
+						if (traits.size() > 0) {
 							if (orop[0].isSelected())
-								for (Trait diyt : ct) {
-									b1 |= trlis.get(i).equals(diyt) || trlis.get(i).others.contains(f);
+								for (Trait tr : traits) {
+									b1 |= trait.list.get(i).equals(tr) || trait.list.get(i).others.contains(f);
 									if (b1)
 										break;
 								}
 							else {
-								b1 &= ct.contains(trlis.get(i)) || trlis.get(i).others.contains(f);
+								b1 &= traits.contains(trait.list.get(i)) || trait.list.get(i).others.contains(f);
 								if (!b1)
 									break;
 							}
@@ -373,21 +370,17 @@ class UFBList extends UnitFilterBox {
 		for (int i = 0; i < orop.length; i++)
 			set(orop[i] = new JTG(get(0, "orop")));
 		FixIndexList.FixIndexMap<Trait> BCtraits = UserProfile.getBCData().traits;
-		for (int i = 0 ; i < BCtraits.size() - 4 ; i++) {
-			trlis.add(BCtraits.get(i));
-			vt.add(TRAIT[i]);
-		}
+		for (int i = 0 ; i < TRAIT_EVA ; i++)
+			trait.list.add(BCtraits.get(i));
 		for (PackData.UserPack pacc : UserProfile.getUserPacks())
 			for (Trait ctra : pacc.traits)
-				if (pack == null || ctra.id.pack.equals(pack) || parents.contains(ctra.id.pack)) {
-					trlis.add(ctra);
-					vt.add(ctra.name);
-				}
-		trait.setIcons(trlis);
+				if (pack == null || ctra.id.pack.equals(pack) || parents.contains(ctra.id.pack))
+					trait.list.add(ctra);
+
+		trait.setListData();
 		Collections.addAll(va, SABIS);
 		for (int i = 0; i < Data.PROC_TOT; i++)
 			va.add(ProcLang.get().get(i).abbr_name);
-		trait.setListData(vt);
 		abis.setListData(va);
 		atkt.setListData(ATKCONF);
 		set(rare);

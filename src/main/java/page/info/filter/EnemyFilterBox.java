@@ -247,9 +247,8 @@ class EFBList extends EnemyFilterBox {
 
 	private final JTG[] orop = new JTG[4];
 	private final JList<String> rare = new JList<>(ERARE);
-	private final Vector<String> vt = new Vector<>();
 	private final Vector<String> va = new Vector<>();
-	private final AttList trait = new AttList();
+	private final TraitList trait = new TraitList(false);
 	private final AttList abis = new AttList(-1, EFILTER);
 	private final AttList atkt = new AttList(2, 0);
 	private final JScrollPane jr = new JScrollPane(rare);
@@ -294,8 +293,6 @@ class EFBList extends EnemyFilterBox {
 		set(jat, x, y, 0, 850, 200, 300);
 	}
 
-	private final List<Trait> trlis = new ArrayList<>();
-
 	private void confirm() {
 		List<Enemy> ans = new ArrayList<>();
 		for(PackData p : UserProfile.getAllPacks()) {
@@ -314,12 +311,12 @@ class EFBList extends EnemyFilterBox {
 					if (ct.size() > 0) {
 						if (orop[0].isSelected())
 							for (Trait diyt : ct) {
-								b1 |= trlis.get(i).equals(diyt);
+								b1 |= trait.list.get(i).equals(diyt);
 								if (b1)
 									break;
 							}
 						else {
-							b1 &= ct.contains(trlis.get(i));
+							b1 &= ct.contains(trait.list.get(i));
 							if (!b1)
 								break;
 						}
@@ -383,23 +380,19 @@ class EFBList extends EnemyFilterBox {
 		for (int i = 0; i < orop.length; i++)
 			set(orop[i] = new JTG(get(0, "orop")));
 		FixIndexMap<Trait> BCtraits = UserProfile.getBCData().traits;
-		for (int i = 0 ; i < BCtraits.size() - 1 ; i++) {
-			trlis.add(BCtraits.get(i));
-			vt.add(TRAIT[i]);
-		}
+		for (int i = 0 ; i < BCtraits.size() - 1 ; i++)
+			trait.list.add(BCtraits.get(i));
 		Collection<PackData.UserPack> pacs = UserProfile.getUserPacks();
 		for (PackData.UserPack pacc : pacs)
 			for (Trait ctra : pacc.traits)
-				if (pack == null || ctra.id.pack.equals(pack) || parents.contains(ctra.id.pack)) {
-					trlis.add(ctra);
-					vt.add(ctra.name);
-				}
-		trait.setIcons(trlis);
+				if (pack == null || ctra.id.pack.equals(pack) || parents.contains(ctra.id.pack))
+					trait.list.add(ctra);
+
+		trait.setListData();
 		va.addAll(Arrays.asList(EABI).subList(0, EFILTER));
 		ProcLang proclang = ProcLang.get();
 		for (int i = 0; i < Data.PROC_TOT; i++)
 			va.add(proclang.get(i).abbr_name);
-		trait.setListData(vt);
 		abis.setListData(va);
 		atkt.setListData(ATKCONF);
 		int m = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;

@@ -32,7 +32,7 @@ public class TraitEditPage extends Page {
 
     private static final long serialVersionUID = 1L;
 
-    private final TraitList jlct = new TraitList();
+    private final TraitList jlct = new TraitList(true);
     private final JScrollPane jspct = new JScrollPane(jlct);
 
     private final JLabel jl = new JLabel();
@@ -119,7 +119,6 @@ public class TraitEditPage extends Page {
                 t.icon = null;
                 jl.setIcon(null);
                 reicn.setEnabled(false);
-                jlct.setTraitIcons();
             }
         });
 
@@ -218,7 +217,6 @@ public class TraitEditPage extends Page {
     private void updateCTL() {
         jlct.setListData(pct.toArray());
         jlct.setSelectedValue(t, true);
-        jlct.setTraitIcons();
         updateCT();
     }
 
@@ -319,7 +317,6 @@ public class TraitEditPage extends Page {
         if (jlct.getSelectedValue() != slt) {
             changing = true;
             jlct.setSelectedValue(slt, true);
-            jlct.setTraitIcons();
             changing = false;
         }
     }

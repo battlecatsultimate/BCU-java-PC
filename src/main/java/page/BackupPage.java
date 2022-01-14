@@ -29,7 +29,6 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
-import java.awt.event.WindowEvent;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;

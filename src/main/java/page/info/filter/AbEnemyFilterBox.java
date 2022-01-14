@@ -253,9 +253,8 @@ class AEFBList extends AbEnemyFilterBox {
 
     private final JTG[] orop = new JTG[3];
     private final JList<String> rare = new JList<>(ERARE);
-    private final Vector<String> vt = new Vector<>();
     private final Vector<String> va = new Vector<>();
-    private final AttList trait = new AttList();
+    private final TraitList trait = new TraitList(false);
     private final AttList abis = new AttList(-1, EFILTER);
     private final AttList atkt = new AttList(2, 0);
     private final JScrollPane jr = new JScrollPane(rare);
@@ -299,26 +298,24 @@ class AEFBList extends AbEnemyFilterBox {
         set(jat, x, y, 0, 850, 200, 300);
     }
 
-    private final List<Trait> trlis = new ArrayList<>();
-
     private void confirm() {
         List<AbEnemy> ans = new ArrayList<>();
         for(PackData p : UserProfile.getAllPacks()) {
             for (Enemy e : p.enemies.getList()) {
-                List<Trait> ct = e.de.getTraits();
+                List<Trait> traits = e.de.getTraits();
                 int a = e.de.getAbi();
                 boolean b0 = isER(e, rare.getSelectedIndex());
                 boolean b1 = !orop[0].isSelected();
                 for (int i : trait.getSelectedIndices())
-                    if (ct.size() > 0) {
+                    if (traits.size() > 0) {
                         if (orop[0].isSelected())
-                            for (Trait diyt : ct) {
-                                b1 |= trlis.get(i).equals(diyt);
+                            for (Trait tr : traits) {
+                                b1 |= trait.list.get(i).equals(tr);
                                 if (b1)
                                     break;
                             }
                         else {
-                            b1 &= ct.contains(trlis.get(i));
+                            b1 &= traits.contains(trait.list.get(i));
                             if (!b1)
                                 break;
                         }
@@ -393,23 +390,19 @@ class AEFBList extends AbEnemyFilterBox {
         for (int i = 0; i < orop.length; i++)
             set(orop[i] = new JTG(get(0, "orop")));
         FixIndexList.FixIndexMap<Trait> BCtraits = UserProfile.getBCData().traits;
-        for (int i = 0 ; i < BCtraits.size() - 1 ; i++) {
-            trlis.add(BCtraits.get(i));
-            vt.add(TRAIT[i]);
-        }
+        for (int i = 0 ; i < BCtraits.size() - 1 ; i++)
+            trait.list.add(BCtraits.get(i));
         Collection<PackData.UserPack> pacs = UserProfile.getUserPacks();
         for (PackData.UserPack pacc : pacs)
             for (Trait ctra : pacc.traits)
-                if (pack == null || ctra.id.pack.equals(pack) || parents.contains(ctra.id.pack)) {
-                    trlis.add(ctra);
-                    vt.add(ctra.name);
-                }
-        trait.setIcons(trlis);
+                if (pack == null || ctra.id.pack.equals(pack) || parents.contains(ctra.id.pack))
+                    trait.list.add(ctra);
+
+        trait.setListData();
         va.addAll(Arrays.asList(EABI).subList(0, EFILTER));
         ProcLang proclang = ProcLang.get();
         for (int i = 0; i < Data.PROC_TOT; i++)
             va.add(proclang.get(i).abbr_name);
-        trait.setListData(vt);
         abis.setListData(va);
         atkt.setListData(ATKCONF);
         rare.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

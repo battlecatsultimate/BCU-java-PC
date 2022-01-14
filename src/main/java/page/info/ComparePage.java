@@ -16,8 +16,8 @@ import common.util.unit.Level;
 import common.util.unit.Trait;
 import main.MainBCU;
 import page.*;
-import page.info.filter.AttList;
 import page.info.filter.EnemyFindPage;
+import page.info.filter.TraitList;
 import page.info.filter.UnitFindPage;
 import utilpc.Interpret;
 import utilpc.UtilPC;
@@ -26,10 +26,6 @@ import javax.swing.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.*;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static utilpc.Interpret.TRAIT;
 
 public class ComparePage extends Page {
 
@@ -55,10 +51,8 @@ public class ComparePage extends Page {
     private final MaskEntity[] maskEntities = new MaskEntity[names.length];
     private final int[][] maskEntityLvl = new int[names.length][6];
 
-    private final AttList trait = new AttList();
-    private final Vector<String> vt = new Vector<>();
+    private final TraitList trait = new TraitList(false);
     private final JScrollPane tlst = new JScrollPane(trait);
-    private final List<Trait> tList = new ArrayList<>();
 
     private EnemyFindPage efp = null;
     private UnitFindPage ufp = null;
@@ -161,20 +155,15 @@ public class ComparePage extends Page {
 
     private void setTraits() {
         FixIndexList.FixIndexMap<Trait> BCtraits = UserProfile.getBCData().traits;
-        for (int i = 0 ; i < BCtraits.size() - 1 ; i++) {
-            tList.add(BCtraits.get(i));
-            vt.add(TRAIT[i]);
-        }
-        Collection<PackData.UserPack> pacs = UserProfile.getUserPacks();
-        for (PackData.UserPack pack : pacs) {
-            for (Trait t : pack.traits) {
-                tList.add(t);
-                vt.add(t.name);
-            }
-        }
+        for (int i = 0 ; i < BCtraits.size() - 1 ; i++)
+            trait.list.add(BCtraits.get(i));
 
-        trait.setIcons(tList);
-        trait.setListData(vt);
+        Collection<PackData.UserPack> pacs = UserProfile.getUserPacks();
+        for (PackData.UserPack pack : pacs)
+            for (Trait t : pack.traits)
+                trait.list.add(t);
+
+        trait.setListData();
         trait.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         trait.addListSelectionListener(x -> reset());
@@ -357,7 +346,7 @@ public class ComparePage extends Page {
 
                 ArrayList<Trait> traits = new ArrayList<>();
                 for (int j = 0; j < trait.getSelectedIndices().length; j++)
-                    traits.add(tList.get(trait.getSelectedIndices()[j]));
+                    traits.addAll(trait.getSelectedValuesList());
 
                 traits.retainAll(mu.getTraits());
                 boolean overlap = traits.size() > 0;
