@@ -13,15 +13,14 @@ import common.pack.FixIndexList.FixIndexMap;
 import main.MainBCU;
 import main.Opts;
 import page.*;
+import page.info.filter.TraitList;
 import page.info.filter.UnitFindPage;
 import page.support.AnimLCR;
 import page.support.Importer;
 import page.support.ReorderList;
-import utilpc.Theme;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -30,31 +29,6 @@ import java.util.Collection;
 import java.util.List;
 
 public class TraitEditPage extends Page {
-
-    private static class TraitList extends JList<Trait> {
-
-        private static final long serialVersionUID = 1L;
-
-        protected TraitList() {
-            if (MainBCU.nimbus)
-                setSelectionBackground(MainBCU.light ? Theme.LIGHT.NIMBUS_SELECT_BG : Theme.DARK.NIMBUS_SELECT_BG);
-        }
-        protected void setTraitIcons() {
-            setCellRenderer(new DefaultListCellRenderer() {
-                private static final long serialVersionUID = 1L;
-                @Override
-                public Component getListCellRendererComponent(JList<?> l, Object o, int ind, boolean s, boolean f) {
-                    JLabel jl = (JLabel) super.getListCellRendererComponent(l, o, ind, s, f);
-                    Trait trait = (Trait)o;
-                    if (trait.icon != null)
-                        jl.setIcon(new ImageIcon((BufferedImage)trait.icon.getImg().bimg()));
-                    else
-                        jl.setIcon(new ImageIcon((BufferedImage)CommonStatic.getBCAssets().dummyTrait.getImg().bimg()));
-                    return jl;
-                }
-            });
-        }
-    }
 
     private static final long serialVersionUID = 1L;
 

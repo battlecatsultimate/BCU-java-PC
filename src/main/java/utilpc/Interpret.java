@@ -98,8 +98,8 @@ public class Interpret extends Data {
 			{ 1, 1 }, { 1, 1 }, { 1, 1 }, { 2, 2 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 },
 			{ 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 } };
 
-	public static final int[] EABIIND = { ABI_BASE, ABI_WAVES, ABI_SNIPERI, ABI_TIMEI, ABI_GHOST, ABI_GLASS, ABI_THEMEI, ABI_BARON };
-	public static final int IMUSFT = 13, EFILTER = 8;
+	public static final int[] EABIIND = { ABI_BASE, ABI_WAVES, ABI_SNIPERI, ABI_TIMEI, ABI_GHOST, ABI_GLASS, ABI_THEMEI };
+	public static final int IMUSFT = 13, EFILTER = 7;
 
 	private static final DecimalFormat df;
 
@@ -562,7 +562,7 @@ public class Interpret extends Data {
 	public static void redefine() {
 		ERARE = Page.get(MainLocale.UTIL, "er", 7);
 		RARITY = Page.get(MainLocale.UTIL, "r", 6);
-		TRAIT = Page.get(MainLocale.UTIL, "c", 13);
+		TRAIT = Page.get(MainLocale.UTIL, "c", 14);
 		STAR = Page.get(MainLocale.UTIL, "s", 5);
 		ABIS = Page.get(MainLocale.UTIL, "a", 19);
 		SABIS = Page.get(MainLocale.UTIL, "sa", 19);

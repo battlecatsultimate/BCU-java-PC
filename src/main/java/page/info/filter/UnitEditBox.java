@@ -18,10 +18,8 @@ public class UnitEditBox extends Page {
 	private static final long serialVersionUID = 1L;
 
 	private final boolean editable;
-
-	private final Vector<String> vt = new Vector<>();
 	private final Vector<String> va = new Vector<>();
-	private final AttList trait = new AttList();
+	private final TraitList trait = new TraitList();
 	private final AttList abis = new AttList(0, 1);
 	private final JScrollPane jt;
 	private final JScrollPane jab = new JScrollPane(abis);
@@ -38,7 +36,7 @@ public class UnitEditBox extends Page {
 		for (UserPack pacc : UserProfile.getUserPacks())
 			if (pack.desc.dependency.contains(pacc.desc.id))
 				traitList.addAll(pacc.traits.getList());
-		trait.setIcons(traitList);
+		trait.setTraitIcons();
 		jt = new JScrollPane(trait);
 
 		cu = cun;
@@ -86,10 +84,8 @@ public class UnitEditBox extends Page {
 	}
 
 	private void ini() {
-		for (Trait value : traitList)
-			vt.add(value.name);
 		Collections.addAll(va, SABIS);
-		trait.setListData(vt);
+		trait.setListData(new Vector<>(traitList));
 		abis.setListData(va);
 		int m = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
 		trait.setSelectionMode(m);
