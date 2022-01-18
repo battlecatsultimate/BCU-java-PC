@@ -314,7 +314,6 @@ public class ConfigPage extends Page {
 		add(btnsnd);
 		add(bgeff);
 		add(btdly);
-		add(rlpk);
 		prlvmd.setText("" + CommonStatic.getConfig().prefLevel);
 		jls.setSelectedIndex(localeIndexOf(cfg().lang));
 		jsmin.setValue(cfg().deadOpa);
