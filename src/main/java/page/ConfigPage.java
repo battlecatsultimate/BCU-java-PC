@@ -275,9 +275,7 @@ public class ConfigPage extends Page {
 
 		bgeff.addActionListener(a -> CommonStatic.getConfig().drawBGEffect = !CommonStatic.getConfig().drawBGEffect);
 
-		rlpk.addActionListener(l -> {
-			UserProfile.reloadExternalPacks();
-		});
+		rlpk.addActionListener(l -> UserProfile.reloadExternalPacks());
 	}
 
 	private void ini() {
@@ -314,6 +312,7 @@ public class ConfigPage extends Page {
 		add(btnsnd);
 		add(bgeff);
 		add(btdly);
+		add(rlpk);
 		prlvmd.setText("" + CommonStatic.getConfig().prefLevel);
 		jls.setSelectedIndex(localeIndexOf(cfg().lang));
 		jsmin.setValue(cfg().deadOpa);
