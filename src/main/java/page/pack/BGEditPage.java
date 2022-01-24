@@ -280,7 +280,13 @@ public class BGEditPage extends Page {
 		}
 
 		for(int i = 0; i < BackgroundEffect.jsonList.length; i++) {
-			effVector.add(get(MainLocale.PAGE, "bgeff10").replace("_", ""+BackgroundEffect.jsonList[i]));
+			String temp = get(MainLocale.PAGE, "bgjson"+BackgroundEffect.jsonList[i]);
+
+			if(temp.equals("bgjson"+BackgroundEffect.jsonList[i])) {
+				temp = get(MainLocale.PAGE, "bgeffdum").replace("_", ""+BackgroundEffect.jsonList[i]);
+			}
+
+			effVector.add(temp);
 		}
 
 		eff.setModel(new DefaultComboBoxModel<>(effVector));
