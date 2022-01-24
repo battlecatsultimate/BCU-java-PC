@@ -17,10 +17,7 @@ import common.util.lang.Editors;
 import common.util.pack.Background;
 import common.util.pack.Soul;
 import common.util.pack.Soul.SoulType;
-import common.util.unit.AbEnemy;
-import common.util.unit.Enemy;
-import common.util.unit.Form;
-import common.util.unit.Unit;
+import common.util.unit.*;
 import main.Opts;
 import page.*;
 import page.anim.DIYViewPage;
@@ -281,16 +278,30 @@ public abstract class EntityEditPage extends Page {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	protected void renew() {
+		PackData.UserPack p = UserProfile.getUserPack(pack);
+
 		if (efp != null && efp.getSelected() != null
 				&& Opts.conf("do you want to overwrite stats? This operation cannot be undone")) {
 			Enemy e = efp.getSelected();
 			ce.importData(e.de);
+			ce.traits.removeIf(t -> {
+				if(t.BCTrait)
+					return false;
+
+				return p == null || !p.desc.dependency.contains(t.id.pack);
+			});
 			setData(ce);
 		}
 		if (ufp != null && ufp.getForm() != null
 				&& Opts.conf("do you want to overwrite stats? This operation cannot be undone")) {
 			Form f = ufp.getForm();
 			ce.importData(f.du);
+			ce.traits.removeIf(t -> {
+				if(t.BCTrait)
+					return false;
+
+				return p == null || !p.desc.dependency.contains(t.id.pack);
+			});
 			setData(ce);
 		}
 		if (sup != null && editor != null) {
