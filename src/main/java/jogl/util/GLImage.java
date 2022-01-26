@@ -3,6 +3,7 @@ package jogl.util;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.awt.AWTTextureIO;
 import common.system.P;
+import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import main.Printer;
 
@@ -179,6 +180,11 @@ public class GLImage implements FakeImage {
 		}
 
 		return copy;
+	}
+
+	@Override
+	public FakeGraphics getGraphics() {
+		return par.getGraphics();
 	}
 
 	protected GLImage root() {

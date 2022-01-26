@@ -21,6 +21,13 @@ public class GLIB extends ImageBuilder<BufferedImage> {
 	}
 
 	@Override
+	public FakeImage build(int w, int h) {
+		BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB_PRE);
+
+		return new AmbImage(img);
+	}
+
+	@Override
 	public FakeImage build(File f) throws IOException {
 		if (CommonStatic.getConfig().icon)
 			return FIBI.builder.build(f);

@@ -1,5 +1,6 @@
 package jogl.util;
 
+import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import jogl.GLStatic;
 import utilpc.awt.FIBI;
@@ -158,6 +159,16 @@ public class AmbImage implements FakeImage {
 		return copy;
 	}
 
+	@Override
+	public FakeGraphics getGraphics() {
+		if(bimg != null)
+			return bimg.getGraphics();
+		else if(gl != null)
+			return gl.getGraphics();
+		else
+			return null;
+	}
+
 	private void check() {
 		if (gl != null || bimg != null)
 			return;
@@ -207,5 +218,4 @@ public class AmbImage implements FakeImage {
 		force = true;
 		gl = null;
 	}
-
 }
