@@ -42,6 +42,8 @@ public class SavePage extends Page {
 
             MainFrame.F.dispose();
 
+            System.gc();
+
             Thread.sleep(5000);
 
             System.exit(0);
