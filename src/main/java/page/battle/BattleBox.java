@@ -525,6 +525,8 @@ public interface BattleBox {
 				gra.drawImage(bimg, posx - bw + shake, posy - bh, bw, bh);
 			} else {
 				if(sb.s_stop == 0 || (sb.ebase.getAbi() & Data.AB_TIMEI) == 0) {
+					posx = (int) getX(sb.ebase.pos);
+
 					((Entity) sb.ebase).anim.draw(gra, setP(posx + shake, posy), siz * sprite);
 
 					if(sb.ebase.health > 0)
@@ -702,17 +704,22 @@ public interface BattleBox {
 				gra.fillRect(0, 0, w, h);
 
 				if((sb.ebase.getAbi() * Data.AB_TIMEI) != 0) {
-					int posy = (int) (midh - road_h * siz);
-					int posx = (int) ((800 * ratio + off) * siz + pos);
-
 					double shake = 0.0;
 
-					if(sb.ebase.health <= 0 || ((ECastle)sb.ebase).hit > 0) {
+					if(sb.ebase.health <= 0 || (sb.ebase instanceof ECastle && ((ECastle) sb.ebase).hit > 0) || (sb.ebase instanceof EEnemy && ((EEnemy) sb.ebase).hit > 0)) {
 						shake = (2 + (sb.time % 2 * -4)) * siz;
 					}
 
 					if (sb.ebase instanceof Entity) {
-						((Entity) sb.ebase).anim.smoke.draw(gra, setP(posx + shake, posy), siz * sprite);
+						int posx = (int) getX(sb.ebase.pos);
+						int posy = (int) (midh - road_h * siz);
+
+						((Entity) sb.ebase).anim.draw(gra, setP(posx + shake, posy), siz * sprite);
+
+						if(((Entity) sb.ebase).anim.smoke != null) {
+							((Entity) sb.ebase).anim.smoke.draw(gra, setP(posx + shake, posy), siz * sprite);
+						}
+
 						if (sb.ebase.health > 0)
 							((Entity) sb.ebase).anim.drawEff(gra, setP(posx + shake, posy), siz * sprite);
 					}
