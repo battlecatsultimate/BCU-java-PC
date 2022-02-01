@@ -161,4 +161,11 @@ public class FG2D implements FakeGraphics {
 		g.translate(x, y);
 	}
 
+	public void drawPath(Polygon p) {
+		g.drawPolygon(p);
+	}
+
+	public void fillPath(Polygon p) {
+		g.fillPolygon(p);
+	}
 }

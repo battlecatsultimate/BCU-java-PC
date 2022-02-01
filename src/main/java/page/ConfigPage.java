@@ -61,6 +61,7 @@ public class ConfigPage extends Page {
 	private final JSlider jsba = new JSlider(0, 50);
 	private final JList<String> jls = new JList<>(MainLocale.LOC_NAME);
 	private final JBTN row = new JBTN(MainLocale.PAGE, CommonStatic.getConfig().twoRow ? "tworow" : "onerow");
+	private final JBTN vcol = new JBTN(MainLocale.PAGE, "viewcolor");
 
 	private final JScrollPane jsps = new JScrollPane(jls);
 
@@ -124,7 +125,8 @@ public class ConfigPage extends Page {
 		set(btnsnd, x, y, 1600, 625, 200, 50);
 		set(bgeff, x, y, 1850, 625, 200, 50);
 		set(btdly, x, y, 1600, 700, 450, 50);
-		set(rlpk, x, y, 1600, 775, 450, 50);
+		set(rlpk, x, y, 1600, 775, 200, 50);
+		set(vcol, x, y, 1850, 775, 200, 50);
 	}
 
 	private void addListeners() {
@@ -276,6 +278,8 @@ public class ConfigPage extends Page {
 		bgeff.addActionListener(a -> CommonStatic.getConfig().drawBGEffect = !CommonStatic.getConfig().drawBGEffect);
 
 		rlpk.addActionListener(l -> UserProfile.reloadExternalPacks());
+
+		vcol.addActionListener(l -> changePanel(new ColorPickPage(this)));
 	}
 
 	private void ini() {
@@ -313,6 +317,7 @@ public class ConfigPage extends Page {
 		add(bgeff);
 		add(btdly);
 		add(rlpk);
+		add(vcol);
 		prlvmd.setText("" + CommonStatic.getConfig().prefLevel);
 		jls.setSelectedIndex(localeIndexOf(cfg().lang));
 		jsmin.setValue(cfg().deadOpa);

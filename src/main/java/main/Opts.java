@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.io.File;
 
@@ -260,6 +261,46 @@ public class Opts {
 				JOptionPane.QUESTION_MESSAGE,
 				warnIcon,
 				new Object[] {okay, cancel},
+				cancel
+		);
+	}
+
+	@SuppressWarnings("MagicConstant")
+	public static void showPageAsPopUp(String title, Page p) {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+
+		int w = MainFrame.F.getRootPane().getWidth();
+		int h = MainFrame.F.getRootPane().getHeight();
+
+		panel.add(p);
+
+		p.setPreferredSize(new Dimension((int) (w * 0.75), (int) (h * 0.75)));
+		panel.setPreferredSize(new Dimension((int) (w * 0.75), (int) (h * 0.75)));
+
+		JBTN okay = new JBTN("OK");
+		JBTN cancel = new JBTN("Cancel");
+
+		okay.addActionListener(a -> {
+			JOptionPane pane = getOptionPane((JComponent) a.getSource());
+
+			pane.setValue(okay);
+		});
+
+		cancel.addActionListener(a -> {
+			JOptionPane pane = getOptionPane((JComponent) a.getSource());
+
+			pane.setValue(cancel);
+		});
+
+		JOptionPane.showOptionDialog(
+				null,
+				panel,
+				title,
+				JOptionPane.OK_CANCEL_OPTION,
+				-1,
+				null,
+				new Object[]{okay, cancel},
 				cancel
 		);
 	}
