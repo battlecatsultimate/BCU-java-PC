@@ -10,6 +10,7 @@ import io.BCMusic;
 import io.BCUReader;
 import main.MainBCU;
 import main.Opts;
+import page.support.ColorPicker;
 import page.view.ViewBox;
 import utilpc.Theme;
 
@@ -127,6 +128,15 @@ public class ConfigPage extends Page {
 		set(btdly, x, y, 1600, 700, 450, 50);
 		set(rlpk, x, y, 1600, 775, 200, 50);
 		set(vcol, x, y, 1850, 775, 200, 50);
+	}
+
+	@Override
+	public void callBack(Object obj) {
+		super.callBack(obj);
+
+		if(obj instanceof ColorPicker) {
+
+		}
 	}
 
 	private void addListeners() {
@@ -279,7 +289,7 @@ public class ConfigPage extends Page {
 
 		rlpk.addActionListener(l -> UserProfile.reloadExternalPacks());
 
-		vcol.addActionListener(l -> changePanel(new ColorPickPage(this)));
+		vcol.addActionListener(l -> Opts.showColorPicker("Color pick pick", this));
 	}
 
 	private void ini() {

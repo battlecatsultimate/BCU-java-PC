@@ -93,7 +93,7 @@ public class LevelEditPage extends Page {
 	}
 
 	@Override
-	protected void timer(int t) {
+    public void timer(int t) {
 		orbb.paint(orbb.getGraphics());
 		super.timer(t);
 	}

@@ -204,7 +204,7 @@ public abstract class AbViewPage extends Page {
 	}
 
 	@Override
-	protected void timer(int t) {
+    public void timer(int t) {
 		if (!pause)
 			eupdate();
 		vb.paint();

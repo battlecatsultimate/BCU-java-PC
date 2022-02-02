@@ -206,7 +206,7 @@ public class BasisPage extends LubCont {
 	}
 
 	@Override
-	protected void timer(int t) {
+    public void timer(int t) {
 		ncb.paint(ncb.getGraphics());
 		super.timer(t);
 	}

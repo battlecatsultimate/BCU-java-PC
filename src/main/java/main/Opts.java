@@ -266,17 +266,47 @@ public class Opts {
 	}
 
 	@SuppressWarnings("MagicConstant")
-	public static void showPageAsPopUp(String title, Page p) {
+	public static void showColorPicker(String title, Page pg) {
+		ColorPickPage p = new ColorPickPage(pg);
+
+		Runnable run = new Runnable() {
+			public final int fps = 33;
+			public int inter = 0;
+
+			@Override
+			public void run() {
+				while (true) {
+					long m = System.currentTimeMillis();
+					try {
+						p.timer(0);
+						int delay = (int) (System.currentTimeMillis() - m);
+						inter = (inter * 9 + 100 * delay / fps) / 10;
+						int sle = delay >= fps ? 1 : fps - delay;
+						Thread.sleep(sle);
+					} catch (InterruptedException e) {
+						return;
+					}
+				}
+			}
+		};
+
+		Thread thread = new Thread(run);
+
+		thread.start();
+
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 
 		int w = MainFrame.F.getRootPane().getWidth();
 		int h = MainFrame.F.getRootPane().getHeight();
 
-		panel.add(p);
+		p.setPreferredSize(new Dimension((int) (w * 0.524), (int) (h * 0.3)));
+		p.setBounds(0, 0, (int) (w * 0.525), (int) (h * 0.3));
 
-		p.setPreferredSize(new Dimension((int) (w * 0.75), (int) (h * 0.75)));
-		panel.setPreferredSize(new Dimension((int) (w * 0.75), (int) (h * 0.75)));
+		panel.add(p);
+		panel.setPreferredSize(new Dimension((int) (w * 0.524), (int) (h * 0.368)));
+
+		panel.setBackground(new Color(64, 64, 64));
 
 		JBTN okay = new JBTN("OK");
 		JBTN cancel = new JBTN("Cancel");
@@ -285,6 +315,9 @@ public class Opts {
 			JOptionPane pane = getOptionPane((JComponent) a.getSource());
 
 			pane.setValue(okay);
+
+			p.callBack(null);
+			thread.interrupt();
 		});
 
 		cancel.addActionListener(a -> {
@@ -301,7 +334,7 @@ public class Opts {
 				-1,
 				null,
 				new Object[]{okay, cancel},
-				cancel
+				null
 		);
 	}
 

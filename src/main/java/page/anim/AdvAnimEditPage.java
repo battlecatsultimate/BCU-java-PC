@@ -203,7 +203,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 	}
 
 	@Override
-	protected void timer(int t) {
+    public void timer(int t) {
 		if (!pause)
 			eupdate();
 		if (ab.getEntity() != null && mpet.part != null) {

@@ -233,7 +233,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	}
 
 	@Override
-	protected synchronized void timer(int t) {
+	public synchronized void timer(int t) {
 		StageBasis sb = basis.sb;
 		if (!pause) {
 			upd++;

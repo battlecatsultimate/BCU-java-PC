@@ -180,7 +180,7 @@ public abstract class Page extends JPanel implements RetFunc {
 
 	protected abstract void resized(int x, int y);
 
-	protected synchronized void timer(int t) {
+	public synchronized void timer(int t) {
 		resized();
 	}
 

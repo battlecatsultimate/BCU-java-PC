@@ -1,6 +1,7 @@
 package page.support;
 
 import common.system.fake.FakeImage;
+import page.ColorPickPage;
 import utilpc.awt.FG2D;
 import utilpc.awt.FIBI;
 
@@ -24,9 +25,10 @@ public class ColorPicker extends JPanel {
         BAR
     }
 
-    private final float[] hsb = {0f, 1f, 1f};
-    private final int[] rgb = {255, 0, 0};
-    private MODE mode = MODE.HUE;
+    private final ColorPickPage page;
+
+    public final float[] hsb = {0f, 1f, 1f};
+    public final int[] rgb = {255, 0, 0};
 
     private final BufferedImage colorField = new BufferedImage(360, 360, BufferedImage.TYPE_INT_ARGB_PRE);
     private final FakeImage colorImage = FIBI.build(colorField);
@@ -40,8 +42,11 @@ public class ColorPicker extends JPanel {
     private int barPos = 0;
 
     private DRAGMODE dragmode = null;
+    private MODE mode = MODE.HUE;
 
-    public ColorPicker() {
+    public ColorPicker(ColorPickPage page) {
+        this.page = page;
+
         updateBar();
         updateField();
 
@@ -55,10 +60,14 @@ public class ColorPicker extends JPanel {
         rgb[2] = c & 0xFF;
         rgb[1] = (c >> 8) & 0xFF;
         rgb[0] = (c >> 16) & 0xFF;
+
+        page.callBack(this);
     }
 
     public void updateHsb() {
         Color.RGBtoHSB(rgb[0], rgb[1], rgb[2], hsb);
+
+        page.callBack(this);
     }
 
     public void setHex(int hex) {
@@ -71,6 +80,12 @@ public class ColorPicker extends JPanel {
 
     public void setMode(MODE mode) {
         this.mode = mode;
+
+        updateField();
+        updateBar();
+
+        changeBarPos();
+        changeCirclePos();
     }
 
     @Override
@@ -160,7 +175,7 @@ public class ColorPicker extends JPanel {
                 //x-axis = H, y-axis = S
                 for(int x = 0; x < colorField.getWidth(); x++) {
                     for(int y = 0; y < colorField.getHeight(); y++) {
-                        int c = Color.HSBtoRGB(x / 360f, y / 360f, 360f - hsb[2]);
+                        int c = Color.HSBtoRGB(x / 360f, (360f - y) / 360f, hsb[2]);
 
                         colorField.setRGB(x, y, c);
                     }
@@ -219,7 +234,7 @@ public class ColorPicker extends JPanel {
         switch (mode) {
             case HUE:
                 for(int y = 0; y < colorBar.getHeight(); y++) {
-                    int c = Color.HSBtoRGB(1f - y / 360f, hsb[1], hsb[2]);
+                    int c = Color.HSBtoRGB(1f - y / 360f, 1f, 1f);
 
                     for(int x = 0; x < 36; x++) {
                         colorBar.setRGB(x, y, c);
@@ -353,8 +368,8 @@ public class ColorPicker extends JPanel {
         if (e.getPoint().x >= iGap && e.getPoint().x <= iGap + ihw && e.getPoint().y >= iGap && e.getPoint().y <= iGap + ihw) {
             dragmode = DRAGMODE.FIELD;
 
-            int x = (int) (e.getPoint().x - iGap);
-            int y = (int) (e.getPoint().y - iGap);
+            double x = e.getPoint().x - iGap;
+            double y = e.getPoint().y - iGap;
 
             long round = Math.round((ihw - y) * 255 / ihw);
 
@@ -407,7 +422,7 @@ public class ColorPicker extends JPanel {
         } else if(e.getPoint().x >= iGap + ihw + gap && e.getPoint().x <= iGap + ihw + gap + barH && e.getPoint().y >= iGap && e.getPoint().y <= iGap + ihw) {
             dragmode = DRAGMODE.BAR;
 
-            int y = (int) (e.getPoint().y - iGap);
+            double y = e.getPoint().y - iGap;
 
             long round = Math.round((ihw - y) * 255 / ihw);
 
@@ -461,8 +476,8 @@ public class ColorPicker extends JPanel {
         double ihw = getHeight() * 0.9;
 
         if(dragmode == DRAGMODE.FIELD) {
-            int x = (int) (Math.min(iGap + ihw, Math.max(e.getPoint().x, iGap)) - iGap);
-            int y = (int) (Math.min(iGap + ihw, Math.max(e.getPoint().y, iGap)) - iGap);
+            double x = Math.min(iGap + ihw, Math.max(e.getPoint().x, iGap)) - iGap;
+            double y = Math.min(iGap + ihw, Math.max(e.getPoint().y, iGap)) - iGap;
 
             long round = Math.round((ihw - y) * 255 / ihw);
 
@@ -513,30 +528,40 @@ public class ColorPicker extends JPanel {
 
             invalidate();
         } else if(dragmode == DRAGMODE.BAR) {
-            int y = (int) (Math.min(iGap + ihw, Math.max(iGap, e.getPoint().y)) - iGap);
+            double y = Math.min(iGap + ihw, Math.max(iGap, e.getPoint().y)) - iGap;
 
             switch (mode) {
                 case HUE:
                     hsb[0] = (float) (1f - y / ihw);
+
+                    updateRgb();
                     break;
                 case SATURATION:
                     hsb[1] = (float) (1f - y / ihw);
+
+                    updateRgb();
                     break;
                 case BRIGHTNESS:
                     hsb[2] = (float) (1f - y / ihw);
+
+                    updateRgb();
                     break;
                 case RED:
                     rgb[0] = (int) ((ihw - y) * 255 / ihw);
+
+                    updateHsb();
                     break;
                 case GREEN:
                     rgb[1] = (int) ((ihw - y) * 255 / ihw);
+
+                    updateHsb();
                     break;
                 case BLUE:
                     rgb[2] = (int) ((ihw - y) * 255 / ihw);
+
+                    updateHsb();
                     break;
             }
-
-            updateRgb();
 
             changeBarPos();
 
@@ -548,5 +573,15 @@ public class ColorPicker extends JPanel {
 
     public void mouseReleased() {
         dragmode = null;
+    }
+
+    public void updateData() {
+        updateField();
+        updateBar();
+
+        changeBarPos();
+        changeCirclePos();
+
+        page.callBack(this);
     }
 }
