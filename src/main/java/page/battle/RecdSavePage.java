@@ -48,7 +48,7 @@ public class RecdSavePage extends Page {
 					str = "new replay " + recd.st.toString();
 				str = MainBCU.validate(str, '#');
 				jtf.setText(str);
-				recd.rename(str);
+				recd.rename(str, false);
 
 			}
 		});
@@ -58,7 +58,7 @@ public class RecdSavePage extends Page {
 			if (Replay.getMap().containsKey(repName) && !Opts.conf("A replay named " + repName + " already exists. Do you wish to overwrite?"))
 				return;
 
-			recd.rename(repName);
+			recd.rename(repName, true);
 			recd.write();
 			Replay.getMap().put(recd.rl.id, recd);
 

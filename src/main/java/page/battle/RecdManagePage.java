@@ -78,7 +78,7 @@ public class RecdManagePage extends AbRecdPage {
 			Replay r = jlr.getSelectedValue();
 			if (r == null)
 				return;
-			r.rename(MainBCU.validate(rena.getText().trim(),'#'));
+			r.rename(MainBCU.validate(rena.getText().trim(),'#'), true);
 			rena.setText(r.rl.id);
 		});
 

@@ -59,15 +59,10 @@ public class RecdPackPage extends AbRecdPage {
 
 	private void addListeners() {
 
-		jlr.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (isAdj() || jlr.getValueIsAdjusting())
-					return;
-				setRecd(jlr.getSelectedValue());
-			}
-
+		jlr.addListSelectionListener(arg0 -> {
+			if (isAdj() || jlr.getValueIsAdjusting())
+				return;
+			setRecd(jlr.getSelectedValue());
 		});
 
 		rena.setLnr(x -> {
@@ -76,7 +71,7 @@ public class RecdPackPage extends AbRecdPage {
 			Replay r = jlr.getSelectedValue();
 			if (r == null)
 				return;
-			r.rename(rena.getText().trim());
+			r.rename(rena.getText().trim(), true);
 			rena.setText(r.rl.id);
 		});
 
