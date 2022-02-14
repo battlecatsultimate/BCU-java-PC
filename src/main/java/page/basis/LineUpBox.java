@@ -68,14 +68,14 @@ public class LineUpBox extends Canvas {
 					else
 						gra.drawImage(slot[2].getImg(), 120 * j, 100 * i);
 				if (sf == null || sf != f || relative == null)
-					Res.getCost(lu.getLv(f).getLvs()[0], true,
+					Res.getCost(lu.getLv(f).getLv(), true,
 							new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
 			}
 		if (relative != null && sf != null) {
 			Point p = relative.sf(mouse).toPoint();
 			FakeImage uni = sf.anim.getUni().getImg();
 			gra.drawImage(uni, p.x, p.y);
-			Res.getCost(lu.getLv(sf).getLvs()[0], true, new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
+			Res.getCost(lu.getLv(sf).getLv(), true, new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
 		}
 		g.drawImage(bimg, 0, 0, getWidth(), getHeight(), null);
 		pt++;

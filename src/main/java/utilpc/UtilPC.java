@@ -32,6 +32,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class UtilPC {
 
@@ -293,10 +294,10 @@ public class UtilPC {
 		return new ImageIcon((Image) img.bimg());
 	}
 
-	public static String[] lvText(Form f, int[] lvs) {
+	public static String[] lvText(Form f, ArrayList<Integer> lvs) {
 		PCoin pc = f.du.getPCoin();
 		if (pc == null)
-			return new String[] { "Lv." + lvs[0], "" };
+			return new String[] { "Lv." + lvs.get(0), "" };
 		else {
 			String[] TraitsHolder = new String[pc.trait.size()];
 			for (int i = 0 ; i < pc.trait.size() ; i++) {
@@ -314,12 +315,12 @@ public class UtilPC {
 
 			lab.append(Interpret.PCTX[pc.info.get(0)[0]]);
 
-			StringBuilder str = new StringBuilder("Lv." + lvs[0] + ", {");
+			StringBuilder str = new StringBuilder("Lv." + lvs.get(0) + ", {");
 			for (int i = 1; i < pc.info.size(); i++) {
-				str.append(lvs[i]).append(",");
+				str.append(lvs.get(i)).append(",");
 				lab.append(", ").append(getPCoinAbilityText(pc, i));
 			}
-			str.append(lvs[pc.info.size()]).append("}");
+			str.append(lvs.get(pc.info.size())).append("}");
 			return new String[] {str.toString(), lab.toString()};
 		}
 	}

@@ -49,7 +49,7 @@ public class ComparePage extends Page {
     private final JBTN[][] swap = new JBTN[names.length][2];
 
     private final MaskEntity[] maskEntities = new MaskEntity[names.length];
-    private final int[][] maskEntityLvl = new int[names.length][6];
+    private final ArrayList<Integer>[] maskEntityLvl = new ArrayList[names.length];
 
     private final TraitList trait = new TraitList(false);
     private final JScrollPane tlst = new JScrollPane(trait);
@@ -231,19 +231,21 @@ public class ComparePage extends Page {
 
                     if (maskEntities[finalI] instanceof MaskEnemy) {
                         if (data.length == 1) {
-                            if (data[0] != -1)
-                                maskEntityLvl[finalI][0] = maskEntityLvl[finalI][1] = data[0];
+                            if (data[0] != -1) {
+                                maskEntityLvl[finalI].set(0, data[0]);
+                                maskEntityLvl[finalI].set(1, data[0]);
+                            }
 
                             jtf.setText(CommonStatic.toArrayFormat(data[0], data[0]) + "%");
                         } else if (data.length == 2) {
                             if (data[0] != -1)
-                                maskEntityLvl[finalI][0] = data[0];
+                                maskEntityLvl[finalI].set(0, data[0]);
                             if (data[1] != -1)
-                                maskEntityLvl[finalI][1] = data[1];
+                                maskEntityLvl[finalI].set(1, data[1]);
 
                             jtf.setText(CommonStatic.toArrayFormat(data[0], data[1]) + "%");
                         } else {
-                            jtf.setText(CommonStatic.toArrayFormat(maskEntityLvl[finalI][0], maskEntityLvl[finalI][1]) + "%");
+                            jtf.setText(CommonStatic.toArrayFormat(maskEntityLvl[finalI].get(0), maskEntityLvl[finalI].get(1)) + "%");
                         }
                     } else {
                         Form f = ((MaskUnit) maskEntities[finalI]).getPack();
@@ -299,9 +301,15 @@ public class ComparePage extends Page {
             if (m instanceof MaskEnemy) {
                 MaskEnemy enemy = (MaskEnemy) m;
 
-                int[] multi = state ? maskEntityLvl[i] : (maskEntityLvl[i] = new int[]{100, 100, 0, 0, 0, 0});
-                double mul = (multi[0] * enemy.multi(b)) / 100.0;
-                double mula = (multi[1] * enemy.multi(b)) / 100.0;
+                if (!state) {
+                    maskEntityLvl[i] = new ArrayList<>();
+                    maskEntityLvl[i].set(0, 100);
+                    maskEntityLvl[i].set(1, 100);
+                }
+                ArrayList<Integer> multi = maskEntityLvl[i];
+
+                double mul = (multi.get(0) * enemy.multi(b)) / 100.0;
+                double mula = (multi.get(1) * enemy.multi(b)) / 100.0;
 
                 abilityPanes[i].setViewportView(abilities[i] = new EntityAbilities(getFront(), m, multi));
 
@@ -329,7 +337,7 @@ public class ComparePage extends Page {
                 for (JBTN btn : swap[i])
                     btn.setEnabled(false);
             } else if (m instanceof MaskUnit) {
-                int[] multi = state
+                ArrayList<Integer> multi = state
                         ? maskEntityLvl[i]
                         : (maskEntityLvl[i] = ((MaskUnit) m).getPack().getPrefLvs());
                 MaskUnit mu = (MaskUnit) (m = ((MaskUnit) m).getPCoin() != null
@@ -340,7 +348,7 @@ public class ComparePage extends Page {
 
                 abilityPanes[i].setViewportView(abilities[i] = new EntityAbilities(getFront(), m, multi));
 
-                double mul = f.unit.lv.getMult(multi[0]);
+                double mul = f.unit.lv.getMult(multi.get(0));
                 double atkLv = b.t().getAtkMulti();
                 double defLv = b.t().getDefMulti();
 
@@ -491,25 +499,34 @@ public class ComparePage extends Page {
                     ? CommonStatic.parseIntsN(level[s].getText().trim().replace("%", ""))
                     : new int[]{100, 100};
             if (data.length == 1) {
-                if (data[0] != -1)
-                    maskEntityLvl[s][0] = maskEntityLvl[s][1] = data[0];
+                if (data[0] != -1) {
+                    maskEntityLvl[s].set(0, data[0]);
+                    maskEntityLvl[s].set(1, data[0]);
+                }
 
                 level[s].setText(CommonStatic.toArrayFormat(data[0], data[0]) + "%");
             } else if (data.length == 2) {
                 if (data[0] != -1)
-                    maskEntityLvl[s][0] = data[0];
+                    maskEntityLvl[s].set(0, data[0]);
                 if (data[1] != -1)
-                    maskEntityLvl[s][1] = data[1];
+                    maskEntityLvl[s].set(1, data[1]);
 
                 level[s].setText(CommonStatic.toArrayFormat(data[0], data[1]) + "%");
             } else {
-                level[s].setText(CommonStatic.toArrayFormat(maskEntityLvl[s][0], maskEntityLvl[s][1]) + "%");
+                level[s].setText(CommonStatic.toArrayFormat(maskEntityLvl[s].get(0), maskEntityLvl[s].get(1)) + "%");
             }
         } else if (ent != null) {
             Form f = ((MaskUnit) ent).getPack();
-            int[] data = maskEntities[s] instanceof MaskUnit
-                    ? CommonStatic.parseIntsN(level[s].getText())
-                    : f.getPrefLvs();
+            int[] data;
+            if (maskEntities[s] instanceof MaskUnit) {
+                data = CommonStatic.parseIntsN(level[s].getText());
+            } else {
+                ArrayList<Integer> lvs = f.getPrefLvs();
+                data = new int[lvs.size()];
+
+                for (int i = 0; i < data.length; i++)
+                    data[i] = lvs.get(i);
+            }
             maskEntityLvl[s] = f.regulateLv(data, maskEntityLvl[s]);
             String[] strs = UtilPC.lvText(f, maskEntityLvl[s]);
             level[s].setText(strs[0]);

@@ -9,6 +9,7 @@ import utilpc.Interpret;
 import utilpc.UtilPC;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,11 +18,11 @@ public class EntityAbilities extends Page {
     private static final long serialVersionUID = 1L;
 
     private final MaskEntity me;
-    private final int[] lvl;
+    private final ArrayList<Integer> lvl;
     private JLabel[] proc;
     private JLabel pcoin;
 
-    public EntityAbilities(Page p, MaskEntity me, int[] lv) {
+    public EntityAbilities(Page p, MaskEntity me, ArrayList<Integer> lv) {
         super(p);
         this.me = (me instanceof MaskUnit && ((MaskUnit) me).getPCoin() != null)
                 ? ((MaskUnit) me).getPCoin().improve(lv)
@@ -35,7 +36,7 @@ public class EntityAbilities extends Page {
     private void ini() {
         boolean isEnemy = me instanceof MaskEnemy;
         List<Interpret.ProcDisplay> ls = Interpret.getAbi(me);
-        ls.addAll(Interpret.getProc(me, isEnemy, Arrays.stream(lvl).mapToDouble(x -> {
+        ls.addAll(Interpret.getProc(me, isEnemy, lvl.stream().mapToDouble(x -> {
             if (isEnemy)
                 return x * ((MaskEnemy) me).multi(BasisSet.current()) / 100;
             else

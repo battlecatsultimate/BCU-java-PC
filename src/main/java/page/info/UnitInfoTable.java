@@ -39,7 +39,7 @@ public class UnitInfoTable extends Page {
 
 	private final BasisSet b;
 	private final Form f;
-	private int[] multi;
+	private ArrayList<Integer> multi;
 	private boolean displaySpecial;
 
 	protected UnitInfoTable(Page p, Form de, boolean sp) {
@@ -52,8 +52,8 @@ public class UnitInfoTable extends Page {
 		atks = new JL[6];
 		MaskUnit du = f.maxu();
 		List<Interpret.ProcDisplay> ls = Interpret.getAbi(du);
-		double mul = f.unit.lv.getMult(multi[0]);
-		ls.addAll(Interpret.getProc(du, false, new double[]{Math.round(du.getHp() * mul) * b.t().getDefMulti(), multi[0]}));
+		double mul = f.unit.lv.getMult(multi.get(0));
+		ls.addAll(Interpret.getProc(du, false, new double[]{Math.round(du.getHp() * mul) * b.t().getDefMulti(), multi.get(0)}));
 		boolean pc = de.du.getPCoin() != null;
 		if (pc)
 			ls.add(new Interpret.ProcDisplay("",null));
@@ -80,7 +80,7 @@ public class UnitInfoTable extends Page {
 
 	protected void reset() {
 		EForm ef = new EForm(f, multi);
-		double mul = f.unit.lv.getMult(multi[0]);
+		double mul = f.unit.lv.getMult(multi.get(0));
 		double atk = b.t().getAtkMulti();
 		double def = b.t().getDefMulti();
 
@@ -133,7 +133,7 @@ public class UnitInfoTable extends Page {
 		atks[1].setText(satk.toString());
 
 		List<Interpret.ProcDisplay> ls = Interpret.getAbi(ef.du);
-		ls.addAll(Interpret.getProc(ef.du, false, new double[]{mul,multi[0]}));
+		ls.addAll(Interpret.getProc(ef.du, false, new double[]{mul, multi.get(0)}));
 		for (JLabel l : proc)
 			if (l != pcoin) {
 				l.setText("");

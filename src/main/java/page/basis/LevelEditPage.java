@@ -104,7 +104,7 @@ public class LevelEditPage extends Page {
 		levels.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				int[] lvs = CommonStatic.parseIntsN(levels.getText());
+				ArrayList<Integer> lvs = Level.LvList(CommonStatic.parseIntsN(levels.getText()));
 
 				setLvOrb(lvs, generateOrb());
 			}
@@ -491,7 +491,7 @@ public class LevelEditPage extends Page {
 		return BasisSet.current().sele.lu;
 	}
 
-	private void setLvOrb(int[] lvs, int[][] orbs) {
+	private void setLvOrb(ArrayList<Integer> lvs, int[][] orbs) {
 		lu().setOrb(f.unit, lvs, orbs);
 		p.callBack(null);
 	}
