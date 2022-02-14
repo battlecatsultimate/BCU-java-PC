@@ -135,6 +135,10 @@ public class Interpret extends Data {
 					return false;
 				}
 			}
+		} else {
+			for (int i = 1; i < me.getAtkCount(); i++)
+				if (me.getAtkModel(i).getShortPoint() == me.getAtkModel(i - 1).getShortPoint() || me.getAtkModel(i).getLongPoint() == me.getAtkModel(i - 1).getLongPoint())
+					return false;
 		}
 
 		return true;
@@ -193,7 +197,7 @@ public class Interpret extends Data {
 					+ Page.get(MainLocale.UTIL, "ld2") + ": " + r, bi));
 		} else if (!allRangeSame(me)) {
 			LinkedHashMap<String, List<Integer>> LDInts = new LinkedHashMap<>();
-			AtkDataModel[] atks = ((CustomEntity)me).atks;
+			MaskAtk[] atks = me.getAtks();
 			List<BufferedImage> ics = new ArrayList<>();
 
 			for (int i = 0; i < atks.length ; i++ ) {
