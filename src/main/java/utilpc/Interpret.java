@@ -564,8 +564,8 @@ public class Interpret extends Data {
 		RARITY = Page.get(MainLocale.UTIL, "r", 6);
 		TRAIT = Page.get(MainLocale.UTIL, "c", 14);
 		STAR = Page.get(MainLocale.UTIL, "s", 5);
-		ABIS = Page.get(MainLocale.UTIL, "a", 20);
-		SABIS = Page.get(MainLocale.UTIL, "sa", 20);
+		ABIS = Page.get(MainLocale.UTIL, "a", 21);
+		SABIS = Page.get(MainLocale.UTIL, "sa", 21);
 		ATKCONF = Page.get(MainLocale.UTIL, "aa", 8);
 		TREA = Page.get(MainLocale.UTIL, "t", 37);
 		COMF = Page.get(MainLocale.UTIL, "na", 6);
