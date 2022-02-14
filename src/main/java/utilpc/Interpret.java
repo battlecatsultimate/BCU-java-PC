@@ -136,9 +136,10 @@ public class Interpret extends Data {
 				}
 			}
 		} else {
-			for (int i = 1; i < me.getAtkCount(); i++)
-				if (me.getAtkModel(i).getShortPoint() == me.getAtkModel(i - 1).getShortPoint() || me.getAtkModel(i).getLongPoint() == me.getAtkModel(i - 1).getLongPoint())
+			for (int i = 1; i < me.getAtkCount(); i++) {
+				if (me.getAtkModel(i).getShortPoint() != me.getAtkModel(0).getShortPoint() || me.getAtkModel(i).getLongPoint() != me.getAtkModel(0).getLongPoint())
 					return false;
+			}
 		}
 
 		return true;
@@ -182,20 +183,9 @@ public class Interpret extends Data {
 			ldr = ma.getLongPoint() - ma.getShortPoint();
 		}
 
+
 		List<ProcDisplay> l = new ArrayList<>();
-		if (lds != 0 || ldr != 0) {
-			int p0 = Math.min(lds, lds + ldr);
-			int p1 = Math.max(lds, lds + ldr);
-			int r = Math.abs(ldr);
-			BufferedImage bi;
-			if (me.isOmni()) {
-				bi = UtilPC.getIcon(2, ATK_OMNI);
-			} else {
-				bi = UtilPC.getIcon(2, ATK_LD);
-			}
-			l.add(new ProcDisplay(Page.get(MainLocale.UTIL, "ld0") + ": " + tb + ", " + Page.get(MainLocale.UTIL, "ld1") + ": " + p0 + "~" + p1 + ", "
-					+ Page.get(MainLocale.UTIL, "ld2") + ": " + r, bi));
-		} else if (!allRangeSame(me)) {
+		if (!allRangeSame(me)) {
 			LinkedHashMap<String, List<Integer>> LDInts = new LinkedHashMap<>();
 			MaskAtk[] atks = me.getAtks();
 			List<BufferedImage> ics = new ArrayList<>();
@@ -235,6 +225,18 @@ public class Interpret extends Data {
 					}
 				}
 			}
+		} else if (lds != 0 || ldr != 0) {
+			int p0 = Math.min(lds, lds + ldr);
+			int p1 = Math.max(lds, lds + ldr);
+			int r = Math.abs(ldr);
+			BufferedImage bi;
+			if (me.isOmni()) {
+				bi = UtilPC.getIcon(2, ATK_OMNI);
+			} else {
+				bi = UtilPC.getIcon(2, ATK_LD);
+			}
+			l.add(new ProcDisplay(Page.get(MainLocale.UTIL, "ld0") + ": " + tb + ", " + Page.get(MainLocale.UTIL, "ld1") + ": " + p0 + "~" + p1 + ", "
+					+ Page.get(MainLocale.UTIL, "ld2") + ": " + r, bi));
 		}
 		AtkDataModel rev = me.getRevenge();
 		for (int z = 0; z < 2; z++) {

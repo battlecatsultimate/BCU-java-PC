@@ -89,7 +89,7 @@ public class UnitInfoTable extends Page {
 		int hp = (int) (Math.round(ef.du.getHp() * mul) * def);
 
 		PCoin pc = f.du.getPCoin();
-		if(pc != null) {
+		if (pc != null) {
 			attack = (int) (attack * pc.getAtkMultiplication(multi));
 			hp = (int) (hp * pc.getHPMultiplication(multi));
 		}
@@ -124,7 +124,7 @@ public class UnitInfoTable extends Page {
 
 			int a = (int) (Math.round(atkDatum[0] * mul) * b.t().getAtkMulti());
 
-			if(pc != null) {
+			if (pc != null) {
 				a = (int) (a * pc.getAtkMultiplication(multi));
 			}
 
@@ -134,10 +134,11 @@ public class UnitInfoTable extends Page {
 
 		List<Interpret.ProcDisplay> ls = Interpret.getAbi(ef.du);
 		ls.addAll(Interpret.getProc(ef.du, false, new double[]{mul, multi.get(0)}));
-		for (JLabel l : proc)
-			if (l != pcoin) {
+		for (JLabel l : proc) {
+			if (l != pcoin)
 				l.setText("");
-			}
+			l.setIcon(null);
+		}
 		for (int i = 0; i < ls.size(); i++) {
 			Interpret.ProcDisplay display = ls.get(i);
 			proc[i].setText(display.toString());
