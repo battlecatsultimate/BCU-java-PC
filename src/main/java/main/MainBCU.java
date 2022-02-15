@@ -280,7 +280,7 @@ public class MainBCU {
 	private static final DecimalFormat df = new DecimalFormat("#.##");
 
 	public static int FILTER_TYPE = 1;
-	public static final boolean WRITE = !new File("./.project").exists();
+	public static final boolean WRITE = !new File("./.idea").exists();
 	public static boolean preload = false, trueRun = true, loaded = false, USE_JOGL = false;
 	public static boolean light = true, nimbus = false, seconds = false, buttonSound = false;
 	public static String author = "";

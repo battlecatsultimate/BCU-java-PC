@@ -88,12 +88,12 @@ public class BCUWriter extends DataIO {
 			System.exit(0);
 		}
 		try {
-			if (ph.exists()) {
+			if (ph.exists() && MainBCU.WRITE) {
 				if (!Opts.conf("<html>" + "Another BCU is running in this folder or last BCU doesn't close properly. "
 						+ "<br> Are you sure to run? It might damage your save.</html>")) {
 					System.exit(0);
 				}
-			} else {
+			} else if(!ph.exists()) {
 				boolean res = ph.createNewFile();
 
 				if(!res) {
