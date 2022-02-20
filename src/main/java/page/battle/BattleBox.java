@@ -18,6 +18,7 @@ import common.system.fake.FakeTransform;
 import common.util.Data;
 import common.util.ImgCore;
 import common.util.Res;
+import common.util.pack.EffAnim;
 import common.util.pack.bgeffect.BackgroundEffect;
 import common.util.stage.CastleImg;
 import common.util.unit.Form;
@@ -589,7 +590,9 @@ public interface BattleBox {
 
 				gra.setTransform(at);
 
-				e.anim.drawEff(gra, setP(p, y), siz);
+				if(e.anim.corpse == null || e.anim.corpse.type == EffAnim.ZombieEff.BACK) {
+					e.anim.drawEff(gra, setP(p, y), siz);
+				}
 			}
 
 			for(int i = 0; i < sb.le.size(); i++) {
@@ -720,7 +723,7 @@ public interface BattleBox {
 							((Entity) sb.ebase).anim.smoke.draw(gra, setP(posx + shake, posy), siz * sprite);
 						}
 
-						if (sb.ebase.health > 0)
+						if (sb.ebase.health > 0 && (((Entity) sb.ebase).anim.corpse == null || ((Entity) sb.ebase).anim.corpse.type == EffAnim.ZombieEff.BACK))
 							((Entity) sb.ebase).anim.drawEff(gra, setP(posx + shake, posy), siz * sprite);
 					}
 				}
@@ -746,7 +749,9 @@ public interface BattleBox {
 
 						gra.setTransform(at);
 
-						e.anim.drawEff(gra, setP(p, y), siz);
+						if(e.anim.corpse == null || e.anim.corpse.type == EffAnim.ZombieEff.BACK) {
+							e.anim.drawEff(gra, setP(p, y), siz);
+						}
 					}
 				}
 			}
