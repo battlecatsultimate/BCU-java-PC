@@ -1,6 +1,7 @@
 package page.pack;
 
 import common.CommonStatic;
+import common.battle.BasisSet;
 import common.battle.data.CustomEnemy;
 import common.io.PackLoader;
 import common.pack.Context.ErrType;
@@ -58,29 +59,30 @@ public class PackEditPage extends Page {
 	private final JList<UserPack> jlt = new JList<>(vpack);
 	private final JScrollPane jspt = new JScrollPane(jlt);
 
-	private final JBTN addp = new JBTN(0, "add");
-	private final JBTN remp = new JBTN(0, "rem");
-	private final JBTN adde = new JBTN(0, "add");
-	private final JBTN reme = new JBTN(0, "rem");
-	private final JBTN erea = new JBTN(0, "reassign");
-	private final JBTN adds = new JBTN(0, "add");
-	private final JBTN rems = new JBTN(0, "rem");
-	private final JBTN addr = new JBTN(0, "add");
-	private final JBTN remr = new JBTN(0, "rem");
-	private final JBTN edit = new JBTN(0, "edit");
-	private final JBTN sdiy = new JBTN(0, "sdiy");
-	private final JBTN vene = new JBTN(0, "vene");
-	private final JBTN extr = new JBTN(0, "extr");
-	private final JBTN vcas = new JBTN(0, "vcas");
-	private final JBTN vbgr = new JBTN(0, "vbgr");
-	private final JBTN vrcg = new JBTN(0, "recg");
-	private final JBTN vrlr = new JBTN(0, "relr");
-	private final JBTN cunt = new JBTN(0, "cunt");
-	private final JBTN tdiy = new JBTN(0, "ctrt");
-	private final JBTN ener = new JBTN(0, "ener");
-	private final JBTN vmsc = new JBTN(0, "vmsc");
-	private final JBTN unpk = new JBTN(0, "unpack");
-	private final JBTN recd = new JBTN(0, "replay");
+	private final JBTN addp = new JBTN(MainLocale.PAGE, "add");
+	private final JBTN remp = new JBTN(MainLocale.PAGE, "rem");
+	private final JBTN adde = new JBTN(MainLocale.PAGE, "add");
+	private final JBTN reme = new JBTN(MainLocale.PAGE, "rem");
+	private final JBTN erea = new JBTN(MainLocale.PAGE, "reassign");
+	private final JBTN adds = new JBTN(MainLocale.PAGE, "add");
+	private final JBTN rems = new JBTN(MainLocale.PAGE, "rem");
+	private final JBTN addr = new JBTN(MainLocale.PAGE, "add");
+	private final JBTN remr = new JBTN(MainLocale.PAGE, "rem");
+	private final JBTN edit = new JBTN(MainLocale.PAGE, "edit");
+	private final JBTN sdiy = new JBTN(MainLocale.PAGE, "sdiy");
+	private final JBTN vene = new JBTN(MainLocale.PAGE, "vene");
+	private final JBTN extr = new JBTN(MainLocale.PAGE, "extr");
+	private final JBTN vcas = new JBTN(MainLocale.PAGE, "vcas");
+	private final JBTN vbgr = new JBTN(MainLocale.PAGE, "vbgr");
+	private final JBTN vrcg = new JBTN(MainLocale.PAGE, "recg");
+	private final JBTN vrlr = new JBTN(MainLocale.PAGE, "relr");
+	private final JBTN cunt = new JBTN(MainLocale.PAGE, "cunt");
+	private final JBTN tdiy = new JBTN(MainLocale.PAGE, "ctrt");
+	private final JBTN ener = new JBTN(MainLocale.PAGE, "ener");
+	private final JBTN vmsc = new JBTN(MainLocale.PAGE, "vmsc");
+	private final JBTN unpk = new JBTN(MainLocale.PAGE, "unpack");
+	private final JBTN recd = new JBTN(MainLocale.PAGE, "replay");
+	private final JTG cmbo = new JTG(MainLocale.PAGE, "usecombo");
 	private final JTF jtfp = new JTF();
 	private final JTF jtfe = new JTF();
 	private final JTF jtfs = new JTF();
@@ -128,6 +130,7 @@ public class PackEditPage extends Page {
 		set(pid, x, y, w, 1050, 400, 50);
 		set(pauth, x, y, w, 1100, 400, 50);
 		set(animall, x, y, w, 1150, 400, 50);
+		set(cmbo, x, y, w, 1000, 400, 50);
 
 		w += 450;
 
@@ -306,6 +309,15 @@ public class PackEditPage extends Page {
 				extr.setEnabled(true);
 			} else {
 				Opts.pop("You typed incorrect password", "Incorrect password");
+			}
+		});
+
+		cmbo.setLnr(x -> {
+			pac.useCombos = cmbo.isSelected();
+			for (BasisSet b : BasisSet.list()) {
+				for (int i = 0; i < b.lb.size(); i++) {
+					b.lb.get(i).lu.renew();
+				}
 			}
 		});
 
@@ -600,6 +612,10 @@ public class PackEditPage extends Page {
 		add(vmsc);
 		add(unpk);
 		add(recd);
+
+		add(cmbo);
+		cmbo.setToolTipText("Decide whether to apply or not this pack's custom CatCombos onto your lineups");
+
 		add(pid);
 		add(pauth);
 		add(animall);
@@ -674,6 +690,7 @@ public class PackEditPage extends Page {
 		boolean canExport = pac != null && pac.editable;
 		unpk.setEnabled(canUnpack);
 		extr.setEnabled(canExport);
+		cmbo.setSelected(pac != null && pac.useCombos);
 		if (b)
 			jtfp.setText(pack.desc.name);
 		if (pac == null) {
