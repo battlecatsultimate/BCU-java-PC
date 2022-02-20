@@ -50,14 +50,14 @@ public class MainPage extends Page {
 	private final JBTN camm = new JBTN(0, "camm");
 	private final JBTN cama = new JBTN(0, "cama");
 	private final JBTN save = new JBTN(0, "save");
-	private final JBTN allf = new JBTN(0, "all file");
+	private final JBTN allf = new JBTN(0, "allfile");
 	private final JBTN auth = new JBTN(0, "author");
 	private final JBTN comp = new JBTN(0, "compare");
 	private final JBTN bckp = new JBTN(0, "backup");
 
 	private final JBTN refr = new JBTN(0, "refrtips");
 	private final JLabel tips = new JLabel();
-	private final String[] ALLTIPS = Page.get(MainLocale.PAGE, "tip", 17);
+	private final String[] ALLTIPS = Page.get(MainLocale.PAGE, "tip", 12);
 
 	public MainPage() {
 		super(null);
@@ -161,33 +161,79 @@ public class MainPage extends Page {
 	}
 
 	private void ini() {
-		add(vuni);
+		add(vuni); //TODO Allow multi-lang support for tooltips
+		vuni.setToolTipText("View the animations for all cat units, as well as copy any of them for your custom content (Unless it comes from a password-protected pack).");
+
 		add(vene);
+		vene.setToolTipText("View the animations for all enemy units, as well as copy any of them for your custom content (Unless it comes from a password-protected pack).");
+
 		add(vsta);
+		vsta.setToolTipText("View data for stages or play any of them here.");
+
 		add(vdiy);
+		vdiy.setToolTipText("View your own animations.");
+
 		add(conf);
+		conf.setToolTipText("Adjust settings to smoothen your performance with the program.");
+
 		add(veff);
+		veff.setToolTipText("View the miscellaneous animations, as well as copy any of them for your custom content.");
+
 		add(vcas);
+		vcas.setToolTipText("View castle images and their minimum boss spawn data.");
+
 		add(vbgr);
+		vbgr.setToolTipText("View the game's backgrounds.");
+
 		add(veif);
+		veif.setToolTipText("View stats for enemy units.");
+
 		add(vuif);
+		vuif.setToolTipText("View stats for cat units.");
+
 		add(vmsc);
+		vmsc.setToolTipText("View and listen the game's music.");
+
 		add(bass);
+		bass.setToolTipText("Manage your lineups.");
+
 		add(memo);
 		add(curr);
+		curr.setToolTipText("Resume the last battle you left at here.");
+
 		add(pcus);
+		pcus.setToolTipText("Create and Manage packs. The core of custom content creation.");
+
 		add(caic);
+		caic.setToolTipText("View and edit your units' sprites, and manage your custom animations.");
+
 		add(camm);
+		caic.setToolTipText("View and edit your units' animation models. Make sure to set their sprites first.");
+
 		add(cama);
+		caic.setToolTipText("View and edit your units' animations. Make sure to set their model first.");
+
 		add(save);
+		save.setToolTipText("Save all your newly made content.");
+
 		add(seicon);
 		add(sgifau);
 		add(welcome);
 		add(rply);
+		rply.setToolTipText("View and Manage battle replays.");
+
 		add(allf);
+		allf.setToolTipText("View BC's data files.");
+
 		add(auth);
+		auth.setToolTipText("Set your username. This information will be registered on your packs.");
+
 		add(comp);
+		comp.setToolTipText("Compare the stats of enemies and units.");
+
 		add(bckp);
+		bckp.setToolTipText("Manage your backups and use them to recover content.");
+
 		add(refr);
 		add(tips);
 		tips.setText("<html>" + ALLTIPS[(int)(Math.random() * ALLTIPS.length)] + "</html>");
