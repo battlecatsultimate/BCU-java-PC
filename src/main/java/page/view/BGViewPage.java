@@ -1,8 +1,10 @@
 package page.view;
 
 import common.pack.Identifier;
+import common.pack.PackData;
 import common.pack.UserProfile;
 import common.util.pack.Background;
+import common.util.stage.Music;
 import page.JBTN;
 import page.Page;
 import page.SupPage;
@@ -13,6 +15,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 public class BGViewPage extends Page implements SupPage<Background> {
@@ -23,6 +27,17 @@ public class BGViewPage extends Page implements SupPage<Background> {
 	private final JList<Background> jlst = new JList<>();
 	private final JScrollPane jspst = new JScrollPane(jlst);
 	private final JLabel jl = new JLabel();
+
+	public BGViewPage(Page p) {
+		super(p);
+		List<Background> bgs = new ArrayList<>();
+		for (PackData pac : UserProfile.getAllPacks())
+			bgs.addAll(pac.bgs.getList());
+
+		jlst.setListData(bgs.toArray(new Background[0]));
+		ini();
+		resized();
+	}
 
 	public BGViewPage(Page p, String pac) {
 		super(p);
@@ -54,25 +69,15 @@ public class BGViewPage extends Page implements SupPage<Background> {
 	}
 
 	private void addListeners() {
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
-		});
+		back.addActionListener(arg0 -> changePanel(getFront()));
 
-		jlst.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (arg0.getValueIsAdjusting())
-					return;
-				Background s = jlst.getSelectedValue();
-				if (s == null)
-					return;
-				jl.setIcon(UtilPC.getBg(s, jl.getWidth(), jl.getHeight()));
-			}
-
+		jlst.addListSelectionListener(arg0 -> {
+			if (arg0.getValueIsAdjusting())
+				return;
+			Background s = jlst.getSelectedValue();
+			if (s == null)
+				return;
+			jl.setIcon(UtilPC.getBg(s, jl.getWidth(), jl.getHeight()));
 		});
 
 	}

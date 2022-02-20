@@ -119,7 +119,7 @@ public class MainPage extends Page {
 		conf.setLnr(() -> new ConfigPage(this));
 		veff.setLnr(() -> new EffectViewPage(this));
 		vcas.setLnr(() -> new CastleViewPage(this));
-		vbgr.setLnr(() -> new BGViewPage(this, null));
+		vbgr.setLnr(() -> new BGViewPage(this));
 		veif.setLnr(() -> new EnemyFindPage(this));
 		vuif.setLnr(() -> new UnitFindPage(this));
 		bass.setLnr(() -> new BasisPage(this));
