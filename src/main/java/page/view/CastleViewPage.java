@@ -23,7 +23,7 @@ public class CastleViewPage extends Page {
 	private final JList<CastleImg> jlst = new JList<>();
 	private final JScrollPane jspst = new JScrollPane(jlst);
 	private final JLabel jl = new JLabel();
-	private final JL jbs = new JL();
+	private final JL jbs = new JL(MainLocale.PAGE, "bspwn");
 	private final JL bs = new JL();
 
 	public CastleViewPage(Page p) {
@@ -89,7 +89,6 @@ public class CastleViewPage extends Page {
 				jl.setIcon(null);
 			else {
 				jl.setIcon(UtilPC.getIcon(s.img));
-				jbs.setText(MainLocale.PAGE, "bspwn");
 				bs.setText("" + s.boss_spawn);
 			}
 		});
