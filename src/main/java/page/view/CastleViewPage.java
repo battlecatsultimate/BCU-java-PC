@@ -65,7 +65,7 @@ public class CastleViewPage extends Page {
 		set(jspst, x, y, 400, 550, 300, 650);
 		set(jl, x, y, 800, 50, 1000, 1000);
 		set(jbs, x, y, 400, 500, 200, 50);
-		set(bs, x, y, 400, 500, 100, 50);
+		set(bs, x, y, 600, 500, 100, 50);
 	}
 
 	private void addListeners() {
@@ -89,7 +89,7 @@ public class CastleViewPage extends Page {
 				jl.setIcon(null);
 			else {
 				jl.setIcon(UtilPC.getIcon(s.img));
-				jbs.setText(MainLocale.PAGE, "bspawn");
+				jbs.setText(MainLocale.PAGE, "bspwn");
 				bs.setText("" + s.boss_spawn);
 			}
 		});
@@ -101,6 +101,7 @@ public class CastleViewPage extends Page {
 		add(jspsm);
 		add(jspst);
 		add(jl);
+		add(jbs);
 		add(bs);
 		addListeners();
 	}
