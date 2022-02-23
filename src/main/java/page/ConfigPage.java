@@ -133,10 +133,6 @@ public class ConfigPage extends Page {
 	@Override
 	public void callBack(Object obj) {
 		super.callBack(obj);
-
-		if(obj instanceof ColorPicker) {
-
-		}
 	}
 
 	private void addListeners() {
@@ -327,7 +323,7 @@ public class ConfigPage extends Page {
 		add(bgeff);
 		add(btdly);
 		add(rlpk);
-		add(vcol);
+		//add(vcol);
 		prlvmd.setText("" + CommonStatic.getConfig().prefLevel);
 		jls.setSelectedIndex(localeIndexOf(cfg().lang));
 		jsmin.setValue(cfg().deadOpa);
