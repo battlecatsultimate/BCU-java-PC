@@ -10,7 +10,6 @@ import io.BCMusic;
 import io.BCUReader;
 import main.MainBCU;
 import main.Opts;
-import page.support.ColorPicker;
 import page.view.ViewBox;
 import utilpc.Theme;
 
