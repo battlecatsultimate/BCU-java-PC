@@ -25,7 +25,7 @@ public class PCoinEditPage extends Page {
         super(p);
         uni = (CustomUnit) u.du;
         editable = edi;
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 6; i++)
             pCoinEdits.add(new PCoinEditTable(this, uni, i, editable));
 
         ini();
@@ -38,25 +38,25 @@ public class PCoinEditPage extends Page {
         set(back, x, y, 0, 0, 200, 50);
         set(addP, x, y, 400, 50, 300, 50);
         set(remP, x, y, 700, 50, 300, 50);
-        for (int i = 0; i < 5; i++)
-            set(pCoinEdits.get(i), x, y, i * 400, 200, 400, 1300);
+        for (int i = 0; i < 6; i++)
+            set(pCoinEdits.get(i), x, y, i * 400, 150, 400, 1300);
     }
 
     private void addListeners() {
         back.addActionListener(arg0 -> changePanel(getFront()));
 
         addP.addActionListener(arg0 -> {
-           if (uni.pcoin == null)
-               uni.pcoin = new PCoin(uni);
-           int slot = uni.pcoin.info.size();
-           uni.pcoin.info.add(new int[]{slot + 1,10,0,0,0,0,0,0,0,0,slot + 1,8,-1});
-           for (int i = 0; i < slot; i++)
-               if (uni.pcoin.info.get(i)[0] == slot + 1) {
-                   PCoinEditTable pc = pCoinEdits.get(i);
-                   pc.setData();
-                   pc.randomize();
-            }
-           setCoinTypes();
+            if (uni.pcoin == null)
+                uni.pcoin = new PCoin(uni);
+            int slot = uni.pcoin.info.size();
+            uni.pcoin.info.add(new int[]{slot + 1,10,0,0,0,0,0,0,0,0,slot + 1,8,-1});
+            for (int i = 0; i < slot; i++)
+                if (uni.pcoin.info.get(i)[0] == slot + 1) {
+                    PCoinEditTable pc = pCoinEdits.get(i);
+                    pc.setData();
+                    pc.randomize();
+                }
+            setCoinTypes();
         });
 
         //PCoin Structure:
@@ -96,7 +96,7 @@ public class PCoinEditPage extends Page {
             uni.pcoin.update();
         for (PCoinEditTable pct : pCoinEdits)
             pct.setData();
-        addP.setEnabled(editable && (uni.pcoin == null || uni.pcoin.info.size() < 5));
+        addP.setEnabled(editable && (uni.pcoin == null || uni.pcoin.info.size() < 6));
         remP.setEnabled(editable && uni.pcoin != null);
     }
 }

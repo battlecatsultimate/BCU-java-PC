@@ -122,23 +122,18 @@ public class TreaTable extends Page {
 				int J = j;
 				j++;
 
-				jlb[J].addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						Node<Integer> n = lncs.get(J);
-						if (jlb[J].isSelected()) {
-							for (int s = 0; s < TCTX.length; s++)
-								if (s != J && jlb[s].isSelected())
-									jlb[s].doClick();
-							expand(n);
-						} else {
-							close(n);
-						}
-						if (front instanceof BasisPage)
-							((BasisPage) front).requireResize();
+				jlb[J].addActionListener(arg0 -> {
+					Node<Integer> n = lncs.get(J);
+					if (jlb[J].isSelected()) {
+						for (int s = 0; s < TCTX.length; s++)
+							if (s != J && jlb[s].isSelected())
+								jlb[s].doClick();
+						expand(n);
+					} else {
+						close(n);
 					}
-
+					if (front instanceof BasisPage)
+						((BasisPage) front).requireResize();
 				});
 
 				jcf[J].addFocusListener(new FocusAdapter() {
