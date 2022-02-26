@@ -488,6 +488,7 @@ public class ComparePage extends Page {
             return;
 
         MaskEntity ent = null;
+        maskEntityLvl[s] = new ArrayList<>();
 
         if (efp != null && efp.getSelected() != null)
             ent = efp.getSelected().de;
@@ -500,16 +501,16 @@ public class ComparePage extends Page {
                     : new int[]{100, 100};
             if (data.length == 1) {
                 if (data[0] != -1) {
-                    maskEntityLvl[s].set(0, data[0]);
-                    maskEntityLvl[s].set(1, data[0]);
+                    maskEntityLvl[s].add(data[0]);
+                    maskEntityLvl[s].add(data[0]);
                 }
 
                 level[s].setText(CommonStatic.toArrayFormat(data[0], data[0]) + "%");
             } else if (data.length == 2) {
                 if (data[0] != -1)
-                    maskEntityLvl[s].set(0, data[0]);
+                    maskEntityLvl[s].add(data[0]);
                 if (data[1] != -1)
-                    maskEntityLvl[s].set(1, data[1]);
+                    maskEntityLvl[s].add(data[1]);
 
                 level[s].setText(CommonStatic.toArrayFormat(data[0], data[1]) + "%");
             } else {
