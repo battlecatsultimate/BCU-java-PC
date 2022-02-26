@@ -530,6 +530,8 @@ public class ComparePage extends Page {
                 for (int i = 0; i < data.length; i++)
                     data[i] = lvs.get(i);
             }
+            while (maskEntityLvl[s].size() < data.length)
+                maskEntityLvl[s].add(data[maskEntityLvl[s].size()]);
 
             maskEntityLvl[s] = f.regulateLv(data, maskEntityLvl[s]);
             String[] strs = UtilPC.lvText(f, maskEntityLvl[s]);
