@@ -303,8 +303,8 @@ public class ComparePage extends Page {
 
                 if (!state) {
                     maskEntityLvl[i] = new ArrayList<>();
-                    maskEntityLvl[i].set(0, 100);
-                    maskEntityLvl[i].set(1, 100);
+                    maskEntityLvl[i].add(100);
+                    maskEntityLvl[i].add(100);
                 }
                 ArrayList<Integer> multi = maskEntityLvl[i];
 
@@ -489,6 +489,7 @@ public class ComparePage extends Page {
 
         MaskEntity ent = null;
         maskEntityLvl[s] = new ArrayList<>();
+        maskEntityLvl[s].add(0);
 
         if (efp != null && efp.getSelected() != null)
             ent = efp.getSelected().de;
@@ -501,14 +502,14 @@ public class ComparePage extends Page {
                     : new int[]{100, 100};
             if (data.length == 1) {
                 if (data[0] != -1) {
-                    maskEntityLvl[s].add(data[0]);
+                    maskEntityLvl[s].set(0, data[0]);
                     maskEntityLvl[s].add(data[0]);
                 }
 
                 level[s].setText(CommonStatic.toArrayFormat(data[0], data[0]) + "%");
             } else if (data.length == 2) {
                 if (data[0] != -1)
-                    maskEntityLvl[s].add(data[0]);
+                    maskEntityLvl[s].set(0, data[0]);
                 if (data[1] != -1)
                     maskEntityLvl[s].add(data[1]);
 
@@ -519,6 +520,7 @@ public class ComparePage extends Page {
         } else if (ent != null) {
             Form f = ((MaskUnit) ent).getPack();
             int[] data;
+
             if (maskEntities[s] instanceof MaskUnit) {
                 data = CommonStatic.parseIntsN(level[s].getText());
             } else {
@@ -528,6 +530,7 @@ public class ComparePage extends Page {
                 for (int i = 0; i < data.length; i++)
                     data[i] = lvs.get(i);
             }
+
             maskEntityLvl[s] = f.regulateLv(data, maskEntityLvl[s]);
             String[] strs = UtilPC.lvText(f, maskEntityLvl[s]);
             level[s].setText(strs[0]);
