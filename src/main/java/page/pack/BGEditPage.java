@@ -226,7 +226,8 @@ public class BGEditPage extends Page {
 		BufferedImage bimg = new Importer(str).getImg();
 		if (bimg == null)
 			return;
-		if (bimg.getWidth() != 1024 && bimg.getHeight() != 1024) {
+
+		if (!(bimg.getWidth() == 770 || bimg.getWidth() == 1024 || bimg.getHeight() == 512 || bimg.getHeight() == 1024)) {
 			getFile("Wrong img size. Img size: w=1024, h=1024", bgr);
 			return;
 		}
@@ -310,7 +311,6 @@ public class BGEditPage extends Page {
 		remc.setEnabled(b);
 		impc.setEnabled(b);
 		expc.setEnabled(b);
-		top.setEnabled(b);
 		overlay.setEnabled(b);
 		eff.setEnabled(b);
 
@@ -327,7 +327,10 @@ public class BGEditPage extends Page {
 			ol[i].setEnabled(b);
 		}
 
-		if (bgr != null) {
+		if (b) {
+			bgr.check();
+			top.setEnabled(bgr.parts.length > Background.TOP);
+
 			top.setSelected(bgr.top);
 
 			for (int i = 0; i < 4; i++) {
@@ -351,6 +354,7 @@ public class BGEditPage extends Page {
 				eff.setSelectedIndex(bgr.effect + 1);
 			}
 		} else {
+			top.setEnabled(false);
 			for (int i = 0; i < 4; i++) {
 				cs[i].setText(null);
 			}
