@@ -11,10 +11,10 @@ import java.util.Locale;
 
 public class ColorPickPage extends Page {
 
+    public final ColorPicker picker = new ColorPicker(this);
+
     private static final long serialVersionUID = 1L;
     private static final String[] ids = {"hue", "sat", "bri", "red", "gre", "blu", "hex"};
-
-    private final ColorPicker picker = new ColorPicker(this);
 
     private final JRadioButton[] radios = new JRadioButton[6];
     private final ButtonGroup group = new ButtonGroup();

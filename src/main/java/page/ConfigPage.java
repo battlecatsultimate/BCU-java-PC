@@ -10,6 +10,7 @@ import io.BCMusic;
 import io.BCUReader;
 import main.MainBCU;
 import main.Opts;
+import page.support.ColorPicker;
 import page.view.ViewBox;
 import utilpc.Theme;
 
@@ -62,6 +63,7 @@ public class ConfigPage extends Page {
 	private final JList<String> jls = new JList<>(MainLocale.LOC_NAME);
 	private final JBTN row = new JBTN(MainLocale.PAGE, CommonStatic.getConfig().twoRow ? "tworow" : "onerow");
 	private final JBTN vcol = new JBTN(MainLocale.PAGE, "viewcolor");
+	private final JBTN vres = new JBTN(MainLocale.PAGE, "viewreset");
 
 	private final JScrollPane jsps = new JScrollPane(jls);
 
@@ -125,13 +127,22 @@ public class ConfigPage extends Page {
 		set(btnsnd, x, y, 1600, 625, 200, 50);
 		set(bgeff, x, y, 1850, 625, 200, 50);
 		set(btdly, x, y, 1600, 700, 450, 50);
-		set(rlpk, x, y, 1600, 775, 200, 50);
-		set(vcol, x, y, 1850, 775, 200, 50);
+		set(rlpk, x, y, 1600, 775, 450, 50);
+		set(vcol, x, y, 1600, 850, 200, 50);
+		set(vres, x, y, 1850, 850, 200, 50);
 	}
 
 	@Override
 	public void callBack(Object obj) {
 		super.callBack(obj);
+
+		if(obj instanceof ColorPicker) {
+			int rgb = ((ColorPicker) obj).rgb[0];
+			rgb = (rgb << 8) + ((ColorPicker) obj).rgb[1];
+			rgb = (rgb << 8) + ((ColorPicker) obj).rgb[2];
+
+			cfg().viewerColor = rgb;
+		}
 	}
 
 	private void addListeners() {
@@ -284,7 +295,14 @@ public class ConfigPage extends Page {
 
 		rlpk.addActionListener(l -> UserProfile.reloadExternalPacks());
 
-		vcol.addActionListener(l -> Opts.showColorPicker("Color pick pick", this));
+		vcol.addActionListener(l -> {
+			if(CommonStatic.getConfig().viewerColor != -1)
+				Opts.showColorPicker("Color pick pick", this, CommonStatic.getConfig().viewerColor);
+			else
+				Opts.showColorPicker("Color pick pick", this);
+		});
+
+		vres.addActionListener(l -> CommonStatic.getConfig().viewerColor = -1);
 	}
 
 	private void ini() {
@@ -322,7 +340,8 @@ public class ConfigPage extends Page {
 		add(bgeff);
 		add(btdly);
 		add(rlpk);
-		//add(vcol);
+		add(vcol);
+		add(vres);
 		prlvmd.setText("" + CommonStatic.getConfig().prefLevel);
 		jls.setSelectedIndex(localeIndexOf(cfg().lang));
 		jsmin.setValue(cfg().deadOpa);

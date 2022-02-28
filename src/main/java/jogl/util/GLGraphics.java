@@ -262,6 +262,7 @@ public class GLGraphics implements GeoAuto {
 	private int mode = PURE;
 	private int bind = 0;
 	private GLC comp = new GLC(DEF, 0, 0);
+	private Integer color = null;
 
 	public GLGraphics(GL2 gl2, int wid, int hei) {
 		g = gl2;
@@ -339,9 +340,20 @@ public class GLGraphics implements GeoAuto {
 		trans[4] *= vf;
 	}
 
+	private void setColor() {
+		if (color == null)
+			return;
+		applyColor(color >> 16 & 255, color >> 8 & 255, color & 255);
+	}
+
 	@Override
 	public void setColor(int r, int g, int b) {
+		color = (r << 16) + (g << 8) + b;
+		setColor();
+	}
 
+	private void applyColor(float c0, float c1, float c2) {
+		g.glColor3f(c0 / 256f, c1 / 256f, c2 / 256f);
 	}
 
 	@Override

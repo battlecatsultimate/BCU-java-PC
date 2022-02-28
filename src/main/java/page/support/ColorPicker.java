@@ -76,6 +76,14 @@ public class ColorPicker extends JPanel {
         rgb[0] = (hex >> 16) & 0xFF;
 
         Color.RGBtoHSB(rgb[0], rgb[1], rgb[2], hsb);
+
+        page.callBack(this);
+
+        updateField();
+        updateBar();
+
+        changeBarPos();
+        changeCirclePos();
     }
 
     public void setMode(MODE mode) {

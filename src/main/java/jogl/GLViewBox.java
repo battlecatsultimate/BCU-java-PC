@@ -170,10 +170,21 @@ class GLViewBox extends GLCstd implements ViewBox, GLEventListener {
 		GLGraphics g = new GLGraphics(drawable.getGL().getGL2(), w, h);
 
 		if (!blank) {
-			int[] c = new int[] { c0.getRed(), c0.getGreen(), c0.getBlue() };
-			int[] f = new int[] { c1.getRed(), c1.getGreen(), c1.getBlue() };
-			g.gradRect(0, 0, w, h / 2, w / 2, 0, c, w / 2, h / 2, f);
-			g.gradRect(0, h / 2, w, h / 2, w / 2, h / 2, f, w / 2, h, c);
+			if(CommonStatic.getConfig().viewerColor != -1) {
+				int rgb = CommonStatic.getConfig().viewerColor;
+
+				int b = rgb & 0xFF;
+				int gr = (rgb >> 8) & 0xFF;
+				int r = (rgb >> 16) & 0xFF;
+
+				g.setColor(r, gr, b);
+				g.fillRect(0, 0, w, h);
+			} else {
+				int[] c = new int[] { c0.getRed(), c0.getGreen(), c0.getBlue() };
+				int[] f = new int[] { c1.getRed(), c1.getGreen(), c1.getBlue() };
+				g.gradRect(0, 0, w, h / 2, w / 2, 0, c, w / 2, h / 2, f);
+				g.gradRect(0, h / 2, w, h / 2, w / 2, h / 2, f, w / 2, h, c);
+			}
 		} else {
 			g.setColor(FakeGraphics.WHITE);
 			g.fillRect(0, 0, w, h);

@@ -266,8 +266,18 @@ public class Opts {
 	}
 
 	@SuppressWarnings("MagicConstant")
-	public static void showColorPicker(String title, Page pg) {
+	public static void showColorPicker(String title, Page pg, int... rgb) {
 		ColorPickPage p = new ColorPickPage(pg);
+
+		if(rgb.length == 3) {
+			int c = Math.max(0, Math.min(255, rgb[0]));
+			c = (c << 8) + Math.max(0, Math.min(255, rgb[1]));
+			c = (c << 8) + Math.max(0, Math.min(255, rgb[2]));
+
+			p.picker.setHex(c);
+		} else if(rgb.length == 1) {
+			p.picker.setHex(Math.max(0, Math.min(0xFFFFFF, rgb[0])));
+		}
 
 		Runnable run = new Runnable() {
 			public final int fps = 33;
@@ -316,7 +326,7 @@ public class Opts {
 
 			pane.setValue(okay);
 
-			p.callBack(null);
+			pg.callBack(p.picker);
 			thread.interrupt();
 		});
 
