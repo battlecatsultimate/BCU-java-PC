@@ -612,8 +612,8 @@ public class PackEditPage extends Page {
 		add(vmsc);
 		add(unpk);
 		add(recd);
-
 		add(cmbo);
+
 		cmbo.setToolTipText("Decide whether to apply or not this pack's custom CatCombos onto your lineups");
 
 		add(pid);
@@ -690,6 +690,8 @@ public class PackEditPage extends Page {
 		boolean canExport = pac != null && pac.editable;
 		unpk.setEnabled(canUnpack);
 		extr.setEnabled(canExport);
+
+		cmbo.setEnabled(pac != null && pac.combos.size() > 0);
 		cmbo.setSelected(pac != null && pac.useCombos);
 		if (b)
 			jtfp.setText(pack.desc.name);
