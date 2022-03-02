@@ -162,77 +162,77 @@ public class MainPage extends Page {
 
 	private void ini() {
 		add(vuni); //TODO Allow multi-lang support for tooltips
-		vuni.setToolTipText("View the animations for all cat units, as well as copy any of them for your custom content (Unless it comes from a password-protected pack).");
+		vuni.setToolTipText("vunitip");
 
 		add(vene);
-		vene.setToolTipText("View the animations for all enemy units, as well as copy any of them for your custom content (Unless it comes from a password-protected pack).");
+		vene.setToolTipText("venetip");
 
 		add(vsta);
-		vsta.setToolTipText("View data for stages or play any of them here.");
+		vsta.setToolTipText("vstatip");
 
 		add(vdiy);
-		vdiy.setToolTipText("View your own animations.");
+		vdiy.setToolTipText("vdiytip");
 
 		add(conf);
-		conf.setToolTipText("Adjust settings to smoothen your performance with the program.");
+		conf.setToolTipText("conftip");
 
 		add(veff);
-		veff.setToolTipText("View the miscellaneous animations, as well as copy any of them for your custom content.");
+		veff.setToolTipText("vefftip");
 
 		add(vcas);
-		vcas.setToolTipText("View castle images and their minimum boss spawn data.");
+		vcas.setToolTipText("vcastip");
 
 		add(vbgr);
-		vbgr.setToolTipText("View the game's backgrounds.");
+		vbgr.setToolTipText("vbgrtip");
 
 		add(veif);
-		veif.setToolTipText("View stats for enemy units.");
+		veif.setToolTipText("veiftip");
 
 		add(vuif);
-		vuif.setToolTipText("View stats for cat units.");
+		vuif.setToolTipText("vuiftip");
 
 		add(vmsc);
-		vmsc.setToolTipText("View and listen the game's music.");
+		vmsc.setToolTipText("vmsctip");
 
 		add(bass);
-		bass.setToolTipText("Manage your lineups.");
+		bass.setToolTipText("basstip");
 
 		add(memo);
 		add(curr);
-		curr.setToolTipText("Resume the last battle you left at here.");
+		curr.setToolTipText("currtip");
 
 		add(pcus);
-		pcus.setToolTipText("Create and Manage packs. The core of custom content creation.");
+		pcus.setToolTipText("pcustip");
 
 		add(caic);
-		caic.setToolTipText("View and edit your units' sprites, and manage your custom animations.");
+		caic.setToolTipText("caictip");
 
 		add(camm);
-		caic.setToolTipText("View and edit your units' animation models. Make sure to set their sprites first.");
+		camm.setToolTipText("cammtip");
 
 		add(cama);
-		caic.setToolTipText("View and edit your units' animations. Make sure to set their model first.");
+		cama.setToolTipText("camatip");
 
 		add(save);
-		save.setToolTipText("Save all your newly made content.");
+		save.setToolTipText("savetip");
 
 		add(seicon);
 		add(sgifau);
 		add(welcome);
 		add(rply);
-		rply.setToolTipText("View and Manage battle replays.");
+		rply.setToolTipText("rplytip");
 
 		add(allf);
-		allf.setToolTipText("View BC's data files.");
+		allf.setToolTipText("allftip");
 
 		add(auth);
-		auth.setToolTipText("Set your username. This information will be registered on your packs.");
+		auth.setToolTipText("authtip");
 
 		add(comp);
-		comp.setToolTipText("Compare the stats of enemies and units.");
+		comp.setToolTipText("comptip");
 
 		add(bckp);
-		bckp.setToolTipText("Manage your backups and use them to recover content.");
+		bckp.setToolTipText("bckptip");
 
 		add(refr);
 		add(tips);
