@@ -161,7 +161,7 @@ public class MainPage extends Page {
 	}
 
 	private void ini() {
-		add(vuni); //TODO Allow multi-lang support for tooltips
+		add(vuni);
 		vuni.setToolTipText("vunitip");
 
 		add(vene);

@@ -692,7 +692,7 @@ public class PackEditPage extends Page {
 		extr.setEnabled(canExport);
 
 		cmbo.setEnabled(pac != null && pac.combos.size() > 0);
-		cmbo.setSelected(pac != null && pac.useCombos);
+		cmbo.setSelected(cmbo.isEnabled() && pac.useCombos);
 		if (b)
 			jtfp.setText(pack.desc.name);
 		if (pac == null) {
