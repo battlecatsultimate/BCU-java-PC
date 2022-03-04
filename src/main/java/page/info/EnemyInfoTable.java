@@ -149,7 +149,7 @@ public class EnemyInfoTable extends Page {
 		int l = main.length + atks.length;
 		if (displaySpecial)
 			l += special.length;
-		return (l + (proc.length + (proc.length % 2 == 1 ? 1 : 0)) / 2) * 50 + (e.descriptionGet().replace("<br>", "").length() > 0 ? 200 : 0);
+		return (l + (proc.length + (proc.length % 2 == 1 ? 1 : 0)) / 2) * 50 + (e.getExplaination().replace("<br>", "").length() > 0 ? 200 : 0);
 	}
 
 	private void ini() {
@@ -265,7 +265,7 @@ public class EnemyInfoTable extends Page {
 					+ (100 - e.de.getLimit())
 					+ " units inside the base<br>once it passes that threshold."
 					+ "</html>");
-		String eDesc = e.descriptionGet().replace("<br>", "\n");
+		String eDesc = e.getExplaination().replace("<br>", "\n");
 		if (eDesc.replace("\n", "").length() > 0)
 			add(desc);
 		descr.setText(e.toString().replace(Data.trio(e.id.id) + " - ", "") + (e.de.getTraits().size() > 0 && !e.de.getTraits().contains(UserProfile.getBCData().traits.get(Data.TRAIT_WHITE)) ? " (" + Interpret.getTrait(TraitBox, 0) + ")" : "") + (e.de.getStar() > 2 ? " (Cool Dude)" : "") + "\n" + eDesc);

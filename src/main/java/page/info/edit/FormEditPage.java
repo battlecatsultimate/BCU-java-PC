@@ -219,7 +219,7 @@ public class FormEditPage extends EntityEditPage {
 	@Override
 	protected void setData(CustomEntity data) {
 		super.setData(data);
-		uniDesc = form.descriptionGet().split("<br>",4);
+		uniDesc = form.getExplaination().split("<br>",4);
 		for (int i = 0; i < fdesc.length; i++)
 			fdesc[i].setText("" + (uniDesc[i].length() > 0 ? uniDesc[i] : "Description Line " + (i + 1)));
 		flv.setText(lv + "");

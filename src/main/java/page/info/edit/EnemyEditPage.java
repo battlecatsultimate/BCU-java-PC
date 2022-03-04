@@ -137,7 +137,7 @@ public class EnemyEditPage extends EntityEditPage {
 	@Override
 	protected void setData(CustomEntity data) {
 		super.setData(data);
-		eneDesc = ene.descriptionGet().split("<br>",4);
+		eneDesc = ene.getExplaination().split("<br>",4);
 		for (int i = 0; i < edesc.length; i++)
 			edesc[i].setText("" + (eneDesc[i].length() > 0 ? eneDesc[i] : "Description Line " + (i + 1)));
 		fsr.setText("star: " + ce.star);
