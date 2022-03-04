@@ -17,6 +17,7 @@ import common.util.lang.Editors;
 import common.util.pack.Background;
 import common.util.pack.Soul;
 import common.util.pack.Soul.SoulType;
+import common.util.stage.Music;
 import common.util.unit.*;
 import main.Opts;
 import page.*;
@@ -31,6 +32,7 @@ import page.support.ReorderList;
 import page.support.ReorderListener;
 import page.view.BGViewPage;
 import page.view.EnemyViewPage;
+import page.view.MusicPage;
 import page.view.UnitViewPage;
 
 import javax.swing.*;
@@ -132,6 +134,13 @@ public abstract class EntityEditPage extends Page {
 			}
 		}
 		setData(ce);
+	}
+
+	public SupPage<Music> getMusicSup(IdEditor<Music> edi) {
+		editor = edi;
+		SupPage<Music> ans = new MusicPage(this, pack);
+		sup = ans;
+		return ans;
 	}
 
 	public SupPage<Background> getBGSup(IdEditor<Background> edi) {

@@ -78,9 +78,12 @@ public abstract class SwingEditor extends Editor {
 				if (fc == boolean.class)
 					return new BoolEditor(group, field, f, edit);
 				if (fc == Identifier.class) {
-					if (group.proc.equals("THEME"))
-						return new IdEditor<>(group, field, f, table::getBGSup, edit);
-					else if (group.proc.equals("SUMMON"))
+					if (group.proc.equals("THEME")) {
+						if (f.equals("id"))
+							return new IdEditor<>(group, field, f, table::getBGSup, edit);
+						else
+							return new IdEditor<>(group, field, f, table::getMusicSup, edit);
+					} else if (group.proc.equals("SUMMON"))
 						if (isEnemy)
 							return new IdEditor<>(group, field, f, table::getEnemySup, edit);
 						else

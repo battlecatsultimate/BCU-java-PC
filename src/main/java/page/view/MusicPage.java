@@ -7,13 +7,14 @@ import common.util.stage.Music;
 import io.BCMusic;
 import page.JBTN;
 import page.Page;
+import page.SupPage;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class MusicPage extends Page {
+public class MusicPage extends Page implements SupPage<Music> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -50,7 +51,7 @@ public class MusicPage extends Page {
 		this(p, UserProfile.getAll(pack, Music.class));
 	}
 
-	public Identifier<Music> getSelected() {
+	public Identifier<Music> getSelectedID() {
 		return jlf.getSelectedValue() == null ? null : jlf.getSelectedValue().getID();
 	}
 
@@ -88,4 +89,8 @@ public class MusicPage extends Page {
 		addListeners();
 	}
 
+	@Override
+	public Music getSelected() {
+		return jlf.getSelectedValue();
+	}
 }

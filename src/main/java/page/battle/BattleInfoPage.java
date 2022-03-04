@@ -179,6 +179,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 				BCMusic.BG.stop();
 
 			BCMusic.play(basis.sb.mus);
+			return;
 		}
 
 		if (basis.sb.getEBHP() < basis.sb.st.mush)
@@ -286,14 +287,18 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			changedBG = false;
 			basis.sb.changeBG(basis.sb.st.bg);
 		}
-
 		if (sb.ebase.health <= 0 || sb.ubase.health <= 0) {
-			if(BCMusic.BG != null)
+			if (BCMusic.BG != null)
 				BCMusic.BG.stop();
 			if (sb.ebase.health <= 0)
 				CommonStatic.setSE(Data.SE_VICTORY);
 			else
 				CommonStatic.setSE(Data.SE_DEFEAT);
+		} else if (basis.sb.mus != null) {
+			if (BCMusic.music != basis.sb.mus) {
+				BCMusic.play(basis.sb.mus);
+				musicChanged = sb.getEBHP() > sb.st.mush;
+			}
 		} else {
 			if (sb.getEBHP() <= sb.st.mush && BCMusic.music != sb.st.mus1)
 				if(basis.sb.st.mush == 0 || basis.sb.st.mush == 100)
@@ -319,7 +324,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 					}
 				}
 			else if (BCMusic.music != sb.st.mus0 && sb.getEBHP() > sb.st.mush) {
-				if(!musicChanged && !backClicked) {
+				if(musicChanged && !backClicked) {
 					if(BCMusic.BG != null)
 						BCMusic.BG.stop();
 					new Thread(() -> {
@@ -335,7 +340,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 						}
 					}).start();
 
-					musicChanged = true;
+					musicChanged = false;
 				}
 			}
 		}

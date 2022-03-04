@@ -17,10 +17,7 @@ import page.view.MusicPage;
 import javax.swing.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.Arrays;
-import java.util.Locale;
 
 class HeadEditTable extends Page {
 
@@ -96,7 +93,7 @@ class HeadEditTable extends Page {
 		}
 
 		if (mp != null) {
-			Identifier<Music> val = mp.getSelected();
+			Identifier<Music> val = mp.getSelectedID();
 			if (musl == 0) {
 				jm0.setText("" + val);
 				sta.mus0 = val;
