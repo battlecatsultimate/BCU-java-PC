@@ -174,6 +174,13 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	protected void renew() {
 		backClicked = false;
 
+		if (basis.sb.mus != null) {
+			if(BCMusic.BG != null)
+				BCMusic.BG.stop();
+
+			BCMusic.play(basis.sb.mus, 0);
+		}
+
 		if (basis.sb.getEBHP() < basis.sb.st.mush)
 			if(basis.sb.st.mush == 0 || basis.sb.st.mush == 100)
 				BCMusic.play(basis.sb.st.mus1, basis.sb.st.loop1);

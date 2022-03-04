@@ -397,7 +397,14 @@ public class PackEditPage extends Page {
 			}
 		});
 
-		jtfe.setLnr(e -> ene.name = jtfe.getText().trim());
+		jtfe.setLnr(e -> {
+			ene.name = jtfe.getText().trim();
+			String name = jtfe.getText().trim();
+			if (name.length() > 0)
+				ene.Name.put(jtfe.getText().trim());
+			else
+				ene.Name.remove();
+		});
 
 		vene.setLnr(() -> new EnemyViewPage(getThis(), pac.getSID()));
 
@@ -644,7 +651,7 @@ public class PackEditPage extends Page {
 		jtfe.setEnabled(b);
 		reme.setEnabled(b);
 		if (b) {
-			jtfe.setText(e.name);
+			jtfe.setText(e.Name.toString());
 			boolean cont = false;
 
 			for(EneRand rand : pac.randEnemies.getList()) {

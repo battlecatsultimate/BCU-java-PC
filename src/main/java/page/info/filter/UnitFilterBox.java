@@ -158,7 +158,7 @@ class UFBButton extends UnitFilterBox {
 					String fname = MultiLangCont.getStatic().FNAME.getCont(f);
 
 					if (fname == null)
-						fname = f.name;
+						fname = f.Name.toString();
 
 					if (fname == null)
 						fname = "";
@@ -338,7 +338,7 @@ class UFBList extends UnitFilterBox {
 					String fname = MultiLangCont.getStatic().FNAME.getCont(f);
 
 					if (fname == null)
-						fname = f.name;
+						fname = f.Name.toString();
 
 					if (fname == null)
 						fname = "";

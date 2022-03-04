@@ -364,7 +364,7 @@ public class UnitManagePage extends Page {
 
 			@Override
 			public void focusLost(FocusEvent fe) {
-				frm.name = jtff.getText().trim();
+				frm.Name.put(jtff.getText().trim());
 			}
 
 		});
@@ -480,7 +480,7 @@ public class UnitManagePage extends Page {
 		remf.setEnabled(b && frm.fid > 0);
 		jtff.setEnabled(b);
 		if (frm != null) {
-			jtff.setText(f.name);
+			jtff.setText(f.Name.toString());
 		} else {
 			jtff.setText("");
 		}

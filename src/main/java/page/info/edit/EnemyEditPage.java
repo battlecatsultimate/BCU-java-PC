@@ -104,7 +104,7 @@ public class EnemyEditPage extends EntityEditPage {
 					eneDesc[edesc.length - 1] = eneDesc[edesc.length - 1].substring(0, 63);
 			}
 		}
-		ene.desc = String.join("<br>", eneDesc);
+		ene.description.put(String.join("<br>", eneDesc));
 		setData(ce);
 	}
 
