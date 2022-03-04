@@ -78,7 +78,7 @@ public class MusicPage extends Page {
 		strt.addActionListener(arg0 -> {
 			if (jlf.getSelectedValue() == null)
 				return;
-			BCMusic.setBG(jlf.getSelectedValue(), 0);
+			BCMusic.setBG(jlf.getSelectedValue());
 		});
 
 	}

@@ -178,20 +178,20 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			if(BCMusic.BG != null)
 				BCMusic.BG.stop();
 
-			BCMusic.play(basis.sb.mus, 0);
+			BCMusic.play(basis.sb.mus);
 		}
 
 		if (basis.sb.getEBHP() < basis.sb.st.mush)
 			if(basis.sb.st.mush == 0 || basis.sb.st.mush == 100)
-				BCMusic.play(basis.sb.st.mus1, basis.sb.st.loop1);
+				BCMusic.play(basis.sb.st.mus1);
 			else {
 				if(BCMusic.BG != null)
 					BCMusic.BG.stop();
 
-				BCMusic.play(basis.sb.st.mus1, basis.sb.st.loop1);
+				BCMusic.play(basis.sb.st.mus1);
 			}
 		else
-			BCMusic.play(basis.sb.st.mus0, basis.sb.st.loop0);
+			BCMusic.play(basis.sb.st.mus0);
 	}
 
 	@Override
@@ -297,7 +297,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		} else {
 			if (sb.getEBHP() <= sb.st.mush && BCMusic.music != sb.st.mus1)
 				if(basis.sb.st.mush == 0 || basis.sb.st.mush == 100)
-					BCMusic.play(basis.sb.st.mus1, basis.sb.st.loop1);
+					BCMusic.play(basis.sb.st.mus1);
 				else {
 					if(!musicChanged && !backClicked) {
 						if(BCMusic.BG != null)
@@ -309,7 +309,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 								if(backClicked)
 									return;
 
-								BCMusic.play(basis.sb.st.mus1, basis.sb.st.loop1);
+								BCMusic.play(basis.sb.st.mus1);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
@@ -329,7 +329,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 							if(backClicked)
 								return;
 
-							BCMusic.play(basis.sb.st.mus0, basis.sb.st.loop0);
+							BCMusic.play(basis.sb.st.mus0);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}

@@ -220,8 +220,8 @@ public class UtilPC {
 		}
 
 		@Override
-		public void setBGM(Identifier<Music> mus, long loop) {
-			BCMusic.play(mus, loop);
+		public void setBGM(Identifier<Music> mus) {
+			BCMusic.play(mus);
 		}
 
 	}

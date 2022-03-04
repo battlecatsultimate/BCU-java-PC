@@ -45,10 +45,6 @@ class HeadEditTable extends Page {
 	private final JTG con = new JTG(1, "ht03");
 	private final JTF[] star = new JTF[4];
 	private final JTF jmax = new JTF();
-	private final JL loop = new JL(1, "lop");
-	private final JL loop1 = new JL(1, "lop1");
-	private final JTF lop = new JTF();
-	private final JTF lop1 = new JTF();
 	private final JL minres = new JL(1, "minspawn");
 	private final JL cost = new JL(1, "chcos");
 	private final JTF minrest = new JTF();
@@ -104,25 +100,9 @@ class HeadEditTable extends Page {
 			if (musl == 0) {
 				jm0.setText("" + val);
 				sta.mus0 = val;
-				if (sta.mus0 != null) {
-					lop.setEnabled(true);
-					getMusTime(sta.mus0, lop);
-				} else {
-					lop.setText("00:00.000");
-					sta.loop0 = 0;
-					lop.setEnabled(false);
-				}
 			} else {
 				jm1.setText("" + val);
 				sta.mus1 = val;
-				if (sta.mus1 != null) {
-					lop1.setEnabled(true);
-					getMusTime(sta.mus1, lop1);
-				} else {
-					lop1.setText("00:00.000");
-					sta.loop1 = 0;
-					lop1.setEnabled(false);
-				}
 			}
 		}
 
@@ -160,12 +140,8 @@ class HeadEditTable extends Page {
 		set(cos, x, y, w * 7, 0, w, 50);
 		set(mus, x, y, 0, 150, w, 50);
 		set(jm0, x, y, w, 150, w, 50);
-		set(loop, x, y, w * 2, 150, w, 50);
-		set(lop, x, y, w * 3, 150, w, 50);
-		set(jmh, x, y, w * 4, 150, w, 50);
-		set(jm1, x, y, w * 5, 150, w, 50);
-		set(loop1, x, y, w * 6, 150, w, 50);
-		set(lop1, x, y, w * 7, 150, w, 50);
+		set(jmh, x, y, w * 2, 150, w, 50);
+		set(jm1, x, y, w * 3, 150, w, 50);
 		for (int i = 0; i < 4; i++)
 			set(star[i], x, y, w * (2 + i), 0, w, 50);
 		set(lt, x, y, 0, 200, 1400, 100);
@@ -200,29 +176,6 @@ class HeadEditTable extends Page {
 		Limit lim = st.lim;
 		lt.setLimit(lim);
 		change(false);
-
-		lop.setText(convertTime(sta.loop0));
-		lop1.setText(convertTime(sta.loop1));
-
-		if (sta.mus0 != null) {
-			lop.setEnabled(true);
-			getMusTime(sta.mus0, lop);
-		} else {
-			lop.setText("00:00.000");
-			lop.setToolTipText("No music");
-			sta.loop0 = 0;
-			lop.setEnabled(false);
-		}
-
-		if (sta.mus1 != null) {
-			lop1.setEnabled(true);
-			getMusTime(sta.mus1, lop1);
-		} else {
-			lop1.setText("00:00.000");
-			lop1.setToolTipText("No music");
-			sta.loop1 = 0;
-			lop1.setEnabled(false);
-		}
 
 		minrest.setEnabled(true);
 		minrest.setText(generateMinRespawn(st.minSpawn, st.maxSpawn));
@@ -340,10 +293,6 @@ class HeadEditTable extends Page {
 		set(jmh);
 		set(jm1);
 		add(lt);
-		set(loop);
-		set(lop);
-		set(loop1);
-		set(lop1);
 		set(minres);
 		set(minrest);
 		set(cost);
@@ -413,26 +362,6 @@ class HeadEditTable extends Page {
 
 		if (jtf == jmh)
 			sta.mush = val;
-
-		if (jtf == lop) {
-			long tim = toMilli(jtf.getText());
-
-			if (tim != -1) {
-				sta.loop0 = tim;
-			}
-
-			lop.setText(convertTime(sta.loop0));
-		}
-
-		if (jtf == lop1) {
-			long tim = toMilli(jtf.getText());
-
-			if (tim != -1) {
-				sta.loop1 = tim;
-			}
-
-			lop1.setText(convertTime(sta.loop1));
-		}
 
 		if (jtf == minrest) {
 			try {

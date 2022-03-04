@@ -212,11 +212,11 @@ public class BCMusic extends Data {
 		secall = new boolean[TOT];
 	}
 
-	public static synchronized void play(Identifier<Music> mus1, long loop) {
-		music = mus1;
+	public static synchronized void play(Identifier<Music> mus) {
+		music = mus;
 		Music f = Identifier.get(music);
 		if (f != null)
-			setBG(f, loop);
+			setBG(f);
 	}
 
 	public static void preload() {
@@ -224,14 +224,14 @@ public class BCMusic extends Data {
 			BCMusic.CACHE[i] = UserProfile.getBCData().musics.get(i).data.getBytes();
 	}
 
-	public static synchronized void setBG(Music f, long loop) {
+	public static synchronized void setBG(Music f) {
 		if (!play)
 			return;
 		try {
 			if (BG != null) {
 				BG.release();
 			}
-			loadSound(-1, f, getVol(VOL_BG), true, loop);
+			loadSound(-1, f, getVol(VOL_BG), true, f.loop);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
