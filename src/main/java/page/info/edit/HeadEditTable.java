@@ -227,52 +227,6 @@ class HeadEditTable extends Page {
 
 	}
 
-	private String convertTime(long milli) {
-		long min = milli / 60 / 1000;
-		double time = milli - (double) min * 60000;
-		time /= 1000;
-		NumberFormat nf = NumberFormat.getInstance(Locale.US);
-
-		DecimalFormat df = (DecimalFormat) nf;
-
-		df.applyPattern("#.###");
-		double s = Double.parseDouble(df.format(time));
-		if (s >= 60) {
-			s -= 60;
-			min += 1;
-		}
-		if (s < 10) {
-			return min + ":" + "0" + df.format(s);
-		} else {
-			return min + ":" + df.format(s);
-		}
-	}
-
-	private void getMusTime(Identifier<Music> mus1, JTF jtf) {
-		Music f = Identifier.get(mus1);
-		if (f == null || f.data == null) {
-			jtf.setToolTipText("Music not found");
-			return;
-		}
-		try {
-			long duration = CommonStatic.def.getMusicLength(f);
-
-			if (duration == -1) {
-				jtf.setToolTipText("Invalid Format");
-			} else if (duration == -2) {
-				jtf.setToolTipText("Unsupported Format");
-			} else if (duration == -3) {
-				jtf.setToolTipText("Can't get duration");
-			} else if (duration >= 0) {
-				jtf.setToolTipText(convertTime(duration));
-			} else {
-				jtf.setToolTipText("Unknown error " + duration);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	private void ini() {
 		set(hea);
 		set(len);
@@ -588,35 +542,6 @@ class HeadEditTable extends Page {
 			}
 		});
 
-	}
-
-	private long toMilli(String time) {
-		try {
-			long[] times = CommonStatic.parseLongsN(time);
-
-			for (long t : times) {
-				if (t < 0) {
-					return -1;
-				}
-			}
-
-			if (times.length == 1) {
-				return times[0] * 1000;
-			} else if (times.length == 2) {
-				return (times[0] * 60 + times[1]) * 1000;
-			} else if (times.length == 3) {
-				if (times[2] < 1000) {
-					return (times[0] * 60 + times[1]) * 1000 + times[2];
-				} else {
-					String decimal = Long.toString(times[2]).substring(0, 3);
-					return (times[0] * 60 + times[1]) * 1000 + Integer.parseInt(decimal);
-				}
-			} else {
-				return -1;
-			}
-		} catch (Exception e) {
-			return -1;
-		}
 	}
 
 	private String generateMinRespawn(int min, int max) {

@@ -166,7 +166,7 @@ class AEFBButton extends AbEnemyFilterBox {
                 ename = MultiLangCont.getStatic().ENAME.getCont(e);
 
                 if (ename == null)
-                    ename = e.name;
+                    ename = e.Name.toString();
 
                 if (ename == null)
                     ename = "";
@@ -347,7 +347,7 @@ class AEFBList extends AbEnemyFilterBox {
                 ename = MultiLangCont.getStatic().ENAME.getCont(e);
 
                 if (ename == null)
-                    ename = e.name;
+                    ename = e.Name.toString();
 
                 if (ename == null)
                     ename = "";

@@ -162,77 +162,77 @@ public class MainPage extends Page {
 
 	private void ini() {
 		add(vuni);
-		vuni.setToolTipText("vunitip");
+		vuni.setToolTipText(Page.get(MainLocale.PAGE,"vunitip"));
 
 		add(vene);
-		vene.setToolTipText("venetip");
+		vene.setToolTipText(Page.get(MainLocale.PAGE,"venetip"));
 
 		add(vsta);
-		vsta.setToolTipText("vstatip");
+		vsta.setToolTipText(Page.get(MainLocale.PAGE,"vstatip"));
 
 		add(vdiy);
-		vdiy.setToolTipText("vdiytip");
+		vdiy.setToolTipText(Page.get(MainLocale.PAGE,"vdiytip"));
 
 		add(conf);
-		conf.setToolTipText("conftip");
+		conf.setToolTipText(Page.get(MainLocale.PAGE,"conftip"));
 
 		add(veff);
-		veff.setToolTipText("vefftip");
+		veff.setToolTipText(Page.get(MainLocale.PAGE,"vefftip"));
 
 		add(vcas);
-		vcas.setToolTipText("vcastip");
+		vcas.setToolTipText(Page.get(MainLocale.PAGE,"vcastip"));
 
 		add(vbgr);
-		vbgr.setToolTipText("vbgrtip");
+		vbgr.setToolTipText(Page.get(MainLocale.PAGE,"vbgrtip"));
 
 		add(veif);
-		veif.setToolTipText("veiftip");
+		veif.setToolTipText(Page.get(MainLocale.PAGE,"veiftip"));
 
 		add(vuif);
-		vuif.setToolTipText("vuiftip");
+		vuif.setToolTipText(Page.get(MainLocale.PAGE,"vuiftip"));
 
 		add(vmsc);
-		vmsc.setToolTipText("vmsctip");
+		vmsc.setToolTipText(Page.get(MainLocale.PAGE,"vmsctip"));
 
 		add(bass);
-		bass.setToolTipText("basstip");
+		bass.setToolTipText(Page.get(MainLocale.PAGE,"basstip"));
 
 		add(memo);
 		add(curr);
-		curr.setToolTipText("currtip");
+		curr.setToolTipText(Page.get(MainLocale.PAGE,"currtip"));
 
 		add(pcus);
-		pcus.setToolTipText("pcustip");
+		pcus.setToolTipText(Page.get(MainLocale.PAGE,"pcustip"));
 
 		add(caic);
-		caic.setToolTipText("caictip");
+		caic.setToolTipText(Page.get(MainLocale.PAGE,"caictip"));
 
 		add(camm);
-		camm.setToolTipText("cammtip");
+		camm.setToolTipText(Page.get(MainLocale.PAGE,"cammtip"));
 
 		add(cama);
-		cama.setToolTipText("camatip");
+		cama.setToolTipText(Page.get(MainLocale.PAGE,"camatip"));
 
 		add(save);
-		save.setToolTipText("savetip");
+		save.setToolTipText(Page.get(MainLocale.PAGE,"savetip"));
 
 		add(seicon);
 		add(sgifau);
 		add(welcome);
 		add(rply);
-		rply.setToolTipText("rplytip");
+		rply.setToolTipText(Page.get(MainLocale.PAGE,"rplytip"));
 
 		add(allf);
-		allf.setToolTipText("allftip");
+		allf.setToolTipText(Page.get(MainLocale.PAGE,"allftip"));
 
 		add(auth);
-		auth.setToolTipText("authtip");
+		auth.setToolTipText(Page.get(MainLocale.PAGE,"authtip"));
 
 		add(comp);
-		comp.setToolTipText("comptip");
+		comp.setToolTipText(Page.get(MainLocale.PAGE,"comptip"));
 
 		add(bckp);
-		bckp.setToolTipText("bckptip");
+		bckp.setToolTipText(Page.get(MainLocale.PAGE,"bckptip"));
 
 		add(refr);
 		add(tips);

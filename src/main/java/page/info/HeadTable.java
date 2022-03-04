@@ -12,7 +12,6 @@ import page.view.CastleViewPage;
 import page.view.MusicPage;
 
 import java.awt.*;
-import java.text.DecimalFormat;
 
 public class HeadTable extends AbJTable {
 
@@ -169,29 +168,6 @@ public class HeadTable extends AbJTable {
 			}
 		}
 		data = lstr;
-	}
-
-	private String convertTime(long milli) {
-		long min = milli / 60 / 1000;
-
-		double time = milli - (double) min * 60000;
-
-		time /= 1000;
-
-		DecimalFormat df = new DecimalFormat("#.###");
-
-		double s = Double.parseDouble(df.format(time));
-
-		if (s >= 60) {
-			s -= 60;
-			min += 1;
-		}
-
-		if (s < 10) {
-			return min + ":" + "0" + df.format(s);
-		} else {
-			return min + ":" + df.format(s);
-		}
 	}
 
 }

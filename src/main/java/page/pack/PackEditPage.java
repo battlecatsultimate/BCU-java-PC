@@ -398,7 +398,6 @@ public class PackEditPage extends Page {
 		});
 
 		jtfe.setLnr(e -> {
-			ene.name = jtfe.getText().trim();
 			String name = jtfe.getText().trim();
 			if (name.length() > 0)
 				ene.Name.put(jtfe.getText().trim());

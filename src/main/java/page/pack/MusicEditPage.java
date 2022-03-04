@@ -1,7 +1,6 @@
 package page.pack;
 
 import common.CommonStatic;
-import common.pack.Identifier;
 import common.pack.PackData.UserPack;
 import common.util.stage.Music;
 import io.BCMusic;
@@ -125,6 +124,7 @@ public class MusicEditPage extends Page {
 		play.setEnabled(sele != null);
 		jtp.setEnabled(sele != null);
 		jtp.setText(sele != null ? convertTime(sele.loop) : "-");
+		getMusTime();
 	}
 
 	private void setList() {
@@ -141,6 +141,30 @@ public class MusicEditPage extends Page {
 				sele = arr[ind];
 			toggleButtons();
 		});
+	}
+
+	private void getMusTime() {
+		if (sele == null || sele.data == null) {
+			jtp.setToolTipText("Music not found");
+			return;
+		}
+		try {
+			long duration = CommonStatic.def.getMusicLength(sele);
+
+			if (duration == -1) {
+				jtp.setToolTipText("Invalid Format");
+			} else if (duration == -2) {
+				jtp.setToolTipText("Unsupported Format");
+			} else if (duration == -3) {
+				jtp.setToolTipText("Can't get duration");
+			} else if (duration >= 0) {
+				jtp.setToolTipText(convertTime(duration));
+			} else {
+				jtp.setToolTipText("Unknown error " + duration);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private String convertTime(long milli) {
