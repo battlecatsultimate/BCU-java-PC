@@ -272,9 +272,9 @@ public class PackEditPage extends Page {
 			@Override
 			public void focusLost(FocusEvent fe) {
 				String str = jtfp.getText().trim();
-				if (pac.desc.name != null && pac.desc.name.equals(str))
+				if (pac.desc.Name == null || pac.desc.Name.toString().equals(str))
 					return;
-				pac.desc.name = str;
+				pac.desc.Name.put(str);
 			}
 
 		});
@@ -445,7 +445,7 @@ public class PackEditPage extends Page {
 
 		jtfs.setLnr(x -> {
 			if (sm != null)
-				sm.name = jtfs.getText().trim();
+				sm.Name.put(jtfs.getText().trim());
 		});
 
 	}
@@ -668,7 +668,7 @@ public class PackEditPage extends Page {
 		rems.setEnabled(sm != null && pac.editable);
 		jtfs.setEnabled(sm != null && pac.editable);
 		if (sm != null)
-			jtfs.setText(sm.name);
+			jtfs.setText(sm.Name.toString());
 	}
 
 	private void setPack(UserPack pack) {
@@ -700,7 +700,7 @@ public class PackEditPage extends Page {
 		cmbo.setEnabled(pac != null && pac.combos.size() > 0);
 		cmbo.setSelected(cmbo.isEnabled() && pac.useCombos);
 		if (b)
-			jtfp.setText(pack.desc.name);
+			jtfp.setText(pack.desc.Name.toString());
 		if (pac == null) {
 			jle.setListData(new Enemy[0]);
 			jlr.setListData(new UserPack[0]);
