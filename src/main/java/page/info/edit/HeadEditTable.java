@@ -262,7 +262,7 @@ class HeadEditTable extends Page {
 		if (jtf == name) {
 			str = str.trim();
 			if (str.length() > 0)
-				sta.Name.put(str);
+				sta.names.put(str);
 			return;
 		}
 		int val = CommonStatic.parseIntN(str);

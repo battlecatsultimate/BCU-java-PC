@@ -162,7 +162,7 @@ class EFBButton extends EnemyFilterBox {
 				ename = MultiLangCont.getStatic().ENAME.getCont(e);
 
 				if (ename == null)
-					ename = e.Name.toString();
+					ename = e.names.toString();
 
 				if (ename == null)
 					ename = "";
@@ -348,7 +348,7 @@ class EFBList extends EnemyFilterBox {
 				ename = MultiLangCont.getStatic().ENAME.getCont(e);
 
 				if (ename == null)
-					ename = e.Name.toString();
+					ename = e.names.toString();
 
 				if (ename == null)
 					ename = "";

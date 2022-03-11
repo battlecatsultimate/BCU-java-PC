@@ -272,9 +272,9 @@ public class PackEditPage extends Page {
 			@Override
 			public void focusLost(FocusEvent fe) {
 				String str = jtfp.getText().trim();
-				if (pac.desc.Name == null || pac.desc.Name.toString().equals(str))
+				if (pac.desc.names == null || pac.desc.names.toString().equals(str))
 					return;
-				pac.desc.Name.put(str);
+				pac.desc.names.put(str);
 			}
 
 		});
@@ -400,9 +400,9 @@ public class PackEditPage extends Page {
 		jtfe.setLnr(e -> {
 			String name = jtfe.getText().trim();
 			if (name.length() > 0)
-				ene.Name.put(jtfe.getText().trim());
+				ene.names.put(jtfe.getText().trim());
 			else
-				ene.Name.remove();
+				ene.names.remove();
 		});
 
 		vene.setLnr(() -> new EnemyViewPage(getThis(), pac.getSID()));
@@ -445,7 +445,7 @@ public class PackEditPage extends Page {
 
 		jtfs.setLnr(x -> {
 			if (sm != null)
-				sm.Name.put(jtfs.getText().trim());
+				sm.names.put(jtfs.getText().trim());
 		});
 
 	}
@@ -650,7 +650,7 @@ public class PackEditPage extends Page {
 		jtfe.setEnabled(b);
 		reme.setEnabled(b);
 		if (b) {
-			jtfe.setText(e.Name.toString());
+			jtfe.setText(e.names.toString());
 			boolean cont = false;
 
 			for(EneRand rand : pac.randEnemies.getList()) {
@@ -668,7 +668,7 @@ public class PackEditPage extends Page {
 		rems.setEnabled(sm != null && pac.editable);
 		jtfs.setEnabled(sm != null && pac.editable);
 		if (sm != null)
-			jtfs.setText(sm.Name.toString());
+			jtfs.setText(sm.names.toString());
 	}
 
 	private void setPack(UserPack pack) {
@@ -700,7 +700,7 @@ public class PackEditPage extends Page {
 		cmbo.setEnabled(pac != null && pac.combos.size() > 0);
 		cmbo.setSelected(cmbo.isEnabled() && pac.useCombos);
 		if (b)
-			jtfp.setText(pack.desc.Name.toString());
+			jtfp.setText(pack.desc.names.toString());
 		if (pac == null) {
 			jle.setListData(new Enemy[0]);
 			jlr.setListData(new UserPack[0]);
