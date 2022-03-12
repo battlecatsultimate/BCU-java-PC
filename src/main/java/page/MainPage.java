@@ -57,7 +57,6 @@ public class MainPage extends Page {
 
 	private final JBTN refr = new JBTN(0, "refrtips");
 	private final JLabel tips = new JLabel();
-	private final String[] ALLTIPS = Page.get(MainLocale.PAGE, "tip", 12);
 
 	public MainPage() {
 		super(null);
@@ -70,6 +69,7 @@ public class MainPage extends Page {
 	protected void renew() {
 		Runtime.getRuntime().gc();
 		curr.setEnabled(BattleInfoPage.current != null);
+		refrTips();
 		setMemo();
 	}
 
@@ -157,7 +157,7 @@ public class MainPage extends Page {
 			}
 		});
 		comp.setLnr(() -> new ComparePage(this));
-		refr.setLnr(c -> tips.setText("<html>" + ALLTIPS[(int)(Math.random() * ALLTIPS.length)] + "</html>"));
+		refr.setLnr(c -> refrTips());
 	}
 
 	private void ini() {
@@ -236,12 +236,11 @@ public class MainPage extends Page {
 
 		add(refr);
 		add(tips);
-		tips.setText("<html>" + ALLTIPS[(int)(Math.random() * ALLTIPS.length)] + "</html>");
-
 
 		welcome.setVisible(!MainBCU.author.isEmpty());
 
 		setMemo();
+		refrTips();
 		addListeners();
 	}
 
@@ -251,7 +250,11 @@ public class MainPage extends Page {
 		long m = Runtime.getRuntime().maxMemory();
 		double per = 100.0 * (t - f) / m;
 		memo.setText("memory used: " + (t - f >> 20) + " MB / " + (m >> 20) + " MB, " + (int) per + "%");
+	}
 
+	private void refrTips() {
+		String[] ALLTIPS = Page.get(MainLocale.PAGE, "tip", 13);
+		tips.setText("<html>" + ALLTIPS[(int)(Math.random() * ALLTIPS.length)] + "</html>");
 	}
 
 }
