@@ -87,7 +87,7 @@ public class BattleSetupPage extends LubCont {
 				jls.setSelectedIndex(0);
 		});
 
-		jlu.addActionListener(arg0 -> changePanel(new BasisPage(getThis())));
+		jlu.addActionListener(arg0 -> changePanel(new BasisPage(getThis(), st.getLim(conf == 1 ? jls.getSelectedIndex() : -1), st.getCont().price)));
 
 		strt.addActionListener(arg0 -> {
 			int star = jls.getSelectedIndex();

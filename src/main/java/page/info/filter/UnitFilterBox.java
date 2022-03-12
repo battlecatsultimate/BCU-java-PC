@@ -8,6 +8,7 @@ import common.pack.UserProfile;
 import common.util.Data;
 import common.util.lang.MultiLangCont;
 import common.util.lang.ProcLang;
+import common.util.stage.Limit;
 import common.util.unit.Trait;
 import common.util.unit.Form;
 import common.util.unit.Unit;
@@ -26,11 +27,11 @@ public abstract class UnitFilterBox extends Page {
 
 	private static final long serialVersionUID = 1L;
 
-	public static UnitFilterBox getNew(Page p) {
+	public static UnitFilterBox getNew(Page p, Limit lim, int price) {
 		if (MainBCU.FILTER_TYPE == 0)
-			return new UFBButton(p);
+			return new UFBButton(p, lim, price);
 		if (MainBCU.FILTER_TYPE == 1)
-			return new UFBList(p);
+			return new UFBList(p, lim, price);
 		return null;
 	}
 
@@ -45,9 +46,13 @@ public abstract class UnitFilterBox extends Page {
 	public String name = "";
 	protected final List<String> parents;
 	protected final String pack;
+	protected final Limit lim;
+	protected final int price;
 
-	protected UnitFilterBox(Page p) {
+	protected UnitFilterBox(Page p, Limit limit, int price) {
 		super(p);
+		lim = limit;
+		this.price = price;
 
 		pack = null;
 		parents = null;
@@ -55,12 +60,28 @@ public abstract class UnitFilterBox extends Page {
 
 	protected UnitFilterBox(Page p, String pack, List<String> parent) {
 		super(p);
+		lim = null;
+		price = 0;
 
 		this.pack = pack;
 		this.parents = parent;
 	}
 
 	public abstract int[] getSizer();
+
+	public boolean Unusable(MaskUnit du) {
+		if (lim == null)
+			return false;
+
+		double cost = du.getPrice() * (1 + price * 0.5);
+		if ((lim.min > 0 && cost < lim.min) || (lim.max > 0 && cost > lim.max))
+			return true;
+
+		Unit u = du.getPack().unit;
+		if (lim.rare != 0 && ((lim.rare >> u.rarity) & 1) == 0)
+			return true;
+		return lim.group != null && !lim.group.allow(u);
+	}
 
 }
 
@@ -75,8 +96,8 @@ class UFBButton extends UnitFilterBox {
 	private final JTG[] proc = new JTG[Data.PROC_TOT];
 	private final JTG[] atkt = new JTG[ATKCONF.length];
 
-	protected UFBButton(Page p) {
-		super(p);
+	protected UFBButton(Page p, Limit lim, int price) {
+		super(p, lim, price);
 
 		ini();
 		confirm();
@@ -113,6 +134,10 @@ class UFBButton extends UnitFilterBox {
 			for (Unit u : p.units.getList())
 				for (Form f : u.forms) {
 					MaskUnit du = f.maxu();
+
+					if (Unusable(du))
+						continue;
+
 					List<Trait> ct = f.du.getTraits();
 					int a = du.getAbi();
 					boolean b0 = rare[u.rarity].isSelected();
@@ -253,8 +278,8 @@ class UFBList extends UnitFilterBox {
 	private final JScrollPane jab = new JScrollPane(abis);
 	private final JScrollPane jat = new JScrollPane(atkt);
 
-	protected UFBList(Page p) {
-		super(p);
+	protected UFBList(Page p, Limit lim, int price) {
+		super(p, lim, price);
 
 		ini();
 		confirm();
@@ -296,6 +321,10 @@ class UFBList extends UnitFilterBox {
 				for (Form f : u.forms) {
 					MaskUnit du = f.maxu();
 					int a = du.getAbi();
+
+					if (Unusable(du))
+						continue;
+
 					List<Trait> traits = du.getTraits();
 					boolean b0 = rare.isSelectedIndex(u.rarity);
 					boolean b1 = !orop[0].isSelected();

@@ -134,7 +134,14 @@ public abstract class AbRecdPage extends Page {
 			changePanel(svp = new StageViewPage(getThis(), MapColc.values(), rStage));
 		});
 
-		jlu.setLnr(x -> changePanel(bp = new BasisPage(getThis())));
+		jlu.setLnr(x -> {
+			Identifier<Stage> st = getSelection().st;
+
+			if (st == null)
+				changePanel(bp = new BasisPage(getThis()));
+			else
+				changePanel(bp = new BasisPage(getThis(), st.get().getLim(4), st.get().getCont().price));
+		});
 
 		rply.setLnr(x -> changePanel(new BattleInfoPage(getThis(), getSelection(), 0)));
 

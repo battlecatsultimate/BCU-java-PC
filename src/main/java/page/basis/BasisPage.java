@@ -7,6 +7,7 @@ import common.battle.LineUp;
 import common.pack.UserProfile;
 import common.system.Node;
 import common.util.pack.NyCastle;
+import common.util.stage.Limit;
 import common.util.unit.Combo;
 import common.util.unit.Form;
 import common.util.unit.Unit;
@@ -81,16 +82,30 @@ public class BasisPage extends LubCont {
 
 	private final TreaTable trea = new TreaTable(this);
 	private final JScrollPane jspt = new JScrollPane(trea);
+	private final Limit lim;
+	private final int price;
 	private Unit cunit;
 
 	private String comboName = "";
 
 	public BasisPage(Page p) {
 		super(p);
+		lim = null;
+		price = 0;
 
 		ini();
 		resized();
 	}
+
+	public BasisPage(Page p, Limit lim, int price) {
+		super(p);
+		this.lim = lim;
+		this.price = price;
+
+		ini();
+		resized();
+	}
+
 
 	public void requireResize() {
 		resize = true;
@@ -217,7 +232,7 @@ public class BasisPage extends LubCont {
 
 		unit.addActionListener(e -> {
 			if (ufp == null)
-				ufp = new UnitFLUPage(getThis());
+				ufp = new UnitFLUPage(getThis(), lim, price);
 			changePanel(ufp);
 		});
 
