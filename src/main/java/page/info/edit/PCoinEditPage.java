@@ -50,6 +50,8 @@ public class PCoinEditPage extends Page {
                 uni.pcoin = new PCoin(uni);
             int slot = uni.pcoin.info.size();
             uni.pcoin.info.add(new int[]{slot + 1,10,0,0,0,0,0,0,0,0,slot + 1,8,-1});
+            uni.pcoin.max.add(10);
+
             for (int i = 0; i < slot; i++)
                 if (uni.pcoin.info.get(i)[0] == slot + 1) {
                     PCoinEditTable pc = pCoinEdits.get(i);

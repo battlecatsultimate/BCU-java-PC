@@ -130,6 +130,7 @@ class PCoinEditTable extends Page {
         delet.addActionListener(arg0 -> {
             changing = true;
             unit.pcoin.info.remove(talent);
+            unit.pcoin.max.remove(talent);
             pcedit.removed();
             changing = false;
         });
