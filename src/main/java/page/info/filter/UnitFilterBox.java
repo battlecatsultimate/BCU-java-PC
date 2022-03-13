@@ -277,6 +277,7 @@ class UFBList extends UnitFilterBox {
 	private final JScrollPane jt  = new JScrollPane(trait);
 	private final JScrollPane jab = new JScrollPane(abis);
 	private final JScrollPane jat = new JScrollPane(atkt);
+	private final JTG limbtn = new JTG("Usable Only");
 
 	protected UFBList(Page p, Limit lim, int price) {
 		super(p, lim, price);
@@ -308,6 +309,7 @@ class UFBList extends UnitFilterBox {
 		set(orop[1], x, y, 250, 0, 200, 50);
 		set(orop[2], x, y, 0, 800, 200, 50);
 
+		set(limbtn, x, y, 0, 0, 200, 50);
 		set(jr, x, y, 0, 50, 200, 250);
 		set(jt, x, y, 0, 400, 200, 350);
 		set(jab, x, y, 250, 50, 200, 1100);
@@ -322,7 +324,7 @@ class UFBList extends UnitFilterBox {
 					MaskUnit du = f.maxu();
 					int a = du.getAbi();
 
-					if (Unusable(du))
+					if (limbtn.isSelected() && Unusable(du))
 						continue;
 
 					List<Trait> traits = du.getTraits();
@@ -420,6 +422,9 @@ class UFBList extends UnitFilterBox {
 		add(jt);
 		add(jab);
 		add(jat);
+
+		if (lim != null)
+			add(limbtn);
 	}
 
 	private void set(AbstractButton b) {
