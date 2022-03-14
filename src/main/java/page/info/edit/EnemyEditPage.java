@@ -104,7 +104,11 @@ public class EnemyEditPage extends EntityEditPage {
 					eneDesc[edesc.length - 1] = eneDesc[edesc.length - 1].substring(0, 63);
 			}
 		}
-		ene.description.put(String.join("<br>", eneDesc));
+		String finalDesc = String.join("<br>", eneDesc);
+		if (finalDesc.length() > 12) //12 is the total length of "<br><br><br>", which is no description
+			ene.description.put(finalDesc);
+		else
+			ene.description.put("");
 		setData(ce);
 	}
 

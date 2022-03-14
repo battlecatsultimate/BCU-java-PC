@@ -181,7 +181,11 @@ public class FormEditPage extends EntityEditPage {
 					uniDesc[fdesc.length - 1] = uniDesc[fdesc.length - 1].substring(0, 63);
 			}
 		}
-		form.description.put(String.join("<br>", uniDesc));
+		String finalDesc = String.join("<br>", uniDesc);
+		if (finalDesc.length() > 12)
+			form.description.put(finalDesc);
+		else
+			form.description.put("");
 		setData(cu);
 	}
 

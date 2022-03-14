@@ -275,6 +275,7 @@ public class PackEditPage extends Page {
 				if (pac.desc.names == null || pac.desc.names.toString().equals(str))
 					return;
 				pac.desc.names.put(str);
+				jtfp.setText(pac.desc.names.toString());
 			}
 
 		});
@@ -398,11 +399,8 @@ public class PackEditPage extends Page {
 		});
 
 		jtfe.setLnr(e -> {
-			String name = jtfe.getText().trim();
-			if (name.length() > 0)
-				ene.names.put(jtfe.getText().trim());
-			else
-				ene.names.remove();
+			ene.names.put(jtfe.getText().trim());
+			jtfe.setText(ene.names.toString());
 		});
 
 		vene.setLnr(() -> new EnemyViewPage(getThis(), pac.getSID()));
@@ -444,8 +442,10 @@ public class PackEditPage extends Page {
 		rems.setLnr(jls::deleteItem);
 
 		jtfs.setLnr(x -> {
-			if (sm != null)
+			if (sm != null) {
 				sm.names.put(jtfs.getText().trim());
+				jtfs.setText(sm.names.toString());
+			}
 		});
 
 	}
