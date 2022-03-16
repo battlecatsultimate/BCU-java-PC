@@ -96,12 +96,10 @@ public class MusicEditPage extends Page {
 		});
 
 		jtp.setLnr(x -> {
-			if (sele.data == null) {
-				jtp.setToolTipText("Music not found");
+			if (sele.data == null)
 				return;
-			}
 
-			long tim = toMilli(jtp.getText());
+			long tim = Math.min(toMilli(jtp.getText()), toMilli(getMusTime()) - 1);
 			if (tim != -1)
 				sele.loop = tim;
 			jtp.setText(convertTime(sele.loop));
@@ -124,7 +122,7 @@ public class MusicEditPage extends Page {
 		play.setEnabled(sele != null);
 		jtp.setEnabled(sele != null);
 		jtp.setText(sele != null ? convertTime(sele.loop) : "-");
-		getMusTime();
+		jtp.setToolTipText(getMusTime());
 	}
 
 	private void setList() {
@@ -143,27 +141,27 @@ public class MusicEditPage extends Page {
 		});
 	}
 
-	private void getMusTime() {
+	private String getMusTime() {
 		if (sele == null || sele.data == null) {
-			jtp.setToolTipText("Music not found");
-			return;
+			return "Music not found";
 		}
 		try {
 			long duration = CommonStatic.def.getMusicLength(sele);
 
 			if (duration == -1) {
-				jtp.setToolTipText("Invalid Format");
+				return "Invalid Format";
 			} else if (duration == -2) {
-				jtp.setToolTipText("Unsupported Format");
+				return "Unsupported Format";
 			} else if (duration == -3) {
-				jtp.setToolTipText("Can't get duration");
+				return "Can't get duration";
 			} else if (duration >= 0) {
-				jtp.setToolTipText(convertTime(duration));
+				return convertTime(duration);
 			} else {
-				jtp.setToolTipText("Unknown error " + duration);
+				return "Unknown error";
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			return "";
 		}
 	}
 
