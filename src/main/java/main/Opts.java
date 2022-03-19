@@ -145,6 +145,24 @@ public class Opts {
 				null, choices, choices[0]);
 	}
 
+	public static boolean[] confirmSave() {
+		JLabel jl = new JLabel("Do you want to save your work before closing BCU?");
+		JCheckBox check = new JCheckBox("Generate backup file");
+		check.setSelected(true);
+
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.add(jl);
+		//panel.add(check); //TODO - Make all the strings used here support multi-language
+
+		int choice = JOptionPane.showConfirmDialog(null, panel, "Save Confirmation", JOptionPane.OK_CANCEL_OPTION);
+
+		if (choice == JOptionPane.CLOSED_OPTION)
+			return new boolean[]{};
+
+		return new boolean[]{choice == JOptionPane.OK_OPTION, check.isSelected()};
+	}
+
 	public static Object[] showTextCheck(String title, String content, boolean defaultCheck) {
 		JLabel contents = new JLabel(content);
 		JTF text = new JTF();
@@ -155,6 +173,7 @@ public class Opts {
 		parentCheck.setSelected(true);
 		parentText.setEnabled(!parentCheck.isSelected());
 
+		check.addItemListener(e -> text.setEnabled(e.getStateChange() != ItemEvent.SELECTED));
 		parentCheck.addItemListener(e -> parentText.setEnabled(e.getStateChange() != ItemEvent.SELECTED));
 
 		Border b = text.getBorder();
