@@ -155,12 +155,12 @@ public class Opts {
 		panel.add(jl);
 		//panel.add(check); //TODO - Make all the strings used here support multi-language
 
-		int choice = JOptionPane.showConfirmDialog(null, panel, "Save Confirmation", JOptionPane.OK_CANCEL_OPTION);
+		int choice = JOptionPane.showConfirmDialog(null, panel, "Save Confirmation", JOptionPane.YES_NO_CANCEL_OPTION);
 
-		if (choice == JOptionPane.CLOSED_OPTION)
+		if (choice == JOptionPane.CLOSED_OPTION || choice == JOptionPane.CANCEL_OPTION)
 			return new boolean[]{};
 
-		return new boolean[]{choice == JOptionPane.OK_OPTION, check.isSelected()};
+		return new boolean[]{choice == JOptionPane.YES_OPTION, check.isSelected()};
 	}
 
 	public static Object[] showTextCheck(String title, String content, boolean defaultCheck) {
