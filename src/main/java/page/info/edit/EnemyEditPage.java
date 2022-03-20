@@ -143,7 +143,7 @@ public class EnemyEditPage extends EntityEditPage {
 		super.setData(data);
 		eneDesc = ene.getExplaination().split("<br>",4);
 		for (int i = 0; i < edesc.length; i++)
-			edesc[i].setText("" + (eneDesc[i].length() > 0 ? eneDesc[i] : "Description Line " + (i + 1)));
+			edesc[i].setText("" + (i < eneDesc.length && eneDesc[i].length() > 0 ? eneDesc[i] : "Description Line " + (i + 1)));
 		fsr.setText("star: " + ce.star);
 		fdr.setText("" + Math.floor(ce.getDrop() * bas.t().getDropMulti()) / 100);
 		int imu = 0;
