@@ -8,10 +8,7 @@ import common.battle.data.CustomUnit;
 import common.pack.PackData.UserPack;
 import common.pack.UserProfile;
 import common.util.anim.AnimCE;
-import common.util.unit.Combo;
-import common.util.unit.Form;
-import common.util.unit.Unit;
-import common.util.unit.UnitLevel;
+import common.util.unit.*;
 import main.Opts;
 import page.*;
 import page.info.edit.FormEditPage;
@@ -228,6 +225,10 @@ public class UnitManagePage extends Page {
 							break;
 						}
 					}
+
+			for (Trait tr : pac.traits)
+				for (Form f : uni.forms)
+					tr.others.remove(f);
 
 			pac.units.remove(uni);
 			uni.lv.units.remove(uni);
