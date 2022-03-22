@@ -15,8 +15,9 @@ public abstract class ProcTable extends Page {
 	static class AtkProcTable extends ProcTable {
 
 		private static final long serialVersionUID = 1L;
+		public int height = 0;
 
-		private static final int SEC = 16;
+		private static final int SEC = 15;
 		private static final int[] INDS = new int[] { Data.P_KB, Data.P_STOP, Data.P_SLOW, Data.P_CRIT, Data.P_WAVE, Data.P_WEAK, Data.P_BREAK, Data.P_SHIELDBREAK,
 				Data.P_WARP, Data.P_CURSE, Data.P_SNIPER, Data.P_BOSS, Data.P_SATK, Data.P_POIATK, Data.P_VOLC, Data.P_TIME, Data.P_SEAL, Data.P_SUMMON, Data.P_MOVEWAVE,
 				Data.P_THEME, Data.P_POISON, Data.P_ARMOR, Data.P_SPEED, Data.P_MINIWAVE };
@@ -37,7 +38,10 @@ public abstract class ProcTable extends Page {
 					se.resize(x, y, c, h, 350, 50);
 					h += 50;
 				}
-				if (i == SEC - 1)
+
+				if (h > height)
+					height = h;
+				if (i == SEC)
 					h = 0;
 			}
 		}

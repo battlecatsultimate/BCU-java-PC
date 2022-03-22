@@ -134,7 +134,7 @@ public class MainFrame extends JFrame {
 				if (!closeClicked) {
 					boolean[] conf = Opts.confirmSave();
 
-					if (conf.length == 0)
+					if (conf == null)
 						return;
 
 					changePanel(new SavePage(conf));

@@ -146,19 +146,19 @@ public class Opts {
 	}
 
 	public static boolean[] confirmSave() {
-		JLabel jl = new JLabel("Do you want to save your work before closing BCU?");
-		JCheckBox check = new JCheckBox("Generate backup file");
+		JLabel jl = new JLabel(Page.get(MainLocale.PAGE, "savwarn"));
+		JCheckBox check = new JCheckBox(Page.get(MainLocale.PAGE, "genbckp"));
 		check.setSelected(true);
 
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.add(jl);
-		//panel.add(check); //TODO - Make all the strings used here support multi-language
+		//panel.add(check); //TODO - Optional Backup generation
 
-		int choice = JOptionPane.showConfirmDialog(null, panel, "Save Confirmation", JOptionPane.YES_NO_CANCEL_OPTION);
+		int choice = JOptionPane.showConfirmDialog(null, panel, Page.get(MainLocale.PAGE, "savconf"), JOptionPane.YES_NO_CANCEL_OPTION);
 
 		if (choice == JOptionPane.CLOSED_OPTION || choice == JOptionPane.CANCEL_OPTION)
-			return new boolean[]{};
+			return null;
 
 		return new boolean[]{choice == JOptionPane.YES_OPTION, check.isSelected()};
 	}
