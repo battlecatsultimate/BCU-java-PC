@@ -77,6 +77,10 @@ public class TraitEditPage extends Page {
             ArrayList<Form> list = new ArrayList<>(ufp.getList());
             if (t != null)
                 list.removeAll(t.others);
+            for (Unit u : packpack.units)
+                for (Form f : u.forms)
+                    list.remove(f);
+
             jlf.setListData(list.toArray(new Form[0]));
             jlf.clearSelection();
             if (list.size() > 0)

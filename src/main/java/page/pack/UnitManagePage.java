@@ -226,10 +226,6 @@ public class UnitManagePage extends Page {
 						}
 					}
 
-			for (Trait tr : pac.traits)
-				for (Form f : uni.forms)
-					tr.others.remove(f);
-
 			pac.units.remove(uni);
 			uni.lv.units.remove(uni);
 			jlu.setListData(pac.units.toRawArray());
