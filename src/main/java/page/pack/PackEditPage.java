@@ -692,6 +692,7 @@ public class PackEditPage extends Page {
 		vene.setEnabled(pac != null);
 		vmsc.setEnabled(pac != null);
 		recd.setEnabled(pac != null);
+		ener.setEnabled(pac != null);
 		boolean canUnpack = pac != null && !pac.editable;
 		boolean canExport = pac != null && pac.editable;
 		unpk.setEnabled(canUnpack);

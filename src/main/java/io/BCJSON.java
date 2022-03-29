@@ -45,7 +45,7 @@ public class BCJSON {
 				langList.add(pcLangCode + "/" + pcLangFile);
 		}
 
-		lang = Data.err(UpdateCheck.checkLang(langList.toArray(new String[0])));
+		lang = CommonStatic.ctx.noticeErr(UpdateCheck.checkLang(langList.toArray(new String[0])), ErrType.ERROR, "Failed to check for updates, try again later on a stable WI-FI connection");
 		clearList(libs, true);
 		clearList(assets, true);
 		clearList(musics, false);
