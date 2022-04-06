@@ -34,6 +34,16 @@ public abstract class SwingEditor extends Editor {
 		}
 
 		@Override
+		public void setVisible(boolean res) {
+			input.setVisible(res);
+		}
+
+		@Override
+		public boolean isInvisible() {
+			return !input.isVisible();
+		}
+
+		@Override
 		public void resize(int x, int y, int x0, int y0, int w0, int h0) {
 			Page.set(input, x, y, x0, y0, w0, h0);
 		}
@@ -97,6 +107,23 @@ public abstract class SwingEditor extends Editor {
 			return null;
 		}
 
+		@Override
+		public void setEditorVisibility(Editor e, boolean b) {
+			SwingEditor edi = (SwingEditor) e;
+			edi.setVisible(b);
+		}
+
+		@Override
+		public boolean EditorVisible(Editor e) {
+			SwingEditor edi = (SwingEditor) e;
+			return !edi.isInvisible();
+		}
+
+		@Override
+		public boolean isEnemy() {
+			return isEnemy;
+		}
+
 	}
 
 	public static class IdEditor<T extends IndexContainer.Indexable<?, T>> extends SwingEditor {
@@ -118,6 +145,17 @@ public abstract class SwingEditor extends Editor {
 		public final void callback(Identifier<T> id) {
 			field.set(id);
 			update();
+		}
+
+		@Override
+		public void setVisible(boolean res) {
+			input.setVisible(res);
+			jl.setVisible(res);
+		}
+
+		@Override
+		public boolean isInvisible() {
+			return !input.isVisible();
 		}
 
 		@Override
@@ -164,6 +202,17 @@ public abstract class SwingEditor extends Editor {
 			super(eg, field, f, edit);
 			label = new JL(ProcLang.get().get(eg.proc).get(f));
 			input.setLnr(this::edit);
+		}
+
+		@Override
+		public void setVisible(boolean res) {
+			label.setVisible(res);
+			input.setVisible(res);
+		}
+
+		@Override
+		public boolean isInvisible() {
+			return !label.isVisible();
 		}
 
 		@Override
@@ -221,10 +270,14 @@ public abstract class SwingEditor extends Editor {
 
 	public boolean edit;
 
-	public SwingEditor(EditorGroup par, Editors.EdiField field, String f, boolean edit) throws Exception {
+	public SwingEditor(EditorGroup par, Editors.EdiField field, String f, boolean edit) {
 		super(par, field, f);
 		this.edit = edit;
 	}
+
+	public abstract void setVisible(boolean res);
+
+	public abstract boolean isInvisible();
 
 	public abstract void resize(int x, int y, int x0, int y0, int w0, int h0);
 

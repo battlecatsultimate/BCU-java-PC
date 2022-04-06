@@ -35,6 +35,8 @@ public abstract class ProcTable extends Page {
 				h += 50;
 				for (int j = 0; j < group[i].list.length; j++) {
 					SwingEditor se = (SwingEditor) group[i].list[j];
+					if (se.isInvisible())
+						continue;
 					se.resize(x, y, c, h, 350, 50);
 					h += 50;
 				}
@@ -56,21 +58,30 @@ public abstract class ProcTable extends Page {
 				Data.P_COUNTER, Data.P_IMUATK, Data.P_DMGCUT, Data.P_DMGCAP, Data.P_IMUKB, Data.P_IMUSTOP,
 				Data.P_IMUSLOW, Data.P_IMUWAVE, Data.P_IMUWEAK, Data.P_IMUWARP, Data.P_IMUCURSE,
 				Data.P_IMUSEAL, Data.P_IMUMOVING, Data.P_IMUARMOR, Data.P_IMUPOI, Data.P_IMUPOIATK, Data.P_IMUVOLC,
+				Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_BARRIER, Data.P_DEMONSHIELD, Data.P_DEATHSURGE
+		}; //Procs for units
+		private static final int[] EINDS = { Data.P_STRONG, Data.P_LETHAL, Data.P_BURROW, Data.P_REVIVE, Data.P_CRITI,
+				Data.P_COUNTER, Data.P_IMUATK, Data.P_DMGCUT, Data.P_DMGCAP, Data.P_IMUKB, Data.P_IMUSTOP,
+				Data.P_IMUSLOW, Data.P_IMUWAVE, Data.P_IMUWEAK, Data.P_IMUWARP, Data.P_IMUCURSE,
+				Data.P_IMUSEAL, Data.P_IMUMOVING, Data.P_IMUARMOR, Data.P_IMUPOI, Data.P_IMUPOIATK, Data.P_IMUVOLC,
 				Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_BARRIER, Data.P_DEMONSHIELD, Data.P_DEATHSURGE, Data.P_IMUCANNON
-		};
+		}; //Procs for enemies
 
 		protected MainProcTable(Page p, boolean edit, boolean unit) {
-			super(p, INDS, edit, unit);
+			super(p, unit ? INDS : EINDS, edit, unit);
 		}
 
 		@Override
 		protected void resized(int x, int y) {
 			int h = 0;
-			for (int i = 0; i < INDS.length; i++) {
+			for (int i = 0; i < inds.length; i++) {
 				set(group[i].jlm, x, y, 0, h, 300, 50);
 				h += 50;
 				for (int j = 0; j < group[i].list.length; j++) {
 					SwingEditor se = (SwingEditor) group[i].list[j];
+					if (se.isInvisible())
+						continue;
+
 					se.resize(x, y, 0, h, 300, 50);
 					h += 50;
 				}
@@ -105,8 +116,10 @@ public abstract class ProcTable extends Page {
 	}
 
 	protected void setData(Proc ints) {
-		for (int i = 0; i < inds.length; i++)
+		for (int i = 0; i < inds.length; i++) {
 			group[i].setData(ints.getArr(inds[i]));
+			group[i].updateVisibility();
+		}
 	}
 
 	private void ini() {
