@@ -650,11 +650,7 @@ public abstract class EntityEditPage extends Page {
 					ce.hb = v[0];
 				}
 				if (jtf == fsp) {
-					if (v[0] < 0)
-						v[0] = 0;
-					if (v[0] > 150)
-						v[0] = 150;
-					ce.speed = v[0];
+					ce.speed = Math.max(0, v[0]);
 				}
 				if (jtf == fra) {
 					if (v[0] <= 0)
