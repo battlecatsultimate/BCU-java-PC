@@ -224,8 +224,11 @@ public class FormEditPage extends EntityEditPage {
 	protected void setData(CustomEntity data) {
 		super.setData(data);
 		uniDesc = form.getExplaination().split("<br>",4);
+		if (uniDesc.length < 4)
+			uniDesc = new String[4];
+
 		for (int i = 0; i < fdesc.length; i++)
-			fdesc[i].setText("" + (i < uniDesc.length && uniDesc[i].length() > 0 ? uniDesc[i] : "Description Line " + (i + 1)));
+			fdesc[i].setText("" + (uniDesc[i].length() > 0 ? uniDesc[i] : "Description Line " + (i + 1)));
 		flv.setText(lv + "");
 		frs.setText(bas.t().getFinRes(cu.getRespawn()) + "");
 		fdr.setText((int) Math.round(cu.getPrice() * 1.5) + "");
