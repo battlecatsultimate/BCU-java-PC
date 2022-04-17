@@ -23,9 +23,7 @@ public class EntityAbilities extends Page {
 
     public EntityAbilities(Page p, MaskEntity me, ArrayList<Integer> lv) {
         super(p);
-        this.me = (me instanceof MaskUnit && ((MaskUnit) me).getPCoin() != null)
-                ? ((MaskUnit) me).getPCoin().improve(lv)
-                : me;
+        this.me = me;
         lvl = lv;
 
         ini();

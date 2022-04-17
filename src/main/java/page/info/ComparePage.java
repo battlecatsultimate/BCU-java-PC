@@ -340,13 +340,17 @@ public class ComparePage extends Page {
                 ArrayList<Integer> multi = state
                         ? maskEntityLvl[i]
                         : (maskEntityLvl[i] = ((MaskUnit) m).getPack().getPrefLvs());
-                MaskUnit mu = (MaskUnit) (m = ((MaskUnit) m).getPCoin() != null
-                                        ? ((MaskUnit) m).getPCoin().improve(multi)
-                                        : ((MaskUnit) m));
+                MaskUnit mu;
+                if (((MaskUnit) m).getPCoin() != null) {
+                    mu = ((MaskUnit) m).getPCoin().improve(multi);
+                    m = mu;
+                } else
+                    mu = (MaskUnit) m;
+
                 Form f = mu.getPack();
                 EForm ef = new EForm(f, multi);
 
-                abilityPanes[i].setViewportView(abilities[i] = new EntityAbilities(getFront(), m, multi));
+                abilityPanes[i].setViewportView(abilities[i] = new EntityAbilities(getFront(), mu, multi));
 
                 double mul = f.unit.lv.getMult(multi.get(0));
                 double atkLv = b.t().getAtkMulti();
