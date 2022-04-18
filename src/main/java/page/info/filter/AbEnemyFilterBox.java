@@ -75,8 +75,8 @@ class AEFBButton extends AbEnemyFilterBox {
     private final JTG[] orop = new JTG[3];
     private final JTG[] rare = new JTG[ERARE.length];
     private final JTG[] trait = new JTG[TRAIT.length];
-    private final JTG[] abis = new JTG[EFILTER];
-    private final JTG[] proc = new JTG[Data.PROC_TOT];
+    private final JTG[] abis = new JTG[EABIIND.length];
+    private final JTG[] proc = new JTG[EPROCIND.length];
     private final JTG[] atkt = new JTG[ATKCONF.length];
 
     protected AEFBButton(Page p) {
@@ -149,9 +149,9 @@ class AEFBButton extends AbEnemyFilterBox {
                 for (int i = 0; i < proc.length; i++)
                     if (proc[i].isSelected())
                         if (orop[1].isSelected())
-                            b2 |= e.de.getAllProc().getArr(i).exists();
+                            b2 |= e.de.getAllProc().getArr(EPROCIND[i]).exists();
                         else
-                            b2 &= e.de.getAllProc().getArr(i).exists();
+                            b2 &= e.de.getAllProc().getArr(EPROCIND[i]).exists();
                 boolean b3 = !orop[2].isSelected();
                 for (int i = 0; i < atkt.length; i++)
                     if (atkt[i].isSelected())
@@ -167,9 +167,6 @@ class AEFBButton extends AbEnemyFilterBox {
 
                 if (ename == null)
                     ename = e.names.toString();
-
-                if (ename == null)
-                    ename = "";
 
                 if (name != null) {
                     b4 = ename.toLowerCase().contains(name.toLowerCase());
@@ -223,8 +220,8 @@ class AEFBButton extends AbEnemyFilterBox {
         }
         ProcLang proclang = ProcLang.get();
         for (int i = 0; i < proc.length; i++) {
-            set(proc[i] = new JTG(proclang.get(i).abbr_name));
-            proc[i].setIcon(UtilPC.createIcon(1, i));
+            set(proc[i] = new JTG(proclang.get(EPROCIND[i]).abbr_name));
+            proc[i].setIcon(UtilPC.createIcon(1, EPROCIND[i]));
         }
         for (int i = 0; i < atkt.length; i++) {
             set(atkt[i] = new JTG(ATKCONF[i]));
@@ -255,7 +252,7 @@ class AEFBList extends AbEnemyFilterBox {
     private final JList<String> rare = new JList<>(ERARE);
     private final Vector<String> va = new Vector<>();
     private final TraitList trait = new TraitList(false);
-    private final AttList abis = new AttList(-1, EFILTER);
+    private final AttList abis = new AttList(-1, EABIIND.length);
     private final AttList atkt = new AttList(2, 0);
     private final JScrollPane jr = new JScrollPane(rare);
     private final JScrollPane jt = new JScrollPane(trait);
@@ -321,7 +318,7 @@ class AEFBList extends AbEnemyFilterBox {
                         }
                     } else b1 = false;
                 boolean b2 = !orop[1].isSelected();
-                int len = EFILTER;
+                int len = EABIIND.length;
                 for (int i : abis.getSelectedIndices())
                     if (i < len) {
                         boolean bind = ((a >> EABIIND[i]) & 1) == 1;
@@ -330,9 +327,9 @@ class AEFBList extends AbEnemyFilterBox {
                         else
                             b2 &= bind;
                     } else if (orop[1].isSelected())
-                        b2 |= e.de.getAllProc().getArr(i - len).exists();
+                        b2 |= e.de.getAllProc().getArr(EPROCIND[i - len]).exists();
                     else
-                        b2 &= e.de.getAllProc().getArr(i - len).exists();
+                        b2 &= e.de.getAllProc().getArr(EPROCIND[i - len]).exists();
                 boolean b3 = !orop[2].isSelected();
                 for (int i : atkt.getSelectedIndices())
                     if (orop[2].isSelected())
@@ -348,9 +345,6 @@ class AEFBList extends AbEnemyFilterBox {
 
                 if (ename == null)
                     ename = e.names.toString();
-
-                if (ename == null)
-                    ename = "";
 
                 if (name != null) {
                     b4 = ename.toLowerCase().contains(name.toLowerCase());
@@ -399,7 +393,7 @@ class AEFBList extends AbEnemyFilterBox {
                     trait.list.add(ctra);
 
         trait.setListData();
-        va.addAll(Arrays.asList(EABI).subList(0, EFILTER));
+        va.addAll(Arrays.asList(EABI).subList(0, EABIIND.length));
         ProcLang proclang = ProcLang.get();
         for (int i = 0; i < Data.PROC_TOT; i++)
             va.add(proclang.get(i).abbr_name);

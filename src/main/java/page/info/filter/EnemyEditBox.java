@@ -41,7 +41,7 @@ public class EnemyEditBox extends Page {
 		ini();
 	}
 
-	public void setData(int[] vals, ArrayList<Trait> cts) {
+	public void setData(int val, ArrayList<Trait> cts) {
 		changing = true;
 		for (int k = 0; k < trait.list.size(); k++)
 			if (cts.contains(trait.list.get(k)))
@@ -53,7 +53,7 @@ public class EnemyEditBox extends Page {
 		abis.clearSelection();
 		for (int i = 0; i < EABIIND.length; i++) {
 			int ind = EABIIND[i];
-			if (ind < 100 ? ((vals[0] >> ind) & 1) > 0 : ((vals[1] >> (ind - 100 - IMUSFT)) & 1) > 0)
+			if (((val >> ind) & 1) > 0)
 				abis.addSelectionInterval(i, i);
 		}
 		for (int area : sel)
@@ -71,10 +71,7 @@ public class EnemyEditBox extends Page {
 		int[] ans = new int[2];
 		for (int i = 0; i < EABIIND.length; i++)
 			if (abis.isSelectedIndex(i))
-				if (EABIIND[i] < 100)
-					ans[0] |= 1 << EABIIND[i];
-				else
-					ans[1] |= 1 << (EABIIND[i] - 100 - IMUSFT);
+				ans[0] |= 1 << EABIIND[i];
 		for (int i = 0; i < trait.list.size(); i++)
 			if (trait.isSelectedIndex(i)) {
 				if (!ce.traits.contains(trait.list.get(i))) {

@@ -98,8 +98,23 @@ public class Interpret extends Data {
 			{ 1, 1 }, { 1, 1 }, { 1, 1 }, { 2, 2 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 },
 			{ 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 } };
 
-	public static final int[] EABIIND = { ABI_BASE, ABI_WAVES, ABI_SNIPERI, ABI_TIMEI, ABI_GHOST, ABI_GLASS, ABI_THEMEI };
-	public static final int IMUSFT = 13, EFILTER = 7;
+	//Filters abilities and procs that are available for enemies. Also gives better organization to the UI
+	public static final int[] EABIIND = { ABI_WAVES, ABI_SNIPERI, ABI_TIMEI, ABI_GHOST, ABI_GLASS, ABI_THEMEI };
+	public static final int[] EPROCIND = { Data.P_KB, Data.P_STOP, Data.P_SLOW, Data.P_WEAK, Data.P_CRIT, Data.P_WAVE, Data.P_MINIWAVE,
+			Data.P_VOLC, Data.P_BARRIER, Data.P_DEMONSHIELD, Data.P_BREAK, Data.P_SHIELDBREAK, Data.P_WARP, Data.P_CURSE, Data.P_SEAL,
+			Data.P_SATK, Data.P_POIATK, Data.P_ATKBASE, Data.P_SUMMON, Data.P_MOVEWAVE, Data.P_SNIPER, Data.P_BOSS, Data.P_TIME, Data.P_THEME,
+			Data.P_POISON, Data.P_ARMOR, Data.P_SPEED, Data.P_STRONG, Data.P_LETHAL, Data.P_BURROW, Data.P_REVIVE, Data.P_CRITI, Data.P_COUNTER,
+			Data.P_IMUATK, Data.P_DMGCUT, Data.P_DMGCAP, Data.P_IMUKB, Data.P_IMUSTOP, Data.P_IMUSLOW, Data.P_IMUWAVE, Data.P_IMUWEAK,
+			Data.P_IMUWARP, Data.P_IMUCURSE, Data.P_IMUSEAL, Data.P_IMUMOVING, Data.P_IMUARMOR, Data.P_IMUPOI, Data.P_IMUPOIATK, Data.P_IMUVOLC,
+			Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_IMUCANNON, Data.P_DEATHSURGE};
+	//Filters abilities and procs that are available for units. Also gives better organization to the UI
+	public static final int[] UPROCIND = { Data.P_KB, Data.P_STOP, Data.P_SLOW, Data.P_WEAK, Data.P_BOUNTY, Data.P_CRIT, Data.P_WAVE,
+			Data.P_MINIWAVE, Data.P_VOLC, Data.P_BARRIER, Data.P_DEMONSHIELD, Data.P_BREAK, Data.P_SHIELDBREAK, Data.P_WARP, Data.P_CURSE,
+			Data.P_SEAL, Data.P_SATK, Data.P_POIATK, Data.P_ATKBASE, Data.P_SUMMON, Data.P_MOVEWAVE, Data.P_SNIPER, Data.P_BOSS, Data.P_TIME,
+			Data.P_THEME, Data.P_POISON, Data.P_ARMOR, Data.P_SPEED, Data.P_STRONG, Data.P_LETHAL, Data.P_BURROW, Data.P_REVIVE, Data.P_CRITI,
+			Data.P_COUNTER, Data.P_IMUATK, Data.P_DMGCUT, Data.P_DMGCAP, Data.P_IMUKB, Data.P_IMUSTOP, Data.P_IMUSLOW, Data.P_IMUWAVE,
+			Data.P_IMUWEAK, Data.P_IMUWARP, Data.P_IMUCURSE, Data.P_IMUSEAL, Data.P_IMUMOVING, Data.P_IMUARMOR, Data.P_IMUPOI, Data.P_IMUPOIATK,
+			Data.P_IMUVOLC, Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_DEATHSURGE};
 
 	private static final DecimalFormat df;
 
@@ -308,8 +323,18 @@ public class Interpret extends Data {
 
 				if(!item.exists())
 					continue;
-
-				share.add(ma.getProc().sharable(i));
+				if (du instanceof DefaultData) {
+					boolean p = false;
+					if (ma.getProc().sharable(i))
+						p = true;
+					else
+						for (int pr : BCShareable)
+							if (pr == i) {
+								p = true;
+								break;
+							}
+					share.add(p);
+				}
 				String format = ProcLang.get().get(i).format;
 				String formatted = Formatter.format(format, item, ctx);
 
@@ -568,10 +593,10 @@ public class Interpret extends Data {
 	public static void redefine() {
 		ERARE = Page.get(MainLocale.UTIL, "er", 7);
 		RARITY = Page.get(MainLocale.UTIL, "r", 6);
-		TRAIT = Page.get(MainLocale.UTIL, "c", 14);
+		TRAIT = Page.get(MainLocale.UTIL, "c", TRAIT_TOT);
 		STAR = Page.get(MainLocale.UTIL, "s", 5);
-		ABIS = Page.get(MainLocale.UTIL, "a", 21);
-		SABIS = Page.get(MainLocale.UTIL, "sa", 21);
+		ABIS = Page.get(MainLocale.UTIL, "a", ABI_TOT);
+		SABIS = Page.get(MainLocale.UTIL, "sa", ABI_TOT);
 		ATKCONF = Page.get(MainLocale.UTIL, "aa", 8);
 		TREA = Page.get(MainLocale.UTIL, "t", 37);
 		COMF = Page.get(MainLocale.UTIL, "na", 6);

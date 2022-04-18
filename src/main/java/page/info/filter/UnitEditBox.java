@@ -41,7 +41,7 @@ public class UnitEditBox extends Page {
 		ini();
 	}
 
-	public void setData(int[] vals, ArrayList<Trait> ts) {
+	public void setData(int val, ArrayList<Trait> ts) {
 		changing = true;
 		for (int k = 0; k < trait.list.size(); k++)
 			if (ts.contains(trait.list.get(k)))
@@ -52,7 +52,7 @@ public class UnitEditBox extends Page {
 		trait.clearSelection();
 		abis.clearSelection();
 		for (int i = 0; i < SABIS.length; i++)
-			if (((vals[0] >> i) & 1) > 0)
+			if (((val >> i) & 1) > 0)
 				abis.addSelectionInterval(i, i);
 		for (int area : sel)
 			trait.addSelectionInterval(area, area);

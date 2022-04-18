@@ -49,9 +49,9 @@ public class AttList extends JList<String> {
 				JLabel jl = (JLabel) super.getListCellRendererComponent(l, o, ind, s, f);
 				BufferedImage v;
 				if (type == -1) {
-					v = ind < para ? UtilPC.getIcon(0, EABIIND[ind]) : UtilPC.getIcon(1, ind - para);
+					v = ind < para ? UtilPC.getIcon(0, EABIIND[ind]) : UtilPC.getIcon(1, EPROCIND[ind - para]);
 				} else if (type == 0) {
-					v = ind < SABIS.length ? UtilPC.getIcon(0, ind) : UtilPC.getIcon(1, ind - SABIS.length);
+					v = ind < SABIS.length ? UtilPC.getIcon(0, ind) : UtilPC.getIcon(1, UPROCIND[ind - SABIS.length]);
 				} else
 					v = UtilPC.getIcon(type, ind);
 				if (v == null)

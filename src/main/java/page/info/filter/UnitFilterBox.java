@@ -93,7 +93,7 @@ class UFBButton extends UnitFilterBox {
 	private final JTG[] rare = new JTG[RARITY.length];
 	private final JTG[] trait = new JTG[9];
 	private final JTG[] abis = new JTG[SABIS.length];
-	private final JTG[] proc = new JTG[Data.PROC_TOT];
+	private final JTG[] proc = new JTG[UPROCIND.length];
 	private final JTG[] atkt = new JTG[ATKCONF.length];
 
 	protected UFBButton(Page p, Limit lim, int price) {
@@ -168,9 +168,9 @@ class UFBButton extends UnitFilterBox {
 					for (int i = 0; i < proc.length; i++)
 						if (proc[i].isSelected())
 							if (orop[1].isSelected())
-								b2 |= du.getAllProc().getArr(i).exists();
+								b2 |= du.getAllProc().getArr(UPROCIND[i]).exists();
 							else
-								b2 &= du.getAllProc().getArr(i).exists();
+								b2 &= du.getAllProc().getArr(UPROCIND[i]).exists();
 					boolean b3 = !orop[2].isSelected();
 					for (int i = 0; i < atkt.length; i++)
 						if (atkt[i].isSelected())
@@ -184,9 +184,6 @@ class UFBButton extends UnitFilterBox {
 
 					if (fname == null)
 						fname = f.names.toString();
-
-					if (fname == null)
-						fname = "";
 
 					if (name != null)
 						b4 = fname.toLowerCase().contains(name.toLowerCase());
@@ -233,8 +230,8 @@ class UFBButton extends UnitFilterBox {
 			abis[i].setIcon(new ImageIcon(v));
 		}
 		for (int i = 0; i < proc.length; i++) {
-			set(proc[i] = new JTG(ProcLang.get().get(i).abbr_name));
-			BufferedImage v = UtilPC.getIcon(1, i);
+			set(proc[i] = new JTG(ProcLang.get().get(UPROCIND[i]).abbr_name));
+			BufferedImage v = UtilPC.getIcon(1, EPROCIND[i]);
 			if (v == null)
 				continue;
 			proc[i].setIcon(new ImageIcon(v));
@@ -354,9 +351,9 @@ class UFBList extends UnitFilterBox {
 							else
 								b2 &= bind;
 						} else if (orop[1].isSelected())
-							b2 |= du.getAllProc().getArr(i - len).exists();
+							b2 |= du.getAllProc().getArr(UPROCIND[i - len]).exists();
 						else
-							b2 &= du.getAllProc().getArr(i - len).exists();
+							b2 &= du.getAllProc().getArr(UPROCIND[i - len]).exists();
 					boolean b3 = !orop[2].isSelected();
 					for (int i : atkt.getSelectedIndices())
 						if (orop[2].isSelected())
@@ -370,9 +367,6 @@ class UFBList extends UnitFilterBox {
 
 					if (fname == null)
 						fname = f.names.toString();
-
-					if (fname == null)
-						fname = "";
 
 					if (name != null)
 						b4 = fname.toLowerCase().contains(name.toLowerCase());
@@ -410,8 +404,8 @@ class UFBList extends UnitFilterBox {
 
 		trait.setListData();
 		Collections.addAll(va, SABIS);
-		for (int i = 0; i < Data.PROC_TOT; i++)
-			va.add(ProcLang.get().get(i).abbr_name);
+		for (int i = 0; i < UPROCIND.length; i++)
+			va.add(ProcLang.get().get(UPROCIND[i]).abbr_name);
 		abis.setListData(va);
 		atkt.setListData(ATKCONF);
 		set(rare);
