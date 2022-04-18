@@ -62,7 +62,7 @@ public abstract class ProcTable extends Page {
 				Data.P_COUNTER, Data.P_IMUATK, Data.P_DMGCUT, Data.P_DMGCAP, Data.P_IMUKB, Data.P_IMUSTOP,
 				Data.P_IMUSLOW, Data.P_IMUWAVE, Data.P_IMUWEAK, Data.P_IMUWARP, Data.P_IMUCURSE,
 				Data.P_IMUSEAL, Data.P_IMUMOVING, Data.P_IMUARMOR, Data.P_IMUPOI, Data.P_IMUPOIATK, Data.P_IMUVOLC,
-				Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_BARRIER, Data.P_DEMONSHIELD, Data.P_DEATHSURGE
+				Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_BARRIER, Data.P_DEMONSHIELD, Data.P_DEATHSURGE, Data.P_BSTHUNT
 		}; //Procs for units
 		private static final int[] EINDS = { Data.P_STRONG, Data.P_LETHAL, Data.P_BURROW, Data.P_REVIVE, Data.P_CRITI,
 				Data.P_COUNTER, Data.P_IMUATK, Data.P_DMGCUT, Data.P_DMGCAP, Data.P_IMUKB, Data.P_IMUSTOP,
@@ -117,6 +117,11 @@ public abstract class ProcTable extends Page {
 		if (comp instanceof JTF)
 			ljp.add((JTF) comp);
 		return ret;
+	}
+
+	public void updateVisibility() {
+		for (int i = 0; i < inds.length; i++)
+			group[i].updateVisibility();
 	}
 
 	protected void setData(Proc ints) {

@@ -300,6 +300,8 @@ public abstract class EntityEditPage extends Page {
 				return p == null || !p.desc.dependency.contains(t.id.pack);
 			});
 			setData(ce);
+			apt.updateVisibility();
+			mpt.updateVisibility();
 		}
 		if (ufp != null && ufp.getForm() != null
 				&& Opts.conf("do you want to overwrite stats? This operation cannot be undone")) {
@@ -312,6 +314,8 @@ public abstract class EntityEditPage extends Page {
 				return p == null || !p.desc.dependency.contains(t.id.pack);
 			});
 			setData(ce);
+			apt.updateVisibility();
+			mpt.updateVisibility();
 		}
 		if (sup != null && editor != null) {
 			if(sup.getSelected() != null) {
