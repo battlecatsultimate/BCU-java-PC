@@ -395,8 +395,8 @@ class AEFBList extends AbEnemyFilterBox {
         trait.setListData();
         va.addAll(Arrays.asList(EABI).subList(0, EABIIND.length));
         ProcLang proclang = ProcLang.get();
-        for (int i = 0; i < Data.PROC_TOT; i++)
-            va.add(proclang.get(i).abbr_name);
+        for (int i = 0; i < EPROCIND.length; i++)
+            va.add(proclang.get(EPROCIND[i]).abbr_name);
         abis.setListData(va);
         atkt.setListData(ATKCONF);
         rare.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
