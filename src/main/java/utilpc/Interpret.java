@@ -604,12 +604,8 @@ public class Interpret extends Data {
 		TCTX = Page.get(MainLocale.UTIL, "tc", 6);
 		PCTX = Page.get(MainLocale.UTIL, "aq", 61);
 		EABI = new String[EABIIND.length];
-		for (int i = 0; i < EABI.length; i++) {
-			if (EABIIND[i] < 100)
-				EABI[i] = SABIS[EABIIND[i]];
-			else
-				EABI[i] = ProcLang.get().get(EABIIND[i] - 100).abbr_name;
-		}
+		for (int i = 0; i < EABI.length; i++)
+			EABI[i] = SABIS[EABIIND[i]];
 	}
 
 	public static void setComp(int ind, int v, BasisSet b) {
