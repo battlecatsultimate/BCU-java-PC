@@ -7,6 +7,7 @@ import common.system.fake.FakeTransform;
 import java.awt.*;
 import java.awt.RenderingHints.Key;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Path2D;
 
 import static java.awt.AlphaComposite.SRC_OVER;
 
@@ -161,11 +162,36 @@ public class FG2D implements FakeGraphics {
 		g.translate(x, y);
 	}
 
-	public void drawPath(Polygon p) {
-		g.drawPolygon(p);
-	}
-
 	public void fillPath(Polygon p) {
 		g.fillPolygon(p);
+	}
+
+	public void enableAntialiasing() {
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+	}
+
+	public void setGradient(int x, int y, int x2, int y2, Color c, Color c2) {
+		LinearGradientPaint gra = new LinearGradientPaint(x, y, x2, y2, new float[] {0.4f, 1f}, new Color[] {c, c2});
+
+		g.setPaint(gra);
+	}
+
+	public void drawFontOutline(Path2D path, float width) {
+		Stroke st = g.getStroke();
+		Color c = g.getColor();
+
+		Stroke round = new BasicStroke(width,BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+
+		setColor(BLACK);
+
+		g.setStroke(round);
+		g.draw(path);
+
+		g.setStroke(st);
+		g.setColor(c);
+	}
+
+	public void fillPath2D(Path2D path) {
+		g.fill(path);
 	}
 }

@@ -22,10 +22,15 @@ import common.util.pack.EffAnim;
 import common.util.pack.bgeffect.BackgroundEffect;
 import common.util.stage.CastleImg;
 import common.util.unit.Form;
+import main.MainBCU;
 import page.RetFunc;
+import page.battle.StageImage.FontStageImageGenerator;
+import page.battle.StageImage.ImageGenerator;
+import page.battle.StageImage.StageImageGenerator;
 import utilpc.PP;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -78,6 +83,7 @@ public interface BattleBox {
 		private final int maxH = 510 * 3;
 		private final int minH = 510; // in p
 		private int pos, midh, prew, preh; // in pix
+		private final StageNamePainter snam;
 
 		private double minSiz = -1;
 		private double maxSiz = -1;
@@ -107,6 +113,7 @@ public interface BattleBox {
 			bf = bas;
 			box = bb;
 			maxW = (int) (bas.sb.st.len * ratio + off * 2);
+			snam = new StageNamePainter(bas.sb.st.toString());
 		}
 
 		public void click(Point p, int button) {
@@ -162,9 +169,6 @@ public interface BattleBox {
 
 			drawBtm(g);
 			drawTop(g);
-			if(bf.sb.st.timeLimit != 0) {
-				drawTime(g);
-			}
 			sb = null;
 		}
 
@@ -795,6 +799,13 @@ public interface BattleBox {
 			bimg = aux.battle[2][page.getSpeed() > 0 ? 0 : 3].getImg();
 			for (int i = 0; i < Math.abs(page.getSpeed()); i++)
 				g.drawImage(bimg, w - cw * (i + 1 + n), ih);
+
+			if(bf.sb.st.timeLimit != 0)
+				drawTime(g);
+			else if (snam.img != null) {
+				double h = Math.max(1.25, box.getHeight() * 0.0024);
+				g.drawImage(snam.img, box.getHeight() * 0.005, snam.usesBCFont ? 0 : box.getHeight() * 0.01, snam.img.getWidth() * h, snam.img.getHeight() * h);
+			}
 		}
 
 		private void drawTime(FakeGraphics g) {
@@ -908,6 +919,50 @@ public interface BattleBox {
 			reset();
 		}
 
+	}
+
+	class StageNamePainter {
+		private final FakeImage img;
+		private final boolean usesBCFont;
+		public StageNamePainter(String str) {
+			usesBCFont = canImage(str);
+			BufferedImage result = generateImage(str);
+			if (result != null)
+				img = MainBCU.builder.build(result);
+			else
+				img = null;
+		}
+
+		private BufferedImage generateImage(String name) {
+			try {
+				if (name.length() >= 1) {
+					ImageGenerator generator;
+					if (usesBCFont)
+						generator = new StageImageGenerator();
+					else
+						generator = new FontStageImageGenerator();
+					return generator.generateRealImage(name);
+				}
+			} catch (Exception e) {
+				System.out.println("Failed to generate display name for " + name);
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		private static boolean canImage(String message) {
+			for (int i = 0; i < message.length(); i++) {
+				String str = Character.toString(message.charAt(i));
+
+				if (str.equals(" "))
+					continue;
+
+				if (!StageImageGenerator.contains(str)) {
+					return false;
+				}
+			}
+			return true;
+		}
 	}
 
 	interface OuterBox extends RetFunc {
