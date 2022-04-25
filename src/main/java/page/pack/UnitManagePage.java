@@ -11,15 +11,15 @@ import common.util.anim.AnimCE;
 import common.util.unit.*;
 import main.Opts;
 import page.*;
+import page.anim.AnimGroupTree;
 import page.info.edit.FormEditPage;
-import page.support.AnimLCR;
-import page.support.ReorderList;
-import page.support.ReorderListener;
-import page.support.UnitLCR;
+import page.support.*;
 import page.view.UnitViewPage;
 import utilpc.Interpret;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.*;
@@ -36,8 +36,8 @@ public class UnitManagePage extends Page {
 	private final JScrollPane jspu = new JScrollPane(jlu);
 	private final ReorderList<Form> jlf = new ReorderList<>();
 	private final JScrollPane jspf = new JScrollPane(jlf);
-	private final JList<AnimCE> jld = new JList<>(new Vector<>(AnimCE.map().values()));
-	private final JScrollPane jspd = new JScrollPane(jld);
+	private final JTree jtd = new JTree();
+	private final JScrollPane jspd = new JScrollPane(jtd);
 	private final JList<UnitLevel> jll = new JList<>();
 	private final JScrollPane jspl = new JScrollPane(jll);
 
@@ -74,6 +74,8 @@ public class UnitManagePage extends Page {
 
 	public UnitManagePage(Page p, UserPack pack) {
 		super(p);
+		AnimGroupTree agt = new AnimGroupTree(jtd);
+		agt.renewNodes();
 
 		pac = pack;
 		ini();
@@ -124,6 +126,7 @@ public class UnitManagePage extends Page {
 		set(jtfl, x, y, w, 700, 300, 50);
 		set(addl, x, y, w, 750, 150, 50);
 		set(reml, x, y, w + dw, 750, 150, 50);
+		SwingUtilities.invokeLater(() -> jtd.setUI(new TreeNodeExpander(jtd)));
 
 	}
 
@@ -131,13 +134,15 @@ public class UnitManagePage extends Page {
 
 		back.addActionListener(arg0 -> changePanel(getFront()));
 
-		jld.addListSelectionListener(arg0 -> {
-			if (jld.getValueIsAdjusting())
+		jtd.addTreeSelectionListener(arg0 -> {
+			if (changing)
 				return;
-			boolean edi = pac != null && pac.editable && jld.getSelectedValue() != null;
+			changing = true;
+			boolean edi = pac != null && pac.editable && getSelectedAnim() != null;
 			addu.setEnabled(edi);
 			addf.setEnabled(edi && uni != null);
 			frea.setEnabled(edi && jlf.getSelectedValue() != null);
+			changing = false;
 		});
 
 		jlp.addListSelectionListener(arg0 -> {
@@ -185,7 +190,7 @@ public class UnitManagePage extends Page {
 		addu.addActionListener(arg0 -> {
 			changing = true;
 			CustomUnit cu = new CustomUnit();
-			AnimCE anim = jld.getSelectedValue();
+			AnimCE anim = getSelectedAnim();
 			cu.limit = CommonStatic.customFormMinPos(anim.mamodel);
 			Unit u = new Unit(pac.getNextID(Unit.class), anim, cu);
 			pac.units.add(u);
@@ -289,15 +294,12 @@ public class UnitManagePage extends Page {
 			if(jlf.getSelectedValue() == null || (!(jlf.getSelectedValue().du instanceof CustomUnit)))
 				return;
 
-			if(jld.getSelectedValue() == null)
-				return;
-
 			if(Opts.conf(get(MainLocale.PAGE, "reasanim"))) {
 				changing = true;
 
 				Form f = jlf.getSelectedValue();
 
-				f.anim = jld.getSelectedValue();
+				f.anim = getSelectedAnim();
 
 				edit.setEnabled(jlf.getSelectedValue() != null && jlf.getSelectedValue().anim != null && pac.editable);
 
@@ -327,7 +329,7 @@ public class UnitManagePage extends Page {
 		addf.addActionListener(arg0 -> {
 			changing = true;
 			CustomUnit cu = new CustomUnit();
-			AnimCE ac = jld.getSelectedValue();
+			AnimCE ac = getSelectedAnim();
 			cu.limit = CommonStatic.customFormMinPos(ac.mamodel);
 			frm = new Form(uni, uni.forms.length, "new form", ac, cu);
 			uni.forms = Arrays.copyOf(uni.forms, uni.forms.length + 1);
@@ -449,7 +451,8 @@ public class UnitManagePage extends Page {
 		add(cmbo);
 		jlu.setCellRenderer(new UnitLCR());
 		jlf.setCellRenderer(new AnimLCR());
-		jld.setCellRenderer(new AnimLCR());
+		jtd.setCellRenderer(new AnimTreeRenderer());
+		SwingUtilities.invokeLater(() -> jtd.setUI(new TreeNodeExpander(jtd)));
 		setPack(pac);
 		addListeners();
 		addListeners$1();
@@ -467,7 +470,7 @@ public class UnitManagePage extends Page {
 		}
 		boolean b = frm != null && pac.editable;
 		edit.setEnabled(b && frm.du instanceof CustomUnit && frm.anim != null);
-		frea.setEnabled(jld.getSelectedValue() != null && b);
+		frea.setEnabled(getSelectedAnim() != null && b);
 
 		if(frm != null && frm.anim == null) {
 			edit.setToolTipText(get(MainLocale.PAGE, "corrrea"));
@@ -509,7 +512,7 @@ public class UnitManagePage extends Page {
 			changing = boo;
 		}
 		boolean b = pac != null && pac.editable;
-		addu.setEnabled(b && jld.getSelectedValue() != null);
+		addu.setEnabled(b && getSelectedAnim() != null);
 		edit.setEnabled(b);
 		addl.setEnabled(b);
 		vuni.setEnabled(pac != null);
@@ -549,7 +552,7 @@ public class UnitManagePage extends Page {
 		remu.setEnabled(b);
 		rar.setEnabled(b);
 		cbl.setEnabled(b);
-		addf.setEnabled(b && jld.getSelectedValue() != null && unit.forms.length < 3);
+		addf.setEnabled(b && getSelectedAnim() != null && unit.forms.length < 3);
 		maxl.setEditable(b);
 		maxp.setEditable(b);
 		boolean boo = changing;
@@ -571,6 +574,18 @@ public class UnitManagePage extends Page {
 		if (frm != null && frm.unit != unit)
 			frm = null;
 		setForm(frm);
+	}
+
+	private AnimCE getSelectedAnim() {
+		TreePath path = jtd.getSelectionPath();
+
+		if(path != null && path.getLastPathComponent() instanceof DefaultMutableTreeNode) {
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+
+			if (node.getUserObject() instanceof AnimCE)
+				return (AnimCE) node.getUserObject();
+		}
+		return null;
 	}
 
 }
