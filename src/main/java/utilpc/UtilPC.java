@@ -1,29 +1,17 @@
 package utilpc;
 
-import com.google.common.io.Files;
 import common.CommonStatic;
-import common.CommonStatic.ImgReader;
 import common.CommonStatic.Itf;
 import common.battle.data.PCoin;
-import common.io.InStream;
 import common.pack.Context;
 import common.pack.Identifier;
-import common.pack.Source;
-import common.pack.Source.ResourceLocation;
 import common.system.VImg;
 import common.system.fake.FakeImage;
-import common.system.fake.ImageBuilder;
-import common.system.files.FDByte;
-import common.util.Data;
-import common.util.anim.ImgCut;
-import common.util.anim.MaAnim;
-import common.util.anim.MaModel;
 import common.util.pack.Background;
 import common.util.stage.Music;
 import common.util.unit.Form;
 import common.util.unit.Trait;
 import io.BCMusic;
-import io.BCUReader;
 import io.BCUWriter;
 import utilpc.awt.FG2D;
 
@@ -31,134 +19,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class UtilPC {
 
 	public static class PCItr implements Itf {
-
-		@Deprecated
-		private static class MusicReader implements ImgReader {
-
-			private final int pid, mid;
-
-			private MusicReader(int p, int m) {
-				pid = p;
-				mid = m;
-			}
-
-			@Override
-			@Deprecated
-			public File readFile(InStream is) {
-				byte[] bs = is.subStream().nextBytesI();
-				String path = "./pack/music/" + Data.hex(pid) + "/" + Data.trio(mid) + ".ogg";
-				File f = CommonStatic.def.route(path);
-				Data.err(() -> Context.check(f));
-				try {
-					Files.write(bs, f);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				return f;
-			}
-
-			@Override
-			public FakeImage readImg(String str) {
-				return null;
-			}
-
-			@Override
-			public VImg readImgOptional(String str) {
-				return null;
-			}
-
-		}
-
-		@Deprecated
-		private static class PCAL implements Source.AnimLoader {
-
-			private String name;
-			private final FakeImage num;
-			private final ImgCut imgcut;
-			private final MaModel mamodel;
-			private final MaAnim[] anims;
-			private VImg uni, edi;
-
-			private PCAL(InStream is) {
-				name = "local animation";
-				num = FakeImage.read(is.nextBytesI());
-				imgcut = ImgCut.newIns(new FDByte(is.nextBytesI()));
-				mamodel = MaModel.newIns(new FDByte(is.nextBytesI()));
-				int n = is.nextInt();
-				anims = new MaAnim[n];
-				for (int i = 0; i < n; i++)
-					anims[i] = MaAnim.newIns(new FDByte(is.nextBytesI()));
-				if (!is.end()) {
-					VImg vimg = ImageBuilder.toVImg(is.nextBytesI());
-					if (vimg.getImg().getHeight() == 32)
-						edi = vimg;
-					else
-						uni = vimg;
-				}
-				if (!is.end())
-					uni = ImageBuilder.toVImg(is.nextBytesI());
-			}
-
-			private PCAL(InStream is, ImgReader r) {
-				is.nextString();
-				num = r.readImg(is.nextString());
-				edi = r.readImgOptional(is.nextString());
-				uni = r.readImgOptional(is.nextString());
-				imgcut = ImgCut.newIns(new FDByte(is.nextBytesI()));
-				mamodel = MaModel.newIns(new FDByte(is.nextBytesI()));
-				int n = is.nextInt();
-				anims = new MaAnim[n];
-				for (int i = 0; i < n; i++)
-					anims[i] = MaAnim.newIns(new FDByte(is.nextBytesI()));
-			}
-
-			@Override
-			public VImg getEdi() {
-				return edi;
-			}
-
-			@Override
-			public ImgCut getIC() {
-				return imgcut;
-			}
-
-			@Override
-			public MaAnim[] getMA() {
-				return anims;
-			}
-
-			@Override
-			public MaModel getMM() {
-				return mamodel;
-			}
-
-			@Override
-			public ResourceLocation getName() {
-				return new ResourceLocation(null, name);
-			}
-
-			@Override
-			public FakeImage getNum() {
-				return num;
-			}
-
-			@Override
-			public int getStatus() {
-				return 1;
-			}
-
-			@Override
-			public VImg getUni() {
-				return uni;
-			}
-
-		}
 
 		@Override
 		public void save(boolean save, boolean exit) {
@@ -182,30 +47,6 @@ public class UtilPC {
 				e.printStackTrace();
 				return -1;
 			}
-		}
-
-		@Override
-		@Deprecated
-		public ImgReader getMusicReader(int pid, int mid) {
-			return new MusicReader(pid, mid);
-		}
-
-		@Override
-		@Deprecated
-		public ImgReader getReader(File f) {
-			return null;
-		}
-
-		@Override
-		@Deprecated
-		public Source.AnimLoader loadAnim(InStream is, ImgReader r) {
-			return r == null ? new PCAL(is) : new PCAL(is, r);
-		}
-
-		@Override
-		@Deprecated
-		public InStream readBytes(File fi) {
-			return BCUReader.readBytes(fi);
 		}
 
 		@Override

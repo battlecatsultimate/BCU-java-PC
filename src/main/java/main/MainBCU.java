@@ -24,6 +24,7 @@ import page.*;
 import page.awt.AWTBBB;
 import page.awt.BBBuilder;
 import common.system.DateComparator;
+import page.battle.BattleBox;
 import utilpc.Theme;
 import utilpc.UtilPC;
 import utilpc.awt.FIBI;
@@ -92,7 +93,6 @@ public class MainBCU {
 			return author;
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		public void initProfile() {
 			LoadPage.prog("reading assets");
@@ -335,6 +335,7 @@ public class MainBCU {
 		CommonStatic.ctx.initProfile();
 
 		BCUReader.getData$1();
+		BattleBox.StageNamePainter.read();
 		loaded = true;
 		JMenuItem menu = MenuBarHandler.getFileItem("Save All");
 			if (menu != null)

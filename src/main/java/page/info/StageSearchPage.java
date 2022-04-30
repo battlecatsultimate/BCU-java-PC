@@ -51,12 +51,12 @@ public class StageSearchPage extends StagePage {
                 for (int i = 0; i < jlmc.getModel().getSize(); i++)
                     for (StageMap stMap : jlmc.getModel().getElementAt(i).maps)
                         for (Stage s : stMap.list)
-                            if (s.toString().contains(str))
+                            if (s.toString().toLowerCase().contains(str))
                                 results.add(s);
             } else
                 for (StageMap stMap : mc.maps)
                     for (Stage s : stMap.list)
-                        if (s.toString().contains(str))
+                        if (s.toString().toLowerCase().contains(str))
                             results.add(s);
             Stage[] st = new Stage[results.size()];
             for (int i = 0; i < st.length; i++)
@@ -78,11 +78,11 @@ public class StageSearchPage extends StagePage {
 
     private void addListeners() {
         jlmc.addListSelectionListener(arg0 -> {
-            searchStage(search.getText(), jlmc.getSelectedValue());
+            searchStage(search.getText().toLowerCase(), jlmc.getSelectedValue());
             jlst.setSelectedValue(0, true);
         });
         jlst.addListSelectionListener(arg0 -> super.setData(jlst.getSelectedValue()));
-        search.setLnr(c -> searchStage(search.getText(), jlmc.getSelectedValue()));
+        search.setLnr(c -> searchStage(search.getText().toLowerCase(), jlmc.getSelectedValue()));
     }
 
     private void ini() {
