@@ -934,7 +934,7 @@ public interface BattleBox {
 		private static final int yGap = 2;
 
 		public static void read() {
-			VFile vf = VFile.get("./org/page/fonts/TacticRound-Bld.ttf");
+			VFile vf = VFile.get("./org/page/fonts/StageFont.otf");
 			try {
 				font = Font.createFont(Font.TRUETYPE_FONT, vf.getData().getStream()).deriveFont(102f);
 			} catch (Exception e) {
