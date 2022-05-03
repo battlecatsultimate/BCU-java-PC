@@ -50,6 +50,15 @@ public class BCJSON {
 		clearList(assets, true);
 		clearList(musics, false);
 		clearList(lang, false);
+
+		Downloader font = UpdateCheck.checkFont();
+		if (font != null) {
+			LoadPage.prog(font.desc);
+			while (!CommonStatic.ctx.noticeErr(() -> font.run(LoadPage.lp::accept), ErrType.DEBUG, "failed to download"))
+				if (!Opts.conf("failed to download, retry?"))
+					break;
+		}
+
 		while (!Data.err(AssetLoader::merge))
 			if (!Opts.conf("failed to process assets, retry?"))
 				CommonStatic.def.save(false, true);

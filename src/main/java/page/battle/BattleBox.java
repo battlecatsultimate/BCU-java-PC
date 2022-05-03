@@ -15,7 +15,6 @@ import common.system.VImg;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.system.fake.FakeTransform;
-import common.system.files.VFile;
 import common.util.Data;
 import common.util.ImgCore;
 import common.util.Res;
@@ -35,6 +34,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.geom.PathIterator;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -934,9 +934,14 @@ public interface BattleBox {
 		private static final int yGap = 2;
 
 		public static void read() {
-			VFile vf = VFile.get("./org/page/fonts/StageFont.otf");
 			try {
-				font = Font.createFont(Font.TRUETYPE_FONT, vf.getData().getStream()).deriveFont(102f);
+				File f = CommonStatic.ctx.getAssetFile("/fonts/StageFont.otf");
+				if (!f.exists()) {
+					System.out.println("Error creating font: Couldn't find stage font file");
+					return;
+				}
+
+				font = Font.createFont(Font.TRUETYPE_FONT, f).deriveFont(102f);
 			} catch (Exception e) {
 				System.out.println("Failed to initialize font");
 				e.printStackTrace();
@@ -944,7 +949,7 @@ public interface BattleBox {
 		}
 
 		public StageNamePainter(String str) {
-			BufferedImage result = str.length() != 0 ? generateImage(str) : null;
+			BufferedImage result = font != null && str.length() != 0 ? generateImage(str) : null;
 			if (result != null)
 				img = MainBCU.builder.build(result);
 			else
