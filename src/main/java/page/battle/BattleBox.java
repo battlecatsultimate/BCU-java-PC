@@ -86,7 +86,7 @@ public interface BattleBox {
 		private final int maxW;
 		private final int maxH = 510 * 3;
 		private final int minH = 510; // in p
-		private int pos, midh, prew, preh; // in pix
+		private int midh, prew, preh; // in pix
 		private final StageNamePainter snam;
 
 		private double minSiz = -1;
@@ -141,7 +141,7 @@ public interface BattleBox {
 
 			ImgCore.set(g);
 			P rect = setP(box.getWidth(), box.getHeight());
-			sb.bg.draw(g, rect, pos, midh, siz, (int) (groundHeight + (CommonStatic.getConfig().twoRow ? (h * 0.75 / 10.0) : 0)));
+			sb.bg.draw(g, rect, sb.pos, midh, siz, (int) (groundHeight + (CommonStatic.getConfig().twoRow ? (h * 0.75 / 10.0) : 0)));
 
 			double midY = groundHeight / minSiz;
 			double y = maxH * siz - midh;
@@ -153,7 +153,7 @@ public interface BattleBox {
 				midY += (h * 0.75 / 10.0);
 
 			if(CommonStatic.getConfig().drawBGEffect && sb.bgEffect != null) {
-				sb.bgEffect.preDraw(g, setP(pos, y), siz, midY);
+				sb.bgEffect.preDraw(g, setP(sb.pos, y), siz, midY);
 			}
 
 			drawCastle(g);
@@ -164,7 +164,7 @@ public interface BattleBox {
 			drawEntity(g);
 
 			if(CommonStatic.getConfig().drawBGEffect && sb.bgEffect != null) {
-				sb.bgEffect.postDraw(g, setP(pos, y), siz, midY);
+				sb.bgEffect.postDraw(g, setP(sb.pos, y), siz, midY);
 			}
 
 			if(sb.bg.overlay != null) {
@@ -177,7 +177,7 @@ public interface BattleBox {
 		}
 
 		public double getX(double x) {
-			return (x * ratio + off) * siz + pos;
+			return (x * ratio + off) * siz + sb.pos;
 		}
 
 		public void calculateSiz(int w, int h) {
@@ -211,11 +211,11 @@ public interface BattleBox {
 			if (siz >= maxSiz)
 				siz = maxSiz;
 
-			if (pos > 0)
-				pos = 0;
+			if (sb.pos > 0)
+				sb.pos = 0;
 
-			if (maxW * siz + pos < w)
-				pos = (int) (w - maxW * siz);
+			if (maxW * siz + sb.pos < w)
+				sb.pos = (int) (w - maxW * siz);
 
 			midh = h + (int) (groundHeight * (siz - maxSiz) / (maxSiz - minSiz));
 
@@ -231,7 +231,7 @@ public interface BattleBox {
 		private void adjust(int w, int s) {
 			int h = box.getHeight();
 
-			pos += w;
+			sb.pos += w;
 
 			siz *= Math.pow(exp, s);
 
@@ -251,7 +251,7 @@ public interface BattleBox {
 		private void clear() {
 			pt = -1;
 			siz = 0;
-			pos = 0;
+			sb.pos = 0;
 			midh = 0;
 		}
 
@@ -517,7 +517,7 @@ public interface BattleBox {
 			FakeTransform at = gra.getTransform();
 			boolean drawCast = sb.ebase instanceof Entity;
 			int posy = (int) (midh - road_h * siz);
-			int posx = (int) ((sb.ebase.pos * ratio + off) * siz + pos);
+			int posx = (int) ((sb.ebase.pos * ratio + off) * siz + sb.pos);
 
 			double shake = 0.0;
 
@@ -546,7 +546,7 @@ public interface BattleBox {
 			posx -= castw * siz / 2;
 			posy -= casth * siz;
 			Res.getBase(sb.ebase, setSym(gra, siz, posx, posy, 0), bf.sb.st.trail);
-			posx = (int) (((sb.st.len - 800) * ratio + off) * siz + pos);
+			posx = (int) (((sb.st.len - 800) * ratio + off) * siz + sb.pos);
 
 			shake = 0.0;
 
@@ -772,7 +772,7 @@ public interface BattleBox {
 
 			gra.setTransform(at);
 
-			double p = (wc.pos * ratio + off) * siz + pos;
+			double p = (wc.pos * ratio + off) * siz + sb.pos;
 
 			if(wc instanceof ContWaveAb)
 				p -= wave * siz;
@@ -882,7 +882,7 @@ public interface BattleBox {
 			if(sb.bg.overlay == null)
 				return;
 
-			gra.gradRectAlpha(pos, - (int) (maxH * siz - midh - midY * siz), (int) ((sb.st.len * ratio + 400) * siz), (int) ((BackgroundEffect.BGHeight * 3 + midY) * siz), pos, 0, sb.bg.overlayAlpha, sb.bg.overlay[1], pos, (int) (BackgroundEffect.BGHeight * 3 * siz - maxH * siz + midh + midY * siz), sb.bg.overlayAlpha, sb.bg.overlay[0]);
+			gra.gradRectAlpha(sb.pos, - (int) (maxH * siz - midh - midY * siz), (int) ((sb.st.len * ratio + 400) * siz), (int) ((BackgroundEffect.BGHeight * 3 + midY) * siz), sb.pos, 0, sb.bg.overlayAlpha, sb.bg.overlay[1], sb.pos, (int) (BackgroundEffect.BGHeight * 3 * siz - maxH * siz + midh + midY * siz), sb.bg.overlayAlpha, sb.bg.overlay[0]);
 		}
 
 		protected synchronized void drag(Point p) {
@@ -918,7 +918,7 @@ public interface BattleBox {
 			else
 				psiz = Math.pow(exp, ind);
 
-			int dif = -(int) ((p.x - pos) * (psiz - 1));
+			int dif = -(int) ((p.x - sb.pos) * (psiz - 1));
 			adjust(dif, ind);
 			reset();
 		}
