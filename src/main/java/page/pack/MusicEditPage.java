@@ -202,7 +202,7 @@ public class MusicEditPage extends Page {
 				return (times[0] * 60 + times[1]) * 1000;
 			} else if (times.length == 3) {
 				if (times[2] < 1000) {
-					return (times[0] * 60 + times[1]) * 1000 + times[2];
+					return (times[0] * 60 + times[1]) * 1000 + getMili(times[2]);
 				} else {
 					String decimal = Long.toString(times[2]).substring(0, 3);
 					return (times[0] * 60 + times[1]) * 1000 + Integer.parseInt(decimal);
@@ -213,5 +213,14 @@ public class MusicEditPage extends Page {
 		} catch (Exception e) {
 			return -1;
 		}
+	}
+
+	private long getMili(long milis) {
+		if (milis == 0 || milis >= 100)
+			return milis;
+		else if (milis >= 10)
+			return milis * 10;
+		else
+			return milis * 100;
 	}
 }
