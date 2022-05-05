@@ -804,16 +804,17 @@ public interface BattleBox {
 			for (int i = 0; i < Math.abs(page.getSpeed()); i++)
 				g.drawImage(bimg, w - cw * (i + 1 + n), ih);
 
-			if(bf.sb.st.timeLimit != 0)
-				drawTime(g);
-			else if (snam.img != null) {
+			if (snam.img != null) {
 				double h = Math.max(1.25, box.getHeight() * 0.0024);
 				g.drawImage(snam.img, box.getHeight() * 0.005, box.getHeight() * 0.01, snam.img.getWidth() * h, snam.img.getHeight() * h * 0.9);
-			}
+				if(bf.sb.st.timeLimit != 0)
+					drawTime(g, snam.img.getHeight() * h * 0.75);
+			} else if(bf.sb.st.timeLimit != 0)
+				drawTime(g, 0);
 		}
 
-		private void drawTime(FakeGraphics g) {
-			P p = P.newP(box.getHeight() * 0.01, box.getHeight() * 0.01);
+		private void drawTime(FakeGraphics g, double nameheight) {
+			P p = P.newP(box.getHeight() * 0.01, box.getHeight() * 0.01 + nameheight);
 			double ratio = box.getHeight() * 0.1 / aux.timer[0].getImg().getHeight();
 
 			double timeLeft = bf.sb.st.timeLimit * 60.0 - bf.sb.time / 30.0;
@@ -935,7 +936,7 @@ public interface BattleBox {
 
 		public static void read() {
 			try {
-				File f = CommonStatic.ctx.getAssetFile("/fonts/StageFont.otf");
+				File f = CommonStatic.ctx.getAssetFile("/fonts/stage_font.otf");
 				if (!f.exists()) {
 					System.out.println("Error creating font: Couldn't find stage font file");
 					return;
