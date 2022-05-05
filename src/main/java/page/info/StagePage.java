@@ -13,7 +13,7 @@ public class StagePage extends Page {
 
 	private static final long serialVersionUID = 1L;
 
-	private final JBTN back = new JBTN(0, "back");
+	protected final JBTN back = new JBTN(0, "back");
 	protected final JBTN strt = new JBTN(0, "start");
 	private final StageTable jt = new StageTable(this);
 	private final JScrollPane jspjt = new JScrollPane(jt);

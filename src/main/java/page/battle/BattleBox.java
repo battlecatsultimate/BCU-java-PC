@@ -805,10 +805,9 @@ public interface BattleBox {
 				g.drawImage(bimg, w - cw * (i + 1 + n), ih);
 
 			if (snam.img != null) {
-				double h = Math.max(1.25, box.getHeight() * 0.0024);
-				g.drawImage(snam.img, box.getHeight() * 0.005, box.getHeight() * 0.01, snam.img.getWidth() * h, snam.img.getHeight() * h * 0.9);
+				g.drawImage(snam.img, box.getHeight() * 0.005, box.getHeight() * 0.01, snam.img.getWidth() * 1.25, snam.img.getHeight() * 1.125);
 				if(bf.sb.st.timeLimit != 0)
-					drawTime(g, snam.img.getHeight() * h * 0.75);
+					drawTime(g, snam.img.getHeight() * 0.9);
 			} else if(bf.sb.st.timeLimit != 0)
 				drawTime(g, 0);
 		}
