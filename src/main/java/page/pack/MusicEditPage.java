@@ -28,6 +28,7 @@ public class MusicEditPage extends Page {
 
 	private final JBTN relo = new JBTN(0, "read list");
 	private final JBTN play = new JBTN(0, "start");
+	private final JBTN stop = new JBTN(0, "stop");
 	private final JBTN show = new JBTN(0, "show");
 	private final JL jlp = new JL("loop");
 	private final JTF jtp = new JTF();
@@ -49,9 +50,10 @@ public class MusicEditPage extends Page {
 		set(jspst, x, y, 50, 100, 300, 1000);
 		set(relo, x, y, 400, 100, 200, 50);
 		set(play, x, y, 400, 200, 200, 50);
-		set(show, x, y, 400, 300, 200, 50);
-		set(jlp, x, y, 400, 400, 200, 50);
-		set(jtp, x, y, 400, 450, 200, 50);
+		set(stop, x, y, 400, 300, 200, 500);
+		set(show, x, y, 400, 400, 200, 50);
+		set(jlp, x, y, 400, 500, 200, 50);
+		set(jtp, x, y, 400, 550, 200, 50);
 	}
 
 	private void addListeners() {
@@ -87,6 +89,8 @@ public class MusicEditPage extends Page {
 		});
 
 		play.addActionListener(arg0 -> BCMusic.setBG(sele));
+
+		stop.addActionListener(arg -> BCMusic.BG.stop());
 
 		jlst.addListSelectionListener(arg0 -> {
 			if (isAdj() || arg0.getValueIsAdjusting())

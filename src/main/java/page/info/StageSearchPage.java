@@ -43,7 +43,7 @@ public class StageSearchPage extends StagePage {
     private final List<Enemy> eList = new ArrayList<>();
     private final JList<Enemy> enemies = new JList<>();
     private final JScrollPane enes = new JScrollPane(enemies);
-    private final JTG eneOrop = new JTG("orop");
+    private final JTG eneOrop = new JTG(0,"orop");
 
     private final JBTN hasBoss = new JBTN();
     private int BossChoice = -1;
@@ -116,6 +116,7 @@ public class StageSearchPage extends StagePage {
         WidthAmount.setVisible(!resultFound);
         continuable.setVisible(!resultFound);
         hasBoss.setVisible(!resultFound);
+        enemy.setVisible(!resultFound);
         enes.setVisible(!resultFound);
         adde.setVisible(!resultFound);
         reme.setVisible(!resultFound);
@@ -283,6 +284,7 @@ public class StageSearchPage extends StagePage {
         add(enes);
         add(adde);
         add(reme);
+        add(enemy);
         add(eneOrop);
         add(initSearch);
 
