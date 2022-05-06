@@ -5,12 +5,11 @@ import common.pack.FixIndexList;
 import common.pack.Identifier;
 import common.pack.PackData;
 import common.pack.UserProfile;
-import common.util.Data;
 import common.util.lang.MultiLangCont;
 import common.util.lang.ProcLang;
 import common.util.stage.Limit;
-import common.util.unit.Trait;
 import common.util.unit.Form;
+import common.util.unit.Trait;
 import common.util.unit.Unit;
 import main.MainBCU;
 import page.JTG;
@@ -19,7 +18,10 @@ import utilpc.UtilPC;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Vector;
 
 import static utilpc.Interpret.*;
 
@@ -417,8 +419,10 @@ class UFBList extends UnitFilterBox {
 		add(jab);
 		add(jat);
 
-		if (lim != null)
+		if (lim != null) {
 			add(limbtn);
+			limbtn.addActionListener(l -> confirm());
+		}
 	}
 
 	private void set(AbstractButton b) {

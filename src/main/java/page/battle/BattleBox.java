@@ -173,7 +173,6 @@ public interface BattleBox {
 
 			drawBtm(g);
 			drawTop(g);
-			sb = null;
 		}
 
 		public double getX(double x) {
