@@ -46,6 +46,7 @@ class HeadEditTable extends Page {
 	private final JL cost = new JL(1, "chcos");
 	private final JTF minrest = new JTF();
 	private final JTF cos = new JTF();
+	private final JTG dojo = new JTG("dojo");
 	private final LimitTable lt;
 
 	private Stage sta;
@@ -139,6 +140,7 @@ class HeadEditTable extends Page {
 		set(jm0, x, y, w, 150, w, 50);
 		set(jmh, x, y, w * 2, 150, w, 50);
 		set(jm1, x, y, w * 3, 150, w, 50);
+		set(dojo, x, y, w * 4, 150, w, 50);
 		for (int i = 0; i < 4; i++)
 			set(star[i], x, y, w * (2 + i), 0, w, 50);
 		set(lt, x, y, 0, 200, 1400, 100);
@@ -152,7 +154,13 @@ class HeadEditTable extends Page {
 			return;
 		change(true);
 		name.setText(st.toString());
-		jhea.setText("" + st.health);
+		if (st.trail) {
+			hea.setText(get(1, "time"));
+			jhea.setText(st.timeLimit + " min");
+		} else {
+			hea.setText(get(1, "ht00"));
+			jhea.setText("" + st.health);
+		}
 		jlen.setText("" + st.len);
 		jbg.setText("" + st.bg);
 		jbgh.setText("<" + st.bgh + "% health:");
@@ -164,6 +172,7 @@ class HeadEditTable extends Page {
 		jmax.setText("" + st.max);
 		cos.setText("" + (st.getCont().price + 1));
 		con.setSelected(!st.non_con);
+		dojo.setSelected(st.trail);
 		String str = get(1, "star") + ": ";
 		for (int i = 0; i < 4; i++)
 			if (i < st.getCont().stars.length)
@@ -194,6 +203,7 @@ class HeadEditTable extends Page {
 		jm0.setEnabled(b);
 		jmh.setEnabled(b);
 		jm1.setEnabled(b);
+		dojo.setEnabled(b);
 		for (JTF jtf : star)
 			jtf.setEnabled(b);
 		cos.setEnabled(b);
@@ -222,6 +232,19 @@ class HeadEditTable extends Page {
 			setData(sta);
 		});
 
+		dojo.addActionListener(arg0 -> {
+			sta.trail = dojo.isSelected();
+			if (sta.trail) {
+				sta.timeLimit = 1;
+				hea.setText(get(1, "time"));
+				jhea.setText(sta.timeLimit + " min");
+			} else {
+				sta.timeLimit = 0;
+				hea.setText(get(1, "ht00"));
+				jhea.setText("" + sta.health);
+			}
+		});
+
 	}
 
 	private void ini() {
@@ -231,6 +254,7 @@ class HeadEditTable extends Page {
 		add(bg);
 		add(cas);
 		add(con);
+		add(dojo);
 		add(mus);
 		set(jhea);
 		set(jlen);
@@ -269,7 +293,10 @@ class HeadEditTable extends Page {
 		if (jtf == jhea) {
 			if (val <= 0)
 				return;
-			sta.health = val;
+			if (!sta.trail)
+				sta.health = val;
+			else
+				sta.timeLimit = val;
 		}
 		if (jtf == jlen) {
 			if (val > 8000)
