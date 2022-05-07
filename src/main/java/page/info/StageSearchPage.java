@@ -168,7 +168,7 @@ public class StageSearchPage extends StagePage {
                     }
                 }
         for (int i = 0; i < diffs.size(); i++) {
-            if (diffs.get(i) > minDiff)
+            if (diffs.get(i) <= minDiff)
                 continue;
             diffs.remove(i);
             stagesFound.remove(i);
