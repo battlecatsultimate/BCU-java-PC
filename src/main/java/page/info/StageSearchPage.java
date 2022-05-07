@@ -9,6 +9,7 @@ import common.util.unit.Enemy;
 import page.*;
 import page.info.filter.EnemyFindPage;
 import page.support.AnimLCR;
+import utilpc.UtilPC;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -134,7 +135,7 @@ public class StageSearchPage extends StagePage {
 
         for (MapColc mc : MapColc.values())
             for (StageMap sm : mc.maps)
-                if (sm.toString().toLowerCase().contains(str))
+                if (UtilPC.damerauLevenshteinDistance(sm.toString().toLowerCase(),str) < 5)
                     chaptersFound.add(sm);
         return chaptersFound;
     }
@@ -142,18 +143,37 @@ public class StageSearchPage extends StagePage {
     private List<Stage> searchStage(List<StageMap> mapsFound) {
         String str = stageName.getText().toLowerCase();
         List<Stage> stagesFound = new ArrayList<>();
+        List<Integer> diffs = new ArrayList<>();
+        int minDiff = 5;
 
         if (mapsFound.isEmpty()) {
             for (MapColc mc : MapColc.values())
                 for (StageMap sm : mc.maps)
-                    for (Stage s : sm.list)
-                        if (s.toString().toLowerCase().contains(str))
+                    for (Stage s : sm.list) {
+                        int diff = UtilPC.damerauLevenshteinDistance(s.toString().toLowerCase(), str);
+                        if (diff <= minDiff) {
                             stagesFound.add(s);
+                            diffs.add(diff);
+                            minDiff = diff;
+                        }
+                    }
         } else
             for (StageMap sm : mapsFound)
-                for (Stage s : sm.list)
-                    if (s.toString().toLowerCase().contains(str))
+                for (Stage s : sm.list) {
+                    int diff = UtilPC.damerauLevenshteinDistance(s.toString().toLowerCase(), str);
+                    if (diff <= minDiff) {
                         stagesFound.add(s);
+                        diffs.add(diff);
+                        minDiff = diff;
+                    }
+                }
+        for (int i = 0; i < diffs.size(); i++) {
+            if (diffs.get(i) > minDiff)
+                continue;
+            diffs.remove(i);
+            stagesFound.remove(i);
+            i--;
+        }
         return stagesFound;
     }
 

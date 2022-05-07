@@ -180,15 +180,11 @@ class UFBButton extends UnitFilterBox {
 								b3 |= isType(du, i);
 							else
 								b3 &= isType(du, i);
-					boolean b4 = true;
 
 					String fname = MultiLangCont.getStatic().FNAME.getCont(f);
-
 					if (fname == null)
 						fname = f.names.toString();
-
-					if (name != null)
-						b4 = fname.toLowerCase().contains(name.toLowerCase());
+					boolean b4 = name == null || UtilPC.damerauLevenshteinDistance(fname.toLowerCase(), name.toLowerCase()) <= 5;
 
 					boolean b5;
 
@@ -363,15 +359,10 @@ class UFBList extends UnitFilterBox {
 						else
 							b3 &= isType(du, i);
 
-					boolean b4 = true;
-
 					String fname = MultiLangCont.getStatic().FNAME.getCont(f);
-
 					if (fname == null)
 						fname = f.names.toString();
-
-					if (name != null)
-						b4 = fname.toLowerCase().contains(name.toLowerCase());
+					boolean b4 = name == null || UtilPC.damerauLevenshteinDistance(fname.toLowerCase(), name.toLowerCase()) <= 5;
 
 					boolean b5;
 
@@ -436,5 +427,4 @@ class UFBList extends UnitFilterBox {
 
 		jl.addListSelectionListener(arg0 -> confirm());
 	}
-
 }

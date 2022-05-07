@@ -155,18 +155,11 @@ class EFBButton extends EnemyFilterBox {
 							b3 |= isType(e.de, i);
 						else
 							b3 &= isType(e.de, i);
-				boolean b4 = true;
 
-				String ename;
-
-				ename = MultiLangCont.getStatic().ENAME.getCont(e);
-
+				String ename = MultiLangCont.getStatic().ENAME.getCont(e);
 				if (ename == null)
 					ename = e.names.toString();
-
-				if (name != null) {
-					b4 = ename.toLowerCase().contains(name.toLowerCase());
-				}
+				boolean b4 = name == null || UtilPC.damerauLevenshteinDistance(ename.toLowerCase(), name.toLowerCase()) <= 5;
 
 				boolean b5;
 
@@ -338,18 +331,10 @@ class EFBList extends EnemyFilterBox {
 					else
 						b3 &= isType(e.de, i);
 
-				boolean b4 = true;
-
-				String ename;
-
-				ename = MultiLangCont.getStatic().ENAME.getCont(e);
-
+				String ename = MultiLangCont.getStatic().ENAME.getCont(e);
 				if (ename == null)
 					ename = e.names.toString();
-
-				if (name != null) {
-					b4 = ename.toLowerCase().contains(name.toLowerCase());
-				}
+				boolean b4 = name == null || UtilPC.damerauLevenshteinDistance(ename.toLowerCase(), name.toLowerCase()) <= 5;
 
 				boolean b5;
 

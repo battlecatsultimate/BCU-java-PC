@@ -4,7 +4,6 @@ import common.pack.FixIndexList;
 import common.pack.Identifier;
 import common.pack.PackData;
 import common.pack.UserProfile;
-import common.util.Data;
 import common.util.lang.MultiLangCont;
 import common.util.lang.ProcLang;
 import common.util.unit.AbEnemy;
@@ -159,18 +158,10 @@ class AEFBButton extends AbEnemyFilterBox {
                             b3 |= isType(e.de, i);
                         else
                             b3 &= isType(e.de, i);
-                boolean b4 = true;
-
-                String ename;
-
-                ename = MultiLangCont.getStatic().ENAME.getCont(e);
-
+                String ename = MultiLangCont.getStatic().ENAME.getCont(e);
                 if (ename == null)
                     ename = e.names.toString();
-
-                if (name != null) {
-                    b4 = ename.toLowerCase().contains(name.toLowerCase());
-                }
+                boolean b4 = name == null || UtilPC.damerauLevenshteinDistance(ename.toLowerCase(), name.toLowerCase()) <= 5;
 
                 boolean b5;
 
@@ -337,18 +328,10 @@ class AEFBList extends AbEnemyFilterBox {
                     else
                         b3 &= isType(e.de, i);
 
-                boolean b4 = true;
-
-                String ename;
-
-                ename = MultiLangCont.getStatic().ENAME.getCont(e);
-
+                String ename = MultiLangCont.getStatic().ENAME.getCont(e);
                 if (ename == null)
                     ename = e.names.toString();
-
-                if (name != null) {
-                    b4 = ename.toLowerCase().contains(name.toLowerCase());
-                }
+                boolean b4 = name == null || UtilPC.damerauLevenshteinDistance(ename.toLowerCase(), name.toLowerCase()) <= 5;
 
                 boolean b5;
 
