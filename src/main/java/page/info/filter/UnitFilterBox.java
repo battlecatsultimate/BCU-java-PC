@@ -276,7 +276,7 @@ class UFBList extends UnitFilterBox {
 	private final JScrollPane jt  = new JScrollPane(trait);
 	private final JScrollPane jab = new JScrollPane(abis);
 	private final JScrollPane jat = new JScrollPane(atkt);
-	private final JTG limbtn = new JTG("Usable Only");
+	private final JTG limbtn = new JTG(0, "usable");
 
 	protected UFBList(Page p, Limit lim, int price) {
 		super(p, lim, price);

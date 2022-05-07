@@ -162,77 +162,77 @@ public class MainPage extends Page {
 
 	private void ini() {
 		add(vuni);
-		vuni.setToolTipText(Page.get(MainLocale.PAGE,"vunitip"));
+		vuni.setToolTipText(get(MainLocale.PAGE,"vunitip"));
 
 		add(vene);
-		vene.setToolTipText(Page.get(MainLocale.PAGE,"venetip"));
+		vene.setToolTipText(get(MainLocale.PAGE,"venetip"));
 
 		add(vsta);
-		vsta.setToolTipText(Page.get(MainLocale.PAGE,"vstatip"));
+		vsta.setToolTipText(get(MainLocale.PAGE,"vstatip"));
 
 		add(vdiy);
-		vdiy.setToolTipText(Page.get(MainLocale.PAGE,"vdiytip"));
+		vdiy.setToolTipText(get(MainLocale.PAGE,"vdiytip"));
 
 		add(conf);
-		conf.setToolTipText(Page.get(MainLocale.PAGE,"conftip"));
+		conf.setToolTipText(get(MainLocale.PAGE,"conftip"));
 
 		add(veff);
-		veff.setToolTipText(Page.get(MainLocale.PAGE,"vefftip"));
+		veff.setToolTipText(get(MainLocale.PAGE,"vefftip"));
 
 		add(vcas);
-		vcas.setToolTipText(Page.get(MainLocale.PAGE,"vcastip"));
+		vcas.setToolTipText(get(MainLocale.PAGE,"vcastip"));
 
 		add(vbgr);
-		vbgr.setToolTipText(Page.get(MainLocale.PAGE,"vbgrtip"));
+		vbgr.setToolTipText(get(MainLocale.PAGE,"vbgrtip"));
 
 		add(veif);
-		veif.setToolTipText(Page.get(MainLocale.PAGE,"veiftip"));
+		veif.setToolTipText(get(MainLocale.PAGE,"veiftip"));
 
 		add(vuif);
-		vuif.setToolTipText(Page.get(MainLocale.PAGE,"vuiftip"));
+		vuif.setToolTipText(get(MainLocale.PAGE,"vuiftip"));
 
 		add(vmsc);
-		vmsc.setToolTipText(Page.get(MainLocale.PAGE,"vmsctip"));
+		vmsc.setToolTipText(get(MainLocale.PAGE,"vmsctip"));
 
 		add(bass);
-		bass.setToolTipText(Page.get(MainLocale.PAGE,"basstip"));
+		bass.setToolTipText(get(MainLocale.PAGE,"basstip"));
 
 		add(memo);
 		add(curr);
-		curr.setToolTipText(Page.get(MainLocale.PAGE,"currtip"));
+		curr.setToolTipText(get(MainLocale.PAGE,"currtip"));
 
 		add(pcus);
-		pcus.setToolTipText(Page.get(MainLocale.PAGE,"pcustip"));
+		pcus.setToolTipText(get(MainLocale.PAGE,"pcustip"));
 
 		add(caic);
-		caic.setToolTipText(Page.get(MainLocale.PAGE,"caictip"));
+		caic.setToolTipText(get(MainLocale.PAGE,"caictip"));
 
 		add(camm);
-		camm.setToolTipText(Page.get(MainLocale.PAGE,"cammtip"));
+		camm.setToolTipText(get(MainLocale.PAGE,"cammtip"));
 
 		add(cama);
-		cama.setToolTipText(Page.get(MainLocale.PAGE,"camatip"));
+		cama.setToolTipText(get(MainLocale.PAGE,"camatip"));
 
 		add(save);
-		save.setToolTipText(Page.get(MainLocale.PAGE,"savetip"));
+		save.setToolTipText(get(MainLocale.PAGE,"savetip"));
 
 		add(seicon);
 		add(sgifau);
 		add(welcome);
 		add(rply);
-		rply.setToolTipText(Page.get(MainLocale.PAGE,"rplytip"));
+		rply.setToolTipText(get(MainLocale.PAGE,"rplytip"));
 
 		add(allf);
-		allf.setToolTipText(Page.get(MainLocale.PAGE,"allftip"));
+		allf.setToolTipText(get(MainLocale.PAGE,"allftip"));
 
 		add(auth);
-		auth.setToolTipText(Page.get(MainLocale.PAGE,"authtip"));
+		auth.setToolTipText(get(MainLocale.PAGE,"authtip"));
 
 		add(comp);
-		comp.setToolTipText(Page.get(MainLocale.PAGE,"comptip"));
+		comp.setToolTipText(get(MainLocale.PAGE,"comptip"));
 
 		add(bckp);
-		bckp.setToolTipText(Page.get(MainLocale.PAGE,"bckptip"));
+		bckp.setToolTipText(get(MainLocale.PAGE,"bckptip"));
 
 		add(refr);
 		add(tips);
@@ -253,7 +253,7 @@ public class MainPage extends Page {
 	}
 
 	private void refrTips() {
-		String[] ALLTIPS = Page.get(MainLocale.PAGE, "tip", 13);
+		String[] ALLTIPS = get(MainLocale.PAGE, "tip", 13);
 		tips.setText("<html>" + ALLTIPS[(int)(Math.random() * ALLTIPS.length)] + "</html>");
 	}
 

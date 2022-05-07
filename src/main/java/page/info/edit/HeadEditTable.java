@@ -23,12 +23,12 @@ class HeadEditTable extends Page {
 
 	private static final long serialVersionUID = 1L;
 
-	private final JL hea = new JL(1, "ht00");
-	private final JL len = new JL(1, "ht01");
-	private final JBTN mus = new JBTN(1, "mus");
-	private final JL max = new JL(1, "ht02");
-	private final JBTN bg = new JBTN(1, "ht04");
-	private final JBTN cas = new JBTN(1, "ht05");
+	private final JL hea = new JL(MainLocale.INFO, "ht00");
+	private final JL len = new JL(MainLocale.INFO, "ht01");
+	private final JBTN mus = new JBTN(MainLocale.INFO, "mus");
+	private final JL max = new JL(MainLocale.INFO, "ht02");
+	private final JBTN bg = new JBTN(MainLocale.INFO, "ht04");
+	private final JBTN cas = new JBTN(MainLocale.INFO, "ht05");
 	private final JTF name = new JTF();
 	private final JTF jhea = new JTF();
 	private final JTF jlen = new JTF();
@@ -39,14 +39,14 @@ class HeadEditTable extends Page {
 	private final JTF jm1 = new JTF();
 	private final JTF jbgh = new JTF();
 	private final JTF jbg1 = new JTF();
-	private final JTG con = new JTG(1, "ht03");
+	private final JTG con = new JTG(MainLocale.INFO, "ht03");
 	private final JTF[] star = new JTF[4];
 	private final JTF jmax = new JTF();
-	private final JL minres = new JL(1, "minspawn");
-	private final JL cost = new JL(1, "chcos");
+	private final JL minres = new JL(MainLocale.INFO, "minspawn");
+	private final JL cost = new JL(MainLocale.INFO, "chcos");
 	private final JTF minrest = new JTF();
 	private final JTF cos = new JTF();
-	private final JTG dojo = new JTG("dojo");
+	private final JTG dojo = new JTG(MainLocale.PAGE,"dojo");
 	private final LimitTable lt;
 
 	private Stage sta;
@@ -155,10 +155,10 @@ class HeadEditTable extends Page {
 		change(true);
 		name.setText(st.toString());
 		if (st.trail) {
-			hea.setText(get(1, "time"));
+			hea.setText(get(MainLocale.INFO, "time"));
 			jhea.setText(st.timeLimit + " min");
 		} else {
-			hea.setText(get(1, "ht00"));
+			hea.setText(get(MainLocale.INFO, "ht00"));
 			jhea.setText("" + st.health);
 		}
 		jlen.setText("" + st.len);
@@ -173,7 +173,7 @@ class HeadEditTable extends Page {
 		cos.setText("" + (st.getCont().price + 1));
 		con.setSelected(!st.non_con);
 		dojo.setSelected(st.trail);
-		String str = get(1, "star") + ": ";
+		String str = get(MainLocale.INFO, "star") + ": ";
 		for (int i = 0; i < 4; i++)
 			if (i < st.getCont().stars.length)
 				star[i].setText(i + 1 + str + st.getCont().stars[i] + "%");
@@ -236,11 +236,11 @@ class HeadEditTable extends Page {
 			sta.trail = dojo.isSelected();
 			if (sta.trail) {
 				sta.timeLimit = 1;
-				hea.setText(get(1, "time"));
+				hea.setText(get(MainLocale.INFO, "time"));
 				jhea.setText(sta.timeLimit + " min");
 			} else {
 				sta.timeLimit = 0;
-				hea.setText(get(1, "ht00"));
+				hea.setText(get(MainLocale.INFO, "ht00"));
 				jhea.setText("" + sta.health);
 			}
 		});
