@@ -19,7 +19,6 @@ import javax.swing.*;
 import java.util.*;
 
 import static utilpc.Interpret.*;
-import static utilpc.Interpret.ATKCONF;
 
 public abstract class AbEnemyFilterBox extends Page {
 
@@ -112,6 +111,7 @@ class AEFBButton extends AbEnemyFilterBox {
 
     private void confirm() {
         List<AbEnemy> ans = new ArrayList<>();
+        int minDiff = 5;
         for(PackData p : UserProfile.getAllPacks()) {
             for (Enemy e : p.enemies.getList()) {
                 List<Trait> ct = e.de.getTraits();
@@ -158,10 +158,14 @@ class AEFBButton extends AbEnemyFilterBox {
                             b3 |= isType(e.de, i);
                         else
                             b3 &= isType(e.de, i);
-                String ename = MultiLangCont.getStatic().ENAME.getCont(e);
-                if (ename == null)
-                    ename = e.names.toString();
-                boolean b4 = name == null || UtilPC.damerauLevenshteinDistance(ename.toLowerCase(), name.toLowerCase()) <= 5;
+
+                boolean b4;
+                String fname = MultiLangCont.getStatic().ENAME.getCont(e);
+                if (fname == null)
+                    fname = e.names.toString();
+                int diff = UtilPC.damerauLevenshteinDistance(fname.toLowerCase(), name.toLowerCase());
+                minDiff = Math.min(minDiff, diff);
+                b4 = diff == minDiff;
 
                 boolean b5;
 
@@ -183,10 +187,27 @@ class AEFBButton extends AbEnemyFilterBox {
         for(PackData.UserPack p : UserProfile.getUserPacks()) {
             if(pack == null || pack.equals(p.desc.id) || parents.contains(p.desc.id)) {
                 for(EneRand rand : p.randEnemies.getList()) {
-                    if(rand.name.equals(name)) {
+                    int diff = UtilPC.damerauLevenshteinDistance(rand.name.toLowerCase(), name.toLowerCase());
+                    if(diff <= minDiff) {
                         ans.add(rand);
+                        minDiff = diff;
                     }
                 }
+            }
+        }
+        for (int i = 0; i < ans.size(); i++) {
+            if (ans.get(i) instanceof Enemy) {
+                Enemy e = (Enemy) ans.get(i);
+                String ename = MultiLangCont.getStatic().ENAME.getCont(e);
+                if (ename == null)
+                    ename = e.names.toString();
+                if (UtilPC.damerauLevenshteinDistance(ename.toLowerCase(), name.toLowerCase()) > minDiff) {
+                    ans.remove(i);
+                    i--;
+                }
+            } else if (UtilPC.damerauLevenshteinDistance(((EneRand) ans.get(i)).name.toLowerCase(), name.toLowerCase()) > minDiff) {
+                ans.remove(i);
+                i--;
             }
         }
 
@@ -288,6 +309,7 @@ class AEFBList extends AbEnemyFilterBox {
 
     private void confirm() {
         List<AbEnemy> ans = new ArrayList<>();
+        int minDiff = 5;
         for(PackData p : UserProfile.getAllPacks()) {
             for (Enemy e : p.enemies.getList()) {
                 List<Trait> traits = e.de.getTraits();
@@ -328,10 +350,18 @@ class AEFBList extends AbEnemyFilterBox {
                     else
                         b3 &= isType(e.de, i);
 
-                String ename = MultiLangCont.getStatic().ENAME.getCont(e);
+                boolean b4 = true;
+
+                String ename;
+
+                ename = MultiLangCont.getStatic().ENAME.getCont(e);
+
                 if (ename == null)
                     ename = e.names.toString();
-                boolean b4 = name == null || UtilPC.damerauLevenshteinDistance(ename.toLowerCase(), name.toLowerCase()) <= 5;
+
+                if (name != null) {
+                    b4 = ename.toLowerCase().contains(name.toLowerCase());
+                }
 
                 boolean b5;
 
@@ -353,13 +383,29 @@ class AEFBList extends AbEnemyFilterBox {
         for(PackData.UserPack p : UserProfile.getUserPacks()) {
             if(pack == null || pack.equals(p.desc.id) || parents.contains(p.desc.id)) {
                 for(EneRand rand : p.randEnemies.getList()) {
-                    if(rand.name.toLowerCase(Locale.ROOT).contains(name.toLowerCase(Locale.ROOT))) {
+                    int diff = UtilPC.damerauLevenshteinDistance(rand.name.toLowerCase(), name.toLowerCase());
+                    if(diff <= minDiff) {
                         ans.add(rand);
+                        minDiff = diff;
                     }
                 }
             }
         }
-
+        for (int i = 0; i < ans.size(); i++) {
+            if (ans.get(i) instanceof Enemy) {
+                Enemy e = (Enemy) ans.get(i);
+                String ename = MultiLangCont.getStatic().ENAME.getCont(e);
+                if (ename == null)
+                    ename = e.names.toString();
+                if (UtilPC.damerauLevenshteinDistance(ename.toLowerCase(), name.toLowerCase()) > minDiff) {
+                    ans.remove(i);
+                    i--;
+                }
+            } else if (UtilPC.damerauLevenshteinDistance(((EneRand) ans.get(i)).name.toLowerCase(), name.toLowerCase()) > minDiff) {
+                ans.remove(i);
+                i--;
+            }
+        }
         getFront().callBack(ans);
     }
 
