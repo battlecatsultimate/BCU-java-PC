@@ -4,11 +4,10 @@ import common.pack.FixIndexList.FixIndexMap;
 import common.pack.Identifier;
 import common.pack.PackData;
 import common.pack.UserProfile;
-import common.util.Data;
 import common.util.lang.MultiLangCont;
 import common.util.lang.ProcLang;
-import common.util.unit.Trait;
 import common.util.unit.Enemy;
+import common.util.unit.Trait;
 import main.MainBCU;
 import page.JTG;
 import page.Page;
@@ -110,6 +109,7 @@ class EFBButton extends EnemyFilterBox {
 
 	private void confirm() {
 		List<Enemy> ans = new ArrayList<>();
+		int minDiff = 5;
 		for(PackData p : UserProfile.getAllPacks()) {
 			for (Enemy e : p.enemies.getList()) {
 				List<Trait> ct = e.de.getTraits();
@@ -155,18 +155,14 @@ class EFBButton extends EnemyFilterBox {
 							b3 |= isType(e.de, i);
 						else
 							b3 &= isType(e.de, i);
-				boolean b4 = true;
 
-				String ename;
-
-				ename = MultiLangCont.getStatic().ENAME.getCont(e);
-
-				if (ename == null)
-					ename = e.names.toString();
-
-				if (name != null) {
-					b4 = ename.toLowerCase().contains(name.toLowerCase());
-				}
+				boolean b4;
+				String fname = MultiLangCont.getStatic().ENAME.getCont(e);
+				if (fname == null)
+					fname = e.names.toString();
+				int diff = UtilPC.damerauLevenshteinDistance(fname.toLowerCase(), name.toLowerCase());
+				minDiff = Math.min(minDiff, diff);
+				b4 = diff == minDiff;
 
 				boolean b5;
 
@@ -182,6 +178,16 @@ class EFBButton extends EnemyFilterBox {
 				b3 = nonSele(atkt) | b3;
 				if (b0 & b1 & b2 & b3 & b4 && b5)
 					ans.add(e);
+			}
+		}
+
+		for (int i = 0; i < ans.size(); i++) {
+			String ename = MultiLangCont.getStatic().ENAME.getCont(ans.get(i));
+			if (ename == null)
+				ename = ans.get(i).names.toString();
+			if (UtilPC.damerauLevenshteinDistance(ename.toLowerCase(), name.toLowerCase()) > minDiff) {
+				ans.remove(i);
+				i--;
 			}
 		}
 		getFront().callBack(ans);
@@ -292,6 +298,7 @@ class EFBList extends EnemyFilterBox {
 
 	private void confirm() {
 		List<Enemy> ans = new ArrayList<>();
+		int minDiff = 5;
 		for(PackData p : UserProfile.getAllPacks()) {
 			for (Enemy e : p.enemies.getList()) {
 				int a = e.de.getAbi();
@@ -338,18 +345,13 @@ class EFBList extends EnemyFilterBox {
 					else
 						b3 &= isType(e.de, i);
 
-				boolean b4 = true;
-
-				String ename;
-
-				ename = MultiLangCont.getStatic().ENAME.getCont(e);
-
-				if (ename == null)
-					ename = e.names.toString();
-
-				if (name != null) {
-					b4 = ename.toLowerCase().contains(name.toLowerCase());
-				}
+				boolean b4;
+				String fname = MultiLangCont.getStatic().ENAME.getCont(e);
+				if (fname == null)
+					fname = e.names.toString();
+				int diff = UtilPC.damerauLevenshteinDistance(fname.toLowerCase(), name.toLowerCase());
+				minDiff = Math.min(minDiff, diff);
+				b4 = diff == minDiff;
 
 				boolean b5;
 
@@ -365,6 +367,16 @@ class EFBList extends EnemyFilterBox {
 				b3 = atkt.getSelectedIndex() == -1 | b3;
 				if (b0 & b1 & b2 & b3 & b4 & b5)
 					ans.add(e);
+			}
+		}
+
+		for (int i = 0; i < ans.size(); i++) {
+			String ename = MultiLangCont.getStatic().ENAME.getCont(ans.get(i));
+			if (ename == null)
+				ename = ans.get(i).names.toString();
+			if (UtilPC.damerauLevenshteinDistance(ename.toLowerCase(), name.toLowerCase()) > minDiff) {
+				ans.remove(i);
+				i--;
 			}
 		}
 		getFront().callBack(ans);

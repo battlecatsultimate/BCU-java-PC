@@ -172,4 +172,38 @@ public class UtilPC {
 
 		return Interpret.PCTX[pc.info.get(index)[0]];
 	}
+
+	public static int damerauLevenshteinDistance(String src, String compare) {
+		if (src.contains(compare))
+			return 0;
+
+		int[][] table = new int[src.length() + 1][compare.length() + 1];
+
+		for (int i = 0; i < src.length() + 1; i++) {
+			table[i][0] = i;
+		}
+
+		for (int i = 0; i < compare.length() + 1; i++) {
+			table[0][i] = i;
+		}
+
+		for (int i = 1; i < src.length() + 1; i++) {
+			for (int j = 1; j < compare.length() + 1; j++) {
+				int cost;
+
+				if (src.charAt(i - 1) == compare.charAt(j - 1))
+					cost = 0;
+				else
+					cost = 1;
+
+				table[i][j] = Math.min(Math.min(table[i - 1][j] + 1, table[i][j - 1] + 1), table[i - 1][j - 1] + cost);
+
+				if (i > 1 && j > 1 && src.charAt(i - 1) == compare.charAt(j - 2) && src.charAt(i - 2) == compare.charAt(j - 1)) {
+					table[i][j] = Math.min(table[i][j], table[i - 2][j - 2]);
+				}
+			}
+		}
+
+		return table[src.length()][compare.length()];
+	}
 }

@@ -132,6 +132,7 @@ class UFBButton extends UnitFilterBox {
 
 	private void confirm() {
 		List<Form> ans = new ArrayList<>();
+		int minDiff = 5;
 		for(PackData p : UserProfile.getAllPacks()) {
 			for (Unit u : p.units.getList())
 				for (Form f : u.forms) {
@@ -180,15 +181,14 @@ class UFBButton extends UnitFilterBox {
 								b3 |= isType(du, i);
 							else
 								b3 &= isType(du, i);
-					boolean b4 = true;
 
+					boolean b4;
 					String fname = MultiLangCont.getStatic().FNAME.getCont(f);
-
 					if (fname == null)
 						fname = f.names.toString();
-
-					if (name != null)
-						b4 = fname.toLowerCase().contains(name.toLowerCase());
+					int diff = UtilPC.damerauLevenshteinDistance(fname.toLowerCase(), name.toLowerCase());
+					minDiff = Math.min(minDiff, diff);
+					b4 = diff == minDiff;
 
 					boolean b5;
 
@@ -205,6 +205,16 @@ class UFBButton extends UnitFilterBox {
 					if (b0 & b1 & b2 & b3 & b4 & b5)
 						ans.add(f);
 				}
+		}
+
+		for (int i = 0; i < ans.size(); i++) {
+			String fname = MultiLangCont.getStatic().FNAME.getCont(ans.get(i));
+			if (fname == null)
+				fname = ans.get(i).names.toString();
+			if (UtilPC.damerauLevenshteinDistance(fname.toLowerCase(), name.toLowerCase()) > minDiff) {
+				ans.remove(i);
+				i--;
+			}
 		}
 		getFront().callBack(ans);
 	}
@@ -276,7 +286,7 @@ class UFBList extends UnitFilterBox {
 	private final JScrollPane jt  = new JScrollPane(trait);
 	private final JScrollPane jab = new JScrollPane(abis);
 	private final JScrollPane jat = new JScrollPane(atkt);
-	private final JTG limbtn = new JTG("Usable Only");
+	private final JTG limbtn = new JTG(0, "usable");
 
 	protected UFBList(Page p, Limit lim, int price) {
 		super(p, lim, price);
@@ -317,6 +327,7 @@ class UFBList extends UnitFilterBox {
 
 	private void confirm() {
 		List<Form> ans = new ArrayList<>();
+		int minDiff = 5;
 		for(PackData p : UserProfile.getAllPacks()) {
 			for (Unit u : p.units.getList())
 				for (Form f : u.forms) {
@@ -363,15 +374,13 @@ class UFBList extends UnitFilterBox {
 						else
 							b3 &= isType(du, i);
 
-					boolean b4 = true;
-
+					boolean b4;
 					String fname = MultiLangCont.getStatic().FNAME.getCont(f);
-
 					if (fname == null)
 						fname = f.names.toString();
-
-					if (name != null)
-						b4 = fname.toLowerCase().contains(name.toLowerCase());
+					int diff = UtilPC.damerauLevenshteinDistance(fname.toLowerCase(), name.toLowerCase());
+					minDiff = Math.min(minDiff, diff);
+					b4 = diff == minDiff;
 
 					boolean b5;
 
@@ -388,7 +397,16 @@ class UFBList extends UnitFilterBox {
 					if (b0 & b1 & b2 & b3 & b4 & b5)
 						ans.add(f);
 				}
+		}
 
+		for (int i = 0; i < ans.size(); i++) {
+			String fname = MultiLangCont.getStatic().FNAME.getCont(ans.get(i));
+			if (fname == null)
+				fname = ans.get(i).names.toString();
+			if (UtilPC.damerauLevenshteinDistance(fname.toLowerCase(), name.toLowerCase()) > minDiff) {
+				ans.remove(i);
+				i--;
+			}
 		}
 		getFront().callBack(ans);
 	}
@@ -436,5 +454,4 @@ class UFBList extends UnitFilterBox {
 
 		jl.addListSelectionListener(arg0 -> confirm());
 	}
-
 }

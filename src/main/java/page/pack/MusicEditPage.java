@@ -169,7 +169,7 @@ public class MusicEditPage extends Page {
 		}
 	}
 
-	private String convertTime(long milli) {
+	private static String convertTime(long milli) {
 		long min = milli / 60 / 1000;
 		double time = milli - (double) min * 60000;
 		time /= 1000;
@@ -190,7 +190,7 @@ public class MusicEditPage extends Page {
 		}
 	}
 
-	private long toMilli(String time) {
+	private static long toMilli(String time) {
 		try {
 			long[] times = CommonStatic.parseLongsN(time);
 
@@ -219,7 +219,7 @@ public class MusicEditPage extends Page {
 		}
 	}
 
-	private long getMili(long milis) {
+	private static long getMili(long milis) {
 		if (milis == 0 || milis >= 100)
 			return milis;
 		else if (milis >= 10)
