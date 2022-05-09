@@ -141,10 +141,10 @@ public interface BattleBox {
 
 			ImgCore.set(g);
 			P rect = setP(box.getWidth(), box.getHeight());
-			sb.bg.draw(g, rect, sb.pos, midh, sb.siz, (int) (groundHeight + (CommonStatic.getConfig().twoRow ? (h * 0.75 / 10.0) : 0)));
+			sb.bg.draw(g, rect, sb.pos, midh, bf.sb.siz, (int) (groundHeight + (CommonStatic.getConfig().twoRow ? (h * 0.75 / 10.0) : 0)));
 
 			double midY = groundHeight / minSiz;
-			double y = maxH * sb.siz - midh;
+			double y = maxH * bf.sb.siz - midh;
 
 			if(CommonStatic.getConfig().drawBGEffect)
 				sb.registerBattleDimension(midY, h / minSiz);
@@ -153,7 +153,7 @@ public interface BattleBox {
 				midY += (h * 0.75 / 10.0);
 
 			if(CommonStatic.getConfig().drawBGEffect && sb.bgEffect != null) {
-				sb.bgEffect.preDraw(g, setP(sb.pos, y), sb.siz, midY);
+				sb.bgEffect.preDraw(g, setP(sb.pos, y), bf.sb.siz, midY);
 			}
 
 			drawCastle(g);
@@ -164,7 +164,7 @@ public interface BattleBox {
 			drawEntity(g);
 
 			if(CommonStatic.getConfig().drawBGEffect && sb.bgEffect != null) {
-				sb.bgEffect.postDraw(g, setP(sb.pos, y), sb.siz, midY);
+				sb.bgEffect.postDraw(g, setP(sb.pos, y), bf.sb.siz, midY);
 			}
 
 			if(sb.bg.overlay != null) {
@@ -176,7 +176,7 @@ public interface BattleBox {
 		}
 
 		public double getX(double x) {
-			return (x * ratio + off) * sb.siz + sb.pos;
+			return (x * ratio + off) * bf.sb.siz + sb.pos;
 		}
 
 		public void calculateSiz(int w, int h) {
@@ -189,34 +189,34 @@ public interface BattleBox {
 			groundHeight = (h * 2 / 10.0) * (1 - minSiz/maxSiz);
 		}
 
-		private double getReulatedSiz(double siz, int w, int h) {
-			if (siz * minH > h)
-				siz = 1.0 * h / minH;
-			if (siz * maxH < h)
-				siz = 1.0 * h / maxH;
-			if (siz * maxW < w)
-				siz = 1.0 * w / maxW;
+		private double getReulatedSiz(double size, int w, int h) {
+			if (size * minH > h)
+				size = 1.0 * h / minH;
+			if (size * maxH < h)
+				size = 1.0 * h / maxH;
+			if (size * maxW < w)
+				size = 1.0 * w / maxW;
 
-			return siz;
+			return size;
 		}
 
 		public void regulate() {
 			int w = box.getWidth();
 			int h = box.getHeight();
 
-			if (sb.siz < minSiz)
-				sb.siz = minSiz;
+			if (bf.sb.siz < minSiz)
+				bf.sb.siz = minSiz;
 
-			if (sb.siz >= maxSiz)
-				sb.siz = maxSiz;
+			if (bf.sb.siz >= maxSiz)
+				bf.sb.siz = maxSiz;
 
 			if (sb.pos > 0)
 				sb.pos = 0;
 
-			if (maxW * sb.siz + sb.pos < w)
-				sb.pos = (int) (w - maxW * sb.siz);
+			if (maxW * bf.sb.siz + sb.pos < w)
+				sb.pos = (int) (w - maxW * bf.sb.siz);
 
-			midh = h + (int) (groundHeight * (sb.siz - maxSiz) / (maxSiz - minSiz));
+			midh = h + (int) (groundHeight * (bf.sb.siz - maxSiz) / (maxSiz - minSiz));
 
 			if(CommonStatic.getConfig().twoRow)
 				midh -= h * 0.75 / 10.0;
@@ -232,24 +232,24 @@ public interface BattleBox {
 
 			sb.pos += w;
 
-			sb.siz *= Math.pow(exp, s);
+			bf.sb.siz *= Math.pow(exp, s);
 
-			if(sb.siz * minH > h) {
-				sb.siz = maxSiz;
+			if(bf.sb.siz * minH > h) {
+				bf.sb.siz = maxSiz;
 			}
 
-			if(sb.siz * maxH < h) {
-				sb.siz = minSiz;
+			if(bf.sb.siz * maxH < h) {
+				bf.sb.siz = minSiz;
 			}
 
-			if(sb.siz * maxW < w) {
-				sb.siz = w * 1.0 / maxW;
+			if(bf.sb.siz * maxW < w) {
+				bf.sb.siz = w * 1.0 / maxW;
 			}
 		}
 
 		private void clear() {
 			pt = -1;
-			sb.siz = 0;
+			bf.sb.siz = 0;
 			sb.pos = 0;
 			midh = 0;
 		}
@@ -498,64 +498,64 @@ public interface BattleBox {
 
 			rang = getX(rang);
 
-			double rw = range.getWidth() * 0.75 * sb.siz;
-			double rh = range.getHeight()  * 0.85 * sb.siz;
+			double rw = range.getWidth() * 0.75 * bf.sb.siz;
+			double rh = range.getHeight()  * 0.85 * bf.sb.siz;
 
 			//102 is guessed value, making range indicator on ground
-			g.drawImage(range, rang, midh - rh - 102 * sb.siz, rw, rh);
+			g.drawImage(range, rang, midh - rh - 102 * bf.sb.siz, rw, rh);
 
 			int rtime = (int) (sb.time / 1.5) % 4;
 
-			double canw = cann.getWidth() * 0.75 * sb.siz;
-			double canh = cann.getHeight() * 0.75 * sb.siz;
+			double canw = cann.getWidth() * 0.75 * bf.sb.siz;
+			double canh = cann.getHeight() * 0.75 * bf.sb.siz;
 
-			g.drawImage(cann, rang + rw / 2.0 - canw / 2.0, midh - canh - rh - 102 * sb.siz - Math.abs(rtime - 2) * 8 * sb.siz, canw, canh);
+			g.drawImage(cann, rang + rw / 2.0 - canw / 2.0, midh - canh - rh - 102 * bf.sb.siz - Math.abs(rtime - 2) * 8 * bf.sb.siz, canw, canh);
 		}
 
 		private void drawCastle(FakeGraphics gra) {
 			FakeTransform at = gra.getTransform();
 			boolean drawCast = sb.ebase instanceof Entity;
-			int posy = (int) (midh - road_h * sb.siz);
-			int posx = (int) ((sb.ebase.pos * ratio + off) * sb.siz + sb.pos);
+			int posy = (int) (midh - road_h * bf.sb.siz);
+			int posx = (int) ((sb.ebase.pos * ratio + off) * bf.sb.siz + sb.pos);
 
 			double shake = 0.0;
 
 			if(sb.ebase.health <= 0 || (drawCast ? ((EEnemy) sb.ebase).hit : ((ECastle) sb.ebase).hit) > 0) {
-				shake = (2 + (sb.time % 2 * -4)) * sb.siz;
+				shake = (2 + (sb.time % 2 * -4)) * bf.sb.siz;
 			}
 
 			if (!drawCast) {
 				Identifier<CastleImg> cind = sb.st.castle;
 				VImg cast = Identifier.getOr(cind, CastleImg.class).img;
 				FakeImage bimg = cast.getImg();
-				int bw = (int) (bimg.getWidth() * sb.siz);
-				int bh = (int) (bimg.getHeight() * sb.siz);
+				int bw = (int) (bimg.getWidth() * bf.sb.siz);
+				int bh = (int) (bimg.getHeight() * bf.sb.siz);
 				gra.drawImage(bimg, posx - bw + shake, posy - bh, bw, bh);
 			} else {
 				if(sb.s_stop == 0 || (sb.ebase.getAbi() & Data.AB_TIMEI) == 0) {
 					posx = (int) getX(sb.ebase.pos);
 
-					((Entity) sb.ebase).anim.draw(gra, setP(posx + shake, posy), sb.siz * sprite);
+					((Entity) sb.ebase).anim.draw(gra, setP(posx + shake, posy), bf.sb.siz * sprite);
 
 					if(sb.ebase.health > 0)
-						((Entity) sb.ebase).anim.drawEff(gra, setP(posx + shake, posy), sb.siz * sprite);
+						((Entity) sb.ebase).anim.drawEff(gra, setP(posx + shake, posy), bf.sb.siz * sprite);
 				}
 			}
 			gra.setTransform(at);
-			posx -= castw * sb.siz / 2;
-			posy -= casth * sb.siz;
-			Res.getBase(sb.ebase, setSym(gra, sb.siz, posx, posy, 0), bf.sb.st.trail);
-			posx = (int) (((sb.st.len - 800) * ratio + off) * sb.siz + sb.pos);
+			posx -= castw * bf.sb.siz / 2;
+			posy -= casth * bf.sb.siz;
+			Res.getBase(sb.ebase, setSym(gra, bf.sb.siz, posx, posy, 0), bf.sb.st.trail);
+			posx = (int) (((sb.st.len - 800) * ratio + off) * bf.sb.siz + sb.pos);
 
 			shake = 0.0;
 
 			if(sb.ubase.health <= 0 || ((ECastle)sb.ubase).hit > 0) {
-				shake = (2 + (sb.time % 2 * -4)) * sb.siz;
+				shake = (2 + (sb.time % 2 * -4)) * bf.sb.siz;
 			}
 
-			drawNyCast(gra, (int) (midh - road_h * sb.siz), (int) (posx + shake), sb.siz, sb.nyc);
-			posx += castw * sb.siz / 2;
-			Res.getBase(sb.ubase, setSym(gra, sb.siz, posx, posy, 1), false);
+			drawNyCast(gra, (int) (midh - road_h * bf.sb.siz), (int) (posx + shake), bf.sb.siz, sb.nyc);
+			posx += castw * bf.sb.siz / 2;
+			Res.getBase(sb.ubase, setSym(gra, bf.sb.siz, posx, posy, 1), false);
 		}
 
 		@SuppressWarnings("UseBulkOperation")
@@ -569,7 +569,7 @@ public interface BattleBox {
 
 			FakeTransform at = gra.getTransform();
 
-			double psiz = sb.siz * sprite;
+			double psiz = bf.sb.siz * sprite;
 
 			CommonStatic.getConfig().battle = true;
 
@@ -591,14 +591,14 @@ public interface BattleBox {
 				gra.setTransform(at);
 
 				double p = getX(e.pos);
-				double y = midh - (road_h - dep) * sb.siz;
+				double y = midh - (road_h - dep) * bf.sb.siz;
 
 				e.anim.draw(gra, setP(p, y), psiz);
 
 				gra.setTransform(at);
 
 				if(e.anim.corpse == null || e.anim.corpse.type == EffAnim.ZombieEff.BACK) {
-					e.anim.drawEff(gra, setP(p, y), sb.siz);
+					e.anim.drawEff(gra, setP(p, y), bf.sb.siz);
 				}
 			}
 
@@ -609,7 +609,7 @@ public interface BattleBox {
 					gra.setTransform(at);
 
 					double sx = getX(e.anim.smokeX);
-					double sy = midh - (road_h - e.anim.smokeLayer * DEP + 75.0) * sb.siz;
+					double sy = midh - (road_h - e.anim.smokeLayer * DEP + 75.0) * bf.sb.siz;
 
 					e.anim.smoke.draw(gra, setP(sx, sy), psiz * 1.2);
 				}
@@ -621,7 +621,7 @@ public interface BattleBox {
 						gra.setTransform(at);
 
 						double sx = getX(((Entity) sb.ebase).anim.smokeX);
-						double sy = midh - (road_h - ((Entity) sb.ebase).anim.smokeLayer * DEP + 100.0) * sb.siz;
+						double sy = midh - (road_h - ((Entity) sb.ebase).anim.smokeLayer * DEP + 100.0) * bf.sb.siz;
 
 						((Entity) sb.ebase).anim.smoke.draw(gra, setP(sx, sy), psiz * 1.2);
 					}
@@ -631,7 +631,7 @@ public interface BattleBox {
 					gra.setTransform(at);
 
 					double sx = getX(((ECastle) sb.ebase).smokeX);
-					double sy = midh - (road_h - ((ECastle) sb.ebase).smokeLayer * DEP + 100.0) * sb.siz;
+					double sy = midh - (road_h - ((ECastle) sb.ebase).smokeLayer * DEP + 100.0) * bf.sb.siz;
 
 					((ECastle) sb.ebase).smoke.draw(gra, setP(sx, sy), psiz * 1.2);
 				}
@@ -642,7 +642,7 @@ public interface BattleBox {
 					gra.setTransform(at);
 
 					double sx = getX(((ECastle) sb.ubase).smokeX);
-					double sy = midh - (road_h - ((ECastle) sb.ubase).smokeLayer * DEP + 100.0) * sb.siz;
+					double sy = midh - (road_h - ((ECastle) sb.ubase).smokeLayer * DEP + 100.0) * bf.sb.siz;
 
 					((ECastle) sb.ubase).smoke.draw(gra, setP(sx, sy), psiz * 1.2);
 				}
@@ -660,11 +660,11 @@ public interface BattleBox {
 
 				gra.setTransform(at);
 				double p = getX(eac.pos);
-				double y = midh - (road_h - dep) * sb.siz;
+				double y = midh - (road_h - dep) * bf.sb.siz;
 
 				if (eac instanceof WaprCont) {
-					double dx = ((WaprCont) eac).dire == -1 ? -27 * sb.siz : -24 * sb.siz;
-					eac.draw(gra, setP(p + dx, y - 24 * sb.siz), psiz);
+					double dx = ((WaprCont) eac).dire == -1 ? -27 * bf.sb.siz : -24 * bf.sb.siz;
+					eac.draw(gra, setP(p + dx, y - 24 * bf.sb.siz), psiz);
 				} else {
 					eac.draw(gra, setP(p, y), psiz);
 				}
@@ -676,7 +676,7 @@ public interface BattleBox {
 
 					gra.setTransform(at);
 					double p = getX(eac.pos);
-					double y = midh - (road_h - DEP * eac.layer) * sb.siz;
+					double y = midh - (road_h - DEP * eac.layer) * bf.sb.siz;
 
 					eac.draw(gra, setP(p, y), psiz * 1.2);
 				}
@@ -688,7 +688,7 @@ public interface BattleBox {
 
 					gra.setTransform(at);
 					double p = getX(eac.pos);
-					double y = midh - (road_h - DEP * eac.layer) * sb.siz;
+					double y = midh - (road_h - DEP * eac.layer) * bf.sb.siz;
 
 					eac.draw(gra, setP(p, y), psiz * 1.2);
 				}
@@ -697,14 +697,14 @@ public interface BattleBox {
 			gra.setTransform(at);
 			int can = cany[sb.canon.id];
 			int disp = canx[sb.canon.id];
-			setP(getX(sb.ubase.pos) + disp * sb.siz, midh + (can - road_h) * sb.siz);
+			setP(getX(sb.ubase.pos) + disp * bf.sb.siz, midh + (can - road_h) * bf.sb.siz);
 			sb.canon.drawBase(gra, p, psiz);
 			gra.setTransform(at);
-			setP(getX(sb.canon.pos), midh - road_h * sb.siz);
+			setP(getX(sb.canon.pos), midh - road_h * bf.sb.siz);
 			sb.canon.drawAtk(gra, p, psiz);
 			gra.setTransform(at);
 			if (sb.sniper != null && sb.sniper.enabled) {
-				setP(getX(sb.sniper.getPos()), midh - road_h * sb.siz);
+				setP(getX(sb.sniper.getPos()), midh - road_h * bf.sb.siz);
 				sb.sniper.drawBase(gra, p, psiz);
 				gra.setTransform(at);
 			}
@@ -717,21 +717,21 @@ public interface BattleBox {
 					double shake = 0.0;
 
 					if(sb.ebase.health <= 0 || (sb.ebase instanceof ECastle && ((ECastle) sb.ebase).hit > 0) || (sb.ebase instanceof EEnemy && ((EEnemy) sb.ebase).hit > 0)) {
-						shake = (2 + (sb.time % 2 * -4)) * sb.siz;
+						shake = (2 + (sb.time % 2 * -4)) * bf.sb.siz;
 					}
 
 					if (sb.ebase instanceof Entity) {
 						int posx = (int) getX(sb.ebase.pos);
-						int posy = (int) (midh - road_h * sb.siz);
+						int posy = (int) (midh - road_h * bf.sb.siz);
 
-						((Entity) sb.ebase).anim.draw(gra, setP(posx + shake, posy), sb.siz * sprite);
+						((Entity) sb.ebase).anim.draw(gra, setP(posx + shake, posy), bf.sb.siz * sprite);
 
 						if(((Entity) sb.ebase).anim.smoke != null) {
-							((Entity) sb.ebase).anim.smoke.draw(gra, setP(posx + shake, posy), sb.siz * sprite);
+							((Entity) sb.ebase).anim.smoke.draw(gra, setP(posx + shake, posy), bf.sb.siz * sprite);
 						}
 
 						if (sb.ebase.health > 0 && (((Entity) sb.ebase).anim.corpse == null || ((Entity) sb.ebase).anim.corpse.type == EffAnim.ZombieEff.BACK))
-							((Entity) sb.ebase).anim.drawEff(gra, setP(posx + shake, posy), sb.siz * sprite);
+							((Entity) sb.ebase).anim.drawEff(gra, setP(posx + shake, posy), bf.sb.siz * sprite);
 					}
 				}
 
@@ -744,20 +744,20 @@ public interface BattleBox {
 						gra.setTransform(at);
 
 						double p = getX(e.pos);
-						double y = midh - (road_h - dep) * sb.siz;
+						double y = midh - (road_h - dep) * bf.sb.siz;
 
 						e.anim.draw(gra, setP(p, y), psiz);
 
 						if(e.anim.smoke != null && e.anim.smokeLayer != -1 && !e.anim.smoke.done()) {
 							gra.setTransform(at);
 
-							e.anim.smoke.draw(gra, setP(p, midh - (road_h - e.anim.smokeLayer * DEP + 75.0) * sb.siz), psiz);
+							e.anim.smoke.draw(gra, setP(p, midh - (road_h - e.anim.smokeLayer * DEP + 75.0) * bf.sb.siz), psiz);
 						}
 
 						gra.setTransform(at);
 
 						if(e.anim.corpse == null || e.anim.corpse.type == EffAnim.ZombieEff.BACK) {
-							e.anim.drawEff(gra, setP(p, y), sb.siz);
+							e.anim.drawEff(gra, setP(p, y), bf.sb.siz);
 						}
 					}
 				}
@@ -771,12 +771,12 @@ public interface BattleBox {
 
 			gra.setTransform(at);
 
-			double p = (wc.pos * ratio + off) * sb.siz + sb.pos;
+			double p = (wc.pos * ratio + off) * bf.sb.siz + sb.pos;
 
 			if(wc instanceof ContWaveAb)
-				p -= wave * sb.siz;
+				p -= wave * bf.sb.siz;
 
-			double y = midh - (road_h - dep) * sb.siz;
+			double y = midh - (road_h - dep) * bf.sb.siz;
 
 			wc.draw(gra, setP(p, y), pSiz);
 		}
@@ -881,7 +881,7 @@ public interface BattleBox {
 			if(sb.bg.overlay == null)
 				return;
 
-			gra.gradRectAlpha(sb.pos, - (int) (maxH * sb.siz - midh - midY * sb.siz), (int) ((sb.st.len * ratio + 400) * sb.siz), (int) ((BackgroundEffect.BGHeight * 3 + midY) * sb.siz), sb.pos, 0, sb.bg.overlayAlpha, sb.bg.overlay[1], sb.pos, (int) (BackgroundEffect.BGHeight * 3 * sb.siz - maxH * sb.siz + midh + midY * sb.siz), sb.bg.overlayAlpha, sb.bg.overlay[0]);
+			gra.gradRectAlpha(sb.pos, - (int) (maxH * bf.sb.siz - midh - midY * bf.sb.siz), (int) ((sb.st.len * ratio + 400) * bf.sb.siz), (int) ((BackgroundEffect.BGHeight * 3 + midY) * bf.sb.siz), sb.pos, 0, sb.bg.overlayAlpha, sb.bg.overlay[1], sb.pos, (int) (BackgroundEffect.BGHeight * 3 * bf.sb.siz - maxH * bf.sb.siz + midh + midY * bf.sb.siz), sb.bg.overlayAlpha, sb.bg.overlay[0]);
 		}
 
 		protected synchronized void drag(Point p) {
@@ -906,14 +906,14 @@ public interface BattleBox {
 		private synchronized void wheeled(Point p, int ind) {
 			int w = box.getWidth();
 			int h = box.getHeight();
-			double psiz = sb.siz * Math.pow(exp, ind);
+			double psiz = bf.sb.siz * Math.pow(exp, ind);
 
 			if(psiz * minH > h)
-				psiz = maxSiz / sb.siz;
+				psiz = maxSiz / bf.sb.siz;
 			else if(psiz * maxH < h)
-				psiz = minSiz / sb.siz;
+				psiz = minSiz / bf.sb.siz;
 			else if(psiz * maxW < w)
-				psiz = minSiz / sb.siz;
+				psiz = minSiz / bf.sb.siz;
 			else
 				psiz = Math.pow(exp, ind);
 
