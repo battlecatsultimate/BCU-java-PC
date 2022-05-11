@@ -236,10 +236,24 @@ public class BasisPage extends LubCont {
 			changePanel(ufp);
 		});
 
-		ul.addListSelectionListener(e -> {
-			changing = true;
-			lub.select(ul.getSelectedValue());
-			changing = false;
+		ul.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				super.mousePressed(e);
+				changing = true;
+				if (e.getButton() == MouseEvent.BUTTON3) {
+					int row = ul.locationToIndex(e.getPoint());
+					ul.setSelectedIndex(row);
+					lub.select(ul.getSelectedValue());
+					if (lub.sf != null && lub.sf.du.getPCoin() != null) {
+						lub.setLv(new int[]{lub.sf.unit.getPrefLv(), 0, 0, 0, 0, 0});
+						setLvs(lub.sf);
+					}
+				} else {
+					lub.select(ul.getSelectedValue());
+				}
+				changing = false;
+			}
 		});
 
 		form.addActionListener(arg0 -> {

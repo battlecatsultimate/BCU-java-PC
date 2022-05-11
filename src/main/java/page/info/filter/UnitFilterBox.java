@@ -243,7 +243,7 @@ class UFBButton extends UnitFilterBox {
 		}
 		for (int i = 0; i < proc.length; i++) {
 			set(proc[i] = new JTG(ProcLang.get().get(UPROCIND[i]).abbr_name));
-			BufferedImage v = UtilPC.getIcon(1, EPROCIND[i]);
+			BufferedImage v = UtilPC.getIcon(1, UPROCIND[i]);
 			if (v == null)
 				continue;
 			proc[i].setIcon(new ImageIcon(v));
