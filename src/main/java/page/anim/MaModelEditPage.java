@@ -214,6 +214,12 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			int[] newl = new int[14];
 			newl[8] = newl[9] = newl[11] = 1000;
 			mm.parts[ind] = newl;
+			for (MaAnim ma : mmet.anim.anims)
+				for (Part part : ma.parts)
+					if (part.ints[1] == 0)
+						for (int[] ints : part.moves)
+							if (ints[1] > ind)
+								ints[1]++;
 			mmet.anim.unSave("mamodel add line");
 			callBack(null);
 			resized();
@@ -371,6 +377,13 @@ public class MaModelEditPage extends Page implements AbEditPage {
 					ind++;
 				} else
 					inds[i] = -1;
+			for (MaAnim ma : mmet.anim.anims)
+				for (Part part : ma.parts)
+					if (part.ints[1] == 0)
+						for (int[] ints : part.moves)
+							if (ints[1] > ind)
+								ints[1]--;
+
 			mmet.anim.reorderModel(inds);
 			mm.reorder(move);
 			mmet.anim.unSave("mamodel remove line");
