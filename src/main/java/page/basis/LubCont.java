@@ -58,7 +58,7 @@ public abstract class LubCont extends Page {
 	@Override
 	protected void mouseReleased(MouseEvent e) {
 		if (e.getSource() == getLub())
-			getLub().release(e.getPoint());
+			getLub().release();
 	}
 
 	@Override

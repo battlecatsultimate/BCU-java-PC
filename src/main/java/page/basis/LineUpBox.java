@@ -126,7 +126,7 @@ public class LineUpBox extends Canvas {
 
 	}
 
-	protected void release(Point p) {
+	protected void release() {
 		relative = null;
 		mouse = null;
 	}
