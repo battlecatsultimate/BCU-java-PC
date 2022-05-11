@@ -25,6 +25,7 @@ public class ColorPicker extends JPanel {
         BAR
     }
 
+    private static final long serialVersionUID = 1L;
     private final ColorPickPage page;
 
     public final float[] hsb = {0f, 1f, 1f};
