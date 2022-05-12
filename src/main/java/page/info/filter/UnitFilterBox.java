@@ -70,21 +70,6 @@ public abstract class UnitFilterBox extends Page {
 	}
 
 	public abstract int[] getSizer();
-
-	public boolean Unusable(MaskUnit du) {
-		if (lim == null)
-			return false;
-
-		double cost = du.getPrice() * (1 + price * 0.5);
-		if ((lim.min > 0 && cost < lim.min) || (lim.max > 0 && cost > lim.max))
-			return true;
-
-		Unit u = du.getPack().unit;
-		if (lim.rare != 0 && ((lim.rare >> u.rarity) & 1) == 0)
-			return true;
-		return lim.group != null && !lim.group.allow(u);
-	}
-
 }
 
 class UFBButton extends UnitFilterBox {
@@ -138,7 +123,7 @@ class UFBButton extends UnitFilterBox {
 				for (Form f : u.forms) {
 					MaskUnit du = f.maxu();
 
-					if (Unusable(du))
+					if (lim != null && lim.unusable(du, price))
 						continue;
 
 					List<Trait> ct = f.du.getTraits();
@@ -334,7 +319,7 @@ class UFBList extends UnitFilterBox {
 					MaskUnit du = f.maxu();
 					int a = du.getAbi();
 
-					if (limbtn.isSelected() && Unusable(du))
+					if (limbtn.isSelected() && lim != null && lim.unusable(du, price))
 						continue;
 
 					List<Trait> traits = du.getTraits();

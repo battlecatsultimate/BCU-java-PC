@@ -75,6 +75,7 @@ public class BasisPage extends LubCont {
 	private final NyCasBox ncb = new NyCasBox();
 	private final JBTN[] jbcsR = new JBTN[3];
 	private final JBTN[] jbcsL = new JBTN[3];
+	private final JTG cost = new JTG(1,"price");
 
 	private boolean changing = false, outside = false, resize = true;
 
@@ -82,16 +83,12 @@ public class BasisPage extends LubCont {
 
 	private final TreaTable trea = new TreaTable(this);
 	private final JScrollPane jspt = new JScrollPane(trea);
-	private final Limit lim;
-	private final int price;
 	private Unit cunit;
 
 	private String comboName = "";
 
 	public BasisPage(Page p) {
 		super(p);
-		lim = null;
-		price = 0;
 
 		ini();
 		resized();
@@ -99,8 +96,7 @@ public class BasisPage extends LubCont {
 
 	public BasisPage(Page p, Limit lim, int price) {
 		super(p);
-		this.lim = lim;
-		this.price = price;
+		lub.setLimit(lim, price);
 
 		ini();
 		resized();
@@ -205,6 +201,7 @@ public class BasisPage extends LubCont {
 		set(reset, x, y, 700, 450, 200, 50);
 		set(lvorb, x, y, 900, 100, 200, 50);
 		set(combo, x, y, 900, 450, 200, 50);
+		set(cost, x, y, 1100, 450, 200, 50);
 		for (int i = 0; i < jbcsL.length; i++)
 			set(jbcsL[i], x, y, 930, 500 + 103 * i, 100, 50);
 		for (int i = 0; i < jbcsR.length; i++)
@@ -232,7 +229,7 @@ public class BasisPage extends LubCont {
 
 		unit.addActionListener(e -> {
 			if (ufp == null)
-				ufp = new UnitFLUPage(getThis(), lim, price);
+				ufp = new UnitFLUPage(getThis(), lub.lim, lub.price);
 			changePanel(ufp);
 		});
 
@@ -519,6 +516,8 @@ public class BasisPage extends LubCont {
 			setCL(jlcs.getSelectedIndex());
 			changing = false;
 		});
+
+		cost.addActionListener(x -> lub.enableCost = cost.isSelected());
 	}
 
 	private void changeLU() {
@@ -562,6 +561,7 @@ public class BasisPage extends LubCont {
 		add(cjtf);
 		add(search);
 		add(combo);
+		add(cost);
 		add(jbcsR[0] = new JBTN(0, ">"));
 		add(jbcsR[1] = new JBTN(0, ">"));
 		add(jbcsR[2] = new JBTN(0, ">"));

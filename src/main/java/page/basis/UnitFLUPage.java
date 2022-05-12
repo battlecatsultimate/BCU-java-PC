@@ -31,6 +31,7 @@ public class UnitFLUPage extends LubCont {
 	public UnitFLUPage(Page p, Limit lim, int price) {
 		super(p);
 
+		lub.setLimit(lim, price);
 		ufb = UnitFilterBox.getNew(this, lim, price);
 		ini();
 		resized();

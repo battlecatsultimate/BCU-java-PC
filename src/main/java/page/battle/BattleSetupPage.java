@@ -85,6 +85,7 @@ public class BattleSetupPage extends LubCont {
 				return;
 			if (jls.getSelectedIndex() == -1)
 				jls.setSelectedIndex(0);
+			lub.setLimit(st.getLim(jls.getSelectedIndex()), st.getCont().price);
 		});
 
 		jlu.addActionListener(arg0 -> changePanel(new BasisPage(getThis(), st.getLim(conf == 1 ? jls.getSelectedIndex() : -1), st.getCont().price)));
@@ -162,6 +163,7 @@ public class BattleSetupPage extends LubCont {
 			jls.setListData(tit);
 		}
 		jls.setSelectedIndex(0);
+		lub.setLimit(st.getLim(conf == 1 ? jls.getSelectedIndex() : -1), st.getCont().price);
 		addListeners();
 	}
 
