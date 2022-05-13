@@ -525,10 +525,10 @@ public class ComparePage extends Page {
             Form f = ((MaskUnit) ent).getPack();
             int[] data;
 
+            ArrayList<Integer> lvs = f.getPrefLvs();
             if (maskEntities[s] instanceof MaskUnit) {
                 data = CommonStatic.parseIntsN(level[s].getText());
             } else {
-                ArrayList<Integer> lvs = f.getPrefLvs();
                 data = new int[lvs.size()];
 
                 for (int i = 0; i < data.length; i++)
@@ -536,6 +536,8 @@ public class ComparePage extends Page {
             }
             while (maskEntityLvl[s].size() < data.length)
                 maskEntityLvl[s].add(data[maskEntityLvl[s].size()]);
+            while (maskEntityLvl[s].size() < lvs.size())
+                maskEntityLvl[s].add(lvs.get(maskEntityLvl[s].size()));
 
             maskEntityLvl[s] = f.regulateLv(data, maskEntityLvl[s]);
             String[] strs = UtilPC.lvText(f, maskEntityLvl[s]);

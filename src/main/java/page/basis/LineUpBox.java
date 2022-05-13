@@ -75,7 +75,7 @@ public class LineUpBox extends Canvas {
 						gra.drawImage(slot[2].getImg(), 120 * j, 100 * i);
 				if (sf == null || sf != f || relative == null) {
 					EForm ef = i != 2 ? lu.efs[i][j] : new EForm(f, lu.getLv(f));
-					if (lim != null && (lim.unusable(ef.du, price) || (lim.line == 1 && i == 1))) {
+					if (lim != null && ((lim.line == 1 && i == 1) || lim.unusable(ef.du, price))) {
 						gra.colRect(120 * j, 100 * i, img.getImg().getWidth(), img.getImg().getHeight(), 255, 0, 0, 100);
 						Res.getCost(-1, false,
 							new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
