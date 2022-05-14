@@ -11,6 +11,7 @@ import page.Page;
 import page.support.UnitLCR;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class CharaGroupPage extends Page {
@@ -49,7 +50,19 @@ public class CharaGroupPage extends Page {
 	public CharaGroupPage(Page p, PackData pac, boolean b) {
 		this(p);
 		jlpk.setSelectedValue(pac, true);
-		jlpk.setEnabled(b);
+		if (!b) {
+			ArrayList<PackData> parentedPacks = new ArrayList<>();
+			for (int i = 0; i < jlpk.getModel().getSize(); i++) {
+				PackData pk = jlpk.getModel().getElementAt(i);
+				if (pk == pac)
+					continue;
+				if (pk instanceof PackData.UserPack && !((UserPack)pac).desc.dependency.contains(((UserPack)pk).desc.id))
+					continue;
+
+				parentedPacks.add(pk);
+			}
+			jlpk.setListData(parentedPacks.toArray(new PackData[0]));
+		}
 	}
 
 	@Override
