@@ -356,10 +356,10 @@ public class ComparePage extends Page {
                 double atkLv = b.t().getAtkMulti();
                 double defLv = b.t().getDefMulti();
 
-                ArrayList<Trait> traits = new ArrayList<>();
-                for (int j = 0; j < trait.getSelectedIndices().length; j++)
-                    traits.addAll(trait.getSelectedValuesList());
-
+                ArrayList<Trait> traits = new ArrayList<>(trait.getSelectedValuesList());
+                ArrayList<Trait> spTraits = new ArrayList<>(UserProfile.getBCData().traits.getList()
+                        .subList(Data.TRAIT_EVA, Data.TRAIT_BEAST + 1));
+                spTraits.retainAll(traits);
                 traits.retainAll(mu.getTraits());
                 boolean overlap = traits.size() > 0;
 
@@ -387,17 +387,26 @@ public class ComparePage extends Page {
                         preString.append(atkDatum[1]).append("f");
                     atk += a;
 
+                    int effectiveDMG = a;
                     if (overlap && (mu.getAbi() & checkAttack) > 0) {
-                        int effectiveDMG = a;
                         if ((mu.getAbi() & Data.AB_MASSIVES) > 0)
                             effectiveDMG *= b.t().getMASSIVESATK(traits);
                         if ((mu.getAbi() & Data.AB_MASSIVE) > 0)
                             effectiveDMG *= b.t().getMASSIVEATK(traits);
-                        if ((mu.getAbi() & Data.AB_GOOD) > 0) {
+                        if ((mu.getAbi() & Data.AB_GOOD) > 0)
                             effectiveDMG *= b.t().getGOODATK(traits);
-                        }
-                        atkString.append(" (").append(effectiveDMG).append(")");
                     }
+                    if (spTraits.contains(trait.list.get(Data.TRAIT_WITCH)) && (mu.getAbi() & Data.AB_WKILL) > 0)
+                        effectiveDMG *= b.t().getWKAtk();
+                    if (spTraits.contains(trait.list.get(Data.TRAIT_EVA)) && (mu.getAbi() & Data.AB_EKILL) > 0)
+                        effectiveDMG *= b.t().getEKAtk();
+                    if (spTraits.contains(trait.list.get(Data.TRAIT_BARON)) && (mu.getAbi() & Data.AB_BAKILL) > 0)
+                        effectiveDMG *= 1.6;
+                    if (spTraits.contains(trait.list.get(Data.TRAIT_BEAST)) && mu.getProc().BSTHUNT.type.active)
+                        effectiveDMG *= 2.5;
+
+                    if (effectiveDMG > a)
+                        atkString.append(" (").append(effectiveDMG).append(")");
                 }
 
                 int respawn = b.t().getFinRes(mu.getRespawn());
@@ -412,35 +421,51 @@ public class ComparePage extends Page {
                 for (JL[] jls : enem)
                     jls[index].setText("-");
 
-                if (traits.size() > 0 && (mu.getAbi() & checkHealth) > 0) {
-                    int effectiveHP = hp;
-
+                int effectiveHP = hp;
+                if (overlap && (mu.getAbi() & checkHealth) > 0) {
                     if ((mu.getAbi() & Data.AB_RESISTS) > 0)
                         effectiveHP /= b.t().getRESISTSDEF(traits);
                     if ((mu.getAbi() & Data.AB_RESIST) > 0)
                         effectiveHP /= b.t().getRESISTDEF(traits, traits, null, new Level(multi));
-                    if ((mu.getAbi() & Data.AB_GOOD) > 0) {
+                    if ((mu.getAbi() & Data.AB_GOOD) > 0)
                         effectiveHP /= b.t().getGOODDEF(traits, traits, null, new Level(multi));
-                    }
-
-                    main[0][index].setText(hp + " (" + effectiveHP + ")");
-                } else {
-                    main[0][index].setText(hp + "");
                 }
+                if (spTraits.contains(trait.list.get(Data.TRAIT_WITCH)) && (mu.getAbi() & Data.AB_WKILL) > 0)
+                    effectiveHP /= b.t().getWKDef();
+                if (spTraits.contains(trait.list.get(Data.TRAIT_EVA)) && (mu.getAbi() & Data.AB_EKILL) > 0)
+                    effectiveHP /= b.t().getEKDef();
+                if (spTraits.contains(trait.list.get(Data.TRAIT_BARON)) && (mu.getAbi() & Data.AB_BAKILL) > 0)
+                    effectiveHP /= 0.7;
+                if (spTraits.contains(trait.list.get(Data.TRAIT_BEAST)) && mu.getProc().BSTHUNT.type.active)
+                    effectiveHP /= 0.6;
+                if (effectiveHP > hp)
+                    main[0][index].setText(hp + " (" + effectiveHP + ")");
+                else
+                    main[0][index].setText(hp + "");
+
+                int effectiveDMG = atk;
                 if (overlap && (mu.getAbi() & checkAttack) > 0) {
-                    int effectiveDMG = atk;
                     if ((mu.getAbi() & Data.AB_MASSIVES) > 0)
                         effectiveDMG *= b.t().getMASSIVESATK(traits);
                     if ((mu.getAbi() & Data.AB_MASSIVE) > 0)
                         effectiveDMG *= b.t().getMASSIVEATK(traits);
-                    if ((mu.getAbi() & Data.AB_GOOD) > 0) {
+                    if ((mu.getAbi() & Data.AB_GOOD) > 0)
                         effectiveDMG *= b.t().getGOODATK(traits);
-                    }
+                }
+                if (spTraits.contains(trait.list.get(Data.TRAIT_WITCH)) && (mu.getAbi() & Data.AB_WKILL) > 0)
+                    effectiveDMG *= b.t().getWKAtk();
+                if (spTraits.contains(trait.list.get(Data.TRAIT_EVA)) && (mu.getAbi() & Data.AB_EKILL) > 0)
+                    effectiveDMG *= b.t().getEKAtk();
+                if (spTraits.contains(trait.list.get(Data.TRAIT_BARON)) && (mu.getAbi() & Data.AB_BAKILL) > 0)
+                    effectiveDMG *= 1.6;
+                if (spTraits.contains(trait.list.get(Data.TRAIT_BEAST)) && mu.getProc().BSTHUNT.type.active)
+                    effectiveDMG *= 2.5;
+
+                if (effectiveDMG > atk)
                     main[4][index].setText((int) (atk * 30.0 / m.getItv())
                             + " (" + (int) (effectiveDMG * 30.0 / m.getItv()) + ")");
-                } else {
+                else
                     main[4][index].setText((int) (atk * 30.0 / m.getItv()) + "");
-                }
 
                 for (JBTN btn : swap[i])
                     btn.setEnabled(true);
