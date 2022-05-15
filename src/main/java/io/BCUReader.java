@@ -138,6 +138,14 @@ public class BCUReader extends DataIO {
 						try {
 							String nl = fl.getName();
 
+							if (nl.equals("RewardName.txt")) {
+								Queue<String> qs = readLines(fl);
+								if (qs != null)
+									for (String line : qs) {
+										String[] str = line.trim().split("\t");
+										MultiLangCont.getStatic().RWNAME.put(ni, Integer.parseInt(str[0]), str[1]);
+									}
+							}
 							if (nl.equals("ComboName.txt")) {
 								Queue<String> qs = readLines(fl);
 								if (qs != null) {
