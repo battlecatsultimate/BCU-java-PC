@@ -27,15 +27,15 @@ public class StageSearchPage extends StagePage {
     private final JTF HPCount = new JTF();
     private final JL baseHP = new JL(1, "ht00");
     private final JBTN greaterBaseHP = new JBTN();
-    private int HPChoice = -1;
+    private byte HPChoice = -1;
 
     private final JTF WidthAmount = new JTF();
     private final JL StageWidth = new JL(1, "ht02");
     private final JBTN greaterWidth = new JBTN();
-    private int WidthChoice = -1;
+    private byte WidthChoice = -1;
 
     private final JBTN continuable = new JBTN();
-    private int ConChoice = -1;
+    private byte ConChoice = -1;
 
     private EnemyFindPage efp;
     private final JL enemy = new JL(0, "enemy");
@@ -47,7 +47,7 @@ public class StageSearchPage extends StagePage {
     private final JTG eneOrop = new JTG(0,"orop");
 
     private final JBTN hasBoss = new JBTN();
-    private int BossChoice = -1;
+    private byte BossChoice = -1;
 
     private final JBTN initSearch = new JBTN("Search");
     private boolean resultFound = false;

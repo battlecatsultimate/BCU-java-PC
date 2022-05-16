@@ -63,7 +63,8 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	private Replay recd;
 	private boolean backClicked = false;
 
-	private int spe = 0, upd = 0;
+	private byte spe = 0;
+	private int upd = 0;
 	private boolean musicChanged = false;
 
 	/**

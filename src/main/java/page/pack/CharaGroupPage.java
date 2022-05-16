@@ -54,9 +54,7 @@ public class CharaGroupPage extends Page {
 			ArrayList<PackData> parentedPacks = new ArrayList<>();
 			for (int i = 0; i < jlpk.getModel().getSize(); i++) {
 				PackData pk = jlpk.getModel().getElementAt(i);
-				if (pk == pac)
-					continue;
-				if (pk instanceof PackData.UserPack && !((UserPack)pac).desc.dependency.contains(((UserPack)pk).desc.id))
+				if (pk != pac && pk instanceof PackData.UserPack && !((UserPack)pac).desc.dependency.contains(((UserPack)pk).desc.id))
 					continue;
 
 				parentedPacks.add(pk);

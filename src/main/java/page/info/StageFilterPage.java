@@ -4,8 +4,6 @@ import common.util.stage.Stage;
 import page.Page;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.util.List;
 
 public class StageFilterPage extends StagePage {
@@ -32,18 +30,13 @@ public class StageFilterPage extends StagePage {
 
 	private void addListeners() {
 
-		jlst.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (arg0.getValueIsAdjusting())
-					return;
-				Stage s = jlst.getSelectedValue();
-				if (s == null)
-					return;
-				setData(s);
-			}
-
+		jlst.addListSelectionListener(arg0 -> {
+			if (arg0.getValueIsAdjusting())
+				return;
+			Stage s = jlst.getSelectedValue();
+			if (s == null)
+				return;
+			setData(s);
 		});
 
 	}
