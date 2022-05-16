@@ -53,15 +53,10 @@ public class RecdManagePage extends AbRecdPage {
 
 	@Override
 	protected void setRecd(Replay r) {
-		if (r != null && r.st != null && r.st.get() == null) {
-			Opts.pop("Please change the stage to a new one","Replay stage not found");
-			r.st = null;
-			r.marked = false;
-		}
 		super.setRecd(r);
 		dele.setEnabled(r != null);
 		rena.setEditable(r != null);
-		rena.setText(r == null ? "" : r.rl == null ? "" : r.rl.id);
+		rena.setText(r == null || r.rl == null ? "" : r.rl.id);
 	}
 
 	private void addListeners() {

@@ -108,14 +108,15 @@ public abstract class AbRecdPage extends Page {
 	protected abstract void setList();
 
 	protected void setRecd(Replay r) {
-		rply.setEnabled(r != null);
-		recd.setEnabled(r != null);
-		imgs.setEnabled(r != null);
 		seed.setEditable(editable && r != null);
 		vsta.setEnabled(r != null);
 		Stage st = r == null || r.st == null ? null : Identifier.getOr(r.st, Stage.class);
-		ista.setText(st == null ? "(unavailable)" : st.toString());
-		imap.setText(st == null ? "(unavailable)" : st.getCont().toString());
+		boolean a = st != null && st.id.toString().equals(r.st.toString());
+		rply.setEnabled(a);
+		recd.setEnabled(a);
+		imgs.setEnabled(a);
+		ista.setText(!a ? "(unavailable)" : st.toString());
+		imap.setText(!a ? "(unavailable)" : st.getCont().toString());
 		jlu.setEnabled(r != null);
 		if (r == null) {
 			len.setText("");

@@ -75,6 +75,11 @@ class TModel extends DefaultTableColumnModel {
 
 	@Override
 	public void moveColumn(int c, int nc) {
+		c = Math.max(c, 0);
+		c = Math.min(c, getColumnCount() - 1);
+		nc = Math.max(nc, 0);
+		nc = Math.min(nc, getColumnCount() - 1);
+
 		if (c == nc)
 			return;
 		t.swap(c, nc);
