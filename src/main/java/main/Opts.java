@@ -311,6 +311,7 @@ public class Opts {
 			public final int fps = 33;
 			public int inter = 0;
 
+			@SuppressWarnings("BusyWait")
 			@Override
 			public void run() {
 				while (true) {
@@ -376,6 +377,7 @@ public class Opts {
 		);
 	}
 
+	@SuppressWarnings("MagicConstant")
 	public static void showExStageSelection(String title, String content, Stage s, BattleInfoPage bp) {
 		if(s.info == null || !(s.info.exConnection || s.info.exStages != null))
 			throw new IllegalStateException("This stage doesn't have EX stage");
@@ -386,7 +388,7 @@ public class Opts {
 		List<Stage> exStages = new ArrayList<>();
 
 		if(s.info.exConnection) {
-			StageMap sm = MapColc.DefMapColc.getMap(s.info.exMapID);
+			StageMap sm = MapColc.DefMapColc.getMap(s.info.exMapID + 4000);
 
 			if(sm != null) {
 				for(int i = s.info.exStageIDMin; i <= s.info.exStageIDMax; i++) {
@@ -433,6 +435,9 @@ public class Opts {
 			int finalI = i;
 
 			rb.addActionListener(e1 -> selection.set(finalI));
+
+			if(i == 0)
+				rb.setSelected(true);
 
 			bg.add(rb);
 
