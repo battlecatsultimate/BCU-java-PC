@@ -1,7 +1,13 @@
 package main;
 
 import common.CommonStatic;
+import common.util.Data;
+import common.util.lang.MultiLangCont;
+import common.util.stage.MapColc;
+import common.util.stage.Stage;
+import common.util.stage.StageMap;
 import page.*;
+import page.battle.BattleInfoPage;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -10,6 +16,9 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Opts {
 
@@ -347,6 +356,98 @@ public class Opts {
 
 			pg.callBack(p.picker);
 			thread.interrupt();
+		});
+
+		cancel.addActionListener(a -> {
+			JOptionPane pane = getOptionPane((JComponent) a.getSource());
+
+			pane.setValue(cancel);
+		});
+
+		JOptionPane.showOptionDialog(
+				null,
+				panel,
+				title,
+				JOptionPane.OK_CANCEL_OPTION,
+				-1,
+				null,
+				new Object[]{okay, cancel},
+				null
+		);
+	}
+
+	public static void showExStageSelection(String title, String content, Stage s, BattleInfoPage bp) {
+		if(s.info == null || !(s.info.exConnection || s.info.exStages != null))
+			throw new IllegalStateException("This stage doesn't have EX stage");
+
+		JLabel contents = new JLabel(content);
+
+		//Gather EX stages
+		List<Stage> exStages = new ArrayList<>();
+
+		if(s.info.exConnection) {
+			StageMap sm = MapColc.DefMapColc.getMap(s.info.exMapID);
+
+			if(sm != null) {
+				for(int i = s.info.exStageIDMin; i <= s.info.exStageIDMax; i++) {
+					Stage st = sm.list.get(i);
+
+					if(st != null)
+						exStages.add(st);
+				}
+			}
+		}
+
+		if(s.info.exStages != null) {
+			for(Stage st : s.info.exStages) {
+				if(st != null)
+					exStages.add(st);
+			}
+		}
+
+		AtomicInteger selection = new AtomicInteger();
+		ButtonGroup bg = new ButtonGroup();
+
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+		panel.add(contents);
+
+		for(int i = 0; i < exStages.size(); i++) {
+			Stage e = exStages.get(i);
+
+			String map = MultiLangCont.get(e.getCont());
+
+			if(map == null || map.isEmpty()) {
+				map = e.getCont().getSID()+"/"+ Data.trio(e.getCont().id.id);
+			}
+
+			String stage = MultiLangCont.get(e);
+
+			if(stage == null || stage.isEmpty()) {
+				stage = Data.trio(e.id.id);
+			}
+
+			JRadioButton rb = new JRadioButton(map+" - "+stage);
+
+			int finalI = i;
+
+			rb.addActionListener(e1 -> selection.set(finalI));
+
+			bg.add(rb);
+
+			panel.add(rb);
+		}
+
+		JBTN okay = new JBTN("OK");
+		JBTN cancel = new JBTN("Cancel");
+
+		okay.addActionListener(a -> {
+			JOptionPane pane = getOptionPane((JComponent) a.getSource());
+
+			pane.setValue(okay);
+
+			bp.callBack(exStages.get(selection.get()));
 		});
 
 		cancel.addActionListener(a -> {

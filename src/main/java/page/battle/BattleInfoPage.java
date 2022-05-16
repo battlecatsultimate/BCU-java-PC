@@ -64,7 +64,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	private boolean backClicked = false;
 
 	private int spe = 0, upd = 0;
-	private boolean musicChanged = false;
+	private boolean musicChanged = false, exPopupShown = false;
 
 	/**
 	 * Creates a new Battle Page
@@ -120,7 +120,11 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 
 	@Override
 	public void callBack(Object o) {
-		changePanel(getFront());
+		if(o instanceof Stage) {
+			//TODO Swap stage with EX stage
+		} else {
+			changePanel(getFront());
+		}
 	}
 
 	@Override
@@ -290,9 +294,15 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		if (sb.ebase.health <= 0 || sb.ubase.health <= 0) {
 			if (BCMusic.BG != null)
 				BCMusic.BG.stop();
-			if (sb.ebase.health <= 0)
+			if (sb.ebase.health <= 0) {
 				CommonStatic.setSE(Data.SE_VICTORY);
-			else
+
+				if(!exPopupShown && CommonStatic.getConfig().exContinuation && sb.st.info != null && (sb.st.info.exConnection || sb.st.info.exStages != null)) {
+					//TODO Make battle keep animating when pop-up exists
+					Opts.showExStageSelection("EX stages found", "You can select one of these EX stages and continue the battle", sb.st, this);
+					exPopupShown = true;
+				}
+			} else
 				CommonStatic.setSE(Data.SE_DEFEAT);
 		} else if (basis.sb.mus != null) {
 			if (BCMusic.music != basis.sb.mus) {
