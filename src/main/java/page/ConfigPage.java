@@ -64,6 +64,7 @@ public class ConfigPage extends Page {
 	private final JBTN row = new JBTN(MainLocale.PAGE, CommonStatic.getConfig().twoRow ? "tworow" : "onerow");
 	private final JBTN vcol = new JBTN(MainLocale.PAGE, "viewcolor");
 	private final JBTN vres = new JBTN(MainLocale.PAGE, "viewreset");
+	private final JTG exCont = new JTG(MainLocale.PAGE, "excont");
 
 	private final JScrollPane jsps = new JScrollPane(jls);
 
@@ -130,6 +131,7 @@ public class ConfigPage extends Page {
 		set(rlpk, x, y, 1600, 775, 450, 50);
 		set(vcol, x, y, 1600, 850, 200, 50);
 		set(vres, x, y, 1850, 850, 200, 50);
+		set(exCont, x, y, 1600, 950, 200, 50);
 	}
 
 	@Override
@@ -303,6 +305,8 @@ public class ConfigPage extends Page {
 		});
 
 		vres.addActionListener(l -> CommonStatic.getConfig().viewerColor = -1);
+
+		exCont.addActionListener(l -> CommonStatic.getConfig().exContinuation = exCont.isSelected());
 	}
 
 	private void ini() {
@@ -342,6 +346,8 @@ public class ConfigPage extends Page {
 		add(rlpk);
 		add(vcol);
 		add(vres);
+		add(exCont);
+		exCont.setSelected(CommonStatic.getConfig().exContinuation);
 		prlvmd.setText("" + CommonStatic.getConfig().prefLevel);
 		jls.setSelectedIndex(localeIndexOf(cfg().lang));
 		jsmin.setValue(cfg().deadOpa);

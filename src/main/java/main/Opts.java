@@ -308,7 +308,6 @@ public class Opts {
 		}
 
 		Runnable run = new Runnable() {
-			public final int fps = 33;
 			public int inter = 0;
 
 			@SuppressWarnings("BusyWait")
@@ -319,8 +318,8 @@ public class Opts {
 					try {
 						p.timer(0);
 						int delay = (int) (System.currentTimeMillis() - m);
-						inter = (inter * 9 + 100 * delay / fps) / 10;
-						int sle = delay >= fps ? 1 : fps - delay;
+						inter = (inter * 9 + 100 * delay / Timer.p) / 10;
+						int sle = delay >= Timer.p ? 1 : Timer.p - delay;
 						Thread.sleep(sle);
 					} catch (InterruptedException e) {
 						return;
@@ -330,7 +329,6 @@ public class Opts {
 		};
 
 		Thread thread = new Thread(run);
-
 		thread.start();
 
 		JPanel panel = new JPanel();
@@ -446,6 +444,7 @@ public class Opts {
 
 		JBTN okay = new JBTN("OK");
 		JBTN cancel = new JBTN("Cancel");
+		Timer.manualTick();
 
 		okay.addActionListener(a -> {
 			JOptionPane pane = getOptionPane((JComponent) a.getSource());

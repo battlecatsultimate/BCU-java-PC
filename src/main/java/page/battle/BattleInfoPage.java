@@ -121,7 +121,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	@Override
 	public void callBack(Object o) {
 		if(o instanceof Stage) {
-			//TODO Swap stage with EX stage
+			changePanel(new BattleInfoPage(getFront(), (Stage) o, 0, basis.sb.b, new int[1])); //TODO remove old stage page from memory once it switches out
 		} else {
 			changePanel(getFront());
 		}
@@ -298,9 +298,8 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 				CommonStatic.setSE(Data.SE_VICTORY);
 
 				if(!exPopupShown && CommonStatic.getConfig().exContinuation && sb.st.info != null && (sb.st.info.exConnection || sb.st.info.exStages != null)) {
-					//TODO Make battle keep animating when pop-up exists
-					Opts.showExStageSelection("EX stages found", "You can select one of these EX stages and continue the battle", sb.st, this);
 					exPopupShown = true;
+					Opts.showExStageSelection("EX stages found", "You can select one of these EX stages and continue the battle", sb.st, this);
 				}
 			} else
 				CommonStatic.setSE(Data.SE_DEFEAT);
