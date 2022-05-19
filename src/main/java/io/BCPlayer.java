@@ -17,28 +17,22 @@ public class BCPlayer implements LineListener {
 	private final int ind;
 	private Clip c;
 	private FloatControl master;
-	private final long loop;
-	private final boolean isLooping;
 
 	private boolean rewinding = false;
 	private boolean playing = false;
 
-	protected BCPlayer(Clip c, int ind, boolean looping) {
+	protected BCPlayer(Clip c, int ind) {
 		this.ind = ind;
 		this.c = c;
 		this.c.addLineListener(this);
 		this.master = (FloatControl) c.getControl(FloatControl.Type.MASTER_GAIN);
-		this.loop = 0;
-		this.isLooping = looping;
 	}
 
-	protected BCPlayer(Clip c, int ind, long loop, boolean looping) {
+	protected BCPlayer(Clip c, int ind, long loop) {
 		this.ind = ind;
 		this.c = c;
 		this.c.addLineListener(this);
 		this.master = (FloatControl) c.getControl(FloatControl.Type.MASTER_GAIN);
-		this.loop = loop;
-		this.isLooping = looping;
 
 		if (loop > 0 && loop * 1000 < c.getMicrosecondLength()) {
 			c.setLoopPoints(milliToFrame(loop), -1);
@@ -72,8 +66,6 @@ public class BCPlayer implements LineListener {
 						players.push(this);
 					}
 				}
-			} else if (isLooping && loop >= c.getMicrosecondLength()) {
-				return;
 			}
 		}
 	}

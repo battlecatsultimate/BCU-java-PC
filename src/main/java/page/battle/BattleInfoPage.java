@@ -120,6 +120,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 
 	@Override
 	public void callBack(Object o) {
+		BCMusic.stopAll();
 		if(o instanceof Stage) {
 			changePanel(new BattleInfoPage(getFront(), (Stage) o, 0, basis.sb.b, new int[1])); //TODO remove old stage page from memory once it switches out
 		} else {
