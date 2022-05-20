@@ -22,7 +22,7 @@ public class BCMusic extends Data {
 	private static boolean[] secall = new boolean[TOT];
 
 	public static BCPlayer BG;
-	public static BCPlayer End;
+	private static BCPlayer End;
 
 	private static BCPlayer[] hit;
 	private static BCPlayer[] hit1;
@@ -101,6 +101,11 @@ public class BCMusic extends Data {
 			UI = null;
 		}
 
+		if (End != null) {
+			End.release();
+			End = null;
+		}
+
 		sounds.clear();
 	}
 
@@ -117,7 +122,25 @@ public class BCMusic extends Data {
 		}
 	}
 
-	public static synchronized void flush(boolean allow, boolean baseHP) {
+	public static synchronized void EndTheme(boolean win) {
+		if (End != null)
+			return;
+		stopAll();
+
+		byte sfx = win ? SE_VICTORY : SE_DEFEAT;
+		try {
+			if (CACHE[sfx] == null)
+				End = new BCPlayer(openFile(UserProfile.getBCData().musics.get(sfx)), sfx);
+			else
+				End = new BCPlayer(openFile(CACHE[sfx]), sfx);
+			End.setVolume(VOL_UI);
+			End.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static synchronized void flush(boolean allow) {
 		if (hit == null) {
 			hit = new BCPlayer[2];
 
@@ -173,34 +196,8 @@ public class BCMusic extends Data {
 			}
 		}
 
-		if (baseHP) {
-			if (End == null) {
-				int sfx = 0;
-				if (secall[SE_VICTORY])
-					sfx = SE_VICTORY;
-				else if (secall[SE_DEFEAT])
-					sfx = SE_DEFEAT;
-				if (sfx != 0)
-					try {
-						End = new BCPlayer(openFile(UserProfile.getBCData().musics.get(sfx)), sfx);
-						End.setVolume(VOL_SE);
-						if (CACHE[sfx] == null)
-							loadSound(sfx, UserProfile.getBCData().musics.get(sfx), false, 0);
-						else
-							loadSound(sfx, CACHE[sfx]);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-			}
-		} else if (End != null) {
-			End.release();
-			End = null;
-			secall[SE_DEFEAT] = false;
-			secall[SE_VICTORY] = false;
-		}
-
 		for (int i = 0; i < TOT; i++)
-			if (secall[i] && allow && !baseHP)
+			if (secall[i] && allow)
 				try {
 					if (CACHE[i] == null)
 						loadSound(i, UserProfile.getBCData().musics.get(i), false, 0);
@@ -391,6 +388,11 @@ public class BCMusic extends Data {
 			BG.start();
 			return;
 		}
+		if (ind != SE_HIT_0 && ind != SE_HIT_1 && ind != SE_HIT_BASE) {
+			openFile(CACHE[ind]);
+			return;
+		}
+
 		ArrayDeque<BCPlayer> clips = sounds.get(ind);
 		if (clips == null) {
 			clips = new ArrayDeque<>();

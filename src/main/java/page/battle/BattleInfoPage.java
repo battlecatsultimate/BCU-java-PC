@@ -265,7 +265,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 				(e.dire == 1 ? le : lu).add(e);
 			et.setList(le);
 			ut.setList(lu);
-			BCMusic.flush(spe < 3, sb.ebase.health <= 0 || sb.ubase.health <= 0);
+			BCMusic.flush(spe < 3 && sb.ebase.health > 0 && sb.ubase.health > 0);
 		}
 		if (basis instanceof SBRply && recd.rl != null)
 			change((SBRply) basis, b -> jsl.setValue(b.prog()));
@@ -293,17 +293,14 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			basis.sb.changeBG(basis.sb.st.bg);
 		}
 		if (sb.ebase.health <= 0 || sb.ubase.health <= 0) {
-			if (BCMusic.BG != null)
-				BCMusic.BG.stop();
-			if (sb.ebase.health <= 0) {
-				CommonStatic.setSE(Data.SE_VICTORY);
+			BCMusic.EndTheme(sb.ebase.health <= 0);
 
+			if (sb.ebase.health <= 0) {
 				if(!exPopupShown && CommonStatic.getConfig().exContinuation && sb.st.info != null && (sb.st.info.exConnection || sb.st.info.exStages != null)) {
 					exPopupShown = true;
 					Opts.showExStageSelection("EX stages found", "You can select one of these EX stages and continue the battle", sb.st, this);
 				}
-			} else
-				CommonStatic.setSE(Data.SE_DEFEAT);
+			}
 		} else if (basis.sb.mus != null) {
 			if (BCMusic.music != basis.sb.mus) {
 				BCMusic.play(basis.sb.mus);
