@@ -123,9 +123,11 @@ public class BCMusic extends Data {
 	}
 
 	public static synchronized void EndTheme(boolean win) {
-		if (End != null)
+		if (!play || End != null)
 			return;
 		stopAll();
+		if (VOL_UI == 0)
+			return;
 
 		byte sfx = win ? SE_VICTORY : SE_DEFEAT;
 		try {
