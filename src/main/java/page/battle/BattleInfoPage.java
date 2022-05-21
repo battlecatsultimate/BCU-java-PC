@@ -63,9 +63,8 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	private Replay recd;
 	private boolean backClicked = false;
 
-	private byte spe = 0;
-	private int upd = 0;
-	private boolean musicChanged = false;
+	private int spe = 0, upd = 0;
+	private boolean musicChanged = false, exPopupShown = false;
 
 	/**
 	 * Creates a new Battle Page
@@ -121,7 +120,12 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 
 	@Override
 	public void callBack(Object o) {
-		changePanel(getFront());
+		BCMusic.stopAll();
+		if(o instanceof Stage) {
+			changePanel(new BattleInfoPage(getFront(), (Stage) o, 0, basis.sb.b, new int[1])); //TODO remove old stage page from memory once it switches out
+		} else {
+			changePanel(getFront());
+		}
 	}
 
 	@Override
@@ -261,7 +265,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 				(e.dire == 1 ? le : lu).add(e);
 			et.setList(le);
 			ut.setList(lu);
-			BCMusic.flush(spe < 3, sb.ebase.health <= 0 || sb.ubase.health <= 0);
+			BCMusic.flush(spe < 3 && sb.ebase.health > 0 && sb.ubase.health > 0);
 		}
 		if (basis instanceof SBRply && recd.rl != null)
 			change((SBRply) basis, b -> jsl.setValue(b.prog()));
@@ -289,12 +293,14 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			basis.sb.changeBG(basis.sb.st.bg);
 		}
 		if (sb.ebase.health <= 0 || sb.ubase.health <= 0) {
-			if (BCMusic.BG != null)
-				BCMusic.BG.stop();
-			if (sb.ebase.health <= 0)
-				CommonStatic.setSE(Data.SE_VICTORY);
-			else
-				CommonStatic.setSE(Data.SE_DEFEAT);
+			BCMusic.EndTheme(sb.ebase.health <= 0);
+
+			if (sb.ebase.health <= 0) {
+				if(!exPopupShown && CommonStatic.getConfig().exContinuation && sb.st.info != null && (sb.st.info.exConnection || sb.st.info.exStages != null)) {
+					exPopupShown = true;
+					Opts.showExStageSelection("EX stages found", "You can select one of these EX stages and continue the battle", sb.st, this);
+				}
+			}
 		} else if (basis.sb.mus != null) {
 			if (BCMusic.music != basis.sb.mus) {
 				BCMusic.play(basis.sb.mus);
