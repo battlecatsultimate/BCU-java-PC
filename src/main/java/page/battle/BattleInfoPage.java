@@ -63,7 +63,8 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	private Replay recd;
 	private boolean backClicked = false;
 
-	private int spe = 0, upd = 0;
+	private byte spe = 0;
+	private int upd = 0;
 	private boolean musicChanged = false, exPopupShown = false;
 
 	/**
@@ -299,6 +300,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 				if(!exPopupShown && CommonStatic.getConfig().exContinuation && sb.st.info != null && (sb.st.info.exConnection || sb.st.info.exStages != null)) {
 					exPopupShown = true;
 					Opts.showExStageSelection("EX stages found", "You can select one of these EX stages and continue the battle", sb.st, this);
+					return;
 				}
 			}
 		} else if (basis.sb.mus != null) {
