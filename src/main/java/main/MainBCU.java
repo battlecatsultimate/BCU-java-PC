@@ -386,7 +386,7 @@ public class MainBCU {
 		@Override
 		public void run() {
 			try {
-				Thread.sleep(MainBCU.autoSaveTime);
+				Thread.sleep(MainBCU.autoSaveTime * 60000L);
 				Source.Workspace.autoSave();
 				MainBCU.restartAutoSaveTimer();
 			} catch (InterruptedException ignored) {
