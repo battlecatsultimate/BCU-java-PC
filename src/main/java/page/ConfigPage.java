@@ -133,7 +133,9 @@ public class ConfigPage extends Page {
 		set(rlpk, x, y, 1600, 775, 450, 50);
 		set(vcol, x, y, 1600, 850, 200, 50);
 		set(vres, x, y, 1850, 850, 200, 50);
-		set(exCont, x, y, 1600, 925, 400, 50);
+		set(exCont, x, y, 1600, 925, 450, 50);
+		set(autosave, x, y, 1600, 1000, 200, 50);
+		set(savetime, x, y, 1800, 1000, 250, 50);
 	}
 
 	@Override
@@ -312,9 +314,13 @@ public class ConfigPage extends Page {
 
 		savetime.setLnr(c -> {
 			int time = CommonStatic.parseIntN(savetime.getText());
-			MainBCU.autoSaveTime = Math.max(0, time);
-			MainFrame.autoSaveTime = MainBCU.autoSaveTime * 1800;
+			boolean eq = time != -1 && time != MainBCU.autoSaveTime;
+
 			savetime.setText(time > 0 ? time + "min" : "deactivated");
+			if (eq) {
+				MainBCU.autoSaveTime = time;
+				MainBCU.restartAutoSaveTimer();
+			}
 		});
 	}
 
@@ -356,6 +362,8 @@ public class ConfigPage extends Page {
 		add(vcol);
 		add(vres);
 		add(exCont);
+		add(autosave);
+		add(savetime);
 		exCont.setSelected(CommonStatic.getConfig().exContinuation);
 		prlvmd.setText("" + CommonStatic.getConfig().prefLevel);
 		jls.setSelectedIndex(localeIndexOf(cfg().lang));

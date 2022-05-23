@@ -1,8 +1,6 @@
 package page;
 
-import common.pack.Source;
 import common.system.P;
-import main.MainBCU;
 import main.Opts;
 import main.Printer;
 import utilpc.PP;
@@ -20,7 +18,6 @@ public class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	public static int autoSaveTime = 0;
 	public static int x = 0, y = 0;
 	public static Rectangle rect = null, crect = null;
 	public static Font font = null;
@@ -49,13 +46,6 @@ public class MainFrame extends JFrame {
 	public static void timer(int t) {
 		if (mainPanel != null && !F.changingPanel)
 			mainPanel.timer(t);
-		if (autoSaveTime > 0) {
-			autoSaveTime--;
-			if (autoSaveTime == 0) {
-				Source.Workspace.autoSave();
-				autoSaveTime = MainBCU.autoSaveTime * 1800;
-			}
-		}
 	}
 
 	protected static void resized() {
