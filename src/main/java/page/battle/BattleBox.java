@@ -42,17 +42,17 @@ public interface BattleBox {
 
 	class BBPainter implements BattleConst {
 
-		private static final double exp = 0.9, sprite = 0.8;
-		private static final int road_h = 156; // in p
-		private static final int off = 200;
-		private static final int DEP = 4;
-		private static final int wave = 28, castw = 128, casth = 256;
-		private static final int c0y = -130, c1y = -130, c2y = -258;
-		private static final int[] cany = new int[] { -134, -134, -134, -250, -250, -134, -134, -134 };
-		private static final int[] canx = new int[] { 0, 0, 0, 64, 64, 0, 0, 0 };
+		private static final float exp = 0.9f, sprite = 0.8f;
+		private static final short road_h = 156; // in p
+		private static final short off = 200;
+		private static final byte DEP = 4, wave = 28;
+		private static final short castw = 128, casth = 256;
+		private static final short c0y = -130, c1y = -130, c2y = -258;
+		private static final short[] cany = new short[] { -134, -134, -134, -250, -250, -134, -134, -134 };
+		private static final byte[] canx = new byte[] { 0, 0, 0, 64, 64, 0, 0, 0 };
 		private static final DecimalFormat df = new DecimalFormat("00.00");
-		private static final double bar = 8;
-		private static final double BOTTOM_GAP = 48;
+		private static final byte bar = 8;
+		private static final byte BOTTOM_GAP = 48;
 
 		public static void drawNyCast(FakeGraphics gra, int y, int x, double siz, int[] inf) {
 			BCAuxAssets aux = CommonStatic.getBCAssets();
@@ -928,9 +928,9 @@ public interface BattleBox {
 		private final FakeImage img;
 		private static Font font;
 		private static final float strokeWidth = 12f;
-		private static final int space = 30;
-		private static final int xGap = 5;
-		private static final int yGap = 2;
+		private static final byte space = 30;
+		private static final byte xGap = 5;
+		private static final byte yGap = 2;
 
 		public static void read() {
 			try {
@@ -961,8 +961,8 @@ public interface BattleBox {
 
 				FontRenderContext frc = new FontRenderContext(affine, true, false);
 
-				double w = generateWidth(message, frc);
-				double[] h = generateHeight(message, frc, affine);
+				float w = generateWidth(message, frc);
+				float[] h = generateHeight(message, frc, affine);
 
 				BufferedImage img = new BufferedImage((int) (w + strokeWidth * 2 + xGap * 2), (int) (h[0] + h[1] + strokeWidth * 2 + yGap * 2), BufferedImage.TYPE_INT_ARGB_PRE);
 
@@ -971,7 +971,7 @@ public interface BattleBox {
 				g.setRenderingHint(3, 2);
 				g.enableAntialiasing();
 
-				double pad = 0.0;
+				float pad = 0.0f;
 
 				for(int i = 0; i < message.length(); i++) {
 					String str = Character.toString(message.charAt(i));
@@ -983,8 +983,8 @@ public interface BattleBox {
 
 					Shape outline = font.createGlyphVector(frc, str).getGlyphOutline(0);
 
-					double[] offset = decideOffset(pad, h[0] + h[1], h[1]);
-					double left = getLeftPoint(outline.getPathIterator(affine));
+					float[] offset = decideOffset(pad, h[0] + h[1], h[1]);
+					float left = getLeftPoint(outline.getPathIterator(affine));
 
 					offset[0] -= left - strokeWidth - xGap;
 					offset[1] += strokeWidth;
@@ -996,7 +996,7 @@ public interface BattleBox {
 					pad += generateLetterWidth(str, frc) + 4;
 				}
 
-				pad = 0.0;
+				pad = 0.0f;
 
 				for(int i = 0; i < message.length(); i++) {
 					String str = Character.toString(message.charAt(i));
@@ -1008,8 +1008,8 @@ public interface BattleBox {
 
 					Shape outline = font.createGlyphVector(frc, str).getGlyphOutline(0);
 
-					double[] offset = decideOffset(pad, h[0] + h[1], h[1]);
-					double left = getLeftPoint(outline.getPathIterator(affine));
+					float[] offset = decideOffset(pad, h[0] + h[1], h[1]);
+					float left = getLeftPoint(outline.getPathIterator(affine));
 
 					offset[0] -= left - strokeWidth - xGap;
 					offset[1] += strokeWidth + 1;
@@ -1041,7 +1041,7 @@ public interface BattleBox {
 
 				g.setRenderingHint(3, 1);
 				g.enableAntialiasing();
-				double ratio = 42.0 / img.getHeight();
+				float ratio = 42.0f / img.getHeight();
 
 				BufferedImage scaled = new BufferedImage((int) (img.getWidth() * ratio), 42, BufferedImage.TYPE_INT_ARGB_PRE);
 				FG2D sg = new FG2D(scaled.getGraphics());
@@ -1052,9 +1052,9 @@ public interface BattleBox {
 				sg.drawImage(MainBCU.builder.build(img), 0, 0, scaled.getWidth(), scaled.getHeight());
 
 				if(scaled.getWidth() > 228)
-					ratio = 228.0 / scaled.getWidth();
+					ratio = 228.0f / scaled.getWidth();
 				else
-					ratio = 1.0;
+					ratio = 1.0f;
 
 				g.drawImage(MainBCU.builder.build(scaled), 3, 2, scaled.getWidth() * ratio, scaled.getHeight());
 				return real;
@@ -1093,27 +1093,27 @@ public interface BattleBox {
 			return true;
 		}
 
-		private double[] getAscendDescend(PathIterator path) {
-			double[] d = new double[6];
+		private float[] getAscendDescend(PathIterator path) {
+			float[] d = new float[6];
 
-			double descend = 0;
-			double ascend = 0;
+			float descend = 0;
+			float ascend = 0;
 
 			while(!path.isDone()) {
 				path.currentSegment(d);
 
-				descend = Math.min(d[1] * -1.0, descend);
-				ascend = Math.max(d[1] * -1.0, ascend);
+				descend = Math.min(d[1] * -1.0f, descend);
+				ascend = Math.max(d[1] * -1.0f, ascend);
 
 				if(!path.isDone())
 					path.next();
 			}
 
-			return new double[] {ascend, descend};
+			return new float[] {ascend, descend};
 		}
 
-		private double generateWidth(String message, FontRenderContext frc) {
-			double w = 0.0;
+		private float generateWidth(String message, FontRenderContext frc) {
+			float w = 0.0f;
 
 			for(int i = 0; i < message.length(); i++) {
 				String str = Character.toString(message.charAt(i));
@@ -1131,17 +1131,17 @@ public interface BattleBox {
 			return w - 4;
 		}
 
-		private double[] generateHeight(String message, FontRenderContext frc, AffineTransform aff) {
+		private float[] generateHeight(String message, FontRenderContext frc, AffineTransform aff) {
 			GlyphVector glyph = font.createGlyphVector(frc, message);
 
-			double[] res = new double[2];
+			float[] res = new float[2];
 
 			for(int i = 0; i < message.length(); i++) {
 				Shape outline = glyph.getGlyphOutline(i);
 
 				PathIterator path = outline.getPathIterator(aff);
 
-				double[] result = getAscendDescend(path);
+				float[] result = getAscendDescend(path);
 
 				res[0] = Math.max(res[0], result[0]);
 				res[1] = Math.min(res[1], result[1]);
@@ -1152,8 +1152,8 @@ public interface BattleBox {
 			return res;
 		}
 
-		private double[] decideOffset(double padding, double h, double base) {
-			return new double[] {padding, h - base};
+		private float[] decideOffset(float padding, float h, float base) {
+			return new float[] {padding, h - base};
 		}
 
 		private double generateLetterWidth(String str, FontRenderContext frc) {
@@ -1162,10 +1162,10 @@ public interface BattleBox {
 			return glyph.getVisualBounds().getWidth();
 		}
 
-		private double getLeftPoint(PathIterator path) {
-			double res = Double.MAX_VALUE;
+		private float getLeftPoint(PathIterator path) {
+			float res = Float.MAX_VALUE;
 
-			double[] d = new double[6];
+			float[] d = new float[6];
 
 			while(!path.isDone()) {
 				path.currentSegment(d);
@@ -1179,10 +1179,10 @@ public interface BattleBox {
 			return res;
 		}
 
-		private Path2D generatePath2D(double[] offset, PathIterator path) {
-			Path2D path2D = new Path2D.Double();
+		private Path2D generatePath2D(float[] offset, PathIterator path) {
+			Path2D path2D = new Path2D.Float();
 
-			double[] d = new double[6];
+			float[] d = new float[6];
 
 			while(!path.isDone()) {
 				switch (path.currentSegment(d)) {

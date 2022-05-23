@@ -282,6 +282,7 @@ public class BCUWriter extends DataIO {
 		jo.addProperty("backup_file", CommonStatic.getConfig().backupFile == null ? "None" : CommonStatic.getConfig().backupFile);
 		jo.addProperty("buttonSound", MainBCU.buttonSound);
 		jo.addProperty("ann0510", MainBCU.announce0510);
+		jo.addProperty("autosavetime", MainBCU.autoSaveTime);
 		jo.addProperty("drawBGEffect", CommonStatic.getConfig().drawBGEffect);
 		String[] exp = new String[Exporter.curs.length];
 		for (int i = 0; i < exp.length; i++)

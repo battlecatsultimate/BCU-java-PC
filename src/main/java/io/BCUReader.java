@@ -77,7 +77,7 @@ public class BCUReader extends DataIO {
 				if (jo.has("drawBGEffect")) {
 					CommonStatic.getConfig().drawBGEffect = jo.get("drawBGEffect").getAsBoolean();
 				}
-				MainBCU.FILTER_TYPE = jo.get("filter").getAsInt();
+				MainBCU.FILTER_TYPE = jo.get("filter").getAsByte();
 				BCMusic.play = jo.get("play_sound").getAsBoolean();
 				BCMusic.VOL_BG = jo.get("volume_BG").getAsInt();
 				BCMusic.VOL_SE = jo.get("volume_SE").getAsInt();
@@ -102,6 +102,9 @@ public class BCUReader extends DataIO {
 				}
 				if(jo.has("ann0510")) {
 					MainBCU.announce0510 = jo.get("ann0510").getAsBoolean();
+				}
+				if (jo.has("autosavetime")) {
+					MainBCU.autoSaveTime = jo.get("autosavetime").getAsInt();
 				}
 				String[] exp = JsonDecoder.decode(jo.get("export_paths"), String[].class);
 				String[] imp = JsonDecoder.decode(jo.get("import_paths"), String[].class);

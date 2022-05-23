@@ -279,7 +279,8 @@ public class MainBCU {
 	public static final int ver = 50112;
 	private static final DecimalFormat df = new DecimalFormat("#.##");
 
-	public static int FILTER_TYPE = 1;
+	public static byte FILTER_TYPE = 1;
+	public static int autoSaveTime = 0;
 	public static final boolean WRITE = !new File("./.idea").exists();
 	public static boolean preload = false, trueRun = true, loaded = false, USE_JOGL = false;
 	public static boolean light = true, nimbus = false, seconds = false, buttonSound = false;
@@ -341,6 +342,7 @@ public class MainBCU {
 			if (menu != null)
 				menu.setEnabled(true);
 		MainFrame.changePanel(new MainPage());
+		MainFrame.autoSaveTime = autoSaveTime * 1800;
 	}
 
 	public static String validate(String str, char replace) {

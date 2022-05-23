@@ -65,6 +65,8 @@ public class ConfigPage extends Page {
 	private final JBTN vcol = new JBTN(MainLocale.PAGE, "viewcolor");
 	private final JBTN vres = new JBTN(MainLocale.PAGE, "viewreset");
 	private final JTG exCont = new JTG(MainLocale.PAGE, "excont");
+	private final JL autosave = new JL(MainLocale.PAGE, "autosave");
+	private final JTF savetime = new JTF(MainBCU.autoSaveTime > 0 ? MainBCU.autoSaveTime + "min" : "deactivated");
 
 	private final JScrollPane jsps = new JScrollPane(jls);
 
@@ -131,7 +133,7 @@ public class ConfigPage extends Page {
 		set(rlpk, x, y, 1600, 775, 450, 50);
 		set(vcol, x, y, 1600, 850, 200, 50);
 		set(vres, x, y, 1850, 850, 200, 50);
-		set(exCont, x, y, 1600, 950, 200, 50);
+		set(exCont, x, y, 1600, 925, 400, 50);
 	}
 
 	@Override
@@ -247,7 +249,7 @@ public class ConfigPage extends Page {
 		});
 
 		filt.addActionListener(e -> {
-			MainBCU.FILTER_TYPE = 1 - MainBCU.FILTER_TYPE;
+			MainBCU.FILTER_TYPE = (byte) (1 - MainBCU.FILTER_TYPE);
 			filt.setText(0, "filter" + MainBCU.FILTER_TYPE);
 		});
 
@@ -307,6 +309,13 @@ public class ConfigPage extends Page {
 		vres.addActionListener(l -> CommonStatic.getConfig().viewerColor = -1);
 
 		exCont.addActionListener(l -> CommonStatic.getConfig().exContinuation = exCont.isSelected());
+
+		savetime.setLnr(c -> {
+			int time = CommonStatic.parseIntN(savetime.getText());
+			MainBCU.autoSaveTime = Math.max(0, time);
+			MainFrame.autoSaveTime = MainBCU.autoSaveTime * 1800;
+			savetime.setText(time > 0 ? time + "min" : "deactivated");
+		});
 	}
 
 	private void ini() {
