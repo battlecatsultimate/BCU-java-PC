@@ -176,13 +176,14 @@ public class BCUWriter extends DataIO {
 		Source.Workspace.saveWorkspace();
 		AnimGroup.writeAnimGroup();
 		writeOptions();
-		Backup.createBackup(null, new ArrayList<>(
-				Arrays.asList(
-						CommonStatic.ctx.getWorkspaceFile(""),
-						CommonStatic.ctx.getUserFile(""),
-						CommonStatic.ctx.getAuxFile("./packs")
-				)
-		));
+		if (CommonStatic.getConfig().maxBackup != -1)
+			Backup.createBackup(null, new ArrayList<>(
+					Arrays.asList(
+							CommonStatic.ctx.getWorkspaceFile(""),
+							CommonStatic.ctx.getUserFile(""),
+							CommonStatic.ctx.getAuxFile("./packs")
+					)
+			));
 	}
 
 	public static void writeGIF(AnimatedGifEncoder age, String path) {
