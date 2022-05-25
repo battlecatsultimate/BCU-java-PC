@@ -52,6 +52,7 @@ public class ConfigPage extends Page {
 	private final JL jlse = new JL(MainLocale.PAGE, "SEvol");
 	private final JL jlui = new JL(MainLocale.PAGE, "UIvol");
 	private final JL mbac = new JL(MainLocale.PAGE, "maxback");
+	private final JBTN nobac = new JBTN(MainLocale.PAGE, CommonStatic.getConfig().maxBackup != -1 ? "nobac" : "yesbac");
 	private final JBTN theme = new JBTN(MainLocale.PAGE, MainBCU.light ? "themel" : "themed");
 	private final JBTN nimbus = new JBTN(MainLocale.PAGE, MainBCU.nimbus ? "nimbus" : "tdefault");
 	private final JSlider jsmin = new JSlider(0, 100);
@@ -65,6 +66,8 @@ public class ConfigPage extends Page {
 	private final JBTN vcol = new JBTN(MainLocale.PAGE, "viewcolor");
 	private final JBTN vres = new JBTN(MainLocale.PAGE, "viewreset");
 	private final JTG exCont = new JTG(MainLocale.PAGE, "excont");
+	private final JL autosave = new JL(MainLocale.PAGE, "autosave");
+	private final JTF savetime = new JTF(MainBCU.autoSaveTime > 0 ? MainBCU.autoSaveTime + "min" : "deactivated");
 
 	private final JScrollPane jsps = new JScrollPane(jls);
 
@@ -124,6 +127,7 @@ public class ConfigPage extends Page {
 		set(preflv, x, y, 1600, 550, 200, 50);
 		set(prlvmd, x, y, 1800, 550, 250, 50);
 		set(mbac, x, y, 1100, 1100, 400, 50);
+		set(nobac, x, y, 1525, 1100, 250, 50);
 		set(jsba, x, y, 1100, 1150, 1000, 100);
 		set(btnsnd, x, y, 1600, 625, 200, 50);
 		set(bgeff, x, y, 1850, 625, 200, 50);
@@ -131,7 +135,9 @@ public class ConfigPage extends Page {
 		set(rlpk, x, y, 1600, 775, 450, 50);
 		set(vcol, x, y, 1600, 850, 200, 50);
 		set(vres, x, y, 1850, 850, 200, 50);
-		set(exCont, x, y, 1600, 950, 200, 50);
+		set(exCont, x, y, 1600, 925, 450, 50);
+		set(autosave, x, y, 1600, 1000, 200, 50);
+		set(savetime, x, y, 1800, 1000, 250, 50);
 	}
 
 	@Override
@@ -211,12 +217,26 @@ public class ConfigPage extends Page {
 
 		jsui.addChangeListener(arg0 -> BCMusic.setUIVol(jsui.getValue()));
 
+		nobac.addActionListener(arg0 -> {
+			if (CommonStatic.getConfig().maxBackup != -1) {
+				if (Opts.conf(get(MainLocale.PAGE, "nobacwarn"))) {
+					nobac.setText(get(MainLocale.PAGE, "yesbac"));
+					CommonStatic.getConfig().maxBackup = -1;
+					jsba.setEnabled(false);
+				}
+			} else {
+				nobac.setText(get(MainLocale.PAGE, "nobac"));
+				jsba.setEnabled(true);
+				jsba.setValue(Backup.backups.size());
+			}
+		});
+
 		jsba.addChangeListener(arg0 -> {
 			if(!jsba.getValueIsAdjusting()) {
 				int back = Backup.backups.size();
 				int pre = CommonStatic.getConfig().maxBackup;
 
-				if(pre >= back && back > jsba.getValue() && jsba.getValue() != 0) {
+				if(pre >= back && back > jsba.getValue() && jsba.getValue() > 0) {
 					if(Opts.conf((back-jsba.getValue())+" "+get(MainLocale.PAGE, "backremwarn"))) {
 						CommonStatic.getConfig().maxBackup = jsba.getValue();
 					} else {
@@ -247,7 +267,7 @@ public class ConfigPage extends Page {
 		});
 
 		filt.addActionListener(e -> {
-			MainBCU.FILTER_TYPE = 1 - MainBCU.FILTER_TYPE;
+			MainBCU.FILTER_TYPE = (byte) (1 - MainBCU.FILTER_TYPE);
 			filt.setText(0, "filter" + MainBCU.FILTER_TYPE);
 		});
 
@@ -307,6 +327,17 @@ public class ConfigPage extends Page {
 		vres.addActionListener(l -> CommonStatic.getConfig().viewerColor = -1);
 
 		exCont.addActionListener(l -> CommonStatic.getConfig().exContinuation = exCont.isSelected());
+
+		savetime.setLnr(c -> {
+			int time = CommonStatic.parseIntN(savetime.getText());
+			boolean eq = time != -1 && time != MainBCU.autoSaveTime;
+
+			savetime.setText(time > 0 ? time + "min" : "deactivated");
+			if (eq) {
+				MainBCU.autoSaveTime = time;
+				MainBCU.restartAutoSaveTimer();
+			}
+		});
 	}
 
 	private void ini() {
@@ -347,6 +378,9 @@ public class ConfigPage extends Page {
 		add(vcol);
 		add(vres);
 		add(exCont);
+		add(autosave);
+		add(savetime);
+		add(nobac);
 		exCont.setSelected(CommonStatic.getConfig().exContinuation);
 		prlvmd.setText("" + CommonStatic.getConfig().prefLevel);
 		jls.setSelectedIndex(localeIndexOf(cfg().lang));
@@ -380,7 +414,10 @@ public class ConfigPage extends Page {
 		musc.setSelected(BCMusic.play);
 		jogl.setSelected(MainBCU.USE_JOGL);
 		btnsnd.setSelected(MainBCU.buttonSound);
-		jsba.setValue(CommonStatic.getConfig().maxBackup);
+		if (CommonStatic.getConfig().maxBackup != -1)
+			jsba.setValue(CommonStatic.getConfig().maxBackup);
+		else
+			jsba.setEnabled(false);
 		bgeff.setSelected(CommonStatic.getConfig().drawBGEffect);
 		btdly.setSelected(CommonStatic.getConfig().buttonDelay);
 		if (!MainBCU.nimbus) {

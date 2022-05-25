@@ -176,13 +176,14 @@ public class BCUWriter extends DataIO {
 		Source.Workspace.saveWorkspace();
 		AnimGroup.writeAnimGroup();
 		writeOptions();
-		Backup.createBackup(null, new ArrayList<>(
-				Arrays.asList(
-						CommonStatic.ctx.getWorkspaceFile(""),
-						CommonStatic.ctx.getUserFile(""),
-						CommonStatic.ctx.getAuxFile("./packs")
-				)
-		));
+		if (CommonStatic.getConfig().maxBackup != -1)
+			Backup.createBackup(null, new ArrayList<>(
+					Arrays.asList(
+							CommonStatic.ctx.getWorkspaceFile(""),
+							CommonStatic.ctx.getUserFile(""),
+							CommonStatic.ctx.getAuxFile("./packs")
+					)
+			));
 	}
 
 	public static void writeGIF(AnimatedGifEncoder age, String path) {
@@ -282,6 +283,7 @@ public class BCUWriter extends DataIO {
 		jo.addProperty("backup_file", CommonStatic.getConfig().backupFile == null ? "None" : CommonStatic.getConfig().backupFile);
 		jo.addProperty("buttonSound", MainBCU.buttonSound);
 		jo.addProperty("ann0510", MainBCU.announce0510);
+		jo.addProperty("autosavetime", MainBCU.autoSaveTime);
 		jo.addProperty("drawBGEffect", CommonStatic.getConfig().drawBGEffect);
 		String[] exp = new String[Exporter.curs.length];
 		for (int i = 0; i < exp.length; i++)
