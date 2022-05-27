@@ -125,7 +125,11 @@ public class BCMusic extends Data {
 	public static synchronized void EndTheme(boolean win) {
 		if (!play || End != null)
 			return;
-		stopAll();
+		if (BG != null) {
+			BG.release();
+			BG = null;
+		}
+
 		if (VOL_UI == 0)
 			return;
 
@@ -296,16 +300,21 @@ public class BCMusic extends Data {
 			switch (ind) {
 				case SE_SPEND_FAIL:
 					if(UI != null && !UI[INVALID].isPlaying()) {
-						if(!UI[TOUCH].isPlaying())
+						if(!UI[TOUCH].isPlaying()) {
+							UI[TOUCH].rewind();
 							UI[TOUCH].start();
+						}
 
+						UI[INVALID].rewind();
 						UI[INVALID].start();
 					}
 					break;
 				case SE_SPEND_SUC:
 				case SE_SPEND_REF:
-					if(!UI[TOUCH].isPlaying())
+					if(!UI[TOUCH].isPlaying()) {
+						UI[TOUCH].rewind();
 						UI[TOUCH].start();
+					}
 
 					loadSound(ind, openFile(bytes), VOL_UI);
 					break;
@@ -388,10 +397,6 @@ public class BCMusic extends Data {
 			BG = new BCPlayer(c, -1, loop);
 			BG.setVolume(VOL_BG);
 			BG.start();
-			return;
-		}
-		if (ind != SE_HIT_0 && ind != SE_HIT_1 && ind != SE_HIT_BASE) {
-			openFile(CACHE[ind]);
 			return;
 		}
 
