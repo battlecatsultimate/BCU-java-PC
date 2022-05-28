@@ -300,21 +300,15 @@ public class BCMusic extends Data {
 			switch (ind) {
 				case SE_SPEND_FAIL:
 					if(UI != null && !UI[INVALID].isPlaying()) {
-						if(!UI[TOUCH].isPlaying()) {
-							UI[TOUCH].rewind();
+						if(!UI[TOUCH].isPlaying())
 							UI[TOUCH].start();
-						}
-
-						UI[INVALID].rewind();
 						UI[INVALID].start();
 					}
 					break;
 				case SE_SPEND_SUC:
 				case SE_SPEND_REF:
-					if(!UI[TOUCH].isPlaying()) {
-						UI[TOUCH].rewind();
+					if(!UI[TOUCH].isPlaying())
 						UI[TOUCH].start();
-					}
 
 					loadSound(ind, openFile(bytes), VOL_UI);
 					break;
