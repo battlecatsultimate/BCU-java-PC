@@ -29,7 +29,7 @@ public class LineUpBox extends Canvas {
 
 	private Form[] backup = new Form[5];
 	private final Page page;
-	private LineUp lu;
+	protected LineUp lu;
 	private int pt = 0, time = 0;
 	private Combo sc;
 	private PP relative, mouse;

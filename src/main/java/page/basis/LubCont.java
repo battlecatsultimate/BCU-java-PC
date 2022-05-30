@@ -1,7 +1,5 @@
 package page.basis;
 
-import common.system.Node;
-import common.util.unit.Unit;
 import page.Page;
 import page.info.UnitInfoPage;
 
@@ -37,10 +35,8 @@ public abstract class LubCont extends Page {
 		if (e.getSource() == getLub())
 			if (e.getButton() == MouseEvent.BUTTON1)
 				getLub().click(e.getPoint());
-			else if (getLub().sf != null) {
-				Node<Unit> n = new Node<>(getLub().sf.unit);
-				changePanel(new UnitInfoPage(this, n));
-			}
+			else if (getLub().sf != null)
+				changePanel(new UnitInfoPage(this, getLub().sf.unit, getLub().lu.getLv(getLub().sf).getLvs()));
 	}
 
 	@Override

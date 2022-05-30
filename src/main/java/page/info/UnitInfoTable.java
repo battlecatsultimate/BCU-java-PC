@@ -42,6 +42,35 @@ public class UnitInfoTable extends Page {
 	private ArrayList<Integer> multi;
 	private boolean displaySpecial;
 
+	protected UnitInfoTable(Page p, Form de, ArrayList<Integer> lvs) {
+		super(p);
+		b = BasisSet.current();
+
+		f = de;
+		multi = lvs;
+		atks = new JL[6];
+
+		boolean pc = de.du.getPCoin() != null;
+		MaskUnit du = pc ? f.du.getPCoin().improve(multi) : f.du;
+		List<Interpret.ProcDisplay> ls = Interpret.getAbi(du);
+		double mul = f.unit.lv.getMult(multi.get(0));
+		ls.addAll(Interpret.getProc(du, false, new double[]{Math.round(du.getHp() * mul) * b.t().getDefMulti(), multi.get(0)}));
+		if (pc)
+			ls.add(new Interpret.ProcDisplay("",null));
+		proc = new JLabel[ls.size()];
+		for (int i = 0; i < ls.size(); i++) {
+			Interpret.ProcDisplay display = ls.get(i);
+			add(proc[i] = new JLabel(display.toString()));
+			proc[i].setBorder(BorderFactory.createEtchedBorder());
+			proc[i].setIcon(display.getIcon());
+		}
+		if (pc)
+			pcoin = proc[ls.size() - 1];
+		else
+			pcoin = null;
+		ini();
+	}
+
 	protected UnitInfoTable(Page p, Form de, boolean sp) {
 		super(p);
 		b = BasisSet.current();
@@ -334,7 +363,7 @@ public class UnitInfoTable extends Page {
 				str = str.substring(wrapped.length());
 			}
 			sb.append(str);
-			jl.setToolTipText("<html>" + sb.toString() + "</html>");
+			jl.setToolTipText("<html>" + sb + "</html>");
 		}
 	}
 

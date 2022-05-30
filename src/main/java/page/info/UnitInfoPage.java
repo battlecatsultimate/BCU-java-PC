@@ -10,6 +10,7 @@ import page.basis.BasisPage;
 import page.view.UnitViewPage;
 
 import javax.swing.*;
+import java.util.ArrayList;
 
 public class UnitInfoPage extends Page {
 
@@ -28,6 +29,19 @@ public class UnitInfoPage extends Page {
 
 	private final BasisSet b;
 	private final Node<Unit> n;
+
+	public UnitInfoPage(Page p, Unit u, ArrayList<Integer> lvs) {
+		super(p);
+		n = new Node<>(u);
+		b = BasisSet.current();
+
+		info = new UnitInfoTable[u.forms.length];
+		for (int i = 0; i < info.length; i++)
+			info[i] = new UnitInfoTable(this, n.val.forms[i], lvs);
+		trea = new TreaTable(this);
+		ini();
+		resized();
+	}
 
 	public UnitInfoPage(Page p, Node<Unit> de) {
 		this(p, de, BasisSet.current(), false);
