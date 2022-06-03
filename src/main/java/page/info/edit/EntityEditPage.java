@@ -107,6 +107,7 @@ public abstract class EntityEditPage extends Page {
 
 	protected final boolean editable;
 	protected final Basis bas = BasisSet.current();
+	protected final ArrayList<AtkDataModel> extra = new ArrayList<>();
 
 	public EntityEditPage(Page p, String pac, CustomEntity e, boolean edit, boolean isEnemy) {
 		super(p);
@@ -440,16 +441,23 @@ public abstract class EntityEditPage extends Page {
 		int[][] raw = ce.rawAtkData();
 		int pre = 0;
 		int n = ce.atks.length;
-		if (ce.rev != null)
+		extra.clear();
+		if (ce.rev != null) {
 			n++;
-		if (ce.res != null)
+			extra.add(ce.rev);
+		} if (ce.res != null) {
 			n++;
-		if (ce.cntr != null)
+			extra.add(ce.res);
+		} if (ce.cntr != null) {
 			n++;
-		if (ce.bur != null)
+			extra.add(ce.cntr);
+		} if (ce.bur != null) {
 			n++;
-		if (ce.resu != null)
+			extra.add(ce.bur);
+		} if (ce.resu != null) {
 			n++;
+			extra.add(ce.resu);
+		}
 		String[] ints = new String[n];
 		for (int i = 0; i < ce.atks.length; i++) {
 			ints[i] = i + 1 + " " + ce.atks[i].str;
@@ -458,16 +466,9 @@ public abstract class EntityEditPage extends Page {
 				ints[i] += " (out of range)";
 		}
 		int ix = ce.atks.length;
-		if (ce.rev != null)
-			ints[ix++] = ce.rev.str;
-		if (ce.res != null)
-			ints[ix++] = ce.res.str;
-		if (ce.cntr != null)
-			ints[ix++] = ce.cntr.str;
-		if (ce.bur != null)
-			ints[ix++] = ce.bur.str;
-		if (ce.resu != null)
-			ints[ix] = ce.resu.str;
+		for (AtkDataModel atk : extra)
+			ints[ix++] = atk.str;
+
 		int ind = jli.getSelectedIndex();
 		jli.setListData(ints);
 		if (ind < 0)
@@ -618,15 +619,8 @@ public abstract class EntityEditPage extends Page {
 	private AtkDataModel get(int ind) {
 		if (ind < ce.atks.length)
 			return ce.atks[ind];
-		else if (ind == ce.atks.length)
-			return ce.rev == null ? ce.res == null ? ce.cntr == null ? ce.bur == null ? ce.resu : ce.bur : ce.cntr : ce.res : ce.rev;
-		else if (ind == ce.atks.length + 1)
-			return ce.res == null ? ce.cntr == null ? ce.bur == null ? ce.resu : ce.bur : ce.cntr : ce.res;
-		else if (ind == ce.atks.length + 2)
-			return ce.cntr == null ? ce.bur == null ? ce.resu : ce.bur : ce.cntr;
-		else if (ind == ce.atks.length + 3)
-			return ce.bur == null ? ce.resu : ce.bur;
-		return ce.resu;
+		else
+			return extra.get(ind - ce.atks.length);
 	}
 
 	protected void input(JTF jtf, String text) {
@@ -731,40 +725,24 @@ public abstract class EntityEditPage extends Page {
 		changing = true;
 		int n = ce.atks.length;
 		if (ind >= n) {
-			if (ind == n)
-				if (ce.rev != null)
+			AtkDataModel rematk = extra.remove(ind - n);
+			switch (rematk.str) {
+				case "revenge":
 					ce.rev = null;
-				else if (ce.res != null)
+					break;
+				case "resurrection":
 					ce.res = null;
-				else if (ce.cntr != null)
+					break;
+				case "counterattack":
 					ce.cntr = null;
-				else if (ce.bur != null)
+					break;
+				case "burrow":
 					ce.bur = null;
-				else
+					break;
+				default:
 					ce.resu = null;
-			else if (ind == n + 1)
-				if (ce.res != null)
-					ce.res = null;
-				else if (ce.cntr != null)
-					ce.cntr = null;
-				else if (ce.bur != null)
-					ce.bur = null;
-				else
-					ce.resu = null;
-			else if (ind == n + 2)
-				if (ce.cntr != null)
-					ce.cntr = null;
-				else if (ce.bur != null)
-					ce.bur = null;
-				else
-					ce.resu = null;
-			else if (ind == n + 3)
-				if (ce.bur != null)
-					ce.bur = null;
-				else
-					ce.resu = null;
-			else
-				ce.resu = null;
+					break;
+			}
 		} else if (n > 1) {
 			AtkDataModel[] datas = new AtkDataModel[n - 1];
 			if (ind >= 0)
