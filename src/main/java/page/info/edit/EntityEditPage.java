@@ -263,8 +263,10 @@ public abstract class EntityEditPage extends Page {
 		setFocusCycleRoot(true);
 		addListeners();
 		atkn.setToolTipText("<html>use name \"revenge\" for attack during HB animation<br>"
-				+ "use name \"resurrection\" for attack during death animation"
-				+ "use name \"counterattack\" for a more customizable counterattack (Needs Counter proc parameters still)</html>");
+				+ "use name \"resurrection\" for attack during death animation<br>"
+				+ "use name \"counterattack\" for a more customizable counterattack (Needs Counter proc parameters still)<br>"
+				+ "use name \"burrow\" for attack during burrow down animation<br>"
+				+ "use name \"resurface\" for attack during burrow up animation</html>");
 		ftp.setToolTipText(
 				"<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
 						+ "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost<br>" +
@@ -444,6 +446,10 @@ public abstract class EntityEditPage extends Page {
 			n++;
 		if (ce.cntr != null)
 			n++;
+		if (ce.bur != null)
+			n++;
+		if (ce.resu != null)
+			n++;
 		String[] ints = new String[n];
 		for (int i = 0; i < ce.atks.length; i++) {
 			ints[i] = i + 1 + " " + ce.atks[i].str;
@@ -457,7 +463,11 @@ public abstract class EntityEditPage extends Page {
 		if (ce.res != null)
 			ints[ix++] = ce.res.str;
 		if (ce.cntr != null)
-			ints[ix] = ce.cntr.str;
+			ints[ix++] = ce.cntr.str;
+		if (ce.bur != null)
+			ints[ix++] = ce.bur.str;
+		if (ce.resu != null)
+			ints[ix] = ce.resu.str;
 		int ind = jli.getSelectedIndex();
 		jli.setListData(ints);
 		if (ind < 0)
@@ -609,10 +619,14 @@ public abstract class EntityEditPage extends Page {
 		if (ind < ce.atks.length)
 			return ce.atks[ind];
 		else if (ind == ce.atks.length)
-			return ce.rev == null ? ce.res == null ? ce.cntr : ce.res : ce.rev;
+			return ce.rev == null ? ce.res == null ? ce.cntr == null ? ce.bur == null ? ce.resu : ce.bur : ce.cntr : ce.res : ce.rev;
 		else if (ind == ce.atks.length + 1)
-			return ce.res == null ? ce.cntr : ce.res;
-		return ce.cntr;
+			return ce.res == null ? ce.cntr == null ? ce.bur == null ? ce.resu : ce.bur : ce.cntr : ce.res;
+		else if (ind == ce.atks.length + 2)
+			return ce.cntr == null ? ce.bur == null ? ce.resu : ce.bur : ce.cntr;
+		else if (ind == ce.atks.length + 3)
+			return ce.bur == null ? ce.resu : ce.bur;
+		return ce.resu;
 	}
 
 	protected void input(JTF jtf, String text) {
@@ -634,6 +648,14 @@ public abstract class EntityEditPage extends Page {
 			if (text.equals("counterattack")) {
 				remAtk(adm);
 				ce.cntr = adm;
+			}
+			if (text.equals("burrow")) {
+				remAtk(adm);
+				ce.bur = adm;
+			}
+			if (text.equals("resurface")) {
+				remAtk(adm);
+				ce.resu = adm;
 			}
 			return;
 		}
@@ -714,15 +736,35 @@ public abstract class EntityEditPage extends Page {
 					ce.rev = null;
 				else if (ce.res != null)
 					ce.res = null;
-				else
+				else if (ce.cntr != null)
 					ce.cntr = null;
+				else if (ce.bur != null)
+					ce.bur = null;
+				else
+					ce.resu = null;
 			else if (ind == n + 1)
 				if (ce.res != null)
 					ce.res = null;
-				else
+				else if (ce.cntr != null)
 					ce.cntr = null;
+				else if (ce.bur != null)
+					ce.bur = null;
+				else
+					ce.resu = null;
+			else if (ind == n + 2)
+				if (ce.cntr != null)
+					ce.cntr = null;
+				else if (ce.bur != null)
+					ce.bur = null;
+				else
+					ce.resu = null;
+			else if (ind == n + 3)
+				if (ce.bur != null)
+					ce.bur = null;
+				else
+					ce.resu = null;
 			else
-				ce.cntr = null;
+				ce.resu = null;
 		} else if (n > 1) {
 			AtkDataModel[] datas = new AtkDataModel[n - 1];
 			if (ind >= 0)

@@ -14,7 +14,9 @@ import common.util.AnimGroup;
 import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.stage.MapColc;
+import common.util.stage.Stage;
 import common.util.stage.StageMap;
+import common.util.stage.info.CustomStageInfo;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
 import main.MainBCU;
@@ -57,7 +59,7 @@ public class PackEditPage extends Page {
 	private final JScrollPane jspe = new JScrollPane(jle);
 	private final JTree jtd = new JTree();
 	private final JScrollPane jspd = new JScrollPane(jtd);
-	private final RLFIM<StageMap> jls = new RLFIM<>(() -> this.changing = true, () -> changing = false, this::setMap, StageMap::new);
+	private final RLFIM<StageMap> jls = new RLFIM<>(() -> this.changing = true, () -> changing = false, this::finishRemoving, this::setMap, StageMap::new);
 	private final JScrollPane jsps = new JScrollPane(jls);
 	private final JList<UserPack> jlr = new JList<>();
 	private final JScrollPane jspr = new JScrollPane(jlr);
@@ -668,6 +670,15 @@ public class PackEditPage extends Page {
 
 			reme.setEnabled(e.findApp(pac.mc).size() == 0 && !cont);
 		}
+	}
+
+	private void finishRemoving(StageMap map) {
+		for (Stage s : map.list)
+			if (s.info != null)
+				((CustomStageInfo)s.info).destroy();
+		for (Stage s : map.list)
+			for (CustomStageInfo si : ((MapColc.PackMapColc)map.getCont()).si)
+				si.remove(s);
 	}
 
 	private void setMap(StageMap map) {

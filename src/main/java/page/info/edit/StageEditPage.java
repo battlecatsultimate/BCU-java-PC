@@ -5,6 +5,7 @@ import common.pack.UserProfile;
 import common.util.stage.MapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
+import common.util.stage.info.CustomStageInfo;
 import common.util.unit.AbEnemy;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
@@ -47,11 +48,11 @@ public class StageEditPage extends Page {
 	private final JBTN elim = new JBTN(0, "limit");
 	private final StageEditTable jt;
 	private final JScrollPane jspjt;
-	private final RLFIM<StageMap> jlsm = new RLFIM<>(() -> this.changing = true, () -> changing = false, this::setAA,
-			StageMap::new);
+	private final RLFIM<StageMap> jlsm = new RLFIM<>(() -> this.changing = true, () -> changing = false,
+			this::finishRemoving, this::setAA, StageMap::new);
 	private final JScrollPane jspsm = new JScrollPane(jlsm);
-	private final RLFIM<Stage> jlst = new RLFIM<>(() -> this.changing = true, () -> changing = false, this::setAB,
-			Stage::new);
+	private final RLFIM<Stage> jlst = new RLFIM<>(() -> this.changing = true, () -> changing = false,
+			this::finishRemoving, this::setAB, Stage::new);
 	private final JScrollPane jspst = new JScrollPane(jlst);
 	private final JList<StageMap> lpsm = new JList<>(Stage.CLIPMC.maps.toArray());
 	private final JScrollPane jlpsm = new JScrollPane(lpsm);
@@ -386,6 +387,24 @@ public class StageEditPage extends Page {
 		adds.setEnabled(true);
 		checkPtst();
 		setAB(sm.list.getList().get(0));
+	}
+
+	private void finishRemoving(Object obj) {
+		if (obj instanceof StageMap) {
+			StageMap stm = (StageMap)obj;
+			for (Stage s : stm.list)
+				if (s.info != null)
+					((CustomStageInfo)s.info).destroy();
+			for (Stage s : stm.list)
+				for (CustomStageInfo si : ((MapColc.PackMapColc)mc).si)
+					si.remove(s);
+		} else {
+			Stage st = (Stage)obj;
+			if (st.info != null)
+				((CustomStageInfo)st.info).destroy();
+			for (CustomStageInfo si : ((MapColc.PackMapColc)mc).si)
+				si.remove(st);
+		}
 	}
 
 	private void setAB(Stage st) {

@@ -254,7 +254,7 @@ public class Interpret extends Data {
 					+ Page.get(MainLocale.UTIL, "ld2") + ": " + r, bi));
 		}
 		AtkDataModel rev = me.getRevenge();
-		for (int z = 0; z < 2; z++) {
+		for (int z = 0; z < 5; z++) {
 			if (rev != null) {
 				int revs = rev.getShortPoint();
 				int revl = rev.getLongPoint();
@@ -269,7 +269,22 @@ public class Interpret extends Data {
 							" [" + Page.get(MainLocale.UTIL, "aa" + (z + 6)) + "]", bi));
 				}
 			}
-			rev = me.getResurrection();
+			switch (z) {
+				case 0:
+					rev = me.getResurrection();
+					break;
+				case 1:
+					rev = me.getCounter();
+					break;
+				case 2:
+					rev = me.getGouge();
+					break;
+				case 3:
+					rev = me.getResurface();
+					break;
+				default:
+					rev = null;
+			}
 		}
 		String imu = Page.get(MainLocale.UTIL, "imu");
 		for (int i = 0; i < ABIS.length; i++)
@@ -340,7 +355,6 @@ public class Interpret extends Data {
 
 				l.add(new ProcDisplay(formatted, UtilPC.getIcon(1, i)));
 			}
-
 		} else {
 			LinkedHashMap<String, List<Integer>> atkMap = new LinkedHashMap<>();
 			List<BufferedImage> procIcons = new ArrayList<>();
@@ -412,30 +426,35 @@ public class Interpret extends Data {
 					l.get(i).text = l.get(i).text + " " + getAtkNumbers(atks);
 		}
 
-		MaskAtk revenge = du.getRevenge();
-		if (revenge != null) {
-			for(int i = 0; i < Data.PROC_TOT; i++) {
-				ProcItem item = revenge.getProc().getArr(i);
+		MaskAtk rev = du.getRevenge();
+		for (int i = 0; i < 5; i++) {
+			if (rev != null) {
+				for(int j = 0; j < Data.PROC_TOT; j++) {
+					ProcItem item = rev.getProc().getArr(j);
 
-				if(!item.exists() || revenge.getProc().sharable(i))
-					continue;
+					if(!item.exists() || rev.getProc().sharable(j))
+						continue;
 
-				String format = ProcLang.get().get(i).format;
-				String formatted = Formatter.format(format, item, ctx);
-				l.add(new ProcDisplay(formatted + " [" + Page.get(MainLocale.UTIL, "aa6") + "]", UtilPC.getIcon(1, i)));
+					String format = ProcLang.get().get(j).format;
+					String formatted = Formatter.format(format, item, ctx);
+					l.add(new ProcDisplay(formatted + " [" + Page.get(MainLocale.UTIL, "aa" + (6 + j)) + "]", UtilPC.getIcon(1, j)));
+				}
 			}
-		}
-		MaskAtk resurrection = du.getResurrection();
-		if (resurrection != null) {
-			for(int i = 0; i < Data.PROC_TOT; i++) {
-				ProcItem item = resurrection.getProc().getArr(i);
-
-				if(!item.exists() || resurrection.getProc().sharable(i))
-					continue;
-
-				String format = ProcLang.get().get(i).format;
-				String formatted = Formatter.format(format, item, ctx);
-				l.add(new ProcDisplay(formatted + " [" + Page.get(MainLocale.UTIL, "aa7") + "]", UtilPC.getIcon(1, i)));
+			switch (i) {
+				case 0:
+					rev = du.getResurrection();
+					break;
+				case 1:
+					rev = du.getCounter();
+					break;
+				case 2:
+					rev = du.getGouge();
+					break;
+				case 3:
+					rev = du.getResurface();
+					break;
+				default:
+					rev = null;
 			}
 		}
 

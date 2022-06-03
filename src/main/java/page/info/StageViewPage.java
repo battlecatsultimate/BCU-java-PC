@@ -12,6 +12,7 @@ import page.battle.StRecdPage;
 
 import javax.swing.*;
 import java.util.Collection;
+import java.util.List;
 import java.util.Vector;
 
 public class StageViewPage extends StagePage {
@@ -158,4 +159,7 @@ public class StageViewPage extends StagePage {
 		addListeners();
 	}
 
+	public List<Stage> getSelectedStages() {
+		return jlst.getSelectedValuesList();
+	}
 }

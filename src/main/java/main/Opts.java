@@ -6,6 +6,7 @@ import common.util.lang.MultiLangCont;
 import common.util.stage.MapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
+import common.util.stage.info.DefStageInfo;
 import page.*;
 import page.battle.BattleInfoPage;
 
@@ -377,7 +378,7 @@ public class Opts {
 
 	@SuppressWarnings("MagicConstant")
 	public static void showExStageSelection(String title, String content, Stage s, BattleInfoPage bp) {
-		if(s.info == null || !(s.info.exConnection || s.info.exStages != null))
+		if(s.info == null || !(s.info.exConnection() || s.info.getExStages() != null))
 			throw new IllegalStateException("This stage doesn't have EX stage");
 
 		JLabel contents = new JLabel(content);
@@ -385,21 +386,24 @@ public class Opts {
 		//Gather EX stages
 		List<Stage> exStages = new ArrayList<>();
 
-		if(s.info.exConnection) {
-			StageMap sm = MapColc.DefMapColc.getMap(s.info.exMapID + 4000);
+		if (s.info instanceof DefStageInfo) {
+			DefStageInfo info = (DefStageInfo)s.info;
+			if (info.exConnection) {
+				StageMap sm = MapColc.DefMapColc.getMap(info.exMapID + 4000);
 
-			if(sm != null) {
-				for(int i = s.info.exStageIDMin; i <= s.info.exStageIDMax; i++) {
-					Stage st = sm.list.get(i);
+				if (sm != null) {
+					for (int i = info.exStageIDMin; i <= info.exStageIDMax; i++) {
+						Stage st = sm.list.get(i);
 
-					if(st != null)
-						exStages.add(st);
+						if (st != null)
+							exStages.add(st);
+					}
 				}
 			}
 		}
 
-		if(s.info.exStages != null) {
-			for(Stage st : s.info.exStages) {
+		if(s.info.getExStages() != null) {
+			for(Stage st : s.info.getExStages()) {
 				if(st != null)
 					exStages.add(st);
 			}
@@ -416,19 +420,7 @@ public class Opts {
 		for(int i = 0; i < exStages.size(); i++) {
 			Stage e = exStages.get(i);
 
-			String map = MultiLangCont.get(e.getCont());
-
-			if(map == null || map.isEmpty()) {
-				map = e.getCont().getSID()+"/"+ Data.trio(e.getCont().id.id);
-			}
-
-			String stage = MultiLangCont.get(e);
-
-			if(stage == null || stage.isEmpty()) {
-				stage = Data.trio(e.id.id);
-			}
-
-			JRadioButton rb = new JRadioButton(map+" - "+stage);
+			JRadioButton rb = new JRadioButton(e.getCont().toString()+" - "+e.toString());
 
 			int finalI = i;
 
@@ -442,9 +434,34 @@ public class Opts {
 			panel.add(rb);
 		}
 
+		JBTN rand = new JBTN("Random");
 		JBTN okay = new JBTN("OK");
 		JBTN cancel = new JBTN("Cancel");
 		Timer.manualTick();
+
+		rand.addActionListener(a -> {
+			JOptionPane pane = getOptionPane((JComponent) a.getSource());
+
+			pane.setValue(rand);
+
+			float[] chances = s.info.getExChances();
+			if (chances[0] == -1) {
+				if (Math.random() * 100 < ((DefStageInfo)s.info).exChance)
+					bp.callBack(exStages.get((int) (Math.random() * exStages.size())));
+			} else {
+				double randomized = Math.random() * 100;
+				float probs = 0;
+
+				for (int i = 0; i < chances.length; i++) {
+					if (randomized < chances[i] + probs) {
+						bp.callBack(exStages.get(i));
+						break;
+					} else
+						probs += chances[i];
+				}
+
+			}
+		});
 
 		okay.addActionListener(a -> {
 			JOptionPane pane = getOptionPane((JComponent) a.getSource());
@@ -467,7 +484,7 @@ public class Opts {
 				JOptionPane.OK_CANCEL_OPTION,
 				-1,
 				null,
-				new Object[]{okay, cancel},
+				new Object[]{rand, okay, cancel},
 				null
 		);
 	}

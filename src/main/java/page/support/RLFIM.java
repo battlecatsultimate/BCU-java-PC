@@ -15,13 +15,14 @@ public class RLFIM<T extends IndexContainer.Indexable<?, T>> extends ReorderList
 	public FixIndexMap<T> map;
 
 	private final Runnable sta, end;
-	private final Consumer<T> sel;
+	private final Consumer<T> sel, del;
 	private final IndexContainer.Constructor<T, T> gen;
 
-	public RLFIM(Runnable sta, Runnable end, Consumer<T> sel, IndexContainer.Constructor<T, T> gen) {
+	public RLFIM(Runnable sta, Runnable end, Consumer<T> del, Consumer<T> sel, IndexContainer.Constructor<T, T> gen) {
 		list = this;
 		this.sta = sta;
 		this.end = end;
+		this.del = del;
 		this.sel = sel;
 		this.gen = gen;
 	}
@@ -42,6 +43,7 @@ public class RLFIM<T extends IndexContainer.Indexable<?, T>> extends ReorderList
 		int ind = getSelectedIndex();
 		T val = getSelectedValue();
 		map.remove(val);
+		del.accept(val);
 		setListData(ic, map);
 		if (ind >= 0)
 			ind--;

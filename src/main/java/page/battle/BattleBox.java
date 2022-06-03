@@ -532,7 +532,7 @@ public interface BattleBox {
 				int bh = (int) (bimg.getHeight() * bf.sb.siz);
 				gra.drawImage(bimg, posx - bw + shake, posy - bh, bw, bh);
 			} else {
-				if(sb.s_stop == 0 || (sb.ebase.getAbi() & Data.AB_TIMEI) == 0) {
+				if(sb.temp_inten == 0 || (sb.ebase.getAbi() & Data.AB_TIMEI) == 0) {
 					posx = (int) getX(sb.ebase.pos);
 
 					((Entity) sb.ebase).anim.draw(gra, setP(posx + shake, posy), bf.sb.siz * sprite);
@@ -616,7 +616,7 @@ public interface BattleBox {
 			}
 
 			if(sb.ebase instanceof Entity) {
-				if(sb.s_stop == 0 || (sb.ebase.getAbi() & Data.AB_TIMEI) > 0) {
+				if(sb.temp_inten == 0 || (sb.ebase.getAbi() & Data.AB_TIMEI) > 0) {
 					if(((Entity) sb.ebase).anim.smoke != null && !((Entity) sb.ebase).anim.smoke.done()) {
 						gra.setTransform(at);
 
@@ -627,7 +627,7 @@ public interface BattleBox {
 					}
 				}
 			} else if(sb.ebase instanceof ECastle) {
-				if(sb.s_stop == 0 && ((ECastle) sb.ebase).smoke != null && !((ECastle) sb.ebase).smoke.done()) {
+				if(sb.temp_inten == 0 && ((ECastle) sb.ebase).smoke != null && !((ECastle) sb.ebase).smoke.done()) {
 					gra.setTransform(at);
 
 					double sx = getX(((ECastle) sb.ebase).smokeX);
@@ -638,7 +638,7 @@ public interface BattleBox {
 			}
 
 			if(sb.ubase instanceof ECastle) {
-				if(sb.s_stop == 0 && ((ECastle) sb.ubase).smoke != null && !((ECastle) sb.ubase).smoke.done()) {
+				if(sb.temp_inten == 0 && ((ECastle) sb.ubase).smoke != null && !((ECastle) sb.ubase).smoke.done()) {
 					gra.setTransform(at);
 
 					double sx = getX(((ECastle) sb.ubase).smokeX);
@@ -709,7 +709,7 @@ public interface BattleBox {
 				gra.setTransform(at);
 			}
 
-			if (sb.s_stop > 0) {
+			if (sb.temp_inten > 0) {
 				gra.setComposite(FakeGraphics.GRAY, 0, 0);
 				gra.fillRect(0, 0, w, h);
 
