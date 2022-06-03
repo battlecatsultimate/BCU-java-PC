@@ -383,6 +383,15 @@ public class Opts {
 
 		JLabel contents = new JLabel(content);
 
+		Border b = contents.getBorder();
+		Border eb = new EmptyBorder(0, 0, 16, 0);
+
+		if(b == null) {
+			contents.setBorder(eb);
+		} else {
+			contents.setBorder(new CompoundBorder(eb, b));
+		}
+
 		//Gather EX stages
 		List<Stage> exStages = new ArrayList<>();
 
