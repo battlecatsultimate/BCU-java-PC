@@ -392,7 +392,7 @@ public class BasisPage extends LubCont {
 
 		badd.addActionListener(arg0 -> {
 			changing = true;
-			BasisLU b = current().add();
+			BasisLU b = current().add(jlb.getSelectedIndex() + 1);
 			vb.clear();
 			vb.addAll(current().lb);
 			jlb.setListData(vb);
