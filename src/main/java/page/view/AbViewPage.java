@@ -40,10 +40,11 @@ public abstract class AbViewPage extends Page {
 	private final JTG jtb = new JTG(MainLocale.PAGE, "pause");
 	private final JBTN nex = new JBTN(MainLocale.PAGE, "nextf");
 	private final JTG gif = new JTG(MainLocale.PAGE, "gif");
+	private final JTG mp4 = new JTG(MainLocale.PAGE, "expmp4");
 	private final JBTN png = new JBTN(MainLocale.PAGE, "png");
 	protected final JBTN camres = new JBTN(MainLocale.PAGE, "rescam");
 	protected final JTG larges = new JTG(MainLocale.PAGE, "larges");
-	private final JLabel scale = new JLabel(MainLocale.getLoc(MainLocale.PAGE, "zoomtext"));
+	private final JLabel scale = new JLabel(MainLocale.getLoc(MainLocale.PAGE, "zoom"));
 	private final JTF manualScale = new JTF();
 
 	protected final ViewBox vb;
@@ -73,6 +74,7 @@ public abstract class AbViewPage extends Page {
 		jtl.setEnabled(b && pause);
 		nex.setEnabled(b && pause);
 		gif.setEnabled(b);
+		mp4.setEnabled(b);
 		png.setEnabled(b && pause);
 	}
 
@@ -120,6 +122,7 @@ public abstract class AbViewPage extends Page {
 		add(nex);
 		add(gif);
 		add(png);
+		add(mp4);
 		add(scale);
 		add(larges);
 		add(manualScale);
@@ -148,8 +151,9 @@ public abstract class AbViewPage extends Page {
 			set(jtb, x, y, 25, 550, 200, 50);
 			set(jtl, x, y, 0, 700, 500, 100);
 			set(nex, x, y, 275, 550, 200, 50);
-			set(png, x, y, 0, 650, 200, 50);
-			set(gif, x, y, 200, 650, 300, 50);
+			set(png, x, y, 0, 650, 150, 50);
+			set(gif, x, y, 175, 650, 150, 50);
+			set(mp4, x, y, 350, 650, 150, 50);
 			set(scale, x, y, 100, 50, 100, 50);
 			set(manualScale, x, y, 200, 50, 150, 50);
 			set(jst, x, y, 0, 0, 0, 0);
@@ -162,8 +166,9 @@ public abstract class AbViewPage extends Page {
 			set(nex, x, y, 1600, 1050, 200, 50);
 			set(png, x, y, 1300, 1150, 200, 50);
 			set(gif, x, y, 1600, 1150, 400, 50);
-			set(scale, x, y, 1000, 50, 150, 50);
-			set(manualScale, x, y, 1100, 50, 150, 50);
+			set(mp4, x, y, 1800, 1050, 200, 50);
+			set(scale, x, y, 1000, 50, 100, 50);
+			set(manualScale, x, y, 1075, 50, 150, 50);
 		}
 	}
 
@@ -208,13 +213,18 @@ public abstract class AbViewPage extends Page {
 		if (!pause)
 			eupdate();
 		vb.paint();
-		if (loader == null)
+		if (loader == null) {
 			gif.setText(0, "gif");
-		else
-			gif.setText(loader.getProg());
-		if (!gif.isSelected() && gif.isEnabled())
-			loader = null;
-		scale.setText(MainLocale.getLoc(MainLocale.PAGE, "zoom"));
+			mp4.setText(0, "expmp4");
+		} else {
+			JTG alt = loader.mp4 ? mp4 : gif;
+			alt.setText(loader.getProg());
+			if (!alt.isSelected() && alt.isEnabled())
+				(loader.mp4 ? gif : mp4).setEnabled(true);
+
+			if (!gif.isSelected() && gif.isEnabled() && !mp4.isSelected() && mp4.isEnabled())
+				loader = null;
+		}
 
 		if(!focusOn) {
 			manualScale.setText(df.format(vb.getCtrl().siz * 100.0) + " %");
@@ -274,12 +284,9 @@ public abstract class AbViewPage extends Page {
 			BCUWriter.writeImage(vb.getPrev(), f);
 		});
 
-		gif.addActionListener(arg0 -> {
-			if (gif.isSelected())
-				loader = vb.start();
-			else
-				vb.end(gif);
-		});
+		gif.addActionListener(arg0 -> setLoader(false, gif.isSelected()));
+
+		mp4.addActionListener(arg0 -> setLoader(true, mp4.isSelected()));
 
 		larges.setLnr(x -> {
 			remove((Canvas) vb);
@@ -310,6 +317,17 @@ public abstract class AbViewPage extends Page {
 				focusOn = false;
 			}
 		});
+	}
+
+	private void setLoader(boolean mp4, boolean start) {
+		if (start) {
+			loader = vb.start(mp4);
+			this.mp4.setEnabled(mp4);
+			gif.setEnabled(!mp4);
+		} else {
+			vb.end(mp4 ? this.mp4 : gif);
+			(mp4 ? gif : this.mp4).setEnabled(false);
+		}
 	}
 
 	private void eupdate() {

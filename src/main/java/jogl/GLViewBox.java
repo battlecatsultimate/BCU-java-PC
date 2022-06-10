@@ -129,11 +129,11 @@ class GLVBExporter implements ViewBox.VBExporter {
 	}
 
 	@Override
-	public Loader start() {
+	public Loader start(boolean mp4) {
 		if (loader != null)
 			return loader;
 		Queue<BufferedImage> qb = new ArrayDeque<>();
-		loader = new Loader(qb);
+		loader = new Loader(qb, mp4);
 		glr = new GLRecdBImg(vb, qb, loader.thr);
 		loader.start();
 		return loader;
@@ -253,8 +253,8 @@ class GLViewBox extends GLCstd implements ViewBox, GLEventListener {
 	}
 
 	public BufferedImage getScreen(boolean transparent) {
-		if (!Conf.white)
-			return getScreen();
+		if (!Conf.white || (!transparent && CommonStatic.getConfig().viewerColor != -1))
+			return super.getScreen();
 		int w = getWidth();
 		int h = getHeight();
 
@@ -262,13 +262,8 @@ class GLViewBox extends GLCstd implements ViewBox, GLEventListener {
 		Graphics2D gra = (Graphics2D) img.getGraphics();
 
 		if (!transparent) {
-			if(CommonStatic.getConfig().viewerColor != -1) {
-				gra.setColor(new Color(CommonStatic.getConfig().viewerColor));
-				gra.fillRect(0, 0, w, h);
-			} else {
-				gra.setColor(Color.GREEN);
-				gra.fillRect(0, 0, w, h);
-			}
+			gra.setColor(Color.GREEN);
+			gra.fillRect(0, 0, w, h);
 		}
 
 		gra.translate(w / 2.0, h * 3 / 4.0);

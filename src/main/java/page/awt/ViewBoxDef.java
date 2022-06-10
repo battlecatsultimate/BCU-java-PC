@@ -114,11 +114,11 @@ class ViewBoxDef extends Canvas implements ViewBox, ViewBox.VBExporter {
 	}
 
 	@Override
-	public Loader start() {
+	public Loader start(boolean mp4) {
 		if (ent == null)
 			return null;
 		lbimg = new ArrayDeque<>();
-		loader = new Loader(lbimg);
+		loader = new Loader(lbimg, mp4);
 		loader.start();
 		return loader;
 	}
