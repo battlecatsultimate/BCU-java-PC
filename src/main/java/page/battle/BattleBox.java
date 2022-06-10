@@ -965,7 +965,6 @@ public interface BattleBox {
 				float[] h = generateHeight(message, frc, affine);
 
 				BufferedImage img = new BufferedImage((int) (w + strokeWidth * 2 + xGap * 2), (int) (h[0] + h[1] + strokeWidth * 2 + yGap * 2), BufferedImage.TYPE_INT_ARGB_PRE);
-
 				FG2D g = new FG2D(img.getGraphics());
 
 				g.setRenderingHint(3, 2);

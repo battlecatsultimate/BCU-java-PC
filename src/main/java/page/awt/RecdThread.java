@@ -172,7 +172,7 @@ public abstract class RecdThread extends Thread {
 	@Override
 	public void run() {
 		while (true) {
-			int size = 0;
+			int size;
 			synchronized (this) {
 				if (quit)
 					break;

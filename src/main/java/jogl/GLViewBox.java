@@ -14,6 +14,7 @@ import page.JTG;
 import page.anim.IconBox;
 import page.view.ViewBox;
 import page.view.ViewBox.Loader;
+import utilpc.awt.FG2D;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -124,7 +125,7 @@ class GLVBExporter implements ViewBox.VBExporter {
 
 	@Override
 	public BufferedImage getPrev() {
-		return vb.getScreen();
+		return vb.getScreen(true);
 	}
 
 	@Override
@@ -244,5 +245,37 @@ class GLViewBox extends GLCstd implements ViewBox, GLEventListener {
 		g.setColor(FakeGraphics.BLACK);
 		if (ent != null)
 			ent.draw(g, ctrl.ori.copy().times(-1), ctrl.siz);
+	}
+
+	@Override
+	public BufferedImage getScreen() {
+		return getScreen(false);
+	}
+
+	public BufferedImage getScreen(boolean transparent) {
+		if (!Conf.white)
+			return getScreen();
+		int w = getWidth();
+		int h = getHeight();
+
+		BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_4BYTE_ABGR);
+		Graphics2D gra = (Graphics2D) img.getGraphics();
+
+		if (!transparent) {
+			if(CommonStatic.getConfig().viewerColor != -1) {
+				gra.setColor(new Color(CommonStatic.getConfig().viewerColor));
+				gra.fillRect(0, 0, w, h);
+			} else {
+				gra.setColor(Color.GREEN);
+				gra.fillRect(0, 0, w, h);
+			}
+		}
+
+		gra.translate(w / 2.0, h * 3 / 4.0);
+		gra.setColor(Color.BLACK);
+		if (ent != null)
+			ent.draw(new FG2D(gra), ctrl.ori.copy().times(-1), ctrl.siz);
+		gra.dispose();
+		return img;
 	}
 }
