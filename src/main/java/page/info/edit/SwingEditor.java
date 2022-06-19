@@ -27,7 +27,7 @@ public abstract class SwingEditor extends Editor {
 
 		public final JTG input;
 
-		public BoolEditor(EditorGroup eg, Editors.EdiField field, String f, boolean edit) throws Exception {
+		public BoolEditor(EditorGroup eg, Editors.EdiField field, String f, boolean edit) {
 			super(eg, field, f, edit);
 			input = new JTG(ProcLang.get().get(eg.proc).get(f));
 			input.setLnr(this::edit);
@@ -94,11 +94,7 @@ public abstract class SwingEditor extends Editor {
 						else
 							return new IdEditor<>(group, field, f, table::getMusicSup, edit);
 					} else if (group.proc.equals("SUMMON"))
-						if (isEnemy)
-							return new IdEditor<>(group, field, f, table::getEnemySup, edit);
-						else
-							return new IdEditor<>(group, field, f, table::getUnitSup, edit);
-
+						return new IdEditor<>(group, field, f, table::getEntitySup, edit);
 				}
 				throw new Exception("unexpected class " + fc);
 			} catch (Exception e) {
@@ -133,8 +129,7 @@ public abstract class SwingEditor extends Editor {
 		public final JBTN input;
 		public final JL jl;
 
-		public IdEditor(EditorGroup par, Editors.EdiField field, String f, PageSup<T> page, boolean edit)
-				throws Exception {
+		public IdEditor(EditorGroup par, Editors.EdiField field, String f, PageSup<T> page, boolean edit) {
 			super(par, field, f, edit);
 			this.page = page;
 			input = new JBTN(ProcLang.get().get(par.proc).get(f));
@@ -198,7 +193,7 @@ public abstract class SwingEditor extends Editor {
 		public final JL label;
 		public final JTF input = new JTF();
 
-		public IntEditor(EditorGroup eg, Editors.EdiField field, String f, boolean edit) throws Exception {
+		public IntEditor(EditorGroup eg, Editors.EdiField field, String f, boolean edit) {
 			super(eg, field, f, edit);
 			label = new JL(ProcLang.get().get(eg.proc).get(f));
 			input.setLnr(this::edit);

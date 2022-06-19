@@ -151,38 +151,29 @@ public abstract class EntityEditPage extends Page {
 		return ans;
 	}
 
-	public SupPage<AbEnemy> getEnemySup(IdEditor<AbEnemy> edi) {
+	public SupPage<?> getEntitySup(IdEditor<?> edi) {
 		editor = edi;
 
 		PackData.UserPack p = UserProfile.getUserPack(pack);
+		SupPage<?> ans;
 
-		SupPage<AbEnemy> ans;
-
-		if(p != null) {
-			ans = new AbEnemyFindPage(this, pack, p.desc.dependency.toArray(new String[0]));
+		if ((ce.getPack() instanceof Enemy && get(jli.getSelectedIndex()).dire != -1)
+				|| (ce.getPack() instanceof Form && get(jli.getSelectedIndex()).dire != 1)) {
+			if(p != null) {
+				ans = new AbEnemyFindPage(this, pack, p.desc.dependency.toArray(new String[0]));
+			} else {
+				ans = new AbEnemyFindPage(this);
+			}
 		} else {
-			ans = new AbEnemyFindPage(this);
+			if(p != null) {
+				ans = new UnitFindPage(this, pack, p.desc.dependency);
+			} else {
+				ans = new UnitFindPage(this);
+			}
 		}
 
 		sup = ans;
 
-		return ans;
-	}
-
-	public SupPage<Unit> getUnitSup(IdEditor<Unit> edi) {
-		editor = edi;
-
-		PackData.UserPack p = UserProfile.getUserPack(pack);
-
-		SupPage<Unit> ans;
-
-		if(p != null) {
-			ans = new UnitFindPage(this, pack, p.desc.dependency);
-		} else {
-			ans = new UnitFindPage(this);
-		}
-
-		sup = ans;
 		return ans;
 	}
 
