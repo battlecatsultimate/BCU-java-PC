@@ -437,7 +437,7 @@ public class Interpret extends Data {
 
 					String format = ProcLang.get().get(j).format;
 					String formatted = Formatter.format(format, item, ctx);
-					l.add(new ProcDisplay(formatted + " [" + Page.get(MainLocale.UTIL, "aa" + (6 + j)) + "]", UtilPC.getIcon(1, j)));
+					l.add(new ProcDisplay(formatted + " [" + Page.get(MainLocale.UTIL, "aa" + (6 + i)) + "]", UtilPC.getIcon(1, j)));
 				}
 			}
 			switch (i) {
