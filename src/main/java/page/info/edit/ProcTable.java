@@ -119,7 +119,7 @@ public abstract class ProcTable extends Page {
 		return ret;
 	}
 
-	public void updateVisibility() {
+	private void updateVisibility() {
 		for (int i = 0; i < inds.length; i++)
 			group[i].updateVisibility();
 	}
@@ -127,6 +127,7 @@ public abstract class ProcTable extends Page {
 	protected void setData(Proc ints) {
 		for (int i = 0; i < inds.length; i++)
 			group[i].setData(ints.getArr(inds[i]));
+		updateVisibility();
 	}
 
 	private void ini() {
