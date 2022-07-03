@@ -277,7 +277,7 @@ public class MainBCU {
 		}
 	}
 
-	public static final int ver = 50114;
+	public static final int ver = 50115;
 	private static final DecimalFormat df = new DecimalFormat("#.##");
 
 	public static byte FILTER_TYPE = 1;
