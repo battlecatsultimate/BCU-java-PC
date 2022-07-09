@@ -640,7 +640,7 @@ public class LevelEditPage extends Page {
 					data[Data.ORB_TYPE] = Data.ORB_ATK;
 				}
 
-				if(str || mas || res) {
+				if(data[Data.ORB_TYPE] == Data.ORB_STRONG || data[Data.ORB_TYPE] == Data.ORB_MASSIVE || data[Data.ORB_TYPE] == Data.ORB_RESISTANT) {
 					List<Integer> allTraits = new ArrayList<>(CommonStatic.getBCAssets().ORB.get(data[0]).keySet());
 
 					List<Integer> traits = new ArrayList<>();
