@@ -125,7 +125,7 @@ class GLVBExporter implements ViewBox.VBExporter {
 
 	@Override
 	public BufferedImage getPrev() {
-		return vb.getScreen(true);
+		return vb.getScreen(ViewBox.Conf.white);
 	}
 
 	@Override
@@ -253,18 +253,13 @@ class GLViewBox extends GLCstd implements ViewBox, GLEventListener {
 	}
 
 	public BufferedImage getScreen(boolean transparent) {
-		if (!Conf.white || (!transparent && CommonStatic.getConfig().viewerColor != -1))
+		if (!transparent)
 			return super.getScreen();
 		int w = getWidth();
 		int h = getHeight();
 
 		BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics2D gra = (Graphics2D) img.getGraphics();
-
-		if (!transparent) {
-			gra.setColor(Color.GREEN);
-			gra.fillRect(0, 0, w, h);
-		}
 
 		gra.translate(w / 2.0, h * 3 / 4.0);
 		gra.setColor(Color.BLACK);
