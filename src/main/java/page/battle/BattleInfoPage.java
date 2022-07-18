@@ -33,7 +33,6 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 
 	public static void redefine() {
 		ComingTable.redefine();
-		EntityTable.redefine();
 	}
 
 	private final JBTN back = new JBTN(MainLocale.PAGE, "back");
@@ -47,6 +46,8 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	private final JScrollPane eup = new JScrollPane(ut);
 	private final JScrollPane eep = new JScrollPane(et);
 	private final JScrollPane ctp = new JScrollPane(ct);
+	private final JTG udps = new JTG(MainLocale.INFO, "u3");
+	private final JTG edps = new JTG(MainLocale.INFO, "u3");
 	private final JLabel ebase = new JLabel();
 	private final JLabel ubase = new JLabel();
 	private final JLabel timer = new JLabel();
@@ -220,7 +221,9 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			set(eep, x, y, 50, 100, 0, 0);
 			set(eup, x, y, 50, 400, 0, 0);
 			set(ecount, x, y, 50, 50, 0, 0);
+			set(edps, x, y, 650, 50, 0, 0);
 			set(ucount, x, y, 50, 350, 0, 0);
+			set(udps, x, y, 2100, 50, 0, 0);
 			set(respawn, x, y, 0, 0, 0, 0);
 			set(jsl, x, y, 0, 0, 0, 0);
 		} else {
@@ -236,8 +239,10 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			set(ebase, x, y, 700, 250, 400, 50);
 			set(timer, x, y, 1100, 250, 200, 50);
 			set(ubase, x, y, 1300, 250, 200, 50);
-			set(ecount, x, y, 50, 50, 600, 50);
-			set(ucount, x, y, 1650, 50, 600, 50);
+			set(ecount, x, y, 50, 50, 450, 50);
+			set(edps, x, y, 500, 50, 150, 50);
+			set(ucount, x, y, 1650, 50, 450, 50);
+			set(udps, x, y, 2100, 50, 150, 50);
 			set(respawn, x, y, 50, 800, 600, 50);
 			set(jsl, x, y, 700, 800, 800, 50);
 		}
@@ -420,6 +425,17 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			bb.reset();
 		});
 
+		edps.addActionListener(a -> {
+			et.setDPS(edps.isSelected());
+
+			edps.setText(get(MainLocale.INFO, et.getDPS() ? "u3" : "u3_1"));
+		});
+
+		udps.addActionListener(a -> {
+			ut.setDPS(udps.isSelected());
+
+			udps.setText(get(MainLocale.INFO, ut.getDPS() ? "u3" : "u3_1"));
+		});
 	}
 
 	private void ini() {
@@ -434,11 +450,17 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		add(ubase);
 		add(timer);
 		add(ecount);
+		add(edps);
 		add(ucount);
+		add(udps);
 		add(respawn);
 		add(jtb);
 		add(row);
 		row.setText(get(MainLocale.PAGE, CommonStatic.getConfig().twoRow ? "tworow" : "onerow"));
+		edps.setText(get(MainLocale.INFO, et.getDPS() ? "u3" : "u3_1"));
+		edps.setSelected(true);
+		udps.setText(get(MainLocale.INFO, ut.getDPS() ? "u3" : "u3_1"));
+		udps.setSelected(true);
 		if (bb instanceof BBRecd)
 			add(stream);
 		else {

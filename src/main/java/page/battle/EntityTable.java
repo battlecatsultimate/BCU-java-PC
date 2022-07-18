@@ -12,29 +12,55 @@ import page.support.EnemyTCR;
 import page.support.SortTable;
 import page.support.UnitTCR;
 
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
+import java.text.DecimalFormat;
+
 class EntityTable extends SortTable<Entity> {
 
 	private static final long serialVersionUID = 1L;
+	private static final DecimalFormat df = new DecimalFormat("#.##");
 
-	private static String[] title;
+	private boolean dps = true;
 
-	static {
-		redefine();
-	}
-
-	protected static void redefine() {
-		title = MainLocale.getLoc(MainLocale.INFO, "u", 3);
-	}
+	private String[] title;
 
 	private final int dir;
 
 	protected EntityTable(int dire) {
 		dir = dire;
+
 		if (dire == 1)
 			setDefaultRenderer(Enemy.class, new EnemyTCR());
 		else
 			setDefaultRenderer(Form.class, new UnitTCR(lnk));
 		sign = -1;
+	}
+
+	public void setDPS(boolean dps) {
+		this.dps = dps;
+
+		redefine(true);
+	}
+
+	public boolean getDPS() {
+		return dps;
+	}
+
+	private void redefine(boolean update) {
+		title = MainLocale.getLoc(MainLocale.INFO, "u", 4);
+
+		if(update && !dps)
+			title[3] = MainLocale.getLoc(MainLocale.INFO, "u3_1");
+
+		if(update) {
+			JTableHeader header = getTableHeader();
+			TableColumnModel model = header.getColumnModel();
+
+			for(int i = 0; i < model.getColumnCount(); i++) {
+				model.getColumn(i).setHeaderValue(title[i]);
+			}
+		}
 	}
 
 	@Override
@@ -51,6 +77,8 @@ class EntityTable extends SortTable<Entity> {
 			return Long.compare(CommonStatic.parseLongN(get(e0,c).toString()),CommonStatic.parseLongN(get(e1,c).toString()));
 		if (c == 1)
 			return getID(e0).compareTo(getID(e1));
+		if (c == 3)
+			return Double.compare((double) get(e0, c), (double) get(e1, c));
 		else
 			return Long.compare((long) get(e0, c), (long) get(e1, c));
 	}
@@ -63,12 +91,20 @@ class EntityTable extends SortTable<Entity> {
 			return t.data.getPack();
 		else if (c == 2)
 			return (long) t.getAtk();
+		else if (c == 3)
+			if(dps)
+				return t.livingTime == 0 ? 0.0 : Double.parseDouble(df.format(t.damageGiven * 30.0 / t.livingTime));
+			else
+				return (double) t.damageGiven;
 		else
 			return null;
 	}
 
 	@Override
 	protected String[] getTit() {
+		if(title == null)
+			redefine(false);
+
 		return title;
 	}
 

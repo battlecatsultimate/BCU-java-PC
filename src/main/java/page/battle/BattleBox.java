@@ -576,6 +576,9 @@ public interface BattleBox {
 			for(int i = 0; i < sb.le.size(); i++) {
 				Entity e = sb.le.get(i);
 
+				if(e.dead)
+					continue;
+
 				int dep = e.layer * DEP;
 
 				while(efList.size() > 0) {
@@ -604,6 +607,9 @@ public interface BattleBox {
 
 			for(int i = 0; i < sb.le.size(); i++) {
 				Entity e = sb.le.get(i);
+
+				if(e.dead)
+					continue;
 
 				if(e.anim.smoke != null && !e.anim.smoke.done()) {
 					gra.setTransform(at);
@@ -737,6 +743,9 @@ public interface BattleBox {
 
 				for(int i = 0; i < sb.le.size(); i ++) {
 					Entity e = sb.le.get(i);
+
+					if(e.dead)
+						continue;
 
 					if ((e.getAbi() & Data.AB_TIMEI) > 0) {
 						int dep = e.layer * DEP;
