@@ -652,8 +652,6 @@ public abstract class EntityEditPage extends Page {
 				if (jtf == fhb) {
 					if (v[0] <= 0)
 						v[0] = 1;
-					if (v[0] > ce.hp)
-						v[0] = ce.hp;
 					ce.hb = v[0];
 				}
 				if (jtf == fsp) {
