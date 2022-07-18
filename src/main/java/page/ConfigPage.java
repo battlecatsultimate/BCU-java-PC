@@ -40,6 +40,7 @@ public class ConfigPage extends Page {
 	private final JTG btnsnd = new JTG(MainLocale.PAGE, "btnsnd");
 	private final JTG bgeff = new JTG(MainLocale.PAGE, "bgeff");
 	private final JTG btdly = new JTG(MainLocale.PAGE, "btdly");
+	private final JTG stdis = new JTG(MainLocale.PAGE, "stdis");
 	private final JL preflv = new JL(MainLocale.PAGE, "preflv");
 	private final JTF prlvmd = new JTF();
 	private final JBTN[] left = new JBTN[4];
@@ -131,7 +132,8 @@ public class ConfigPage extends Page {
 		set(jsba, x, y, 1100, 1150, 1000, 100);
 		set(btnsnd, x, y, 1600, 625, 200, 50);
 		set(bgeff, x, y, 1850, 625, 200, 50);
-		set(btdly, x, y, 1600, 700, 450, 50);
+		set(btdly, x, y, 1600, 700, 200, 50);
+		set(stdis, x, y, 1850, 700, 200, 50);
 		set(rlpk, x, y, 1600, 775, 450, 50);
 		set(vcol, x, y, 1600, 850, 200, 50);
 		set(vres, x, y, 1850, 850, 200, 50);
@@ -313,6 +315,8 @@ public class ConfigPage extends Page {
 
 		btdly.addActionListener(a -> CommonStatic.getConfig().buttonDelay = !CommonStatic.getConfig().buttonDelay);
 
+		stdis.addActionListener(a -> CommonStatic.getConfig().stageName = !CommonStatic.getConfig().stageName);
+
 		bgeff.addActionListener(a -> CommonStatic.getConfig().drawBGEffect = !CommonStatic.getConfig().drawBGEffect);
 
 		rlpk.addActionListener(l -> UserProfile.reloadExternalPacks());
@@ -374,6 +378,7 @@ public class ConfigPage extends Page {
 		add(btnsnd);
 		add(bgeff);
 		add(btdly);
+		add(stdis);
 		add(rlpk);
 		add(vcol);
 		add(vres);
@@ -420,6 +425,7 @@ public class ConfigPage extends Page {
 			jsba.setEnabled(false);
 		bgeff.setSelected(CommonStatic.getConfig().drawBGEffect);
 		btdly.setSelected(CommonStatic.getConfig().buttonDelay);
+		stdis.setSelected(CommonStatic.getConfig().stageName);
 		if (!MainBCU.nimbus) {
 			theme.setEnabled(false);
 		}

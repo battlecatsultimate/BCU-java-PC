@@ -803,7 +803,7 @@ public interface BattleBox {
 			for (int i = 0; i < Math.abs(page.getSpeed()); i++)
 				g.drawImage(bimg, w - cw * (i + 1 + n), ih);
 
-			if (snam.img != null) {
+			if (CommonStatic.getConfig().stageName && snam.img != null) {
 				g.drawImage(snam.img, box.getHeight() * 0.005, box.getHeight() * 0.01, snam.img.getWidth() * 1.25, snam.img.getHeight() * 1.125);
 				if(bf.sb.st.timeLimit != 0)
 					drawTime(g, snam.img.getHeight() * 0.9);
