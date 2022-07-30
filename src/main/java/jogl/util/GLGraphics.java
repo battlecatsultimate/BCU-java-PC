@@ -304,6 +304,7 @@ public class GLGraphics implements GeoAuto {
 		g.glTexCoord2f(r[0], r[1] + r[3]);
 		addP(x, y + h);
 		g.glEnd();
+		g.glBlendEquation(GL_FUNC_ADD);
 	}
 
 	@Override
@@ -429,6 +430,9 @@ public class GLGraphics implements GeoAuto {
 		}
 		if (mode == BLEND) {
 			g.glUniform1f(tm.para, comp.p0 * 1.0f / 256);
+			if(comp.p1 == -1) {
+				g.glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
+			}
 			if (comp.p1 == 0) {
 				g.glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 				g.glUniform1i(tm.mode, 1);
@@ -442,8 +446,8 @@ public class GLGraphics implements GeoAuto {
 				g.glBlendFunc(GL_ONE_MINUS_DST_COLOR, GL_ONE);
 				g.glUniform1i(tm.mode, 1);// sA=sA*p
 			} else if (comp.p1 == -1) {// d-s*a
-				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-				g.glUniform1i(tm.mode, 3);// sA=-sA*p
+				g.glBlendFunc(GL_ONE, GL_ONE);
+				g.glUniform1i(tm.mode, 1);// sA=-sA*p
 			} else if (comp.p1 == -2) {
 				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 				g.glUniform1i(tm.mode, 1);
