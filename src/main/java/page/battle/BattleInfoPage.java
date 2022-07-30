@@ -7,6 +7,7 @@ import common.battle.entity.Entity;
 import common.util.Data;
 import common.util.stage.Replay;
 import common.util.stage.Stage;
+import common.util.unit.Form;
 import io.BCMusic;
 import main.MainBCU;
 import main.Opts;
@@ -33,6 +34,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 
 	public static void redefine() {
 		ComingTable.redefine();
+		TotalDamageTable.redefine();
 	}
 
 	private final JBTN back = new JBTN(MainLocale.PAGE, "back");
@@ -45,11 +47,13 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	private final ComingTable ct = new ComingTable(this);
 	private final EntityTable et = new EntityTable(1, false);
 	private final EntityTable est = new EntityTable(1, true);
+	private final TotalDamageTable utd;
 	private final JScrollPane eup = new JScrollPane(ut);
 	private final JScrollPane eusp = new JScrollPane(ust);
 	private final JScrollPane eep = new JScrollPane(et);
 	private final JScrollPane eesp = new JScrollPane(est);
 	private final JScrollPane ctp = new JScrollPane(ct);
+	private final JScrollPane utdsp;
 	private final JTG ustat = new JTG(MainLocale.INFO, "stat");
 	private final JTG estat = new JTG(MainLocale.INFO, "stat");
 	private final JLabel ebase = new JLabel();
@@ -89,6 +93,8 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		jtb.setSelected((conf & 2) != 0);
 		jtb.setEnabled((conf & 1) == 0);
 		ct.setData(basis.sb.st);
+		utd = new TotalDamageTable(basis.sb);
+		utdsp = new JScrollPane(utd);
 
 		if (recd.rl != null)
 			jsl.setMaximum(((SBRply) basis).size());
@@ -104,6 +110,9 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		pause = true;
 		basis = ctrl;
 		ct.setData(basis.sb.st);
+		utd = new TotalDamageTable(rpl.sb);
+		utdsp = new JScrollPane(utd);
+
 		ini();
 		rply.setText(0, "rply");
 		resized();
@@ -118,6 +127,9 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		basis = sb;
 		ct.setData(basis.sb.st);
 		jtb.setSelected(DEF_LARGE);
+		utd = new TotalDamageTable(sb.sb);
+		utdsp = new JScrollPane(utd);
+
 		ini();
 		rply.setText(0, "rply");
 		resized();
@@ -226,6 +238,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			set(eesp, x, y, 50, 100, 0, 0);
 			set(eup, x, y, 50, 400, 0, 0);
 			set(eusp, x, y, 50, 400, 0, 0);
+			set(utdsp, x, y, 1650, 850, 0, 0);
 			set(ecount, x, y, 50, 50, 0, 0);
 			set(estat, x, y, 650, 50, 0, 0);
 			set(ucount, x, y, 50, 350, 0, 0);
@@ -242,8 +255,9 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			set(rply, x, y, 900, 200, 200, 50);
 			set(stream, x, y, 900, 200, 400, 50);
 			set(next, x, y, 1100, 200, 200, 50);
-			set(eup, x, y, 1650, 100, 600, 1100);
-			set(eusp, x, y, 1650, 100, 600, 1100);
+			set(eup, x, y, 1650, 100, 600, 700);
+			set(eusp, x, y, 1650, 100, 600, 700);
+			set(utdsp, x, y, 1650, 850, 600, 400);
 			set(ebase, x, y, 700, 250, 400, 50);
 			set(timer, x, y, 1100, 250, 200, 50);
 			set(ubase, x, y, 1300, 250, 200, 50);
@@ -259,6 +273,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		est.setRowHeight(size(x, y, 50));
 		ut.setRowHeight(size(x, y, 50));
 		ust.setRowHeight(size(x, y, 50));
+		utd.setRowHeight(size(x, y, 50));
 	}
 
 	@Override
@@ -279,10 +294,18 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			List<Entity> lu = new ArrayList<>();
 			for (Entity e : sb.le)
 				(e.dire == 1 ? le : lu).add(e);
+			List<Form> lf = new ArrayList<>();
+			for (Form[] fs : basis.sb.b.lu.fs) {
+				for(Form f : fs) {
+					if(f != null)
+						lf.add(f);
+				}
+			}
 			et.setList(le);
 			est.setList(le);
 			ut.setList(lu);
 			ust.setList(lu);
+			utd.setList(lf);
 			BCMusic.flush(spe < 3 && sb.ebase.health > 0 && sb.ubase.health > 0);
 		}
 		if (basis instanceof SBRply && recd.rl != null)
@@ -455,6 +478,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		add(eep);
 		add(eesp);
 		add(ctp);
+		add(utdsp);
 		add((Canvas) bb);
 		add(paus);
 		add(next);
