@@ -27,6 +27,8 @@ class MaModelEditTable extends AnimTable<int[]> {
 	private final Page page;
 
 	protected MaModelEditTable(Page p) {
+		super(strs);
+
 		selectionModel.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		setTransferHandler(new AnimTableTH<>(this, 1));
 		page = p;

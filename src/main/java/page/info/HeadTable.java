@@ -34,6 +34,8 @@ public class HeadTable extends AbJTable {
 	private final Page page;
 
 	protected HeadTable(Page p) {
+		super(new String[8]);
+
 		page = p;
 	}
 

@@ -40,14 +40,18 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	private final JBTN next = new JBTN(MainLocale.PAGE, "nextf");
 	private final JBTN rply = new JBTN();
 	private final JBTN row = new JBTN();
-	private final EntityTable ut = new EntityTable(-1);
+	private final EntityTable ut = new EntityTable(-1, false);
+	private final EntityTable ust = new EntityTable(-1, true);
 	private final ComingTable ct = new ComingTable(this);
-	private final EntityTable et = new EntityTable(1);
+	private final EntityTable et = new EntityTable(1, false);
+	private final EntityTable est = new EntityTable(1, true);
 	private final JScrollPane eup = new JScrollPane(ut);
+	private final JScrollPane eusp = new JScrollPane(ust);
 	private final JScrollPane eep = new JScrollPane(et);
+	private final JScrollPane eesp = new JScrollPane(est);
 	private final JScrollPane ctp = new JScrollPane(ct);
-	private final JTG udps = new JTG(MainLocale.INFO, "u3");
-	private final JTG edps = new JTG(MainLocale.INFO, "u3");
+	private final JTG ustat = new JTG(MainLocale.INFO, "stat");
+	private final JTG estat = new JTG(MainLocale.INFO, "stat");
 	private final JLabel ebase = new JLabel();
 	private final JLabel ubase = new JLabel();
 	private final JLabel timer = new JLabel();
@@ -124,7 +128,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	public void callBack(Object o) {
 		BCMusic.stopAll();
 		if(o instanceof Stage) {
-			changePanel(new BattleInfoPage(getFront(), (Stage) o, 0, basis.sb.b, new int[1])); //TODO remove old stage page from memory once it switches out
+			changePanel(new BattleInfoPage(getFront(), (Stage) o, 0, basis.sb.b, new int[1]));
 		} else {
 			changePanel(getFront());
 		}
@@ -219,16 +223,19 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			set((Canvas) bb, x, y, 190, 50, 1920, 1200);
 			set(ctp, x, y, 0, 0, 0, 0);
 			set(eep, x, y, 50, 100, 0, 0);
+			set(eesp, x, y, 50, 100, 0, 0);
 			set(eup, x, y, 50, 400, 0, 0);
+			set(eusp, x, y, 50, 400, 0, 0);
 			set(ecount, x, y, 50, 50, 0, 0);
-			set(edps, x, y, 650, 50, 0, 0);
+			set(estat, x, y, 650, 50, 0, 0);
 			set(ucount, x, y, 50, 350, 0, 0);
-			set(udps, x, y, 2100, 50, 0, 0);
+			set(ustat, x, y, 2100, 50, 0, 0);
 			set(respawn, x, y, 0, 0, 0, 0);
 			set(jsl, x, y, 0, 0, 0, 0);
 		} else {
 			set(ctp, x, y, 50, 850, 1450, 400);
 			set(eep, x, y, 50, 100, 600, 700);
+			set(eesp, x, y, 50, 100, 600, 700);
 			set((Canvas) bb, x, y, 700, 300, 800, 500);
 			set(row, x, y , 1300, 200, 200, 50);
 			set(paus, x, y, 700, 200, 200, 50);
@@ -236,19 +243,22 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			set(stream, x, y, 900, 200, 400, 50);
 			set(next, x, y, 1100, 200, 200, 50);
 			set(eup, x, y, 1650, 100, 600, 1100);
+			set(eusp, x, y, 1650, 100, 600, 1100);
 			set(ebase, x, y, 700, 250, 400, 50);
 			set(timer, x, y, 1100, 250, 200, 50);
 			set(ubase, x, y, 1300, 250, 200, 50);
 			set(ecount, x, y, 50, 50, 450, 50);
-			set(edps, x, y, 500, 50, 150, 50);
+			set(estat, x, y, 500, 50, 150, 50);
 			set(ucount, x, y, 1650, 50, 450, 50);
-			set(udps, x, y, 2100, 50, 150, 50);
+			set(ustat, x, y, 2100, 50, 150, 50);
 			set(respawn, x, y, 50, 800, 600, 50);
 			set(jsl, x, y, 700, 800, 800, 50);
 		}
 		ct.setRowHeight(size(x, y, 50));
 		et.setRowHeight(size(x, y, 50));
+		est.setRowHeight(size(x, y, 50));
 		ut.setRowHeight(size(x, y, 50));
+		ust.setRowHeight(size(x, y, 50));
 	}
 
 	@Override
@@ -270,7 +280,9 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			for (Entity e : sb.le)
 				(e.dire == 1 ? le : lu).add(e);
 			et.setList(le);
+			est.setList(le);
 			ut.setList(lu);
+			ust.setList(lu);
 			BCMusic.flush(spe < 3 && sb.ebase.health > 0 && sb.ubase.health > 0);
 		}
 		if (basis instanceof SBRply && recd.rl != null)
@@ -425,23 +437,23 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			bb.reset();
 		});
 
-		edps.addActionListener(a -> {
-			et.setDPS(edps.isSelected());
-
-			edps.setText(get(MainLocale.INFO, et.getDPS() ? "u3" : "u3_1"));
+		estat.addActionListener(a -> {
+			eep.setVisible(!estat.isSelected());
+			eesp.setVisible(estat.isSelected());
 		});
 
-		udps.addActionListener(a -> {
-			ut.setDPS(udps.isSelected());
-
-			udps.setText(get(MainLocale.INFO, ut.getDPS() ? "u3" : "u3_1"));
+		ustat.addActionListener(a -> {
+			eup.setVisible(!ustat.isSelected());
+			eusp.setVisible(ustat.isSelected());
 		});
 	}
 
 	private void ini() {
 		add(back);
 		add(eup);
+		add(eusp);
 		add(eep);
+		add(eesp);
 		add(ctp);
 		add((Canvas) bb);
 		add(paus);
@@ -450,17 +462,19 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		add(ubase);
 		add(timer);
 		add(ecount);
-		add(edps);
+		add(estat);
 		add(ucount);
-		add(udps);
+		add(ustat);
 		add(respawn);
 		add(jtb);
 		add(row);
 		row.setText(get(MainLocale.PAGE, CommonStatic.getConfig().twoRow ? "tworow" : "onerow"));
-		edps.setText(get(MainLocale.INFO, et.getDPS() ? "u3" : "u3_1"));
-		edps.setSelected(true);
-		udps.setText(get(MainLocale.INFO, ut.getDPS() ? "u3" : "u3_1"));
-		udps.setSelected(true);
+		estat.setSelected(false);
+		eep.setVisible(!estat.isSelected());
+		eesp.setVisible(estat.isSelected());
+		ustat.setSelected(false);
+		eup.setVisible(!ustat.isSelected());
+		eusp.setVisible(ustat.isSelected());
 		if (bb instanceof BBRecd)
 			add(stream);
 		else {

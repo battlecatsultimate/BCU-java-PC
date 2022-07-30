@@ -33,6 +33,8 @@ class SCGroupEditTable extends AbJTable {
 	protected final SCDef scd;
 
 	protected SCGroupEditTable(SCDef sc) {
+		super(title);
+
 		scd = sc;
 		setDefaultRenderer(Integer.class, new EnemyTCR());
 	}

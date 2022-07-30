@@ -44,6 +44,8 @@ class EREditTable extends AbJTable implements Reorderable {
 	private final String pack;
 
 	protected EREditTable(Page p, PackData.UserPack pack) {
+		super(title);
+
 		page = p;
 		setTransferHandler(new InTableTH(this));
 		setDefaultRenderer(Integer.class, new EnemyTCR());

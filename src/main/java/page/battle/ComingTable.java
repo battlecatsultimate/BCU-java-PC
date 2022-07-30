@@ -40,6 +40,8 @@ class ComingTable extends AbJTable {
 	private final Page page;
 
 	protected ComingTable(Page p) {
+		super(title);
+
 		page = p;
 		setDefaultRenderer(Enemy.class, new EnemyTCR());
 	}

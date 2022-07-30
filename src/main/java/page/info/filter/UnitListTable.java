@@ -34,6 +34,8 @@ public class UnitListTable extends SortTable<Form> {
 	private final Page page;
 
 	public UnitListTable(Page p) {
+		super(tit);
+
 		page = p;
 
 		setDefaultRenderer(Enemy.class, new UnitTCR(lnk));
@@ -113,10 +115,4 @@ public class UnitListTable extends SortTable<Form> {
 			return du.getWill() + 1;
 		return null;
 	}
-
-	@Override
-	protected String[] getTit() {
-		return tit;
-	}
-
 }

@@ -1,5 +1,6 @@
 package page.support;
 
+import javax.annotation.Nonnull;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Comparator;
@@ -12,9 +13,12 @@ public abstract class SortTable<T> extends AbJTable {
 	private static final String[] dire = new String[] { "↑", "↓" };
 
 	public List<T> list;
+
 	protected int sort = 0, sign = 1;
 
-	protected SortTable() {
+	protected SortTable(@Nonnull String[] title) {
+		super(title);
+
 		SortTable<T> t = this;
 
 		getTableHeader().addMouseListener(new MouseAdapter() {
@@ -36,14 +40,9 @@ public abstract class SortTable<T> extends AbJTable {
 	}
 
 	@Override
-	public int getColumnCount() {
-		return getTit().length;
-	}
-
-	@Override
 	public String getColumnName(int c) {
 		c = lnk[c];
-		return (sort == c ? dire[(sign + 1) / 2] : "") + getTit()[c];
+		return (sort == c ? dire[(sign + 1) / 2] : "") + title[c];
 	}
 
 	@Override
@@ -68,8 +67,6 @@ public abstract class SortTable<T> extends AbJTable {
 	protected abstract int compare(T e0, T e1, int c);
 
 	protected abstract Object get(T t, int c);
-
-	protected abstract String[] getTit();
 
 	protected void setHeader() {
 		for (int i = 0; i < getColumnCount(); i++)

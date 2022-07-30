@@ -16,6 +16,10 @@ class ImgCutEditTable extends AbJTable {
 
 	protected AnimCE anim;
 
+	public ImgCutEditTable() {
+		super(strs);
+	}
+
 	@Override
 	public boolean editCellAt(int row, int column, EventObject e) {
 		boolean result = super.editCellAt(row, column, e);

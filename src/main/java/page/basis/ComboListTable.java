@@ -37,6 +37,8 @@ public class ComboListTable extends SortTable<Combo> {
 	private final Page fr;
 
 	public ComboListTable(Page p, LineUp line) {
+		super(tit);
+
 		fr = p;
 		lu = line;
 
@@ -141,10 +143,5 @@ public class ComboListTable extends SortTable<Combo> {
 			return t.forms[c - 4];
 		}
 		return null;
-	}
-
-	@Override
-	protected String[] getTit() {
-		return tit;
 	}
 }

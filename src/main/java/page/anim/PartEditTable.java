@@ -27,6 +27,8 @@ class PartEditTable extends AnimTable<int[]> {
 	private final Page page;
 
 	protected PartEditTable(Page p) {
+		super(strs);
+
 		page = p;
 		selectionModel.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		setTransferHandler(new AnimTableTH<>(this, 3));

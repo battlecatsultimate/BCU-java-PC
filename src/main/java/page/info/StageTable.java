@@ -42,6 +42,8 @@ public class StageTable extends AbJTable {
 	private final Page page;
 
 	protected StageTable(Page p) {
+		super(title);
+
 		page = p;
 
 		setDefaultRenderer(Enemy.class, new EnemyTCR());

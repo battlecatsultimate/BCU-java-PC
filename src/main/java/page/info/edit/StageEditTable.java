@@ -51,6 +51,8 @@ public class StageEditTable extends AbJTable implements Reorderable {
 	private boolean changing = false;
 
 	protected StageEditTable(Page p, UserPack pac) {
+		super(title);
+
 		page = p;
 		pack = pac;
 		setTransferHandler(new InTableTH(this));
