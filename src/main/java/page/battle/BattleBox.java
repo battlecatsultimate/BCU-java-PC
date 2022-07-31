@@ -277,7 +277,7 @@ public interface BattleBox {
 			int cw = 0;
 			int time = (sb.time / 5) % 2;
 			int mtype = sb.money < sb.upgradeCost ? 0 : time == 0 ? 1 : 2;
-			if (sb.work_lv == 8)
+			if (sb.work_lv >= 8)
 				mtype = 2;
 			FakeImage left = aux.battle[0][mtype].getImg();
 			int ctype = sb.cannon == sb.maxCannon && time == 0 ? 1 : 0;
