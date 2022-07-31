@@ -356,7 +356,6 @@ public class ComboEditPage extends Page {
             ctypes.setSelectedIndex(c.type);
             clvls.setSelectedIndex(c.lv);
             comboname.setText(c.name);
-            pac.combos.set(jlc.getSelectedRow(),c);
         } else
             comboname.setText("");
         comboname.setEnabled(dsize);
