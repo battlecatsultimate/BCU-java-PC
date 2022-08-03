@@ -258,7 +258,8 @@ public abstract class EntityEditPage extends Page {
 				+ "use name \"resurrection\" for attack during death animation<br>"
 				+ "use name \"counterattack\" for a more customizable counterattack (Needs Counter proc parameters still)<br>"
 				+ "use name \"burrow\" for attack during burrow down animation<br>"
-				+ "use name \"resurface\" for attack during burrow up animation</html>");
+				+ "use name \"resurface\" for attack during burrow up animation<br>"
+				+ "use name \"revive\" for attack during reviving</html>");
 		ftp.setToolTipText(
 				"<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
 						+ "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost<br>" +
@@ -408,6 +409,7 @@ public abstract class EntityEditPage extends Page {
 
 	protected void setData(CustomEntity data) {
 		changing = true;
+
 		fhp.setText("" + (int) (ce.hp * getDef()));
 		fhb.setText("" + ce.hb);
 		fsp.setText("" + ce.speed);
@@ -421,56 +423,91 @@ public abstract class EntityEditPage extends Page {
 		fct.setText("" + ce.loop);
 		fwp.setText("" + (ce.will + 1));
 		cdps.setText("" + (int) (Math.round(getLvAtk() * ce.allAtk()) * getAtk()) * 30 / ce.getItv());
+
 		comm.setSelected(data.common);
+
 		if (!comm.isSelected())
 			ce.updateAllProc();
+
 		mpt.setData(ce.rep.proc);
+
 		int[][] raw = ce.rawAtkData();
 		int pre = 0;
 		int n = ce.atks.length;
+
 		extra.clear();
+
 		if (ce.rev != null) {
 			n++;
 			extra.add(ce.rev);
-		} if (ce.res != null) {
+		}
+
+		if (ce.res != null) {
 			n++;
 			extra.add(ce.res);
-		} if (ce.cntr != null) {
+		}
+
+		if (ce.cntr != null) {
 			n++;
 			extra.add(ce.cntr);
-		} if (ce.bur != null) {
+		}
+
+		if (ce.bur != null) {
 			n++;
 			extra.add(ce.bur);
-		} if (ce.resu != null) {
+		}
+
+		if (ce.resu != null) {
 			n++;
 			extra.add(ce.resu);
 		}
+
+		if (ce.revi != null) {
+			n++;
+			extra.add(ce.revi);
+		}
+
 		String[] ints = new String[n];
+
 		for (int i = 0; i < ce.atks.length; i++) {
 			ints[i] = i + 1 + " " + ce.atks[i].str;
 			pre += raw[i][1];
 			if (pre >= ce.getAnimLen())
 				ints[i] += " (out of range)";
 		}
+
 		int ix = ce.atks.length;
+
 		for (AtkDataModel atk : extra)
 			ints[ix++] = atk.str;
 
 		int ind = jli.getSelectedIndex();
+
 		jli.setListData(ints);
+
 		if (ind < 0)
 			ind = 0;
+
 		if (ind >= ints.length)
 			ind = ints.length - 1;
+
 		setA(ind);
+
 		jli.setSelectedIndex(ind);
+
 		Animable<AnimU<?>, UType> ene = ce.getPack();
+
 		if (editable)
 			jcba.setSelectedItem(ene.anim);
+
 		jcbs.setSelectedItem(Identifier.get(ce.death));
+
 		vrev.setText(ce.rev == null ? "x" : (KB_TIME[INT_HB] - ce.rev.pre + "f"));
+
 		Soul s = Identifier.get(ce.death);
+
 		vres.setText(ce.res == null ? "x" : s == null ? "-" : (s.len(SoulType.DEF) - ce.res.pre + "f"));
+
 		changing = false;
 	}
 
@@ -614,32 +651,47 @@ public abstract class EntityEditPage extends Page {
 
 		if (jtf == atkn) {
 			AtkDataModel adm = aet.adm;
+
 			if (adm == null || adm.str.equals(text))
 				return;
+
 			text = ce.getAvailable(text);
+
 			adm.str = text;
+
 			if (text.equals("revenge")) {
 				remAtk(adm);
 				ce.rev = adm;
 			}
+
 			if (text.equals("resurrection")) {
 				remAtk(adm);
 				ce.res = adm;
 			}
+
 			if (text.equals("counterattack")) {
 				remAtk(adm);
 				ce.cntr = adm;
 			}
+
 			if (text.equals("burrow")) {
 				remAtk(adm);
 				ce.bur = adm;
 			}
+
 			if (text.equals("resurface")) {
 				remAtk(adm);
 				ce.resu = adm;
 			}
+
+			if (text.equals("revive")) {
+				remAtk(adm);
+				ce.revi = adm;
+			}
+
 			return;
 		}
+
 		if (text.length() > 0) {
 			int[] v = CommonStatic.parseIntsN(text);
 			if (v.length > 0) {
@@ -723,6 +775,9 @@ public abstract class EntityEditPage extends Page {
 					break;
 				case "burrow":
 					ce.bur = null;
+					break;
+				case "revive":
+					ce.revi = null;
 					break;
 				default:
 					ce.resu = null;

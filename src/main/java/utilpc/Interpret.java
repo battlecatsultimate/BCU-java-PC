@@ -254,7 +254,7 @@ public class Interpret extends Data {
 					+ Page.get(MainLocale.UTIL, "ld2") + ": " + r, bi));
 		}
 		AtkDataModel rev = me.getRevenge();
-		for (int z = 0; z < 5; z++) {
+		for (int z = 0; z < 6; z++) {
 			if (rev != null) {
 				int revs = rev.getShortPoint();
 				int revl = rev.getLongPoint();
@@ -281,6 +281,9 @@ public class Interpret extends Data {
 					break;
 				case 3:
 					rev = me.getResurface();
+					break;
+				case 4:
+					rev = me.getRevive();
 					break;
 				default:
 					rev = null;
@@ -427,7 +430,7 @@ public class Interpret extends Data {
 		}
 
 		MaskAtk rev = du.getRevenge();
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 6; i++) {
 			if (rev != null) {
 				for(int j = 0; j < Data.PROC_TOT; j++) {
 					ProcItem item = rev.getProc().getArr(j);
@@ -452,6 +455,9 @@ public class Interpret extends Data {
 					break;
 				case 3:
 					rev = du.getResurface();
+					break;
+				case 4:
+					rev = du.getRevive();
 					break;
 				default:
 					rev = null;
