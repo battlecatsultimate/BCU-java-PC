@@ -34,7 +34,7 @@ public class StageTable extends AbJTable {
 	}
 
 	public static void redefine() {
-		title = Page.get(MainLocale.INFO, "t", 9);
+		title = Page.get(MainLocale.INFO, "t", 10);
 	}
 
 	protected Object[][] data;
@@ -96,8 +96,11 @@ public class StageTable extends AbJTable {
 		if (data == null)
 			return;
 		int c = getColumnModel().getColumnIndexAtX(p.x);
+
 		c = lnk[c];
+
 		int r = p.y / getRowHeight();
+
 		if (r < 0 || r >= data.length || c != 1)
 			return;
 
@@ -142,17 +145,24 @@ public class StageTable extends AbJTable {
 
 	protected void setData(Stage st) {
 		Line[] info = st.data.getSimple();
-		data = new Object[info.length][9];
+
+		data = new Object[info.length][11];
+
 		for (int i = 0; i < info.length; i++) {
 			int ind = info.length - i - 1;
 			data[ind][1] = Identifier.get(info[i].enemy);
-			data[ind][0] = info[i].boss == 1 ? "boss" : "";
+
+			data[ind][0] = info[i].boss == 1 ? "Boss" : info[i].boss == 2 ? "Boss (Shake)" : "";
+
 			data[ind][2] = info[i].multiple == info[i].mult_atk ? info[i].multiple+"" : CommonStatic.toArrayFormat(info[i].multiple, info[i].mult_atk);
-			data[ind][3] = info[i].number == 0 ? "infinite" : info[i].number;
+
+			data[ind][3] = info[i].number == 0 ? "Infinite" : info[i].number;
+
 			if (info[i].castle_0 >= info[i].castle_1)
 				data[ind][4] = info[i].castle_0 + "%";
 			else
 				data[ind][4] = info[i].castle_0 + "~" + info[i].castle_1 + "%";
+
 			if (Math.abs(info[i].spawn_0) >= Math.abs(info[i].spawn_1))
 				data[ind][5] = info[i].spawn_0;
 			else
@@ -165,9 +175,14 @@ public class StageTable extends AbJTable {
 
 			data[ind][7] = info[i].layer_0 == info[i].layer_1 ? info[i].layer_0
 					: info[i].layer_0 + "~" + info[i].layer_1;
+
+			data[ind][8] = info[i].kill_count;
+
 			int g = info[i].group;
+
 			SCGroup scg = st.data.sub.get(g);
-			data[ind][8] = scg == null ? g != 0 ? Data.trio(g) + " - invalid" : "" : scg.toString();
+
+			data[ind][9] = scg == null ? g != 0 ? Data.trio(g) + " - invalid" : "" : scg.toString();
 
 		}
 	}

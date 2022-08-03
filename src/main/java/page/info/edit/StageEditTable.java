@@ -41,7 +41,7 @@ public class StageEditTable extends AbJTable implements Reorderable {
 	}
 
 	protected static void redefine() {
-		title = Page.get(MainLocale.INFO, "t", 9);
+		title = Page.get(MainLocale.INFO, "t", 10);
 	}
 
 	private SCDef stage;
@@ -131,16 +131,22 @@ public class StageEditTable extends AbJTable implements Reorderable {
 	public synchronized void reorder(int ori, int fin) {
 		if (fin > ori)
 			fin--;
+
 		if (fin == ori)
 			return;
+
 		Line[] info = stage.datas;
+
 		int ior = info.length - ori - 1;
 		int ifi = info.length - fin - 1;
+
 		Line temp = info[ior];
+
 		if (ior < ifi)
 			System.arraycopy(info, ior + 1, info, ior, ifi - ior);
 		else if (ior - ifi >= 0)
 			System.arraycopy(info, ifi, info, ifi + 1, ior - ifi);
+
 		info[ifi] = temp;
 	}
 
@@ -148,9 +154,12 @@ public class StageEditTable extends AbJTable implements Reorderable {
 	public synchronized void setValueAt(Object arg0, int r, int c) {
 		if (stage == null)
 			return;
+
 		if (r >= getRowCount())
 			return;
+
 		c = lnk[c];
+
 		if (c == 1) {
 			String[] is = CommonStatic.getPackEntityID((String) arg0);
 
@@ -160,16 +169,18 @@ public class StageEditTable extends AbJTable implements Reorderable {
 			setEnemy(r, is[0], is[1]);
 		} else if (c > 3) {
 			int[] is = CommonStatic.parseIntsN((String) arg0);
+
 			if (is.length == 0)
 				return;
+
 			if (is.length == 1)
 				set(r, c, is[0], -1);
 			else
 				set(r, c, is[0], is[1]);
 		} else if (c == 0) {
-			int i = ((String) arg0).length();
-			set(r, c, i > 0 ? 1 : 0, 0);
+			int i = CommonStatic.parseIntN((String) arg0);
 
+			set(r, c, i, 0);
 		} else if (c == 2) {
 			int[] data = CommonStatic.parseIntsN((String) arg0);
 
@@ -186,6 +197,7 @@ public class StageEditTable extends AbJTable implements Reorderable {
 			}
 		} else {
 			int i = arg0 instanceof Integer ? (Integer) arg0 : CommonStatic.parseIntN((String) arg0);
+
 			set(r, c, i, 0);
 		}
 	}
@@ -193,18 +205,27 @@ public class StageEditTable extends AbJTable implements Reorderable {
 	protected synchronized int addLine(AbEnemy enemy) {
 		if (stage == null)
 			return -1;
+
 		int ind = getSelectedRow();
+
 		if (ind == -1)
 			ind = 0;
+
 		Line[] info = stage.datas;
+
 		int len = info.length;
 		int sind = len - ind - 1;
+
 		Line[] ans = new Line[len + 1];
+
 		if (sind >= 0) {
 			System.arraycopy(info, 0, ans, 0, sind);
-			if (len + 1 - (sind + 1) >= 0) System.arraycopy(info, sind + 1 - 1, ans, sind + 1, len + 1 - (sind + 1));
+
+			if (len + 1 - (sind + 1) >= 0)
+				System.arraycopy(info, sind + 1 - 1, ans, sind + 1, len + 1 - (sind + 1));
 		} else
 			sind = 0;
+
 		if (enemy == null && sind < info.length && getSelectedRow() >= 0)
 			ans[sind] = info[sind].clone();
 		else {
@@ -217,13 +238,17 @@ public class StageEditTable extends AbJTable implements Reorderable {
 			ans[sind].multiple = 100;
 			ans[sind].mult_atk = 100;
 		}
+
 		stage.datas = ans;
+
 		ind++;
+
 		if (ind >= ans.length)
 			ind = ans.length - 1;
 		for (int i = 0; i < ans.length; i++)
 			if (ans[i] == null)
 				ans[i] = new Line();
+
 		return ind;
 	}
 
@@ -314,13 +339,13 @@ public class StageEditTable extends AbJTable implements Reorderable {
 		if (data == null)
 			return null;
 		if (c == 0)
-			return data.boss == 1 ? "boss" : "";
+			return data.boss == 1 ? "Boss" : data.boss == 2 ? "Boss (Shake)" : "";
 		else if (c == 1)
 			return Identifier.get(data.enemy);
 		else if (c == 2)
 			return (data.multiple == data.mult_atk ? data.multiple : CommonStatic.toArrayFormat(data.multiple, data.mult_atk)) + "%";
 		else if (c == 3)
-			return data.number == 0 ? "infinite" : data.number;
+			return data.number == 0 ? "Infinite" : data.number;
 		else if (c == 4)
 			return (data.castle_0 >= data.castle_1 ? data.castle_0 : data.castle_0 + "~" + data.castle_1) + "%";
 		else if (c == 5)
@@ -329,9 +354,13 @@ public class StageEditTable extends AbJTable implements Reorderable {
 			return data.respawn_0 == data.respawn_1 ? data.respawn_0 : data.respawn_0 + "~" + data.respawn_1;
 		else if (c == 7)
 			return data.layer_0 == data.layer_1 ? data.layer_0 : data.layer_0 + "~" + data.layer_1;
-		else if (c == 8) {
+		else if (c == 8)
+			return data.kill_count;
+		else if (c == 9) {
 			int g = data.group;
+
 			SCGroup scg = stage.sub.get(g);
+
 			return scg == null ? g != 0 ? Data.trio(g) + " - invalid" : "" : scg.toString();
 		}
 		return null;
@@ -340,14 +369,23 @@ public class StageEditTable extends AbJTable implements Reorderable {
 	private void set(int r, int c, int v, int para) {
 		if (changing)
 			return;
+
 		if (r < 0 || r >= stage.datas.length)
 			return;
+
 		if (c == 1 && (v < 0 || para == -1))
 			return;
+
 		if (c != 5 && c != 7 && v < 0)
 			v = 0;
+
+		if (c == 0 && v > 2)
+			return;
+
 		Line[] info = stage.datas;
+
 		Line data = info[info.length - r - 1];
+
 		if (c == 0)
 			data.boss = v;
 		else if (c == 1) {
@@ -400,6 +438,8 @@ public class StageEditTable extends AbJTable implements Reorderable {
 				data.layer_1 = para;
 			}
 		else if (c == 8)
+			data.kill_count = v;
+		else if (c == 9)
 			data.group = v;
 	}
 
