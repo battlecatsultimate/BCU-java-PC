@@ -795,23 +795,33 @@ public interface BattleBox {
 			int w = box.getWidth();
 			SymCoord sym = setSym(g, 1, w-aux.num[0][0].getImg().getHeight()*0.2, aux.num[0][0].getImg().getHeight()*0.2, 1);
 			P p = Res.getMoney(sb.getMoney(), sb.getMaxMoney(), sym);
-			int ih = (int) p.y + (int) (aux.num[0][0].getImg().getHeight()*0.2);
+			int ih = (int) p.y + (int) (aux.num[0][0].getImg().getHeight()*0.3);
 			int n = 0;
 			FakeImage bimg = aux.battle[2][1].getImg();
+			int ow = (int) (aux.num[0][0].getImg().getHeight() * 0.2);
 			int cw = bimg.getWidth();
 			if ((sb.conf[0] & 2) > 0 && sb.sniper != null) {
 				bimg = aux.battle[2][sb.sniper.enabled ? 2 : 4].getImg();
-				g.drawImage(bimg, w - cw, ih);
+				g.drawImage(bimg, w - cw - ow, ih);
 				n++;
 			}
 			bimg = aux.battle[2][1].getImg();
 			if ((sb.conf[0] & 1) > 0) {
-				g.drawImage(bimg, w - cw * (n + 1), ih);
+				g.drawImage(bimg, w - cw * (n + 1) - ow, ih);
 				n++;
 			}
-			bimg = aux.battle[2][page.getSpeed() > 0 ? 0 : 3].getImg();
-			for (int i = 0; i < Math.abs(page.getSpeed()); i++)
-				g.drawImage(bimg, w - cw * (i + 1 + n), ih);
+
+			if(page.getSpeed() > 0) {
+				bimg = aux.battle[2][page.getSpeed() == 1 ? 0 : page.getSpeed() + 3].getImg();
+
+				int offset = page.getSpeed() == 1 ? 0 : 11;
+
+				g.drawImage(bimg, w - cw * (1 + n) - offset - ow, ih - offset);
+			} else {
+				bimg = aux.battle[2][3].getImg();
+				for (int i = 0; i < Math.abs(page.getSpeed()); i++)
+					g.drawImage(bimg, w - cw * (i + 1 + n) - ow, ih);
+			}
 
 			if (CommonStatic.getConfig().stageName && snam.img != null) {
 				g.drawImage(snam.img, box.getHeight() * 0.005, box.getHeight() * 0.01, snam.img.getWidth() * 1.25, snam.img.getHeight() * 1.125);
