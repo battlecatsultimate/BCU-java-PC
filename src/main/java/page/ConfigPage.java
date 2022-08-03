@@ -42,6 +42,7 @@ public class ConfigPage extends Page {
 	private final JTG btdly = new JTG(MainLocale.PAGE, "btdly");
 	private final JTG stdis = new JTG(MainLocale.PAGE, "stdis");
 	private final JL preflv = new JL(MainLocale.PAGE, "preflv");
+	private final JTG shake = new JTG(MainLocale.PAGE, "shake");
 	private final JTF prlvmd = new JTF();
 	private final JBTN[] left = new JBTN[4];
 	private final JBTN[] right = new JBTN[4];
@@ -140,6 +141,7 @@ public class ConfigPage extends Page {
 		set(exCont, x, y, 1600, 925, 450, 50);
 		set(autosave, x, y, 1600, 1000, 200, 50);
 		set(savetime, x, y, 1800, 1000, 250, 50);
+		set(shake, x, y, 1600, 475, 450, 50);
 	}
 
 	@Override
@@ -342,6 +344,8 @@ public class ConfigPage extends Page {
 				MainBCU.restartAutoSaveTimer();
 			}
 		});
+
+		shake.addActionListener(c -> CommonStatic.getConfig().shake = shake.isSelected());
 	}
 
 	private void ini() {
@@ -386,6 +390,7 @@ public class ConfigPage extends Page {
 		add(autosave);
 		add(savetime);
 		add(nobac);
+		add(shake);
 		exCont.setSelected(CommonStatic.getConfig().exContinuation);
 		prlvmd.setText("" + CommonStatic.getConfig().prefLevel);
 		jls.setSelectedIndex(localeIndexOf(cfg().lang));
@@ -429,6 +434,7 @@ public class ConfigPage extends Page {
 		if (!MainBCU.nimbus) {
 			theme.setEnabled(false);
 		}
+		shake.setSelected(CommonStatic.getConfig().shake);
 		addListeners();
 	}
 

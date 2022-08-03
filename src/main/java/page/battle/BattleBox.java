@@ -82,7 +82,7 @@ public interface BattleBox {
 
 		protected double corr, unir; // siz = pix/p;
 
-		private StageBasis sb;
+		private final StageBasis sb;
 		private final int maxW;
 		private final int maxH = 510 * 3;
 		private final int minH = 510; // in p
@@ -118,6 +118,7 @@ public interface BattleBox {
 			box = bb;
 			maxW = (int) (bas.sb.st.len * ratio + off * 2);
 			snam = new StageNamePainter(bas.sb.st.toString());
+			sb = bas.sb;
 		}
 
 		public void click(Point p, int button) {
@@ -126,8 +127,6 @@ public interface BattleBox {
 		public void draw(FakeGraphics g) {
 			int w = box.getWidth();
 			int h = box.getHeight();
-
-			sb = bf.sb;
 
 			calculateSiz(w, h);
 
@@ -141,7 +140,7 @@ public interface BattleBox {
 
 			ImgCore.set(g);
 			P rect = setP(box.getWidth(), box.getHeight());
-			sb.bg.draw(g, rect, sb.pos, midh, bf.sb.siz, (int) (groundHeight + (CommonStatic.getConfig().twoRow ? (h * 0.75 / 10.0) : 0)));
+			sb.bg.draw(g, rect, sb.pos, midh, bf.sb.siz, (int) Math.ceil(groundHeight + (CommonStatic.getConfig().twoRow ? (h * 0.75 / 10.0) : 0) - sb.shakeOffset));
 
 			double midY = groundHeight / minSiz;
 			double y = maxH * bf.sb.siz - midh;
@@ -220,6 +219,8 @@ public interface BattleBox {
 
 			if(CommonStatic.getConfig().twoRow)
 				midh -= h * 0.75 / 10.0;
+
+			midh += sb.shakeOffset;
 		}
 
 		public void reset() {
