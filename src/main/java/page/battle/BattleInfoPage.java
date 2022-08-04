@@ -157,7 +157,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			spe--;
 			bb.reset();
 		}
-		if (spe < (basis instanceof SBCtrl ? 5 : 7) && e.getKeyChar() == '.') {
+		if (spe < 5 && e.getKeyChar() == '.') {
 			spe++;
 			bb.reset();
 		}
