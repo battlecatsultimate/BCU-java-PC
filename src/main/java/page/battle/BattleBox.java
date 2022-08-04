@@ -799,7 +799,7 @@ public interface BattleBox {
 			int n = 0;
 			FakeImage bimg = aux.battle[2][1].getImg();
 			int ow = (int) (aux.num[0][0].getImg().getHeight() * 0.2);
-			int cw = bimg.getWidth();
+			int cw = (int) (bimg.getWidth() * 1.1);
 			if ((sb.conf[0] & 2) > 0 && sb.sniper != null) {
 				bimg = aux.battle[2][sb.sniper.enabled ? 2 : 4].getImg();
 				g.drawImage(bimg, w - cw - ow, ih);
