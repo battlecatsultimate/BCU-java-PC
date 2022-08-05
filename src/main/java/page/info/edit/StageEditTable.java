@@ -178,9 +178,13 @@ public class StageEditTable extends AbJTable implements Reorderable {
 			else
 				set(r, c, is[0], is[1]);
 		} else if (c == 0) {
-			int i = CommonStatic.parseIntN((String) arg0);
+			if(arg0.equals("2")) {
+				set(r, c, 2, 0);
+			} else {
+				int i = ((String) arg0).length();
 
-			set(r, c, i, 0);
+				set(r, c, i > 0 ? 1 : 0, 0);
+			}
 		} else if (c == 2) {
 			int[] data = CommonStatic.parseIntsN((String) arg0);
 
