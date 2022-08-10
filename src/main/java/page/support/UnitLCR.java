@@ -28,7 +28,7 @@ public class UnitLCR extends DefaultListCellRenderer {
 
 		if(form.anim == null) {
 			jl.setEnabled(false);
-			jl.setText(o.toString() + " (Error - Corrupted)");
+			jl.setText(o + " (Error - Corrupted)");
 			return jl;
 		}
 
