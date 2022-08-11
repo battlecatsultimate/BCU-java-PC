@@ -7,6 +7,7 @@ import common.battle.entity.Entity;
 import common.util.Data;
 import common.util.stage.Replay;
 import common.util.stage.Stage;
+import common.util.unit.Form;
 import io.BCMusic;
 import main.MainBCU;
 import main.Opts;
@@ -33,7 +34,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 
 	public static void redefine() {
 		ComingTable.redefine();
-		EntityTable.redefine();
+		TotalDamageTable.redefine();
 	}
 
 	private final JBTN back = new JBTN(MainLocale.PAGE, "back");
@@ -41,12 +42,20 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	private final JBTN next = new JBTN(MainLocale.PAGE, "nextf");
 	private final JBTN rply = new JBTN();
 	private final JBTN row = new JBTN();
-	private final EntityTable ut = new EntityTable(-1);
+	private final EntityTable ut = new EntityTable(-1, false);
+	private final EntityTable ust = new EntityTable(-1, true);
 	private final ComingTable ct = new ComingTable(this);
-	private final EntityTable et = new EntityTable(1);
+	private final EntityTable et = new EntityTable(1, false);
+	private final EntityTable est = new EntityTable(1, true);
+	private final TotalDamageTable utd;
 	private final JScrollPane eup = new JScrollPane(ut);
+	private final JScrollPane eusp = new JScrollPane(ust);
 	private final JScrollPane eep = new JScrollPane(et);
+	private final JScrollPane eesp = new JScrollPane(est);
 	private final JScrollPane ctp = new JScrollPane(ct);
+	private final JScrollPane utdsp;
+	private final JTG ustat = new JTG(MainLocale.INFO, "stat");
+	private final JTG estat = new JTG(MainLocale.INFO, "stat");
 	private final JLabel ebase = new JLabel();
 	private final JLabel ubase = new JLabel();
 	private final JLabel timer = new JLabel();
@@ -63,8 +72,9 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	private Replay recd;
 	private boolean backClicked = false;
 
-	private int spe = 0, upd = 0;
-	private boolean musicChanged = false;
+	private byte spe = 0;
+	private int upd = 0;
+	private boolean musicChanged = false, exPopupShown = false;
 
 	/**
 	 * Creates a new Battle Page
@@ -83,6 +93,8 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		jtb.setSelected((conf & 2) != 0);
 		jtb.setEnabled((conf & 1) == 0);
 		ct.setData(basis.sb.st);
+		utd = new TotalDamageTable(basis.sb);
+		utdsp = new JScrollPane(utd);
 
 		if (recd.rl != null)
 			jsl.setMaximum(((SBRply) basis).size());
@@ -98,6 +110,9 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		pause = true;
 		basis = ctrl;
 		ct.setData(basis.sb.st);
+		utd = new TotalDamageTable(rpl.sb);
+		utdsp = new JScrollPane(utd);
+
 		ini();
 		rply.setText(0, "rply");
 		resized();
@@ -112,6 +127,9 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		basis = sb;
 		ct.setData(basis.sb.st);
 		jtb.setSelected(DEF_LARGE);
+		utd = new TotalDamageTable(sb.sb);
+		utdsp = new JScrollPane(utd);
+
 		ini();
 		rply.setText(0, "rply");
 		resized();
@@ -120,7 +138,12 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 
 	@Override
 	public void callBack(Object o) {
-		changePanel(getFront());
+		BCMusic.stopAll();
+		if(o instanceof Stage) {
+			changePanel(new BattleInfoPage(getFront(), (Stage) o, 0, basis.sb.b, new int[1]));
+		} else {
+			changePanel(getFront());
+		}
 	}
 
 	@Override
@@ -134,7 +157,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			spe--;
 			bb.reset();
 		}
-		if (spe < (basis instanceof SBCtrl ? 5 : 7) && e.getKeyChar() == '.') {
+		if (spe < 5 && e.getKeyChar() == '.') {
 			spe++;
 			bb.reset();
 		}
@@ -174,17 +197,25 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	protected void renew() {
 		backClicked = false;
 
+		if (basis.sb.mus != null) {
+			if(BCMusic.BG != null)
+				BCMusic.BG.stop();
+
+			BCMusic.play(basis.sb.mus);
+			return;
+		}
+
 		if (basis.sb.getEBHP() < basis.sb.st.mush)
 			if(basis.sb.st.mush == 0 || basis.sb.st.mush == 100)
-				BCMusic.play(basis.sb.st.mus1, basis.sb.st.loop1);
+				BCMusic.play(basis.sb.st.mus1);
 			else {
 				if(BCMusic.BG != null)
 					BCMusic.BG.stop();
 
-				BCMusic.play(basis.sb.st.mus1, basis.sb.st.loop1);
+				BCMusic.play(basis.sb.st.mus1);
 			}
 		else
-			BCMusic.play(basis.sb.st.mus0, basis.sb.st.loop0);
+			BCMusic.play(basis.sb.st.mus0);
 	}
 
 	@Override
@@ -204,36 +235,49 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			set((Canvas) bb, x, y, 190, 50, 1920, 1200);
 			set(ctp, x, y, 0, 0, 0, 0);
 			set(eep, x, y, 50, 100, 0, 0);
+			set(eesp, x, y, 50, 100, 0, 0);
 			set(eup, x, y, 50, 400, 0, 0);
+			set(eusp, x, y, 50, 400, 0, 0);
+			set(utdsp, x, y, 1650, 850, 0, 0);
 			set(ecount, x, y, 50, 50, 0, 0);
+			set(estat, x, y, 650, 50, 0, 0);
 			set(ucount, x, y, 50, 350, 0, 0);
+			set(ustat, x, y, 2100, 50, 0, 0);
 			set(respawn, x, y, 0, 0, 0, 0);
 			set(jsl, x, y, 0, 0, 0, 0);
 		} else {
 			set(ctp, x, y, 50, 850, 1450, 400);
 			set(eep, x, y, 50, 100, 600, 700);
+			set(eesp, x, y, 50, 100, 600, 700);
 			set((Canvas) bb, x, y, 700, 300, 800, 500);
 			set(row, x, y , 1300, 200, 200, 50);
 			set(paus, x, y, 700, 200, 200, 50);
 			set(rply, x, y, 900, 200, 200, 50);
 			set(stream, x, y, 900, 200, 400, 50);
 			set(next, x, y, 1100, 200, 200, 50);
-			set(eup, x, y, 1650, 100, 600, 1100);
+			set(eup, x, y, 1650, 100, 600, 700);
+			set(eusp, x, y, 1650, 100, 600, 700);
+			set(utdsp, x, y, 1650, 850, 600, 400);
 			set(ebase, x, y, 700, 250, 400, 50);
 			set(timer, x, y, 1100, 250, 200, 50);
 			set(ubase, x, y, 1300, 250, 200, 50);
-			set(ecount, x, y, 50, 50, 600, 50);
-			set(ucount, x, y, 1650, 50, 600, 50);
+			set(ecount, x, y, 50, 50, 450, 50);
+			set(estat, x, y, 500, 50, 150, 50);
+			set(ucount, x, y, 1650, 50, 450, 50);
+			set(ustat, x, y, 2100, 50, 150, 50);
 			set(respawn, x, y, 50, 800, 600, 50);
 			set(jsl, x, y, 700, 800, 800, 50);
 		}
 		ct.setRowHeight(size(x, y, 50));
 		et.setRowHeight(size(x, y, 50));
+		est.setRowHeight(size(x, y, 50));
 		ut.setRowHeight(size(x, y, 50));
+		ust.setRowHeight(size(x, y, 50));
+		utd.setRowHeight(size(x, y, 50));
 	}
 
 	@Override
-	protected synchronized void timer(int t) {
+	public synchronized void timer(int t) {
 		StageBasis sb = basis.sb;
 		if (!pause) {
 			upd++;
@@ -250,9 +294,19 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			List<Entity> lu = new ArrayList<>();
 			for (Entity e : sb.le)
 				(e.dire == 1 ? le : lu).add(e);
+			List<Form> lf = new ArrayList<>();
+			for (Form[] fs : basis.sb.b.lu.fs) {
+				for(Form f : fs) {
+					if(f != null)
+						lf.add(f);
+				}
+			}
 			et.setList(le);
+			est.setList(le);
 			ut.setList(lu);
-			BCMusic.flush(spe < 3, sb.ebase.health <= 0 || sb.ubase.health <= 0);
+			ust.setList(lu);
+			utd.setList(lf);
+			BCMusic.flush(spe < 3 && sb.ebase.health > 0 && sb.ubase.health > 0);
 		}
 		if (basis instanceof SBRply && recd.rl != null)
 			change((SBRply) basis, b -> jsl.setValue(b.prog()));
@@ -279,18 +333,25 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			changedBG = false;
 			basis.sb.changeBG(basis.sb.st.bg);
 		}
-
 		if (sb.ebase.health <= 0 || sb.ubase.health <= 0) {
-			if(BCMusic.BG != null)
-				BCMusic.BG.stop();
-			if (sb.ebase.health <= 0)
-				CommonStatic.setSE(Data.SE_VICTORY);
-			else
-				CommonStatic.setSE(Data.SE_DEFEAT);
+			BCMusic.EndTheme(sb.ebase.health <= 0);
+
+			if (sb.ebase.health <= 0) {
+				if(!exPopupShown && CommonStatic.getConfig().exContinuation && sb.st.info != null && (sb.st.info.exConnection() || sb.st.info.getExStages() != null)) {
+					exPopupShown = true;
+					Opts.showExStageSelection("EX stages found", "You can select one of these EX stages and continue the battle", sb.st, this);
+					return;
+				}
+			}
+		} else if (basis.sb.mus != null) {
+			if (BCMusic.music != basis.sb.mus) {
+				BCMusic.play(basis.sb.mus);
+				musicChanged = sb.getEBHP() > sb.st.mush;
+			}
 		} else {
 			if (sb.getEBHP() <= sb.st.mush && BCMusic.music != sb.st.mus1)
 				if(basis.sb.st.mush == 0 || basis.sb.st.mush == 100)
-					BCMusic.play(basis.sb.st.mus1, basis.sb.st.loop1);
+					BCMusic.play(basis.sb.st.mus1);
 				else {
 					if(!musicChanged && !backClicked) {
 						if(BCMusic.BG != null)
@@ -302,7 +363,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 								if(backClicked)
 									return;
 
-								BCMusic.play(basis.sb.st.mus1, basis.sb.st.loop1);
+								BCMusic.play(basis.sb.st.mus1);
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
@@ -312,7 +373,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 					}
 				}
 			else if (BCMusic.music != sb.st.mus0 && sb.getEBHP() > sb.st.mush) {
-				if(!musicChanged && !backClicked) {
+				if(musicChanged && !backClicked) {
 					if(BCMusic.BG != null)
 						BCMusic.BG.stop();
 					new Thread(() -> {
@@ -322,13 +383,13 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 							if(backClicked)
 								return;
 
-							BCMusic.play(basis.sb.st.mus0, basis.sb.st.loop0);
+							BCMusic.play(basis.sb.st.mus0);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
 					}).start();
 
-					musicChanged = true;
+					musicChanged = false;
 				}
 			}
 		}
@@ -399,13 +460,25 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			bb.reset();
 		});
 
+		estat.addActionListener(a -> {
+			eep.setVisible(!estat.isSelected());
+			eesp.setVisible(estat.isSelected());
+		});
+
+		ustat.addActionListener(a -> {
+			eup.setVisible(!ustat.isSelected());
+			eusp.setVisible(ustat.isSelected());
+		});
 	}
 
 	private void ini() {
 		add(back);
 		add(eup);
+		add(eusp);
 		add(eep);
+		add(eesp);
 		add(ctp);
+		add(utdsp);
 		add((Canvas) bb);
 		add(paus);
 		add(next);
@@ -413,11 +486,19 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		add(ubase);
 		add(timer);
 		add(ecount);
+		add(estat);
 		add(ucount);
+		add(ustat);
 		add(respawn);
 		add(jtb);
 		add(row);
 		row.setText(get(MainLocale.PAGE, CommonStatic.getConfig().twoRow ? "tworow" : "onerow"));
+		estat.setSelected(false);
+		eep.setVisible(!estat.isSelected());
+		eesp.setVisible(estat.isSelected());
+		ustat.setSelected(false);
+		eup.setVisible(!ustat.isSelected());
+		eusp.setVisible(ustat.isSelected());
 		if (bb instanceof BBRecd)
 			add(stream);
 		else {

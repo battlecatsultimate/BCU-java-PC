@@ -59,11 +59,13 @@ public interface ViewBox {
 	class Loader implements RetFunc {
 
 		public final RecdThread thr;
+		public final boolean mp4;
 
 		private JTG jtb;
 
-		public Loader(Queue<BufferedImage> list) {
-			thr = RecdThread.getIns(this, list, null, RecdThread.GIF);
+		public Loader(Queue<BufferedImage> list, boolean mp4) {
+			this.mp4 = mp4;
+			thr = RecdThread.getIns(this, list, null, mp4 ? RecdThread.MP4 : RecdThread.GIF);
 		}
 
 		@Override
@@ -92,7 +94,7 @@ public interface ViewBox {
 
 		BufferedImage getPrev();
 
-		Loader start();
+		Loader start(boolean mp4);
 
 	}
 
@@ -139,9 +141,9 @@ public interface ViewBox {
 
 	void setEntity(EAnimI ieAnim);
 
-	default Loader start() {
+	default Loader start(boolean mp4) {
 		if (getExp() != null)
-			return getExp().start();
+			return getExp().start(mp4);
 		return null;
 	}
 

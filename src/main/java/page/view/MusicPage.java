@@ -1,18 +1,20 @@
 package page.view;
 
 import common.pack.Identifier;
+import common.pack.PackData;
 import common.pack.UserProfile;
 import common.util.stage.Music;
 import io.BCMusic;
 import page.JBTN;
 import page.Page;
+import page.SupPage;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
-public class MusicPage extends Page {
+public class MusicPage extends Page implements SupPage<Music> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -23,8 +25,14 @@ public class MusicPage extends Page {
 	private final JScrollPane jsp = new JScrollPane(jlf);
 
 	public MusicPage(Page p) {
-		this(p, UserProfile.getBCData().musics.getList());
+		super(p);
+		List<Music> mus = new ArrayList<>();
+		for (PackData pac : UserProfile.getAllPacks())
+			mus.addAll(pac.musics.getList());
 
+		jlf.setListData(mus.toArray(new Music[0]));
+		ini();
+		resized();
 	}
 
 	public MusicPage(Page p, Collection<Music> mus) {
@@ -43,7 +51,7 @@ public class MusicPage extends Page {
 		this(p, UserProfile.getAll(pack, Music.class));
 	}
 
-	public Identifier<Music> getSelected() {
+	public Identifier<Music> getSelectedID() {
 		return jlf.getSelectedValue() == null ? null : jlf.getSelectedValue().getID();
 	}
 
@@ -61,21 +69,15 @@ public class MusicPage extends Page {
 	}
 
 	private void addListeners() {
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				BCMusic.clear();
-				changePanel(getFront());
-			}
+		back.addActionListener(arg0 -> {
+			BCMusic.clear();
+			changePanel(getFront());
 		});
 
-		strt.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				if (jlf.getSelectedValue() == null)
-					return;
-				BCMusic.setBG(jlf.getSelectedValue(), 0);
-			}
+		strt.addActionListener(arg0 -> {
+			if (jlf.getSelectedValue() == null)
+				return;
+			BCMusic.setBG(jlf.getSelectedValue());
 		});
 
 	}
@@ -87,4 +89,8 @@ public class MusicPage extends Page {
 		addListeners();
 	}
 
+	@Override
+	public Music getSelected() {
+		return jlf.getSelectedValue();
+	}
 }

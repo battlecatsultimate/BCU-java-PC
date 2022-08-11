@@ -9,10 +9,6 @@ import page.JTF;
 import page.Page;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 public class RecdManagePage extends AbRecdPage {
@@ -56,15 +52,10 @@ public class RecdManagePage extends AbRecdPage {
 
 	@Override
 	protected void setRecd(Replay r) {
-		if (r != null && r.st != null && r.st.get() == null) {
-			Opts.pop("Please change the stage to a new one","Replay stage not found");
-			r.st = null;
-			r.marked = false;
-		}
 		super.setRecd(r);
 		dele.setEnabled(r != null);
 		rena.setEditable(r != null);
-		rena.setText(r == null ? "" : r.rl == null ? "" : r.rl.id);
+		rena.setText(r == null || r.rl == null ? "" : r.rl.id);
 	}
 
 	private void addListeners() {
@@ -81,7 +72,7 @@ public class RecdManagePage extends AbRecdPage {
 			Replay r = jlr.getSelectedValue();
 			if (r == null)
 				return;
-			r.rename(MainBCU.validate(rena.getText().trim(),'#'));
+			r.rename(MainBCU.validate(rena.getText().trim(),'#'), true);
 			rena.setText(r.rl.id);
 		});
 

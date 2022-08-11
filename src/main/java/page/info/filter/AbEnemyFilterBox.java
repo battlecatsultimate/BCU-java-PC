@@ -4,7 +4,6 @@ import common.pack.FixIndexList;
 import common.pack.Identifier;
 import common.pack.PackData;
 import common.pack.UserProfile;
-import common.util.Data;
 import common.util.lang.MultiLangCont;
 import common.util.lang.ProcLang;
 import common.util.unit.AbEnemy;
@@ -20,7 +19,6 @@ import javax.swing.*;
 import java.util.*;
 
 import static utilpc.Interpret.*;
-import static utilpc.Interpret.ATKCONF;
 
 public abstract class AbEnemyFilterBox extends Page {
 
@@ -75,8 +73,8 @@ class AEFBButton extends AbEnemyFilterBox {
     private final JTG[] orop = new JTG[3];
     private final JTG[] rare = new JTG[ERARE.length];
     private final JTG[] trait = new JTG[TRAIT.length];
-    private final JTG[] abis = new JTG[EFILTER];
-    private final JTG[] proc = new JTG[Data.PROC_TOT];
+    private final JTG[] abis = new JTG[EABIIND.length];
+    private final JTG[] proc = new JTG[EPROCIND.length];
     private final JTG[] atkt = new JTG[ATKCONF.length];
 
     protected AEFBButton(Page p) {
@@ -113,6 +111,7 @@ class AEFBButton extends AbEnemyFilterBox {
 
     private void confirm() {
         List<AbEnemy> ans = new ArrayList<>();
+        int minDiff = 5;
         for(PackData p : UserProfile.getAllPacks()) {
             for (Enemy e : p.enemies.getList()) {
                 List<Trait> ct = e.de.getTraits();
@@ -149,9 +148,9 @@ class AEFBButton extends AbEnemyFilterBox {
                 for (int i = 0; i < proc.length; i++)
                     if (proc[i].isSelected())
                         if (orop[1].isSelected())
-                            b2 |= e.de.getAllProc().getArr(i).exists();
+                            b2 |= e.de.getAllProc().getArr(EPROCIND[i]).exists();
                         else
-                            b2 &= e.de.getAllProc().getArr(i).exists();
+                            b2 &= e.de.getAllProc().getArr(EPROCIND[i]).exists();
                 boolean b3 = !orop[2].isSelected();
                 for (int i = 0; i < atkt.length; i++)
                     if (atkt[i].isSelected())
@@ -159,21 +158,14 @@ class AEFBButton extends AbEnemyFilterBox {
                             b3 |= isType(e.de, i);
                         else
                             b3 &= isType(e.de, i);
-                boolean b4 = true;
 
-                String ename;
-
-                ename = MultiLangCont.getStatic().ENAME.getCont(e);
-
-                if (ename == null)
-                    ename = e.name;
-
-                if (ename == null)
-                    ename = "";
-
-                if (name != null) {
-                    b4 = ename.toLowerCase().contains(name.toLowerCase());
-                }
+                boolean b4;
+                String fname = MultiLangCont.getStatic().ENAME.getCont(e);
+                if (fname == null)
+                    fname = e.names.toString();
+                int diff = UtilPC.damerauLevenshteinDistance(fname.toLowerCase(), name.toLowerCase());
+                minDiff = Math.min(minDiff, diff);
+                b4 = diff == minDiff;
 
                 boolean b5;
 
@@ -195,10 +187,27 @@ class AEFBButton extends AbEnemyFilterBox {
         for(PackData.UserPack p : UserProfile.getUserPacks()) {
             if(pack == null || pack.equals(p.desc.id) || parents.contains(p.desc.id)) {
                 for(EneRand rand : p.randEnemies.getList()) {
-                    if(rand.name.equals(name)) {
+                    int diff = UtilPC.damerauLevenshteinDistance(rand.name.toLowerCase(), name.toLowerCase());
+                    if(diff <= minDiff) {
                         ans.add(rand);
+                        minDiff = diff;
                     }
                 }
+            }
+        }
+        for (int i = 0; i < ans.size(); i++) {
+            if (ans.get(i) instanceof Enemy) {
+                Enemy e = (Enemy) ans.get(i);
+                String ename = MultiLangCont.getStatic().ENAME.getCont(e);
+                if (ename == null)
+                    ename = e.names.toString();
+                if (UtilPC.damerauLevenshteinDistance(ename.toLowerCase(), name.toLowerCase()) > minDiff) {
+                    ans.remove(i);
+                    i--;
+                }
+            } else if (UtilPC.damerauLevenshteinDistance(((EneRand) ans.get(i)).name.toLowerCase(), name.toLowerCase()) > minDiff) {
+                ans.remove(i);
+                i--;
             }
         }
 
@@ -223,8 +232,8 @@ class AEFBButton extends AbEnemyFilterBox {
         }
         ProcLang proclang = ProcLang.get();
         for (int i = 0; i < proc.length; i++) {
-            set(proc[i] = new JTG(proclang.get(i).abbr_name));
-            proc[i].setIcon(UtilPC.createIcon(1, i));
+            set(proc[i] = new JTG(proclang.get(EPROCIND[i]).abbr_name));
+            proc[i].setIcon(UtilPC.createIcon(1, EPROCIND[i]));
         }
         for (int i = 0; i < atkt.length; i++) {
             set(atkt[i] = new JTG(ATKCONF[i]));
@@ -253,10 +262,9 @@ class AEFBList extends AbEnemyFilterBox {
 
     private final JTG[] orop = new JTG[3];
     private final JList<String> rare = new JList<>(ERARE);
-    private final Vector<String> vt = new Vector<>();
     private final Vector<String> va = new Vector<>();
-    private final AttList trait = new AttList();
-    private final AttList abis = new AttList(-1, EFILTER);
+    private final TraitList trait = new TraitList(false);
+    private final AttList abis = new AttList(-1, EABIIND.length);
     private final AttList atkt = new AttList(2, 0);
     private final JScrollPane jr = new JScrollPane(rare);
     private final JScrollPane jt = new JScrollPane(trait);
@@ -299,32 +307,31 @@ class AEFBList extends AbEnemyFilterBox {
         set(jat, x, y, 0, 850, 200, 300);
     }
 
-    private final List<Trait> trlis = new ArrayList<>();
-
     private void confirm() {
         List<AbEnemy> ans = new ArrayList<>();
+        int minDiff = 5;
         for(PackData p : UserProfile.getAllPacks()) {
             for (Enemy e : p.enemies.getList()) {
-                List<Trait> ct = e.de.getTraits();
+                List<Trait> traits = e.de.getTraits();
                 int a = e.de.getAbi();
                 boolean b0 = isER(e, rare.getSelectedIndex());
                 boolean b1 = !orop[0].isSelected();
                 for (int i : trait.getSelectedIndices())
-                    if (ct.size() > 0) {
+                    if (traits.size() > 0) {
                         if (orop[0].isSelected())
-                            for (Trait diyt : ct) {
-                                b1 |= trlis.get(i).equals(diyt);
+                            for (Trait tr : traits) {
+                                b1 |= trait.list.get(i).equals(tr);
                                 if (b1)
                                     break;
                             }
                         else {
-                            b1 &= ct.contains(trlis.get(i));
+                            b1 &= traits.contains(trait.list.get(i));
                             if (!b1)
                                 break;
                         }
                     } else b1 = false;
                 boolean b2 = !orop[1].isSelected();
-                int len = EFILTER;
+                int len = EABIIND.length;
                 for (int i : abis.getSelectedIndices())
                     if (i < len) {
                         boolean bind = ((a >> EABIIND[i]) & 1) == 1;
@@ -333,9 +340,9 @@ class AEFBList extends AbEnemyFilterBox {
                         else
                             b2 &= bind;
                     } else if (orop[1].isSelected())
-                        b2 |= e.de.getAllProc().getArr(i - len).exists();
+                        b2 |= e.de.getAllProc().getArr(EPROCIND[i - len]).exists();
                     else
-                        b2 &= e.de.getAllProc().getArr(i - len).exists();
+                        b2 &= e.de.getAllProc().getArr(EPROCIND[i - len]).exists();
                 boolean b3 = !orop[2].isSelected();
                 for (int i : atkt.getSelectedIndices())
                     if (orop[2].isSelected())
@@ -350,10 +357,7 @@ class AEFBList extends AbEnemyFilterBox {
                 ename = MultiLangCont.getStatic().ENAME.getCont(e);
 
                 if (ename == null)
-                    ename = e.name;
-
-                if (ename == null)
-                    ename = "";
+                    ename = e.names.toString();
 
                 if (name != null) {
                     b4 = ename.toLowerCase().contains(name.toLowerCase());
@@ -379,13 +383,29 @@ class AEFBList extends AbEnemyFilterBox {
         for(PackData.UserPack p : UserProfile.getUserPacks()) {
             if(pack == null || pack.equals(p.desc.id) || parents.contains(p.desc.id)) {
                 for(EneRand rand : p.randEnemies.getList()) {
-                    if(rand.name.toLowerCase(Locale.ROOT).contains(name.toLowerCase(Locale.ROOT))) {
+                    int diff = UtilPC.damerauLevenshteinDistance(rand.name.toLowerCase(), name.toLowerCase());
+                    if(diff <= minDiff) {
                         ans.add(rand);
+                        minDiff = diff;
                     }
                 }
             }
         }
-
+        for (int i = 0; i < ans.size(); i++) {
+            if (ans.get(i) instanceof Enemy) {
+                Enemy e = (Enemy) ans.get(i);
+                String ename = MultiLangCont.getStatic().ENAME.getCont(e);
+                if (ename == null)
+                    ename = e.names.toString();
+                if (UtilPC.damerauLevenshteinDistance(ename.toLowerCase(), name.toLowerCase()) > minDiff) {
+                    ans.remove(i);
+                    i--;
+                }
+            } else if (UtilPC.damerauLevenshteinDistance(((EneRand) ans.get(i)).name.toLowerCase(), name.toLowerCase()) > minDiff) {
+                ans.remove(i);
+                i--;
+            }
+        }
         getFront().callBack(ans);
     }
 
@@ -393,23 +413,19 @@ class AEFBList extends AbEnemyFilterBox {
         for (int i = 0; i < orop.length; i++)
             set(orop[i] = new JTG(get(0, "orop")));
         FixIndexList.FixIndexMap<Trait> BCtraits = UserProfile.getBCData().traits;
-        for (int i = 0 ; i < BCtraits.size() - 1 ; i++) {
-            trlis.add(BCtraits.get(i));
-            vt.add(TRAIT[i]);
-        }
+        for (int i = 0 ; i < BCtraits.size() - 1 ; i++)
+            trait.list.add(BCtraits.get(i));
         Collection<PackData.UserPack> pacs = UserProfile.getUserPacks();
         for (PackData.UserPack pacc : pacs)
             for (Trait ctra : pacc.traits)
-                if (pack == null || ctra.id.pack.equals(pack) || parents.contains(ctra.id.pack)) {
-                    trlis.add(ctra);
-                    vt.add(ctra.name);
-                }
-        trait.setIcons(trlis);
-        va.addAll(Arrays.asList(EABI).subList(0, EFILTER));
+                if (pack == null || ctra.id.pack.equals(pack) || parents.contains(ctra.id.pack))
+                    trait.list.add(ctra);
+
+        trait.setListData();
+        va.addAll(Arrays.asList(EABI).subList(0, EABIIND.length));
         ProcLang proclang = ProcLang.get();
-        for (int i = 0; i < Data.PROC_TOT; i++)
-            va.add(proclang.get(i).abbr_name);
-        trait.setListData(vt);
+        for (int i = 0; i < EPROCIND.length; i++)
+            va.add(proclang.get(EPROCIND[i]).abbr_name);
         abis.setListData(va);
         atkt.setListData(ATKCONF);
         rare.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);

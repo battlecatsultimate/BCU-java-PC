@@ -16,9 +16,6 @@ import page.Page;
 import page.info.UnitInfoPage;
 import page.info.filter.UnitEditBox;
 
-import static utilpc.Interpret.EABIIND;
-import static utilpc.Interpret.IMUSFT;
-
 public class FormEditPage extends EntityEditPage {
 
 	private static final long serialVersionUID = 1L;
@@ -181,7 +178,11 @@ public class FormEditPage extends EntityEditPage {
 					uniDesc[fdesc.length - 1] = uniDesc[fdesc.length - 1].substring(0, 63);
 			}
 		}
-		form.explanation = String.join("<br>", uniDesc);
+		String finalDesc = String.join("<br>", uniDesc);
+		if (finalDesc.length() > 12)
+			form.description.put(finalDesc);
+		else
+			form.description.put("");
 		setData(cu);
 	}
 
@@ -219,7 +220,10 @@ public class FormEditPage extends EntityEditPage {
 	@Override
 	protected void setData(CustomEntity data) {
 		super.setData(data);
-		uniDesc = form.descriptionGet().split("<br>",4);
+		uniDesc = form.getExplaination().split("<br>",4);
+		if (uniDesc.length < 4)
+			uniDesc = new String[]{"","","",""};
+
 		for (int i = 0; i < fdesc.length; i++)
 			fdesc[i].setText("" + (uniDesc[i].length() > 0 ? uniDesc[i] : "Description Line " + (i + 1)));
 		flv.setText(lv + "");
@@ -230,14 +234,7 @@ public class FormEditPage extends EntityEditPage {
 		fli.setToolTipText("<html>This unit will always stay at least "
 				+ cu.getLimit()
 				+ " units away from the max stage length<br>once it passes that threshold.");
-		int imu = 0;
-		for (int j : EABIIND)
-			if (j > 100) {
-				int id = j - 100;
-				if (cu.getProc().getArr(id).exists())
-					imu |= 1 << id - IMUSFT;
-			}
-		ueb.setData(new int[] { cu.abi, imu }, data.traits);
+		ueb.setData(cu.abi, data.traits);
 		if (cu.getPCoin() != null)
 			cu.pcoin.update();
 	}

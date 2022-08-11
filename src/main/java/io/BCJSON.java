@@ -18,7 +18,7 @@ public class BCJSON {
 
 	public static final String[] PC_LANG_CODES = { "en", "jp", "kr", "zh", "fr", "it", "es", "de" };
 	public static final String[] PC_LANG_FILES = { "util.properties", "page.properties", "info.properties",
-			"StageName.txt", "UnitName.txt", "UnitExplanation.txt", "EnemyName.txt", "EnemyExplanation.txt", "ComboName.txt", "proc.json", "animation_type.json" };
+			"StageName.txt", "UnitName.txt", "UnitExplanation.txt", "EnemyName.txt", "EnemyExplanation.txt", "ComboName.txt", "RewardName.txt", "proc.json", "animation_type.json" };
 	public static final String JAR_LINK = "https://github.com/battlecatsultimate/bcu-assets/raw/master/jar/BCU-";
 	public static final String ALT_LINK = "https://gitee.com/lcy0x1/bcu-assets/raw/master/jar/BCU-";
 
@@ -45,11 +45,20 @@ public class BCJSON {
 				langList.add(pcLangCode + "/" + pcLangFile);
 		}
 
-		lang = Data.err(UpdateCheck.checkLang(langList.toArray(new String[0])));
+		lang = CommonStatic.ctx.noticeErr(UpdateCheck.checkLang(langList.toArray(new String[0])), ErrType.ERROR, "Failed to check for updates, try again later on a stable WI-FI connection");
 		clearList(libs, true);
 		clearList(assets, true);
 		clearList(musics, false);
 		clearList(lang, false);
+
+		Downloader font = UpdateCheck.checkFont();
+		if (font != null) {
+			LoadPage.prog(font.desc);
+			while (!CommonStatic.ctx.noticeErr(() -> font.run(LoadPage.lp::accept), ErrType.DEBUG, "failed to download"))
+				if (!Opts.conf("failed to download, retry?"))
+					break;
+		}
+
 		while (!Data.err(AssetLoader::merge))
 			if (!Opts.conf("failed to process assets, retry?"))
 				CommonStatic.def.save(false, true);

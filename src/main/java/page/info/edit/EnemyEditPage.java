@@ -13,9 +13,6 @@ import page.info.EnemyInfoPage;
 import page.info.filter.EnemyEditBox;
 import utilpc.Interpret;
 
-import static utilpc.Interpret.EABIIND;
-import static utilpc.Interpret.IMUSFT;
-
 public class EnemyEditPage extends EntityEditPage {
 
 	private static final long serialVersionUID = 1L;
@@ -104,7 +101,11 @@ public class EnemyEditPage extends EntityEditPage {
 					eneDesc[edesc.length - 1] = eneDesc[edesc.length - 1].substring(0, 63);
 			}
 		}
-		ene.desc = String.join("<br>", eneDesc);
+		String finalDesc = String.join("<br>", eneDesc);
+		if (finalDesc.length() > 12) //12 is the total length of "<br><br><br>", which is no description
+			ene.description.put(finalDesc);
+		else
+			ene.description.put("");
 		setData(ce);
 	}
 
@@ -137,25 +138,21 @@ public class EnemyEditPage extends EntityEditPage {
 	@Override
 	protected void setData(CustomEntity data) {
 		super.setData(data);
-		eneDesc = ene.descriptionGet().split("<br>",4);
-		for (int i = 0; i < edesc.length; i++)
+		eneDesc = ene.getExplaination().split("<br>",4);
+		if (eneDesc.length < 4)
+			eneDesc = new String[]{"","","",""};
+
+		for (int i = 0; i < 4; i++)
 			edesc[i].setText("" + (eneDesc[i].length() > 0 ? eneDesc[i] : "Description Line " + (i + 1)));
 		fsr.setText("star: " + ce.star);
 		fdr.setText("" + Math.floor(ce.getDrop() * bas.t().getDropMulti()) / 100);
-		int imu = 0;
-		for (int j : EABIIND)
-			if (j > 100) {
-				int id = j - 100;
-				if (ce.getProc().getArr(id).exists())
-					imu |= 1 << id - IMUSFT;
-			}
 		fli.setText(ce.getLimit() + "");
 		fli.setToolTipText("<html>"
 				+ "This enemy will stay at least "
 				+ (ce.getLimit() - 100)
 				+ " units from position 0. If the enemy is a boss,<br>the value will be added by the boss spawn point determined by the stage castle."
 				+ "</html>");
-		eeb.setData(new int[] { ce.abi, imu }, data.traits);
+		eeb.setData(ce.abi, data.traits);
 	}
 
 }

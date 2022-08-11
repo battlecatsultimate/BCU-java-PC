@@ -6,9 +6,6 @@ import io.BCUWriter;
 import page.JBTN;
 import page.Page;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 public class EditHead extends Page implements EditLink {
 
 	private static final long serialVersionUID = 1L;

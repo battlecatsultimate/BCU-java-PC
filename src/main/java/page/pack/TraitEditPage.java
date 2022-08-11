@@ -13,15 +13,14 @@ import common.pack.FixIndexList.FixIndexMap;
 import main.MainBCU;
 import main.Opts;
 import page.*;
+import page.info.filter.TraitList;
 import page.info.filter.UnitFindPage;
 import page.support.AnimLCR;
 import page.support.Importer;
 import page.support.ReorderList;
-import utilpc.Theme;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -31,34 +30,9 @@ import java.util.List;
 
 public class TraitEditPage extends Page {
 
-    private static class TraitList extends JList<Trait> {
-
-        private static final long serialVersionUID = 1L;
-
-        protected TraitList() {
-            if (MainBCU.nimbus)
-                setSelectionBackground(MainBCU.light ? Theme.LIGHT.NIMBUS_SELECT_BG : Theme.DARK.NIMBUS_SELECT_BG);
-        }
-        protected void setTraitIcons() {
-            setCellRenderer(new DefaultListCellRenderer() {
-                private static final long serialVersionUID = 1L;
-                @Override
-                public Component getListCellRendererComponent(JList<?> l, Object o, int ind, boolean s, boolean f) {
-                    JLabel jl = (JLabel) super.getListCellRendererComponent(l, o, ind, s, f);
-                    Trait trait = (Trait)o;
-                    if (trait.icon != null)
-                        jl.setIcon(new ImageIcon((BufferedImage)trait.icon.getImg().bimg()));
-                    else
-                        jl.setIcon(new ImageIcon((BufferedImage)CommonStatic.getBCAssets().dummyTrait.getImg().bimg()));
-                    return jl;
-                }
-            });
-        }
-    }
-
     private static final long serialVersionUID = 1L;
 
-    private final TraitList jlct = new TraitList();
+    private final TraitList jlct = new TraitList(true);
     private final JScrollPane jspct = new JScrollPane(jlct);
 
     private final JLabel jl = new JLabel();
@@ -103,6 +77,10 @@ public class TraitEditPage extends Page {
             ArrayList<Form> list = new ArrayList<>(ufp.getList());
             if (t != null)
                 list.removeAll(t.others);
+            for (Unit u : packpack.units)
+                for (Form f : u.forms)
+                    list.remove(f);
+
             jlf.setListData(list.toArray(new Form[0]));
             jlf.clearSelection();
             if (list.size() > 0)
@@ -145,7 +123,6 @@ public class TraitEditPage extends Page {
                 t.icon = null;
                 jl.setIcon(null);
                 reicn.setEnabled(false);
-                jlct.setTraitIcons();
             }
         });
 
@@ -244,7 +221,6 @@ public class TraitEditPage extends Page {
     private void updateCTL() {
         jlct.setListData(pct.toArray());
         jlct.setSelectedValue(t, true);
-        jlct.setTraitIcons();
         updateCT();
     }
 
@@ -345,7 +321,6 @@ public class TraitEditPage extends Page {
         if (jlct.getSelectedValue() != slt) {
             changing = true;
             jlct.setSelectedValue(slt, true);
-            jlct.setTraitIcons();
             changing = false;
         }
     }

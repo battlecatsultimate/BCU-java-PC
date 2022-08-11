@@ -37,6 +37,8 @@ public class AbEnemyListTable  extends SortTable<AbEnemy> {
     private final Basis b = BasisSet.current();
 
     protected AbEnemyListTable(Page p) {
+        super(tit);
+
         page = p;
 
         setDefaultRenderer(Enemy.class, new EnemyTCR());
@@ -133,10 +135,4 @@ public class AbEnemyListTable  extends SortTable<AbEnemy> {
             return null;
         }
     }
-
-    @Override
-    protected String[] getTit() {
-        return tit;
-    }
-
 }

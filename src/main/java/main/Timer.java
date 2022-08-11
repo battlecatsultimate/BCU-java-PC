@@ -8,29 +8,30 @@ public strictfp class Timer extends Thread {
 
 	public static int p = 33;
 	public static int inter = 0;
+	protected static boolean state;
 
-	protected static int state;
-
-	private static int delay = 0;
-	private Inv thr = null;
+	public static void manualTick() {
+		state = true; //Only used for followup popup, avoid using unless absolutely necessary
+	}
 
 	@Override
 	public void run() {
 		while (true) {
 			long m = System.currentTimeMillis();
-			state = 0;
+			state = false;
+			Inv thr;
 			SwingUtilities.invokeLater(thr = new Inv());
 			try {
 				boolean end = false;
 				while (!end) {
 					synchronized (thr) {
-						end = state == 1;
+						end = state;
 					}
 					if (!end)
 						sleep(1);
 				}
 				thr.join();
-				delay = (int) (System.currentTimeMillis() - m);
+				int delay = (int) (System.currentTimeMillis() - m);
 				inter = (inter * 9 + 100 * delay / p) / 10;
 				int sle = delay >= p ? 1 : p - delay;
 				sleep(sle);
@@ -48,7 +49,7 @@ strictfp class Inv extends Thread {
 	public void run() {
 		MainFrame.timer(-1);
 		synchronized (this) {
-			Timer.state = 1;
+			Timer.state = true;
 		}
 
 	}

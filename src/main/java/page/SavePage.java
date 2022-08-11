@@ -8,6 +8,7 @@ public class SavePage extends Page {
     private static final long serialVersionUID = 1L;
 
     private final JLabel save = new JLabel(Page.get(MainLocale.PAGE, "savepro"));
+    private boolean[] saveOpts = new boolean[]{true, false};
 
     protected SavePage() {
         super(null);
@@ -18,6 +19,12 @@ public class SavePage extends Page {
         resized();
 
         new Thread(this::finishJob).start();
+    }
+
+    protected SavePage(boolean[] backup) {
+        this();
+        saveOpts = backup;
+        setVisible(saveOpts[0]);
     }
 
     @Override
@@ -32,7 +39,7 @@ public class SavePage extends Page {
 
     private void finishJob() {
         try {
-            CommonStatic.def.save(true, false);
+            CommonStatic.def.save(saveOpts[0], false);
 
             setVisible(false);
 
@@ -41,6 +48,8 @@ public class SavePage extends Page {
             changePanel(null);
 
             MainFrame.F.dispose();
+
+            System.gc();
 
             Thread.sleep(5000);
 

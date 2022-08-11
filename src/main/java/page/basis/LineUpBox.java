@@ -9,7 +9,9 @@ import common.system.VImg;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.util.Res;
+import common.util.stage.Limit;
 import common.util.unit.Combo;
+import common.util.unit.EForm;
 import common.util.unit.Form;
 import common.util.unit.Unit;
 import page.Page;
@@ -27,10 +29,14 @@ public class LineUpBox extends Canvas {
 
 	private Form[] backup = new Form[5];
 	private final Page page;
-	private LineUp lu;
+	protected LineUp lu;
 	private int pt = 0, time = 0;
 	private Combo sc;
 	private PP relative, mouse;
+	protected boolean enableCost = false;
+
+	protected Limit lim;
+	protected int price;
 
 	protected Form sf;
 
@@ -62,17 +68,38 @@ public class LineUpBox extends Canvas {
 					for (Form fc : sc.forms)
 						if (f.unit == fc.unit && f.fid >= fc.fid)
 							gra.drawImage(slot[2].getImg(), 120 * j, 100 * i);
-				if (time == 1 && sf != null && f.unit == sf.unit && relative == null)
-					gra.drawImage(slot[1].getImg(), 120 * j, 100 * i);
-				if (sf == null || sf != f || relative == null)
-					Res.getCost(lu.getLv(f).getLvs()[0], true,
+				if (sf != null && f.unit == sf.unit && relative == null)
+					if(time == 1)
+						gra.drawImage(slot[1].getImg(), 120 * j, 100 * i);
+					else
+						gra.drawImage(slot[2].getImg(), 120 * j, 100 * i);
+				if (sf == null || sf != f || relative == null) {
+					EForm ef = i != 2 ? lu.efs[i][j] : new EForm(f, lu.getLv(f));
+					if (lim != null && ((lim.line == 1 && i == 1) || lim.unusable(ef.du, price))) {
+						gra.colRect(120 * j, 100 * i, img.getImg().getWidth(), img.getImg().getHeight(), 255, 0, 0, 100);
+						Res.getCost(-1, false,
 							new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
+					} else if (enableCost)
+						Res.getCost((int) ef.getPrice(price), true,
+							new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
+					else
+						Res.getLv(lu.getLv(f).getLv(),
+							new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
+				}
 			}
 		if (relative != null && sf != null) {
 			Point p = relative.sf(mouse).toPoint();
 			FakeImage uni = sf.anim.getUni().getImg();
 			gra.drawImage(uni, p.x, p.y);
-			Res.getCost(lu.getLv(sf).getLvs()[0], true, new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
+			EForm ef = new EForm(sf, lu.getLv(sf));
+			if (lim != null && lim.unusable(ef.du, price)) {
+				gra.colRect(p.x, p.y, uni.getWidth(), uni.getHeight(), 255, 0, 0, 100);
+				Res.getCost(-1, true, new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
+			} else if (enableCost)
+				Res.getCost((int) ef.getPrice(price), true,
+					new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
+			else
+				Res.getLv(lu.getLv(sf).getLv(), new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
 		}
 		g.drawImage(bimg, 0, 0, getWidth(), getHeight(), null);
 		pt++;
@@ -84,6 +111,12 @@ public class LineUpBox extends Canvas {
 	public void setLU(LineUp l) {
 		lu = l;
 		backup = new Form[5];
+	}
+
+	public void setLimit(Limit l, int price) {
+		lim = l;
+		this.price = price;
+		paint(getGraphics());
 	}
 
 	protected void adjForm() {
@@ -123,7 +156,7 @@ public class LineUpBox extends Canvas {
 
 	}
 
-	protected void release(Point p) {
+	protected void release() {
 		relative = null;
 		mouse = null;
 	}

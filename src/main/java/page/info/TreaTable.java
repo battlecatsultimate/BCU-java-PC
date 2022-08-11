@@ -13,8 +13,6 @@ import page.basis.BasisPage;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.ArrayList;
@@ -122,23 +120,18 @@ public class TreaTable extends Page {
 				int J = j;
 				j++;
 
-				jlb[J].addActionListener(new ActionListener() {
-
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						Node<Integer> n = lncs.get(J);
-						if (jlb[J].isSelected()) {
-							for (int s = 0; s < TCTX.length; s++)
-								if (s != J && jlb[s].isSelected())
-									jlb[s].doClick();
-							expand(n);
-						} else {
-							close(n);
-						}
-						if (front instanceof BasisPage)
-							((BasisPage) front).requireResize();
+				jlb[J].addActionListener(arg0 -> {
+					Node<Integer> n = lncs.get(J);
+					if (jlb[J].isSelected()) {
+						for (int s = 0; s < TCTX.length; s++)
+							if (s != J && jlb[s].isSelected())
+								jlb[s].doClick();
+						expand(n);
+					} else {
+						close(n);
 					}
-
+					if (front instanceof BasisPage)
+						((BasisPage) front).requireResize();
 				});
 
 				jcf[J].addFocusListener(new FocusAdapter() {
@@ -196,7 +189,7 @@ public class TreaTable extends Page {
 
 		int slowTime = (int) (b.t().getCannonMagnification(1, Data.BASE_SLOW_TIME) * (100 + b.getInc(C_SLOW)) / 100.0);
 
-		int ironWallHP = (int) (5 * b.t().getCannonMagnification(BASE_WALL, BASE_WALL_MAGNIFICATION));
+		int ironWallHP = (int) (5 * b.t().getCannonMagnification(BASE_WALL, BASE_WALL_MAGNIFICATION) / 100);
 		int ironWallTime = (int) b.t().getCannonMagnification(2, Data.BASE_WALL_ALIVE_TIME);
 
 		int freezeTime = (int) (b.t().getCannonMagnification(3, Data.BASE_TIME) * (100 + b.getInc(C_STOP)) / 100.0);

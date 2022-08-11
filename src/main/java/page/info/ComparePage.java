@@ -16,8 +16,8 @@ import common.util.unit.Level;
 import common.util.unit.Trait;
 import main.MainBCU;
 import page.*;
-import page.info.filter.AttList;
 import page.info.filter.EnemyFindPage;
+import page.info.filter.TraitList;
 import page.info.filter.UnitFindPage;
 import utilpc.Interpret;
 import utilpc.UtilPC;
@@ -26,10 +26,6 @@ import javax.swing.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.*;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static utilpc.Interpret.TRAIT;
 
 public class ComparePage extends Page {
 
@@ -53,12 +49,10 @@ public class ComparePage extends Page {
     private final JBTN[][] swap = new JBTN[names.length][2];
 
     private final MaskEntity[] maskEntities = new MaskEntity[names.length];
-    private final int[][] maskEntityLvl = new int[names.length][6];
+    private final ArrayList<Integer>[] maskEntityLvl = new ArrayList[names.length];
 
-    private final AttList trait = new AttList();
-    private final Vector<String> vt = new Vector<>();
+    private final TraitList trait = new TraitList(false);
     private final JScrollPane tlst = new JScrollPane(trait);
-    private final List<Trait> tList = new ArrayList<>();
 
     private EnemyFindPage efp = null;
     private UnitFindPage ufp = null;
@@ -161,20 +155,15 @@ public class ComparePage extends Page {
 
     private void setTraits() {
         FixIndexList.FixIndexMap<Trait> BCtraits = UserProfile.getBCData().traits;
-        for (int i = 0 ; i < BCtraits.size() - 1 ; i++) {
-            tList.add(BCtraits.get(i));
-            vt.add(TRAIT[i]);
-        }
-        Collection<PackData.UserPack> pacs = UserProfile.getUserPacks();
-        for (PackData.UserPack pack : pacs) {
-            for (Trait t : pack.traits) {
-                tList.add(t);
-                vt.add(t.name);
-            }
-        }
+        for (int i = 0 ; i < BCtraits.size() - 1 ; i++)
+            trait.list.add(BCtraits.get(i));
 
-        trait.setIcons(tList);
-        trait.setListData(vt);
+        Collection<PackData.UserPack> pacs = UserProfile.getUserPacks();
+        for (PackData.UserPack pack : pacs)
+            for (Trait t : pack.traits)
+                trait.list.add(t);
+
+        trait.setListData();
         trait.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         trait.addListSelectionListener(x -> reset());
@@ -242,19 +231,21 @@ public class ComparePage extends Page {
 
                     if (maskEntities[finalI] instanceof MaskEnemy) {
                         if (data.length == 1) {
-                            if (data[0] != -1)
-                                maskEntityLvl[finalI][0] = maskEntityLvl[finalI][1] = data[0];
+                            if (data[0] != -1) {
+                                maskEntityLvl[finalI].set(0, data[0]);
+                                maskEntityLvl[finalI].set(1, data[0]);
+                            }
 
                             jtf.setText(CommonStatic.toArrayFormat(data[0], data[0]) + "%");
                         } else if (data.length == 2) {
                             if (data[0] != -1)
-                                maskEntityLvl[finalI][0] = data[0];
+                                maskEntityLvl[finalI].set(0, data[0]);
                             if (data[1] != -1)
-                                maskEntityLvl[finalI][1] = data[1];
+                                maskEntityLvl[finalI].set(1, data[1]);
 
                             jtf.setText(CommonStatic.toArrayFormat(data[0], data[1]) + "%");
                         } else {
-                            jtf.setText(CommonStatic.toArrayFormat(maskEntityLvl[finalI][0], maskEntityLvl[finalI][1]) + "%");
+                            jtf.setText(CommonStatic.toArrayFormat(maskEntityLvl[finalI].get(0), maskEntityLvl[finalI].get(1)) + "%");
                         }
                     } else {
                         Form f = ((MaskUnit) maskEntities[finalI]).getPack();
@@ -310,9 +301,15 @@ public class ComparePage extends Page {
             if (m instanceof MaskEnemy) {
                 MaskEnemy enemy = (MaskEnemy) m;
 
-                int[] multi = state ? maskEntityLvl[i] : (maskEntityLvl[i] = new int[]{100, 100, 0, 0, 0, 0});
-                double mul = (multi[0] * enemy.multi(b)) / 100.0;
-                double mula = (multi[1] * enemy.multi(b)) / 100.0;
+                if (!state) {
+                    maskEntityLvl[i] = new ArrayList<>();
+                    maskEntityLvl[i].add(100);
+                    maskEntityLvl[i].add(100);
+                }
+                ArrayList<Integer> multi = maskEntityLvl[i];
+
+                double mul = (multi.get(0) * enemy.multi(b)) / 100.0;
+                double mula = (multi.get(1) * enemy.multi(b)) / 100.0;
 
                 abilityPanes[i].setViewportView(abilities[i] = new EntityAbilities(getFront(), m, multi));
 
@@ -340,25 +337,29 @@ public class ComparePage extends Page {
                 for (JBTN btn : swap[i])
                     btn.setEnabled(false);
             } else if (m instanceof MaskUnit) {
-                int[] multi = state
+                ArrayList<Integer> multi = state
                         ? maskEntityLvl[i]
                         : (maskEntityLvl[i] = ((MaskUnit) m).getPack().getPrefLvs());
-                MaskUnit mu = (MaskUnit) (m = ((MaskUnit) m).getPCoin() != null
-                                        ? ((MaskUnit) m).getPCoin().improve(multi)
-                                        : ((MaskUnit) m));
+                MaskUnit mu;
+                if (((MaskUnit) m).getPCoin() != null) {
+                    mu = ((MaskUnit) m).getPCoin().improve(multi);
+                    m = mu;
+                } else
+                    mu = (MaskUnit) m;
+
                 Form f = mu.getPack();
                 EForm ef = new EForm(f, multi);
 
-                abilityPanes[i].setViewportView(abilities[i] = new EntityAbilities(getFront(), m, multi));
+                abilityPanes[i].setViewportView(abilities[i] = new EntityAbilities(getFront(), mu, multi));
 
-                double mul = f.unit.lv.getMult(multi[0]);
+                double mul = f.unit.lv.getMult(multi.get(0));
                 double atkLv = b.t().getAtkMulti();
                 double defLv = b.t().getDefMulti();
 
-                ArrayList<Trait> traits = new ArrayList<>();
-                for (int j = 0; j < trait.getSelectedIndices().length; j++)
-                    traits.add(tList.get(trait.getSelectedIndices()[j]));
-
+                ArrayList<Trait> traits = new ArrayList<>(trait.getSelectedValuesList());
+                ArrayList<Trait> spTraits = new ArrayList<>(UserProfile.getBCData().traits.getList()
+                        .subList(Data.TRAIT_EVA, Data.TRAIT_BEAST + 1));
+                spTraits.retainAll(traits);
                 traits.retainAll(mu.getTraits());
                 boolean overlap = traits.size() > 0;
 
@@ -386,17 +387,26 @@ public class ComparePage extends Page {
                         preString.append(atkDatum[1]).append("f");
                     atk += a;
 
+                    int effectiveDMG = a;
                     if (overlap && (mu.getAbi() & checkAttack) > 0) {
-                        int effectiveDMG = a;
                         if ((mu.getAbi() & Data.AB_MASSIVES) > 0)
                             effectiveDMG *= b.t().getMASSIVESATK(traits);
                         if ((mu.getAbi() & Data.AB_MASSIVE) > 0)
                             effectiveDMG *= b.t().getMASSIVEATK(traits);
-                        if ((mu.getAbi() & Data.AB_GOOD) > 0) {
+                        if ((mu.getAbi() & Data.AB_GOOD) > 0)
                             effectiveDMG *= b.t().getGOODATK(traits);
-                        }
-                        atkString.append(" (").append(effectiveDMG).append(")");
                     }
+                    if (spTraits.contains(trait.list.get(Data.TRAIT_WITCH)) && (mu.getAbi() & Data.AB_WKILL) > 0)
+                        effectiveDMG *= b.t().getWKAtk();
+                    if (spTraits.contains(trait.list.get(Data.TRAIT_EVA)) && (mu.getAbi() & Data.AB_EKILL) > 0)
+                        effectiveDMG *= b.t().getEKAtk();
+                    if (spTraits.contains(trait.list.get(Data.TRAIT_BARON)) && (mu.getAbi() & Data.AB_BAKILL) > 0)
+                        effectiveDMG *= 1.6;
+                    if (spTraits.contains(trait.list.get(Data.TRAIT_BEAST)) && mu.getProc().BSTHUNT.type.active)
+                        effectiveDMG *= 2.5;
+
+                    if (effectiveDMG > a)
+                        atkString.append(" (").append(effectiveDMG).append(")");
                 }
 
                 int respawn = b.t().getFinRes(mu.getRespawn());
@@ -411,35 +421,51 @@ public class ComparePage extends Page {
                 for (JL[] jls : enem)
                     jls[index].setText("-");
 
-                if (traits.size() > 0 && (mu.getAbi() & checkHealth) > 0) {
-                    int effectiveHP = hp;
-
+                int effectiveHP = hp;
+                if (overlap && (mu.getAbi() & checkHealth) > 0) {
                     if ((mu.getAbi() & Data.AB_RESISTS) > 0)
                         effectiveHP /= b.t().getRESISTSDEF(traits);
                     if ((mu.getAbi() & Data.AB_RESIST) > 0)
                         effectiveHP /= b.t().getRESISTDEF(traits, traits, null, new Level(multi));
-                    if ((mu.getAbi() & Data.AB_GOOD) > 0) {
+                    if ((mu.getAbi() & Data.AB_GOOD) > 0)
                         effectiveHP /= b.t().getGOODDEF(traits, traits, null, new Level(multi));
-                    }
-
-                    main[0][index].setText(hp + " (" + effectiveHP + ")");
-                } else {
-                    main[0][index].setText(hp + "");
                 }
+                if (spTraits.contains(trait.list.get(Data.TRAIT_WITCH)) && (mu.getAbi() & Data.AB_WKILL) > 0)
+                    effectiveHP /= b.t().getWKDef();
+                if (spTraits.contains(trait.list.get(Data.TRAIT_EVA)) && (mu.getAbi() & Data.AB_EKILL) > 0)
+                    effectiveHP /= b.t().getEKDef();
+                if (spTraits.contains(trait.list.get(Data.TRAIT_BARON)) && (mu.getAbi() & Data.AB_BAKILL) > 0)
+                    effectiveHP /= 0.7;
+                if (spTraits.contains(trait.list.get(Data.TRAIT_BEAST)) && mu.getProc().BSTHUNT.type.active)
+                    effectiveHP /= 0.6;
+                if (effectiveHP > hp)
+                    main[0][index].setText(hp + " (" + effectiveHP + ")");
+                else
+                    main[0][index].setText(hp + "");
+
+                int effectiveDMG = atk;
                 if (overlap && (mu.getAbi() & checkAttack) > 0) {
-                    int effectiveDMG = atk;
                     if ((mu.getAbi() & Data.AB_MASSIVES) > 0)
                         effectiveDMG *= b.t().getMASSIVESATK(traits);
                     if ((mu.getAbi() & Data.AB_MASSIVE) > 0)
                         effectiveDMG *= b.t().getMASSIVEATK(traits);
-                    if ((mu.getAbi() & Data.AB_GOOD) > 0) {
+                    if ((mu.getAbi() & Data.AB_GOOD) > 0)
                         effectiveDMG *= b.t().getGOODATK(traits);
-                    }
+                }
+                if (spTraits.contains(trait.list.get(Data.TRAIT_WITCH)) && (mu.getAbi() & Data.AB_WKILL) > 0)
+                    effectiveDMG *= b.t().getWKAtk();
+                if (spTraits.contains(trait.list.get(Data.TRAIT_EVA)) && (mu.getAbi() & Data.AB_EKILL) > 0)
+                    effectiveDMG *= b.t().getEKAtk();
+                if (spTraits.contains(trait.list.get(Data.TRAIT_BARON)) && (mu.getAbi() & Data.AB_BAKILL) > 0)
+                    effectiveDMG *= 1.6;
+                if (spTraits.contains(trait.list.get(Data.TRAIT_BEAST)) && mu.getProc().BSTHUNT.type.active)
+                    effectiveDMG *= 2.5;
+
+                if (effectiveDMG > atk)
                     main[4][index].setText((int) (atk * 30.0 / m.getItv())
                             + " (" + (int) (effectiveDMG * 30.0 / m.getItv()) + ")");
-                } else {
+                else
                     main[4][index].setText((int) (atk * 30.0 / m.getItv()) + "");
-                }
 
                 for (JBTN btn : swap[i])
                     btn.setEnabled(true);
@@ -491,6 +517,8 @@ public class ComparePage extends Page {
             return;
 
         MaskEntity ent = null;
+        maskEntityLvl[s] = new ArrayList<>();
+        maskEntityLvl[s].add(0);
 
         if (efp != null && efp.getSelected() != null)
             ent = efp.getSelected().de;
@@ -502,25 +530,40 @@ public class ComparePage extends Page {
                     ? CommonStatic.parseIntsN(level[s].getText().trim().replace("%", ""))
                     : new int[]{100, 100};
             if (data.length == 1) {
-                if (data[0] != -1)
-                    maskEntityLvl[s][0] = maskEntityLvl[s][1] = data[0];
+                if (data[0] != -1) {
+                    maskEntityLvl[s].set(0, data[0]);
+                    maskEntityLvl[s].add(data[0]);
+                }
 
                 level[s].setText(CommonStatic.toArrayFormat(data[0], data[0]) + "%");
             } else if (data.length == 2) {
                 if (data[0] != -1)
-                    maskEntityLvl[s][0] = data[0];
+                    maskEntityLvl[s].set(0, data[0]);
                 if (data[1] != -1)
-                    maskEntityLvl[s][1] = data[1];
+                    maskEntityLvl[s].add(data[1]);
 
                 level[s].setText(CommonStatic.toArrayFormat(data[0], data[1]) + "%");
             } else {
-                level[s].setText(CommonStatic.toArrayFormat(maskEntityLvl[s][0], maskEntityLvl[s][1]) + "%");
+                level[s].setText(CommonStatic.toArrayFormat(maskEntityLvl[s].get(0), maskEntityLvl[s].get(1)) + "%");
             }
         } else if (ent != null) {
             Form f = ((MaskUnit) ent).getPack();
-            int[] data = maskEntities[s] instanceof MaskUnit
-                    ? CommonStatic.parseIntsN(level[s].getText())
-                    : f.getPrefLvs();
+            int[] data;
+
+            ArrayList<Integer> lvs = f.getPrefLvs();
+            if (maskEntities[s] instanceof MaskUnit) {
+                data = CommonStatic.parseIntsN(level[s].getText());
+            } else {
+                data = new int[lvs.size()];
+
+                for (int i = 0; i < data.length; i++)
+                    data[i] = lvs.get(i);
+            }
+            while (maskEntityLvl[s].size() < data.length)
+                maskEntityLvl[s].add(data[maskEntityLvl[s].size()]);
+            while (maskEntityLvl[s].size() < lvs.size())
+                maskEntityLvl[s].add(lvs.get(maskEntityLvl[s].size()));
+
             maskEntityLvl[s] = f.regulateLv(data, maskEntityLvl[s]);
             String[] strs = UtilPC.lvText(f, maskEntityLvl[s]);
             level[s].setText(strs[0]);

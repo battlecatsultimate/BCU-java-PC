@@ -128,8 +128,10 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		changing = true;
 		DefaultMutableTreeNode selectedNode = agt.findAnimNode(ac, null);
 
-		if(selectedNode == null)
+		if(selectedNode == null) {
+			changing = false;
 			return;
+		}
 
 		agt.expandCurrentAnimNode(selectedNode);
 		jta.setSelectionPath(new TreePath(selectedNode.getPath()));

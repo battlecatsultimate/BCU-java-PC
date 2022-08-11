@@ -17,21 +17,18 @@ import page.view.MusicPage;
 import javax.swing.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.Arrays;
-import java.util.Locale;
 
 class HeadEditTable extends Page {
 
 	private static final long serialVersionUID = 1L;
 
-	private final JL hea = new JL(1, "ht00");
-	private final JL len = new JL(1, "ht01");
-	private final JBTN mus = new JBTN(1, "mus");
-	private final JL max = new JL(1, "ht02");
-	private final JBTN bg = new JBTN(1, "ht04");
-	private final JBTN cas = new JBTN(1, "ht05");
+	private final JL hea = new JL(MainLocale.INFO, "ht00");
+	private final JL len = new JL(MainLocale.INFO, "ht01");
+	private final JBTN mus = new JBTN(MainLocale.INFO, "mus");
+	private final JL max = new JL(MainLocale.INFO, "ht02");
+	private final JBTN bg = new JBTN(MainLocale.INFO, "ht04");
+	private final JBTN cas = new JBTN(MainLocale.INFO, "ht05");
 	private final JTF name = new JTF();
 	private final JTF jhea = new JTF();
 	private final JTF jlen = new JTF();
@@ -42,17 +39,14 @@ class HeadEditTable extends Page {
 	private final JTF jm1 = new JTF();
 	private final JTF jbgh = new JTF();
 	private final JTF jbg1 = new JTF();
-	private final JTG con = new JTG(1, "ht03");
+	private final JTG con = new JTG(MainLocale.INFO, "ht03");
 	private final JTF[] star = new JTF[4];
 	private final JTF jmax = new JTF();
-	private final JL loop = new JL(1, "lop");
-	private final JL loop1 = new JL(1, "lop1");
-	private final JTF lop = new JTF();
-	private final JTF lop1 = new JTF();
-	private final JL minres = new JL(1, "minspawn");
-	private final JL cost = new JL(1, "chcos");
+	private final JL minres = new JL(MainLocale.INFO, "minspawn");
+	private final JL cost = new JL(MainLocale.INFO, "chcos");
 	private final JTF minrest = new JTF();
 	private final JTF cos = new JTF();
+	private final JTG dojo = new JTG(MainLocale.PAGE,"dojo");
 	private final LimitTable lt;
 
 	private Stage sta;
@@ -100,29 +94,13 @@ class HeadEditTable extends Page {
 		}
 
 		if (mp != null) {
-			Identifier<Music> val = mp.getSelected();
+			Identifier<Music> val = mp.getSelectedID();
 			if (musl == 0) {
 				jm0.setText("" + val);
 				sta.mus0 = val;
-				if (sta.mus0 != null) {
-					lop.setEnabled(true);
-					getMusTime(sta.mus0, lop);
-				} else {
-					lop.setText("00:00.000");
-					sta.loop0 = 0;
-					lop.setEnabled(false);
-				}
 			} else {
 				jm1.setText("" + val);
 				sta.mus1 = val;
-				if (sta.mus1 != null) {
-					lop1.setEnabled(true);
-					getMusTime(sta.mus1, lop1);
-				} else {
-					lop1.setText("00:00.000");
-					sta.loop1 = 0;
-					lop1.setEnabled(false);
-				}
 			}
 		}
 
@@ -160,12 +138,9 @@ class HeadEditTable extends Page {
 		set(cos, x, y, w * 7, 0, w, 50);
 		set(mus, x, y, 0, 150, w, 50);
 		set(jm0, x, y, w, 150, w, 50);
-		set(loop, x, y, w * 2, 150, w, 50);
-		set(lop, x, y, w * 3, 150, w, 50);
-		set(jmh, x, y, w * 4, 150, w, 50);
-		set(jm1, x, y, w * 5, 150, w, 50);
-		set(loop1, x, y, w * 6, 150, w, 50);
-		set(lop1, x, y, w * 7, 150, w, 50);
+		set(jmh, x, y, w * 2, 150, w, 50);
+		set(jm1, x, y, w * 3, 150, w, 50);
+		set(dojo, x, y, w * 4, 150, w, 50);
 		for (int i = 0; i < 4; i++)
 			set(star[i], x, y, w * (2 + i), 0, w, 50);
 		set(lt, x, y, 0, 200, 1400, 100);
@@ -179,7 +154,13 @@ class HeadEditTable extends Page {
 			return;
 		change(true);
 		name.setText(st.toString());
-		jhea.setText("" + st.health);
+		if (st.trail) {
+			hea.setText(get(MainLocale.INFO, "time"));
+			jhea.setText(st.timeLimit + " min");
+		} else {
+			hea.setText(get(MainLocale.INFO, "ht00"));
+			jhea.setText("" + st.health);
+		}
 		jlen.setText("" + st.len);
 		jbg.setText("" + st.bg);
 		jbgh.setText("<" + st.bgh + "% health:");
@@ -191,7 +172,8 @@ class HeadEditTable extends Page {
 		jmax.setText("" + st.max);
 		cos.setText("" + (st.getCont().price + 1));
 		con.setSelected(!st.non_con);
-		String str = get(1, "star") + ": ";
+		dojo.setSelected(st.trail);
+		String str = get(MainLocale.INFO, "star") + ": ";
 		for (int i = 0; i < 4; i++)
 			if (i < st.getCont().stars.length)
 				star[i].setText(i + 1 + str + st.getCont().stars[i] + "%");
@@ -200,29 +182,6 @@ class HeadEditTable extends Page {
 		Limit lim = st.lim;
 		lt.setLimit(lim);
 		change(false);
-
-		lop.setText(convertTime(sta.loop0));
-		lop1.setText(convertTime(sta.loop1));
-
-		if (sta.mus0 != null) {
-			lop.setEnabled(true);
-			getMusTime(sta.mus0, lop);
-		} else {
-			lop.setText("00:00.000");
-			lop.setToolTipText("No music");
-			sta.loop0 = 0;
-			lop.setEnabled(false);
-		}
-
-		if (sta.mus1 != null) {
-			lop1.setEnabled(true);
-			getMusTime(sta.mus1, lop1);
-		} else {
-			lop1.setText("00:00.000");
-			lop1.setToolTipText("No music");
-			sta.loop1 = 0;
-			lop1.setEnabled(false);
-		}
 
 		minrest.setEnabled(true);
 		minrest.setText(generateMinRespawn(st.minSpawn, st.maxSpawn));
@@ -244,6 +203,7 @@ class HeadEditTable extends Page {
 		jm0.setEnabled(b);
 		jmh.setEnabled(b);
 		jm1.setEnabled(b);
+		dojo.setEnabled(b);
 		for (JTF jtf : star)
 			jtf.setEnabled(b);
 		cos.setEnabled(b);
@@ -272,52 +232,19 @@ class HeadEditTable extends Page {
 			setData(sta);
 		});
 
-	}
-
-	private String convertTime(long milli) {
-		long min = milli / 60 / 1000;
-		double time = milli - (double) min * 60000;
-		time /= 1000;
-		NumberFormat nf = NumberFormat.getInstance(Locale.US);
-
-		DecimalFormat df = (DecimalFormat) nf;
-
-		df.applyPattern("#.###");
-		double s = Double.parseDouble(df.format(time));
-		if (s >= 60) {
-			s -= 60;
-			min += 1;
-		}
-		if (s < 10) {
-			return min + ":" + "0" + df.format(s);
-		} else {
-			return min + ":" + df.format(s);
-		}
-	}
-
-	private void getMusTime(Identifier<Music> mus1, JTF jtf) {
-		Music f = Identifier.get(mus1);
-		if (f == null || f.data == null) {
-			jtf.setToolTipText("Music not found");
-			return;
-		}
-		try {
-			long duration = CommonStatic.def.getMusicLength(f);
-
-			if (duration == -1) {
-				jtf.setToolTipText("Invalid Format");
-			} else if (duration == -2) {
-				jtf.setToolTipText("Unsupported Format");
-			} else if (duration == -3) {
-				jtf.setToolTipText("Can't get duration");
-			} else if (duration >= 0) {
-				jtf.setToolTipText(convertTime(duration));
+		dojo.addActionListener(arg0 -> {
+			sta.trail = dojo.isSelected();
+			if (sta.trail) {
+				sta.timeLimit = 1;
+				hea.setText(get(MainLocale.INFO, "time"));
+				jhea.setText(sta.timeLimit + " min");
 			} else {
-				jtf.setToolTipText("Unknown error " + duration);
+				sta.timeLimit = 0;
+				hea.setText(get(MainLocale.INFO, "ht00"));
+				jhea.setText("" + sta.health);
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		});
+
 	}
 
 	private void ini() {
@@ -327,6 +254,7 @@ class HeadEditTable extends Page {
 		add(bg);
 		add(cas);
 		add(con);
+		add(dojo);
 		add(mus);
 		set(jhea);
 		set(jlen);
@@ -340,10 +268,6 @@ class HeadEditTable extends Page {
 		set(jmh);
 		set(jm1);
 		add(lt);
-		set(loop);
-		set(lop);
-		set(loop1);
-		set(lop1);
 		set(minres);
 		set(minrest);
 		set(cost);
@@ -362,14 +286,17 @@ class HeadEditTable extends Page {
 		if (jtf == name) {
 			str = str.trim();
 			if (str.length() > 0)
-				sta.name = str;
+				sta.names.put(str);
 			return;
 		}
 		int val = CommonStatic.parseIntN(str);
 		if (jtf == jhea) {
 			if (val <= 0)
 				return;
-			sta.health = val;
+			if (!sta.trail)
+				sta.health = val;
+			else
+				sta.timeLimit = val;
 		}
 		if (jtf == jlen) {
 			if (val > 8000)
@@ -413,26 +340,6 @@ class HeadEditTable extends Page {
 
 		if (jtf == jmh)
 			sta.mush = val;
-
-		if (jtf == lop) {
-			long tim = toMilli(jtf.getText());
-
-			if (tim != -1) {
-				sta.loop0 = tim;
-			}
-
-			lop.setText(convertTime(sta.loop0));
-		}
-
-		if (jtf == lop1) {
-			long tim = toMilli(jtf.getText());
-
-			if (tim != -1) {
-				sta.loop1 = tim;
-			}
-
-			lop1.setText(convertTime(sta.loop1));
-		}
 
 		if (jtf == minrest) {
 			try {
@@ -659,35 +566,6 @@ class HeadEditTable extends Page {
 			}
 		});
 
-	}
-
-	private long toMilli(String time) {
-		try {
-			long[] times = CommonStatic.parseLongsN(time);
-
-			for (long t : times) {
-				if (t < 0) {
-					return -1;
-				}
-			}
-
-			if (times.length == 1) {
-				return times[0] * 1000;
-			} else if (times.length == 2) {
-				return (times[0] * 60 + times[1]) * 1000;
-			} else if (times.length == 3) {
-				if (times[2] < 1000) {
-					return (times[0] * 60 + times[1]) * 1000 + times[2];
-				} else {
-					String decimal = Long.toString(times[2]).substring(0, 3);
-					return (times[0] * 60 + times[1]) * 1000 + Integer.parseInt(decimal);
-				}
-			} else {
-				return -1;
-			}
-		} catch (Exception e) {
-			return -1;
-		}
 	}
 
 	private String generateMinRespawn(int min, int max) {

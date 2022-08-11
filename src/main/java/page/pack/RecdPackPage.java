@@ -7,8 +7,6 @@ import page.Page;
 import page.battle.AbRecdPage;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 public class RecdPackPage extends AbRecdPage {
 
@@ -59,15 +57,10 @@ public class RecdPackPage extends AbRecdPage {
 
 	private void addListeners() {
 
-		jlr.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (isAdj() || jlr.getValueIsAdjusting())
-					return;
-				setRecd(jlr.getSelectedValue());
-			}
-
+		jlr.addListSelectionListener(arg0 -> {
+			if (isAdj() || jlr.getValueIsAdjusting())
+				return;
+			setRecd(jlr.getSelectedValue());
 		});
 
 		rena.setLnr(x -> {
@@ -76,7 +69,7 @@ public class RecdPackPage extends AbRecdPage {
 			Replay r = jlr.getSelectedValue();
 			if (r == null)
 				return;
-			r.rename(rena.getText().trim());
+			r.rename(rena.getText().trim(), true);
 			rena.setText(r.rl.id);
 		});
 

@@ -57,13 +57,13 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 	private final JL inff = new JL();
 	private final JL infv = new JL();
 	private final JL infm = new JL();
-	private final JL lmul = new JL("</>");
+	private final JTG lmul = new JTG("set speed for selected");
 	private final JTF tmul = new JTF();
 	private final AnimCE ac;
 	private final UType animID;
 	private final MMTree mmt;
 	private Point p = null;
-	private boolean pause;
+	private boolean pause, changing;
 	private Part[] keeps;
 
 	public AdvAnimEditPage(Page p, AnimCE anim, UType id) {
@@ -203,7 +203,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 	}
 
 	@Override
-	protected void timer(int t) {
+    public void timer(int t) {
 		if (!pause)
 			eupdate();
 		if (ab.getEntity() != null && mpet.part != null) {
@@ -235,17 +235,40 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 	private void addListeners$4() {
 
 		tmul.setLnr(x -> {
-			double d = CommonStatic.parseIntN(tmul.getText()) * 0.01;
-			if (!Opts.conf("times animation length by " + d))
+			if (changing)
 				return;
-			for (Part p : maet.ma.parts) {
-				for (int[] line : p.moves)
-					line[0] *= d;
-				p.off *= d;
-				p.validate();
+			changing = true;
+
+			double d = CommonStatic.parseIntN(tmul.getText()) * 0.01;
+			if(d <= 0) {
+				tmul.setText("");
+				changing = false;
+				return;
 			}
+
+			String str = d < 1 ? "Decrease " : "Increase ";
+			if (!Opts.conf(str + "animation speed to " + (d * 100) + "%?")) {
+				changing = false;
+				return;
+			}
+
+			if (lmul.isSelected() && maet.getSelected().length > 0) {
+				for (Part p : maet.getSelected()) {
+					for (int[] line : p.moves)
+						line[0] *= d;
+					p.off *= d;
+					p.validate();
+				}
+			} else
+				for (Part p : maet.ma.parts) {
+					for (int[] line : p.moves)
+						line[0] *= d;
+					p.off *= d;
+					p.validate();
+				}
 			maet.ma.validate();
 			maet.anim.unSave("maanim multiply");
+			changing = false;
 		});
 
 		same.setLnr(x -> change(0, z -> setCs(findRep(mpet.part))));

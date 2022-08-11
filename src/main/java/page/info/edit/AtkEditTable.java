@@ -250,9 +250,10 @@ class AtkEditTable extends Page {
 	}
 
 	private int findIdealAtkValue(int val) {
-		double lvValue = Math.round(val * 1.0 / mul);
+		double sign = Math.signum(val);
+		double lvValue = Math.round(Math.abs(val) * 1.0 / mul);
 
-		return (int) ((lvValue + 0.5) / lvMul);
+		return (int) ((lvValue + 0.5) * sign / lvMul);
 	}
 
 	protected void setProcTable(ProcTable.AtkProcTable a) {

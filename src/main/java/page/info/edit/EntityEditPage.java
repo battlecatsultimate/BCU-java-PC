@@ -20,6 +20,9 @@ import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
+import common.util.pack.Soul.SoulType;
+import common.util.stage.Music;
+import common.util.unit.*;
 import main.Opts;
 import page.*;
 import page.anim.DIYViewPage;
@@ -33,6 +36,7 @@ import page.support.ReorderList;
 import page.support.ReorderListener;
 import page.view.BGViewPage;
 import page.view.EnemyViewPage;
+import page.view.MusicPage;
 import page.view.UnitViewPage;
 
 import javax.swing.*;
@@ -107,6 +111,7 @@ public abstract class EntityEditPage extends Page {
 
 	protected final boolean editable;
 	protected final Basis bas = BasisSet.current();
+	protected final ArrayList<AtkDataModel> extra = new ArrayList<>();
 
 	public EntityEditPage(Page p, String pac, CustomEntity e, boolean edit, boolean isEnemy) {
 		super(p);
@@ -136,6 +141,13 @@ public abstract class EntityEditPage extends Page {
 		setData(ce);
 	}
 
+	public SupPage<Music> getMusicSup(IdEditor<Music> edi) {
+		editor = edi;
+		SupPage<Music> ans = new MusicPage(this, pack);
+		sup = ans;
+		return ans;
+	}
+
 	public SupPage<Background> getBGSup(IdEditor<Background> edi) {
 		editor = edi;
 		SupPage<Background> ans = new BGViewPage(this, pack);
@@ -143,38 +155,29 @@ public abstract class EntityEditPage extends Page {
 		return ans;
 	}
 
-	public SupPage<AbEnemy> getEnemySup(IdEditor<AbEnemy> edi) {
+	public SupPage<?> getEntitySup(IdEditor<?> edi) {
 		editor = edi;
 
 		PackData.UserPack p = UserProfile.getUserPack(pack);
+		SupPage<?> ans;
 
-		SupPage<AbEnemy> ans;
-
-		if(p != null) {
-			ans = new AbEnemyFindPage(this, pack, p.desc.dependency.toArray(new String[0]));
+		if ((ce.getPack() instanceof Enemy && get(jli.getSelectedIndex()).dire != -1)
+				|| (ce.getPack() instanceof Form && get(jli.getSelectedIndex()).dire != 1)) {
+			if(p != null) {
+				ans = new AbEnemyFindPage(this, pack, p.desc.dependency.toArray(new String[0]));
+			} else {
+				ans = new AbEnemyFindPage(this);
+			}
 		} else {
-			ans = new AbEnemyFindPage(this);
+			if(p != null) {
+				ans = new UnitFindPage(this, pack, p.desc.dependency);
+			} else {
+				ans = new UnitFindPage(this);
+			}
 		}
 
 		sup = ans;
 
-		return ans;
-	}
-
-	public SupPage<Unit> getUnitSup(IdEditor<Unit> edi) {
-		editor = edi;
-
-		PackData.UserPack p = UserProfile.getUserPack(pack);
-
-		SupPage<Unit> ans;
-
-		if(p != null) {
-			ans = new UnitFindPage(this, pack, p.desc.dependency);
-		} else {
-			ans = new UnitFindPage(this);
-		}
-
-		sup = ans;
 		return ans;
 	}
 
@@ -256,8 +259,11 @@ public abstract class EntityEditPage extends Page {
 		setFocusCycleRoot(true);
 		addListeners();
 		atkn.setToolTipText("<html>use name \"revenge\" for attack during HB animation<br>"
-				+ "use name \"resurrection\" for attack during death animation"
-				+ "use name \"counterattack\" for a more customizable counterattack (Needs Counter proc parameters still)</html>");
+				+ "use name \"resurrection\" for attack during death animation<br>"
+				+ "use name \"counterattack\" for a more customizable counterattack (Needs Counter proc parameters still)<br>"
+				+ "use name \"burrow\" for attack during burrow down animation<br>"
+				+ "use name \"resurface\" for attack during burrow up animation<br>"
+				+ "use name \"revive\" for attack during reviving</html>");
 		ftp.setToolTipText(
 				"<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
 						+ "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost<br>" +
@@ -280,16 +286,30 @@ public abstract class EntityEditPage extends Page {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	protected void renew() {
+		PackData.UserPack p = UserProfile.getUserPack(pack);
+
 		if (efp != null && efp.getSelected() != null
 				&& Opts.conf("do you want to overwrite stats? This operation cannot be undone")) {
 			Enemy e = efp.getSelected();
 			ce.importData(e.de);
+			ce.traits.removeIf(t -> {
+				if(t.BCTrait)
+					return false;
+
+				return p == null || !p.desc.dependency.contains(t.id.pack);
+			});
 			setData(ce);
 		}
 		if (ufp != null && ufp.getForm() != null
 				&& Opts.conf("do you want to overwrite stats? This operation cannot be undone")) {
 			Form f = ufp.getForm();
 			ce.importData(f.du);
+			ce.traits.removeIf(t -> {
+				if(t.BCTrait)
+					return false;
+
+				return p == null || !p.desc.dependency.contains(t.id.pack);
+			});
 			setData(ce);
 		}
 		if (sup != null && editor != null) {
@@ -369,7 +389,7 @@ public abstract class EntityEditPage extends Page {
 
 		jsp.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
 		jspm.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
-		apt.setPreferredSize(size(x, y, 750, 2550).toDimension()); // TODO dynamic change
+		apt.setPreferredSize(size(x, y, 750, apt.height).toDimension());
 		apt.resized(x, y);
 		set(jsp, x, y, 1050, 100, 800, 900);
 	}
@@ -393,6 +413,7 @@ public abstract class EntityEditPage extends Page {
 
 	protected void setData(CustomEntity data) {
 		changing = true;
+
 		fhp.setText("" + (int) (ce.hp * getDef()));
 		fhb.setText("" + ce.hb);
 		fsp.setText("" + ce.speed);
@@ -406,48 +427,93 @@ public abstract class EntityEditPage extends Page {
 		fct.setText("" + ce.loop);
 		fwp.setText("" + (ce.will + 1));
 		cdps.setText("" + (int) (Math.round(getLvAtk() * ce.allAtk()) * getAtk()) * 30 / ce.getItv());
+
 		comm.setSelected(data.common);
+
 		if (!comm.isSelected())
 			ce.updateAllProc();
+
 		mpt.setData(ce.rep.proc);
+
 		int[][] raw = ce.rawAtkData();
 		int pre = 0;
 		int n = ce.atks.length;
-		if (ce.rev != null)
+
+		extra.clear();
+
+		if (ce.rev != null) {
 			n++;
-		if (ce.res != null)
+			extra.add(ce.rev);
+		}
+
+		if (ce.res != null) {
 			n++;
-		if (ce.cntr != null)
+			extra.add(ce.res);
+		}
+
+		if (ce.cntr != null) {
 			n++;
+			extra.add(ce.cntr);
+		}
+
+		if (ce.bur != null) {
+			n++;
+			extra.add(ce.bur);
+		}
+
+		if (ce.resu != null) {
+			n++;
+			extra.add(ce.resu);
+		}
+
+		if (ce.revi != null) {
+			n++;
+			extra.add(ce.revi);
+		}
+
 		String[] ints = new String[n];
+
 		for (int i = 0; i < ce.atks.length; i++) {
 			ints[i] = i + 1 + " " + ce.atks[i].str;
 			pre += raw[i][1];
 			if (pre >= ce.getAnimLen())
 				ints[i] += " (out of range)";
 		}
+
 		int ix = ce.atks.length;
-		if (ce.rev != null)
-			ints[ix++] = ce.rev.str;
-		if (ce.res != null)
-			ints[ix++] = ce.res.str;
-		if (ce.cntr != null)
-			ints[ix] = ce.cntr.str;
+
+		for (AtkDataModel atk : extra)
+			ints[ix++] = atk.str;
+
 		int ind = jli.getSelectedIndex();
+
 		jli.setListData(ints);
+
 		if (ind < 0)
 			ind = 0;
+
 		if (ind >= ints.length)
 			ind = ints.length - 1;
+
 		setA(ind);
+
 		jli.setSelectedIndex(ind);
+
 		Animable<AnimU<?>, UType> ene = ce.getPack();
+
 		if (editable)
 			jcba.setSelectedItem(ene.anim);
+
 		jcbs.setSelectedItem(Identifier.get(ce.death));
+
 		vrev.setText(ce.rev == null ? "x" : (KB_TIME[INT_HB] - ce.rev.pre + "f"));
+
 		Soul s = Identifier.get(ce.death);
 		vres.setText(ce.res == null ? "x" : s == null ? "-" : (s.anim.len(UType.SOUL) - ce.res.pre + "f"));
+
+		// vres.setText(ce.res == null ? "x" : s == null ? "-" : (s.len(SoulType.DEF) - ce.res.pre + "f"));
+		// TODO: check if above commented code is needed or not
+
 		changing = false;
 	}
 
@@ -583,35 +649,55 @@ public abstract class EntityEditPage extends Page {
 	private AtkDataModel get(int ind) {
 		if (ind < ce.atks.length)
 			return ce.atks[ind];
-		else if (ind == ce.atks.length)
-			return ce.rev == null ? ce.res == null ? ce.cntr : ce.res : ce.rev;
-		else if (ind == ce.atks.length + 1)
-			return ce.res == null ? ce.cntr : ce.res;
-		return ce.cntr;
+		else
+			return extra.get(ind - ce.atks.length);
 	}
 
 	protected void input(JTF jtf, String text) {
 
 		if (jtf == atkn) {
 			AtkDataModel adm = aet.adm;
+
 			if (adm == null || adm.str.equals(text))
 				return;
+
 			text = ce.getAvailable(text);
+
 			adm.str = text;
+
 			if (text.equals("revenge")) {
 				remAtk(adm);
 				ce.rev = adm;
 			}
+
 			if (text.equals("resurrection")) {
 				remAtk(adm);
 				ce.res = adm;
 			}
+
 			if (text.equals("counterattack")) {
 				remAtk(adm);
 				ce.cntr = adm;
 			}
+
+			if (text.equals("burrow")) {
+				remAtk(adm);
+				ce.bur = adm;
+			}
+
+			if (text.equals("resurface")) {
+				remAtk(adm);
+				ce.resu = adm;
+			}
+
+			if (text.equals("revive")) {
+				remAtk(adm);
+				ce.revi = adm;
+			}
+
 			return;
 		}
+
 		if (text.length() > 0) {
 			int[] v = CommonStatic.parseIntsN(text);
 			if (v.length > 0) {
@@ -624,16 +710,10 @@ public abstract class EntityEditPage extends Page {
 				if (jtf == fhb) {
 					if (v[0] <= 0)
 						v[0] = 1;
-					if (v[0] > ce.hp)
-						v[0] = ce.hp;
 					ce.hb = v[0];
 				}
 				if (jtf == fsp) {
-					if (v[0] < 0)
-						v[0] = 0;
-					if (v[0] > 150)
-						v[0] = 150;
-					ce.speed = v[0];
+					ce.speed = Math.max(0, v[0]);
 				}
 				if (jtf == fra) {
 					if (v[0] <= 0)
@@ -688,20 +768,27 @@ public abstract class EntityEditPage extends Page {
 		changing = true;
 		int n = ce.atks.length;
 		if (ind >= n) {
-			if (ind == n)
-				if (ce.rev != null)
+			AtkDataModel rematk = extra.remove(ind - n);
+			switch (rematk.str) {
+				case "revenge":
 					ce.rev = null;
-				else if (ce.res != null)
+					break;
+				case "resurrection":
 					ce.res = null;
-				else
+					break;
+				case "counterattack":
 					ce.cntr = null;
-			else if (ind == n + 1)
-				if (ce.res != null)
-					ce.res = null;
-				else
-					ce.cntr = null;
-			else
-				ce.cntr = null;
+					break;
+				case "burrow":
+					ce.bur = null;
+					break;
+				case "revive":
+					ce.revi = null;
+					break;
+				default:
+					ce.resu = null;
+					break;
+			}
 		} else if (n > 1) {
 			AtkDataModel[] datas = new AtkDataModel[n - 1];
 			if (ind >= 0)

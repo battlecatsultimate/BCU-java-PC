@@ -3,6 +3,7 @@ package page.battle;
 import common.util.stage.Replay;
 import io.BCMusic;
 import main.MainBCU;
+import main.Opts;
 import page.JBTN;
 import page.JTF;
 import page.Page;
@@ -47,13 +48,17 @@ public class RecdSavePage extends Page {
 					str = "new replay " + recd.st.toString();
 				str = MainBCU.validate(str, '#');
 				jtf.setText(str);
-				recd.rename(str);
+				recd.rename(str, false);
 
 			}
 		});
 
 		save.addActionListener(arg0 -> {
-			recd.rename(jtf.getText());
+			String repName = jtf.getText();
+			if (Replay.getMap().containsKey(repName) && !Opts.conf("A replay named " + repName + " already exists. Do you wish to overwrite?"))
+				return;
+
+			recd.rename(repName, true);
 			recd.write();
 			Replay.getMap().put(recd.rl.id, recd);
 

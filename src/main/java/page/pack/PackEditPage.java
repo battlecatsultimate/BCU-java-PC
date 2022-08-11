@@ -1,6 +1,7 @@
 package page.pack;
 
 import common.CommonStatic;
+import common.battle.BasisSet;
 import common.battle.data.CustomEnemy;
 import common.io.PackLoader;
 import common.pack.Context.ErrType;
@@ -9,26 +10,34 @@ import common.pack.Source;
 import common.pack.Source.Workspace;
 import common.pack.Source.ZipSource;
 import common.pack.UserProfile;
+import common.util.AnimGroup;
 import common.util.Data;
 import common.util.anim.AnimCE;
 import common.util.stage.MapColc;
+import common.util.stage.Stage;
 import common.util.stage.StageMap;
+import common.util.stage.info.CustomStageInfo;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
 import main.MainBCU;
 import main.Opts;
 import page.*;
+import page.anim.AnimGroupTree;
 import page.info.StageViewPage;
 import page.info.edit.EnemyEditPage;
 import page.info.edit.StageEditPage;
 import page.support.AnimLCR;
+import page.support.AnimTreeRenderer;
 import page.support.RLFIM;
+import page.support.TreeNodeExpander;
 import page.view.BGViewPage;
 import page.view.CastleViewPage;
 import page.view.EnemyViewPage;
 import page.view.MusicPage;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -49,17 +58,16 @@ public class PackEditPage extends Page {
 	private final JScrollPane jspp = new JScrollPane(jlp);
 	private final JList<Enemy> jle = new JList<>();
 	private final JScrollPane jspe = new JScrollPane(jle);
-	private final JList<AnimCE> jld = new JList<>(new Vector<>(AnimCE.map().values().stream().filter(a -> a.id.base.equals(Source.BasePath.ANIM)).collect(Collectors.toList())));
-	private final JScrollPane jspd = new JScrollPane(jld);
-	private final RLFIM<StageMap> jls = new RLFIM<>(() -> this.changing = true, () -> changing = false, this::setMap,
-			StageMap::new);
+	private final JTree jtd = new JTree();
+	private final JScrollPane jspd = new JScrollPane(jtd);
+	private final RLFIM<StageMap> jls = new RLFIM<>(() -> this.changing = true, () -> changing = false, this::finishRemoving, this::setMap, StageMap::new);
 	private final JScrollPane jsps = new JScrollPane(jls);
 	private final JList<UserPack> jlr = new JList<>();
 	private final JScrollPane jspr = new JScrollPane(jlr);
 	private final JList<UserPack> jlt = new JList<>(vpack);
 	private final JScrollPane jspt = new JScrollPane(jlt);
 
-	private final JBTN addp = new JBTN(0, "add");
+	/*private final JBTN addp = new JBTN(0, "add");
 	private final JBTN remp = new JBTN(0, "rem");
 	private final JBTN adde = new JBTN(0, "add");
 	private final JBTN reme = new JBTN(0, "rem");
@@ -82,7 +90,32 @@ public class PackEditPage extends Page {
 	private final JBTN vmsc = new JBTN(0, "cmsc");
 	private final JBTN unpk = new JBTN(0, "unpack");
 	private final JBTN recd = new JBTN(0, "replay");
-	private final JBTN csol = new JBTN(0, "csoul");
+	*/
+	private final JBTN addp = new JBTN(MainLocale.PAGE, "add");
+	private final JBTN remp = new JBTN(MainLocale.PAGE, "rem");
+	private final JBTN adde = new JBTN(MainLocale.PAGE, "add");
+	private final JBTN reme = new JBTN(MainLocale.PAGE, "rem");
+	private final JBTN erea = new JBTN(MainLocale.PAGE, "reassign");
+	private final JBTN adds = new JBTN(MainLocale.PAGE, "add");
+	private final JBTN rems = new JBTN(MainLocale.PAGE, "rem");
+	private final JBTN addr = new JBTN(MainLocale.PAGE, "add");
+	private final JBTN remr = new JBTN(MainLocale.PAGE, "rem");
+	private final JBTN edit = new JBTN(MainLocale.PAGE, "edit");
+	private final JBTN sdiy = new JBTN(MainLocale.PAGE, "sdiy");
+	private final JBTN vene = new JBTN(MainLocale.PAGE, "vene");
+	private final JBTN extr = new JBTN(MainLocale.PAGE, "extr");
+	private final JBTN vcas = new JBTN(MainLocale.PAGE, "vcas");
+	private final JBTN vbgr = new JBTN(MainLocale.PAGE, "vbgr");
+	private final JBTN vrcg = new JBTN(MainLocale.PAGE, "recg");
+	private final JBTN vrlr = new JBTN(MainLocale.PAGE, "relr");
+	private final JBTN cunt = new JBTN(MainLocale.PAGE, "cunt");
+	private final JBTN tdiy = new JBTN(MainLocale.PAGE, "ctrt");
+	private final JBTN ener = new JBTN(MainLocale.PAGE, "ener");
+	private final JBTN vmsc = new JBTN(MainLocale.PAGE, "vmsc");
+	private final JBTN unpk = new JBTN(MainLocale.PAGE, "unpack");
+	private final JBTN recd = new JBTN(MainLocale.PAGE, "replay");
+	private final JBTN csol = new JBTN(MainLocale.PAGE, "csoul");
+	private final JTG cmbo = new JTG(MainLocale.PAGE, "usecombo");
 	private final JTF jtfp = new JTF();
 	private final JTF jtfe = new JTF();
 	private final JTF jtfs = new JTF();
@@ -104,6 +137,9 @@ public class PackEditPage extends Page {
 
 	public PackEditPage(Page p) {
 		super(p);
+		AnimGroup.workspaceGroup.renewGroup();
+		AnimGroupTree agt = new AnimGroupTree(jtd);
+		agt.renewNodes();
 
 		ini();
 	}
@@ -130,6 +166,7 @@ public class PackEditPage extends Page {
 		set(pid, x, y, w, 1050, 400, 50);
 		set(pauth, x, y, w, 1100, 400, 50);
 		set(animall, x, y, w, 1150, 400, 50);
+		set(cmbo, x, y, w, 1000, 400, 50);
 
 		w += 450;
 
@@ -175,12 +212,13 @@ public class PackEditPage extends Page {
 
 		set(recd, x, y, w, 950, 300, 50);
 		set(tdiy, x, y, w, 1050, 300, 50);
-		set(csol, x, y, w, 1150, 300, 50);
+		set(csol, x, y, w, 1250, 250, 50);
 
 		w += 350;
 
 		set(lbt, x, y, w, 100, 350, 50);
 		set(jspt, x, y, w, 150, 350, 600);
+		SwingUtilities.invokeLater(() -> jtd.setUI(new TreeNodeExpander(jtd)));
 	}
 
 	private void addListeners() {
@@ -219,14 +257,18 @@ public class PackEditPage extends Page {
 				changePanel(new LvRestrictPage(getThis(), pac, true));
 		});
 
-		jld.addListSelectionListener(arg0 -> {
-			if (jld.getValueIsAdjusting())
+		jtd.addTreeSelectionListener(arg0 -> {
+			if (changing)
 				return;
-			boolean editable = pac != null && jld.getSelectedValue() != null && jld.getSelectedValue().id.base.equals(Source.BasePath.ANIM) && pac.editable;
+			changing = true;
+			/*boolean editable = pac != null && jld.getSelectedValue() != null && jld.getSelectedValue().id.base.equals(Source.BasePath.ANIM) && pac.editable;
 			adde.setEnabled(editable);
-			erea.setEnabled(editable && jle.getSelectedValue() != null);
-		});
+			erea.setEnabled(editable && jle.getSelectedValue() != null);*/
+			adde.setEnabled(pac != null && getSelectedAnim() != null && pac.editable);
+			erea.setEnabled(adde.isEnabled() && jle.getSelectedValue() != null);
+			changing = false;
 
+		});
 	}
 
 	private void addListeners$1() {
@@ -275,9 +317,10 @@ public class PackEditPage extends Page {
 			@Override
 			public void focusLost(FocusEvent fe) {
 				String str = jtfp.getText().trim();
-				if (pac.desc.name != null && pac.desc.name.equals(str))
+				if (pac.desc.names == null || pac.desc.names.toString().equals(str))
 					return;
-				pac.desc.name = str;
+				pac.desc.names.put(str);
+				jtfp.setText(pac.desc.names.toString());
 			}
 
 		});
@@ -315,6 +358,15 @@ public class PackEditPage extends Page {
 			}
 		});
 
+		cmbo.setLnr(x -> {
+			pac.useCombos = cmbo.isSelected();
+			for (BasisSet b : BasisSet.list()) {
+				for (int i = 0; i < b.lb.size(); i++) {
+					b.lb.get(i).lu.renew();
+				}
+			}
+		});
+
 	}
 
 	private void addListeners$2() {
@@ -330,7 +382,7 @@ public class PackEditPage extends Page {
 		adde.addActionListener(arg0 -> {
 			changing = true;
 			CustomEnemy ce = new CustomEnemy();
-			AnimCE anim = jld.getSelectedValue();
+			AnimCE anim = getSelectedAnim();
 			ce.limit = CommonStatic.customEnemyMinPos(anim.mamodel);
 			Enemy e = new Enemy(pac.getNextID(Enemy.class), anim, ce);
 			pac.enemies.add(e);
@@ -367,14 +419,11 @@ public class PackEditPage extends Page {
 			if(jle.getSelectedValue() == null || !(jle.getSelectedValue().de instanceof CustomEnemy))
 				return;
 
-			if(jld.getSelectedValue() == null)
-				return;
-
 			if(Opts.conf(get(MainLocale.PAGE, "reasanim"))) {
 				changing = true;
 
 				Enemy e = jle.getSelectedValue();
-				AnimCE anim = jld.getSelectedValue();
+				AnimCE anim = getSelectedAnim();
 
 				((CustomEnemy) e.de).limit = Math.abs(anim.mamodel.parts[0][6] * 6);
 				e.anim = anim;
@@ -391,7 +440,10 @@ public class PackEditPage extends Page {
 			}
 		});
 
-		jtfe.setLnr(e -> ene.name = jtfe.getText().trim());
+		jtfe.setLnr(e -> {
+			ene.names.put(jtfe.getText().trim());
+			jtfe.setText(ene.names.toString());
+		});
 
 		vene.setLnr(() -> new EnemyViewPage(getThis(), pac.getSID()));
 
@@ -412,9 +464,7 @@ public class PackEditPage extends Page {
 
 		cunt.addActionListener(arg0 -> changePanel(new UnitManagePage(getThis(), pac)));
 
-		tdiy.addActionListener(arg0 -> {
-			changePanel(new TraitEditPage(getThis(), pac));
-		});
+		tdiy.addActionListener(arg0 -> changePanel(new TraitEditPage(getThis(), pac)));
 
 		vmsc.setLnr(() -> pac.editable ? new MusicEditPage(getThis(), pac)
 				: new MusicPage(getThis(), pac.musics.getList()));
@@ -432,8 +482,10 @@ public class PackEditPage extends Page {
 		rems.setLnr(jls::deleteItem);
 
 		jtfs.setLnr(x -> {
-			if (sm != null)
-				sm.name = jtfs.getText().trim();
+			if (sm != null) {
+				sm.names.put(jtfs.getText().trim());
+				jtfs.setText(sm.names.toString());
+			}
 		});
 
 	}
@@ -607,11 +659,16 @@ public class PackEditPage extends Page {
 		add(unpk);
 		add(recd);
 		add(csol);
+		add(cmbo);
+
+		cmbo.setToolTipText("Decide whether to apply or not this pack's custom CatCombos onto your lineups");
+
 		add(pid);
 		add(pauth);
 		add(animall);
 		jle.setCellRenderer(new AnimLCR());
-		jld.setCellRenderer(new AnimLCR());
+		jtd.setCellRenderer(new AnimTreeRenderer());
+		SwingUtilities.invokeLater(() -> jtd.setUI(new TreeNodeExpander(jtd)));
 		setPack(null);
 		addListeners();
 		addListeners$1();
@@ -624,7 +681,7 @@ public class PackEditPage extends Page {
 		ene = e;
 		boolean b = e != null && pac.editable;
 		edit.setEnabled(e != null && e.de instanceof CustomEnemy && e.anim != null);
-		erea.setEnabled(e != null && jld.getSelectedValue() != null && pac != null && pac.editable);
+		erea.setEnabled(b && getSelectedAnim() != null);
 
 		if(e != null && e.anim == null) {
 			edit.setToolTipText(get(MainLocale.PAGE, "corrrea"));
@@ -635,7 +692,7 @@ public class PackEditPage extends Page {
 		jtfe.setEnabled(b);
 		reme.setEnabled(b);
 		if (b) {
-			jtfe.setText(e.name);
+			jtfe.setText(e.names.toString());
 			boolean cont = false;
 
 			for(EneRand rand : pac.randEnemies.getList()) {
@@ -648,12 +705,21 @@ public class PackEditPage extends Page {
 		}
 	}
 
+	private void finishRemoving(StageMap map) {
+		for (Stage s : map.list)
+			if (s.info != null)
+				((CustomStageInfo)s.info).destroy();
+		for (Stage s : map.list)
+			for (CustomStageInfo si : ((MapColc.PackMapColc)map.getCont()).si)
+				si.remove(s);
+	}
+
 	private void setMap(StageMap map) {
 		sm = map;
 		rems.setEnabled(sm != null && pac.editable);
 		jtfs.setEnabled(sm != null && pac.editable);
 		if (sm != null)
-			jtfs.setText(sm.name);
+			jtfs.setText(sm.names.toString());
 	}
 
 	private void setPack(UserPack pack) {
@@ -669,7 +735,9 @@ public class PackEditPage extends Page {
 			}
 
 		jtfp.setEnabled(b);
-		adde.setEnabled(b && jld.getSelectedValue() != null && jld.getSelectedValue().id.base.equals(Source.BasePath.ANIM));
+		// adde.setEnabled(b && jld.getSelectedValue() != null && jld.getSelectedValue().id.base.equals(Source.BasePath.ANIM));
+		// TODO: check if above commmented code is needed
+		adde.setEnabled(b && getSelectedAnim() != null);
 		adds.setEnabled(b);
 		extr.setEnabled(pac != null);
 		vcas.setEnabled(pac != null);
@@ -677,12 +745,16 @@ public class PackEditPage extends Page {
 		vene.setEnabled(pac != null);
 		vmsc.setEnabled(pac != null);
 		recd.setEnabled(pac != null);
+		ener.setEnabled(pac != null);
 		boolean canUnpack = pac != null && !pac.editable;
 		boolean canExport = pac != null && pac.editable;
 		unpk.setEnabled(canUnpack);
 		extr.setEnabled(canExport);
+
+		cmbo.setEnabled(pac != null && pac.combos.size() > 0);
+		cmbo.setSelected(cmbo.isEnabled() && pac.useCombos);
 		if (b)
-			jtfp.setText(pack.desc.name);
+			jtfp.setText(pack.desc.names.toString());
 		if (pac == null) {
 			jle.setListData(new Enemy[0]);
 			jlr.setListData(new UserPack[0]);
@@ -720,6 +792,18 @@ public class PackEditPage extends Page {
 			else
 				animall.setText("Copy Anim : Not Allowed");
 		}
+	}
+
+	private AnimCE getSelectedAnim() {
+		TreePath path = jtd.getSelectionPath();
+
+		if(path != null && path.getLastPathComponent() instanceof DefaultMutableTreeNode) {
+			DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+
+			if (node.getUserObject() instanceof AnimCE)
+				return (AnimCE) node.getUserObject();
+		}
+		return null;
 	}
 
 	private void setRely(UserPack rel) {

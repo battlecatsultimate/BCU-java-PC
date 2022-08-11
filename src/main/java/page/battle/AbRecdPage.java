@@ -108,14 +108,15 @@ public abstract class AbRecdPage extends Page {
 	protected abstract void setList();
 
 	protected void setRecd(Replay r) {
-		rply.setEnabled(r != null);
-		recd.setEnabled(r != null);
-		imgs.setEnabled(r != null);
 		seed.setEditable(editable && r != null);
 		vsta.setEnabled(r != null);
 		Stage st = r == null || r.st == null ? null : Identifier.getOr(r.st, Stage.class);
-		ista.setText(st == null ? "(unavailable)" : st.toString());
-		imap.setText(st == null ? "(unavailable)" : st.getCont().toString());
+		boolean a = st != null && st.id.toString().equals(r.st.toString());
+		rply.setEnabled(a);
+		recd.setEnabled(a);
+		imgs.setEnabled(a);
+		ista.setText(!a ? "(unavailable)" : st.toString());
+		imap.setText(!a ? "(unavailable)" : st.getCont().toString());
 		jlu.setEnabled(r != null);
 		if (r == null) {
 			len.setText("");
@@ -134,7 +135,14 @@ public abstract class AbRecdPage extends Page {
 			changePanel(svp = new StageViewPage(getThis(), MapColc.values(), rStage));
 		});
 
-		jlu.setLnr(x -> changePanel(bp = new BasisPage(getThis())));
+		jlu.setLnr(x -> {
+			Identifier<Stage> st = getSelection().st;
+
+			if (st == null)
+				changePanel(bp = new BasisPage(getThis()));
+			else
+				changePanel(bp = new BasisPage(getThis(), st.get().getLim(4), st.get().getCont().price));
+		});
 
 		rply.setLnr(x -> changePanel(new BattleInfoPage(getThis(), getSelection(), 0)));
 

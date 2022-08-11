@@ -39,8 +39,37 @@ public class UnitInfoTable extends Page {
 
 	private final BasisSet b;
 	private final Form f;
-	private int[] multi;
+	private ArrayList<Integer> multi;
 	private boolean displaySpecial;
+
+	protected UnitInfoTable(Page p, Form de, ArrayList<Integer> lvs) {
+		super(p);
+		b = BasisSet.current();
+
+		f = de;
+		multi = lvs;
+		atks = new JL[6];
+
+		boolean pc = de.du.getPCoin() != null;
+		MaskUnit du = pc ? f.du.getPCoin().improve(multi) : f.du;
+		List<Interpret.ProcDisplay> ls = Interpret.getAbi(du);
+		double mul = f.unit.lv.getMult(multi.get(0));
+		ls.addAll(Interpret.getProc(du, false, new double[]{Math.round(du.getHp() * mul) * b.t().getDefMulti(), multi.get(0)}));
+		if (pc)
+			ls.add(new Interpret.ProcDisplay("",null));
+		proc = new JLabel[ls.size()];
+		for (int i = 0; i < ls.size(); i++) {
+			Interpret.ProcDisplay display = ls.get(i);
+			add(proc[i] = new JLabel(display.toString()));
+			proc[i].setBorder(BorderFactory.createEtchedBorder());
+			proc[i].setIcon(display.getIcon());
+		}
+		if (pc)
+			pcoin = proc[ls.size() - 1];
+		else
+			pcoin = null;
+		ini();
+	}
 
 	protected UnitInfoTable(Page p, Form de, boolean sp) {
 		super(p);
@@ -52,8 +81,8 @@ public class UnitInfoTable extends Page {
 		atks = new JL[6];
 		MaskUnit du = f.maxu();
 		List<Interpret.ProcDisplay> ls = Interpret.getAbi(du);
-		double mul = f.unit.lv.getMult(multi[0]);
-		ls.addAll(Interpret.getProc(du, false, new double[]{Math.round(du.getHp() * mul) * b.t().getDefMulti(), multi[0]}));
+		double mul = f.unit.lv.getMult(multi.get(0));
+		ls.addAll(Interpret.getProc(du, false, new double[]{Math.round(du.getHp() * mul) * b.t().getDefMulti(), multi.get(0)}));
 		boolean pc = de.du.getPCoin() != null;
 		if (pc)
 			ls.add(new Interpret.ProcDisplay("",null));
@@ -75,12 +104,12 @@ public class UnitInfoTable extends Page {
 		int l = main.length + 1;
 		if (displaySpecial)
 			l += special.length;
-		return (l + (proc.length + 1) / 2) * 50 + (f.descriptionGet().replace("<br>", "").length() > 0 ? 200 : 0);
+		return (l + (proc.length + 1) / 2) * 50 + (f.getExplaination().replace("<br>", "").length() > 0 ? 200 : 0);
 	}
 
 	protected void reset() {
 		EForm ef = new EForm(f, multi);
-		double mul = f.unit.lv.getMult(multi[0]);
+		double mul = f.unit.lv.getMult(multi.get(0));
 		double atk = b.t().getAtkMulti();
 		double def = b.t().getDefMulti();
 
@@ -89,7 +118,7 @@ public class UnitInfoTable extends Page {
 		int hp = (int) (Math.round(ef.du.getHp() * mul) * def);
 
 		PCoin pc = f.du.getPCoin();
-		if(pc != null) {
+		if (pc != null) {
 			attack = (int) (attack * pc.getAtkMultiplication(multi));
 			hp = (int) (hp * pc.getHPMultiplication(multi));
 		}
@@ -124,7 +153,7 @@ public class UnitInfoTable extends Page {
 
 			int a = (int) (Math.round(atkDatum[0] * mul) * b.t().getAtkMulti());
 
-			if(pc != null) {
+			if (pc != null) {
 				a = (int) (a * pc.getAtkMultiplication(multi));
 			}
 
@@ -133,11 +162,12 @@ public class UnitInfoTable extends Page {
 		atks[1].setText(satk.toString());
 
 		List<Interpret.ProcDisplay> ls = Interpret.getAbi(ef.du);
-		ls.addAll(Interpret.getProc(ef.du, false, new double[]{mul,multi[0]}));
-		for (JLabel l : proc)
-			if (l != pcoin) {
+		ls.addAll(Interpret.getProc(ef.du, false, new double[]{mul, multi.get(0)}));
+		for (JLabel l : proc) {
+			if (l != pcoin)
 				l.setText("");
-			}
+			l.setIcon(null);
+		}
 		for (int i = 0; i < ls.size(); i++) {
 			Interpret.ProcDisplay display = ls.get(i);
 			proc[i].setText(display.toString());
@@ -298,7 +328,7 @@ public class UnitInfoTable extends Page {
 		special[0][5].setToolTipText("<html>This unit will stay at least "
 				+ f.du.getLimit()
 				+ " units away from the max stage length<br>once it passes that threshold.");
-		String fDesc = f.descriptionGet().replace("<br>", "\n");
+		String fDesc = f.getExplaination().replace("<br>", "\n");
 		if (fDesc.replace("\n", "").length() > 0)
 			add(desc);
 		descr.setText(f.toString().replace((f.uid == null ? "NULL" : f.uid.id) + "-" + f.fid + " ", "") + "\n" + fDesc);
@@ -333,7 +363,7 @@ public class UnitInfoTable extends Page {
 				str = str.substring(wrapped.length());
 			}
 			sb.append(str);
-			jl.setToolTipText("<html>" + sb.toString() + "</html>");
+			jl.setToolTipText("<html>" + sb + "</html>");
 		}
 	}
 

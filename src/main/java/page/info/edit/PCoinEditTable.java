@@ -37,7 +37,7 @@ class PCoinEditTable extends Page {
     }
 
     private static class NPList extends JList<talentData> {
-
+        private static final long serialVersionUID = 1L;
 
         protected NPList() {
             if (MainBCU.nimbus)
@@ -78,7 +78,7 @@ class PCoinEditTable extends Page {
     }
 
     //ensures not every single talent is here, to avoid touching unused values, each number corresponds to a PC_CORRES array
-    private final int[] allPC = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 57, 40, 41, 50, 51, 52, 54, 56, 58};
+    private final int[] allPC = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 57, 40, 41, 50, 51, 52, 54, 56, 58, 59, 60};
 
     private final CustomUnit unit;
     private final NPList ctypes = new NPList();
@@ -130,6 +130,7 @@ class PCoinEditTable extends Page {
         delet.addActionListener(arg0 -> {
             changing = true;
             unit.pcoin.info.remove(talent);
+            unit.pcoin.max.remove(talent);
             pcedit.removed();
             changing = false;
         });

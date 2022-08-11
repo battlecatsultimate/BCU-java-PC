@@ -14,6 +14,7 @@ import page.JTG;
 import page.anim.IconBox;
 import page.view.ViewBox;
 import page.view.ViewBox.Loader;
+import utilpc.awt.FG2D;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -124,15 +125,15 @@ class GLVBExporter implements ViewBox.VBExporter {
 
 	@Override
 	public BufferedImage getPrev() {
-		return vb.getScreen();
+		return vb.getScreen(ViewBox.Conf.white);
 	}
 
 	@Override
-	public Loader start() {
+	public Loader start(boolean mp4) {
 		if (loader != null)
 			return loader;
 		Queue<BufferedImage> qb = new ArrayDeque<>();
-		loader = new Loader(qb);
+		loader = new Loader(qb, mp4);
 		glr = new GLRecdBImg(vb, qb, loader.thr);
 		loader.start();
 		return loader;
@@ -170,10 +171,21 @@ class GLViewBox extends GLCstd implements ViewBox, GLEventListener {
 		GLGraphics g = new GLGraphics(drawable.getGL().getGL2(), w, h);
 
 		if (!blank) {
-			int[] c = new int[] { c0.getRed(), c0.getGreen(), c0.getBlue() };
-			int[] f = new int[] { c1.getRed(), c1.getGreen(), c1.getBlue() };
-			g.gradRect(0, 0, w, h / 2, w / 2, 0, c, w / 2, h / 2, f);
-			g.gradRect(0, h / 2, w, h / 2, w / 2, h / 2, f, w / 2, h, c);
+			if(CommonStatic.getConfig().viewerColor != -1) {
+				int rgb = CommonStatic.getConfig().viewerColor;
+
+				int b = rgb & 0xFF;
+				int gr = (rgb >> 8) & 0xFF;
+				int r = (rgb >> 16) & 0xFF;
+
+				g.setColor(r, gr, b);
+				g.fillRect(0, 0, w, h);
+			} else {
+				int[] c = new int[] { c0.getRed(), c0.getGreen(), c0.getBlue() };
+				int[] f = new int[] { c1.getRed(), c1.getGreen(), c1.getBlue() };
+				g.gradRect(0, 0, w, h / 2, w / 2, 0, c, w / 2, h / 2, f);
+				g.gradRect(0, h / 2, w, h / 2, w / 2, h / 2, f, w / 2, h, c);
+			}
 		} else {
 			g.setColor(FakeGraphics.WHITE);
 			g.fillRect(0, 0, w, h);
@@ -233,5 +245,27 @@ class GLViewBox extends GLCstd implements ViewBox, GLEventListener {
 		g.setColor(FakeGraphics.BLACK);
 		if (ent != null)
 			ent.draw(g, ctrl.ori.copy().times(-1), ctrl.siz);
+	}
+
+	@Override
+	public BufferedImage getScreen() {
+		return getScreen(false);
+	}
+
+	public BufferedImage getScreen(boolean transparent) {
+		if (!transparent)
+			return super.getScreen();
+		int w = getWidth();
+		int h = getHeight();
+
+		BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_4BYTE_ABGR);
+		Graphics2D gra = (Graphics2D) img.getGraphics();
+
+		gra.translate(w / 2.0, h * 3 / 4.0);
+		gra.setColor(Color.BLACK);
+		if (ent != null)
+			ent.draw(new FG2D(gra), ctrl.ori.copy().times(-1), ctrl.siz);
+		gra.dispose();
+		return img;
 	}
 }

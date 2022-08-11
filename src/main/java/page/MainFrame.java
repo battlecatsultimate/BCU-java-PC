@@ -132,7 +132,12 @@ public class MainFrame extends JFrame {
 					menu.setEnabled(false);
 
 				if (!closeClicked) {
-					changePanel(new SavePage());
+					boolean[] conf = Opts.confirmSave();
+
+					if (conf == null)
+						return;
+
+					changePanel(new SavePage(conf));
 				} else {
 					Opts.warnPop("Saving progress...\nPlease wait!", "Saving");
 				}

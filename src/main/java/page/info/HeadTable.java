@@ -12,7 +12,6 @@ import page.view.CastleViewPage;
 import page.view.MusicPage;
 
 import java.awt.*;
-import java.text.DecimalFormat;
 
 public class HeadTable extends AbJTable {
 
@@ -35,6 +34,8 @@ public class HeadTable extends AbJTable {
 	private final Page page;
 
 	protected HeadTable(Page p) {
+		super(new String[8]);
+
 		page = p;
 	}
 
@@ -119,10 +120,6 @@ public class HeadTable extends AbJTable {
 			bas2[1] = st.minSpawn + "f ~ " + st.maxSpawn + "f";
 		bas2[2] = MainLocale.getLoc(MainLocale.INFO, "ht03");
 		bas2[3] = !st.non_con;
-		bas2[4] = MainLocale.getLoc(MainLocale.INFO, "lop");
-		bas2[5] = convertTime(st.loop0);
-		bas2[6] = MainLocale.getLoc(MainLocale.INFO, "lop1");
-		bas2[7] = convertTime(st.loop1);
 		if(st.timeLimit != 0) {
 			bas2[4] = Page.get(MainLocale.INFO, "time");
 			bas2[5] = st.timeLimit +" min";
@@ -173,29 +170,6 @@ public class HeadTable extends AbJTable {
 			}
 		}
 		data = lstr;
-	}
-
-	private String convertTime(long milli) {
-		long min = milli / 60 / 1000;
-
-		double time = milli - (double) min * 60000;
-
-		time /= 1000;
-
-		DecimalFormat df = new DecimalFormat("#.###");
-
-		double s = Double.parseDouble(df.format(time));
-
-		if (s >= 60) {
-			s -= 60;
-			min += 1;
-		}
-
-		if (s < 10) {
-			return min + ":" + "0" + df.format(s);
-		} else {
-			return min + ":" + df.format(s);
-		}
 	}
 
 }

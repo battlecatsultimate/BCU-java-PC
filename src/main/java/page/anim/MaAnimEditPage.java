@@ -67,12 +67,12 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 	private final JLabel inff = new JLabel();
 	private final JLabel infv = new JLabel();
 	private final JLabel infm = new JLabel();
-	private final JLabel lmul = new JLabel("</>");
+	private final JTG lmul = new JTG("Set speed for selected");
 	private final JTF tmul = new JTF();
 	private final EditHead aep;
 
 	private Point p = null;
-	private boolean pause;
+	private boolean pause, changing;
 
 	public MaAnimEditPage(Page p) {
 		super(p);
@@ -251,7 +251,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 	}
 
 	@Override
-	protected void timer(int t) {
+    public void timer(int t) {
 		if (!pause)
 			eupdate();
 		if (ab.getEntity() != null && mpet.part != null) {
@@ -358,7 +358,9 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 				System.arraycopy(data, 0, ma.parts, 0, ind);
 			if (data.length - ind >= 0)
 				System.arraycopy(data, ind, ma.parts, ind + 1, data.length - ind);
-			Part np = new Part();
+
+			int modif = jlv.getSelectedIndex() == -1 ? 5 : jlv.getSelectedIndex();
+			Part np = new Part(Math.max(0, jlm.getSelectedIndex()), modif);
 			np.validate();
 			ma.parts[ind] = np;
 			ma.validate();
@@ -401,24 +403,41 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 			@Override
 			public void focusLost(FocusEvent e) {
+				if (changing)
+					return;
+				changing = true;
+
 				double d = CommonStatic.parseIntN(tmul.getText()) * 0.01;
 
 				if(d <= 0) {
 					tmul.setText("");
+					changing = false;
 					return;
 				}
 
 				String str = d < 1 ? "Decrease " : "Increase ";
-				if (!Opts.conf(str + "animation speed by " + (d * 100) + "%?"))
+				if (!Opts.conf(str + "animation speed to " + (d * 100) + "%?")) {
+					changing = false;
 					return;
-				for (Part p : maet.ma.parts) {
-					for (int[] line : p.moves)
-						line[0] *= d;
-					p.off *= d;
-					p.validate();
 				}
+
+				if (lmul.isSelected() && maet.getSelected().length > 0) {
+					for (Part p : maet.getSelected()) {
+						for (int[] line : p.moves)
+							line[0] *= d;
+						p.off *= d;
+						p.validate();
+					}
+				} else
+					for (Part p : maet.ma.parts) {
+						for (int[] line : p.moves)
+							line[0] *= d;
+						p.off *= d;
+						p.validate();
+					}
 				maet.ma.validate();
 				maet.anim.unSave("maanim multiply");
+				changing = false;
 			}
 
 		});

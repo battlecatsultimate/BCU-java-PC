@@ -23,7 +23,7 @@ public class UnitFindPage extends Page implements SupPage<Unit> {
 	public UnitFindPage(Page p) {
 		super(p);
 
-		ufb = UnitFilterBox.getNew(this);
+		ufb = UnitFilterBox.getNew(this, null, 0);
 		ini();
 		resized();
 	}

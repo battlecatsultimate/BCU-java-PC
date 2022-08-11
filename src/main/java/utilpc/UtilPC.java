@@ -1,29 +1,17 @@
 package utilpc;
 
-import com.google.common.io.Files;
 import common.CommonStatic;
-import common.CommonStatic.ImgReader;
 import common.CommonStatic.Itf;
 import common.battle.data.PCoin;
-import common.io.InStream;
 import common.pack.Context;
 import common.pack.Identifier;
-import common.pack.Source;
-import common.pack.Source.ResourceLocation;
 import common.system.VImg;
 import common.system.fake.FakeImage;
-import common.system.fake.ImageBuilder;
-import common.system.files.FDByte;
-import common.util.Data;
-import common.util.anim.ImgCut;
-import common.util.anim.MaAnim;
-import common.util.anim.MaModel;
 import common.util.pack.Background;
 import common.util.stage.Music;
 import common.util.unit.Form;
 import common.util.unit.Trait;
 import io.BCMusic;
-import io.BCUReader;
 import io.BCUWriter;
 import utilpc.awt.FG2D;
 
@@ -31,133 +19,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 
 public class UtilPC {
 
 	public static class PCItr implements Itf {
-
-		@Deprecated
-		private static class MusicReader implements ImgReader {
-
-			private final int pid, mid;
-
-			private MusicReader(int p, int m) {
-				pid = p;
-				mid = m;
-			}
-
-			@Override
-			@Deprecated
-			public File readFile(InStream is) {
-				byte[] bs = is.subStream().nextBytesI();
-				String path = "./pack/music/" + Data.hex(pid) + "/" + Data.trio(mid) + ".ogg";
-				File f = CommonStatic.def.route(path);
-				Data.err(() -> Context.check(f));
-				try {
-					Files.write(bs, f);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				return f;
-			}
-
-			@Override
-			public FakeImage readImg(String str) {
-				return null;
-			}
-
-			@Override
-			public VImg readImgOptional(String str) {
-				return null;
-			}
-
-		}
-
-		@Deprecated
-		private static class PCAL implements Source.AnimLoader {
-
-			private String name;
-			private final FakeImage num;
-			private final ImgCut imgcut;
-			private final MaModel mamodel;
-			private final MaAnim[] anims;
-			private VImg uni, edi;
-
-			private PCAL(InStream is) {
-				name = "local animation";
-				num = FakeImage.read(is.nextBytesI());
-				imgcut = ImgCut.newIns(new FDByte(is.nextBytesI()));
-				mamodel = MaModel.newIns(new FDByte(is.nextBytesI()));
-				int n = is.nextInt();
-				anims = new MaAnim[n];
-				for (int i = 0; i < n; i++)
-					anims[i] = MaAnim.newIns(new FDByte(is.nextBytesI()));
-				if (!is.end()) {
-					VImg vimg = ImageBuilder.toVImg(is.nextBytesI());
-					if (vimg.getImg().getHeight() == 32)
-						edi = vimg;
-					else
-						uni = vimg;
-				}
-				if (!is.end())
-					uni = ImageBuilder.toVImg(is.nextBytesI());
-			}
-
-			private PCAL(InStream is, ImgReader r) {
-				is.nextString();
-				num = r.readImg(is.nextString());
-				edi = r.readImgOptional(is.nextString());
-				uni = r.readImgOptional(is.nextString());
-				imgcut = ImgCut.newIns(new FDByte(is.nextBytesI()));
-				mamodel = MaModel.newIns(new FDByte(is.nextBytesI()));
-				int n = is.nextInt();
-				anims = new MaAnim[n];
-				for (int i = 0; i < n; i++)
-					anims[i] = MaAnim.newIns(new FDByte(is.nextBytesI()));
-			}
-
-			@Override
-			public VImg getEdi() {
-				return edi;
-			}
-
-			@Override
-			public ImgCut getIC() {
-				return imgcut;
-			}
-
-			@Override
-			public MaAnim[] getMA() {
-				return anims;
-			}
-
-			@Override
-			public MaModel getMM() {
-				return mamodel;
-			}
-
-			@Override
-			public ResourceLocation getName() {
-				return new ResourceLocation(null, name);
-			}
-
-			@Override
-			public FakeImage getNum() {
-				return num;
-			}
-
-			@Override
-			public int getStatus() {
-				return 1;
-			}
-
-			@Override
-			public VImg getUni() {
-				return uni;
-			}
-
-		}
 
 		@Override
 		public void save(boolean save, boolean exit) {
@@ -185,30 +51,6 @@ public class UtilPC {
 
 		@Override
 		@Deprecated
-		public ImgReader getMusicReader(int pid, int mid) {
-			return new MusicReader(pid, mid);
-		}
-
-		@Override
-		@Deprecated
-		public ImgReader getReader(File f) {
-			return null;
-		}
-
-		@Override
-		@Deprecated
-		public Source.AnimLoader loadAnim(InStream is, ImgReader r) {
-			return r == null ? new PCAL(is) : new PCAL(is, r);
-		}
-
-		@Override
-		@Deprecated
-		public InStream readBytes(File fi) {
-			return BCUReader.readBytes(fi);
-		}
-
-		@Override
-		@Deprecated
 		public File route(String path) {
 			return new File(path);
 		}
@@ -224,8 +66,11 @@ public class UtilPC {
 		}
 
 		@Override
-		public void setBGM(Identifier<Music> mus, long loop) {
-			BCMusic.play(mus, loop);
+		/*public void setBGM(Identifier<Music> mus, long loop) {
+			BCMusic.play(mus, loop);*/
+		// TODO: check above
+		public void setBGM(Identifier<Music> mus) {
+			BCMusic.play(mus);
 		}
 
 	}
@@ -298,10 +143,10 @@ public class UtilPC {
 		return new ImageIcon((Image) img.bimg());
 	}
 
-	public static String[] lvText(Form f, int[] lvs) {
+	public static String[] lvText(Form f, ArrayList<Integer> lvs) {
 		PCoin pc = f.du.getPCoin();
 		if (pc == null)
-			return new String[] { "Lv." + lvs[0], "" };
+			return new String[] { "Lv." + lvs.get(0), "" };
 		else {
 			String[] TraitsHolder = new String[pc.trait.size()];
 			for (int i = 0 ; i < pc.trait.size() ; i++) {
@@ -319,12 +164,12 @@ public class UtilPC {
 
 			lab.append(Interpret.PCTX[pc.info.get(0)[0]]);
 
-			StringBuilder str = new StringBuilder("Lv." + lvs[0] + ", {");
+			StringBuilder str = new StringBuilder("Lv." + lvs.get(0) + ", {");
 			for (int i = 1; i < pc.info.size(); i++) {
-				str.append(lvs[i]).append(",");
+				str.append(lvs.get(i)).append(",");
 				lab.append(", ").append(getPCoinAbilityText(pc, i));
 			}
-			str.append(lvs[pc.info.size()]).append("}");
+			str.append(lvs.get(pc.info.size())).append("}");
 			return new String[] {str.toString(), lab.toString()};
 		}
 	}
@@ -334,5 +179,39 @@ public class UtilPC {
 			return null;
 
 		return Interpret.PCTX[pc.info.get(index)[0]];
+	}
+
+	public static int damerauLevenshteinDistance(String src, String compare) {
+		if (src.contains(compare))
+			return 0;
+
+		int[][] table = new int[src.length() + 1][compare.length() + 1];
+
+		for (int i = 0; i < src.length() + 1; i++) {
+			table[i][0] = i;
+		}
+
+		for (int i = 0; i < compare.length() + 1; i++) {
+			table[0][i] = i;
+		}
+
+		for (int i = 1; i < src.length() + 1; i++) {
+			for (int j = 1; j < compare.length() + 1; j++) {
+				int cost;
+
+				if (src.charAt(i - 1) == compare.charAt(j - 1))
+					cost = 0;
+				else
+					cost = 1;
+
+				table[i][j] = Math.min(Math.min(table[i - 1][j] + 1, table[i][j - 1] + 1), table[i - 1][j - 1] + cost);
+
+				if (i > 1 && j > 1 && src.charAt(i - 1) == compare.charAt(j - 2) && src.charAt(i - 2) == compare.charAt(j - 1)) {
+					table[i][j] = Math.min(table[i][j], table[i - 2][j - 2]);
+				}
+			}
+		}
+
+		return table[src.length()][compare.length()];
 	}
 }

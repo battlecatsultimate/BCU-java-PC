@@ -2,6 +2,7 @@ package page.info;
 
 import common.CommonStatic;
 import common.battle.BasisSet;
+import common.battle.data.AtkDataModel;
 import common.battle.data.CustomEnemy;
 import common.battle.data.DataEnemy;
 import common.pack.UserProfile;
@@ -41,6 +42,7 @@ public class EnemyInfoTable extends Page {
 	private final Enemy e;
 	private int multi, mulatk;
 	private boolean displaySpecial;
+	private final ArrayList<AtkDataModel> atkList = new ArrayList<>();
 
 	protected EnemyInfoTable(Page p, Enemy de, int mul, int mula) {
 		super(p);
@@ -49,7 +51,18 @@ public class EnemyInfoTable extends Page {
 		e = de;
 		multi = mul;
 		mulatk = mula;
-		atks = new JL[e.de.rawAtkData().length][8];
+		if (e.de.getRevenge() != null)
+			atkList.add(e.de.getRevenge());
+		if (e.de.getResurrection() != null)
+			atkList.add(e.de.getResurrection());
+		if (e.de.getCounter() != null)
+			atkList.add(e.de.getCounter());
+		if (e.de.getGouge() != null)
+			atkList.add(e.de.getGouge());
+		if (e.de.getResurface() != null)
+			atkList.add(e.de.getResurface());
+
+		atks = new JL[e.de.rawAtkData().length + atkList.size()][8];
 		List<Interpret.ProcDisplay> ls = Interpret.getAbi(e.de);
 		ls.addAll(Interpret.getProc(e.de, true, new double[]{multi  * e.de.multi(b) / 100, mulatk  * e.de.multi(b) / 100}));
 		proc = new JLabel[ls.size()];
@@ -69,8 +82,11 @@ public class EnemyInfoTable extends Page {
 		main[1][7].setText("" + Math.floor(e.de.getDrop() * b.t().getDropMulti()) / 100);
 		main[2][3].setText("" + (int) (e.de.allAtk() * mula * 30 / e.de.getItv()));
 		int[][] atkData = e.de.rawAtkData();
-		for (int i = 0; i < atks.length; i++)
+		for (int i = 0; i < atkData.length; i++)
 			atks[i][1].setText("" + Math.round(atkData[i][0] * mula));
+		for (int i = 0; i < atkList.size(); i++)
+			atks[i + atkData.length][1].setText("" + Math.round(atkList.get(i).atk * mula));
+
 		List<Interpret.ProcDisplay> ls = Interpret.getAbi(e.de);
 		ls.addAll(Interpret.getProc(e.de, true, new double[]{mul, mula}));
 
@@ -149,7 +165,7 @@ public class EnemyInfoTable extends Page {
 		int l = main.length + atks.length;
 		if (displaySpecial)
 			l += special.length;
-		return (l + (proc.length + (proc.length % 2 == 1 ? 1 : 0)) / 2) * 50 + (e.descriptionGet().replace("<br>", "").length() > 0 ? 200 : 0);
+		return (l + (proc.length + (proc.length % 2 == 1 ? 1 : 0)) / 2) * 50 + (e.getExplaination().replace("<br>", "").length() > 0 ? 200 : 0);
 	}
 
 	private void ini() {
@@ -241,7 +257,7 @@ public class EnemyInfoTable extends Page {
 		}
 
 		int[][] atkData = e.de.rawAtkData();
-		for (int i = 0; i < atks.length; i++) {
+		for (int i = 0; i < atkData.length; i++) {
 			atks[i][0].setText(MainLocale.INFO, "atk");
 			atks[i][2].setText(MainLocale.INFO, "preaa");
 			if (MainBCU.seconds)
@@ -252,6 +268,19 @@ public class EnemyInfoTable extends Page {
 			atks[i][5].setText("" + (!(e.de instanceof DataEnemy) && ((CustomEnemy) e.de).atks[i].specialTrait));
 			atks[i][6].setText(MainLocale.INFO, "dire");
 			atks[i][7].setText("" + atkData[i][3]);
+		}
+		for (int i = 0; i < atkList.size(); i++) {
+			int ind = i + atkData.length;
+			atks[ind][0].setText(MainLocale.INFO, "atk [" + atkList.get(i).str + "]");
+			atks[ind][2].setText(MainLocale.INFO, "preaa");
+			if (MainBCU.seconds)
+				atks[ind][3].setText(MainBCU.toSeconds(atkList.get(i).pre));
+			else
+				atks[ind][3].setText(atkList.get(i).pre + "f");
+			atks[ind][4].setText(0, atkList.get(i).specialTrait ? "igtr" : "cntr");
+			atks[ind][5].setText("" + (atkList.get(i).specialTrait));
+			atks[ind][6].setText(MainLocale.INFO, "dire");
+			atks[ind][7].setText("" + atkList.get(i).dire);
 		}
 		if (e.de.getLimit() >= 100)
 			special[0][5].setToolTipText("<html>"
@@ -265,7 +294,7 @@ public class EnemyInfoTable extends Page {
 					+ (100 - e.de.getLimit())
 					+ " units inside the base<br>once it passes that threshold."
 					+ "</html>");
-		String eDesc = e.descriptionGet().replace("<br>", "\n");
+		String eDesc = e.getExplaination().replace("<br>", "\n");
 		if (eDesc.replace("\n", "").length() > 0)
 			add(desc);
 		descr.setText(e.toString().replace(Data.trio(e.id.id) + " - ", "") + (e.de.getTraits().size() > 0 && !e.de.getTraits().contains(UserProfile.getBCData().traits.get(Data.TRAIT_WHITE)) ? " (" + Interpret.getTrait(TraitBox, 0) + ")" : "") + (e.de.getStar() > 2 ? " (Cool Dude)" : "") + "\n" + eDesc);
@@ -300,7 +329,7 @@ public class EnemyInfoTable extends Page {
 				str = str.substring(wrapped.length());
 			}
 			sb.append(str);
-			jl.setToolTipText("<html>" + sb.toString() + "</html>");
+			jl.setToolTipText("<html>" + sb + "</html>");
 		}
 	}
 

@@ -50,14 +50,13 @@ public class MainPage extends Page {
 	private final JBTN camm = new JBTN(0, "camm");
 	private final JBTN cama = new JBTN(0, "cama");
 	private final JBTN save = new JBTN(0, "save");
-	private final JBTN allf = new JBTN(0, "all file");
+	private final JBTN allf = new JBTN(0, "allfile");
 	private final JBTN auth = new JBTN(0, "author");
 	private final JBTN comp = new JBTN(0, "compare");
 	private final JBTN bckp = new JBTN(0, "backup");
 
 	private final JBTN refr = new JBTN(0, "refrtips");
 	private final JLabel tips = new JLabel();
-	private final String[] ALLTIPS = Page.get(MainLocale.PAGE, "tip", 16);
 
 	public MainPage() {
 		super(null);
@@ -70,6 +69,7 @@ public class MainPage extends Page {
 	protected void renew() {
 		Runtime.getRuntime().gc();
 		curr.setEnabled(BattleInfoPage.current != null);
+		refrTips();
 		setMemo();
 	}
 
@@ -119,7 +119,7 @@ public class MainPage extends Page {
 		conf.setLnr(() -> new ConfigPage(this));
 		veff.setLnr(() -> new EffectViewPage(this));
 		vcas.setLnr(() -> new CastleViewPage(this));
-		vbgr.setLnr(() -> new BGViewPage(this, null));
+		vbgr.setLnr(() -> new BGViewPage(this));
 		veif.setLnr(() -> new EnemyFindPage(this));
 		vuif.setLnr(() -> new UnitFindPage(this));
 		bass.setLnr(() -> new BasisPage(this));
@@ -157,45 +157,90 @@ public class MainPage extends Page {
 			}
 		});
 		comp.setLnr(() -> new ComparePage(this));
-		refr.setLnr(c -> tips.setText("<html>" + ALLTIPS[(int)(Math.random() * ALLTIPS.length)] + "</html>"));
+		refr.setLnr(c -> refrTips());
 	}
 
 	private void ini() {
 		add(vuni);
+		vuni.setToolTipText(get(MainLocale.PAGE,"vunitip"));
+
 		add(vene);
+		vene.setToolTipText(get(MainLocale.PAGE,"venetip"));
+
 		add(vsta);
+		vsta.setToolTipText(get(MainLocale.PAGE,"vstatip"));
+
 		add(vdiy);
+		vdiy.setToolTipText(get(MainLocale.PAGE,"vdiytip"));
+
 		add(conf);
+		conf.setToolTipText(get(MainLocale.PAGE,"conftip"));
+
 		add(veff);
+		veff.setToolTipText(get(MainLocale.PAGE,"vefftip"));
+
 		add(vcas);
+		vcas.setToolTipText(get(MainLocale.PAGE,"vcastip"));
+
 		add(vbgr);
+		vbgr.setToolTipText(get(MainLocale.PAGE,"vbgrtip"));
+
 		add(veif);
+		veif.setToolTipText(get(MainLocale.PAGE,"veiftip"));
+
 		add(vuif);
+		vuif.setToolTipText(get(MainLocale.PAGE,"vuiftip"));
+
 		add(vmsc);
+		vmsc.setToolTipText(get(MainLocale.PAGE,"vmsctip"));
+
 		add(bass);
+		bass.setToolTipText(get(MainLocale.PAGE,"basstip"));
+
 		add(memo);
 		add(curr);
+		curr.setToolTipText(get(MainLocale.PAGE,"currtip"));
+
 		add(pcus);
+		pcus.setToolTipText(get(MainLocale.PAGE,"pcustip"));
+
 		add(caic);
+		caic.setToolTipText(get(MainLocale.PAGE,"caictip"));
+
 		add(camm);
+		camm.setToolTipText(get(MainLocale.PAGE,"cammtip"));
+
 		add(cama);
+		cama.setToolTipText(get(MainLocale.PAGE,"camatip"));
+
 		add(save);
+		save.setToolTipText(get(MainLocale.PAGE,"savetip"));
+
 		add(seicon);
 		add(sgifau);
 		add(welcome);
 		add(rply);
+		rply.setToolTipText(get(MainLocale.PAGE,"rplytip"));
+
 		add(allf);
+		allf.setToolTipText(get(MainLocale.PAGE,"allftip"));
+
 		add(auth);
+		auth.setToolTipText(get(MainLocale.PAGE,"authtip"));
+
 		add(comp);
+		comp.setToolTipText(get(MainLocale.PAGE,"comptip"));
+
 		add(bckp);
+		bckp.setToolTipText(get(MainLocale.PAGE,"bckptip"));
+
 		add(refr);
 		add(tips);
-		tips.setText("<html>" + ALLTIPS[(int)(Math.random() * ALLTIPS.length)] + "</html>");
-
 
 		welcome.setVisible(!MainBCU.author.isEmpty());
 
 		setMemo();
+		refrTips();
 		addListeners();
 	}
 
@@ -205,7 +250,11 @@ public class MainPage extends Page {
 		long m = Runtime.getRuntime().maxMemory();
 		double per = 100.0 * (t - f) / m;
 		memo.setText("memory used: " + (t - f >> 20) + " MB / " + (m >> 20) + " MB, " + (int) per + "%");
+	}
 
+	private void refrTips() {
+		String[] ALLTIPS = get(MainLocale.PAGE, "tip", 13);
+		tips.setText("<html>" + ALLTIPS[(int)(Math.random() * ALLTIPS.length)] + "</html>");
 	}
 
 }

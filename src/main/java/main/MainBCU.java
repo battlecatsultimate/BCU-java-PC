@@ -7,6 +7,7 @@ import common.io.PackLoader.ZipDesc.FileDesc;
 import common.io.assets.Admin;
 import common.io.assets.AssetLoader;
 import common.pack.Context;
+import common.pack.Source;
 import common.pack.Source.Workspace;
 import common.pack.UserProfile;
 import common.pack.Context.ErrType;
@@ -24,6 +25,7 @@ import page.*;
 import page.awt.AWTBBB;
 import page.awt.BBBuilder;
 import common.system.DateComparator;
+import page.battle.BattleBox;
 import utilpc.Theme;
 import utilpc.UtilPC;
 import utilpc.awt.FIBI;
@@ -92,7 +94,6 @@ public class MainBCU {
 			return author;
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		public void initProfile() {
 			LoadPage.prog("reading assets");
@@ -276,16 +277,24 @@ public class MainBCU {
 		}
 	}
 
-	public static final int ver = 50106;
+	public static final int ver = 50119;
 	private static final DecimalFormat df = new DecimalFormat("#.##");
 
-	public static int FILTER_TYPE = 1;
-	public static final boolean WRITE = !new File("./.project").exists();
+	public static byte FILTER_TYPE = 1;
+	public static int autoSaveTime = 0;
+	public static final boolean WRITE = !new File("./.idea").exists();
 	public static boolean preload = false, trueRun = true, loaded = false, USE_JOGL = false;
 	public static boolean light = true, nimbus = false, seconds = false, buttonSound = false;
 	public static String author = "";
 	public static ImageBuilder<BufferedImage> builder;
 	public static boolean announce0510 = false;
+	public static AutoSaveTimer ast;
+
+	public static void restartAutoSaveTimer() {
+		if (ast != null)
+			ast.interrupt();
+		ast = autoSaveTime > 0 ? new AutoSaveTimer() : null;
+	}
 
 	public static String getTime() {
 		return new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
@@ -335,10 +344,13 @@ public class MainBCU {
 		CommonStatic.ctx.initProfile();
 
 		BCUReader.getData$1();
+		BattleBox.StageNamePainter.read();
 		loaded = true;
 		JMenuItem menu = MenuBarHandler.getFileItem("Save All");
 			if (menu != null)
 				menu.setEnabled(true);
+
+		ast = autoSaveTime > 0 ? new AutoSaveTimer() : null;
 		MainFrame.changePanel(new MainPage());
 	}
 
@@ -362,5 +374,23 @@ public class MainBCU {
 		File assets = new File("./assets/assets/zip");
 
 		return res.exists() && assets.exists();
+	}
+
+	private static class AutoSaveTimer extends Thread {
+
+		public AutoSaveTimer() {
+			super();
+			start();
+		}
+
+		@Override
+		public void run() {
+			try {
+				Thread.sleep(MainBCU.autoSaveTime * 60000L);
+				Source.Workspace.autoSave();
+				MainBCU.restartAutoSaveTimer();
+			} catch (InterruptedException ignored) {
+			}
+		}
 	}
 }

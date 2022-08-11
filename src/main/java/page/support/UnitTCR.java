@@ -13,9 +13,16 @@ public class UnitTCR extends DefaultTableCellRenderer {
 	private static final long serialVersionUID = 1L;
 
 	private final int[] lnk;
+	private final int manualIndex;
 
 	public UnitTCR(int[] ints) {
 		lnk = ints;
+		manualIndex = 1;
+	}
+
+	public UnitTCR(int[] ints, int manualIndex) {
+		lnk = ints;
+		this.manualIndex = manualIndex;
 	}
 
 	@Override
@@ -23,7 +30,7 @@ public class UnitTCR extends DefaultTableCellRenderer {
 		Component comp = super.getTableCellRendererComponent(t, v, s, f, r, c);
 		if (lnk != null)
 			c = lnk[c];
-		if (c != 1)
+		if (c != manualIndex)
 			return comp;
 		JLabel jl = (JLabel) comp;
 		Form e = (Form) v;

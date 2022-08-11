@@ -1,5 +1,6 @@
 package utilpc.awt;
 
+import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
 
@@ -83,6 +84,11 @@ public class FIBI implements FakeImage {
 		}
 
 		return copy;
+	}
+
+	@Override
+	public FakeGraphics getGraphics() {
+		return new FG2D(bimg.getGraphics());
 	}
 
 }

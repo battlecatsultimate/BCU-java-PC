@@ -84,7 +84,7 @@ public class Interpret extends Data {
 	 * treasure max
 	 */
 	private static final int[] TMAX = { 30, 30, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 600, 1500, 100,
-			100, 100, 30, 30, 30, 30, 30, 10, 300, 300, 600, 600, 600, 20, 30, 30, 30, 20, 30, 20, 20 };
+			100, 100, 30, 30, 30, 30, 30, 10, 300, 300, 600, 600, 600, 30, 30, 30, 30, 20, 30, 30, 30 };
 
 	/**
 	 * combo string component
@@ -98,8 +98,23 @@ public class Interpret extends Data {
 			{ 1, 1 }, { 1, 1 }, { 1, 1 }, { 2, 2 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 },
 			{ 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 } };
 
-	public static final int[] EABIIND = { ABI_BASE, ABI_WAVES, ABI_SNIPERI, ABI_TIMEI, ABI_GHOST, ABI_GLASS, ABI_THEMEI };
-	public static final int IMUSFT = 13, EFILTER = 7;
+	//Filters abilities and procs that are available for enemies. Also gives better organization to the UI
+	public static final int[] EABIIND = { ABI_WAVES, ABI_SNIPERI, ABI_TIMEI, ABI_GHOST, ABI_GLASS, ABI_THEMEI };
+	public static final int[] EPROCIND = { Data.P_KB, Data.P_STOP, Data.P_SLOW, Data.P_WEAK, Data.P_CRIT, Data.P_WAVE, Data.P_MINIWAVE,
+			Data.P_VOLC, Data.P_BARRIER, Data.P_DEMONSHIELD, Data.P_BREAK, Data.P_SHIELDBREAK, Data.P_WARP, Data.P_CURSE, Data.P_SEAL,
+			Data.P_SATK, Data.P_POIATK, Data.P_ATKBASE, Data.P_SUMMON, Data.P_MOVEWAVE, Data.P_SNIPER, Data.P_BOSS, Data.P_TIME, Data.P_THEME,
+			Data.P_POISON, Data.P_ARMOR, Data.P_SPEED, Data.P_STRONG, Data.P_LETHAL, Data.P_BURROW, Data.P_REVIVE, Data.P_CRITI, Data.P_COUNTER,
+			Data.P_IMUATK, Data.P_DMGCUT, Data.P_DMGCAP, Data.P_IMUKB, Data.P_IMUSTOP, Data.P_IMUSLOW, Data.P_IMUWAVE, Data.P_IMUWEAK,
+			Data.P_IMUWARP, Data.P_IMUCURSE, Data.P_IMUSEAL, Data.P_IMUMOVING, Data.P_IMUARMOR, Data.P_IMUPOI, Data.P_IMUPOIATK, Data.P_IMUVOLC,
+			Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_IMUCANNON, Data.P_DEATHSURGE};
+	//Filters abilities and procs that are available for units. Also gives better organization to the UI
+	public static final int[] UPROCIND = { Data.P_BSTHUNT, Data.P_KB, Data.P_STOP, Data.P_SLOW, Data.P_WEAK, Data.P_BOUNTY, Data.P_CRIT, Data.P_WAVE,
+			Data.P_MINIWAVE, Data.P_VOLC, Data.P_BARRIER, Data.P_DEMONSHIELD, Data.P_BREAK, Data.P_SHIELDBREAK, Data.P_WARP, Data.P_CURSE,
+			Data.P_SEAL, Data.P_SATK, Data.P_POIATK, Data.P_ATKBASE, Data.P_SUMMON, Data.P_MOVEWAVE, Data.P_SNIPER, Data.P_BOSS, Data.P_TIME,
+			Data.P_THEME, Data.P_POISON, Data.P_ARMOR, Data.P_SPEED, Data.P_STRONG, Data.P_LETHAL, Data.P_BURROW, Data.P_REVIVE, Data.P_CRITI,
+			Data.P_COUNTER, Data.P_IMUATK, Data.P_DMGCUT, Data.P_DMGCAP, Data.P_IMUKB, Data.P_IMUSTOP, Data.P_IMUSLOW, Data.P_IMUWAVE,
+			Data.P_IMUWEAK, Data.P_IMUWARP, Data.P_IMUCURSE, Data.P_IMUSEAL, Data.P_IMUMOVING, Data.P_IMUARMOR, Data.P_IMUPOI, Data.P_IMUPOIATK,
+			Data.P_IMUVOLC, Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_DEATHSURGE};
 
 	private static final DecimalFormat df;
 
@@ -134,6 +149,11 @@ public class Interpret extends Data {
 				if (f != far.get(0)) {
 					return false;
 				}
+			}
+		} else {
+			for (int i = 1; i < me.getAtkCount(); i++) {
+				if (me.getAtkModel(i).getShortPoint() != me.getAtkModel(0).getShortPoint() || me.getAtkModel(i).getLongPoint() != me.getAtkModel(0).getLongPoint())
+					return false;
 			}
 		}
 
@@ -178,22 +198,11 @@ public class Interpret extends Data {
 			ldr = ma.getLongPoint() - ma.getShortPoint();
 		}
 
+
 		List<ProcDisplay> l = new ArrayList<>();
-		if (lds != 0 || ldr != 0) {
-			int p0 = Math.min(lds, lds + ldr);
-			int p1 = Math.max(lds, lds + ldr);
-			int r = Math.abs(ldr);
-			BufferedImage bi;
-			if (me.isOmni()) {
-				bi = UtilPC.getIcon(2, ATK_OMNI);
-			} else {
-				bi = UtilPC.getIcon(2, ATK_LD);
-			}
-			l.add(new ProcDisplay(Page.get(MainLocale.UTIL, "ld0") + ": " + tb + ", " + Page.get(MainLocale.UTIL, "ld1") + ": " + p0 + "~" + p1 + ", "
-					+ Page.get(MainLocale.UTIL, "ld2") + ": " + r, bi));
-		} else if (!allRangeSame(me)) {
+		if (!allRangeSame(me)) {
 			LinkedHashMap<String, List<Integer>> LDInts = new LinkedHashMap<>();
-			AtkDataModel[] atks = ((CustomEntity)me).atks;
+			MaskAtk[] atks = me.getAtks();
 			List<BufferedImage> ics = new ArrayList<>();
 
 			for (int i = 0; i < atks.length ; i++ ) {
@@ -231,9 +240,21 @@ public class Interpret extends Data {
 					}
 				}
 			}
+		} else if (lds != 0 || ldr != 0) {
+			int p0 = Math.min(lds, lds + ldr);
+			int p1 = Math.max(lds, lds + ldr);
+			int r = Math.abs(ldr);
+			BufferedImage bi;
+			if (me.isOmni()) {
+				bi = UtilPC.getIcon(2, ATK_OMNI);
+			} else {
+				bi = UtilPC.getIcon(2, ATK_LD);
+			}
+			l.add(new ProcDisplay(Page.get(MainLocale.UTIL, "ld0") + ": " + tb + ", " + Page.get(MainLocale.UTIL, "ld1") + ": " + p0 + "~" + p1 + ", "
+					+ Page.get(MainLocale.UTIL, "ld2") + ": " + r, bi));
 		}
 		AtkDataModel rev = me.getRevenge();
-		for (int z = 0; z < 2; z++) {
+		for (int z = 0; z < 6; z++) {
 			if (rev != null) {
 				int revs = rev.getShortPoint();
 				int revl = rev.getLongPoint();
@@ -248,7 +269,25 @@ public class Interpret extends Data {
 							" [" + Page.get(MainLocale.UTIL, "aa" + (z + 6)) + "]", bi));
 				}
 			}
-			rev = me.getResurrection();
+			switch (z) {
+				case 0:
+					rev = me.getResurrection();
+					break;
+				case 1:
+					rev = me.getCounter();
+					break;
+				case 2:
+					rev = me.getGouge();
+					break;
+				case 3:
+					rev = me.getResurface();
+					break;
+				case 4:
+					rev = me.getRevive();
+					break;
+				default:
+					rev = null;
+			}
 		}
 		String imu = Page.get(MainLocale.UTIL, "imu");
 		for (int i = 0; i < ABIS.length; i++)
@@ -302,14 +341,23 @@ public class Interpret extends Data {
 
 				if(!item.exists())
 					continue;
-
-				share.add(ma.getProc().sharable(i));
+				if (du instanceof DefaultData) {
+					boolean p = false;
+					if (ma.getProc().sharable(i))
+						p = true;
+					else
+						for (int pr : BCShareable)
+							if (pr == i) {
+								p = true;
+								break;
+							}
+					share.add(p);
+				}
 				String format = ProcLang.get().get(i).format;
 				String formatted = Formatter.format(format, item, ctx);
 
 				l.add(new ProcDisplay(formatted, UtilPC.getIcon(1, i)));
 			}
-
 		} else {
 			LinkedHashMap<String, List<Integer>> atkMap = new LinkedHashMap<>();
 			List<BufferedImage> procIcons = new ArrayList<>();
@@ -381,30 +429,38 @@ public class Interpret extends Data {
 					l.get(i).text = l.get(i).text + " " + getAtkNumbers(atks);
 		}
 
-		MaskAtk revenge = du.getRevenge();
-		if (revenge != null) {
-			for(int i = 0; i < Data.PROC_TOT; i++) {
-				ProcItem item = revenge.getProc().getArr(i);
+		MaskAtk rev = du.getRevenge();
+		for (int i = 0; i < 6; i++) {
+			if (rev != null) {
+				for(int j = 0; j < Data.PROC_TOT; j++) {
+					ProcItem item = rev.getProc().getArr(j);
 
-				if(!item.exists() || revenge.getProc().sharable(i))
-					continue;
+					if(!item.exists() || rev.getProc().sharable(j))
+						continue;
 
-				String format = ProcLang.get().get(i).format;
-				String formatted = Formatter.format(format, item, ctx);
-				l.add(new ProcDisplay(formatted + " [" + Page.get(MainLocale.UTIL, "aa6") + "]", UtilPC.getIcon(1, i)));
+					String format = ProcLang.get().get(j).format;
+					String formatted = Formatter.format(format, item, ctx);
+					l.add(new ProcDisplay(formatted + " [" + Page.get(MainLocale.UTIL, "aa" + (6 + i)) + "]", UtilPC.getIcon(1, j)));
+				}
 			}
-		}
-		MaskAtk resurrection = du.getResurrection();
-		if (resurrection != null) {
-			for(int i = 0; i < Data.PROC_TOT; i++) {
-				ProcItem item = resurrection.getProc().getArr(i);
-
-				if(!item.exists() || resurrection.getProc().sharable(i))
-					continue;
-
-				String format = ProcLang.get().get(i).format;
-				String formatted = Formatter.format(format, item, ctx);
-				l.add(new ProcDisplay(formatted + " [" + Page.get(MainLocale.UTIL, "aa7") + "]", UtilPC.getIcon(1, i)));
+			switch (i) {
+				case 0:
+					rev = du.getResurrection();
+					break;
+				case 1:
+					rev = du.getCounter();
+					break;
+				case 2:
+					rev = du.getGouge();
+					break;
+				case 3:
+					rev = du.getResurface();
+					break;
+				case 4:
+					rev = du.getRevive();
+					break;
+				default:
+					rev = null;
 			}
 		}
 
@@ -562,23 +618,19 @@ public class Interpret extends Data {
 	public static void redefine() {
 		ERARE = Page.get(MainLocale.UTIL, "er", 7);
 		RARITY = Page.get(MainLocale.UTIL, "r", 6);
-		TRAIT = Page.get(MainLocale.UTIL, "c", 13);
+		TRAIT = Page.get(MainLocale.UTIL, "c", TRAIT_TOT);
 		STAR = Page.get(MainLocale.UTIL, "s", 5);
-		ABIS = Page.get(MainLocale.UTIL, "a", 19);
-		SABIS = Page.get(MainLocale.UTIL, "sa", 19);
+		ABIS = Page.get(MainLocale.UTIL, "a", ABI_TOT);
+		SABIS = Page.get(MainLocale.UTIL, "sa", ABI_TOT);
 		ATKCONF = Page.get(MainLocale.UTIL, "aa", 8);
 		TREA = Page.get(MainLocale.UTIL, "t", 37);
 		COMF = Page.get(MainLocale.UTIL, "na", 6);
 		COMN = Page.get(MainLocale.UTIL, "nb", 25);
 		TCTX = Page.get(MainLocale.UTIL, "tc", 6);
-		PCTX = Page.get(MainLocale.UTIL, "aq", 59);
+		PCTX = Page.get(MainLocale.UTIL, "aq", 61);
 		EABI = new String[EABIIND.length];
-		for (int i = 0; i < EABI.length; i++) {
-			if (EABIIND[i] < 100)
-				EABI[i] = SABIS[EABIIND[i]];
-			else
-				EABI[i] = ProcLang.get().get(EABIIND[i] - 100).abbr_name;
-		}
+		for (int i = 0; i < EABI.length; i++)
+			EABI[i] = SABIS[EABIIND[i]];
 	}
 
 	public static void setComp(int ind, int v, BasisSet b) {

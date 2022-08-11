@@ -10,8 +10,6 @@ import page.support.ReorderList;
 import page.support.ReorderListener;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.util.List;
 
 public class StRecdPage extends AbRecdPage {
@@ -96,15 +94,10 @@ public class StRecdPage extends AbRecdPage {
 			setList();
 		});
 
-		list.addListSelectionListener(new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (isAdj() || list.getValueIsAdjusting())
-					return;
-				setRecd(list.getSelectedValue());
-			}
-
+		list.addListSelectionListener(e -> {
+			if (isAdj() || list.getValueIsAdjusting())
+				return;
+			setRecd(list.getSelectedValue());
 		});
 
 		list.list = new ReorderListener<Replay>() {
@@ -128,7 +121,7 @@ public class StRecdPage extends AbRecdPage {
 			Replay r = list.getSelectedValue();
 			if (isAdj() || r == null)
 				return;
-			r.rename(jtf.getText());
+			r.rename(jtf.getText(), true);
 		});
 
 	}

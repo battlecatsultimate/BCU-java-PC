@@ -11,6 +11,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Queue;
 
 public abstract class RecdThread extends Thread {
@@ -52,6 +54,9 @@ public abstract class RecdThread extends Thread {
 
 		MP4Thread(Queue<BufferedImage> list, String str, RetFunc bip) {
 			super(list, bip);
+			if (str == null)
+				str = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+
 			file = new File("./img/" + str + ".mp4");
 			try {
 				encoder = AWTSequenceEncoder.create30Fps(file);
@@ -172,7 +177,7 @@ public abstract class RecdThread extends Thread {
 	@Override
 	public void run() {
 		while (true) {
-			int size = 0;
+			int size;
 			synchronized (this) {
 				if (quit)
 					break;

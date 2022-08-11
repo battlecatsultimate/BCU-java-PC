@@ -7,6 +7,7 @@ import common.battle.LineUp;
 import common.pack.UserProfile;
 import common.system.Node;
 import common.util.pack.NyCastle;
+import common.util.stage.Limit;
 import common.util.unit.Combo;
 import common.util.unit.Form;
 import common.util.unit.Unit;
@@ -74,6 +75,7 @@ public class BasisPage extends LubCont {
 	private final NyCasBox ncb = new NyCasBox();
 	private final JBTN[] jbcsR = new JBTN[3];
 	private final JBTN[] jbcsL = new JBTN[3];
+	private final JTG cost = new JTG(1,"price");
 
 	private boolean changing = false, outside = false, resize = true;
 
@@ -91,6 +93,15 @@ public class BasisPage extends LubCont {
 		ini();
 		resized();
 	}
+
+	public BasisPage(Page p, Limit lim, int price) {
+		super(p);
+		lub.setLimit(lim, price);
+
+		ini();
+		resized();
+	}
+
 
 	public void requireResize() {
 		resize = true;
@@ -190,6 +201,7 @@ public class BasisPage extends LubCont {
 		set(reset, x, y, 700, 450, 200, 50);
 		set(lvorb, x, y, 900, 100, 200, 50);
 		set(combo, x, y, 900, 450, 200, 50);
+		set(cost, x, y, 1100, 450, 200, 50);
 		for (int i = 0; i < jbcsL.length; i++)
 			set(jbcsL[i], x, y, 930, 500 + 103 * i, 100, 50);
 		for (int i = 0; i < jbcsR.length; i++)
@@ -206,7 +218,7 @@ public class BasisPage extends LubCont {
 	}
 
 	@Override
-	protected void timer(int t) {
+    public void timer(int t) {
 		ncb.paint(ncb.getGraphics());
 		super.timer(t);
 	}
@@ -217,14 +229,28 @@ public class BasisPage extends LubCont {
 
 		unit.addActionListener(e -> {
 			if (ufp == null)
-				ufp = new UnitFLUPage(getThis());
+				ufp = new UnitFLUPage(getThis(), lub.lim, lub.price);
 			changePanel(ufp);
 		});
 
-		ul.addListSelectionListener(e -> {
-			changing = true;
-			lub.select(ul.getSelectedValue());
-			changing = false;
+		ul.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				super.mousePressed(e);
+				changing = true;
+				if (e.getButton() == MouseEvent.BUTTON3) {
+					int row = ul.locationToIndex(e.getPoint());
+					ul.setSelectedIndex(row);
+					lub.select(ul.getSelectedValue());
+					if (lub.sf != null && lub.sf.du.getPCoin() != null) {
+						lub.setLv(new int[]{lub.sf.unit.getPrefLv(), 0, 0, 0, 0, 0});
+						setLvs(lub.sf);
+					}
+				} else {
+					lub.select(ul.getSelectedValue());
+				}
+				changing = false;
+			}
 		});
 
 		form.addActionListener(arg0 -> {
@@ -366,7 +392,7 @@ public class BasisPage extends LubCont {
 
 		badd.addActionListener(arg0 -> {
 			changing = true;
-			BasisLU b = current().add();
+			BasisLU b = current().add(jlb.getSelectedIndex() + 1);
 			vb.clear();
 			vb.addAll(current().lb);
 			jlb.setListData(vb);
@@ -490,6 +516,8 @@ public class BasisPage extends LubCont {
 			setCL(jlcs.getSelectedIndex());
 			changing = false;
 		});
+
+		cost.addActionListener(x -> lub.enableCost = cost.isSelected());
 	}
 
 	private void changeLU() {
@@ -533,6 +561,7 @@ public class BasisPage extends LubCont {
 		add(cjtf);
 		add(search);
 		add(combo);
+		add(cost);
 		add(jbcsR[0] = new JBTN(0, ">"));
 		add(jbcsR[1] = new JBTN(0, ">"));
 		add(jbcsR[2] = new JBTN(0, ">"));

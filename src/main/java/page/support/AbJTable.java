@@ -1,5 +1,6 @@
 package page.support;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableColumnModel;
@@ -11,13 +12,18 @@ public abstract class AbJTable extends JTable implements TableModel {
 	private static final long serialVersionUID = 1L;
 
 	protected final int[] lnk;
+	protected final String[] title;
 
 	private final TModel tm = new TModel(this);
 
-	protected AbJTable() {
+	protected AbJTable(@Nonnull String[] title) {
+		this.title = title;
+
 		lnk = new int[getColumnCount()];
+
 		for (int i = 0; i < lnk.length; i++)
 			lnk[i] = i;
+
 		setColumnModel(tm);
 		setModel(this);
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -31,7 +37,9 @@ public abstract class AbJTable extends JTable implements TableModel {
 	public abstract Class<?> getColumnClass(int c);
 
 	@Override
-	public abstract int getColumnCount();
+	public int getColumnCount() {
+		return title.length;
+	}
 
 	@Override
 	public abstract String getColumnName(int c);
@@ -75,6 +83,11 @@ class TModel extends DefaultTableColumnModel {
 
 	@Override
 	public void moveColumn(int c, int nc) {
+		c = Math.max(c, 0);
+		c = Math.min(c, getColumnCount() - 1);
+		nc = Math.max(nc, 0);
+		nc = Math.min(nc, getColumnCount() - 1);
+
 		if (c == nc)
 			return;
 		t.swap(c, nc);

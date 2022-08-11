@@ -111,30 +111,55 @@ public class EnemyViewPage extends AbViewPage {
 
 		copy.addActionListener(e -> {
 			{
-				Enemy ene = jlu.getSelectedValue();
+				if (jlu.getSelectedValuesList().size() <= 1) {
+					Enemy ene = jlu.getSelectedValue();
 
-				if(ene != null) {
-					PackData pack = ene.getCont();
+					if (ene != null) {
+						PackData pack = ene.getCont();
 
-					if(pack != null)
-						if(pack instanceof PackData.DefPack)
-							copyAnim();
-						else if(pack instanceof PackData.UserPack) {
-							if(((PackData.UserPack) pack).editable || ((PackData.UserPack) pack).desc.allowAnim)
+						if (pack != null)
+							if (pack instanceof PackData.DefPack)
 								copyAnim();
-							else {
-								String pass = Opts.read("Enter the password : ");
-
-								if(pass == null)
-									return;
-
-								if(((Source.ZipSource) ((PackData.UserPack) pack).source).zip.matchKey(pass)) {
+							else if (pack instanceof PackData.UserPack) {
+								if (((PackData.UserPack) pack).editable || ((PackData.UserPack) pack).desc.allowAnim)
 									copyAnim();
-								} else {
-									Opts.pop("You typed incorrect password", "Incorrect password");
+								else {
+									String pass = Opts.read("Enter the password : ");
+
+									if (pass == null)
+										return;
+
+									if (((Source.ZipSource) ((PackData.UserPack) pack).source).zip.matchKey(pass)) {
+										copyAnim();
+									} else {
+										Opts.pop("You typed incorrect password", "Incorrect password");
+									}
 								}
 							}
+					}
+				} else {
+					List<Enemy> list = jlu.getSelectedValuesList();
+					PackData pack = list.get(0).getCont();
+
+					if (pack == null)
+						return;
+
+					if (pack instanceof PackData.UserPack) {
+						if (!((PackData.UserPack) pack).editable && !((PackData.UserPack) pack).desc.allowAnim) {
+							String pass = Opts.read("Enter the password : ");
+
+							if (pass == null)
+								return;
+
+							if (!((Source.ZipSource) ((PackData.UserPack) pack).source).zip.matchKey(pass)) {
+								Opts.pop("You typed incorrect password", "Incorrect password");
+								return;
+							}
 						}
+					}
+
+					for (Enemy ene : list)
+						copyAnim(ene);
 				}
 			}
 		});
@@ -158,6 +183,17 @@ public class EnemyViewPage extends AbViewPage {
 		AnimD<?, ?> eau = (AnimD<?, ?>) ei.anim();
 		Source.ResourceLocation rl = new Source.ResourceLocation(Source.ResourceLocation.LOCAL, "new anim", Source.BasePath.ANIM);
 		Source.Workspace.validate(rl);
+		new AnimCE(rl, eau);
+		changePanel(new ImgCutEditPage(getThis()));
+	}
+
+	private void copyAnim(Enemy ene) {
+		EAnimI ei = ene.anim.getEAnim(ene.anim.types()[0]);
+		if (ei == null || ei.anim() == null)
+			return;
+		AnimD<?, ?> eau = (AnimD<?, ?>) ei.anim();
+		Source.ResourceLocation rl = new Source.ResourceLocation(Source.ResourceLocation.LOCAL, ene.toString());
+		Source.Workspace.validate(Source.ANIM, rl);
 		new AnimCE(rl, eau);
 		changePanel(new ImgCutEditPage(getThis()));
 	}

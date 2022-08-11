@@ -3,9 +3,12 @@ package page.basis;
 import common.CommonStatic;
 import common.battle.BasisSet;
 import common.battle.LineUp;
+import common.battle.data.MaskUnit;
+import common.battle.data.Orb;
 import common.util.Data;
 import common.util.unit.Form;
 import common.util.unit.Level;
+import common.util.unit.Trait;
 import main.Opts;
 import page.JBTN;
 import page.JTF;
@@ -93,7 +96,7 @@ public class LevelEditPage extends Page {
 	}
 
 	@Override
-	protected void timer(int t) {
+    public void timer(int t) {
 		orbb.paint(orbb.getGraphics());
 		super.timer(t);
 	}
@@ -104,9 +107,13 @@ public class LevelEditPage extends Page {
 		levels.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				int[] lvs = CommonStatic.parseIntsN(levels.getText());
+				ArrayList<Integer> lvs = Level.LvList(CommonStatic.parseIntsN(levels.getText()));
 
 				setLvOrb(lvs, generateOrb());
+
+				updateOrbConsideringAbilities();
+
+				orbList.setListData(generateNames());
 			}
 		});
 
@@ -369,14 +376,30 @@ public class LevelEditPage extends Page {
 
 		if(f.orbs.getSlots() == -1) {
 			for(Form form : f.unit.forms) {
-				str |= (form.du.getAbi() & Data.AB_GOOD) != 0;
-				mas |= (form.du.getAbi() & Data.AB_MASSIVE) != 0;
-				res |= (form.du.getAbi() & Data.AB_RESIST) != 0;
+				MaskUnit mu;
+
+				if(form.du.getPCoin() != null) {
+					mu = form.du.getPCoin().improve(lv.getLvs());
+				} else {
+					mu = form.du;
+				}
+
+				str |= (mu.getAbi() & Data.AB_GOOD) != 0;
+				mas |= (mu.getAbi() & Data.AB_MASSIVE) != 0;
+				res |= (mu.getAbi() & Data.AB_RESIST) != 0;
 			}
 		} else {
-			str = (f.du.getAbi() & Data.AB_GOOD) != 0;
-			mas = (f.du.getAbi() & Data.AB_MASSIVE) != 0;
-			res = (f.du.getAbi() & Data.AB_RESIST) != 0;
+			MaskUnit mu;
+
+			if(f.du.getPCoin() != null) {
+				mu = f.du.getPCoin().improve(lv.getLvs());
+			} else {
+				mu = f.du;
+			}
+
+			str = (mu.getAbi() & Data.AB_GOOD) != 0;
+			mas = (mu.getAbi() & Data.AB_MASSIVE) != 0;
+			res = (mu.getAbi() & Data.AB_RESIST) != 0;
 		}
 
 		if (f.orbs.getSlots() != -1) {
@@ -433,7 +456,55 @@ public class LevelEditPage extends Page {
 		String[] grades;
 
 		if (aux.ORB.containsKey(data[0])) {
-			traitData = new ArrayList<>(aux.ORB.get(data[0]).keySet());
+			if(data[Data.ORB_TYPE] == Data.ORB_STRONG || data[Data.ORB_TYPE] == Data.ORB_MASSIVE || data[Data.ORB_TYPE] == Data.ORB_RESISTANT) {
+				List<Integer> allTraits = new ArrayList<>(aux.ORB.get(data[0]).keySet());
+
+				traitData = new ArrayList<>();
+
+				List<Trait> traitList = new ArrayList<>();
+
+				if(f.orbs.getSlots() == -1) {
+					for(Form form : f.unit.forms) {
+						MaskUnit mu;
+
+						if(form.du.getPCoin() != null) {
+							mu = form.du.getPCoin().improve(lv.getLvs());
+						} else {
+							mu = form.du;
+						}
+
+						for(Trait t : mu.getTraits()) {
+							if(t.BCTrait && !traitList.contains(t))
+								traitList.add(t);
+						}
+					}
+				} else {
+					MaskUnit mu;
+
+					if(f.du.getPCoin() != null) {
+						mu = f.du.getPCoin().improve(lv.getLvs());
+					} else {
+						mu = f.du;
+					}
+
+					for(Trait t : mu.getTraits()) {
+						if(t.BCTrait && !traitList.contains(t))
+							traitList.add(t);
+					}
+				}
+
+				for (Trait t : traitList) {
+					if (allTraits.contains(Orb.traitToOrb(t.id.id)))
+						traitData.add(Orb.traitToOrb(t.id.id));
+				}
+
+				if(traitData.isEmpty())
+					traitData = allTraits;
+				else
+					traitData.sort(Integer::compareTo);
+			} else {
+				traitData = new ArrayList<>(aux.ORB.get(data[0]).keySet());
+			}
 
 			traits = new String[traitData.size()];
 
@@ -491,12 +562,102 @@ public class LevelEditPage extends Page {
 		return BasisSet.current().sele.lu;
 	}
 
-	private void setLvOrb(int[] lvs, int[][] orbs) {
+	private void setLvOrb(ArrayList<Integer> lvs, int[][] orbs) {
 		lu().setOrb(f.unit, lvs, orbs);
 		p.callBack(null);
 	}
 
 	private boolean valid() {
 		return orbList.getSelectedIndex() != -1 && orbs.size() != 0;
+	}
+
+	private void updateOrbConsideringAbilities() {
+		boolean str = false;
+		boolean mas = false;
+		boolean res = false;
+
+		List<Integer> possibleTraits = new ArrayList<>();
+
+		if(f.orbs.getSlots() == -1) {
+			for(Form form : f.unit.forms) {
+				MaskUnit mu;
+
+				if(form.du.getPCoin() != null) {
+					mu = form.du.getPCoin().improve(lv.getLvs());
+				} else {
+					mu = form.du;
+				}
+
+				str |= (mu.getAbi() & Data.AB_GOOD) != 0;
+				mas |= (mu.getAbi() & Data.AB_MASSIVE) != 0;
+				res |= (mu.getAbi() & Data.AB_RESIST) != 0;
+
+				for(Trait t : mu.getTraits()) {
+					if(!t.BCTrait)
+						continue;
+
+					int bitMask = 1 << t.id.id;
+
+					if(!possibleTraits.contains(bitMask))
+						possibleTraits.add(bitMask);
+				}
+			}
+		} else {
+			MaskUnit mu;
+
+			if(f.du.getPCoin() != null) {
+				mu = f.du.getPCoin().improve(lv.getLvs());
+			} else {
+				mu = f.du;
+			}
+
+			str = (mu.getAbi() & Data.AB_GOOD) != 0;
+			mas = (mu.getAbi() & Data.AB_MASSIVE) != 0;
+			res = (mu.getAbi() & Data.AB_RESIST) != 0;
+
+			for(Trait t : mu.getTraits()) {
+				if(!t.BCTrait)
+					continue;
+
+				int bitMask = 1 << t.id.id;
+
+				if(!possibleTraits.contains(bitMask))
+					possibleTraits.add(bitMask);
+			}
+		}
+
+		if(lv.getOrbs() != null) {
+			for(int[] data : lv.getOrbs()) {
+				if(!str && data[Data.ORB_TYPE] == Data.ORB_STRONG) {
+					data[Data.ORB_TYPE] = Data.ORB_ATK;
+				}
+
+				if(!mas && data[Data.ORB_TYPE] == Data.ORB_MASSIVE) {
+					data[Data.ORB_TYPE] = Data.ORB_ATK;
+				}
+
+				if(!res && data[Data.ORB_TYPE] == Data.ORB_RESISTANT) {
+					data[Data.ORB_TYPE] = Data.ORB_ATK;
+				}
+
+				if(data[Data.ORB_TYPE] == Data.ORB_STRONG || data[Data.ORB_TYPE] == Data.ORB_MASSIVE || data[Data.ORB_TYPE] == Data.ORB_RESISTANT) {
+					List<Integer> allTraits = new ArrayList<>(CommonStatic.getBCAssets().ORB.get(data[0]).keySet());
+
+					List<Integer> traits = new ArrayList<>();
+
+					for(int t : possibleTraits) {
+						if (allTraits.contains(t))
+							traits.add(t);
+					}
+
+					if(!traits.isEmpty())
+						traits.sort(Integer::compareTo);
+
+					if(!traits.isEmpty() && !traits.contains(data[Data.ORB_TRAIT])) {
+						data[Data.ORB_TRAIT] = traits.get(0);
+					}
+				}
+			}
+		}
 	}
 }

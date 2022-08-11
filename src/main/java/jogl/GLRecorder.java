@@ -44,7 +44,7 @@ class GLRecdBImg extends GLRecorder {
 
 	protected GLRecdBImg(GLCstd scr, String path, int type, RetFunc ob) {
 		super(scr);
-		qb = new ArrayDeque<BufferedImage>();
+		qb = new ArrayDeque<>();
 		th = RecdThread.getIns(ob, qb, path, type);
 	}
 

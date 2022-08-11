@@ -81,11 +81,16 @@ class BufferedAnim extends Canvas implements AnimBox {
 		if (img == null)
 			return null;
 		Graphics2D gra = (Graphics2D) img.getGraphics();
-		GradientPaint gdt = new GradientPaint(w / 2f, 0, c0, w / 2f, h / 2f, c1, true);
-		Paint p = gra.getPaint();
-		gra.setPaint(gdt);
-		gra.fillRect(0, 0, w, h);
-		gra.setPaint(p);
+		if(CommonStatic.getConfig().viewerColor != -1) {
+			gra.setColor(new Color(CommonStatic.getConfig().viewerColor));
+			gra.fillRect(0, 0, w, h);
+		} else {
+			Paint p = gra.getPaint();
+			GradientPaint gdt = new GradientPaint(w / 2f, 0, c0, w / 2f, h / 2f, c1, true);
+			gra.setPaint(gdt);
+			gra.fillRect(0, 0, w, h);
+			gra.setPaint(p);
+		}
 		gra.translate(w / 2, h * 3 / 4);
 		if (ent != null)
 			ent.draw(new FG2D(gra), ori.copy().times(-1), siz);
@@ -150,8 +155,19 @@ class GLAnimBox extends GLCstd implements AnimBox {
 		int h = getHeight();
 		GLGraphics g = new GLGraphics(drawable.getGL().getGL2(), w, h);
 
-		g.gradRect(0, 0, w, h / 2, w / 2, 0, c, w / 2, h / 2, f);
-		g.gradRect(0, h / 2, w, h / 2, w / 2, h / 2, f, w / 2, h, c);
+		if(CommonStatic.getConfig().viewerColor != -1) {
+			int rgb = CommonStatic.getConfig().viewerColor;
+
+			int b = rgb & 0xFF;
+			int gr = (rgb >> 8) & 0xFF;
+			int r = (rgb >> 16) & 0xFF;
+
+			g.setColor(r, gr, b);
+			g.fillRect(0, 0, w, h);
+		} else {
+			g.gradRect(0, 0, w, h / 2, w / 2, 0, c, w / 2, h / 2, f);
+			g.gradRect(0, h / 2, w, h / 2, w / 2, h / 2, f, w / 2, h, c);
+		}
 
 		drawAnim(g);
 

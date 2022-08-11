@@ -45,7 +45,7 @@ public class LoadPage extends Page {
 	}
 
 	@Override
-	protected void timer(int t) {
+    public void timer(int t) {
 		if (temp != null) {
 			jl.setText(temp);
 			temp = null;

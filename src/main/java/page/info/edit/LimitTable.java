@@ -23,7 +23,7 @@ public class LimitTable extends Page {
 
 	protected static void redefine() {
 		limits = Page.get(MainLocale.INFO, "ht1", 7);
-		rarity = new String[] { "N", "EX", "R", "SR", "UR", "LR" };
+		rarity = Page.get(MainLocale.UTIL, "r", 6);
 	}
 
 	private final JTF jcmin = new JTF();

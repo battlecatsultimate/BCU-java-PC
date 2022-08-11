@@ -31,7 +31,7 @@ class ComingTable extends AbJTable {
 	}
 
 	protected static void redefine() {
-		title = Page.get(MainLocale.INFO, "c", 6);
+		title = Page.get(MainLocale.INFO, "c", 7);
 	}
 
 	private Object[][] data;
@@ -40,6 +40,8 @@ class ComingTable extends AbJTable {
 	private final Page page;
 
 	protected ComingTable(Page p) {
+		super(title);
+
 		page = p;
 		setDefaultRenderer(Enemy.class, new EnemyTCR());
 	}
@@ -109,7 +111,7 @@ class ComingTable extends AbJTable {
 
 	protected void setData(Stage st) {
 		Line[] info = st.data.getSimple();
-		data = new Object[info.length][6];
+		data = new Object[info.length][7];
 		link = new int[info.length];
 		for (int i = 0; i < info.length; i++) {
 			int ind = info.length - i - 1;
@@ -129,10 +131,14 @@ class ComingTable extends AbJTable {
 		for (int i = 0; i < link.length; i++)
 			if (link[i] != -1) {
 				if (MainBCU.seconds)
-					data[link[i]][5] = MainBCU.toSeconds(est.rem[i]);
+					data[link[i]][5] = MainBCU.toSeconds(Math.abs(est.rem[i]));
 				else
-					data[link[i]][5] = est.rem[i] + "f";
+					data[link[i]][5] = Math.abs(est.rem[i]) + "f";
+
 				data[link[i]][3] = est.num[i] == 0 ? "infinite" : est.num[i];
+
+				data[link[i]][6] = est.killCounter[i];
+
 				if (est.num[i] == -1)
 					data[link[i]] = null;
 			}

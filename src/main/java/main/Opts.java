@@ -1,14 +1,25 @@
 package main;
 
 import common.CommonStatic;
+import common.util.Data;
+import common.util.lang.MultiLangCont;
+import common.util.stage.MapColc;
+import common.util.stage.Stage;
+import common.util.stage.StageMap;
+import common.util.stage.info.DefStageInfo;
 import page.*;
+import page.battle.BattleInfoPage;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Opts {
 
@@ -144,6 +155,24 @@ public class Opts {
 				null, choices, choices[0]);
 	}
 
+	public static boolean[] confirmSave() {
+		JLabel jl = new JLabel(Page.get(MainLocale.PAGE, "savwarn"));
+		JCheckBox check = new JCheckBox(Page.get(MainLocale.PAGE, "genbckp"));
+		check.setSelected(true);
+
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.add(jl);
+		//panel.add(check); //TODO - Optional Backup generation
+
+		int choice = JOptionPane.showConfirmDialog(null, panel, Page.get(MainLocale.PAGE, "savconf"), JOptionPane.YES_NO_CANCEL_OPTION);
+
+		if (choice == JOptionPane.CLOSED_OPTION || choice == JOptionPane.CANCEL_OPTION)
+			return null;
+
+		return new boolean[]{choice == JOptionPane.YES_OPTION, check.isSelected()};
+	}
+
 	public static Object[] showTextCheck(String title, String content, boolean defaultCheck) {
 		JLabel contents = new JLabel(content);
 		JTF text = new JTF();
@@ -154,6 +183,7 @@ public class Opts {
 		parentCheck.setSelected(true);
 		parentText.setEnabled(!parentCheck.isSelected());
 
+		check.addItemListener(e -> text.setEnabled(e.getStateChange() != ItemEvent.SELECTED));
 		parentCheck.addItemListener(e -> parentText.setEnabled(e.getStateChange() != ItemEvent.SELECTED));
 
 		Border b = text.getBorder();
@@ -261,6 +291,210 @@ public class Opts {
 				warnIcon,
 				new Object[] {okay, cancel},
 				cancel
+		);
+	}
+
+	@SuppressWarnings("MagicConstant")
+	public static void showColorPicker(String title, Page pg, int... rgb) {
+		ColorPickPage p = new ColorPickPage(pg);
+
+		if(rgb.length == 3) {
+			int c = Math.max(0, Math.min(255, rgb[0]));
+			c = (c << 8) + Math.max(0, Math.min(255, rgb[1]));
+			c = (c << 8) + Math.max(0, Math.min(255, rgb[2]));
+
+			p.picker.setHex(c);
+		} else if(rgb.length == 1) {
+			p.picker.setHex(Math.max(0, Math.min(0xFFFFFF, rgb[0])));
+		}
+
+		Runnable run = new Runnable() {
+			public int inter = 0;
+
+			@SuppressWarnings("BusyWait")
+			@Override
+			public void run() {
+				while (true) {
+					long m = System.currentTimeMillis();
+					try {
+						p.timer(0);
+						int delay = (int) (System.currentTimeMillis() - m);
+						inter = (inter * 9 + 100 * delay / Timer.p) / 10;
+						int sle = delay >= Timer.p ? 1 : Timer.p - delay;
+						Thread.sleep(sle);
+					} catch (InterruptedException e) {
+						return;
+					}
+				}
+			}
+		};
+
+		Thread thread = new Thread(run);
+		thread.start();
+
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+
+		int w = MainFrame.F.getRootPane().getWidth();
+		int h = MainFrame.F.getRootPane().getHeight();
+
+		p.setPreferredSize(new Dimension((int) (w * 0.524), (int) (h * 0.3)));
+		p.setBounds(0, 0, (int) (w * 0.525), (int) (h * 0.3));
+
+		panel.add(p);
+		panel.setPreferredSize(new Dimension((int) (w * 0.524), (int) (h * 0.368)));
+
+		panel.setBackground(new Color(64, 64, 64));
+
+		JBTN okay = new JBTN("OK");
+		JBTN cancel = new JBTN("Cancel");
+
+		okay.addActionListener(a -> {
+			JOptionPane pane = getOptionPane((JComponent) a.getSource());
+
+			pane.setValue(okay);
+
+			pg.callBack(p.picker);
+			thread.interrupt();
+		});
+
+		cancel.addActionListener(a -> {
+			JOptionPane pane = getOptionPane((JComponent) a.getSource());
+
+			pane.setValue(cancel);
+		});
+
+		JOptionPane.showOptionDialog(
+				null,
+				panel,
+				title,
+				JOptionPane.OK_CANCEL_OPTION,
+				-1,
+				null,
+				new Object[]{okay, cancel},
+				null
+		);
+	}
+
+	@SuppressWarnings("MagicConstant")
+	public static void showExStageSelection(String title, String content, Stage s, BattleInfoPage bp) {
+		if(s.info == null || !(s.info.exConnection() || s.info.getExStages() != null))
+			throw new IllegalStateException("This stage doesn't have EX stage");
+
+		JLabel contents = new JLabel(content);
+
+		Border b = contents.getBorder();
+		Border eb = new EmptyBorder(0, 0, 16, 0);
+
+		if(b == null) {
+			contents.setBorder(eb);
+		} else {
+			contents.setBorder(new CompoundBorder(eb, b));
+		}
+
+		//Gather EX stages
+		List<Stage> exStages = new ArrayList<>();
+
+		if (s.info instanceof DefStageInfo) {
+			DefStageInfo info = (DefStageInfo)s.info;
+			if (info.exConnection) {
+				StageMap sm = MapColc.DefMapColc.getMap(info.exMapID + 4000);
+
+				if (sm != null) {
+					for (int i = info.exStageIDMin; i <= info.exStageIDMax; i++) {
+						Stage st = sm.list.get(i);
+
+						if (st != null)
+							exStages.add(st);
+					}
+				}
+			}
+		}
+
+		if(s.info.getExStages() != null) {
+			for(Stage st : s.info.getExStages()) {
+				if(st != null)
+					exStages.add(st);
+			}
+		}
+
+		AtomicInteger selection = new AtomicInteger();
+		ButtonGroup bg = new ButtonGroup();
+
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+		panel.add(contents);
+
+		for(int i = 0; i < exStages.size(); i++) {
+			Stage e = exStages.get(i);
+
+			JRadioButton rb = new JRadioButton(e.getCont().toString()+" - "+e.toString());
+
+			int finalI = i;
+
+			rb.addActionListener(e1 -> selection.set(finalI));
+
+			if(i == 0)
+				rb.setSelected(true);
+
+			bg.add(rb);
+
+			panel.add(rb);
+		}
+
+		JBTN rand = new JBTN("Random");
+		JBTN okay = new JBTN("OK");
+		JBTN cancel = new JBTN("Cancel");
+		Timer.manualTick();
+
+		rand.addActionListener(a -> {
+			JOptionPane pane = getOptionPane((JComponent) a.getSource());
+
+			pane.setValue(rand);
+
+			float[] chances = s.info.getExChances();
+			if (chances[0] == -1) {
+				if (Math.random() * 100 < ((DefStageInfo)s.info).exChance)
+					bp.callBack(exStages.get((int) (Math.random() * exStages.size())));
+			} else {
+				double randomized = Math.random() * 100;
+				float probs = 0;
+
+				for (int i = 0; i < chances.length; i++) {
+					if (randomized < chances[i] + probs) {
+						bp.callBack(exStages.get(i));
+						break;
+					} else
+						probs += chances[i];
+				}
+
+			}
+		});
+
+		okay.addActionListener(a -> {
+			JOptionPane pane = getOptionPane((JComponent) a.getSource());
+
+			pane.setValue(okay);
+
+			bp.callBack(exStages.get(selection.get()));
+		});
+
+		cancel.addActionListener(a -> {
+			JOptionPane pane = getOptionPane((JComponent) a.getSource());
+
+			pane.setValue(cancel);
+		});
+
+		JOptionPane.showOptionDialog(
+				null,
+				panel,
+				title,
+				JOptionPane.OK_CANCEL_OPTION,
+				-1,
+				null,
+				new Object[]{rand, okay, cancel},
+				null
 		);
 	}
 

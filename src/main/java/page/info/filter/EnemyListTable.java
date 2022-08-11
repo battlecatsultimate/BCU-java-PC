@@ -33,6 +33,8 @@ public class EnemyListTable extends SortTable<Enemy> {
 	private final Basis b = BasisSet.current();
 
 	protected EnemyListTable(Page p) {
+		super(tit);
+
 		page = p;
 
 		setDefaultRenderer(Enemy.class, new EnemyTCR());
@@ -104,10 +106,4 @@ public class EnemyListTable extends SortTable<Enemy> {
 			return e.de.getWill() + 1;
 		return null;
 	}
-
-	@Override
-	protected String[] getTit() {
-		return tit;
-	}
-
 }

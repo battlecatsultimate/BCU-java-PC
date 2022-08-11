@@ -12,6 +12,7 @@ import page.battle.StRecdPage;
 
 import javax.swing.*;
 import java.util.Collection;
+import java.util.List;
 import java.util.Vector;
 
 public class StageViewPage extends StagePage {
@@ -60,7 +61,7 @@ public class StageViewPage extends StagePage {
 		set(strt, x, y, 400, 0, 200, 50);
 		set(recd, x, y, 1850, 350, 200, 50);
 		set(info, x, y, 1600, 350, 200, 50);
-		set(search, x, y, 1350, 350, 200, 50);
+		set(search, x, y, 200, 0, 200, 50);
 	}
 
 	@Override
@@ -138,7 +139,7 @@ public class StageViewPage extends StagePage {
 			}
 		});
 
-		search.setLnr(x -> changePanel(new StageSearchPage(getThis(), jlmc.getSelectedIndex())));
+		search.setLnr(x -> changePanel(new StageSearchPage(getThis())));
 
 	}
 
@@ -158,4 +159,7 @@ public class StageViewPage extends StagePage {
 		addListeners();
 	}
 
+	public List<Stage> getSelectedStages() {
+		return jlst.getSelectedValuesList();
+	}
 }

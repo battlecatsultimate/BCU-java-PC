@@ -114,11 +114,11 @@ class ViewBoxDef extends Canvas implements ViewBox, ViewBox.VBExporter {
 	}
 
 	@Override
-	public Loader start() {
+	public Loader start(boolean mp4) {
 		if (ent == null)
 			return null;
 		lbimg = new ArrayDeque<>();
-		loader = new Loader(lbimg);
+		loader = new Loader(lbimg, mp4);
 		loader.start();
 		return loader;
 	}
@@ -141,11 +141,16 @@ class ViewBoxDef extends Canvas implements ViewBox, ViewBox.VBExporter {
 			img = (BufferedImage) createImage(w, h);
 			gra = (Graphics2D) img.getGraphics();
 			if (!blank) {
-				GradientPaint gdt = new GradientPaint(w / 2f, 0, c0, w / 2f, h / 2f, c1, true);
-				Paint p = gra.getPaint();
-				gra.setPaint(gdt);
-				gra.fillRect(0, 0, w, h);
-				gra.setPaint(p);
+				if(CommonStatic.getConfig().viewerColor != -1) {
+					gra.setColor(new Color(CommonStatic.getConfig().viewerColor));
+					gra.fillRect(0, 0, w, h);
+				} else {
+					GradientPaint gdt = new GradientPaint(w / 2f, 0, c0, w / 2f, h / 2f, c1, true);
+					Paint p = gra.getPaint();
+					gra.setPaint(gdt);
+					gra.fillRect(0, 0, w, h);
+					gra.setPaint(p);
+				}
 			}
 		}
 		draw(new FG2D(gra));
