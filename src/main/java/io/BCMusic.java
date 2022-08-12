@@ -275,7 +275,7 @@ public class BCMusic extends Data {
 				loadSound(-1, CACHE_CUSTOM.get(mus));
 			} else {
 				Clip c = openFile(m);
-				if (c.getMicrosecondLength() > 10_000_000L)
+				if (c.getMicrosecondLength() < 10_000_000L)
 					loadSound(-1, CACHE_CUSTOM.put(mus, m.data.getBytes()));
 				else
 					loadSound(-1, c); // TODO stop audio if battle is exited after
