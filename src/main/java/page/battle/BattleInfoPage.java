@@ -281,31 +281,46 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		StageBasis sb = basis.sb;
 		if (!pause) {
 			upd++;
+
 			if (spe < 0)
 				if (upd % (1 - spe) != 0)
 					return;
+
 			basis.update();
+
 			updateKey();
+
 			if (spe > 0)
 				for (int i = 0; i < Math.pow(2, spe); i++)
 					basis.update();
+
 			ct.update(sb.est);
+
 			List<Entity> le = new ArrayList<>();
+			List<Entity> les = new ArrayList<>();
 			List<Entity> lu = new ArrayList<>();
-			for (Entity e : sb.le)
+			List<Entity> lus = new ArrayList<>();
+
+			for (Entity e : sb.le) {
 				(e.dire == 1 ? le : lu).add(e);
+				(e.dire == 1 ? les : lus).add(e);
+			}
+
 			List<Form> lf = new ArrayList<>();
+
 			for (Form[] fs : basis.sb.b.lu.fs) {
 				for(Form f : fs) {
 					if(f != null)
 						lf.add(f);
 				}
 			}
+
 			et.setList(le);
-			est.setList(le);
+			est.setList(les);
 			ut.setList(lu);
-			ust.setList(lu);
+			ust.setList(lus);
 			utd.setList(lf);
+
 			BCMusic.flush(spe < 3 && sb.ebase.health > 0 && sb.ubase.health > 0);
 		}
 		if (basis instanceof SBRply && recd.rl != null)
