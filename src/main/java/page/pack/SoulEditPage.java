@@ -218,7 +218,7 @@ public class SoulEditPage extends Page {
         }
 
         boolean editable = exists && pac.editable;
-        boolean selected = jld.getSelectedValue() != null && jld.getSelectedValue().id.base.equals(Source.BasePath.SOUL);
+        boolean selected = jld.getSelectedValue() != null;
         adds.setEnabled(editable && selected);
         rems.setEnabled(editable && soul != null);
         srea.setEnabled(editable && soul != null);
