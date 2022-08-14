@@ -89,6 +89,7 @@ public abstract class EntityEditPage extends Page {
 	private final JL vitv = new JL();
 	private final JComboBox<AnimCE> jcba = new JComboBox<>();
 	private final JComboBox<Soul> jcbs = new JComboBox<>();
+	private final JComboBox<AtkDataModel.AttackType> jcat = new JComboBox<>();
 	private final ListJtfPolicy ljp = new ListJtfPolicy();
 	private final AtkEditTable aet;
 	private final ProcTable.MainProcTable mpt;
@@ -237,10 +238,12 @@ public abstract class EntityEditPage extends Page {
 		set(vres);
 		add(comm);
 		add(jcbs);
-		Vector<Soul> vec = new Vector<>();
-		vec.add(null);
-		vec.addAll(UserProfile.getAll(pack, Soul.class));
-		jcbs.setModel(new DefaultComboBoxModel<>(vec));
+		add(jcat);
+		Vector<Soul> souls = new Vector<>();
+		souls.add(null);
+		souls.addAll(UserProfile.getAll(pack, Soul.class));
+		jcbs.setModel(new DefaultComboBoxModel<>(souls));
+		jcat.setModel(new DefaultComboBoxModel<>(AtkDataModel.AttackType.values()));
 		if (editable) {
 			add(jcba);
 			Vector<AnimCE> vda = new Vector<>();
@@ -339,7 +342,8 @@ public abstract class EntityEditPage extends Page {
 		set(jspm, x, y, 1850, 100, 350, 900);
 		mpt.componentResized(x, y);
 
-		set(jspi, x, y, 350, 100, 300, 350);
+		set(jcat, x, y, 350, 100, 300, 50);
+		set(jspi, x, y, 350, 150, 300, 300);
 		set(add, x, y, 350, 450, 150, 50);
 		set(rem, x, y, 500, 450, 150, 50);
 		set(copy, x, y, 350, 500, 150, 50);
