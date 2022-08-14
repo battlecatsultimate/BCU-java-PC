@@ -82,7 +82,7 @@ public interface BattleBox {
 
 		protected double corr, unir; // siz = pix/p;
 
-		private final StageBasis sb;
+		private StageBasis sb;
 		private final int maxW;
 		private final int maxH = 510 * 3;
 		private final int minH = 510; // in p
@@ -125,6 +125,8 @@ public interface BattleBox {
 		}
 
 		public void draw(FakeGraphics g) {
+			sb = bf.sb;
+
 			int w = box.getWidth();
 			int h = box.getHeight();
 
