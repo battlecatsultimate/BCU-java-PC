@@ -4,10 +4,7 @@ import common.CommonStatic;
 import common.pack.Source;
 import common.pack.Source.ResourceLocation;
 import common.pack.Source.Workspace;
-import common.util.anim.AnimCE;
-import common.util.anim.AnimD;
-import common.util.anim.AnimI;
-import common.util.anim.EAnimI;
+import common.util.anim.*;
 import io.BCUWriter;
 import main.Timer;
 import page.*;
@@ -243,7 +240,13 @@ public abstract class AbViewPage extends Page {
 			if (ei == null || !(ei.anim() instanceof AnimD))
 				return;
 			AnimD<?, ?> eau = (AnimD<?, ?>) ei.anim();
-			ResourceLocation rl = new ResourceLocation(ResourceLocation.LOCAL, "new anim", Source.BasePath.ANIM);
+			ResourceLocation rl;
+
+			if (eau.types[0].equals(AnimU.UType.SOUL))
+				rl = new ResourceLocation(ResourceLocation.LOCAL, "new soul anim", Source.BasePath.SOUL);
+			else
+				rl = new ResourceLocation(ResourceLocation.LOCAL, "new anim", Source.BasePath.ANIM);
+
 			Workspace.validate(rl);
 			new AnimCE(rl, eau);
 			changePanel(new ImgCutEditPage(getThis()));
