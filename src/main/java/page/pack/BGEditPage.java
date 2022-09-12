@@ -280,11 +280,11 @@ public class BGEditPage extends Page {
 			effVector.add(get(MainLocale.PAGE, "bgeff"+i));
 		}
 
-		for(int i = 0; i < BackgroundEffect.jsonList.length; i++) {
-			String temp = get(MainLocale.PAGE, "bgjson"+BackgroundEffect.jsonList[i]);
+		for(int i = 0; i < BackgroundEffect.jsonList.size(); i++) {
+			String temp = get(MainLocale.PAGE, "bgjson"+BackgroundEffect.jsonList.get(i));
 
-			if(temp.equals("bgjson"+BackgroundEffect.jsonList[i])) {
-				temp = get(MainLocale.PAGE, "bgeffdum").replace("_", ""+BackgroundEffect.jsonList[i]);
+			if(temp.equals("bgjson"+BackgroundEffect.jsonList.get(i))) {
+				temp = get(MainLocale.PAGE, "bgeffdum").replace("_", ""+BackgroundEffect.jsonList.get(i));
 			}
 
 			effVector.add(temp);
