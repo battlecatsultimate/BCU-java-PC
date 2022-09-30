@@ -13,5 +13,5 @@
       </list>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_14" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_14" project-jdk-name="liberica-1.8" project-jdk-type="JavaSDK" />
 </project>

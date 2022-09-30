@@ -175,7 +175,7 @@ public class EnemyInfoTable extends Page {
 		trs.sort(Comparator.comparing(t -> !t.BCTrait));
 		String[] TraitBox = new String[trs.size()];
 		for (int i = 0; i < trs.size(); i++) {
-			Trait trait = e.de.getTraits().get(i);
+			Trait trait = trs.get(i);
 			if (trait.BCTrait)
 				TraitBox[i] = Interpret.TRAIT[trait.id.id];
 			else
@@ -264,10 +264,27 @@ public class EnemyInfoTable extends Page {
 				atks[i][3].setText(MainBCU.toSeconds(atkData[i][1]));
 			else
 				atks[i][3].setText(atkData[i][1] + "f");
-			atks[i][4].setText(0, atkData[i][3] == -1 ? "igtr" : "cntr");
-			atks[i][5].setText("" + (!(e.de instanceof DataEnemy) && ((CustomEnemy) e.de).atks[i].specialTrait));
-			atks[i][6].setText(MainLocale.INFO, "dire");
-			atks[i][7].setText("" + atkData[i][3]);
+			atks[i][4].setText(MainLocale.INFO, "dire");
+			atks[i][5].setText("" + atkData[i][3]);
+
+			ArrayList<Trait> atrs = e.de.getAtkModel(i).getATKTraits();
+			if (atrs.isEmpty())
+				continue;
+			atks[i][6].setText(MainLocale.INFO, "trait");
+
+			atrs.sort(Comparator.comparingInt(t -> t.id.id));
+			atrs.sort(Comparator.comparing(t -> t.id.pack));
+			atrs.sort(Comparator.comparing(t -> !t.BCTrait));
+			String[] Atraits = new String[atrs.size()];
+			for (int j = 0; j < atrs.size(); j++) {
+				Trait trait = atrs.get(j);
+				if (trait.BCTrait)
+					Atraits[j] = Interpret.TRAIT[trait.id.id];
+				else
+					Atraits[j] = trait.name;
+			}
+			atks[i][7].setText(Interpret.getTrait(Atraits, e.de.getStar()));
+			atks[i][6].setToolTipText(atks[i][7].getText());
 		}
 		for (int i = 0; i < atkList.size(); i++) {
 			int ind = i + atkData.length;
@@ -277,10 +294,8 @@ public class EnemyInfoTable extends Page {
 				atks[ind][3].setText(MainBCU.toSeconds(atkList.get(i).pre));
 			else
 				atks[ind][3].setText(atkList.get(i).pre + "f");
-			atks[ind][4].setText(0, atkList.get(i).specialTrait ? "igtr" : "cntr");
-			atks[ind][5].setText("" + (atkList.get(i).specialTrait));
-			atks[ind][6].setText(MainLocale.INFO, "dire");
-			atks[ind][7].setText("" + atkList.get(i).dire);
+			atks[ind][4].setText(MainLocale.INFO, "dire");
+			atks[ind][5].setText("" + atkList.get(i).dire);
 		}
 		if (e.de.getLimit() >= 100)
 			special[0][5].setToolTipText("<html>"

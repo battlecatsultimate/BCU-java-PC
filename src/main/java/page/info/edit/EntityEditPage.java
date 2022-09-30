@@ -15,6 +15,7 @@ import common.util.anim.AnimU;
 import common.util.anim.AnimU.UType;
 import common.util.lang.Editors;
 import common.util.pack.Background;
+import common.util.pack.EffAnim;
 import common.util.pack.Soul;
 import common.util.pack.Soul.SoulType;
 import common.util.stage.Music;
@@ -81,10 +82,6 @@ public abstract class EntityEditPage extends Page {
 	private final JL lpst = new JL(MainLocale.INFO, "postaa");
 	private final JL vpst = new JL();
 	private final JL litv = new JL(MainLocale.INFO, "atkf");
-	private final JL lrev = new JL(MainLocale.INFO, "post-HB");
-	private final JL lres = new JL(MainLocale.INFO, "post-death");
-	private final JL vrev = new JL();
-	private final JL vres = new JL();
 	private final JL vitv = new JL();
 	private final JComboBox<AnimCE> jcba = new JComboBox<>();
 	private final JComboBox<Soul> jcbs = new JComboBox<>();
@@ -114,7 +111,7 @@ public abstract class EntityEditPage extends Page {
 		Editors.setEditorSupplier(new EditCtrl(isEnemy, this));
 		pack = pac;
 		ce = e;
-		aet = new AtkEditTable(this, edit, !isEnemy);
+		aet = new AtkEditTable(this, pack, edit, !isEnemy);
 		apt = new ProcTable.AtkProcTable(aet, edit, !isEnemy);
 		aet.setProcTable(apt);
 		jsp = new JScrollPane(apt);
@@ -230,10 +227,6 @@ public abstract class EntityEditPage extends Page {
 		set(vpst);
 		set(litv);
 		set(vitv);
-		set(lrev);
-		set(lres);
-		set(vrev);
-		set(vres);
 		add(comm);
 		add(jcbs);
 		Vector<Soul> vec = new Vector<>();
@@ -357,31 +350,19 @@ public abstract class EntityEditPage extends Page {
 		set(lct, x, y, 50, 600, 100, 50);
 		set(fct, x, y, 150, 600, 200, 50);
 
-		set(aet, x, y, 650, 100, 400, 500);
+		set(aet, x, y, 650, 100, 400, 900);
 
-		set(ldps, x, y, 650, 600, 200, 50);
-		set(cdps, x, y, 850, 600, 200, 50);
-		set(lpst, x, y, 650, 650, 200, 50);
-		set(vpst, x, y, 850, 650, 200, 50);
-		set(litv, x, y, 650, 700, 200, 50);
-		set(vitv, x, y, 850, 700, 200, 50);
-		set(jcba, x, y, 650, 750, 400, 50);
-		set(lli, x, y, 1400, 1050, 200, 50);
-		set(fli, x, y, 1600, 1050, 200, 50);
+		set(ldps, x, y, 650, 1050, 200, 50);
+		set(cdps, x, y, 850, 1050, 200, 50);
+		set(lpst, x, y, 650, 1100, 200, 50);
+		set(vpst, x, y, 850, 1100, 200, 50);
+		set(litv, x, y, 650, 1150, 200, 50);
+		set(vitv, x, y, 850, 1150, 200, 50);
+		set(jcba, x, y, 650, 1000, 400, 50);
+		set(lli, x, y, 1800, 1000, 200, 50);
+		set(fli, x, y, 2000, 1000, 200, 50);
 
-		if (editable) {
-			set(lrev, x, y, 650, 850, 200, 50);
-			set(vrev, x, y, 850, 850, 200, 50);
-			set(lres, x, y, 650, 900, 200, 50);
-			set(vres, x, y, 850, 900, 200, 50);
-			set(jcbs, x, y, 650, 950, 400, 50);
-		} else {
-			set(lrev, x, y, 650, 800, 200, 50);
-			set(vrev, x, y, 850, 800, 200, 50);
-			set(lres, x, y, 650, 850, 200, 50);
-			set(vres, x, y, 850, 850, 200, 50);
-			set(jcbs, x, y, 650, 900, 400, 50);
-		}
+		set(jcbs, x, y, 1800, 1050, 400, 50);
 
 		jsp.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
 		jspm.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
@@ -417,7 +398,6 @@ public abstract class EntityEditPage extends Page {
 		fwd.setText("" + ce.width);
 		ftb.setText("" + ce.tba);
 		fbs.setText("" + ce.base);
-		vpst.setText("" + ce.getPost());
 		vitv.setText("" + ce.getItv());
 		ftp.setText("" + ce.touch);
 		fct.setText("" + ce.loop);
@@ -425,7 +405,6 @@ public abstract class EntityEditPage extends Page {
 		cdps.setText("" + (int) (Math.round(getLvAtk() * ce.allAtk()) * getAtk()) * 30 / ce.getItv());
 
 		comm.setSelected(data.common);
-
 		if (!comm.isSelected())
 			ce.updateAllProc();
 
@@ -436,7 +415,6 @@ public abstract class EntityEditPage extends Page {
 		int n = ce.atks.length;
 
 		extra.clear();
-
 		if (ce.rev != null) {
 			n++;
 			extra.add(ce.rev);
@@ -501,13 +479,6 @@ public abstract class EntityEditPage extends Page {
 			jcba.setSelectedItem(ene.anim);
 
 		jcbs.setSelectedItem(Identifier.get(ce.death));
-
-		vrev.setText(ce.rev == null ? "x" : (KB_TIME[INT_HB] - ce.rev.pre + "f"));
-
-		Soul s = Identifier.get(ce.death);
-
-		vres.setText(ce.res == null ? "x" : s == null ? "-" : (s.len(SoulType.DEF) - ce.res.pre + "f"));
-
 		changing = false;
 	}
 
@@ -809,6 +780,36 @@ public abstract class EntityEditPage extends Page {
 		atkn.setText(adm.str);
 		aet.setData(adm, getAtk(), getLvAtk());
 		rem.setEnabled(editable && (ce.atks.length > 1 || ind >= ce.atks.length));
+		switch (adm.str) {
+			case "revenge":
+				lpst.setText(MainLocale.INFO, "Post-HB");
+				vpst.setText(KB_TIME[INT_HB] - ce.rev.pre + "f");
+				break;
+			case "resurrection":
+				lpst.setText(MainLocale.INFO, "Post-Death");
+				Soul s = Identifier.get(ce.death);
+				vpst.setText(s == null ? "-" : (s.len(SoulType.DEF) - ce.res.pre + "f"));
+				break;
+			case "counterattack":
+				lpst.setText(MainLocale.INFO, "Post-Counter");
+				vpst.setText("-");
+				break;
+			case "burrow":
+				lpst.setText(MainLocale.INFO, "Post-Bury Atk");
+				vpst.setText((ce.getPack().anim.anims[4].len - ce.bur.pre + 1) + "f");
+				break;
+			case "revive":
+				lpst.setText(MainLocale.INFO, "Post-Revival Atk");
+				vpst.setText((effas().A_ZOMBIE.getEAnim(EffAnim.ZombieEff.REVIVE).len() - ce.revi.pre) + "f");
+				break;
+			case "resurface":
+				lpst.setText(MainLocale.INFO, "Post-Unburrow Atk");
+				vpst.setText((ce.getPack().anim.anims[6].len - ce.resu.pre + 1) + "f");
+				break;
+			default:
+				lpst.setText(MainLocale.INFO, "postaa");
+				vpst.setText(ce.getPost() + "f");
+		}
 	}
 
 }

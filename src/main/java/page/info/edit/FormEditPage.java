@@ -199,18 +199,18 @@ public class FormEditPage extends EntityEditPage {
 		set(flr, x, y, 750, 50, 200, 50);
 		set(ueb, x, y, 50, 650, 600, 500);
 		if (editable) {
-			set(vuni, x, y, 650, 800, 200, 50);
-			set(stat, x, y, 850, 800, 200, 50);
+			set(vuni, x, y, 1800, 1100, 200, 50);
+			set(stat, x, y, 2000, 1100, 200, 50);
 		} else {
-			set(vuni, x, y, 650, 750, 200, 50);
-			set(stat, x, y, 850, 750, 200, 50);
+			set(vuni, x, y, 650, 1000, 200, 50);
+			set(stat, x, y, 850, 1000, 200, 50);
 		}
 		set(impt, x, y, 50, 1150, 200, 50);
 		set(vene, x, y, 250, 1150, 200, 50);
 		set(pcoin, x, y, 450, 1150, 200, 50);
 		int h = 1000;
 		for (JTF jtf : fdesc) {
-			set(jtf, x, y, 650, h, 750, 50);
+			set(jtf, x, y, 1050, h, 750, 50);
 			h += 50;
 		}
 		ueb.resized();

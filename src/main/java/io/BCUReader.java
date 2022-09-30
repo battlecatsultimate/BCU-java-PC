@@ -47,10 +47,6 @@ public class BCUReader extends DataIO {
 		BCMusic.preload();
 	}
 
-	public static InStream readBytes(File file) {
-		return InStream.getIns(file);
-	}
-
 	public static void readInfo() {
 		File f = new File("./user/config.json");
 		if (f.exists()) {

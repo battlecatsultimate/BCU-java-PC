@@ -2,13 +2,21 @@ package page.info.edit;
 
 import common.CommonStatic;
 import common.battle.data.AtkDataModel;
+import common.pack.PackData;
+import common.pack.UserProfile;
+import common.util.unit.Trait;
 import page.*;
+import page.info.filter.TraitList;
 import page.support.ListJtfPolicy;
 import utilpc.Interpret;
 
 import javax.swing.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+
+import static common.util.Data.TRAIT_EVA;
+import static common.util.Data.TRAIT_RED;
+import static utilpc.Interpret.SABIS;
 
 class AtkEditTable extends Page {
 
@@ -33,22 +41,34 @@ class AtkEditTable extends Page {
 	private final JTF fab = new JTF();
 	private final JTF fmv = new JTF();
 	private final JTG isr = new JTG(1, "isr");
-	private final JTG spt = new JTG();
+	private final TraitList atktr = new TraitList(false);
+	private final JScrollPane scrtr;
 
 	private final ListJtfPolicy ljp = new ListJtfPolicy();
 	private final boolean editable, isUnit;
 
 	private double mul;
 	private double lvMul;
-	private final boolean changing = false;
+	private boolean changing = false;
 
 	protected AtkDataModel adm;
 	protected ProcTable.AtkProcTable apt;
 
-	protected AtkEditTable(Page p, boolean edit, boolean unit) {
+	protected AtkEditTable(Page p, String pack, boolean edit, boolean unit) {
 		super(p);
 		editable = edit;
 		isUnit = unit;
+		atktr.list.addAll(UserProfile.getBCData().traits.getList().subList(TRAIT_RED,TRAIT_EVA));
+
+		PackData.UserPack pk = UserProfile.getUserPack(pack);
+		if (pk != null) {
+			atktr.list.addAll(pk.traits.getList());
+			for (PackData.UserPack pacc : UserProfile.getUserPacks())
+				if (pk.desc.dependency.contains(pacc.desc.id))
+					atktr.list.addAll(pacc.traits.getList());
+		}
+		scrtr = new JScrollPane(atktr);
+
 		ini();
 	}
 
@@ -69,7 +89,7 @@ class AtkEditTable extends Page {
 		set(lab, x, y, 0, 350, 200, 50);
 		set(lmv, x, y, 0, 400, 200, 50);
 		set(isr, x, y, 0, 450, 200, 50);
-		set(spt, x, y, 200, 450, 200, 50);
+		set(scrtr, x, y, 50, 500, 300, 400);
 		set(fatk, x, y, 200, 0, 200, 50);
 		set(fpre, x, y, 200, 50, 200, 50);
 		set(fp0, x, y, 200, 100, 200, 50);
@@ -82,6 +102,7 @@ class AtkEditTable extends Page {
 	}
 
 	protected void setData(AtkDataModel data, double multi, double lvMulti) {
+		changing = true;
 		adm = data;
 		mul = multi;
 		lvMul = lvMulti;
@@ -109,12 +130,13 @@ class AtkEditTable extends Page {
 		}
 		fab.setText(str + "}");
 		isr.setSelected(adm.range);
-		spt.setVisible(!isUnit || adm.dire != 1);
-		if (spt.isVisible()) {
-			spt.setSelected(adm.specialTrait);
-			spt.setText(MainLocale.PAGE, !isUnit && adm.dire == -1 ? "igtr" : "cntr");
-		} else
-			adm.specialTrait = false;
+
+		for (int k = 0; k < atktr.list.size(); k++)
+			if (adm.traits.contains(atktr.list.get(k)))
+				atktr.addSelectionInterval(k, k);
+			else
+				atktr.removeSelectionInterval(k, k);
+		changing = false;
 	}
 
 	private void ini() {
@@ -137,7 +159,8 @@ class AtkEditTable extends Page {
 		set(fab);
 		set(fmv);
 		add(isr);
-		add(spt);
+		add(scrtr);
+
 		ftp.setToolTipText(
 				"<html>" + "+1 for normal attack<br>"
 						+ "+2 to attack kb<br>"
@@ -160,12 +183,30 @@ class AtkEditTable extends Page {
 		fab.setToolTipText(ttt + "</html>");
 
 		isr.setEnabled(editable);
-		spt.setEnabled(editable);
+		atktr.setEnabled(editable);
 		setFocusTraversalPolicy(ljp);
 		setFocusCycleRoot(true);
 
 		isr.setLnr(x -> adm.range = isr.isSelected());
-		spt.setLnr(x -> adm.specialTrait = spt.isSelected());
+		initTraits();
+	}
+
+	private void initTraits() {
+		atktr.setListData();
+		int m = ListSelectionModel.MULTIPLE_INTERVAL_SELECTION;
+		atktr.setSelectionMode(m);
+
+		atktr.addListSelectionListener(arg0 -> {
+			if (!changing && !atktr.getValueIsAdjusting()) {
+				for (int i = 0; i < atktr.list.size(); i++)
+					if (atktr.isSelectedIndex(i)) {
+						if (!adm.traits.contains(atktr.list.get(i))) {
+							adm.traits.add(atktr.list.get(i));
+						}
+					} else
+						adm.traits.remove(atktr.list.get(i));
+			}
+		});
 	}
 
 	private void input(JTF jtf, String text) {
