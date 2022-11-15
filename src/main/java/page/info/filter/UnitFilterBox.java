@@ -13,6 +13,7 @@ import common.util.unit.Trait;
 import common.util.unit.Unit;
 import main.MainBCU;
 import page.JTG;
+import page.MainLocale;
 import page.Page;
 import utilpc.UtilPC;
 
@@ -272,6 +273,7 @@ class UFBList extends UnitFilterBox {
 	private final JScrollPane jab = new JScrollPane(abis);
 	private final JScrollPane jat = new JScrollPane(atkt);
 	private final JTG limbtn = new JTG(0, "usable");
+	private final JTG inccus = new JTG(MainLocale.PAGE, "inccus");
 
 	protected UFBList(Page p, Limit lim, int price) {
 		super(p, lim, price);
@@ -303,7 +305,8 @@ class UFBList extends UnitFilterBox {
 		set(orop[1], x, y, 250, 0, 200, 50);
 		set(orop[2], x, y, 0, 800, 200, 50);
 
-		set(limbtn, x, y, 0, 0, 200, 50);
+		set(limbtn, x, y, 0, 300, 200, 50);
+		set(inccus, x, y, 0, 0, 200, 50);
 		set(jr, x, y, 0, 50, 200, 250);
 		set(jt, x, y, 0, 400, 200, 350);
 		set(jab, x, y, 250, 50, 200, 1100);
@@ -314,6 +317,10 @@ class UFBList extends UnitFilterBox {
 		List<Form> ans = new ArrayList<>();
 		int minDiff = 5;
 		for(PackData p : UserProfile.getAllPacks()) {
+			if(!inccus.isSelected() && !(p instanceof PackData.DefPack)) {
+				continue;
+			}
+
 			for (Unit u : p.units.getList())
 				for (Form f : u.forms) {
 					MaskUnit du = f.maxu();
@@ -421,6 +428,9 @@ class UFBList extends UnitFilterBox {
 		add(jt);
 		add(jab);
 		add(jat);
+		set(inccus);
+
+		inccus.setSelected(true);
 
 		if (lim != null) {
 			add(limbtn);
