@@ -76,7 +76,7 @@ public class UnitManagePage extends Page {
 
 	public UnitManagePage(Page p, UserPack pack) {
 		super(p);
-		AnimGroupTree agt = new AnimGroupTree(jtd);
+		AnimGroupTree agt = new AnimGroupTree(jtd, Source.BasePath.ANIM);
 		agt.renewNodes();
 
 		pac = pack;

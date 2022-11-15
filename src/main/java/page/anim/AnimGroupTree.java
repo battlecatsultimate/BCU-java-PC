@@ -1,5 +1,6 @@
 package page.anim;
 
+import common.pack.Source;
 import common.util.AnimGroup;
 import common.util.anim.AnimCE;
 
@@ -19,9 +20,15 @@ public class AnimGroupTree implements TreeExpansionListener {
     private final HashMap<String, Boolean> groupExpanded = new HashMap<>();
 
     private DefaultMutableTreeNode nodes = new DefaultMutableTreeNode("Animation");
+    private Source.BasePath required = null;
 
     public AnimGroupTree(JTree animTree) {
         this.animTree = animTree;
+    }
+
+    public AnimGroupTree(JTree animTree, Source.BasePath basePath) {
+        this(animTree);
+        required = basePath;
     }
 
     public void renewNodes() {
@@ -39,6 +46,8 @@ public class AnimGroupTree implements TreeExpansionListener {
                 continue;
 
             for(AnimCE anim : anims) {
+                if (required != null && !anim.id.base.equals(required))
+                    continue;
                 DefaultMutableTreeNode animNode = new DefaultMutableTreeNode(anim);
 
                 container.add(animNode);
@@ -51,6 +60,8 @@ public class AnimGroupTree implements TreeExpansionListener {
 
         if(baseGroup != null && !baseGroup.isEmpty()) {
             for(AnimCE anim : baseGroup) {
+                if (required != null && !anim.id.base.equals(required))
+                    continue;
                 DefaultMutableTreeNode animNode = new DefaultMutableTreeNode(anim);
 
                 nodes.add(animNode);
