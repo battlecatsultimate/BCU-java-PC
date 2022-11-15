@@ -93,7 +93,7 @@ public interface IconBox extends ViewBox {
 			if (cont.isBlank()) {
 				BCAuxAssets aux = CommonStatic.getBCAssets();
 
-				int t = mode == 0 ? type == 1 ? 1 : 0 : 3;
+				int t = mode == 0 ? (type == 1 || type == 2) ? type : 0 : 3;
 
 				FakeImage bimg = aux.ico[mode][t].getImg();
 
@@ -107,7 +107,7 @@ public interface IconBox extends ViewBox {
 
 				if (glow == 1) {
 					gra.setComposite(FakeGraphics.BLEND, 255, 3);
-					bimg = aux.ico[0][4].getImg();
+					bimg = aux.ico[0][5].getImg();
 					gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r));
 //					gra.setComposite(FakeGraphics.BLEND, 117, 3);
 //					bimg = aux.ico[0][6].getImg();
@@ -115,8 +115,8 @@ public interface IconBox extends ViewBox {
 					gra.setComposite(FakeGraphics.DEF, 0, 0);
 				}
 
-				if (mode == 0 && type > 1) {
-					bimg = aux.ico[0][5].getImg();
+				if (mode == 0 && type > 2) {
+					bimg = aux.ico[0][6].getImg();
 				} else {
 					bimg = aux.ico[mode][t].getImg();
 				}
@@ -130,7 +130,7 @@ public interface IconBox extends ViewBox {
 			if (cont.isBlank()) {
 				BCAuxAssets aux = CommonStatic.getBCAssets();
 
-				if (mode == 0 && type > 1 || mode == 1) {
+				if (mode == 0 && type > 2 || mode == 1) {
 					FakeImage bimg = aux.ico[mode][type].getImg();
 
 					int bw = bimg.getWidth();
