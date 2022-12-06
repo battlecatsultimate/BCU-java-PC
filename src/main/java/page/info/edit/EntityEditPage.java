@@ -508,9 +508,6 @@ public abstract class EntityEditPage extends Page {
 		Soul s = Identifier.get(ce.death);
 		vres.setText(ce.res == null ? "x" : s == null ? "-" : (s.anim.len(UType.SOUL) - ce.res.pre + "f"));
 
-		// vres.setText(ce.res == null ? "x" : s == null ? "-" : (s.len(SoulType.DEF) - ce.res.pre + "f"));
-		// TODO: check if above commented code is needed or not
-
 		changing = false;
 	}
 

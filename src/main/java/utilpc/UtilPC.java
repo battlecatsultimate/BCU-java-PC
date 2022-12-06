@@ -66,9 +66,6 @@ public class UtilPC {
 		}
 
 		@Override
-		/*public void setBGM(Identifier<Music> mus, long loop) {
-			BCMusic.play(mus, loop);*/
-		// TODO: check above
 		public void setBGM(Identifier<Music> mus) {
 			BCMusic.play(mus);
 		}

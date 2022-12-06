@@ -735,8 +735,6 @@ public class PackEditPage extends Page {
 			}
 
 		jtfp.setEnabled(b);
-		// adde.setEnabled(b && jld.getSelectedValue() != null && jld.getSelectedValue().id.base.equals(Source.BasePath.ANIM));
-		// TODO: check if above commmented code is needed
 		adde.setEnabled(b && getSelectedAnim() != null);
 		adds.setEnabled(b);
 		extr.setEnabled(pac != null);
