@@ -163,7 +163,7 @@ public class Opts {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.add(jl);
-		//panel.add(check); //TODO - Optional Backup generation
+		//panel.add(check); // TODO - Optional Backup generation
 
 		int choice = JOptionPane.showConfirmDialog(null, panel, Page.get(MainLocale.PAGE, "savconf"), JOptionPane.YES_NO_CANCEL_OPTION);
 
