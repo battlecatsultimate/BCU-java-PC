@@ -8,6 +8,8 @@ import page.JBTN;
 import page.JTF;
 import page.Page;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
@@ -20,6 +22,7 @@ public class RecdSavePage extends Page {
 	private final JTF jtf = new JTF();
 
 	private final Replay recd;
+	private String name;
 
 	protected RecdSavePage(Page p, Replay rec) {
 		super(p);
@@ -47,24 +50,20 @@ public class RecdSavePage extends Page {
 				if (str.length() == 0)
 					str = "new replay " + recd.st.toString();
 				str = MainBCU.validate(str, '#');
-				jtf.setText(str);
-				recd.rename(str, false);
-
+				jtf.setText(name = str);
 			}
 		});
 
 		save.addActionListener(arg0 -> {
-			String repName = jtf.getText();
-			if (Replay.getMap().containsKey(repName) && !Opts.conf("A replay named " + repName + " already exists. Do you wish to overwrite?"))
+			if (Replay.getMap().containsKey(name) && !Opts.conf("A replay named " + name + " already exists. Do you wish to overwrite?"))
 				return;
 
-			recd.rename(repName, true);
+			recd.rename(name, true);
 			recd.write();
 			Replay.getMap().put(recd.rl.id, recd);
 
-			if(BCMusic.music != null) {
+			if (BCMusic.music != null)
 				BCMusic.stopAll();
-			}
 
 			changePanel(new RecdManagePage(getRootPage()));
 		});
@@ -76,7 +75,7 @@ public class RecdSavePage extends Page {
 		add(jtf);
 		add(save);
 		addListeners();
-		String initName = "new replay " + recd.st.toString().replaceAll("/", "#");
+		String initName = name = "new replay " + recd.st.toString().replaceAll("/", "-");
 		jtf.setText(initName);
 	}
 

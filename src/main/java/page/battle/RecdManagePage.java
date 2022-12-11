@@ -1,15 +1,19 @@
 package page.battle;
 
 import common.CommonStatic;
+import common.pack.PackData;
+import common.pack.UserProfile;
 import common.util.stage.Replay;
 import main.MainBCU;
-import main.Opts;
 import page.JBTN;
 import page.JTF;
 import page.Page;
 
 import javax.swing.*;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 public class RecdManagePage extends AbRecdPage {
 
@@ -44,7 +48,10 @@ public class RecdManagePage extends AbRecdPage {
 	protected void setList() {
 		change(true);
 		Replay r = jlr.getSelectedValue();
-		jlr.setListData(Replay.getMap().values().toArray(new Replay[0]));
+		Vector<Replay> replays = new Vector<>(Replay.getMap().values());
+		for (PackData.UserPack pack : UserProfile.getUserPacks())
+			replays.addAll(pack.getReplays()); // FIXME Pack replays don't load properly after reopening BCU
+		jlr.setListData(replays);
 		jlr.setSelectedValue(r, true);
 		setRecd(r);
 		change(false);
@@ -79,9 +86,9 @@ public class RecdManagePage extends AbRecdPage {
 		dele.addActionListener(arg0 -> {
 			Replay r = jlr.getSelectedValue();
 			File f = CommonStatic.ctx.getWorkspaceFile(r.rl.getPath() + ".replay");
-			if (f.exists())
+			if (f.exists()) {
 				f.delete();
-			if (!f.exists()) {
+			} else {
 				Replay.getMap().remove(r.rl.id);
 				setList();
 			}
