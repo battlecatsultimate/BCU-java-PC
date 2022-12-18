@@ -33,16 +33,16 @@ public class ConfigPage extends Page {
 	private final JTG whit = new JTG(MainLocale.PAGE, "white");
 	private final JTG refe = new JTG(MainLocale.PAGE, "axis");
 	private final JTG jogl = new JTG(MainLocale.PAGE, "JOGL");
-	private final JTG musc = new JTG(MainLocale.PAGE, "musc");
 	private final JTG exla = new JTG(MainLocale.PAGE, "exlang");
 	private final JTG extt = new JTG(MainLocale.PAGE, "extip");
-	private final JTG secs = new JTG(MainLocale.PAGE, "secs");
-	private final JTG btnsnd = new JTG(MainLocale.PAGE, "btnsnd");
-	private final JTG bgeff = new JTG(MainLocale.PAGE, "bgeff");
-	private final JTG btdly = new JTG(MainLocale.PAGE, "btdly");
-	private final JTG stdis = new JTG(MainLocale.PAGE, "stdis");
+	private final JBTN secs = new JBTN(MainLocale.PAGE, MainBCU.seconds ? "secs" : "frame");
+	private final JCB musc = new JCB(MainLocale.PAGE, "musc");
+	private final JCB jcsnd = new JCB(MainLocale.PAGE, "btnsnd");
+	private final JCB jceff = new JCB(MainLocale.PAGE, "bgeff");
+	private final JCB jcdly = new JCB(MainLocale.PAGE, "btdly");
+	private final JCB stdis = new JCB(MainLocale.PAGE, "stdis");
 	private final JL preflv = new JL(MainLocale.PAGE, "preflv");
-	private final JTG shake = new JTG(MainLocale.PAGE, "shake");
+	private final JCB shake = new JCB(MainLocale.PAGE, "shake");
 	private final JTF prlvmd = new JTF();
 	private final JBTN[] left = new JBTN[4];
 	private final JBTN[] right = new JBTN[4];
@@ -53,8 +53,15 @@ public class ConfigPage extends Page {
 	private final JL jlbg = new JL(MainLocale.PAGE, "BGvol");
 	private final JL jlse = new JL(MainLocale.PAGE, "SEvol");
 	private final JL jlui = new JL(MainLocale.PAGE, "UIvol");
+	private final JL jlla = new JL(MainLocale.PAGE, "lang");
+	private final JL jlfi = new JL(MainLocale.PAGE, "filter");
+	private final JL jlti = new JL(MainLocale.PAGE, "meastime");
+	private final JL jlly = new JL(MainLocale.PAGE, "layout");
+	private final JL jlth = new JL(MainLocale.PAGE, "theme");
+	private final JL jlga = new JL(MainLocale.PAGE, "gameplay");
+	private final JL jlot = new JL(MainLocale.PAGE, "other");
 	private final JL mbac = new JL(MainLocale.PAGE, "maxback");
-	private final JBTN nobac = new JBTN(MainLocale.PAGE, CommonStatic.getConfig().maxBackup != -1 ? "nobac" : "yesbac");
+	private final JCB jcbac = new JCB(MainLocale.PAGE, "jcbac");
 	private final JBTN theme = new JBTN(MainLocale.PAGE, MainBCU.light ? "themel" : "themed");
 	private final JBTN nimbus = new JBTN(MainLocale.PAGE, MainBCU.nimbus ? "nimbus" : "tdefault");
 	private final JSlider jsmin = new JSlider(0, 100);
@@ -67,7 +74,7 @@ public class ConfigPage extends Page {
 	private final JBTN row = new JBTN(MainLocale.PAGE, CommonStatic.getConfig().twoRow ? "tworow" : "onerow");
 	private final JBTN vcol = new JBTN(MainLocale.PAGE, "viewcolor");
 	private final JBTN vres = new JBTN(MainLocale.PAGE, "viewreset");
-	private final JTG exCont = new JTG(MainLocale.PAGE, "excont");
+	private final JCB excont = new JCB(MainLocale.PAGE, "excont");
 	private final JL autosave = new JL(MainLocale.PAGE, "autosave");
 	private final JTF savetime = new JTF(MainBCU.autoSaveTime > 0 ? MainBCU.autoSaveTime + "min" : "deactivated");
 
@@ -97,51 +104,65 @@ public class ConfigPage extends Page {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);
 		set(jogl, x, y, 50, 100, 200, 50);
-		set(prel, x, y, 50, 200, 200, 50);
-		set(whit, x, y, 50, 300, 200, 50);
-		set(refe, x, y, 50, 400, 200, 50);
+		set(prel, x, y, 50, 175, 200, 50);
+		set(whit, x, y, 50, 250, 200, 50);
+		set(refe, x, y, 50, 325, 200, 50);
 		for (int i = 0; i < 4; i++) {
-			set(name[i], x, y, 300, 100 + i * 100, 200, 50);
-			set(left[i], x, y, 550, 100 + i * 100, 100, 50);
-			set(vals[i], x, y, 650, 100 + i * 100, 200, 50);
-			set(right[i], x, y, 850, 100 + i * 100, 100, 50);
+			set(name[i], x, y, 350, 100 + i * 75, 200, 50);
+			set(left[i], x, y, 575, 100 + i * 75, 75, 50);
+			set(vals[i], x, y, 650, 100 + i * 75, 200, 50);
+			set(right[i], x, y, 850, 100 + i * 75, 75, 50);
 		}
-		set(jsps, x, y, 1100, 100, 200, 400);
-		set(jlmin, x, y, 50, 500, 400, 50);
-		set(jsmin, x, y, 50, 550, 1000, 100);
-		set(jlmax, x, y, 50, 650, 400, 50);
-		set(jsmax, x, y, 50, 700, 1000, 100);
-		set(jlbg, x, y, 50, 800, 400, 50);
-		set(jsbg, x, y, 50, 850, 1000, 100);
-		set(jlse, x, y, 50, 950, 400, 50);
-		set(jsse, x, y, 50, 1000, 1000, 100);
-		set(jlui, x, y, 50, 1100, 400, 50);
-		set(jsui, x, y, 50, 1150, 1000, 100);
-		set(filt, x, y, 1100, 550, 200, 50);
-		set(musc, x, y, 1350, 550, 200, 50);
-		set(exla, x, y, 1100, 625, 450, 50);
-		set(extt, x, y, 1100, 700, 450, 50);
-		set(rlla, x, y, 1100, 775, 450, 50);
-		set(nimbus, x, y, 1100, 850, 200, 50);
-		set(theme, x, y, 1350, 850, 200, 50);
-		set(row, x, y, 1100, 925, 450, 50);
-		set(secs, x, y, 1100, 1000, 450, 50);
-		set(preflv, x, y, 1600, 550, 200, 50);
-		set(prlvmd, x, y, 1800, 550, 250, 50);
-		set(mbac, x, y, 1100, 1100, 400, 50);
-		set(nobac, x, y, 1525, 1100, 250, 50);
-		set(jsba, x, y, 1100, 1150, 1000, 100);
-		set(btnsnd, x, y, 1600, 625, 200, 50);
-		set(bgeff, x, y, 1850, 625, 200, 50);
-		set(btdly, x, y, 1600, 700, 200, 50);
-		set(stdis, x, y, 1850, 700, 200, 50);
-		set(rlpk, x, y, 1600, 775, 450, 50);
-		set(vcol, x, y, 1600, 850, 200, 50);
-		set(vres, x, y, 1850, 850, 200, 50);
-		set(exCont, x, y, 1600, 925, 450, 50);
-		set(autosave, x, y, 1600, 1000, 200, 50);
-		set(savetime, x, y, 1800, 1000, 250, 50);
-		set(shake, x, y, 1600, 475, 450, 50);
+
+		set(jlmin, x, y, 50, 425, 300, 50);
+		set(jsmin, x, y, 350, 425, 750, 75);
+		set(jlmax, x, y, 50, 500, 300, 50);
+		set(jsmax, x, y, 350, 500, 750, 75);
+		set(jlbg, x, y, 50, 575, 300, 50);
+		set(jsbg, x, y, 350, 575, 750, 75);
+		set(jlse, x, y, 50, 650, 300, 50);
+		set(jsse, x, y, 350, 650, 750, 75);
+		set(jlui, x, y, 50, 725, 300, 50);
+		set(jsui, x, y, 350, 725, 750, 75);
+		set(mbac, x, y, 50, 800, 300, 50);
+		set(jsba, x, y, 350, 800, 750, 75);
+
+		set(jlga, x, y, 50, 900, 300, 50); // orig. 1650, 100
+		set(musc, x, y, 50, 950, 300, 50);
+		set(jceff, x, y, 50, 1000, 300, 50);
+		set(jcdly, x, y, 50, 1050, 300, 50);
+		set(stdis, x, y, 50, 1100, 300, 50);
+		set(excont, x, y, 50, 1150, 300, 50);
+		set(shake, x, y, 50, 1200, 300, 50);
+
+		set(jlot, x, y, 350, 900, 300, 50);
+		set(jcbac, x, y, 350, 950, 300, 50);
+		set(jcsnd, x, y, 350, 1000, 300, 50);
+
+		set(jlfi, x, y, 1225, 100, 200, 50);
+		set(filt, x, y, 1425, 100, 200, 50);
+		set(jlti, x, y, 1225, 175, 200, 50);
+		set(secs, x, y, 1425, 175, 200, 50);
+		set(jlly, x, y, 1225, 250, 200, 50);
+		set(row, x, y, 1425, 250, 200, 50);
+		set(jlth, x, y, 1225, 325, 200, 50);
+		set(nimbus, x, y, 1425, 325, 200, 50);
+		set(theme, x, y, 1425, 400, 200, 50);
+
+		set(preflv, x, y, 1225, 475, 200, 50);
+		set(prlvmd, x, y, 1425, 475, 200, 50);
+		set(autosave, x, y, 1225, 550, 200, 50);
+		set(savetime, x, y, 1425, 550, 200, 50);
+
+		set(rlpk, x, y, 1225, 625, 400, 50);
+		set(vcol, x, y, 1225, 700, 400, 50);
+		set(vres, x, y, 1225, 775, 400, 50);
+
+		set(jlla, x, y, 1750, 100, 300, 50); // orig. 50, 825
+		set(jsps, x, y, 1750, 150, 300, 300);
+		set(exla, x, y, 1750, 475, 300, 50);
+		set(extt, x, y, 1750, 550, 300, 50);
+		set(rlla, x, y, 1750, 625, 300, 50);
 	}
 
 	@Override
@@ -160,7 +181,10 @@ public class ConfigPage extends Page {
 	private void addListeners() {
 		back.addActionListener(arg0 -> changePanel(getFront()));
 
-		secs.addActionListener(arg0 -> MainBCU.seconds = secs.isSelected());
+		secs.addActionListener(arg0 -> {
+			MainBCU.seconds = !MainBCU.seconds;
+			secs.setText(0, MainBCU.seconds ? "secs" : "frame");
+		});
 
 		prel.addActionListener(arg0 -> MainBCU.preload = prel.isSelected());
 
@@ -221,15 +245,15 @@ public class ConfigPage extends Page {
 
 		jsui.addChangeListener(arg0 -> BCMusic.setUIVol(jsui.getValue()));
 
-		nobac.addActionListener(arg0 -> {
+		jcbac.addActionListener(arg0 -> {
 			if (CommonStatic.getConfig().maxBackup != -1) {
 				if (Opts.conf(get(MainLocale.PAGE, "nobacwarn"))) {
-					nobac.setText(get(MainLocale.PAGE, "yesbac"));
 					CommonStatic.getConfig().maxBackup = -1;
 					jsba.setEnabled(false);
+				} else {
+					jcbac.setSelected(true);
 				}
 			} else {
-				nobac.setText(get(MainLocale.PAGE, "nobac"));
 				jsba.setEnabled(true);
 				jsba.setValue(Backup.backups.size());
 			}
@@ -275,7 +299,12 @@ public class ConfigPage extends Page {
 			filt.setText(0, "filter" + MainBCU.FILTER_TYPE);
 		});
 
-		musc.addActionListener(arg0 -> BCMusic.play = musc.isSelected());
+		musc.addActionListener(arg0 -> {
+			boolean selected = musc.isSelected();
+			BCMusic.play = selected;
+			jsbg.setEnabled(selected);
+			jsse.setEnabled(selected);
+		});
 
 		nimbus.setLnr((b) -> {
 			if (Opts.conf("This requires restart to apply. Do you want to restart?"+(MainBCU.nimbus ? "\n\nWarning : Using Nimbus theme may result in high CPU usage" : ""))) {
@@ -309,17 +338,17 @@ public class ConfigPage extends Page {
 			row.setText(MainLocale.PAGE, CommonStatic.getConfig().twoRow ? "tworow" : "onerow");
 		});
 
-		btnsnd.addActionListener(a -> {
+		jcsnd.addActionListener(a -> {
 			MainBCU.buttonSound = !MainBCU.buttonSound;
 			if(MainBCU.buttonSound)
 				BCMusic.clickSound();
 		});
 
-		btdly.addActionListener(a -> CommonStatic.getConfig().buttonDelay = !CommonStatic.getConfig().buttonDelay);
+		jcdly.addActionListener(a -> CommonStatic.getConfig().buttonDelay = !CommonStatic.getConfig().buttonDelay);
 
 		stdis.addActionListener(a -> CommonStatic.getConfig().stageName = !CommonStatic.getConfig().stageName);
 
-		bgeff.addActionListener(a -> CommonStatic.getConfig().drawBGEffect = !CommonStatic.getConfig().drawBGEffect);
+		jceff.addActionListener(a -> CommonStatic.getConfig().drawBGEffect = !CommonStatic.getConfig().drawBGEffect);
 
 		rlpk.addActionListener(l -> UserProfile.reloadExternalPacks());
 
@@ -332,7 +361,7 @@ public class ConfigPage extends Page {
 
 		vres.addActionListener(l -> CommonStatic.getConfig().viewerColor = -1);
 
-		exCont.addActionListener(l -> CommonStatic.getConfig().exContinuation = exCont.isSelected());
+		excont.addActionListener(l -> CommonStatic.getConfig().exContinuation = excont.isSelected());
 
 		savetime.setLnr(c -> {
 			int time = CommonStatic.parseIntN(savetime.getText());
@@ -359,7 +388,14 @@ public class ConfigPage extends Page {
 		set(jsmax);
 		add(jlmin);
 		add(jlmax);
+		add(jlla);
+		add(jlfi);
+		add(jlti);
+		add(jlly);
+		add(jlth);
 		add(filt);
+		add(jlga);
+		add(jlot);
 		add(musc);
 		add(rlla);
 		add(exla);
@@ -379,19 +415,19 @@ public class ConfigPage extends Page {
 		set(prlvmd);
 		set(jsba);
 		add(mbac);
-		add(btnsnd);
-		add(bgeff);
-		add(btdly);
+		add(jcsnd);
+		add(jceff);
+		add(jcdly);
 		add(stdis);
 		add(rlpk);
 		add(vcol);
 		add(vres);
-		add(exCont);
+		add(excont);
 		add(autosave);
 		add(savetime);
-		add(nobac);
+		add(jcbac);
 		add(shake);
-		exCont.setSelected(CommonStatic.getConfig().exContinuation);
+		excont.setSelected(CommonStatic.getConfig().exContinuation);
 		prlvmd.setText("" + CommonStatic.getConfig().prefLevel);
 		jls.setSelectedIndex(localeIndexOf(cfg().lang));
 		jsmin.setValue(cfg().deadOpa);
@@ -417,19 +453,21 @@ public class ConfigPage extends Page {
 		}
 		exla.setSelected(MainLocale.exLang);
 		extt.setSelected(MainLocale.exTTT);
-		secs.setSelected(MainBCU.seconds);
 		prel.setSelected(MainBCU.preload);
 		whit.setSelected(ViewBox.Conf.white);
 		refe.setSelected(cfg().ref);
 		musc.setSelected(BCMusic.play);
+		jsbg.setEnabled(BCMusic.play);
+		jsse.setEnabled(BCMusic.play);
 		jogl.setSelected(MainBCU.USE_JOGL);
-		btnsnd.setSelected(MainBCU.buttonSound);
+		jcsnd.setSelected(MainBCU.buttonSound);
+		jcbac.setSelected(CommonStatic.getConfig().maxBackup != -1);
 		if (CommonStatic.getConfig().maxBackup != -1)
 			jsba.setValue(CommonStatic.getConfig().maxBackup);
 		else
 			jsba.setEnabled(false);
-		bgeff.setSelected(CommonStatic.getConfig().drawBGEffect);
-		btdly.setSelected(CommonStatic.getConfig().buttonDelay);
+		jceff.setSelected(CommonStatic.getConfig().drawBGEffect);
+		jcdly.setSelected(CommonStatic.getConfig().buttonDelay);
 		stdis.setSelected(CommonStatic.getConfig().stageName);
 		if (!MainBCU.nimbus) {
 			theme.setEnabled(false);
