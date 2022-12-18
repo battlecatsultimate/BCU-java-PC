@@ -26,6 +26,7 @@ import page.awt.AWTBBB;
 import page.awt.BBBuilder;
 import common.system.DateComparator;
 import page.battle.BattleBox;
+import utilpc.Interpret;
 import utilpc.Theme;
 import utilpc.UtilPC;
 import utilpc.awt.FIBI;
@@ -100,6 +101,7 @@ public class MainBCU {
 			AssetLoader.load(LoadPage::prog);
 			LoadPage.prog("reading BC data");
 			UserProfile.getBCData().load(LoadPage::prog, LoadPage::prog);
+			Interpret.loadCannonMax();
 			LoadPage.prog("reading backups");
 			Backup.loadBackups();
 
@@ -277,7 +279,7 @@ public class MainBCU {
 		}
 	}
 
-	public static final int ver = 50125;
+	public static final int ver = 50200;
 	private static final DecimalFormat df = new DecimalFormat("#.##");
 
 	public static byte FILTER_TYPE = 1;

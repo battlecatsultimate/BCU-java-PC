@@ -3,6 +3,7 @@ package utilpc;
 import common.CommonStatic;
 import common.battle.BasisLU;
 import common.battle.BasisSet;
+import common.battle.CannonLevelCurve;
 import common.battle.Treasure;
 import common.battle.data.*;
 import common.pack.Identifier;
@@ -83,8 +84,8 @@ public class Interpret extends Data {
 	/**
 	 * treasure max
 	 */
-	private static final int[] TMAX = { 30, 30, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 600, 1500, 100,
-			100, 100, 30, 30, 30, 30, 30, 10, 300, 300, 600, 600, 600, 30, 30, 30, 30, 20, 30, 30, 30 };
+	public static final int[] TMAX = { 30, 30, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 600, 1500, 100,
+			100, 100, 30, 30, 30, 30, 30, 10, 300, 300, 600, 600, 600, 30, 0, 0, 0, 0, 0, 0, 0 };
 
 	/**
 	 * combo string component
@@ -123,6 +124,11 @@ public class Interpret extends Data {
 
 		NumberFormat nf = NumberFormat.getNumberInstance(Locale.US);
 		df = (DecimalFormat) nf;
+	}
+
+	public static void loadCannonMax() {
+		for (int i = 1; i <= Treasure.curveData.size(); i++)
+			TMAX[29 + i] = Treasure.curveData.get(i).max;
 	}
 
 	public static boolean allRangeSame(MaskEntity me) {
