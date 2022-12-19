@@ -1,6 +1,7 @@
 package page.info;
 
 import common.util.stage.*;
+import org.jetbrains.annotations.NotNull;
 import page.MainFrame;
 import page.MainLocale;
 import page.Page;
@@ -12,6 +13,7 @@ import page.view.CastleViewPage;
 import page.view.MusicPage;
 
 import java.awt.*;
+import java.awt.event.MouseEvent;
 
 public class HeadTable extends AbJTable {
 
@@ -172,4 +174,13 @@ public class HeadTable extends AbJTable {
 		data = lstr;
 	}
 
+	@Override
+	public String getToolTipText(@NotNull MouseEvent e) {
+		java.awt.Point p = e.getPoint();
+		int rowIndex = rowAtPoint(p);
+		int colIndex = columnAtPoint(p);
+		Object val = getValueAt(rowIndex, colIndex);
+
+		return val == null ? null : val.toString();
+	}
 }
