@@ -29,10 +29,10 @@ public class ConfigPage extends Page {
 	private final JBTN filt = new JBTN(MainLocale.PAGE, "filter" + MainBCU.FILTER_TYPE);
 	private final JBTN rlla = new JBTN(MainLocale.PAGE, "rllang");
 	private final JBTN rlpk = new JBTN(MainLocale.PAGE, "rlpks");
-	private final JTG prel = new JTG(MainLocale.PAGE, "preload");
-	private final JTG whit = new JTG(MainLocale.PAGE, "white");
-	private final JTG refe = new JTG(MainLocale.PAGE, "axis");
-	private final JTG jogl = new JTG(MainLocale.PAGE, "JOGL");
+	private final JCB prel = new JCB(MainLocale.PAGE, "preload");
+	private final JCB whit = new JCB(MainLocale.PAGE, "white");
+	private final JCB refe = new JCB(MainLocale.PAGE, "axis");
+	private final JCB jogl = new JCB(MainLocale.PAGE, "JOGL");
 	private final JTG exla = new JTG(MainLocale.PAGE, "exlang");
 	private final JTG extt = new JTG(MainLocale.PAGE, "extip");
 	private final JBTN secs = new JBTN(MainLocale.PAGE, MainBCU.seconds ? "secs" : "frame");
@@ -60,6 +60,7 @@ public class ConfigPage extends Page {
 	private final JL jlth = new JL(MainLocale.PAGE, "theme");
 	private final JL jlga = new JL(MainLocale.PAGE, "gameplay");
 	private final JL jlot = new JL(MainLocale.PAGE, "other");
+	private final JL jlre = new JL(MainLocale.PAGE, "render");
 	private final JL mbac = new JL(MainLocale.PAGE, "maxback");
 	private final JCB jcbac = new JCB(MainLocale.PAGE, "jcbac");
 	private final JBTN theme = new JBTN(MainLocale.PAGE, MainBCU.light ? "themel" : "themed");
@@ -103,10 +104,13 @@ public class ConfigPage extends Page {
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);
-		set(jogl, x, y, 50, 100, 200, 50);
-		set(prel, x, y, 50, 175, 200, 50);
-		set(whit, x, y, 50, 250, 200, 50);
-		set(refe, x, y, 50, 325, 200, 50);
+
+		set(jlre, x, y, 50, 100, 300, 50);
+		set(jogl, x, y, 50, 150, 300, 50);
+		set(whit, x, y, 50, 200, 300, 50);
+		set(refe, x, y, 50, 250, 300, 50);
+		set(prel, x, y, 50, 300, 300, 50);
+
 		for (int i = 0; i < 4; i++) {
 			set(name[i], x, y, 350, 100 + i * 75, 200, 50);
 			set(left[i], x, y, 575, 100 + i * 75, 75, 50);
@@ -127,7 +131,7 @@ public class ConfigPage extends Page {
 		set(mbac, x, y, 50, 800, 300, 50);
 		set(jsba, x, y, 350, 800, 750, 75);
 
-		set(jlga, x, y, 50, 900, 300, 50); // orig. 1650, 100
+		set(jlga, x, y, 50, 900, 300, 50);
 		set(musc, x, y, 50, 950, 300, 50);
 		set(jceff, x, y, 50, 1000, 300, 50);
 		set(jcdly, x, y, 50, 1050, 300, 50);
@@ -158,7 +162,7 @@ public class ConfigPage extends Page {
 		set(vcol, x, y, 1225, 700, 400, 50);
 		set(vres, x, y, 1225, 775, 400, 50);
 
-		set(jlla, x, y, 1750, 100, 300, 50); // orig. 50, 825
+		set(jlla, x, y, 1750, 100, 300, 50);
 		set(jsps, x, y, 1750, 150, 300, 300);
 		set(exla, x, y, 1750, 475, 300, 50);
 		set(extt, x, y, 1750, 550, 300, 50);
@@ -300,10 +304,10 @@ public class ConfigPage extends Page {
 		});
 
 		musc.addActionListener(arg0 -> {
-			boolean selected = musc.isSelected();
-			BCMusic.play = selected;
-			jsbg.setEnabled(selected);
-			jsse.setEnabled(selected);
+			BCMusic.play = musc.isSelected();
+			jsbg.setEnabled(BCMusic.play);
+			jsse.setEnabled(BCMusic.play);
+			jcsnd.setEnabled(BCMusic.play);
 		});
 
 		nimbus.setLnr((b) -> {
@@ -339,7 +343,7 @@ public class ConfigPage extends Page {
 		});
 
 		jcsnd.addActionListener(a -> {
-			MainBCU.buttonSound = !MainBCU.buttonSound;
+			MainBCU.buttonSound = jcsnd.isSelected();
 			if(MainBCU.buttonSound)
 				BCMusic.clickSound();
 		});
@@ -394,6 +398,7 @@ public class ConfigPage extends Page {
 		add(jlly);
 		add(jlth);
 		add(filt);
+		add(jlre);
 		add(jlga);
 		add(jlot);
 		add(musc);
@@ -459,8 +464,9 @@ public class ConfigPage extends Page {
 		musc.setSelected(BCMusic.play);
 		jsbg.setEnabled(BCMusic.play);
 		jsse.setEnabled(BCMusic.play);
-		jogl.setSelected(MainBCU.USE_JOGL);
+		jcsnd.setEnabled(BCMusic.play);
 		jcsnd.setSelected(MainBCU.buttonSound);
+		jogl.setSelected(MainBCU.USE_JOGL);
 		jcbac.setSelected(CommonStatic.getConfig().maxBackup != -1);
 		if (CommonStatic.getConfig().maxBackup != -1)
 			jsba.setValue(CommonStatic.getConfig().maxBackup);
