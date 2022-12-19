@@ -105,7 +105,7 @@ public class ConfigPage extends Page {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);
 
-		set(jlre, x, y, 50, 100, 300, 50);
+		set(jlre, x, y, 50, 100, 200, 50);
 		set(jogl, x, y, 50, 150, 300, 50);
 		set(whit, x, y, 50, 200, 300, 50);
 		set(refe, x, y, 50, 250, 300, 50);
