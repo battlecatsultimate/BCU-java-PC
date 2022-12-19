@@ -3,7 +3,6 @@ package utilpc;
 import common.CommonStatic;
 import common.battle.BasisLU;
 import common.battle.BasisSet;
-import common.battle.CannonLevelCurve;
 import common.battle.Treasure;
 import common.battle.data.*;
 import common.pack.Identifier;

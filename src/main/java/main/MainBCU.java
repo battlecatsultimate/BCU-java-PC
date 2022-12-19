@@ -26,7 +26,6 @@ import page.awt.AWTBBB;
 import page.awt.BBBuilder;
 import common.system.DateComparator;
 import page.battle.BattleBox;
-import utilpc.Interpret;
 import utilpc.Theme;
 import utilpc.UtilPC;
 import utilpc.awt.FIBI;
@@ -101,7 +100,6 @@ public class MainBCU {
 			AssetLoader.load(LoadPage::prog);
 			LoadPage.prog("reading BC data");
 			UserProfile.getBCData().load(LoadPage::prog, LoadPage::prog);
-			Interpret.loadCannonMax();
 			LoadPage.prog("reading backups");
 			Backup.loadBackups();
 

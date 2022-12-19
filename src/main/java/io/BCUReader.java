@@ -27,6 +27,7 @@ import page.battle.BattleInfoPage;
 import page.support.Exporter;
 import page.support.Importer;
 import page.view.ViewBox;
+import utilpc.Interpret;
 
 import java.awt.*;
 import java.io.File;
@@ -44,6 +45,7 @@ public class BCUReader extends DataIO {
 
 	public static void getData$1() {
 		readLang();
+		Interpret.loadCannonMax();
 		BCMusic.preload();
 	}
 
