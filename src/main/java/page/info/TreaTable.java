@@ -213,7 +213,7 @@ public class TreaTable extends Page {
 		jtf[32].setToolTipText("<html>This cannon has multiple properties.<br>"+
 				"It will freeze enemies for " + freezeTime + " frames.<br>" +
 				"It will deal " + freezeAttack + "% of base cannon damage.</html>");
-		jtf[33].setToolTipText("This cannon will deal " + waterAttack + "% of remaining HP to metals, while dealing 1 damage to all non-metals.");
+		jtf[33].setToolTipText("This cannon will deal " + waterAttack + "% of remaining HP to metals, while dealing 0.1% of remaining HP to non-metals.");
 		jtf[34].setToolTipText("<html>This cannon has multiple properties.<br>" +
 				"It will deal " + undergroundAttack + "% of maximum HP to burrowing zombies.<br>" +
 				"It will deal " + surfaceAttack + "% of maximum HP is dealt to non-burrowing zombies.<br>" +
