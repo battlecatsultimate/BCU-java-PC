@@ -89,6 +89,8 @@ public abstract class EntityEditPage extends Page {
 	private final JL vitv = new JL();
 	private final JComboBox<AnimCE> jcba = new JComboBox<>();
 	private final JComboBox<Soul> jcbs = new JComboBox<>();
+	private final JTG hbbo = new JTG(MainLocale.INFO, "kbbounce");
+	private final JTG bobo = new JTG(MainLocale.INFO, "bossbounce");
 	private final ListJtfPolicy ljp = new ListJtfPolicy();
 	private final AtkEditTable aet;
 	private final ProcTable.MainProcTable mpt;
@@ -237,6 +239,8 @@ public abstract class EntityEditPage extends Page {
 		set(vres);
 		add(comm);
 		add(jcbs);
+		add(hbbo);
+		add(bobo);
 		Vector<Soul> vec = new Vector<>();
 		vec.add(null);
 		vec.addAll(UserProfile.getAll(pack, Soul.class));
@@ -276,6 +280,7 @@ public abstract class EntityEditPage extends Page {
 		atkn.setEnabled(editable);
 		comm.setEnabled(editable);
 		jcbs.setEnabled(editable);
+		hbbo.setEnabled(editable);
 
 		add(jsp);
 	}
@@ -369,6 +374,8 @@ public abstract class EntityEditPage extends Page {
 		set(jcba, x, y, 650, 750, 400, 50);
 		set(lli, x, y, 1400, 1050, 200, 50);
 		set(fli, x, y, 1600, 1050, 200, 50);
+		set(hbbo, x, y, 50, 1200, 200, 50);
+		set(bobo, x, y, 250, 1200, 200, 50);
 
 		if (editable) {
 			set(lrev, x, y, 650, 850, 200, 50);
@@ -502,6 +509,9 @@ public abstract class EntityEditPage extends Page {
 			jcba.setSelectedItem(ene.anim);
 
 		jcbs.setSelectedItem(Identifier.get(ce.death));
+
+		hbbo.setSelected(ce.kbBounce);
+		bobo.setSelected(ce.bossBounce);
 
 		vrev.setText(ce.rev == null ? "x" : (KB_TIME[INT_HB] - ce.rev.pre + "f"));
 
@@ -638,6 +648,19 @@ public abstract class EntityEditPage extends Page {
 			setData(ce);
 		});
 
+		hbbo.addActionListener(arg0 -> {
+			if (changing)
+				return;
+
+			ce.kbBounce = hbbo.isSelected();
+		});
+
+		bobo.addActionListener(arg0 -> {
+			if (changing)
+				return;
+
+			ce.bossBounce = bobo.isSelected();
+		});
 	}
 
 	private AtkDataModel get(int ind) {
