@@ -25,7 +25,11 @@ public class MenuBarHandler {
 
     private static void setFileItems() {
         JMenu menu = new JMenu("File");
+        JMenu history = new JMenu("History");
+
         bar.add(menu);
+        bar.add(history);
+
         int shortcut = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
         JMenuItem save = new JMenuItem("Save All");
@@ -35,7 +39,6 @@ public class MenuBarHandler {
             Opts.pop("Successfully saved data.", "Save Confirmation");
         });
 
-        //FIXME Please find a way to organize menu bar
         JMenuItem back = new JMenuItem("Go Back");
         back.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
         back.addActionListener(e -> {
@@ -48,7 +51,8 @@ public class MenuBarHandler {
         back.setEnabled(false);
 
         menu.add(save);
-        menu.add(back);
+        history.add(back);
+
         fileItems.add(save);
         fileItems.add(back);
     }
