@@ -5,6 +5,7 @@ import main.Opts;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,10 +34,23 @@ public class MenuBarHandler {
             BCUWriter.writeData();
             Opts.pop("Successfully saved data.", "Save Confirmation");
         });
+
+        //FIXME Please find a way to organize menu bar
+        JMenuItem back = new JMenuItem("Go Back");
+        back.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
+        back.addActionListener(e -> {
+            if(!(MainFrame.getPanel() instanceof MainPage) && !(MainFrame.getPanel() instanceof SavePage)) {
+                MainFrame.changePanel(MainFrame.getPanel().getFront());
+            }
+        });
+
         save.setEnabled(false);
+        back.setEnabled(false);
 
         menu.add(save);
+        menu.add(back);
         fileItems.add(save);
+        fileItems.add(back);
     }
 
     public static JMenuItem getFileItem(String n) {

@@ -346,9 +346,11 @@ public class MainBCU {
 		BCUReader.getData$1();
 		BattleBox.StageNamePainter.read();
 		loaded = true;
+
 		JMenuItem menu = MenuBarHandler.getFileItem("Save All");
-			if (menu != null)
-				menu.setEnabled(true);
+
+		if (menu != null)
+			menu.setEnabled(true);
 
 		ast = autoSaveTime > 0 ? new AutoSaveTimer() : null;
 		MainFrame.changePanel(new MainPage());
