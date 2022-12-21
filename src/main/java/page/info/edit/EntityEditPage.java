@@ -286,6 +286,7 @@ public abstract class EntityEditPage extends Page {
 		comm.setEnabled(editable);
 		jcbs.setEnabled(editable);
 		hbbo.setEnabled(editable);
+		bobo.setEnabled(editable);
 
 		add(jsp);
 	}
