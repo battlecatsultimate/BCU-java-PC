@@ -1,6 +1,7 @@
 package page;
 
 import io.BCUWriter;
+import main.MainBCU;
 import main.Opts;
 
 import javax.swing.*;
@@ -62,7 +63,11 @@ public class MenuBarHandler {
             if (i.getText().equals(n))
                 return i;
         }
-        System.out.println("Missing menu item: " + n);
+
+        if(MainBCU.loaded) {
+            System.out.println("Missing menu item: " + n);
+        }
+
         return null;
     }
 }
