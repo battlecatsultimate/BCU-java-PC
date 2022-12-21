@@ -39,7 +39,7 @@ public class MenuBarHandler {
         JMenuItem back = new JMenuItem("Go Back");
         back.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
         back.addActionListener(e -> {
-            if(!(MainFrame.getPanel() instanceof MainPage) && !(MainFrame.getPanel() instanceof SavePage)) {
+            if(!(MainFrame.getPanel() instanceof MainPage) && !(MainFrame.getPanel() instanceof SavePage) && MainFrame.getPanel().getFront() != null) {
                 MainFrame.changePanel(MainFrame.getPanel().getFront());
             }
         });
