@@ -203,8 +203,8 @@ class MaModelEditTable extends AnimTable<int[]> {
 			mm.strs0[r] = ((String) val).trim();
 		else {
 			int v = (int) val;
-			if (c == 1 && v < -1)
-				v = -1;
+			if (c == 1 && v < 0)
+				v = 0;
 			if (c == 2)
 				if (v < 0)
 					v = 0;
