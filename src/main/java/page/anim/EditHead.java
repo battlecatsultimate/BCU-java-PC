@@ -6,6 +6,8 @@ import io.BCUWriter;
 import page.JBTN;
 import page.Page;
 
+import javax.swing.*;
+
 public class EditHead extends Page implements EditLink {
 
 	private static final long serialVersionUID = 1L;
@@ -43,6 +45,11 @@ public class EditHead extends Page implements EditLink {
 		else if (v == 3)
 			p3 = (MaAnimEditPage) p;
 		ini();
+	}
+
+	@Override
+	protected JButton getBackButton() {
+		return null;
 	}
 
 	@Override

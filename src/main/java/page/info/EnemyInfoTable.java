@@ -98,6 +98,11 @@ public class EnemyInfoTable extends Page {
 	}
 
 	@Override
+	protected JButton getBackButton() {
+		return null;
+	}
+
+	@Override
 	protected void resized(int x, int y) {
 		for (int i = 0; i < main.length; i++)
 			for (int j = 0; j < main[i].length; j++)

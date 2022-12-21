@@ -38,6 +38,11 @@ public class LoadPage extends Page {
 	}
 
 	@Override
+	protected JButton getBackButton() {
+		return null;
+	}
+
+	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(jl, x, y, 100, 500, 2000, 50);

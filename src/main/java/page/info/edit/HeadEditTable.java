@@ -66,6 +66,11 @@ class HeadEditTable extends Page {
 	}
 
 	@Override
+	protected JButton getBackButton() {
+		return null;
+	}
+
+	@Override
 	public void callBack(Object o) {
 		setData(sta);
 	}

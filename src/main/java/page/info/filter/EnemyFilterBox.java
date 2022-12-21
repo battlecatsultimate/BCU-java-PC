@@ -90,6 +90,11 @@ class EFBButton extends EnemyFilterBox {
 	}
 
 	@Override
+	protected JButton getBackButton() {
+		return null;
+	}
+
+	@Override
 	public void callBack(Object o) {
 		confirm();
 	}
@@ -271,6 +276,11 @@ class EFBList extends EnemyFilterBox {
 
 		ini();
 		confirm();
+	}
+
+	@Override
+	protected JButton getBackButton() {
+		return null;
 	}
 
 	@Override

@@ -33,6 +33,11 @@ public class RecdManagePage extends AbRecdPage {
 	}
 
 	@Override
+	protected JButton getBackButton() {
+		return super.getBackButton();
+	}
+
+	@Override
 	public Replay getSelection() {
 		return jlr.getSelectedValue();
 	}

@@ -2,14 +2,16 @@ package page.anim;
 
 import common.CommonStatic;
 import common.pack.PackData.UserPack;
+import common.pack.Source;
 import common.pack.Source.ResourceLocation;
 import common.pack.Source.Workspace;
-import common.pack.Source;
 import common.pack.UserProfile;
 import common.system.fake.FakeImage.Marker;
 import common.util.AnimGroup;
-import common.util.anim.*;
-import common.util.pack.Soul;
+import common.util.anim.AnimCE;
+import common.util.anim.ImgCut;
+import common.util.anim.MaAnim;
+import common.util.anim.Part;
 import common.util.unit.Enemy;
 import main.MainBCU;
 import main.Opts;
@@ -17,7 +19,10 @@ import page.JBTN;
 import page.JTF;
 import page.MainLocale;
 import page.Page;
-import page.support.*;
+import page.support.AnimTreeRenderer;
+import page.support.Exporter;
+import page.support.Importer;
+import page.support.TreeNodeExpander;
 import utilpc.Algorithm;
 import utilpc.Algorithm.SRResult;
 import utilpc.ReColor;
@@ -28,7 +33,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -108,6 +116,11 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 		ini();
 		resized();
+	}
+
+	@Override
+	protected JButton getBackButton() {
+		return back;
 	}
 
 	@Override

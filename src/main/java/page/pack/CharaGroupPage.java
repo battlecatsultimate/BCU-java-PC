@@ -64,6 +64,11 @@ public class CharaGroupPage extends Page {
 	}
 
 	@Override
+	protected JButton getBackButton() {
+		return back;
+	}
+
+	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);

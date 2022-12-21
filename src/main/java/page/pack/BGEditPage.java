@@ -61,6 +61,11 @@ public class BGEditPage extends Page {
 	}
 
 	@Override
+	protected JButton getBackButton() {
+		return back;
+	}
+
+	@Override
 	protected void renew() {
 		if (bvp != null) {
 			bgr = bvp.getSelected();

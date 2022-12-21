@@ -416,6 +416,11 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			bb.getPainter().dragFrame++;
 	}
 
+	@Override
+	protected JButton getBackButton() {
+		return back;
+	}
+
 	private void addListeners() {
 
 		jtb.setLnr(x -> {

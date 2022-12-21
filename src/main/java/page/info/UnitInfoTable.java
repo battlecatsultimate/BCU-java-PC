@@ -100,6 +100,11 @@ public class UnitInfoTable extends Page {
 		ini();
 	}
 
+	@Override
+	protected JButton getBackButton() {
+		return null;
+	}
+
 	protected int getH() {
 		int l = main.length + 1;
 		if (displaySpecial)

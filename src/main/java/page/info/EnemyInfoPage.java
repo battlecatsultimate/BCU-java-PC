@@ -37,6 +37,11 @@ public class EnemyInfoPage extends Page {
 	}
 
 	@Override
+	protected JButton getBackButton() {
+		return back;
+	}
+
+	@Override
 	public void callBack(Object o) {
 		info.reset();
 	}

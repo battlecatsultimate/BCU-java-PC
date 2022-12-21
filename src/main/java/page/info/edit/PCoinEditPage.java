@@ -7,6 +7,7 @@ import common.util.unit.Form;
 import page.JBTN;
 import page.Page;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,11 @@ public class PCoinEditPage extends Page {
 
         ini();
         resized();
+    }
+
+    @Override
+    protected JButton getBackButton() {
+        return back;
     }
 
     @Override

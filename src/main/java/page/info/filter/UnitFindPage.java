@@ -43,6 +43,11 @@ public class UnitFindPage extends Page implements SupPage<Unit> {
 		resized();
 	}
 
+	@Override
+	protected JButton getBackButton() {
+		return back;
+	}
+
 	public Form getForm() {
 		if (ult.getSelectedRow() == -1 || ult.getSelectedRow() > ult.list.size() - 1)
 			return null;

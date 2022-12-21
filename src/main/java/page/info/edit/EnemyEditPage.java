@@ -13,6 +13,8 @@ import page.info.EnemyInfoPage;
 import page.info.filter.EnemyEditBox;
 import utilpc.Interpret;
 
+import javax.swing.*;
+
 public class EnemyEditPage extends EntityEditPage {
 
 	private static final long serialVersionUID = 1L;
@@ -38,6 +40,11 @@ public class EnemyEditPage extends EntityEditPage {
 		ini();
 		setData((CustomEnemy) e.de);
 		resized();
+	}
+
+	@Override
+	protected JButton getBackButton() {
+		return super.getBackButton();
 	}
 
 	@Override

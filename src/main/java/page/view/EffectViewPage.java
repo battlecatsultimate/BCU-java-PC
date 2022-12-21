@@ -2,14 +2,12 @@ package page.view;
 
 import common.CommonStatic;
 import common.pack.UserProfile;
-import common.util.Animable;
 import common.util.anim.AnimI;
-import common.util.anim.AnimU;
-import common.util.anim.EAnimI;
 import page.Page;
 
 import javax.swing.*;
-import java.util.*;
+import java.util.Collections;
+import java.util.Vector;
 import java.util.stream.Collectors;
 
 public class EffectViewPage extends AbViewPage {

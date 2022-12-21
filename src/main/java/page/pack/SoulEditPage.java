@@ -53,6 +53,11 @@ public class SoulEditPage extends Page {
     }
 
     @Override
+    protected JButton getBackButton() {
+        return back;
+    }
+
+    @Override
     protected void renew() {
         setPack(pac);
     }

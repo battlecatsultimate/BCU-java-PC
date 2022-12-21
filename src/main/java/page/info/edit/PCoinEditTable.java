@@ -107,6 +107,11 @@ class PCoinEditTable extends Page {
     }
 
     @Override
+    protected JButton getBackButton() {
+        return null;
+    }
+
+    @Override
     protected void resized(int x, int y) {
         set(pCoin, x, y, 0, 0, 400, 50);
         set(delet, x, y, 0, 50, 400, 50);

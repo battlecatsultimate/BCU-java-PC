@@ -79,6 +79,11 @@ public class CGLREditPage extends Page {
 	}
 
 	@Override
+	protected JButton getBackButton() {
+		return back;
+	}
+
+	@Override
 	protected void renew() {
 		if (ufp != null && ufp.getList() != null) {
 			changing = true;

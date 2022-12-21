@@ -67,6 +67,11 @@ public class LimitTable extends Page {
 	}
 
 	@Override
+	protected JButton getBackButton() {
+		return null;
+	}
+
+	@Override
 	protected void renew() {
 		if (cgp != null) {
 			jcg.setText("" + cgp.cg);

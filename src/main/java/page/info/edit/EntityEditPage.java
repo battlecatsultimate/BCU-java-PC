@@ -129,6 +129,11 @@ public abstract class EntityEditPage extends Page {
 	}
 
 	@Override
+	protected JButton getBackButton() {
+		return back;
+	}
+
+	@Override
 	public void callBack(Object o) {
 		if (o instanceof int[]) {
 			int[] vals = (int[]) o;

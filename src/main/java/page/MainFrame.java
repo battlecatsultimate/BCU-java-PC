@@ -35,8 +35,8 @@ public class MainFrame extends JFrame {
 
 		JMenuItem back = MenuBarHandler.getFileItem("Go Back");
 
-		if(back != null) {
-			back.setEnabled(!(p instanceof MainPage) && !(p instanceof SavePage) && MainFrame.getPanel().getFront() != null);
+		if(back != null && p != null) {
+			back.setEnabled(p.getBackButton() != null);
 		}
 	}
 

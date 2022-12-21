@@ -84,6 +84,11 @@ public class UnitManagePage extends Page {
 	}
 
 	@Override
+	protected JButton getBackButton() {
+		return back;
+	}
+
+	@Override
 	protected void renew() {
 		setPack(pac);
 	}

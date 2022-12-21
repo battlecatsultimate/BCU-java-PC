@@ -99,6 +99,11 @@ class UFBButton extends UnitFilterBox {
 	}
 
 	@Override
+	protected JButton getBackButton() {
+		return null;
+	}
+
+	@Override
 	public void callBack(Object o) {
 		confirm();
 	}
@@ -287,6 +292,11 @@ class UFBList extends UnitFilterBox {
 
 		ini();
 		confirm();
+	}
+
+	@Override
+	protected JButton getBackButton() {
+		return null;
 	}
 
 	@Override

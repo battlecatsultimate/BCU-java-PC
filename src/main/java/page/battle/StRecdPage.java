@@ -37,6 +37,11 @@ public class StRecdPage extends AbRecdPage {
 	}
 
 	@Override
+	protected JButton getBackButton() {
+		return super.getBackButton();
+	}
+
+	@Override
 	public Replay getSelection() {
 		return list.getSelectedValue();
 	}

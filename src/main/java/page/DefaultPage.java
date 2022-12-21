@@ -1,5 +1,7 @@
 package page;
 
+import javax.swing.*;
+
 public class DefaultPage extends Page {
 
 	private static final long serialVersionUID = 1L;
@@ -11,6 +13,11 @@ public class DefaultPage extends Page {
 
 		ini();
 		resized();
+	}
+
+	@Override
+	protected JButton getBackButton() {
+		return back;
 	}
 
 	@Override

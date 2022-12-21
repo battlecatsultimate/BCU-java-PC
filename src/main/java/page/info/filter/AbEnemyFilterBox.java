@@ -92,6 +92,11 @@ class AEFBButton extends AbEnemyFilterBox {
     }
 
     @Override
+    protected JButton getBackButton() {
+        return null;
+    }
+
+    @Override
     public void callBack(Object o) {
         confirm();
     }
@@ -283,6 +288,11 @@ class AEFBList extends AbEnemyFilterBox {
 
         ini();
         confirm();
+    }
+
+    @Override
+    protected JButton getBackButton() {
+        return null;
     }
 
     @Override

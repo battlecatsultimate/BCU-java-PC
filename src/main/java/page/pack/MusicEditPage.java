@@ -56,6 +56,11 @@ public class MusicEditPage extends Page {
 		set(jtp, x, y, 400, 550, 200, 50);
 	}
 
+	@Override
+	protected JButton getBackButton() {
+		return back;
+	}
+
 	private void addListeners() {
 		back.addActionListener(arg0 -> {
 			if (BCMusic.BG != null && BCMusic.BG.isPlaying()) {

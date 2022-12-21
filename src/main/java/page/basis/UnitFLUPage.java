@@ -50,6 +50,11 @@ public class UnitFLUPage extends LubCont {
 	}
 
 	@Override
+	protected JButton getBackButton() {
+		return back;
+	}
+
+	@Override
 	protected LineUpBox getLub() {
 		return lub;
 	}

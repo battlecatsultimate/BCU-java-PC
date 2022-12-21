@@ -30,6 +30,11 @@ public class ColorPickPage extends Page {
     }
 
     @Override
+    protected JButton getBackButton() {
+        return null;
+    }
+
+    @Override
     protected void resized(int x, int y) {
         setBounds(0, 0, x, y);
 

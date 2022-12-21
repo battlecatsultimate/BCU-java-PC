@@ -76,6 +76,11 @@ public abstract class AbViewPage extends Page {
 	}
 
 	@Override
+	protected JButton getBackButton() {
+		return back;
+	}
+
+	@Override
 	protected void exit() {
 		Timer.p = 33;
 	}

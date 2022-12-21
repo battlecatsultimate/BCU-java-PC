@@ -60,6 +60,11 @@ public class UnitEditBox extends Page {
 	}
 
 	@Override
+	protected JButton getBackButton() {
+		return null;
+	}
+
+	@Override
 	protected void resized(int x, int y) {
 		set(jt, x, y, 0, 0, 300, 500);
 		set(jab, x, y, 300, 0, 300, 500);

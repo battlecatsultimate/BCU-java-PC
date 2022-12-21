@@ -66,6 +66,11 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	}
 
 	@Override
+	protected JButton getBackButton() {
+		return back;
+	}
+
+	@Override
 	public void callBack(Object obj) {
 		change(obj, o -> {
 			if (o instanceof int[]) {

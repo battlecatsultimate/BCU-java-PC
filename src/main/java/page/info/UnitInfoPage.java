@@ -62,6 +62,11 @@ public class UnitInfoPage extends Page {
 	}
 
 	@Override
+	protected JButton getBackButton() {
+		return back;
+	}
+
+	@Override
 	public void callBack(Object newParam) {
 		for (UnitInfoTable uit : info)
 			uit.reset();
@@ -129,8 +134,8 @@ public class UnitInfoPage extends Page {
 		add(next);
 		add(find);
 		add(extr);
-		for (int i = 0; i < info.length; i++)
-			cont.add(info[i]);
+		for (UnitInfoTable unitInfoTable : info)
+			cont.add(unitInfoTable);
 		cont.setLayout(null);
 		add(jsp);
 		add(trea);

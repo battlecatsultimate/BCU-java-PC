@@ -44,6 +44,11 @@ public class AbEnemySelectionPage extends Page implements SupPage<AbEnemy> {
     }
 
     @Override
+    protected JButton getBackButton() {
+        return back;
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public void callBack(Object o) {
         elt.setList((List<AbEnemy>) o);

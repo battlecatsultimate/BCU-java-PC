@@ -68,6 +68,11 @@ public class MusicPage extends Page implements SupPage<Music> {
 		set(strt, x, y, 400, 100, 200, 50);
 	}
 
+	@Override
+	protected JButton getBackButton() {
+		return back;
+	}
+
 	private void addListeners() {
 		back.addActionListener(arg0 -> {
 			BCMusic.clear();

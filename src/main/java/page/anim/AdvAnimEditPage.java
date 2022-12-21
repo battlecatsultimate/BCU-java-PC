@@ -76,6 +76,11 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 	}
 
 	@Override
+	protected JButton getBackButton() {
+		return back;
+	}
+
+	@Override
 	public void callBack(Object o) {
 		if (o instanceof int[])
 			change((int[]) o, rs -> {
