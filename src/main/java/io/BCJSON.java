@@ -37,8 +37,11 @@ public class BCJSON {
 			CommonStatic.def.save(false, true);
 		}
 
-		int music = json != null ? json.music : Data.SE_ALL[Data.SE_ALL.length - 1] + 1;
-		musics = CommonStatic.ctx.noticeErr(UpdateCheck.checkMusic(music), ErrType.ERROR, "Failed to check for updates, try again later on a stable WI-FI connection");
+		int count = json != null ? json.music : Data.SE_ALL[Data.SE_ALL.length - 1] + 1;
+		if (CommonStatic.getConfig().updateOldMusic)
+			musics = CommonStatic.ctx.noticeErr(UpdateCheck.checkMusic(count), ErrType.ERROR, "Failed to check for updates, try again later on a stable WI-FI connection");
+		else
+			musics = UpdateCheck.checkNewMusic(count);
 		ArrayList<String> langList = new ArrayList<>();
 		for (String pcLangCode : PC_LANG_CODES) {
 			for (String pcLangFile : PC_LANG_FILES)
