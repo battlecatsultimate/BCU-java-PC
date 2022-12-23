@@ -4,15 +4,14 @@ import common.CommonStatic;
 import common.battle.BasisSet;
 import common.battle.data.MaskUnit;
 import common.battle.data.PCoin;
+import common.system.VImg;
+import common.system.fake.FakeImage;
 import common.util.Data;
 import common.util.unit.EForm;
 import common.util.unit.Form;
 import common.util.unit.Trait;
 import main.MainBCU;
-import page.JL;
-import page.JTF;
-import page.MainLocale;
-import page.Page;
+import page.*;
 import utilpc.Interpret;
 import utilpc.UtilPC;
 
@@ -30,6 +29,7 @@ public class UnitInfoTable extends Page {
 
 	private final JL[][] main = new JL[4][8];
 	private final JL[][] special = new JL[1][8];
+	private final JL[][] upgrade = new JL[2][3];
 	private final JL[] atks;
 	private final JLabel[] proc;
 	private final JTF jtf = new JTF();
@@ -109,6 +109,8 @@ public class UnitInfoTable extends Page {
 		int l = main.length + 1;
 		if (displaySpecial)
 			l += special.length;
+		if (f.unit.info.hasEvolveCost() && f.fid == 2)
+			l += upgrade.length;
 		return (l + (proc.length + 1) / 2) * 50 + (f.getExplaination().replace("<br>", "").length() > 0 ? 200 : 0);
 	}
 
@@ -213,6 +215,14 @@ public class UnitInfoTable extends Page {
 		for (int i = 0; i < proc.length; i++)
 			set(proc[i], x, y, i % 2 * 800, h + 50 * (i / 2), i % 2 == 0 && i + 1 == proc.length ? 1600 : 800, 50);
 		h += proc.length * 25 + (proc.length % 2 == 1 ? 25 : 0);
+		if (f.unit.info.hasEvolveCost() && f.fid == 2) {
+			for (JL[] ug : upgrade) {
+				for (int i = 0; i < ug.length; i++) {
+					set(ug[i], x, y, i * 300, h, 300, 50);
+				}
+				h += 50;
+			}
+		}
 		set(desc, x, y, 0, h, 1600, 200);
 	}
 
@@ -254,6 +264,12 @@ public class UnitInfoTable extends Page {
 				special[i][j].setBorder(BorderFactory.createEtchedBorder());
 				if (j % 2 == 0)
 					special[i][j].setHorizontalAlignment(SwingConstants.CENTER);
+			}
+		}
+		for (int i = 0; i < upgrade.length; i++) {
+			for (int j = 0; j < upgrade[i].length; j++) {
+				add(upgrade[i][j] = new JL());
+				upgrade[i][j].setBorder(BorderFactory.createEtchedBorder());
 			}
 		}
 		add(jtf);
@@ -308,6 +324,26 @@ public class UnitInfoTable extends Page {
 			special[0][7].setText(back + "");
 		else
 			special[0][7].setText(Math.min(back, front) + " ~ " + Math.max(back, front));
+
+		if (f.unit.info.hasEvolveCost() && f.fid == 2) {
+			int[][] evo = f.unit.info.evo;
+			for (int i = 0; i < evo.length; i++) { // [[id, count], ...]
+				int id = evo[i][0];
+				if (id == 0)
+					break;
+				VImg img = CommonStatic.getBCAssets().gatyaitem.get(id);
+				ImageIcon icon = UtilPC.getIcon(img);
+				if (icon != null) {
+					int w = MainFrame.F.getRootPane().getWidth();
+					int h = MainFrame.F.getRootPane().getHeight() - MenuBarHandler.getBar().getHeight();
+					Image scaled = icon.getImage().getScaledInstance(w * 50 / 2300, h * 50 / 1300, Image.SCALE_SMOOTH);
+					upgrade[i / 3][i % 3].setIcon(new ImageIcon(scaled));
+				}
+				upgrade[i / 3][i % 3].setText(evo[i][1] + " " + get(MainLocale.UTIL, "cf" + id));
+			}
+			upgrade[1][2].setText(f.unit.info.xp + " XP");
+		}
+
 		atks[0].setText(1, "atk");
 		atks[2].setText(1, "preaa");
 		atks[4].setText(1, "dire");
@@ -330,6 +366,7 @@ public class UnitInfoTable extends Page {
 		}
 		atks[3].setText(pre.toString());
 		atks[5].setText(use.toString());
+
 		special[0][5].setToolTipText("<html>This unit will stay at least "
 				+ f.du.getLimit()
 				+ " units away from the max stage length<br>once it passes that threshold.");
