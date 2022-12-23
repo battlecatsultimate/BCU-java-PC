@@ -138,7 +138,7 @@ public class BCUReader extends DataIO {
 
 				File[] fls = fi.listFiles();
 
-				if(fls != null) { // TODO may un-nest the nesting hell that this is
+				if(fls != null) {
 					for (File fl : fls)
 						try {
 							String nl = fl.getName();

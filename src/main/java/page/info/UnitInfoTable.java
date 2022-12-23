@@ -337,7 +337,8 @@ public class UnitInfoTable extends Page {
 					break;
 				VImg img = CommonStatic.getBCAssets().gatyaitem.get(id);
 				JL up = upgrade[i / 2][i % 2];
-				up.setIcon(UtilPC.getScaledIcon(img, 50, 50));
+				if (img != null)
+					up.setIcon(UtilPC.getScaledIcon(img, 50, 50));
 				up.setText(evo[i][1] + " " + get(MainLocale.UTIL, "cf" + id));
 			}
 			upgrade[2][1].setIcon(UtilPC.getScaledIcon(CommonStatic.getBCAssets().XP, 50, 30));
