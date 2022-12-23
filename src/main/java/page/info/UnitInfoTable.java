@@ -29,12 +29,13 @@ public class UnitInfoTable extends Page {
 
 	private final JL[][] main = new JL[4][8];
 	private final JL[][] special = new JL[1][8];
-	private final JL[][] upgrade = new JL[2][3];
+	private final JL[][] upgrade = new JL[3][2];
 	private final JL[] atks;
 	private final JLabel[] proc;
 	private final JTF jtf = new JTF();
 	private final JLabel pcoin;
 	private final JTextArea descr = new JTextArea();
+	private final JTextArea cfdesc = new JTextArea();
 	private final JScrollPane desc = new JScrollPane(descr);
 
 	private final BasisSet b;
@@ -216,6 +217,7 @@ public class UnitInfoTable extends Page {
 			set(proc[i], x, y, i % 2 * 800, h + 50 * (i / 2), i % 2 == 0 && i + 1 == proc.length ? 1600 : 800, 50);
 		h += proc.length * 25 + (proc.length % 2 == 1 ? 25 : 0);
 		if (f.unit.info.hasEvolveCost() && f.fid == 2) {
+			set(cfdesc, x, y, 600, h, 1000, 150);
 			for (JL[] ug : upgrade) {
 				for (int i = 0; i < ug.length; i++) {
 					set(ug[i], x, y, i * 300, h, 300, 50);
@@ -272,6 +274,8 @@ public class UnitInfoTable extends Page {
 				upgrade[i][j].setBorder(BorderFactory.createEtchedBorder());
 			}
 		}
+		add(cfdesc);
+		cfdesc.setBorder(BorderFactory.createEtchedBorder());
 		add(jtf);
 		String[] strs = UtilPC.lvText(f, multi);
 		jtf.setText(strs[0]);
@@ -332,10 +336,12 @@ public class UnitInfoTable extends Page {
 				if (id == 0)
 					break;
 				VImg img = CommonStatic.getBCAssets().gatyaitem.get(id);
-				ImageIcon icon = UtilPC.getScaledIcon(img, 50, 50);
-				upgrade[i / 3][i % 3].setText(evo[i][1] + " " + get(MainLocale.UTIL, "cf" + id));
+				JL up = upgrade[i / 2][i % 2];
+				up.setIcon(UtilPC.getScaledIcon(img, 50, 50));
+				up.setText(evo[i][1] + " " + get(MainLocale.UTIL, "cf" + id));
 			}
-			upgrade[1][2].setText(f.unit.info.xp + " XP");
+			upgrade[2][1].setText(f.unit.info.xp + " XP");
+			cfdesc.setText(f.unit.info.getCatfruitExplanation().replace("<br>", "\n"));
 		}
 
 		atks[0].setText(1, "atk");
@@ -369,6 +375,7 @@ public class UnitInfoTable extends Page {
 			add(desc);
 		descr.setText(f.toString().replace((f.uid == null ? "NULL" : f.uid.id) + "-" + f.fid + " ", "") + "\n" + fDesc);
 		descr.setEditable(false);
+		cfdesc.setEditable(false);
 		reset();
 		addListeners();
 		updateTooltips();

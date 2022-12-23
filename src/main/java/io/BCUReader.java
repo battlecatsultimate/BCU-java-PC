@@ -138,7 +138,7 @@ public class BCUReader extends DataIO {
 
 				File[] fls = fi.listFiles();
 
-				if(fls != null) {
+				if(fls != null) { // TODO may un-nest the nesting hell that this is
 					for (File fl : fls)
 						try {
 							String nl = fl.getName();
@@ -256,6 +256,18 @@ public class BCUReader extends DataIO {
 											MultiLangCont.getStatic().FEXP.put(ni, u.forms[i], strs);
 									}
 								continue;
+							}
+							if (nl.equals("CatFruitExplanation.txt")) {
+								Queue<String> qs = readLines(fl);
+								if (qs != null)
+									for (String str : qs) {
+										String[] strs = str.trim().split("\\s", 2);
+										if (strs.length < 2)
+											continue;
+										Unit u = UserProfile.getBCData().units.get(CommonStatic.parseIntN(strs[0]));
+										if (u != null)
+											MultiLangCont.getStatic().CFEXP.put(ni, u.info, strs[1]);
+									}
 							}
 							if (nl.equals("EnemyExplanation.txt")) {
 								Queue<String> qs = readLines(fl);
