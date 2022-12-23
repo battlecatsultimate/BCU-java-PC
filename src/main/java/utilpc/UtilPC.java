@@ -13,6 +13,8 @@ import common.util.unit.Form;
 import common.util.unit.Trait;
 import io.BCMusic;
 import io.BCUWriter;
+import page.MainFrame;
+import page.MenuBarHandler;
 import utilpc.awt.FG2D;
 
 import javax.swing.*;
@@ -138,6 +140,17 @@ public class UtilPC {
 		if (img.bimg() == null)
 			return null;
 		return new ImageIcon((Image) img.bimg());
+	}
+
+	public static ImageIcon getScaledIcon(VImg v, int w, int h) {
+		ImageIcon i = getIcon(v);
+		if (i == null)
+			return null;
+
+		int pw = MainFrame.F.getRootPane().getWidth();
+		int ph = MainFrame.F.getRootPane().getHeight() - MenuBarHandler.getBar().getHeight();
+		Image img = i.getImage().getScaledInstance(pw * w / 2300, ph * h / 1300, Image.SCALE_SMOOTH);
+		return new ImageIcon(img);
 	}
 
 	public static String[] lvText(Form f, ArrayList<Integer> lvs) {

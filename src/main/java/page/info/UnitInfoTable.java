@@ -332,13 +332,7 @@ public class UnitInfoTable extends Page {
 				if (id == 0)
 					break;
 				VImg img = CommonStatic.getBCAssets().gatyaitem.get(id);
-				ImageIcon icon = UtilPC.getIcon(img);
-				if (icon != null) {
-					int w = MainFrame.F.getRootPane().getWidth();
-					int h = MainFrame.F.getRootPane().getHeight() - MenuBarHandler.getBar().getHeight();
-					Image scaled = icon.getImage().getScaledInstance(w * 50 / 2300, h * 50 / 1300, Image.SCALE_SMOOTH);
-					upgrade[i / 3][i % 3].setIcon(new ImageIcon(scaled));
-				}
+				ImageIcon icon = UtilPC.getScaledIcon(img, 50, 50);
 				upgrade[i / 3][i % 3].setText(evo[i][1] + " " + get(MainLocale.UTIL, "cf" + id));
 			}
 			upgrade[1][2].setText(f.unit.info.xp + " XP");
