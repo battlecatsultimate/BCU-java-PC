@@ -340,6 +340,7 @@ public class UnitInfoTable extends Page {
 				up.setIcon(UtilPC.getScaledIcon(img, 50, 50));
 				up.setText(evo[i][1] + " " + get(MainLocale.UTIL, "cf" + id));
 			}
+			upgrade[2][1].setIcon(UtilPC.getScaledIcon(CommonStatic.getBCAssets().XP, 50, 30));
 			upgrade[2][1].setText(f.unit.info.xp + " XP");
 			cfdesc.setText(f.unit.info.getCatfruitExplanation().replace("<br>", "\n"));
 		}
