@@ -335,8 +335,7 @@ public class UnitInfoTable extends Page {
 				if (id == 0)
 					break;
 				VImg img = CommonStatic.getBCAssets().gatyaitem.get(id);
-				if (img != null)
-					up.setIcon(UtilPC.getScaledIcon(img, 50, 50));
+				up.setIcon(img != null ? UtilPC.getScaledIcon(img, 50, 50) : null);
 				up.setText(evo[i][1] + " " + get(MainLocale.UTIL, "cf" + id));
 				count++;
 			}

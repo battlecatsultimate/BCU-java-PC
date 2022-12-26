@@ -9,11 +9,9 @@ import common.battle.data.MaskUnit;
 import common.pack.FixIndexList;
 import common.pack.PackData;
 import common.pack.UserProfile;
+import common.system.VImg;
 import common.util.Data;
-import common.util.unit.EForm;
-import common.util.unit.Form;
-import common.util.unit.Level;
-import common.util.unit.Trait;
+import common.util.unit.*;
 import main.MainBCU;
 import page.*;
 import page.info.filter.EnemyFindPage;
@@ -40,8 +38,9 @@ public class ComparePage extends Page {
     private final JL[][] seco = new JL[1][names.length + 1]; // stats after others
     private final JL[][] unit = new JL[2][names.length + 1]; // stats on unit
     private final JL[][] enem = new JL[1][names.length + 1]; // stats on enemy
+    private final JL[][] evol = new JL[1][names.length * 6 + 1]; // { { {JL, JL, JL}, {JL, JL, JL} }, ... }
 
-    private final JCB[] boxes = new JCB[main.length + unit.length + enem.length + seco.length + 1];
+    private final JCB[] boxes = new JCB[main.length + unit.length + enem.length + seco.length + evol.length + 1];
 
     private final JBTN back = new JBTN(0, "back");
 
@@ -140,17 +139,17 @@ public class ComparePage extends Page {
 
         unit[0][0].setText(MainLocale.INFO, "cdo");
         unit[1][0].setText(MainLocale.INFO, "price");
-
         boxes[main.length].setText(MainLocale.INFO, "cdo");
         boxes[1 + main.length].setText(MainLocale.INFO, "price");
 
         enem[0][0].setText(MainLocale.INFO, "drop");
-
         boxes[main.length + unit.length].setText(MainLocale.INFO, "drop");
 
-        seco[0][0].setText(MainLocale.INFO, "trait");
+        evol[0][0].setText(MainLocale.INFO, "evolve");
+        boxes[main.length + unit.length + enem.length].setText(MainLocale.INFO, "evolve");
 
-        boxes[main.length + unit.length + enem.length].setText(MainLocale.INFO, "trait");
+        seco[0][0].setText(MainLocale.INFO, "trait");
+        boxes[main.length + unit.length + enem.length + evol.length].setText(MainLocale.INFO, "trait");
 
         boxes[boxes.length - 1].setText("ability");
 
@@ -275,6 +274,7 @@ public class ComparePage extends Page {
         for (int i = 0; i < maskEntities.length; i++) {
             MaskEntity m = maskEntities[i];
             int index = i + 1;
+            int evolIndex = i * 6 + 1; // [1] U [7] U [13]
             if (m == null) {
                 abilityPanes[i].setViewportView(null);
                 abilityPanes[i].setEnabled(false);
@@ -292,6 +292,13 @@ public class ComparePage extends Page {
                     jls[index].setText("-");
                 for (JL[] jls : seco)
                     jls[index].setText("-");
+                for (JL[] jls : evol) {
+                    for (int j = evolIndex; j < evolIndex + 6; j++) {
+                        jls[j].setText("-");
+                        jls[j].setIcon(null);
+                        jls[j].setToolTipText(null);
+                    }
+                }
                 continue;
             }
 
@@ -339,6 +346,13 @@ public class ComparePage extends Page {
 
                 for (JL[] jls : unit)
                     jls[index].setText("-");
+                for (JL[] jls : evol) {
+                    for (int j = evolIndex; j < evolIndex + 6; j++) {
+                        jls[j].setText("-");
+                        jls[j].setIcon(null);
+                        jls[j].setToolTipText(null);
+                    }
+                }
                 for (JBTN btn : swap[i])
                     btn.setEnabled(false);
             } else if (m instanceof MaskUnit) {
@@ -422,6 +436,41 @@ public class ComparePage extends Page {
 
                 double price = ef.getPrice(1);
                 unit[1][index].setText(price + "");
+
+                if (f.hasEvolveCost()) {
+                    int[][] evo = f.unit.info.evo;
+                    int count = 0;
+                    for (int j = 0; j < evo.length; j++) { // [[id, count], ...]
+                        int id = evo[j][0];
+                        JL up = evol[0][evolIndex + j];
+                        if (id == 0)
+                            break;
+                        VImg img = CommonStatic.getBCAssets().gatyaitem.get(id);
+                        up.setIcon(img != null ? UtilPC.getScaledIcon(img, 50, 50) : null);
+                        up.setText(evo[j][1] + " " + get(MainLocale.UTIL, "cf" + id + "s"));
+                        up.setToolTipText(evo[j][1] + " " + get(MainLocale.UTIL, "cf" + id));
+                        count++;
+                    }
+                    JL xp = evol[0][evolIndex + count];
+                    xp.setIcon(UtilPC.getScaledIcon(CommonStatic.getBCAssets().XP, 50, 30));
+                    xp.setText(f.unit.info.xp + "");
+                    xp.setToolTipText(f.unit.info.xp + " XP");
+                    for (JL[] jls : evol) {
+                        for (int j = evolIndex + count + 1; j < evolIndex + 6; j++) {
+                            jls[j].setText("-");
+                            jls[j].setIcon(null);
+                            jls[j].setToolTipText(null);
+                        }
+                    }
+                } else {
+                    for (JL[] jls : evol) {
+                        for (int j = evolIndex; j < evolIndex + 6; j++) {
+                            jls[j].setText("-");
+                            jls[j].setIcon(null);
+                            jls[j].setToolTipText(null);
+                        }
+                    }
+                }
 
                 for (JL[] jls : enem)
                     jls[index].setText("-");
@@ -628,6 +677,18 @@ public class ComparePage extends Page {
                 add(seco[i][j]);
             }
         }
+
+        for (int i = 0; i < evol.length; i++) {
+            for (int j = 0; j < evol[i].length; j++) {
+                evol[i][j] = new JL("-");
+                if (j == 0)
+                    evol[i][j].setHorizontalAlignment(SwingConstants.CENTER);
+                else
+                    Interpret.setUnderline(evol[i][j]);
+
+                add(evol[i][j]);
+            }
+        }
     }
 
     @Override
@@ -719,9 +780,28 @@ public class ComparePage extends Page {
             posY += 50;
         }
 
+        for (int i = 0; i < evol.length; i++) { // evol[3][6]
+            JL[] d = evol[i];
+            if (!boxes[i + main.length + unit.length + enem.length].isSelected()) {
+                for (JL jl : d)
+                    set(jl, x, y, 0, 0, 0, 0);
+                continue;
+            }
+            int posX = 250;
+            set(d[0], x, y, 50, posY, 200, 50);
+            for (int j = 1; j < evol[i].length; j++) {
+                JL jl = evol[i][j];
+                int l = j - 1;
+                int localPosX = posX + (l % 3 * 200) + (l / 6 * 600);
+                int localPosY = posY + (l / 3 % 2 * 50);
+                set(jl, x, y, localPosX, localPosY, width / 3, 50);
+            }
+            posY += 100;
+        }
+
         for (int i = 0; i < seco.length; i++) {
             JL[] d = seco[i];
-            if (!boxes[i + main.length + unit.length + enem.length].isSelected()) {
+            if (!boxes[i + main.length + unit.length + enem.length + evol.length].isSelected()) {
                 for (JL ex : d)
                     set(ex, x, y, 0, 0, 0, 0);
                 continue;
