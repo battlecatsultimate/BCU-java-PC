@@ -262,7 +262,7 @@ public class BCUReader extends DataIO {
 								if (qs != null)
 									for (String str : qs) {
 										String[] strs = str.trim().split("\\s", 2);
-										if (strs.length < 2)
+										if (strs.length < 2 || strs[1].equals("<br><br>"))
 											continue;
 										Unit u = UserProfile.getBCData().units.get(CommonStatic.parseIntN(strs[0]));
 										if (u != null)
