@@ -7,8 +7,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="java_PC" />
+        <module name="BCU-java-PC" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="BCU_java_PC" target="1.8" />
+      <module name="java_PC" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
