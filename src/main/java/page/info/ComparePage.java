@@ -38,7 +38,7 @@ public class ComparePage extends Page {
     private final JL[][] seco = new JL[1][names.length + 1]; // stats after others
     private final JL[][] unit = new JL[2][names.length + 1]; // stats on unit
     private final JL[][] enem = new JL[1][names.length + 1]; // stats on enemy
-    private final JL[][] evol = new JL[1][names.length * 6 + 1]; // { { {JL, JL, JL}, {JL, JL, JL} }, ... }
+    private final JL[][] evol = new JL[1][names.length * 6 + 1]; // evolve slots
 
     private final JCB[] boxes = new JCB[main.length + unit.length + enem.length + seco.length + evol.length + 1];
 
@@ -274,7 +274,7 @@ public class ComparePage extends Page {
         for (int i = 0; i < maskEntities.length; i++) {
             MaskEntity m = maskEntities[i];
             int index = i + 1;
-            int evolIndex = i * 6 + 1; // [1] U [7] U [13]
+            int evolIndex = i * 6 + 1;
             if (m == null) {
                 abilityPanes[i].setViewportView(null);
                 abilityPanes[i].setEnabled(false);
@@ -440,7 +440,7 @@ public class ComparePage extends Page {
                 if (f.hasEvolveCost()) {
                     int[][] evo = f.unit.info.evo;
                     int count = 0;
-                    for (int j = 0; j < evo.length; j++) { // [[id, count], ...]
+                    for (int j = 0; j < evo.length; j++) {
                         int id = evo[j][0];
                         JL up = evol[0][evolIndex + j];
                         if (id == 0)
@@ -725,7 +725,7 @@ public class ComparePage extends Page {
 
         posY = 250;
 
-        for (int i = 0; i < main.length; i++) { // 9
+        for (int i = 0; i < main.length; i++) {
             JL[] d = main[i];
             if (!boxes[i].isSelected()) {
                 for (JL ex : d)
@@ -780,7 +780,7 @@ public class ComparePage extends Page {
             posY += 50;
         }
 
-        for (int i = 0; i < evol.length; i++) { // evol[3][6]
+        for (int i = 0; i < evol.length; i++) {
             JL[] d = evol[i];
             if (!boxes[i + main.length + unit.length + enem.length].isSelected()) {
                 for (JL jl : d)

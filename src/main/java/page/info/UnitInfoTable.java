@@ -329,7 +329,7 @@ public class UnitInfoTable extends Page {
 		if (f.hasEvolveCost()) {
 			int[][] evo = f.unit.info.evo;
 			int count = 0;
-			for (int i = 0; i < evo.length; i++) { // [[id, count], ...]
+			for (int i = 0; i < evo.length; i++) {
 				int id = evo[i][0];
 				JL up = upgrade[i / 2][i % 2];
 				if (id == 0)
