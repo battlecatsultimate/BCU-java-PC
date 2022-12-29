@@ -277,7 +277,8 @@ public class MainBCU {
 		}
 	}
 
-	public static final int ver = 50201;
+	public static final int ver = 50202;
+	public static final boolean isBeta = false;
 	private static final DecimalFormat df = new DecimalFormat("#.##");
 
 	public static byte FILTER_TYPE = 1;
@@ -338,6 +339,9 @@ public class MainBCU {
 		} else {
 			announce0510 = true;
 		}
+
+		if (isBeta && !Opts.conf("This is a beta release. Are you sure you want to continue?"))
+			System.exit(0);
 
 		MenuBarHandler.initialize();
 		BCJSON.check();
