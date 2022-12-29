@@ -377,14 +377,9 @@ public class ConfigPage extends Page {
 		excont.addActionListener(l -> CommonStatic.getConfig().exContinuation = excont.isSelected());
 
 		savetime.setLnr(c -> {
-			int time = CommonStatic.parseIntN(savetime.getText());
-			boolean eq = time != -1 && time != MainBCU.autoSaveTime;
-
-			savetime.setText(time > 0 ? time + "min" : "deactivated");
-			if (eq) {
-				MainBCU.autoSaveTime = time;
-				MainBCU.restartAutoSaveTimer();
-			}
+			MainBCU.autoSaveTime = Math.max(0, CommonStatic.parseIntN(savetime.getText()));
+			savetime.setText(MainBCU.autoSaveTime > 0 ? MainBCU.autoSaveTime + "min" : "deactivated");
+			MainBCU.restartAutoSaveTimer();
 		});
 
 		shake.addActionListener(c -> CommonStatic.getConfig().shake = shake.isSelected());
