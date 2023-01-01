@@ -10,9 +10,5 @@
         <module name="BCU-java-PC" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="BCU_java_PC" target="1.8" />
-      <module name="java_PC" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>
