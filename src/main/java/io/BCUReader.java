@@ -257,6 +257,18 @@ public class BCUReader extends DataIO {
 									}
 								continue;
 							}
+							if (nl.equals("CatFruitExplanation.txt")) {
+								Queue<String> qs = readLines(fl);
+								if (qs != null)
+									for (String str : qs) {
+										String[] strs = str.trim().split("\\s", 2);
+										if (strs.length < 2 || strs[1].equals("<br><br>"))
+											continue;
+										Unit u = UserProfile.getBCData().units.get(CommonStatic.parseIntN(strs[0]));
+										if (u != null)
+											MultiLangCont.getStatic().CFEXP.put(ni, u.info, strs[1]);
+									}
+							}
 							if (nl.equals("EnemyExplanation.txt")) {
 								Queue<String> qs = readLines(fl);
 								if(qs != null)

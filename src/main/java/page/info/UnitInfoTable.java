@@ -4,6 +4,7 @@ import common.CommonStatic;
 import common.battle.BasisSet;
 import common.battle.data.MaskUnit;
 import common.battle.data.PCoin;
+import common.system.VImg;
 import common.util.Data;
 import common.util.unit.EForm;
 import common.util.unit.Form;
@@ -30,11 +31,13 @@ public class UnitInfoTable extends Page {
 
 	private final JL[][] main = new JL[4][8];
 	private final JL[][] special = new JL[1][8];
+	private final JL[][] upgrade = new JL[3][2];
 	private final JL[] atks;
 	private final JLabel[] proc;
 	private final JTF jtf = new JTF();
 	private final JLabel pcoin;
 	private final JTextArea descr = new JTextArea();
+	private final JTextArea cfdesc = new JTextArea();
 	private final JScrollPane desc = new JScrollPane(descr);
 
 	private final BasisSet b;
@@ -56,7 +59,7 @@ public class UnitInfoTable extends Page {
 		double mul = f.unit.lv.getMult(multi.get(0));
 		ls.addAll(Interpret.getProc(du, false, new double[]{Math.round(du.getHp() * mul) * b.t().getDefMulti(), multi.get(0)}));
 		if (pc)
-			ls.add(new Interpret.ProcDisplay("",null));
+			ls.add(new Interpret.ProcDisplay("", null));
 		proc = new JLabel[ls.size()];
 		for (int i = 0; i < ls.size(); i++) {
 			Interpret.ProcDisplay display = ls.get(i);
@@ -64,10 +67,7 @@ public class UnitInfoTable extends Page {
 			proc[i].setBorder(BorderFactory.createEtchedBorder());
 			proc[i].setIcon(display.getIcon());
 		}
-		if (pc)
-			pcoin = proc[ls.size() - 1];
-		else
-			pcoin = null;
+		pcoin = pc ? proc[ls.size() - 1] : null;
 		ini();
 	}
 
@@ -85,7 +85,7 @@ public class UnitInfoTable extends Page {
 		ls.addAll(Interpret.getProc(du, false, new double[]{Math.round(du.getHp() * mul) * b.t().getDefMulti(), multi.get(0)}));
 		boolean pc = de.du.getPCoin() != null;
 		if (pc)
-			ls.add(new Interpret.ProcDisplay("",null));
+			ls.add(new Interpret.ProcDisplay("", null));
 		proc = new JLabel[ls.size()];
 		for (int i = 0; i < ls.size(); i++) {
 			Interpret.ProcDisplay display = ls.get(i);
@@ -93,10 +93,7 @@ public class UnitInfoTable extends Page {
 			proc[i].setBorder(BorderFactory.createEtchedBorder());
 			proc[i].setIcon(display.getIcon());
 		}
-		if (pc)
-			pcoin = proc[ls.size() - 1];
-		else
-			pcoin = null;
+		pcoin = pc ? proc[ls.size() - 1] : null;
 		ini();
 	}
 
@@ -109,6 +106,8 @@ public class UnitInfoTable extends Page {
 		int l = main.length + 1;
 		if (displaySpecial)
 			l += special.length;
+		if (f.hasEvolveCost())
+			l += upgrade.length;
 		return (l + (proc.length + 1) / 2) * 50 + (f.getExplaination().replace("<br>", "").length() > 0 ? 200 : 0);
 	}
 
@@ -213,6 +212,14 @@ public class UnitInfoTable extends Page {
 		for (int i = 0; i < proc.length; i++)
 			set(proc[i], x, y, i % 2 * 800, h + 50 * (i / 2), i % 2 == 0 && i + 1 == proc.length ? 1600 : 800, 50);
 		h += proc.length * 25 + (proc.length % 2 == 1 ? 25 : 0);
+		if (f.hasEvolveCost()) {
+			set(cfdesc, x, y, 800, h, 800, 150);
+			for (JL[] ug : upgrade) {
+				for (int j = 0; j < ug.length; j++)
+					set(ug[j], x, y, j * 400, h, 400, 50);
+				h += 50;
+			}
+		}
 		set(desc, x, y, 0, h, 1600, 200);
 	}
 
@@ -256,6 +263,16 @@ public class UnitInfoTable extends Page {
 					special[i][j].setHorizontalAlignment(SwingConstants.CENTER);
 			}
 		}
+		if (f.hasEvolveCost()) {
+			for (int i = 0; i < upgrade.length; i++) {
+				for (int j = 0; j < upgrade[i].length; j++) {
+					add(upgrade[i][j] = new JL());
+					upgrade[i][j].setBorder(BorderFactory.createEtchedBorder());
+				}
+			}
+		}
+		add(cfdesc);
+		cfdesc.setBorder(BorderFactory.createEtchedBorder());
 		add(jtf);
 		String[] strs = UtilPC.lvText(f, multi);
 		jtf.setText(strs[0]);
@@ -308,6 +325,28 @@ public class UnitInfoTable extends Page {
 			special[0][7].setText(back + "");
 		else
 			special[0][7].setText(Math.min(back, front) + " ~ " + Math.max(back, front));
+
+		if (f.hasEvolveCost()) {
+			int[][] evo = f.unit.info.evo;
+			int count = 0;
+			for (int i = 0; i < evo.length; i++) {
+				int id = evo[i][0];
+				JL up = upgrade[i / 2][i % 2];
+				if (id == 0)
+					break;
+				VImg img = CommonStatic.getBCAssets().gatyaitem.get(id);
+				up.setIcon(img != null ? UtilPC.getScaledIcon(img, 50, 50) : null);
+				up.setText(evo[i][1] + " " + get(MainLocale.UTIL, "cf" + id));
+				count++;
+			}
+			JL xp = upgrade[count / 2][count % 2];
+			xp.setIcon(UtilPC.getScaledIcon(CommonStatic.getBCAssets().XP, 50, 30));
+			xp.setText(f.unit.info.xp + " XP");
+			String desc = f.unit.info.getCatfruitExplanation();
+			if (desc != null)
+				cfdesc.setText(desc.replace("<br>", "\n"));
+		}
+
 		atks[0].setText(1, "atk");
 		atks[2].setText(1, "preaa");
 		atks[4].setText(1, "dire");
@@ -330,6 +369,7 @@ public class UnitInfoTable extends Page {
 		}
 		atks[3].setText(pre.toString());
 		atks[5].setText(use.toString());
+
 		special[0][5].setToolTipText("<html>This unit will stay at least "
 				+ f.du.getLimit()
 				+ " units away from the max stage length<br>once it passes that threshold.");
@@ -338,6 +378,7 @@ public class UnitInfoTable extends Page {
 			add(desc);
 		descr.setText(f.toString().replace((f.uid == null ? "NULL" : f.uid.id) + "-" + f.fid + " ", "") + "\n" + fDesc);
 		descr.setEditable(false);
+		cfdesc.setEditable(false);
 		reset();
 		addListeners();
 		updateTooltips();
@@ -356,12 +397,12 @@ public class UnitInfoTable extends Page {
 
 				int maximum; //JP proc texts don't count with space, this is here to prevent it from staying in while loop forever
 				if (CommonStatic.getConfig().lang == 3)
-					maximum = Math.max(wrapped.lastIndexOf("。"),wrapped.lastIndexOf("、"));
+					maximum = Math.max(wrapped.lastIndexOf("。"), wrapped.lastIndexOf("、"));
 				else
 					maximum = Math.max(Math.max(wrapped.lastIndexOf(" "), wrapped.lastIndexOf(".")), wrapped.lastIndexOf(","));
 
 				if (maximum <= 0)
-					maximum = Math.min(i,wrapped.length());
+					maximum = Math.min(i, wrapped.length());
 
 				wrapped = wrapped.substring(0, maximum);
 				sb.append(wrapped).append("<br>");
