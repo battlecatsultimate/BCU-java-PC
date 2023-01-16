@@ -54,6 +54,7 @@ public class MainPage extends Page {
 	private final JBTN auth = new JBTN(0, "author");
 	private final JBTN comp = new JBTN(0, "compare");
 	private final JBTN bckp = new JBTN(0, "backup");
+	private final JBTN logs = new JBTN(0, "logs");
 
 	private final JBTN refr = new JBTN(0, "refrtips");
 	private final JLabel tips = new JLabel();
@@ -93,7 +94,7 @@ public class MainPage extends Page {
 		set(vbgr, x, y, 600, 600, 200, 50);
 		set(vmsc, x, y, 600, 700, 200, 50);
 		set(allf, x, y, 600, 800, 200, 50);
-		set(tips, x, y, 600, 850, 1200, 200);
+		set(tips, x, y, 600, 1050, 1200, 200);
 
 		set(conf, x, y, 900, 200, 200, 50);
 		set(save, x, y, 900, 300, 200, 50);
@@ -109,6 +110,7 @@ public class MainPage extends Page {
 		set(comp, x, y, 1200, 500, 200, 50);
 		set(pcus, x, y, 1200, 600, 200, 50);
 		set(rply, x, y, 1200, 700, 200, 50);
+		set(logs, x, y, 1200, 800, 200, 50);
 
 		set(vdiy, x, y, 1500, 200, 200, 50);
 		set(caic, x, y, 1500, 300, 200, 50);
@@ -138,6 +140,7 @@ public class MainPage extends Page {
 		rply.setLnr(() -> new RecdManagePage(this));
 		allf.setLnr(() -> new ResourcePage(this));
 		bckp.setLnr(() -> new BackupPage(this, true));
+		logs.setLnr(() -> new LogPage(this));
 		auth.setLnr(e -> {
 			String author = Opts.read("Decide your author name");
 
@@ -238,6 +241,9 @@ public class MainPage extends Page {
 
 		add(bckp);
 		bckp.setToolTipText(get(MainLocale.PAGE,"bckptip"));
+
+		add(logs);
+		logs.setToolTipText(""); // TODO: Logs tool tip
 
 		add(refr);
 		add(tips);
