@@ -284,7 +284,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 			int t = jcb.getSelectedIndex();
 			IconBox.IBConf.mode = t / 5; // [ Def, Str, Sou,
 			IconBox.IBConf.type = t % 5; // [ 0,   1,   2,  3, 4, 5, 6, 7]
-			IconBox.IBConf.glow = Math.max(IconBox.IBConf.type - 1, 0) + IconBox.IBConf.mode > 1 ? 1 : 0;
+			IconBox.IBConf.glow = t / 3 >= 1 && t % 3 <= 1 ? 1 : 0;
 			ib.changeType();
 		});
 
