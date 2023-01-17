@@ -288,7 +288,7 @@ public abstract class AbViewPage extends Page {
 
 		png.addActionListener(arg0 -> {
 			String str = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-			File f = new File("./img/" + str + ".png");
+			File f = new File(CommonStatic.ctx.getBCUFolder(), "./img/" + str + ".png");
 			BCUWriter.writeImage(vb.getPrev(), f);
 		});
 

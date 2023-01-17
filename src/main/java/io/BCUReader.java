@@ -54,7 +54,7 @@ public class BCUReader extends DataIO {
 	}
 
 	public static void readInfo() {
-		File f = new File("./user/config.json");
+		File f = new File(CommonStatic.ctx.getBCUFolder(), "./user/config.json");
 		if (f.exists()) {
 			try (Reader r = new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8)) {
 				JsonElement je = JsonParser.parseReader(r);
@@ -122,7 +122,7 @@ public class BCUReader extends DataIO {
 
 	public static void readLang() {
 		LoadPage.prog("reading language information");
-		File f = new File("./assets/lang/");
+		File f = new File(CommonStatic.ctx.getBCUFolder(), "./assets/lang/");
 		if (!f.exists())
 			return;
 

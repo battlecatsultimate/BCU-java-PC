@@ -58,8 +58,8 @@ public class BCUWriter extends DataIO {
 
 	public static void logPrepare() {
 		String str = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-		log = new File("./logs/" + str + ".log");
-		ph = new File("./logs/placeholder");
+		log = new File(CommonStatic.ctx.getBCUFolder(), "./logs/" + str + ".log");
+		ph = new File(CommonStatic.ctx.getBCUFolder(), "./logs/placeholder");
 
 		if (!log.getParentFile().exists()) {
 			boolean res = log.getParentFile().mkdirs();
@@ -189,7 +189,7 @@ public class BCUWriter extends DataIO {
 	public static void writeGIF(AnimatedGifEncoder age, String path) {
 		if (path == null)
 			path = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-		File f = new File("./img/" + path + ".gif");
+		File f = new File(CommonStatic.ctx.getBCUFolder(), "./img/" + path + ".gif");
 		if (!f.getParentFile().exists()) {
 			boolean res = f.getParentFile().mkdirs();
 
@@ -198,7 +198,10 @@ public class BCUWriter extends DataIO {
 				return;
 			}
 		}
-		age.start("./img/" + path + ".gif");
+
+		File destination = new File(CommonStatic.ctx.getBCUFolder(), "./img/" + path + ".gif");
+
+		age.start(destination.getAbsolutePath());
 	}
 
 	public static boolean writeImage(BufferedImage bimg, File f) {
@@ -258,7 +261,7 @@ public class BCUWriter extends DataIO {
 	}
 
 	private static void writeOptions() {
-		File f = new File("./user/config.json");
+		File f = new File(CommonStatic.ctx.getBCUFolder(), "./user/config.json");
 		Data.err(() -> Context.check(f));
 		JsonObject jo = JsonEncoder.encode(CommonStatic.getConfig()).getAsJsonObject();
 		Rectangle r = MainFrame.crect;

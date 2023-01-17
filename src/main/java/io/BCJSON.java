@@ -71,8 +71,8 @@ public class BCJSON {
 
 			if (updateIt) {
 				String ver = Data.revVer(jar.ver);
-				File target = new File("./BCU-" + ver + ".jar");
-				File temp = new File("./temp.temp");
+				File target = new File(CommonStatic.ctx.getBCUFolder(), "./BCU-" + ver + ".jar");
+				File temp = new File(CommonStatic.ctx.getBCUFolder(), "./temp.temp");
 				String url = JAR_LINK + ver + ".jar";
 				String alt = ALT_LINK + ver + ".jar";
 

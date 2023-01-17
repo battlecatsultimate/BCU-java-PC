@@ -1,5 +1,6 @@
 package page.awt;
 
+import common.CommonStatic;
 import common.pack.Context;
 import common.util.Data;
 import io.BCUWriter;
@@ -57,7 +58,7 @@ public abstract class RecdThread extends Thread {
 			if (str == null)
 				str = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 
-			file = new File("./img/" + str + ".mp4");
+			file = new File(CommonStatic.ctx.getBCUFolder(), "./img/" + str + ".mp4");
 			try {
 				encoder = AWTSequenceEncoder.create30Fps(file);
 			} catch (IOException e) {

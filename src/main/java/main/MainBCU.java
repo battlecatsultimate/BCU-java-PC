@@ -7,10 +7,11 @@ import common.io.PackLoader.ZipDesc.FileDesc;
 import common.io.assets.Admin;
 import common.io.assets.AssetLoader;
 import common.pack.Context;
+import common.pack.Context.ErrType;
 import common.pack.Source;
 import common.pack.Source.Workspace;
 import common.pack.UserProfile;
-import common.pack.Context.ErrType;
+import common.system.DateComparator;
 import common.system.fake.ImageBuilder;
 import common.system.files.VFile;
 import common.util.AnimGroup;
@@ -21,10 +22,10 @@ import io.BCUReader;
 import io.BCUWriter;
 import jogl.GLBBB;
 import jogl.util.GLIB;
+import org.jetbrains.annotations.NotNull;
 import page.*;
 import page.awt.AWTBBB;
 import page.awt.BBBuilder;
-import common.system.DateComparator;
 import page.battle.BattleBox;
 import utilpc.Theme;
 import utilpc.UtilPC;
@@ -55,17 +56,17 @@ public class MainBCU {
 
 		@Override
 		public File getAssetFile(String string) {
-			return new File("./assets/" + string);
+			return new File(getBCUFolder(), "./assets/" + string);
 		}
 
 		@Override
 		public File getAuxFile(String path) {
-			return new File(path);
+			return new File(getBCUFolder(), path);
 		}
 
 		@Override
 		public InputStream getLangFile(String file) {
-			File f = new File(
+			File f = new File(getBCUFolder(),
 					"./assets/lang/" + CommonStatic.Lang.LOC_CODE[CommonStatic.getConfig().lang] + "/" + file);
 			if (!f.exists()) {
 				String path = "common/util/lang/assets/" + file;
@@ -76,17 +77,17 @@ public class MainBCU {
 
 		@Override
 		public File getUserFile(String string) {
-			return new File("./user/" + string);
+			return new File(getBCUFolder(), "./user/" + string);
 		}
 
 		@Override
 		public File getWorkspaceFile(String relativePath) {
-			return new File("./workspace/" + relativePath);
+			return new File(getBCUFolder(), "./workspace/" + relativePath);
 		}
 
 		@Override
 		public File getBackupFile(String string) {
-			return new File("./backups/"+string);
+			return new File(getBCUFolder(), "./backups/"+string);
 		}
 
 		@Override
@@ -126,11 +127,11 @@ public class MainBCU {
 			Replay.read();
 			LoadPage.prog("remove old files");
 			CommonStatic.ctx.noticeErr(() -> {
-				Context.delete(new File("./user/backup.zip"));
-				Context.delete(new File("./user/basis.v"));
-				Context.delete(new File("./user/data.ini"));
-				Context.delete(new File("./assets/assets.zip"));
-				Context.delete(new File("./assets/calendar/"));
+				Context.delete(new File(getBCUFolder(), "./user/backup.zip"));
+				Context.delete(new File(getBCUFolder(), "./user/basis.v"));
+				Context.delete(new File(getBCUFolder(), "./user/data.ini"));
+				Context.delete(new File(getBCUFolder(), "./assets/assets.zip"));
+				Context.delete(new File(getBCUFolder(), "./assets/calendar/"));
 			}, ErrType.WARN, "Failed to delete old files");
 			LoadPage.prog("finished reading");
 		}
@@ -197,7 +198,7 @@ public class MainBCU {
 					return false;
 				}
 
-				boolean result = CommonStatic.ctx.noticeErr(() -> b.backup.unzip(path -> new File("./"+path), prog), ErrType.ERROR, "Failed to restore files");
+				boolean result = CommonStatic.ctx.noticeErr(() -> b.backup.unzip(path -> new File(getBCUFolder(), "./"+path), prog), ErrType.ERROR, "Failed to restore files");
 
 				DateComparator comparator = new DateComparator();
 
@@ -220,6 +221,29 @@ public class MainBCU {
 
 				return true;
 			}
+		}
+
+		@NotNull
+		@Override
+		public File getBCUFolder() {
+			if(!MainBCU.WRITE)
+				return new File("./");
+
+			try {
+				File f = new File(MainBCU.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+
+				File parent = f.getParentFile();
+
+				if(parent != null) {
+					System.out.println(parent.getAbsolutePath());
+
+					return parent;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return new File("./");
 		}
 
 		private void extractData(VFile vf, Consumer<Double> prog) throws IOException {
@@ -376,8 +400,8 @@ public class MainBCU {
 	}
 
 	private static boolean checkOldFileExisting() {
-		File res = new File("./res");
-		File assets = new File("./assets/assets/zip");
+		File res = new File(CommonStatic.ctx.getBCUFolder(), "./res");
+		File assets = new File(CommonStatic.ctx.getBCUFolder(), "./assets/assets/zip");
 
 		return res.exists() && assets.exists();
 	}

@@ -1,5 +1,7 @@
 package page;
 
+import common.CommonStatic;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
@@ -7,8 +9,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class LogPage extends Page {
 
@@ -59,7 +61,7 @@ public class LogPage extends Page {
         add(jldv);
         add(show);
 
-        File log = new File("./logs");
+        File log = new File(CommonStatic.ctx.getBCUFolder(), "./logs");
         if (log.exists() && log.isDirectory()) {
             File[] fs = log.listFiles();
             if (fs == null)

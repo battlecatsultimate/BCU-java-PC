@@ -79,7 +79,7 @@ public class MusicEditPage extends Page {
 		});
 
 		show.addActionListener(arg0 -> {
-			File f = new File("./workspace/" + pack.desc.id + "/musics/");
+			File f = new File(CommonStatic.ctx.getBCUFolder(), "./workspace/" + pack.desc.id + "/musics/");
 			if(!f.exists()) {
 				boolean result = f.mkdirs();
 
