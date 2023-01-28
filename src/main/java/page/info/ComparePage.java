@@ -665,7 +665,7 @@ public class ComparePage extends Page {
 
             Level lvs = f.unit.getPrefLvs();
 
-            maskEntityLvl[s] = new Level(lvs.getTalents().length);
+            maskEntityLvl[s] = lvs.clone();
 
             if (maskEntities[s] instanceof MaskUnit) {
                 data = CommonStatic.parseIntsN(level[s].getText());
@@ -685,17 +685,13 @@ public class ComparePage extends Page {
             }
 
             if (data.length > 1) {
-                ((Level) maskEntityLvl[s]).setLevel(data[1]);
+                ((Level) maskEntityLvl[s]).setPlusLevel(data[1]);
             }
 
             ((Level) maskEntityLvl[s]).setTalents(lvs.getTalents());
 
-            int[] t = ((Level) maskEntityLvl[s]).getTalents();
-
-            if (data.length - 2 >= 0)
-                System.arraycopy(data, 2, t, 2, data.length - 2);
-
             maskEntityLvl[s] = f.regulateLv(null, (Level) maskEntityLvl[s]);
+
             String[] strs = UtilPC.lvText(f, (Level) maskEntityLvl[s]);
             level[s].setText(strs[0]);
         }
