@@ -21,7 +21,7 @@ public class BackgroundLCR extends DefaultListCellRenderer {
 
         JLabel jl = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-        //Set text here
+        //@TODO Set text here
 
         return jl;
     }
