@@ -79,6 +79,7 @@ public class ConfigPage extends Page {
 	private final JCB excont = new JCB(MainLocale.PAGE, "excont");
 	private final JL autosave = new JL(MainLocale.PAGE, "autosave");
 	private final JTF savetime = new JTF(MainBCU.autoSaveTime > 0 ? MainBCU.autoSaveTime + "min" : "deactivated");
+	private final JCB reallv = new JCB(MainLocale.PAGE, "reallv");
 
 	private final JScrollPane jsps = new JScrollPane(jls);
 
@@ -137,7 +138,7 @@ public class ConfigPage extends Page {
 		set(mbac, x, y, 50, 800, 300, 50);
 		set(jsba, x, y, 350, 800, 750, 75);
 
-		set(jlga, x, y, 50, 900, 300, 50);
+		set(jlga, x, y, 50, 900, 600, 50);
 		set(musc, x, y, 50, 950, 300, 50);
 		set(jceff, x, y, 50, 1000, 300, 50);
 		set(jcdly, x, y, 50, 1050, 300, 50);
@@ -145,10 +146,12 @@ public class ConfigPage extends Page {
 		set(excont, x, y, 50, 1150, 300, 50);
 		set(shake, x, y, 50, 1200, 300, 50);
 
-		set(jlot, x, y, 350, 900, 300, 50);
-		set(jcbac, x, y, 350, 950, 300, 50);
-		set(jcmus, x, y, 350, 1000, 300, 50);
-		set(jcsnd, x, y, 350, 1050, 300, 50);
+		set(reallv, x, y, 350, 950, 300, 50);
+
+		set(jlot, x, y, 650, 900, 300, 50);
+		set(jcbac, x, y, 650, 950, 300, 50);
+		set(jcmus, x, y, 650, 1000, 300, 50);
+		set(jcsnd, x, y, 650, 1050, 300, 50);
 
 		set(jlfi, x, y, 1225, 100, 200, 50);
 		set(filt, x, y, 1425, 100, 200, 50);
@@ -383,6 +386,8 @@ public class ConfigPage extends Page {
 		});
 
 		shake.addActionListener(c -> CommonStatic.getConfig().shake = shake.isSelected());
+
+		reallv.addActionListener(c -> CommonStatic.getConfig().realLevel = reallv.isSelected());
 	}
 
 	private void ini() {
@@ -437,6 +442,7 @@ public class ConfigPage extends Page {
 		add(jcbac);
 		add(jcmus);
 		add(shake);
+		add(reallv);
 		excont.setSelected(CommonStatic.getConfig().exContinuation);
 		prlvmd.setText("" + CommonStatic.getConfig().prefLevel);
 		jls.setSelectedIndex(localeIndexOf(cfg().lang));
@@ -485,6 +491,8 @@ public class ConfigPage extends Page {
 			theme.setEnabled(false);
 		}
 		shake.setSelected(cfg().shake);
+		reallv.setSelected(cfg().realLevel);
+		reallv.setToolTipText(get(MainLocale.PAGE, "reallvtip"));
 		addListeners();
 	}
 

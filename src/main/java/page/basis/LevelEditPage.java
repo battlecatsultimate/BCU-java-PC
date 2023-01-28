@@ -88,7 +88,7 @@ public class LevelEditPage extends Page {
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(bck, x, y, 0, 0, 200, 50);
-		set(pcoin, x, y, 50, 100, 600, 50);
+		set(pcoin, x, y, 50, 100, 1200, 50);
 		set(levels, x, y, 50, 150, 350, 50);
 		set(orbScroll, x, y, 50, 225, 350, 600);
 		set(add, x, y, 50, 875, 175, 50);

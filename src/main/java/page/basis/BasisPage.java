@@ -201,7 +201,7 @@ public class BasisPage extends LubCont {
 		set(setc, x, y, 1100, 750, 200, 50);
 		set(jspcn, x, y, 500, 500, 400, 250);
 		set(jspul, x, y, 1300, 150, 300, 600);
-		set(pcoin, x, y, 500, 50, 600, 50);
+		set(pcoin, x, y, 500, 50, 1200, 50);
 		set(lvjtf, x, y, 500, 100, 400, 50);
 		set(form, x, y, 500, 450, 200, 50);
 		set(reset, x, y, 700, 450, 200, 50);
