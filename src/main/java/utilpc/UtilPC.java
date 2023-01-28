@@ -186,8 +186,6 @@ public class UtilPC {
 
 			str.append(lv.getTalents()[pc.info.size() - 1]).append("}");
 
-			System.out.println("I'm here : " + str);
-
 			return new String[] {str.toString(), lab.toString()};
 		}
 	}
