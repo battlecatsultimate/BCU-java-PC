@@ -112,7 +112,7 @@ public class LevelEditPage extends Page {
 		levels.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				ArrayList<Integer> lvs = Level.LvList(CommonStatic.parseIntsN(levels.getText()));
+				Level lvs = Level.lvList(f.unit, CommonStatic.parseIntsN(levels.getText()), null);
 
 				setLvOrb(lvs, generateOrb());
 
@@ -150,7 +150,7 @@ public class LevelEditPage extends Page {
 
 			orbList.setListData(generateNames());
 
-			setLvOrb(lv.getLvs(), generateOrb());
+			setLvOrb(lv, generateOrb());
 		});
 
 		add.setLnr(x -> {
@@ -160,7 +160,7 @@ public class LevelEditPage extends Page {
 
 			orbList.setListData(generateNames());
 
-			setLvOrb(lv.getLvs(), generateOrb());
+			setLvOrb(lv, generateOrb());
 		});
 
 		type.addActionListener(arg0 -> {
@@ -191,7 +191,7 @@ public class LevelEditPage extends Page {
 
 				orbb.changeOrb(data);
 
-				setLvOrb(lv.getLvs(), generateOrb());
+				setLvOrb(lv, generateOrb());
 			}
 		});
 
@@ -211,7 +211,7 @@ public class LevelEditPage extends Page {
 
 				orbb.changeOrb(data);
 
-				setLvOrb(lv.getLvs(), generateOrb());
+				setLvOrb(lv, generateOrb());
 			}
 		});
 
@@ -231,7 +231,7 @@ public class LevelEditPage extends Page {
 
 				orbb.changeOrb(data);
 
-				setLvOrb(lv.getLvs(), generateOrb());
+				setLvOrb(lv, generateOrb());
 			}
 		});
 
@@ -251,7 +251,7 @@ public class LevelEditPage extends Page {
 			}
 
 			orbb.changeOrb(new int[] {});
-			setLvOrb(lv.getLvs(), generateOrb());
+			setLvOrb(lv, generateOrb());
 			orbList.setListData(generateNames());
 		});
 	}
@@ -346,7 +346,7 @@ public class LevelEditPage extends Page {
 
 		add(clear);
 
-		String[] strs = UtilPC.lvText(f, lu().getLv(f).getLvs());
+		String[] strs = UtilPC.lvText(f, lu().getLv(f));
 
 		levels.setText(strs[0]);
 		pcoin.setText(strs[1]);
@@ -384,7 +384,7 @@ public class LevelEditPage extends Page {
 				MaskUnit mu;
 
 				if(form.du.getPCoin() != null) {
-					mu = form.du.getPCoin().improve(lv.getLvs());
+					mu = form.du.getPCoin().improve(lv.getTalents());
 				} else {
 					mu = form.du;
 				}
@@ -397,7 +397,7 @@ public class LevelEditPage extends Page {
 			MaskUnit mu;
 
 			if(f.du.getPCoin() != null) {
-				mu = f.du.getPCoin().improve(lv.getLvs());
+				mu = f.du.getPCoin().improve(lv.getTalents());
 			} else {
 				mu = f.du;
 			}
@@ -473,7 +473,7 @@ public class LevelEditPage extends Page {
 						MaskUnit mu;
 
 						if(form.du.getPCoin() != null) {
-							mu = form.du.getPCoin().improve(lv.getLvs());
+							mu = form.du.getPCoin().improve(lv.getTalents());
 						} else {
 							mu = form.du;
 						}
@@ -487,7 +487,7 @@ public class LevelEditPage extends Page {
 					MaskUnit mu;
 
 					if(f.du.getPCoin() != null) {
-						mu = f.du.getPCoin().improve(lv.getLvs());
+						mu = f.du.getPCoin().improve(lv.getTalents());
 					} else {
 						mu = f.du;
 					}
@@ -567,8 +567,9 @@ public class LevelEditPage extends Page {
 		return BasisSet.current().sele.lu;
 	}
 
-	private void setLvOrb(ArrayList<Integer> lvs, int[][] orbs) {
-		lu().setOrb(f.unit, lvs, orbs);
+	private void setLvOrb(Level lv, int[][] orbs) {
+		lu().setOrb(f.unit, lv, orbs);
+
 		p.callBack(null);
 	}
 
@@ -588,7 +589,7 @@ public class LevelEditPage extends Page {
 				MaskUnit mu;
 
 				if(form.du.getPCoin() != null) {
-					mu = form.du.getPCoin().improve(lv.getLvs());
+					mu = form.du.getPCoin().improve(lv.getTalents());
 				} else {
 					mu = form.du;
 				}
@@ -611,7 +612,7 @@ public class LevelEditPage extends Page {
 			MaskUnit mu;
 
 			if(f.du.getPCoin() != null) {
-				mu = f.du.getPCoin().improve(lv.getLvs());
+				mu = f.du.getPCoin().improve(lv.getTalents());
 			} else {
 				mu = f.du;
 			}

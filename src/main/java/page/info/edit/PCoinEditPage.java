@@ -54,16 +54,27 @@ public class PCoinEditPage extends Page {
         addP.addActionListener(arg0 -> {
             if (uni.pcoin == null)
                 uni.pcoin = new PCoin(uni);
+
             int slot = uni.pcoin.info.size();
-            uni.pcoin.info.add(new int[]{slot + 1,10,0,0,0,0,0,0,0,0,slot + 1,8,-1});
-            uni.pcoin.max.add(10);
+
+            uni.pcoin.info.add(new int[]{ slot + 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, slot + 1, 8, 1, -1 });
+
+            uni.pcoin.max = new int[uni.pcoin.info.size()];
+
+            for(int i = 0; i < uni.pcoin.info.size() -1; i++) {
+                uni.pcoin.max[i] = uni.pcoin.info.get(i)[1];
+            }
+
+            uni.pcoin.max[uni.pcoin.info.size() - 1] = 10;
 
             for (int i = 0; i < slot; i++)
                 if (uni.pcoin.info.get(i)[0] == slot + 1) {
                     PCoinEditTable pc = pCoinEdits.get(i);
+
                     pc.setData();
                     pc.randomize();
                 }
+
             setCoinTypes();
         });
 

@@ -44,7 +44,7 @@ public class FormEditPage extends EntityEditPage {
 		super(p, pac.desc.id, (CustomEntity) f.du, pac.editable, false);
 		form = f;
 		cu = (CustomUnit) form.du;
-		lv = f.unit.getPrefLv();
+		lv = f.unit.getPreferredLevel();
 		ueb = new UnitEditBox(this, pac, cu);
 		ini();
 		setData((CustomUnit) f.du);

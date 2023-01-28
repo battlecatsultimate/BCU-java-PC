@@ -4,12 +4,14 @@ import common.battle.BasisSet;
 import common.battle.data.MaskEnemy;
 import common.battle.data.MaskEntity;
 import common.battle.data.MaskUnit;
+import common.util.unit.Level;
+import common.util.unit.LevelInterface;
+import common.util.unit.Magnification;
 import page.Page;
 import utilpc.Interpret;
 import utilpc.UtilPC;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class EntityAbilities extends Page {
@@ -17,11 +19,11 @@ public class EntityAbilities extends Page {
     private static final long serialVersionUID = 1L;
 
     private final MaskEntity me;
-    private final ArrayList<Integer> lvl;
+    private final LevelInterface lvl;
     private JLabel[] proc;
     private JLabel pcoin;
 
-    public EntityAbilities(Page p, MaskEntity me, ArrayList<Integer> lv) {
+    public EntityAbilities(Page p, MaskEntity me, LevelInterface lv) {
         super(p);
         this.me = me;
         lvl = lv;
@@ -32,24 +34,36 @@ public class EntityAbilities extends Page {
 
     private void ini() {
         boolean isEnemy = me instanceof MaskEnemy;
+
         List<Interpret.ProcDisplay> ls = Interpret.getAbi(me);
-        ls.addAll(Interpret.getProc(me, isEnemy, lvl.stream().mapToDouble(x -> {
-            if (isEnemy)
-                return x * ((MaskEnemy) me).multi(BasisSet.current()) / 100;
-            else
-                return x;
-        }).toArray()));
+
+        double[] mag = new double[2];
+
+        if (lvl instanceof Level) {
+            mag[0] = ((Level) lvl).getLv();
+            mag[1] = ((Level) lvl).getPlusLv();
+        } else if (lvl instanceof Magnification && me instanceof MaskEnemy) {
+            mag[0] = ((Magnification) lvl).hp * ((MaskEnemy) me).multi(BasisSet.current()) / 100;
+            mag[1] = ((Magnification) lvl).atk * ((MaskEnemy) me).multi(BasisSet.current()) / 100;
+        }
+
+        ls.addAll(Interpret.getProc(me, isEnemy, mag));
+
         proc = new JLabel[ls.size()];
+
         for (int i = 0; i < ls.size(); i++) {
             Interpret.ProcDisplay disp = ls.get(i);
+
             add(proc[i] = new JLabel(disp.toString()));
+
             proc[i].setBorder(BorderFactory.createEtchedBorder());
             proc[i].setIcon(disp.getIcon());
             Interpret.setUnderline(proc[i]);
         }
 
-        if (!isEnemy && ((MaskUnit) me).getPCoin() != null) {
-            String[] strs = UtilPC.lvText(((MaskUnit) me).getPack(), lvl);
+        if (!isEnemy && ((MaskUnit) me).getPCoin() != null && lvl instanceof Level) {
+            String[] strs = UtilPC.lvText(((MaskUnit) me).getPack(), (Level) lvl);
+
             add(pcoin = new JLabel(strs[1]));
 
             pcoin.setBorder(BorderFactory.createEtchedBorder());
@@ -67,6 +81,7 @@ public class EntityAbilities extends Page {
         setBounds(0, 0, x, y);
 
         int posY = 0;
+
         for (JLabel jLabel : proc) {
             set(jLabel, x, y, 0, posY, 1200, 50);
             posY += 50;

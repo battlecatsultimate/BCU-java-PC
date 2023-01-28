@@ -10,10 +10,7 @@ import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
 import common.util.Res;
 import common.util.stage.Limit;
-import common.util.unit.Combo;
-import common.util.unit.EForm;
-import common.util.unit.Form;
-import common.util.unit.Unit;
+import common.util.unit.*;
 import page.Page;
 import utilpc.PP;
 import utilpc.awt.FG2D;
@@ -83,7 +80,7 @@ public class LineUpBox extends Canvas {
 						Res.getCost((int) ef.getPrice(price), true,
 							new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
 					else
-						Res.getLv(lu.getLv(f).getLv(),
+						Res.getLv(lu.getLv(f).getLv() + lu.getLv(f).getPlusLv(),
 							new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
 				}
 			}
@@ -99,7 +96,7 @@ public class LineUpBox extends Canvas {
 				Res.getCost((int) ef.getPrice(price), true,
 					new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
 			else
-				Res.getLv(lu.getLv(sf).getLv(), new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
+				Res.getLv(lu.getLv(sf).getLv() + lu.getLv(sf).getPlusLv(), new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
 		}
 		g.drawImage(bimg, 0, 0, getWidth(), getHeight(), null);
 		pt++;
@@ -187,10 +184,14 @@ public class LineUpBox extends Canvas {
 		page.callBack(f);
 	}
 
-	protected void setLv(int[] lv) {
-		if (lv.length == 0 || sf == null)
+	protected void setLv(Level lv) {
+		if (sf == null)
 			return;
-		lu.setLv(sf.unit, sf.regulateLv(lv, lu.getLv(sf).getLvs()));
+
+		System.out.println("Input received : " + lv.toString());
+		System.out.println("Regulated result : " + sf.regulateLv(lv, lu.getLv(sf)));
+
+		lu.setLv(sf.unit, sf.regulateLv(lv, lu.getLv(sf)));
 	}
 
 	protected void setPos(int pos) {
