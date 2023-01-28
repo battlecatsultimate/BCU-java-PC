@@ -2,6 +2,7 @@ package page.info;
 
 import common.battle.BasisSet;
 import common.system.Node;
+import common.util.unit.Level;
 import common.util.unit.Unit;
 import page.JBTN;
 import page.JTG;
@@ -10,7 +11,6 @@ import page.basis.BasisPage;
 import page.view.UnitViewPage;
 
 import javax.swing.*;
-import java.util.ArrayList;
 
 public class UnitInfoPage extends Page {
 
@@ -30,7 +30,7 @@ public class UnitInfoPage extends Page {
 	private final BasisSet b;
 	private final Node<Unit> n;
 
-	public UnitInfoPage(Page p, Unit u, ArrayList<Integer> lvs) {
+	public UnitInfoPage(Page p, Unit u, Level lvs) {
 		super(p);
 		n = new Node<>(u);
 		b = BasisSet.current();

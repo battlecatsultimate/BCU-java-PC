@@ -48,7 +48,7 @@ public class ComparePage extends Page {
     private final JBTN[][] swap = new JBTN[names.length][2];
 
     private final MaskEntity[] maskEntities = new MaskEntity[names.length];
-    private final ArrayList<Integer>[] maskEntityLvl = new ArrayList[names.length];
+    private final LevelInterface[] maskEntityLvl = new LevelInterface[names.length];
 
     private final TraitList trait = new TraitList(false);
     private final JScrollPane tlst = new JScrollPane(trait);
@@ -195,32 +195,46 @@ public class ComparePage extends Page {
                     return;
 
                 Form oldf = (Form) maskEntities[finalI].getPack();
+
                 Form[] forms = oldf.unit.forms;
+
                 int fid = oldf.fid;
+
                 Form f = (fid - 1) < 0 ? forms[forms.length - 1] : forms[fid - 1];
 
                 int[] data = CommonStatic.parseIntsN(level[finalI].getText());
-                maskEntityLvl[finalI] = f.regulateLv(data, maskEntityLvl[finalI]);
-                String[] strs = UtilPC.lvText(f, maskEntityLvl[finalI]);
+
+                maskEntityLvl[finalI] = f.regulateLv(Level.lvList(f.unit, data, null), (Level) maskEntityLvl[finalI]);
+
+                String[] strs = UtilPC.lvText(f, (Level) maskEntityLvl[finalI]);
+
                 level[finalI].setText(strs[0]);
 
                 maskEntities[finalI] = f.du;
+
                 reset();
             });
+
             swap[i][1].addActionListener(x -> {
                 if (!(maskEntities[finalI] instanceof MaskUnit))
                     return;
 
                 Form oldf = (Form) maskEntities[finalI].getPack();
+
                 int fid = oldf.fid;
+
                 Form f = oldf.uid.get().forms[(fid + 1) % oldf.unit.forms.length];
 
                 int[] data = CommonStatic.parseIntsN(level[finalI].getText());
-                maskEntityLvl[finalI] = f.regulateLv(data, maskEntityLvl[finalI]);
-                String[] strs = UtilPC.lvText(f, maskEntityLvl[finalI]);
+
+                maskEntityLvl[finalI] = f.regulateLv(Level.lvList(f.unit, data, null), (Level) maskEntityLvl[finalI]);
+
+                String[] strs = UtilPC.lvText(f, (Level) maskEntityLvl[finalI]);
+
                 level[finalI].setText(strs[0]);
 
                 maskEntities[finalI] = f.du;
+
                 reset();
             });
         }
@@ -236,25 +250,28 @@ public class ComparePage extends Page {
                     if (maskEntities[finalI] instanceof MaskEnemy) {
                         if (data.length == 1) {
                             if (data[0] != -1) {
-                                maskEntityLvl[finalI].set(0, data[0]);
-                                maskEntityLvl[finalI].set(1, data[0]);
+                                ((Magnification) maskEntityLvl[finalI]).hp = data[0];
+                                ((Magnification) maskEntityLvl[finalI]).atk = data[0];
                             }
 
                             jtf.setText(CommonStatic.toArrayFormat(data[0], data[0]) + "%");
                         } else if (data.length == 2) {
                             if (data[0] != -1)
-                                maskEntityLvl[finalI].set(0, data[0]);
+                                ((Magnification) maskEntityLvl[finalI]).hp = data[0];
                             if (data[1] != -1)
-                                maskEntityLvl[finalI].set(1, data[1]);
+                                ((Magnification) maskEntityLvl[finalI]).atk = data[1];
 
                             jtf.setText(CommonStatic.toArrayFormat(data[0], data[1]) + "%");
                         } else {
-                            jtf.setText(CommonStatic.toArrayFormat(maskEntityLvl[finalI].get(0), maskEntityLvl[finalI].get(1)) + "%");
+                            jtf.setText(CommonStatic.toArrayFormat(((Magnification) maskEntityLvl[finalI]).hp = data[0], ((Magnification) maskEntityLvl[finalI]).atk = data[1]) + "%");
                         }
                     } else {
                         Form f = ((MaskUnit) maskEntities[finalI]).getPack();
-                        maskEntityLvl[finalI] = f.regulateLv(data, maskEntityLvl[finalI]);
-                        String[] strs = UtilPC.lvText(f, maskEntityLvl[finalI]);
+
+                        maskEntityLvl[finalI] = f.regulateLv(Level.lvList(f.unit, data, null), (Level) maskEntityLvl[finalI]);
+
+                        String[] strs = UtilPC.lvText(f, (Level) maskEntityLvl[finalI]);
+
                         jtf.setText(strs[0]);
                     }
 
@@ -278,20 +295,28 @@ public class ComparePage extends Page {
             if (m == null) {
                 abilityPanes[i].setViewportView(null);
                 abilityPanes[i].setEnabled(false);
+
                 names[i].setIcon(null);
                 names[i].setText("-");
+
                 level[i].setEnabled(false);
                 level[i].setText("-");
+
                 for (JBTN btn : swap[i])
                     btn.setEnabled(false);
+
                 for (JL[] jls : main)
                     jls[index].setText("-");
+
                 for (JL[] jls : unit)
                     jls[index].setText("-");
+
                 for (JL[] jls : enem)
                     jls[index].setText("-");
+
                 for (JL[] jls : seco)
                     jls[index].setText("-");
+
                 for (JL[] jls : evol) {
                     for (int j = evolIndex; j < evolIndex + 6; j++) {
                         jls[j].setText("-");
@@ -299,6 +324,7 @@ public class ComparePage extends Page {
                         jls[j].setToolTipText(null);
                     }
                 }
+
                 continue;
             }
 
@@ -307,6 +333,7 @@ public class ComparePage extends Page {
             int hp = m.getHp();
             int atk = 0;
             int[][] atkData = m.rawAtkData();
+
             StringBuilder atkString = new StringBuilder();
             StringBuilder preString = new StringBuilder();
 
@@ -314,14 +341,16 @@ public class ComparePage extends Page {
                 MaskEnemy enemy = (MaskEnemy) m;
 
                 if (!state) {
-                    maskEntityLvl[i] = new ArrayList<>();
-                    maskEntityLvl[i].add(100);
-                    maskEntityLvl[i].add(100);
+                    maskEntityLvl[i] = new Magnification(100, 100);
                 }
-                ArrayList<Integer> multi = maskEntityLvl[i];
 
-                double mul = (multi.get(0) * enemy.multi(b)) / 100.0;
-                double mula = (multi.get(1) * enemy.multi(b)) / 100.0;
+                LevelInterface multi = maskEntityLvl[i];
+
+                if(!(multi instanceof Magnification))
+                    return;
+
+                double mul = (((Magnification) multi).hp * enemy.multi(b)) / 100.0;
+                double mula = (((Magnification) multi).atk * enemy.multi(b)) / 100.0;
 
                 abilityPanes[i].setViewportView(abilities[i] = new EntityAbilities(getFront(), m, multi));
 
@@ -356,12 +385,14 @@ public class ComparePage extends Page {
                 for (JBTN btn : swap[i])
                     btn.setEnabled(false);
             } else if (m instanceof MaskUnit) {
-                ArrayList<Integer> multi = state
+                Level multi = (Level) (state
                         ? maskEntityLvl[i]
-                        : (maskEntityLvl[i] = ((MaskUnit) m).getPack().getPrefLvs());
+                        : (maskEntityLvl[i] = ((MaskUnit) m).getPack().unit.getPrefLvs()));
+
                 MaskUnit mu;
+
                 if (((MaskUnit) m).getPCoin() != null) {
-                    mu = ((MaskUnit) m).getPCoin().improve(multi);
+                    mu = ((MaskUnit) m).getPCoin().improve(multi.getTalents());
                     m = mu;
                 } else
                     mu = (MaskUnit) m;
@@ -371,21 +402,25 @@ public class ComparePage extends Page {
 
                 abilityPanes[i].setViewportView(abilities[i] = new EntityAbilities(getFront(), mu, multi));
 
-                double mul = f.unit.lv.getMult(multi.get(0));
+                double mul = f.unit.lv.getMult(multi.getLv() + multi.getPlusLv());
                 double atkLv = b.t().getAtkMulti();
                 double defLv = b.t().getDefMulti();
 
                 ArrayList<Trait> traits = new ArrayList<>(trait.getSelectedValuesList());
                 ArrayList<Trait> spTraits = new ArrayList<>(UserProfile.getBCData().traits.getList()
                         .subList(Data.TRAIT_EVA, Data.TRAIT_BEAST + 1));
+
                 spTraits.retainAll(traits);
+
                 traits.retainAll(mu.getTraits());
+
                 boolean overlap = traits.size() > 0;
 
                 int checkHealth = (Data.AB_GOOD | Data.AB_RESIST | Data.AB_RESISTS);
                 int checkAttack = (Data.AB_GOOD | Data.AB_MASSIVE | Data.AB_MASSIVES);
 
                 hp = (int) (Math.round(hp * mul) * defLv);
+
                 if (mu.getPCoin() != null)
                     hp = (int) (hp * mu.getPCoin().getHPMultiplication(multi));
 
@@ -396,17 +431,21 @@ public class ComparePage extends Page {
                     }
 
                     int a = (int) (Math.round(atkDatum[0] * mul) * atkLv);
+
                     if (mu.getPCoin() != null)
                         a = (int) (a * mu.getPCoin().getAtkMultiplication(multi));
 
                     atkString.append(a);
+
                     if (MainBCU.seconds)
                         preString.append(MainBCU.toSeconds(atkDatum[1]));
                     else
                         preString.append(atkDatum[1]).append("f");
+
                     atk += a;
 
                     int effectiveDMG = a;
+
                     if (overlap && (mu.getAbi() & checkAttack) > 0) {
                         if ((mu.getAbi() & Data.AB_MASSIVES) > 0)
                             effectiveDMG *= b.t().getMASSIVESATK(traits);
@@ -415,12 +454,16 @@ public class ComparePage extends Page {
                         if ((mu.getAbi() & Data.AB_GOOD) > 0)
                             effectiveDMG *= b.t().getGOODATK(traits);
                     }
+
                     if (spTraits.contains(trait.list.get(Data.TRAIT_WITCH)) && (mu.getAbi() & Data.AB_WKILL) > 0)
                         effectiveDMG *= b.t().getWKAtk();
+
                     if (spTraits.contains(trait.list.get(Data.TRAIT_EVA)) && (mu.getAbi() & Data.AB_EKILL) > 0)
                         effectiveDMG *= b.t().getEKAtk();
+
                     if (spTraits.contains(trait.list.get(Data.TRAIT_BARON)) && (mu.getAbi() & Data.AB_BAKILL) > 0)
                         effectiveDMG *= 1.6;
+
                     if (spTraits.contains(trait.list.get(Data.TRAIT_BEAST)) && mu.getProc().BSTHUNT.type.active)
                         effectiveDMG *= 2.5;
 
@@ -429,32 +472,44 @@ public class ComparePage extends Page {
                 }
 
                 int respawn = b.t().getFinRes(mu.getRespawn());
+
                 if (MainBCU.seconds)
                     unit[0][index].setText(MainBCU.toSeconds(respawn));
                 else
                     unit[0][index].setText(respawn + "f");
 
                 double price = ef.getPrice(1);
+
                 unit[1][index].setText(price + "");
 
                 if (f.hasEvolveCost()) {
                     int[][] evo = f.unit.info.evo;
+
                     int count = 0;
+
                     for (int j = 0; j < evo.length; j++) {
                         int id = evo[j][0];
+
                         JL up = evol[0][evolIndex + j];
+
                         if (id == 0)
                             break;
+
                         VImg img = CommonStatic.getBCAssets().gatyaitem.get(id);
+
                         up.setIcon(img != null ? UtilPC.getScaledIcon(img, 50, 50) : null);
                         up.setText(evo[j][1] + " " + get(MainLocale.UTIL, "cf" + id + "s"));
                         up.setToolTipText(evo[j][1] + " " + get(MainLocale.UTIL, "cf" + id));
+
                         count++;
                     }
+
                     JL xp = evol[0][evolIndex + count];
+
                     xp.setIcon(UtilPC.getScaledIcon(CommonStatic.getBCAssets().XP, 50, 30));
                     xp.setText(f.unit.info.xp + "");
                     xp.setToolTipText(f.unit.info.xp + " XP");
+
                     for (JL[] jls : evol) {
                         for (int j = evolIndex + count + 1; j < evolIndex + 6; j++) {
                             jls[j].setText("-");
@@ -479,10 +534,12 @@ public class ComparePage extends Page {
                 if (overlap && (mu.getAbi() & checkHealth) > 0) {
                     if ((mu.getAbi() & Data.AB_RESISTS) > 0)
                         effectiveHP /= b.t().getRESISTSDEF(traits);
+
                     if ((mu.getAbi() & Data.AB_RESIST) > 0)
-                        effectiveHP /= b.t().getRESISTDEF(traits, traits, null, new Level(multi));
+                        effectiveHP /= b.t().getRESISTDEF(traits, traits, null, multi.clone());
+
                     if ((mu.getAbi() & Data.AB_GOOD) > 0)
-                        effectiveHP /= b.t().getGOODDEF(traits, traits, null, new Level(multi));
+                        effectiveHP /= b.t().getGOODDEF(traits, traits, null, multi.clone());
                 }
                 if (spTraits.contains(trait.list.get(Data.TRAIT_WITCH)) && (mu.getAbi() & Data.AB_WKILL) > 0)
                     effectiveHP /= b.t().getWKDef();
@@ -571,8 +628,6 @@ public class ComparePage extends Page {
             return;
 
         MaskEntity ent = null;
-        maskEntityLvl[s] = new ArrayList<>();
-        maskEntityLvl[s].add(0);
 
         if (efp != null && efp.getSelected() != null)
             ent = efp.getSelected().de;
@@ -580,46 +635,64 @@ public class ComparePage extends Page {
             ent = ufp.getForm().du;
 
         if (ent instanceof MaskEnemy) {
+            maskEntityLvl[s] = new Magnification(100, 100);
+
             int[] data = maskEntities[s] instanceof MaskEnemy
                     ? CommonStatic.parseIntsN(level[s].getText().trim().replace("%", ""))
                     : new int[]{100, 100};
+
             if (data.length == 1) {
                 if (data[0] != -1) {
-                    maskEntityLvl[s].set(0, data[0]);
-                    maskEntityLvl[s].add(data[0]);
+                    ((Magnification) maskEntityLvl[s]).hp = data[0];
+                    ((Magnification) maskEntityLvl[s]).atk = data[0];
                 }
 
                 level[s].setText(CommonStatic.toArrayFormat(data[0], data[0]) + "%");
             } else if (data.length == 2) {
                 if (data[0] != -1)
-                    maskEntityLvl[s].set(0, data[0]);
+                    ((Magnification) maskEntityLvl[s]).hp = data[0];
                 if (data[1] != -1)
-                    maskEntityLvl[s].add(data[1]);
+                    ((Magnification) maskEntityLvl[s]).atk = data[1];
 
                 level[s].setText(CommonStatic.toArrayFormat(data[0], data[1]) + "%");
             } else {
-                level[s].setText(CommonStatic.toArrayFormat(maskEntityLvl[s].get(0), maskEntityLvl[s].get(1)) + "%");
+                level[s].setText(CommonStatic.toArrayFormat(((Magnification) maskEntityLvl[s]).hp, ((Magnification) maskEntityLvl[s]).atk) + "%");
             }
         } else if (ent != null) {
             Form f = ((MaskUnit) ent).getPack();
+
             int[] data;
 
-            ArrayList<Integer> lvs = f.getPrefLvs();
+            Level lvs = f.unit.getPrefLvs();
+
+            maskEntityLvl[s] = lvs.clone();
+
             if (maskEntities[s] instanceof MaskUnit) {
                 data = CommonStatic.parseIntsN(level[s].getText());
             } else {
-                data = new int[lvs.size()];
+                data = new int[2 + lvs.getTalents().length];
 
-                for (int i = 0; i < data.length; i++)
-                    data[i] = lvs.get(i);
+                data[0] = lvs.getLv();
+                data[1] = lvs.getPlusLv();
+
+                int[] talents = lvs.getTalents();
+
+                System.arraycopy(talents, 0, data, 2, data.length - 2);
             }
-            while (maskEntityLvl[s].size() < data.length)
-                maskEntityLvl[s].add(data[maskEntityLvl[s].size()]);
-            while (maskEntityLvl[s].size() < lvs.size())
-                maskEntityLvl[s].add(lvs.get(maskEntityLvl[s].size()));
 
-            maskEntityLvl[s] = f.regulateLv(data, maskEntityLvl[s]);
-            String[] strs = UtilPC.lvText(f, maskEntityLvl[s]);
+            if (data.length > 0) {
+                ((Level) maskEntityLvl[s]).setLevel(data[0]);
+            }
+
+            if (data.length > 1) {
+                ((Level) maskEntityLvl[s]).setPlusLevel(data[1]);
+            }
+
+            ((Level) maskEntityLvl[s]).setTalents(lvs.getTalents());
+
+            maskEntityLvl[s] = f.regulateLv(null, (Level) maskEntityLvl[s]);
+
+            String[] strs = UtilPC.lvText(f, (Level) maskEntityLvl[s]);
             level[s].setText(strs[0]);
         }
 

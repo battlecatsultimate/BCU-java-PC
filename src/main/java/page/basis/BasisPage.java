@@ -10,6 +10,7 @@ import common.util.pack.NyCastle;
 import common.util.stage.Limit;
 import common.util.unit.Combo;
 import common.util.unit.Form;
+import common.util.unit.Level;
 import common.util.unit.Unit;
 import page.JBTN;
 import page.JTF;
@@ -247,8 +248,8 @@ public class BasisPage extends LubCont {
 					int row = ul.locationToIndex(e.getPoint());
 					ul.setSelectedIndex(row);
 					lub.select(ul.getSelectedValue());
-					if (lub.sf != null && lub.sf.du.getPCoin() != null) {
-						lub.setLv(new int[]{lub.sf.unit.getPrefLv(), 0, 0, 0, 0, 0});
+					if (lub.sf != null && lub.sf.du != null && lub.sf.du.getPCoin() != null) {
+						lub.setLv(new Level(lub.sf.unit.getPreferredLevel(), lub.sf.unit.getPreferredPlusLevel(), new int[] { 0, 0, 0, 0, 0 }));
 						setLvs(lub.sf);
 					}
 				} else {
@@ -266,10 +267,13 @@ public class BasisPage extends LubCont {
 		lvjtf.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
-				int[] lv = CommonStatic.parseIntsN(lvjtf.getText());
-				lub.setLv(lv);
-				if (lub.sf != null)
+				if (lub.sf != null) {
+					int[] lv = CommonStatic.parseIntsN(lvjtf.getText());
+
+					lub.setLv(Level.lvList(lub.sf.unit, lv, null));
+
 					setLvs(lub.sf);
+				}
 			}
 		});
 
@@ -690,7 +694,8 @@ public class BasisPage extends LubCont {
 
 		lvorb.setEnabled(f.orbs != null);
 
-		String[] strs = UtilPC.lvText(f, lu().getLv(f).getLvs());
+		String[] strs = UtilPC.lvText(f, lu().getLv(f));
+
 		lvjtf.setText(strs[0]);
 		pcoin.setText(strs[1]);
 	}

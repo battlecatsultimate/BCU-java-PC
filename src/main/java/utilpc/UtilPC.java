@@ -10,6 +10,7 @@ import common.system.fake.FakeImage;
 import common.util.pack.Background;
 import common.util.stage.Music;
 import common.util.unit.Form;
+import common.util.unit.Level;
 import common.util.unit.Trait;
 import io.BCMusic;
 import io.BCUWriter;
@@ -21,7 +22,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
 
 public class UtilPC {
 
@@ -153,12 +153,14 @@ public class UtilPC {
 		return new ImageIcon(img);
 	}
 
-	public static String[] lvText(Form f, ArrayList<Integer> lvs) {
+	public static String[] lvText(Form f, Level lv) {
 		PCoin pc = f.du.getPCoin();
-		if (pc == null)
-			return new String[] { "Lv." + lvs.get(0), "" };
-		else {
+
+		if (pc == null) {
+			return new String[]{"Lv." + lv.getLv() + " + " + lv.getPlusLv(), ""};
+		} else {
 			String[] TraitsHolder = new String[pc.trait.size()];
+
 			for (int i = 0 ; i < pc.trait.size() ; i++) {
 				Trait trait = pc.trait.get(i);
 				if (trait.BCTrait)
@@ -166,6 +168,7 @@ public class UtilPC {
 				else
 					TraitsHolder[i] = trait.name;
 			}
+
 			StringBuilder lab = new StringBuilder();
 
 			if(pc.trait.size() > 0) {
@@ -174,12 +177,15 @@ public class UtilPC {
 
 			lab.append(Interpret.PCTX[pc.info.get(0)[0]]);
 
-			StringBuilder str = new StringBuilder("Lv." + lvs.get(0) + ", {");
-			for (int i = 1; i < pc.info.size(); i++) {
-				str.append(lvs.get(i)).append(",");
+			StringBuilder str = new StringBuilder("Lv." + lv.getLv() + " + " + lv.getPlusLv() + ", {");
+
+			for (int i = 0; i < pc.info.size() - 1; i++) {
+				str.append(lv.getTalents()[i]).append(",");
 				lab.append(", ").append(getPCoinAbilityText(pc, i));
 			}
-			str.append(lvs.get(pc.info.size())).append("}");
+
+			str.append(lv.getTalents()[pc.info.size() - 1]).append("}");
+
 			return new String[] {str.toString(), lab.toString()};
 		}
 	}

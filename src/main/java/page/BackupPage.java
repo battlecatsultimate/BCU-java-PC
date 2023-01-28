@@ -374,7 +374,7 @@ public class BackupPage extends Page {
 
                     Form f = u.forms[u.forms.length - 1];
 
-                    String str = u + " - " + UtilPC.lvText(f, e.getValue().getLvs())[0];
+                    String str = u + " - " + UtilPC.lvText(f, e.getValue())[0];
 
                     DefaultMutableTreeNode nuv = new DefaultMutableTreeNode(str);
                     nlv.add(nuv);
