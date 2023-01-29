@@ -634,6 +634,9 @@ public class LevelEditPage extends Page {
 
 		if(lv.getOrbs() != null) {
 			for(int[] data : lv.getOrbs()) {
+				if(data.length == 0)
+					continue;
+
 				if(!str && data[Data.ORB_TYPE] == Data.ORB_STRONG) {
 					data[Data.ORB_TYPE] = Data.ORB_ATK;
 				}
