@@ -123,6 +123,7 @@ public class UnitInfoTable extends Page {
 		int hp = (int) (Math.round(ef.du.getHp() * mul) * def);
 
 		PCoin pc = f.du.getPCoin();
+
 		if (pc != null) {
 			attack = (int) (attack * pc.getAtkMultiplication(multi));
 			hp = (int) (hp * pc.getHPMultiplication(multi));
@@ -143,6 +144,13 @@ public class UnitInfoTable extends Page {
 		main[1][3].setText(hp + " / " + ef.du.getHb());
 		main[2][3].setText("" + (attack * 30 / ef.du.getItv()));
 		main[2][5].setText("" + (int) (ef.du.getSpeed() * (1 + b.getInc(Data.C_SPE) * 0.01)));
+
+		if(MainBCU.seconds) {
+			main[3][5].setText(MainBCU.toSeconds(ef.du.getTBA()));
+		} else {
+			main[3][5].setText("" + ef.du.getTBA() + "f");
+		}
+
 		int respawn = b.t().getFinRes(ef.du.getRespawn());
 		if (MainBCU.seconds)
 			main[1][5].setText(MainBCU.toSeconds(respawn));

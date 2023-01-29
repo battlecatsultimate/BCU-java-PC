@@ -175,16 +175,24 @@ public class UtilPC {
 				lab.append("[").append(Interpret.getTrait(TraitsHolder, 0)).append("]").append(" ");
 			}
 
-			lab.append(Interpret.PCTX[pc.info.get(0)[0]]);
-
 			StringBuilder str = new StringBuilder("Lv." + lv.getLv() + " + " + lv.getPlusLv() + ", {");
 
-			for (int i = 0; i < pc.info.size() - 1; i++) {
-				str.append(lv.getTalents()[i]).append(",");
-				lab.append(", ").append(getPCoinAbilityText(pc, i));
+			for (int i = 0; i < pc.info.size(); i++) {
+				str.append(lv.getTalents()[i]);
+
+				if(pc.info.get(i)[13] == 1) {
+					str.append("*");
+				}
+
+				lab.append(getPCoinAbilityText(pc, i));
+
+				if(i < pc.info.size() - 1) {
+					str.append(", ");
+					lab.append(", ");
+				}
 			}
 
-			str.append(lv.getTalents()[pc.info.size() - 1]).append("}");
+			str.append("}");
 
 			return new String[] {str.toString(), lab.toString()};
 		}

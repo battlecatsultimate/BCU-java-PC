@@ -88,8 +88,8 @@ public class LevelEditPage extends Page {
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(bck, x, y, 0, 0, 200, 50);
-		set(pcoin, x, y, 50, 100, 600, 50);
-		set(levels, x, y, 50, 150, 350, 50);
+		set(pcoin, x, y, 50, 100, 1200, 50);
+		set(levels, x, y, 50, 150, 700, 50);
 		set(orbScroll, x, y, 50, 225, 350, 600);
 		set(add, x, y, 50, 875, 175, 50);
 		set(rem, x, y, 225, 875, 175, 50);
@@ -119,6 +119,8 @@ public class LevelEditPage extends Page {
 				updateOrbConsideringAbilities();
 
 				orbList.setListData(generateNames());
+
+				levels.setText(UtilPC.lvText(f, lv)[0]);
 			}
 		});
 
@@ -499,8 +501,8 @@ public class LevelEditPage extends Page {
 				}
 
 				for (Trait t : traitList) {
-					if (allTraits.contains(Orb.traitToOrb(t.id.id)))
-						traitData.add(Orb.traitToOrb(t.id.id));
+					if (allTraits.contains(1 << t.id.id))
+						traitData.add(1 << t.id.id);
 				}
 
 				if(traitData.isEmpty())
@@ -627,13 +629,17 @@ public class LevelEditPage extends Page {
 
 				int bitMask = 1 << t.id.id;
 
-				if(!possibleTraits.contains(bitMask))
+				if(!possibleTraits.contains(bitMask)) {
 					possibleTraits.add(bitMask);
+				}
 			}
 		}
 
 		if(lv.getOrbs() != null) {
 			for(int[] data : lv.getOrbs()) {
+				if(data.length == 0)
+					continue;
+
 				if(!str && data[Data.ORB_TYPE] == Data.ORB_STRONG) {
 					data[Data.ORB_TYPE] = Data.ORB_ATK;
 				}

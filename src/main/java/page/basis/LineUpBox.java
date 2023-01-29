@@ -188,9 +188,6 @@ public class LineUpBox extends Canvas {
 		if (sf == null)
 			return;
 
-		System.out.println("Input received : " + lv.toString());
-		System.out.println("Regulated result : " + sf.regulateLv(lv, lu.getLv(sf)));
-
 		lu.setLv(sf.unit, sf.regulateLv(lv, lu.getLv(sf)));
 	}
 
