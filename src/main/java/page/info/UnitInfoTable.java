@@ -125,8 +125,8 @@ public class UnitInfoTable extends Page {
 		PCoin pc = f.du.getPCoin();
 
 		if (pc != null) {
-			attack = (int) (attack * pc.getAtkMultiplication(multi));
-			hp = (int) (hp * pc.getHPMultiplication(multi));
+			attack = (int) (attack * pc.getAtkMultiplication(multi.getTalents()));
+			hp = (int) (hp * pc.getHPMultiplication(multi.getTalents()));
 		}
 
 		ArrayList<Trait> trs = ef.du.getTraits();
@@ -167,7 +167,7 @@ public class UnitInfoTable extends Page {
 			int a = (int) (Math.round(atkDatum[0] * mul) * b.t().getAtkMulti());
 
 			if (pc != null) {
-				a = (int) (a * pc.getAtkMultiplication(multi));
+				a = (int) (a * pc.getAtkMultiplication(multi.getTalents()));
 			}
 
 			satk.append(a);
