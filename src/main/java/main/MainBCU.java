@@ -301,7 +301,7 @@ public class MainBCU {
 		}
 	}
 
-	public static final int ver = 50203;
+	public static final int ver = 50204;
 	public static final boolean isBeta = false;
 	private static final DecimalFormat df = new DecimalFormat("#.##");
 
