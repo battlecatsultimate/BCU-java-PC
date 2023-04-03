@@ -73,18 +73,19 @@ public class Interpret extends Data {
 	 * treasure orderer
 	 */
 	public static final int[] TIND = { 0, 1, 18, 19, 20, 21, 22, 23, 2, 3, 4, 5, 24, 25, 26, 27, 28, 6, 7, 8, 9, 10, 11,
-			12, 13, 14, 15, 16, 17, 29, 30, 31, 32, 33, 34, 35, 36 };
+			12, 13, 14, 15, 16, 17, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50 };
 
 	/**
 	 * treasure grouper
 	 */
-	public static final int[][] TCOLP = { { 0, 8 }, { 8, 6 }, { 14, 3 }, { 17, 4 }, { 21, 3 }, { 29, 8 } };
+	public static final int[][] TCOLP = { { 0, 8 }, { 8, 6 }, { 14, 3 }, { 17, 4 }, { 21, 3 }, { 29, 22 } };
 
 	/**
 	 * treasure max
 	 */
 	private static final int[] TMAX = { 30, 30, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 300, 600, 1500, 100,
-			100, 100, 30, 30, 30, 30, 30, 10, 300, 300, 600, 600, 600, 30, 0, 0, 0, 0, 0, 0, 0 };
+			100, 100, 30, 30, 30, 30, 30, 10, 300, 300, 600, 600, 600, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+			0, 0, 0, 0, 0, 0 };
 
 	/**
 	 * combo string component
@@ -128,6 +129,10 @@ public class Interpret extends Data {
 	public static void loadCannonMax() {
 		for (int i = 1; i <= Treasure.curveData.size(); i++)
 			TMAX[29 + i] = Treasure.curveData.get(i).max;
+		for (int i = 1; i <= Treasure.baseData.size(); i++)
+			TMAX[36 + i] = Treasure.baseData.get(i).max;
+		for (int i = 1; i <= Treasure.decorationData.size(); i++)
+			TMAX[43 + i] = Treasure.decorationData.get(i).max;
 	}
 
 	public static boolean allRangeSame(MaskEntity me) {
@@ -488,81 +493,112 @@ public class Interpret extends Data {
 	}
 
 	public static int getValue(int ind, Treasure t) {
-		if (ind == 0)
-			return t.tech[LV_RES];
-		else if (ind == 1)
-			return t.tech[LV_ACC];
-		else if (ind == 2)
-			return t.trea[T_ATK];
-		else if (ind == 3)
-			return t.trea[T_DEF];
-		else if (ind == 4)
-			return t.trea[T_RES];
-		else if (ind == 5)
-			return t.trea[T_ACC];
-		else if (ind == 6)
-			return t.fruit[T_RED];
-		else if (ind == 7)
-			return t.fruit[T_FLOAT];
-		else if (ind == 8)
-			return t.fruit[T_BLACK];
-		else if (ind == 9)
-			return t.fruit[T_ANGEL];
-		else if (ind == 10)
-			return t.fruit[T_METAL];
-		else if (ind == 11)
-			return t.fruit[T_ZOMBIE];
-		else if (ind == 12)
-			return t.fruit[T_ALIEN];
-		else if (ind == 13)
-			return t.alien;
-		else if (ind == 14)
-			return t.star;
-		else if (ind == 15)
-			return t.gods[0];
-		else if (ind == 16)
-			return t.gods[1];
-		else if (ind == 17)
-			return t.gods[2];
-		else if (ind == 18)
-			return t.tech[LV_BASE];
-		else if (ind == 19)
-			return t.tech[LV_WORK];
-		else if (ind == 20)
-			return t.tech[LV_WALT];
-		else if (ind == 21)
-			return t.tech[LV_RECH];
-		else if (ind == 22)
-			return t.tech[LV_CATK];
-		else if (ind == 23)
-			return t.tech[LV_CRG];
-		else if (ind == 24)
-			return t.trea[T_WORK];
-		else if (ind == 25)
-			return t.trea[T_WALT];
-		else if (ind == 26)
-			return t.trea[T_RECH];
-		else if (ind == 27)
-			return t.trea[T_CATK];
-		else if (ind == 28)
-			return t.trea[T_BASE];
-		else if (ind == 29)
-			return t.bslv[BASE_H];
-		else if (ind == 30)
-			return t.bslv[BASE_SLOW];
-		else if (ind == 31)
-			return t.bslv[BASE_WALL];
-		else if (ind == 32)
-			return t.bslv[BASE_STOP];
-		else if (ind == 33)
-			return t.bslv[BASE_WATER];
-		else if (ind == 34)
-			return t.bslv[BASE_GROUND];
-		else if (ind == 35)
-			return t.bslv[BASE_BARRIER];
-		else if (ind == 36)
-			return t.bslv[BASE_CURSE];
-		return -1;
+		switch (ind) {
+			case 0:
+				return t.tech[LV_RES];
+			case 1:
+				return t.tech[LV_ACC];
+			case 2:
+				return t.trea[T_ATK];
+			case 3:
+				return t.trea[T_DEF];
+			case 4:
+				return t.trea[T_RES];
+			case 5:
+				return t.trea[T_ACC];
+			case 6:
+				return t.fruit[T_RED];
+			case 7:
+				return t.fruit[T_FLOAT];
+			case 8:
+				return t.fruit[T_BLACK];
+			case 9:
+				return t.fruit[T_ANGEL];
+			case 10:
+				return t.fruit[T_METAL];
+			case 11:
+				return t.fruit[T_ZOMBIE];
+			case 12:
+				return t.fruit[T_ALIEN];
+			case 13:
+				return t.alien;
+			case 14:
+				return t.star;
+			case 15:
+				return t.gods[0];
+			case 16:
+				return t.gods[1];
+			case 17:
+				return t.gods[2];
+			case 18:
+				return t.tech[LV_BASE];
+			case 19:
+				return t.tech[LV_WORK];
+			case 20:
+				return t.tech[LV_WALT];
+			case 21:
+				return t.tech[LV_RECH];
+			case 22:
+				return t.tech[LV_CATK];
+			case 23:
+				return t.tech[LV_CRG];
+			case 24:
+				return t.trea[T_WORK];
+			case 25:
+				return t.trea[T_WALT];
+			case 26:
+				return t.trea[T_RECH];
+			case 27:
+				return t.trea[T_CATK];
+			case 28:
+				return t.trea[T_BASE];
+			case 29:
+				return t.bslv[BASE_H];
+			case 30:
+				return t.bslv[BASE_SLOW];
+			case 31:
+				return t.bslv[BASE_WALL];
+			case 32:
+				return t.bslv[BASE_STOP];
+			case 33:
+				return t.bslv[BASE_WATER];
+			case 34:
+				return t.bslv[BASE_GROUND];
+			case 35:
+				return t.bslv[BASE_BARRIER];
+			case 36:
+				return t.bslv[BASE_CURSE];
+			case 37:
+				return t.base[DECO_BASE_SLOW - 1];
+			case 38:
+				return t.base[DECO_BASE_WALL - 1];
+			case 39:
+				return t.base[DECO_BASE_STOP - 1];
+			case 40:
+				return t.base[DECO_BASE_WATER - 1];
+			case 41:
+				return t.base[DECO_BASE_GROUND - 1];
+			case 42:
+				return t.base[DECO_BASE_BARRIER - 1];
+			case 43:
+				return t.base[DECO_BASE_CURSE - 1];
+			case 44:
+				return t.deco[DECO_BASE_SLOW - 1];
+			case 45:
+				return t.deco[DECO_BASE_WALL - 1];
+			case 46:
+				return t.deco[DECO_BASE_STOP - 1];
+			case 47:
+				return t.deco[DECO_BASE_WATER - 1];
+			case 48:
+				return t.deco[DECO_BASE_GROUND - 1];
+			case 49:
+				return t.deco[DECO_BASE_BARRIER - 1];
+			case 50:
+				return t.deco[DECO_BASE_CURSE - 1];
+			default:
+				return -1;
+		}
 	}
 
 	public static boolean isER(Enemy e, int t) {
@@ -628,7 +664,7 @@ public class Interpret extends Data {
 		ABIS = Page.get(MainLocale.UTIL, "a", ABI_TOT);
 		SABIS = Page.get(MainLocale.UTIL, "sa", ABI_TOT);
 		ATKCONF = Page.get(MainLocale.UTIL, "aa", 8);
-		TREA = Page.get(MainLocale.UTIL, "t", 37);
+		TREA = Page.get(MainLocale.UTIL, "t", 51);
 		COMF = Page.get(MainLocale.UTIL, "na", 6);
 		COMN = Page.get(MainLocale.UTIL, "nb", 25);
 		TCTX = Page.get(MainLocale.UTIL, "tc", 6);
@@ -660,85 +696,166 @@ public class Interpret extends Data {
 	}
 
 	private static void setVal(int ind, int v, Treasure t) {
-
 		if (v < 0)
 			v = 0;
+
 		v = Math.min(v, TMAX[ind]);
 
-		if (ind == 0)
-			t.tech[LV_RES] = Math.max(v, 1);
-		else if (ind == 1)
-			t.tech[LV_ACC] = Math.max(v, 1);
-		else if (ind == 2)
-			t.trea[T_ATK] = v;
-		else if (ind == 3)
-			t.trea[T_DEF] = v;
-		else if (ind == 4)
-			t.trea[T_RES] = v;
-		else if (ind == 5)
-			t.trea[T_ACC] = v;
-		else if (ind == 6)
-			t.fruit[T_RED] = v;
-		else if (ind == 7)
-			t.fruit[T_FLOAT] = v;
-		else if (ind == 8)
-			t.fruit[T_BLACK] = v;
-		else if (ind == 9)
-			t.fruit[T_ANGEL] = v;
-		else if (ind == 10)
-			t.fruit[T_METAL] = v;
-		else if (ind == 11)
-			t.fruit[T_ZOMBIE] = v;
-		else if (ind == 12)
-			t.fruit[T_ALIEN] = v;
-		else if (ind == 13)
-			t.alien = v;
-		else if (ind == 14)
-			t.star = v;
-		else if (ind == 15)
-			t.gods[0] = v;
-		else if (ind == 16)
-			t.gods[1] = v;
-		else if (ind == 17)
-			t.gods[2] = v;
-		else if (ind == 18)
-			t.tech[LV_BASE] = Math.max(v, 1);
-		else if (ind == 19)
-			t.tech[LV_WORK] = Math.max(v, 1);
-		else if (ind == 20)
-			t.tech[LV_WALT] = Math.max(v, 1);
-		else if (ind == 21)
-			t.tech[LV_RECH] = Math.max(v, 1);
-		else if (ind == 22)
-			t.tech[LV_CATK] = Math.max(v, 1);
-		else if (ind == 23)
-			t.tech[LV_CRG] = Math.max(v, 1);
-		else if (ind == 24)
-			t.trea[T_WORK] = v;
-		else if (ind == 25)
-			t.trea[T_WALT] = v;
-		else if (ind == 26)
-			t.trea[T_RECH] = v;
-		else if (ind == 27)
-			t.trea[T_CATK] = v;
-		else if (ind == 28)
-			t.trea[T_BASE] = v;
-		else if (ind == 29)
-			t.bslv[BASE_H] = v;
-		else if (ind == 30)
-			t.bslv[BASE_SLOW] = v;
-		else if (ind == 31)
-			t.bslv[BASE_WALL] = v;
-		else if (ind == 32)
-			t.bslv[BASE_STOP] = v;
-		else if (ind == 33)
-			t.bslv[BASE_WATER] = v;
-		else if (ind == 34)
-			t.bslv[BASE_GROUND] = v;
-		else if (ind == 35)
-			t.bslv[BASE_BARRIER] = v;
-		else if (ind == 36)
-			t.bslv[BASE_CURSE] = v;
+		switch (ind) {
+			case 0:
+				t.tech[LV_RES] = Math.max(v, 1);
+				break;
+			case 1:
+				t.tech[LV_ACC] = Math.max(v, 1);
+				break;
+			case 2:
+				t.trea[T_ATK] = v;
+				break;
+			case 3:
+				t.trea[T_DEF] = v;
+				break;
+			case 4:
+				t.trea[T_RES] = v;
+				break;
+			case 5:
+				t.trea[T_ACC] = v;
+				break;
+			case 6:
+				t.fruit[T_RED] = v;
+				break;
+			case 7:
+				t.fruit[T_FLOAT] = v;
+				break;
+			case 8:
+				t.fruit[T_BLACK] = v;
+				break;
+			case 9:
+				t.fruit[T_ANGEL] = v;
+				break;
+			case 10:
+				t.fruit[T_METAL] = v;
+				break;
+			case 11:
+				t.fruit[T_ZOMBIE] = v;
+				break;
+			case 12:
+				t.fruit[T_ALIEN] = v;
+				break;
+			case 13:
+				t.alien = v;
+				break;
+			case 14:
+				t.star = v;
+				break;
+			case 15:
+				t.gods[0] = v;
+				break;
+			case 16:
+				t.gods[1] = v;
+				break;
+			case 17:
+				t.gods[2] = v;
+				break;
+			case 18:
+				t.tech[LV_BASE] = Math.max(v, 1);
+				break;
+			case 19:
+				t.tech[LV_WORK] = Math.max(v, 1);
+				break;
+			case 20:
+				t.tech[LV_WALT] = Math.max(v, 1);
+				break;
+			case 21:
+				t.tech[LV_RECH] = Math.max(v, 1);
+				break;
+			case 22:
+				t.tech[LV_CATK] = Math.max(v, 1);
+				break;
+			case 23:
+				t.tech[LV_CRG] = Math.max(v, 1);
+				break;
+			case 24:
+				t.trea[T_WORK] = v;
+				break;
+			case 25:
+				t.trea[T_WALT] = v;
+				break;
+			case 26:
+				t.trea[T_RECH] = v;
+				break;
+			case 27:
+				t.trea[T_CATK] = v;
+				break;
+			case 28:
+				t.trea[T_BASE] = v;
+				break;
+			case 29:
+				t.bslv[BASE_H] = v;
+				break;
+			case 30:
+				t.bslv[BASE_SLOW] = v;
+				break;
+			case 31:
+				t.bslv[BASE_WALL] = v;
+				break;
+			case 32:
+				t.bslv[BASE_STOP] = v;
+				break;
+			case 33:
+				t.bslv[BASE_WATER] = v;
+				break;
+			case 34:
+				t.bslv[BASE_GROUND] = v;
+				break;
+			case 35:
+				t.bslv[BASE_BARRIER] = v;
+				break;
+			case 36:
+				t.bslv[BASE_CURSE] = v;
+				break;
+			case 37:
+				t.base[DECO_BASE_SLOW - 1] = v;
+				break;
+			case 38:
+				t.base[DECO_BASE_WALL - 1] = v;
+				break;
+			case 39:
+				t.base[DECO_BASE_STOP - 1] = v;
+				break;
+			case 40:
+				t.base[DECO_BASE_WATER - 1] = v;
+				break;
+			case 41:
+				t.base[DECO_BASE_GROUND - 1] = v;
+				break;
+			case 42:
+				t.base[DECO_BASE_BARRIER - 1] = v;
+				break;
+			case 43:
+				t.base[DECO_BASE_CURSE - 1] = v;
+				break;
+			case 44:
+				t.deco[DECO_BASE_SLOW - 1] = v;
+				break;
+			case 45:
+				t.deco[DECO_BASE_WALL - 1] = v;
+				break;
+			case 46:
+				t.deco[DECO_BASE_STOP - 1] = v;
+				break;
+			case 47:
+				t.deco[DECO_BASE_WATER - 1] = v;
+				break;
+			case 48:
+				t.deco[DECO_BASE_GROUND - 1] = v;
+				break;
+			case 49:
+				t.deco[DECO_BASE_BARRIER - 1] = v;
+				break;
+			case 50:
+				t.deco[DECO_BASE_CURSE - 1] = v;
+				break;
+		}
 	}
 
 	private static String getAtkNumbers(List<Integer> inds) {
