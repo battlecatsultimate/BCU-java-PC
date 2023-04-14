@@ -102,7 +102,7 @@ public class Interpret extends Data {
 	//Filters abilities and procs that are available for enemies. Also gives better organization to the UI
 	public static final int[] EABIIND = { ABI_WAVES, ABI_SNIPERI, ABI_TIMEI, ABI_GHOST, ABI_GLASS, ABI_THEMEI };
 	public static final int[] EPROCIND = { Data.P_KB, Data.P_STOP, Data.P_SLOW, Data.P_WEAK, Data.P_CRIT, Data.P_WAVE, Data.P_MINIWAVE,
-			Data.P_VOLC, Data.P_BARRIER, Data.P_DEMONSHIELD, Data.P_BREAK, Data.P_SHIELDBREAK, Data.P_WARP, Data.P_CURSE, Data.P_SEAL,
+			Data.P_VOLC, Data.P_MINIVOLC, Data.P_BARRIER, Data.P_DEMONSHIELD, Data.P_BREAK, Data.P_SHIELDBREAK, Data.P_WARP, Data.P_CURSE, Data.P_SEAL,
 			Data.P_SATK, Data.P_POIATK, Data.P_ATKBASE, Data.P_SUMMON, Data.P_MOVEWAVE, Data.P_SNIPER, Data.P_BOSS, Data.P_TIME, Data.P_THEME,
 			Data.P_POISON, Data.P_ARMOR, Data.P_SPEED, Data.P_STRONG, Data.P_LETHAL, Data.P_BURROW, Data.P_REVIVE, Data.P_CRITI, Data.P_COUNTER,
 			Data.P_IMUATK, Data.P_DMGCUT, Data.P_DMGCAP, Data.P_IMUKB, Data.P_IMUSTOP, Data.P_IMUSLOW, Data.P_IMUWAVE, Data.P_IMUWEAK,
@@ -110,7 +110,7 @@ public class Interpret extends Data {
 			Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_IMUCANNON, Data.P_DEATHSURGE};
 	//Filters abilities and procs that are available for units. Also gives better organization to the UI
 	public static final int[] UPROCIND = { Data.P_BSTHUNT, Data.P_KB, Data.P_STOP, Data.P_SLOW, Data.P_WEAK, Data.P_BOUNTY, Data.P_CRIT, Data.P_WAVE,
-			Data.P_MINIWAVE, Data.P_VOLC, Data.P_BARRIER, Data.P_DEMONSHIELD, Data.P_BREAK, Data.P_SHIELDBREAK, Data.P_WARP, Data.P_CURSE,
+			Data.P_MINIWAVE, Data.P_VOLC, Data.P_MINIVOLC, Data.P_BARRIER, Data.P_DEMONSHIELD, Data.P_BREAK, Data.P_SHIELDBREAK, Data.P_WARP, Data.P_CURSE,
 			Data.P_SEAL, Data.P_SATK, Data.P_POIATK, Data.P_ATKBASE, Data.P_SUMMON, Data.P_MOVEWAVE, Data.P_SNIPER, Data.P_BOSS, Data.P_TIME,
 			Data.P_THEME, Data.P_POISON, Data.P_ARMOR, Data.P_SPEED, Data.P_STRONG, Data.P_LETHAL, Data.P_BURROW, Data.P_REVIVE, Data.P_CRITI,
 			Data.P_COUNTER, Data.P_IMUATK, Data.P_DMGCUT, Data.P_DMGCAP, Data.P_IMUKB, Data.P_IMUSTOP, Data.P_IMUSLOW, Data.P_IMUWAVE,
