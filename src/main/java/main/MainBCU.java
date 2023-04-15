@@ -235,8 +235,6 @@ public class MainBCU {
 				File parent = f.getParentFile();
 
 				if(parent != null) {
-					System.out.println(parent.getAbsolutePath());
-
 					return parent;
 				}
 			} catch (Exception e) {
