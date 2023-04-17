@@ -92,9 +92,10 @@ public class Opts {
 		int opt = JOptionPane.DEFAULT_OPTION;
 		int result = JOptionPane.showOptionDialog(null, text, title, opt, JOptionPane.INFORMATION_MESSAGE, null, null, null);
 
-		if(result == JOptionPane.OK_OPTION || result == JOptionPane.NO_OPTION) {
+		if(result == JOptionPane.OK_OPTION || result == JOptionPane.NO_OPTION || result == JOptionPane.CLOSED_OPTION) {
 			if(fatal)
 				CommonStatic.def.save(false, true);
+
 			popped = false;
 		}
 	}

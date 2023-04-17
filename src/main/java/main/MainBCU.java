@@ -162,7 +162,7 @@ public class MainBCU {
 			(t == ErrType.INFO ? System.out : System.err).println(str);
 
 			if (t != ErrType.INFO)
-				Opts.errOnce(str, "ERROR", t == ErrType.FATAL);
+				Opts.errOnce(str, "ERROR", t == ErrType.FATAL || t == ErrType.ERROR);
 		}
 
 		@Override
