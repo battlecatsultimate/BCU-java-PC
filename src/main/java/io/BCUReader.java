@@ -148,7 +148,28 @@ public class BCUReader extends DataIO {
 								if (qs != null)
 									for (String line : qs) {
 										String[] str = line.trim().split("\t");
-										MultiLangCont.getStatic().RWNAME.put(ni, Integer.parseInt(str[0]), str[1]);
+
+										if(str.length >= 2) {
+											String[] ids = str[0].split("\\|");
+
+											for (String id : ids) {
+												if (CommonStatic.isInteger(id)) {
+													MultiLangCont.getStatic().RWNAME.put(ni, Integer.parseInt(id), str[1]);
+												} else if (id.startsWith("S")) {
+													String realID = id.replace("S", "");
+
+													if (CommonStatic.isInteger(realID)) {
+														MultiLangCont.getStatic().RWSTNAME.put(ni, Integer.parseInt(realID), str[1]);
+													}
+												} else if (id.startsWith("I")) {
+													String realID = id.replace("I", "");
+
+													if (CommonStatic.isInteger(realID)) {
+														MultiLangCont.getStatic().RWSVNAME.put(ni, Integer.parseInt(realID), str[1]);
+													}
+												}
+											}
+										}
 									}
 							}
 							if (nl.equals("ComboName.txt")) {
