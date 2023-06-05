@@ -51,6 +51,8 @@ public class UnitListTable extends SortTable<Form> {
 		if (r < 0 || r >= list.size() || c != 1)
 			return;
 		Form e = list.get(r);
+		if (e.anim == null)
+			return;
 		Node<Unit> n = Node.getList(list, e);
 		MainFrame.changePanel(new UnitInfoPage(page, n));
 
@@ -110,7 +112,7 @@ public class UnitListTable extends SortTable<Form> {
 		else if (c == 11)
 			return e.getDefaultPrice(1);
 		else if (c == 12)
-			return du.getItv();
+			return e.anim == null ? 0 : du.getItv();
 		else if (c == 13)
 			return du.getWill() + 1;
 		return null;

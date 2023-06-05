@@ -100,7 +100,7 @@ public class Interpret extends Data {
 			{ 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 } };
 
 	//Filters abilities and procs that are available for enemies. Also gives better organization to the UI
-	public static final int[] EABIIND = { ABI_WAVES, ABI_SNIPERI, ABI_TIMEI, ABI_GHOST, ABI_GLASS, ABI_THEMEI };
+	public static final int[] EABIIND = { ABI_CSUR, ABI_WAVES, ABI_SNIPERI, ABI_TIMEI, ABI_GHOST, ABI_GLASS, ABI_THEMEI };
 	public static final int[] EPROCIND = { Data.P_KB, Data.P_STOP, Data.P_SLOW, Data.P_WEAK, Data.P_CRIT, Data.P_WAVE, Data.P_MINIWAVE,
 			Data.P_VOLC, Data.P_MINIVOLC, Data.P_BARRIER, Data.P_DEMONSHIELD, Data.P_BREAK, Data.P_SHIELDBREAK, Data.P_WARP, Data.P_CURSE, Data.P_SEAL,
 			Data.P_SATK, Data.P_POIATK, Data.P_ATKBASE, Data.P_SUMMON, Data.P_MOVEWAVE, Data.P_SNIPER, Data.P_BOSS, Data.P_TIME, Data.P_THEME,
@@ -668,7 +668,7 @@ public class Interpret extends Data {
 		COMF = Page.get(MainLocale.UTIL, "na", 6);
 		COMN = Page.get(MainLocale.UTIL, "nb", 25);
 		TCTX = Page.get(MainLocale.UTIL, "tc", 6);
-		PCTX = Page.get(MainLocale.UTIL, "aq", 65);
+		PCTX = Page.get(MainLocale.UTIL, "aq", PC_CORRES.length);
 		EABI = new String[EABIIND.length];
 		for (int i = 0; i < EABI.length; i++)
 			EABI[i] = SABIS[EABIIND[i]];

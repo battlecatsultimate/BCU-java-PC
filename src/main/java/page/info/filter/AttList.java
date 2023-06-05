@@ -56,6 +56,17 @@ public class AttList extends JList<String> {
 					v = UtilPC.getIcon(type, ind);
 				if (v == null)
 					return jl;
+
+				if(v.getWidth() == v.getHeight() && v.getWidth() > 40) {
+					BufferedImage dimg = new BufferedImage(41, 41, v.getType());
+
+					Graphics2D g2d = dimg.createGraphics();
+					g2d.drawImage(v, 0, 0, 41, 41, null);
+					g2d.dispose();
+
+					v = dimg;
+				}
+
 				jl.setIcon(new ImageIcon(v));
 				return jl;
 			}
