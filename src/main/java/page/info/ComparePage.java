@@ -29,7 +29,7 @@ public class ComparePage extends Page {
 
     private static final long serialVersionUID = 1L;
 
-    private final JL[] names = new JL[3];
+    private final JL[] names = new JL[3]; // TODO: minimum of 2, up to 5 (requires restructure... x_x)
     private final JTF[] level = new JTF[names.length];
     private final EntityAbilities[] abilities = new EntityAbilities[names.length];
     private final JScrollPane[] abilityPanes = new JScrollPane[names.length];

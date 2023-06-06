@@ -63,6 +63,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	private final JBTN spri = new JBTN(0, "sprite");
 	private final JBTN white = new JBTN(0, "whiteBG");
 	private final JLabel icon = new JLabel();
+	private final JLabel uni = new JLabel();
 	private final JTree jta = new JTree();
 	private final AnimGroupTree agt;
 	private final JScrollPane jspu = new JScrollPane(jta);
@@ -220,6 +221,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		set(save, x, y, 1400, 1150, 200, 50);
 		set(ico, x, y, 1650, 1050, 200, 50);
 		set(icon, x, y, 1650, 1100, 400, 100);
+		set(uni, x, y, 1900, 1000, 200, 200); // one day... the ui will be better... another day...
 		set(white, x, y, 2100, 1050, 200, 50);
 		SwingUtilities.invokeLater(() -> jta.setUI(new TreeNodeExpander(jta)));
 		aep.componentResized(x, y);
@@ -396,13 +398,24 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		save.addActionListener(arg0 -> icet.anim.saveImg());
 
 		ico.addActionListener(arg0 -> {
-			BufferedImage bimg = new Importer("select enemy icon").getImg();
+			BufferedImage bimg = new Importer("select icon image").getImg();
 			if (bimg == null)
 				return;
-			icet.anim.setEdi(MainBCU.builder.toVImg(bimg));
-			icet.anim.saveIcon();
-			if (icet.anim.getEdi() != null)
-				icon.setIcon(UtilPC.getIcon(icet.anim.getEdi()));
+			int selection = Opts.selection("What icon is this for?",
+					"Select Icon Type",
+					"Display icon",
+					"Deploy icon");
+			if (selection == 0) {
+				icet.anim.setEdi(MainBCU.builder.toVImg(bimg));
+				icet.anim.saveIcon();
+				if (icet.anim.getEdi() != null)
+					icon.setIcon(UtilPC.getIcon(icet.anim.getEdi()));
+			} else if (selection == 1) {
+				icet.anim.setUni(MainBCU.builder.toVImg(bimg));
+				icet.anim.saveUni();
+				if (icet.anim.getUni() != null)
+					uni.setIcon(UtilPC.getIcon(icet.anim.getUni()));
+			}
 		});
 
 		white.setLnr(e -> {
@@ -605,6 +618,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		add(merg);
 		add(spri);
 		add(white);
+		add(uni);
 		add.setEnabled(aep.focus == null);
 		jtf.setEnabled(aep.focus == null);
 		relo.setEnabled(aep.focus == null);
@@ -666,8 +680,12 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		}
 
 		merg.setEnabled(mergeEnabled);
-		if (anim != null && anim.getEdi() != null)
-			icon.setIcon(UtilPC.getIcon(anim.getEdi()));
+		if (anim != null) {
+			if (anim.getEdi() != null)
+				icon.setIcon(UtilPC.getIcon(anim.getEdi()));
+			if (anim.getUni() != null)
+				uni.setIcon(UtilPC.getIcon(anim.getUni()));
+		}
 		setB();
 		changing = boo;
 	}

@@ -364,7 +364,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			if (data.length - ind >= 0)
 				System.arraycopy(data, ind, ma.parts, ind + 1, data.length - ind);
 
-			int modif = jlv.getSelectedIndex() == -1 ? 5 : jlv.getSelectedIndex();
+			int modif = jlv.getSelectedIndex() == -1 ? 5 : Integer.parseInt(jlv.getSelectedValue().split(" ")[0]);
 			Part np = new Part(Math.max(0, jlm.getSelectedIndex()), modif);
 			np.validate();
 			ma.parts[ind] = np;
