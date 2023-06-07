@@ -206,7 +206,7 @@ class SpriteBox extends JPanel implements KeyListener, MouseInputListener, Mouse
 		y = (int) ((y + p.y) * factor - p.y);
 	}
 
-	private void ini() {
+	private void ini() { // TODO: This has a side effect that it'll now respond on model and animation page as well. Seems like it works fine though... we'll see
 		addKeyListener(this);
 		addMouseListener(this);
 		addMouseMotionListener(this);
