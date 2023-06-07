@@ -233,7 +233,7 @@ public class BGEditPage extends Page {
 			return;
 
 		if (!(bimg.getWidth() == 770 || bimg.getWidth() == 1024 || bimg.getHeight() == 512 || bimg.getHeight() == 1024)) {
-			getFile("Wrong img size. Img size: w=1024, h=1024", bgr);
+			getFile("Its size must be one of these: 770x512, 770x1024, 1024x512, 1024x1024", bgr);
 			return;
 		}
 		if (bgr == null) {
