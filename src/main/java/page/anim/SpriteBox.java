@@ -4,13 +4,13 @@ import common.util.anim.AnimCE;
 import common.util.anim.ImgCut;
 import page.Page;
 
+import javax.swing.*;
+import javax.swing.event.MouseInputListener;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
-class SpriteBox extends Canvas {
+class SpriteBox extends JPanel implements KeyListener, MouseInputListener, MouseWheelListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -26,11 +26,13 @@ class SpriteBox extends Canvas {
 	protected double size = 1.0;
 	protected double initSize = 1.0;
 
-	protected SpriteBox(Page p) {
+	protected SpriteBox(Page p) { // TODO: figure out how to make this thing have a damn border
 		page = p;
+		this.setBorder(BorderFactory.createEtchedBorder());
 		setIgnoreRepaint(true);
 		setFocusable(true);
 		setFocusTraversalKeysEnabled(false);
+		ini();
 	}
 
 	@Override
@@ -106,74 +108,6 @@ class SpriteBox extends Canvas {
 		}
 		gra.dispose();
 		return img;
-	}
-
-	protected synchronized void keyTyped(KeyEvent ke) {
-		if (ke.getKeyCode() == KeyEvent.VK_TAB) {
-			skip++;
-			sele = findSprite(c);
-		}
-	}
-
-	protected synchronized void mouseDragged(MouseEvent e) {
-		Point p = e.getPoint();
-		if (!drag) {
-			Point p2 = new Point(p.x + (int) x, p.y + (int) y);
-			sele = findSprite(p2);
-			page.callBack(null);
-		}
-
-		drag = true;
-		Point p0 = getPoint(c);
-		Point p1 = getPoint(c = p);
-
-		if(sele == -1) {
-			x -= (p1.x - p0.x) * size;
-			y -= (p1.y - p0.y) * size;
-
-			limit();
-		} else {
-			int[] line = anim.imgcut.cuts[sele];
-			int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-			if ((e.getModifiers() & modifier) > 0) {
-				line[2] += p1.x - p0.x;
-				line[3] += p1.y - p0.y;
-			} else {
-				line[0] += p1.x - p0.x;
-				line[1] += p1.y - p0.y;
-			}
-		}
-	}
-
-	protected synchronized void mousePressed(Point p) {
-		c = p;
-	}
-
-	protected synchronized void mouseReleased(Point p) {
-		if (drag && sele >= 0) {
-			anim.ICedited();
-			anim.unSave("imgcut drag");
-		} else if(!drag) {
-			skip = 0;
-			c = p;
-			Point p2 = new Point(p.x + (int) x, p.y + (int) y);
-			sele = findSprite(p2);
-			page.callBack(null);
-		}
-
-		if(drag)
-			drag = false;
-	}
-
-	protected synchronized void mouseWheel(MouseEvent e) {
-		MouseWheelEvent mwe = (MouseWheelEvent) e;
-
-		double factor = Math.pow(0.95, mwe.getPreciseWheelRotation());
-
-		size *= factor;
-
-		relativeScaling(e.getPoint(), factor);
-		limit();
 	}
 
 	protected boolean isAnimValid() {
@@ -270,5 +204,101 @@ class SpriteBox extends Canvas {
 	private void relativeScaling(Point p, double factor) {
 		x = (int) ((x + p.x) * factor - p.x);
 		y = (int) ((y + p.y) * factor - p.y);
+	}
+
+	private void ini() {
+		addKeyListener(this);
+		addMouseListener(this);
+		addMouseMotionListener(this);
+		addMouseWheelListener(this);
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_TAB) {
+			skip++;
+			sele = findSprite(c);
+		}
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {}
+
+	@Override
+	public void keyReleased(KeyEvent e) {}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		c = e.getPoint();
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		Point p = e.getPoint();
+		if (drag && sele >= 0) {
+			anim.ICedited();
+			anim.unSave("imgcut drag");
+		} else if(!drag) {
+			skip = 0;
+			c = p;
+			Point p2 = new Point(p.x + (int) x, p.y + (int) y);
+			sele = findSprite(p2);
+			page.callBack(null);
+		}
+
+		if(drag)
+			drag = false;
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+
+	@Override
+	public void mouseExited(MouseEvent e) {}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		Point p = e.getPoint();
+		if (!drag) {
+			Point p2 = new Point(p.x + (int) x, p.y + (int) y);
+			sele = findSprite(p2);
+			page.callBack(null);
+		}
+
+		drag = true;
+		Point p0 = getPoint(c);
+		Point p1 = getPoint(c = p);
+
+		if	(sele == -1) { // TODO: maybe add (e.getModifiers() & MouseEvent.SHIFT_DOWN_MASK) > 0
+			x -= (p1.x - p0.x) * size;
+			y -= (p1.y - p0.y) * size;
+
+			limit();
+		} else {
+			int[] line = anim.imgcut.cuts[sele];
+			int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+			if ((e.getModifiers() & modifier) > 0) {
+				line[2] += p1.x - p0.x;
+				line[3] += p1.y - p0.y;
+			} else {
+				line[0] += p1.x - p0.x;
+				line[1] += p1.y - p0.y;
+			}
+		}
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {}
+
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		double factor = Math.pow(0.95, e.getPreciseWheelRotation());
+		size *= factor;
+
+		relativeScaling(e.getPoint(), factor);
+		limit();
 	}
 }
