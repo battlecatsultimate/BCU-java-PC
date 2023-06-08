@@ -246,7 +246,7 @@ class SpriteBox extends JPanel implements KeyListener, MouseInputListener, Mouse
 			c = p;
 			Point p2 = new Point(p.x + (int) x, p.y + (int) y);
 			sele = findSprite(p2);
-			page.callBack(null);
+			page.callBack(this);
 		}
 
 		if(drag)
@@ -265,14 +265,14 @@ class SpriteBox extends JPanel implements KeyListener, MouseInputListener, Mouse
 		if (!drag) {
 			Point p2 = new Point(p.x + (int) x, p.y + (int) y);
 			sele = findSprite(p2);
-			page.callBack(null);
+			page.callBack(this);
 		}
 
 		drag = true;
 		Point p0 = getPoint(c);
 		Point p1 = getPoint(c = p);
 
-		if	(sele == -1) { // TODO: maybe add (e.getModifiers() & MouseEvent.SHIFT_DOWN_MASK) > 0
+		if	(sele == -1 || e.isShiftDown()) {
 			x -= (p1.x - p0.x) * size;
 			y -= (p1.y - p0.y) * size;
 

@@ -122,12 +122,14 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	@Override
 	public void callBack(Object o) {
 		changing = true;
-		if (sb.sele >= 0) {
-			icet.getSelectionModel().setSelectionInterval(sb.sele, sb.sele);
-			int h = icet.getRowHeight();
-			icet.scrollRectToVisible(new Rectangle(0, h * sb.sele, 1, h));
-		} else
-			icet.clearSelection();
+		if (o instanceof SpriteBox) {
+			if (sb.sele >= 0) {
+				icet.getSelectionModel().setSelectionInterval(sb.sele, sb.sele);
+				int h = icet.getRowHeight();
+				icet.scrollRectToVisible(new Rectangle(0, h * sb.sele, 1, h));
+			} else
+				icet.clearSelection();
+		}
 		setB();
 		changing = false;
 	}
@@ -165,6 +167,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		set(aep, x, y, 800, 0, 1750, 50);
 		set(back, x, y, 0, 0, 200, 50);
 		set(relo, x, y, 250, 0, 200, 50);
+
 		set(jspu, x, y, 50, 50, 300, 500);
 		set(jspic, x, y, 400, 50, 600, 800);
 		set(sb, x, y, 1050, 50, 1200, 800);

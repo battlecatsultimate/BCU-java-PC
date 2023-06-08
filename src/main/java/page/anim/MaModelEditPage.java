@@ -80,6 +80,18 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			}
 			if (mb.getEntity() != null)
 				mb.getEntity().organize();
+			if (o instanceof SpriteBox) {
+				if (sb.sele >= 0) {
+					jlp.getSelectionModel().setSelectionInterval(sb.sele, sb.sele);
+					int[] selected = mmet.getSelectedRows();
+					int[][] cells = mmet.mm.parts;
+					for (int i : selected)
+						cells[i][2] = jlp.getSelectedIndex();
+					mmet.anim.unSave("mamodel sprite select");
+				} else {
+					jlp.clearSelection();
+				}
+			}
 			setTree(mmet.anim);
 		});
 
