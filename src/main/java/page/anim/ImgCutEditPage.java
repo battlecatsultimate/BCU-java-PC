@@ -165,35 +165,36 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		set(aep, x, y, 800, 0, 1750, 50);
 		set(back, x, y, 0, 0, 200, 50);
 		set(relo, x, y, 250, 0, 200, 50);
-		set(jspu, x, y, 0, 50, 300, 800);
-		set(jspic, x, y, 300, 50, 600, 800);
-		set(sb, x, y, 900, 50, 1350, 800);
+		set(jspu, x, y, 50, 50, 300, 500);
+		set(jspic, x, y, 400, 50, 600, 800);
+		set(sb, x, y, 1050, 50, 1200, 800);
 
-		set(name, x, y, 0, 850, 300, 50);
-		set(add, x, y, 0, 900, 150, 50);
-		set(rem, x, y, 150, 900, 150, 50);
-		set(copy, x, y, 0, 950, 150, 50);
-		set(merg, x, y, 150, 950, 150, 50);
+		set(name, x, y, 100, 600, 200, 50);
+		set(add, x, y, 50, 650, 150, 50);
+		set(rem, x, y, 200, 650, 150, 50);
+		set(copy, x, y, 50, 700, 150, 50);
+		set(merg, x, y, 200, 700, 150, 50);
 
-		set(impt, x, y, 900, 850, 200, 50);
-		set(expt, x, y, 1100, 850, 200, 50);
-		set(loca, x, y, 1300, 850, 200, 50);
-		set(spri, x, y, 1500, 850, 200, 50);
-		set(save, x, y, 1700, 850, 200, 50);
+		set(impt, x, y, 50, 800, 150, 50);
+		set(expt, x, y, 200, 800, 150, 50);
+		set(spri, x, y, 50, 850, 150, 50);
+		set(loca, x, y, 200, 850, 150, 50);
+
+		set(save, x, y, 1850, 850, 200, 50);
 		set(white, x, y, 2050, 850, 200, 50);
 
-		set(addl, x, y, 300, 850, 200, 50);
-		set(reml, x, y, 500, 850, 200, 50);
-		set(resz, x, y, 700, 850, 200, 50);
+		set(addl, x, y, 400, 850, 200, 50);
+		set(reml, x, y, 600, 850, 200, 50);
+		set(resz, x, y, 800, 850, 200, 50);
 
-		set(swcl, x, y, 900, 950, 300, 50);
-		set(jspf, x, y, 900, 1000, 150, 200);
-		set(jspt, x, y, 1050, 1000, 150, 200);
+		set(swcl, x, y, 575, 950, 300, 50);
+		set(jspf, x, y, 575, 1000, 150, 200);
+		set(jspt, x, y, 725, 1000, 150, 200);
 
-		set(icob, x, y, 375, 950, 200, 50);
-		set(unib, x, y, 625, 950, 200, 50);
-		set(icon, x, y, 350, 1000, 250, 200);
-		set(uni, x, y, 600, 1000, 250, 200); // one day... the ui will be better... another day...
+		set(icob, x, y, 75, 950, 200, 50);
+		set(unib, x, y, 325, 950, 200, 50);
+		set(icon, x, y, 50, 1000, 250, 200);
+		set(uni, x, y, 300, 1000, 250, 200); // one day... the ui will be better... another day...
 		SwingUtilities.invokeLater(() -> jta.setUI(new TreeNodeExpander(jta)));
 		aep.componentResized(x, y);
 		icet.setRowHeight(size(x, y, 50));
