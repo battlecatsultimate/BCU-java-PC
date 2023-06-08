@@ -97,6 +97,21 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 	@Override
 	public void callBack(Object o) {
+		if (o instanceof SpriteBox) {
+			if (sb.sele >= 0) {
+				jlp.getSelectionModel().setSelectionInterval(sb.sele, sb.sele);
+				if (maet.getSelectedRow() == -1 || maet.ma.parts[maet.getSelectedRow()].ints[1] != 2)
+					return;
+
+				int[] selected = mpet.getSelectedRows();
+				int[][] cells = mpet.part.moves;
+				for (int i : selected)
+					cells[i][1] = sb.sele;
+				maet.anim.unSave("maanim sprite select");
+			} else {
+				jlp.clearSelection();
+			}
+		}
 		if (o instanceof int[])
 			change((int[]) o, rs -> {
 				if (rs[0] == 0) {
@@ -404,47 +419,42 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			setC(ind);
 		}));
 
-		tmul.addFocusListener(new FocusAdapter() {
+		tmul.setLnr(x -> {
+			if (changing)
+				return;
+			changing = true;
 
-			@Override
-			public void focusLost(FocusEvent e) {
-				if (changing)
-					return;
-				changing = true;
+			double d = CommonStatic.parseIntN(tmul.getText()) * 0.01;
 
-				double d = CommonStatic.parseIntN(tmul.getText()) * 0.01;
-
-				if(d <= 0) {
-					tmul.setText("");
-					changing = false;
-					return;
-				}
-
-				String str = d < 1 ? "Decrease " : "Increase ";
-				if (!Opts.conf(str + "animation speed to " + (d * 100) + "%?")) {
-					changing = false;
-					return;
-				}
-
-				if (lmul.isSelected() && maet.getSelected().length > 0) {
-					for (Part p : maet.getSelected()) {
-						for (int[] line : p.moves)
-							line[0] *= d;
-						p.off *= d;
-						p.validate();
-					}
-				} else
-					for (Part p : maet.ma.parts) {
-						for (int[] line : p.moves)
-							line[0] *= d;
-						p.off *= d;
-						p.validate();
-					}
-				maet.ma.validate();
-				maet.anim.unSave("maanim multiply");
+			if(d <= 0) {
+				tmul.setText("");
 				changing = false;
+				return;
 			}
 
+			String str = d < 1 ? "Decrease " : "Increase ";
+			if (!Opts.conf(str + "animation speed to " + (d * 100) + "%?")) {
+				changing = false;
+				return;
+			}
+
+			if (lmul.isSelected() && maet.getSelected().length > 0) {
+				for (Part p : maet.getSelected()) {
+					for (int[] line : p.moves)
+						line[0] *= d;
+					p.off *= d;
+					p.validate();
+				}
+			} else
+				for (Part p : maet.ma.parts) {
+					for (int[] line : p.moves)
+						line[0] *= d;
+					p.off *= d;
+					p.validate();
+				}
+			maet.ma.validate();
+			maet.anim.unSave("maanim multiply");
+			changing = false;
 		});
 
 	}

@@ -86,7 +86,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 					int[] selected = mmet.getSelectedRows();
 					int[][] cells = mmet.mm.parts;
 					for (int i : selected)
-						cells[i][2] = jlp.getSelectedIndex();
+						cells[i][2] = sb.sele;
 					mmet.anim.unSave("mamodel sprite select");
 				} else {
 					jlp.clearSelection();
