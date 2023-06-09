@@ -6,7 +6,6 @@ import page.JBTN;
 import page.Page;
 import page.support.AnimTreeRenderer;
 import page.support.TreeNodeExpander;
-import utilpc.Interpret;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -129,14 +128,14 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			int[][] parts = mmet.mm.parts;
 			Point p0 = mb.getPoint(p);
 			Point p1 = mb.getPoint(p = e.getPoint());
-			System.out.println("Point 0: " + p0 + "\nPoint 1:" + p1);
 
 			for (int i : rows) {
 				int[] part = parts[i];
 				int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-				if ((e.getModifiers() & modifier) != 0) { // TODO: fix pivot when scale is different
-					part[6] -= p1.x - p0.x;
-					part[7] -= p1.y - p0.y;
+				boolean zero = i != 0;
+				if ((e.getModifiers() & modifier) != 0) { // TODO: fix pivot when scale is different for parented parts
+					part[6] -= (zero ? p1.x - p0.x : p0.x - p1.x) / (part[8] / 1000.0);
+					part[7] -= (zero ? p1.y - p0.y : p0.y - p1.y) / (part[9] / 1000.0);
 				} else {
 					part[4] += p1.x - p0.x;
 					part[5] += p1.y - p0.y;
@@ -493,6 +492,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		}
 		mmet.setMaModel(anim);
 		mb.setEntity(new EAnimS(anim, anim.mamodel));
+//		sb.setDragListener(mb.getEntity()::organize);
 		ImgCut ic = anim.imgcut;
 		String[] name = new String[ic.n];
 		for (int i = 0; i < ic.n; i++)

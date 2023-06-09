@@ -240,7 +240,6 @@ class SpriteBox extends JPanel implements KeyListener, MouseInputListener, Mouse
 	public void mouseReleased(MouseEvent e) {
 		Point p = e.getPoint();
 		if (drag && sele >= 0) {
-			anim.ICedited();
 			anim.unSave("imgcut drag");
 		} else if(!drag) {
 			skip = 0;
@@ -288,6 +287,7 @@ class SpriteBox extends JPanel implements KeyListener, MouseInputListener, Mouse
 				line[0] += p1.x - p0.x;
 				line[1] += p1.y - p0.y;
 			}
+			anim.ICedited();
 		}
 	}
 
