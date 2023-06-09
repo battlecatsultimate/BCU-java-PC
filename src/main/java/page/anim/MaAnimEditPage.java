@@ -1,6 +1,7 @@
 package page.anim;
 
 import common.CommonStatic;
+import common.system.P;
 import common.util.anim.*;
 import main.Opts;
 import page.JBTN;
@@ -70,7 +71,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 	private final EditHead aep;
 
 	private Point p = null;
-	private boolean pause, changing;
+	private boolean pause, changing, dragged;
 
 	public MaAnimEditPage(Page p) {
 		super(p);
@@ -98,7 +99,8 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		if (o instanceof SpriteBox) {
 			if (sb.sele >= 0) {
 				jlp.getSelectionModel().setSelectionInterval(sb.sele, sb.sele);
-				if (maet.getSelectedRow() == -1 || maet.ma.parts[maet.getSelectedRow()].ints[1] != 2)
+				int[] rows = maet.getSelectedRows();
+				if (rows.length != 1 || maet.ma.parts[rows[0]].ints[1] != 2)
 					return;
 
 				changing = true;
@@ -150,6 +152,13 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		});
 	}
 
+//	private P realScale(int[] part, boolean ignoreFirst) { // this is kinda finicky, but it works enough
+//		P scale = ignoreFirst ? new P(1.0, 1.0) : new P(part[8] / 1000.0, part[9] / 1000.0);
+//		if (part[0] != -1)
+//			scale.times(realScale(mmet.mm.parts[part[0]], false));
+//		return scale;
+//	}
+
 	@Override
 	protected void mouseDragged(MouseEvent e) {
 		if (p == null)
@@ -157,6 +166,24 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		ab.ori.x += p.x - e.getX();
 		ab.ori.y += p.y - e.getY();
 		p = e.getPoint();
+//		int row = maet.getSelectedRow();
+//		int[] parts = mpet.getSelectedRows();
+//		int index = 0;
+//		int mod = row == -1 ? -1 : maet.ma.parts[row].ints[1];
+//		if (mod == 4 || mod == 5 || mod == 6 || mod == 7)
+//			index = mod;
+//		if (!e.isShiftDown() && index != 0 && parts.length != 0) {
+//			dragged = true;
+//			Point p0 = ab.getPoint(p);
+//			Point p1 = ab.getPoint(p = e.getPoint());
+//
+//			int[][] cells = mpet.part.moves;
+//
+//		} else {
+//			ab.ori.x += p.x - e.getX();
+//			ab.ori.y += p.y - e.getY();
+//			p = e.getPoint();
+//		}
 	}
 
 	@Override
@@ -169,6 +196,10 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 	@Override
 	protected void mouseReleased(MouseEvent e) {
 		p = null;
+		if (dragged) {
+			maet.anim.unSave("maanim drag");
+			dragged = false;
+		}
 	}
 
 	@Override

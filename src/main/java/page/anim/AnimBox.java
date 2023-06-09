@@ -11,6 +11,7 @@ import jogl.GLCstd;
 import jogl.util.GLGraphics;
 import main.MainBCU;
 import main.Timer;
+import utilpc.Interpret;
 import utilpc.awt.FG2D;
 
 import java.awt.*;
@@ -39,6 +40,8 @@ interface AnimBox {
 	double getSiz();
 
 	void draw();
+
+	Point getPoint(Point p);
 }
 
 class BufferedAnim extends Canvas implements AnimBox {
@@ -135,6 +138,11 @@ class BufferedAnim extends Canvas implements AnimBox {
 	public double getSiz() {
 		return siz;
 	}
+
+	@Override
+	public Point getPoint(Point p) {
+		return Interpret.getPoint(p, ori, siz);
+	}
 }
 
 class GLAnimBox extends GLCstd implements AnimBox {
@@ -226,5 +234,10 @@ class GLAnimBox extends GLCstd implements AnimBox {
 	@Override
 	public void draw() {
 		display();
+	}
+
+	@Override
+	public Point getPoint(Point p) {
+		return Interpret.getPoint(p, ori, siz);
 	}
 }
