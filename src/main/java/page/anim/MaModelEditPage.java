@@ -6,6 +6,7 @@ import page.JBTN;
 import page.Page;
 import page.support.AnimTreeRenderer;
 import page.support.TreeNodeExpander;
+import utilpc.Interpret;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -46,6 +47,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	private final EditHead aep;
 	private Point p = null;
 	private MMTree mmt;
+	boolean dragged = false;
 
 	public MaModelEditPage(Page p) {
 		super(p);
@@ -121,9 +123,31 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	protected void mouseDragged(MouseEvent e) {
 		if (p == null)
 			return;
-		mb.ori.x += p.x - e.getX();
-		mb.ori.y += p.y - e.getY();
-		p = e.getPoint();
+		int[] rows = mmet.getSelectedRows();
+		if (rows.length != 0 && e.isShiftDown()) {
+			dragged = true;
+			int[][] parts = mmet.mm.parts;
+			Point p0 = mb.getPoint(p);
+			Point p1 = mb.getPoint(p = e.getPoint());
+			System.out.println("Point 0: " + p0 + "\nPoint 1:" + p1);
+
+			for (int i : rows) {
+				int[] part = parts[i];
+				int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+				if ((e.getModifiers() & modifier) != 0) { // TODO: fix pivot when scale is different
+					part[6] -= p1.x - p0.x;
+					part[7] -= p1.y - p0.y;
+				} else {
+					part[4] += p1.x - p0.x;
+					part[5] += p1.y - p0.y;
+				}
+			}
+			mb.getEntity().organize();
+		} else {
+			mb.ori.x += p.x - e.getX();
+			mb.ori.y += p.y - e.getY();
+			p = e.getPoint();
+		}
 	}
 
 	@Override
@@ -136,6 +160,10 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	@Override
 	protected void mouseReleased(MouseEvent e) {
 		p = null;
+		if (dragged) {
+			mmet.anim.unSave("mamodel drag");
+			dragged = false;
+		}
 	}
 
 	@Override
@@ -275,7 +303,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			change((AnimCE) node.getUserObject(), this::setA);
 		});
 
-		jlp.addListSelectionListener(arg0 -> sb.setSprite(jlp.getSelectedIndex(), true));
+		jlp.addListSelectionListener(arg0 -> sb.setSprite(jlp.getSelectedIndex(), false)); // TODO: fix when selecting multiple lines >:(
 
 		ListSelectionModel lsm = mmet.getSelectionModel();
 

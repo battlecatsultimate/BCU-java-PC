@@ -342,7 +342,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		jlp.addListSelectionListener(arg0 -> {
 			if (isAdj() || jlp.getValueIsAdjusting())
 				return;
-			sb.setSprite(jlp.getSelectedIndex(), true);
+			sb.setSprite(jlp.getSelectedIndex(), false);
 		});
 
 		jlm.addListSelectionListener(arg0 -> {

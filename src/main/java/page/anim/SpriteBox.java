@@ -3,6 +3,7 @@ package page.anim;
 import common.util.anim.AnimCE;
 import common.util.anim.ImgCut;
 import page.Page;
+import utilpc.Interpret;
 
 import javax.swing.*;
 import javax.swing.event.MouseInputListener;
@@ -146,7 +147,7 @@ class SpriteBox extends JPanel implements KeyListener, MouseInputListener, Mouse
 	}
 
 	private Point getPoint(Point p) {
-		return new Point((int) ((p.x + x) / size), (int) ((p.y + y) / size));
+		return Interpret.getPoint(p, x, y, size);
 	}
 
 	private void limit() {

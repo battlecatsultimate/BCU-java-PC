@@ -7,6 +7,7 @@ import common.battle.Treasure;
 import common.battle.data.*;
 import common.pack.Identifier;
 import common.pack.UserProfile;
+import common.system.P;
 import common.util.Data;
 import common.util.Data.Proc.ProcItem;
 import common.util.lang.Formatter;
@@ -943,5 +944,13 @@ public class Interpret extends Data {
 		});
 
 		label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+	}
+
+	public static Point getPoint(Point p, double x, double y, double size) {
+		return new Point((int) ((p.x + x) / size), (int) ((p.y + y) / size));
+	}
+
+	public static Point getPoint(Point p, P pp, double size) {
+		return new Point((int) ((p.x + pp.x) / size), (int) ((p.y + pp.y) / size));
 	}
 }
