@@ -119,10 +119,10 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		});
 	}
 
-	private P realScale(int[] part) {
-		P scale = new P(part[8] / 1000.0, part[9] / 1000.0);
+	private P realScale(int[] part, boolean ignoreFirst) { // this is kinda finicky, but it works enough
+		P scale = ignoreFirst ? new P(1.0, 1.0) : new P(part[8] / 1000.0, part[9] / 1000.0);
 		if (part[0] != -1)
-			scale.times(realScale(mmet.mm.parts[part[0]]));
+			scale.times(realScale(mmet.mm.parts[part[0]], false));
 		return scale;
 	}
 
@@ -143,16 +143,17 @@ public class MaModelEditPage extends Page implements AbEditPage {
 
 			for (int i : rows) {
 				int[] part = parts[i];
-				P scale = realScale(part); // a bit funky sometimes but works for me
 				boolean zero = i != 0;
 				int modifiers = e.getModifiers();
 				int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 				if ((modifiers & modifier) != 0) {
+					P scale = realScale(part, false);
 					part[6] -= (zero ? p1.x - p0.x : p0.x - p1.x) / scale.x;
 					part[7] -= (zero ? p1.y - p0.y : p0.y - p1.y) / scale.y;
 				} else {
-					part[4] += (p1.x - p0.x) / scale.x;
-					part[5] += (p1.y - p0.y) / scale.y;
+					P scale = realScale(part, true);
+					part[4] += (p1.x - p0.x) / (scale.x);
+					part[5] += (p1.y - p0.y) / (scale.y);
 				}
 			}
 			mb.getEntity().organize();
