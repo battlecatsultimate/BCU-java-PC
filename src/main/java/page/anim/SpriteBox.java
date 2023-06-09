@@ -301,4 +301,10 @@ class SpriteBox extends JPanel implements KeyListener, MouseInputListener, Mouse
 		relativeScaling(e.getPoint(), factor);
 		limit();
 	}
+
+	public void setSprite(int id, boolean callback) {
+		sele = id;
+		if (callback)
+			page.callBack(this);
+	}
 }

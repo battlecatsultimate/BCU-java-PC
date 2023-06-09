@@ -16,8 +16,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
@@ -103,11 +101,13 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 				if (maet.getSelectedRow() == -1 || maet.ma.parts[maet.getSelectedRow()].ints[1] != 2)
 					return;
 
+				changing = true;
 				int[] selected = mpet.getSelectedRows();
 				int[][] cells = mpet.part.moves;
 				for (int i : selected)
 					cells[i][1] = sb.sele;
 				maet.anim.unSave("maanim sprite select");
+				changing = false;
 			} else {
 				jlp.clearSelection();
 			}
@@ -342,7 +342,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		jlp.addListSelectionListener(arg0 -> {
 			if (isAdj() || jlp.getValueIsAdjusting())
 				return;
-			sb.sele = jlp.getSelectedIndex();
+			sb.setSprite(jlp.getSelectedIndex(), true);
 		});
 
 		jlm.addListSelectionListener(arg0 -> {
@@ -688,7 +688,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 					Rectangle r = jlp.getCellBounds(ic, ic);
 					if (r != null)
 						jlp.scrollRectToVisible(r);
-					sb.sele = jlp.getSelectedIndex();
+					sb.setSprite(jlp.getSelectedIndex(), false);
 				}
 			} else
 				maet.clearSelection();
@@ -700,7 +700,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		reml.setEnabled(ind >= 0);
 		if (ind >= 0 && mpet.part.ints[1] == 2) {
 			change(mpet.part.moves[ind][1], jlp::setSelectedIndex);
-			sb.sele = jlp.getSelectedIndex();
+			sb.setSprite(jlp.getSelectedIndex(), false);
 		}
 	}
 

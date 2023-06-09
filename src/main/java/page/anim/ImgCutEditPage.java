@@ -166,23 +166,23 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		setBounds(0, 0, x, y);
 		set(aep, x, y, 800, 0, 1750, 50);
 		set(back, x, y, 0, 0, 200, 50);
-		set(relo, x, y, 250, 0, 200, 50);
 
-		set(jspu, x, y, 50, 50, 300, 500);
-		set(jspic, x, y, 400, 50, 600, 800);
-		set(sb, x, y, 1050, 50, 1200, 800);
+		set(jspu, x, y, 50, 250, 300, 500);
+		set(jspic, x, y, 400, 100, 600, 750);
+		set(sb, x, y, 1050, 100, 1200, 750);
 
-		set(name, x, y, 100, 600, 200, 50);
-		set(add, x, y, 50, 650, 150, 50);
-		set(rem, x, y, 200, 650, 150, 50);
-		set(copy, x, y, 50, 700, 150, 50);
-		set(merg, x, y, 200, 700, 150, 50);
+		set(add, x, y, 50, 100, 150, 50);
+		set(rem, x, y, 200, 100, 150, 50);
+		set(copy, x, y, 50, 150, 150, 50);
+		set(merg, x, y, 200, 150, 150, 50);
+		set(name, x, y, 50, 200, 300, 50);
 
 		set(impt, x, y, 50, 800, 150, 50);
 		set(expt, x, y, 200, 800, 150, 50);
 		set(spri, x, y, 50, 850, 150, 50);
 		set(loca, x, y, 200, 850, 150, 50);
 
+		set(relo, x, y, 1650, 850, 200, 50);
 		set(save, x, y, 1850, 850, 200, 50);
 		set(white, x, y, 2050, 850, 200, 50);
 
@@ -629,6 +629,8 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		swcl.setEnabled(anim != null);
 		save.setEnabled(anim != null);
 		resz.setEnabled(anim != null);
+		relo.setEnabled(anim != null);
+		white.setEnabled(anim != null);
 		icet.setCut(anim);
 		sb.setAnim(anim);
 		if (sb.sele == -1)
@@ -679,7 +681,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	}
 
 	private void setB() {
-		sb.sele = icet.getSelectedRow();
+		sb.setSprite(icet.getSelectedRow(), false);
 		reml.setEnabled(sb.sele != -1);
 		if (sb.sele >= 0) {
 			for (int[] ints : icet.anim.mamodel.parts)

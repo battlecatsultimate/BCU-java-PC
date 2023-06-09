@@ -275,7 +275,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			change((AnimCE) node.getUserObject(), this::setA);
 		});
 
-		jlp.addListSelectionListener(arg0 -> sb.sele = jlp.getSelectedIndex());
+		jlp.addListSelectionListener(arg0 -> sb.setSprite(jlp.getSelectedIndex(), true));
 
 		ListSelectionModel lsm = mmet.getSelectionModel();
 
