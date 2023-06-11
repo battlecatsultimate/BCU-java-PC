@@ -4,6 +4,7 @@ import common.CommonStatic;
 import common.system.P;
 import common.util.anim.*;
 import page.JBTN;
+import page.MenuBarHandler;
 import page.Page;
 import page.support.AnimTreeRenderer;
 import page.support.TreeNodeExpander;
@@ -143,17 +144,34 @@ public class MaModelEditPage extends Page implements AbEditPage {
 
 			for (int i : rows) {
 				int[] part = parts[i];
-				boolean zero = i != 0;
 				int modifiers = e.getModifiers();
 				int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-				if ((modifiers & modifier) != 0) {
-					P scale = realScale(part, false);
-					part[6] -= (zero ? p1.x - p0.x : p0.x - p1.x) / scale.x;
-					part[7] -= (zero ? p1.y - p0.y : p0.y - p1.y) / scale.y;
+				if (SwingUtilities.isRightMouseButton(e)) {
+//					int x = getRootPane().getWidth();
+//					int y = getRootPane().getHeight() - MenuBarHandler.getBar().getHeight();
+//					Point p2 = mb.getPoint(new Point(size(x, y, 400), size(x, y, 250)));
+//					double s0 = Math.sqrt(Math.pow(p2.x - p0.x, 2) + Math.pow(p2.y - p0.y, 2)); // pivot to point 0
+//					double s1 = Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2)); // pivot to point 1
+//					double s2 = Math.sqrt(Math.pow(p1.x - p0.x, 2) + Math.pow(p1.y - p0.y, 2)); // point 0 to point 1
+//					double angle = Math.acos((s0 + s1 - s2) / (2 * s0 * s1)); // law of cosine
+//					part[10] += angle * 10;
+//					part[10] %= 3600;
+//					System.out.println("Angle: " + angle);
 				} else {
-					P scale = realScale(part, true);
-					part[4] += (p1.x - p0.x) / (scale.x);
-					part[5] += (p1.y - p0.y) / (scale.y);
+					if ((modifiers & modifier) != 0) {
+						P scale = realScale(part, false);
+						double angle = part[10] / 1800.0 * Math.PI; // TODO adjust speed according to angle
+						double sin = Math.sin(angle);
+						double cos = Math.cos(angle);
+						int x = i != 0 ? p0.x - p1.x : p1.x - p0.x;
+						int y = i != 0 ? p0.y - p1.y : p1.y - p0.y;
+						part[6] += ((x * cos) + (y * sin)) / scale.x;
+						part[7] += ((y * cos) - (x * sin)) / scale.y;
+					} else {
+						P scale = realScale(part, true);
+						part[4] += (p1.x - p0.x) / (scale.x);
+						part[5] += (p1.y - p0.y) / (scale.y);
+					}
 				}
 			}
 			mb.getEntity().organize();
