@@ -146,17 +146,16 @@ public class MaModelEditPage extends Page implements AbEditPage {
 				int[] part = parts[i];
 				int modifiers = e.getModifiers();
 				int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-				if (SwingUtilities.isRightMouseButton(e)) {
-//					int x = getRootPane().getWidth();
-//					int y = getRootPane().getHeight() - MenuBarHandler.getBar().getHeight();
-//					Point p2 = mb.getPoint(new Point(size(x, y, 400), size(x, y, 250)));
-//					double s0 = Math.sqrt(Math.pow(p2.x - p0.x, 2) + Math.pow(p2.y - p0.y, 2)); // pivot to point 0
-//					double s1 = Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2)); // pivot to point 1
-//					double s2 = Math.sqrt(Math.pow(p1.x - p0.x, 2) + Math.pow(p1.y - p0.y, 2)); // point 0 to point 1
-//					double angle = Math.acos((s0 + s1 - s2) / (2 * s0 * s1)); // law of cosine
-//					part[10] += angle * 10;
-//					part[10] %= 3600;
-//					System.out.println("Angle: " + angle);
+				if (SwingUtilities.isRightMouseButton(e)) { // TODO fix going the other way... grrr math
+					int x = getRootPane().getWidth();
+					int y = getRootPane().getHeight() - MenuBarHandler.getBar().getHeight();
+					Point p2 = mb.getPoint(new Point(size(x, y, 400), size(x, y, 250))); // pivot placeholder
+					double s0 = Math.sqrt(Math.pow(p2.x - p0.x, 2) + Math.pow(p2.y - p0.y, 2)); // pivot to point 0
+					double s1 = Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2)); // pivot to point 1
+					double s2 = Math.sqrt(Math.pow(p1.x - p0.x, 2) + Math.pow(p1.y - p0.y, 2)); // point 0 to point 1
+					double angle = Math.acos((Math.pow(s0, 2) + Math.pow(s1, 2) - Math.pow(s2, 2)) / (2 * s0 * s1)); // law of cosine
+					part[10] += angle * 1800 / Math.PI;
+					part[10] %= 3600;
 				} else {
 					if ((modifiers & modifier) != 0) {
 						P scale = realScale(part, false);
