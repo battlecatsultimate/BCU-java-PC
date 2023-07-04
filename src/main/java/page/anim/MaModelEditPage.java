@@ -144,10 +144,11 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			int modifiers = e.getModifiers();
 			int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 			boolean isCtrlDown = (modifiers & modifier) != 0; // note: do NOT use for right mouse check
+			int[] part;
 
-			for (int i : rows) {
-				int[] part = parts[i];
-				if (SwingUtilities.isRightMouseButton(e)) {
+			if (SwingUtilities.isRightMouseButton(e)) {
+				for (int i : rows) {
+					part = parts[i];
 					int x = getRootPane().getWidth();
 					int y = getRootPane().getHeight() - MenuBarHandler.getBar().getHeight();
 					Point p2 = mb.getPoint(new Point(size(x, y, 400), size(x, y, 250))); // pivot placeholder
@@ -155,8 +156,11 @@ public class MaModelEditPage extends Page implements AbEditPage {
 					double sB = Math.atan2(p1.y - p2.y, p1.x - p2.x);
 					part[10] += (sB - sA) * 1800 / Math.PI;
 					part[10] %= 3600;
-				} else {
-					if (isCtrlDown) {
+				}
+			} else {
+				if (isCtrlDown) {
+					for (int i : rows) {
+						part = parts[i];
 						P scale = realScale(part, false);
 						double angle = part[10] / 1800.0 * Math.PI; // TODO adjust speed according to angle
 						double sin = Math.sin(angle);
@@ -165,7 +169,10 @@ public class MaModelEditPage extends Page implements AbEditPage {
 						int y = i != 0 ? p0.y - p1.y : p1.y - p0.y;
 						part[6] += ((x * cos) + (y * sin)) / scale.x;
 						part[7] += ((y * cos) - (x * sin)) / scale.y;
-					} else {
+					}
+				} else {
+					for (int i : rows) {
+						part = parts[i];
 						P scale = realScale(part, true);
 						part[4] += (p1.x - p0.x) / (scale.x);
 						part[5] += (p1.y - p0.y) / (scale.y);
