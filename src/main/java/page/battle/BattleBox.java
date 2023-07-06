@@ -164,6 +164,8 @@ public interface BattleBox {
 
 			drawEntity(g);
 
+			drawCastleHealthIndicator(g);
+
 			if(CommonStatic.getConfig().drawBGEffect && sb.bgEffect != null) {
 				sb.bgEffect.postDraw(g, setP(sb.pos, y), bf.sb.siz, midY);
 			}
@@ -545,9 +547,7 @@ public interface BattleBox {
 				}
 			}
 			gra.setTransform(at);
-			posx -= castw * bf.sb.siz / 2;
-			posy -= casth * bf.sb.siz;
-			Res.getBase(sb.ebase, setSym(gra, bf.sb.siz, posx, posy, 0), bf.sb.st.trail);
+
 			posx = (int) (((sb.st.len - 800) * ratio + off) * bf.sb.siz + sb.pos);
 
 			shake = 0.0;
@@ -557,8 +557,20 @@ public interface BattleBox {
 			}
 
 			drawNyCast(gra, (int) (midh - road_h * bf.sb.siz), (int) (posx + shake), bf.sb.siz, sb.nyc);
-			posx += castw * bf.sb.siz / 2;
-			Res.getBase(sb.ubase, setSym(gra, bf.sb.siz, posx, posy, 1), false);
+		}
+
+		private void drawCastleHealthIndicator(FakeGraphics gra) {
+			int posy = (int) (midh - road_h * bf.sb.siz);
+			int posx = (int) ((sb.ebase.pos * ratio + off) * bf.sb.siz + sb.pos);
+
+			posx -= castw * bf.sb.siz;
+			posy -= casth * bf.sb.siz + aux.num[5][0].getImg().getHeight() * bf.sb.siz;
+
+			Res.getBase(sb.ebase, setSym(gra, bf.sb.siz, posx, posy, 0), bf.sb.st.trail);
+
+			posx = (int) (((sb.st.len - 800) * ratio + off) * bf.sb.siz + sb.pos);
+
+			Res.getBase(sb.ubase, setSym(gra, bf.sb.siz, posx, posy, 0), false);
 		}
 
 		@SuppressWarnings("UseBulkOperation")
