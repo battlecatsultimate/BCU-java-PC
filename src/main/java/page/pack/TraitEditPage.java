@@ -299,8 +299,8 @@ public class TraitEditPage extends Page {
         BufferedImage bimg = new Importer(str).getImg();
         if (bimg == null)
             return;
-        if (bimg.getWidth() != 41 && bimg.getHeight() != 41) {
-            getFile("Wrong img size. Img size: w=41, h=41");
+        if (bimg.getWidth() != 41 || bimg.getHeight() != 41) {
+            getFile("The icon must be 41x41");
             return;
         }
         if (t.icon != null)
