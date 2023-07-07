@@ -565,9 +565,9 @@ public interface BattleBox {
 			int posy = (int) (midh - road_h * bf.sb.siz);
 			int posx = (int) ((sb.ebase.pos * ratio + off) * bf.sb.siz + sb.pos);
 
-			posx -= castw * bf.sb.siz / 2;
-
 			if (sb.ebase instanceof Entity && ((Entity) sb.ebase).data instanceof DataEnemy) {
+				posx -= castw * bf.sb.siz / 2;
+
 				AnimU<?> anim = ((Entity) sb.ebase).data.getPack().anim;
 
 				if(anim != null && anim.mamodel.confs.length > 1) {
@@ -575,7 +575,8 @@ public interface BattleBox {
 					posy += anim.mamodel.confs[1][3] * 2.5 * anim.mamodel.parts[0][9] / anim.mamodel.ints[0] * bf.sb.siz * ratio;
 				}
 			} else {
-				posy -= casth * bf.sb.siz + aux.num[5][0].getImg().getHeight() * bf.sb.siz;
+				posx -= castw * bf.sb.siz * 1.15;
+				posy -= casth * bf.sb.siz * 0.95 + aux.num[5][0].getImg().getHeight() * bf.sb.siz;
 			}
 
 			Res.getBase(sb.ebase, setSym(gra, bf.sb.siz * 0.8, posx, posy, 0), bf.sb.st.trail);

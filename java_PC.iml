@@ -8,7 +8,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="BCU-Installer1" level="project" />
-    <orderEntry type="library" name="BCU_LIB1" level="project" />
     <orderEntry type="library" name="BCU_lib1" level="project" />
   </component>
 </module>
