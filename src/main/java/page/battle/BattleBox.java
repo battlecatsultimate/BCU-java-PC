@@ -7,6 +7,7 @@ import common.battle.BattleField;
 import common.battle.StageBasis;
 import common.battle.attack.ContAb;
 import common.battle.attack.ContWaveAb;
+import common.battle.data.DataEnemy;
 import common.battle.entity.*;
 import common.pack.Identifier;
 import common.system.P;
@@ -18,6 +19,7 @@ import common.system.fake.FakeTransform;
 import common.util.Data;
 import common.util.ImgCore;
 import common.util.Res;
+import common.util.anim.AnimU;
 import common.util.pack.EffAnim;
 import common.util.pack.bgeffect.BackgroundEffect;
 import common.util.stage.CastleImg;
@@ -163,6 +165,8 @@ public interface BattleBox {
 			}
 
 			drawEntity(g);
+
+			drawCastleHealthIndicator(g);
 
 			if(CommonStatic.getConfig().drawBGEffect && sb.bgEffect != null) {
 				sb.bgEffect.postDraw(g, setP(sb.pos, y), bf.sb.siz, midY);
@@ -545,9 +549,7 @@ public interface BattleBox {
 				}
 			}
 			gra.setTransform(at);
-			posx -= castw * bf.sb.siz / 2;
-			posy -= casth * bf.sb.siz;
-			Res.getBase(sb.ebase, setSym(gra, bf.sb.siz, posx, posy, 0), bf.sb.st.trail);
+
 			posx = (int) (((sb.st.len - 800) * ratio + off) * bf.sb.siz + sb.pos);
 
 			shake = 0.0;
@@ -557,8 +559,32 @@ public interface BattleBox {
 			}
 
 			drawNyCast(gra, (int) (midh - road_h * bf.sb.siz), (int) (posx + shake), bf.sb.siz, sb.nyc);
-			posx += castw * bf.sb.siz / 2;
-			Res.getBase(sb.ubase, setSym(gra, bf.sb.siz, posx, posy, 1), false);
+		}
+
+		private void drawCastleHealthIndicator(FakeGraphics gra) {
+			int posy = (int) (midh - road_h * bf.sb.siz);
+			int posx = (int) ((sb.ebase.pos * ratio + off) * bf.sb.siz + sb.pos);
+
+			if (sb.ebase instanceof Entity && ((Entity) sb.ebase).data instanceof DataEnemy) {
+				posx -= castw * bf.sb.siz / 2;
+
+				AnimU<?> anim = ((Entity) sb.ebase).data.getPack().anim;
+
+				if(anim != null && anim.mamodel.confs.length > 1) {
+					posx += anim.mamodel.confs[1][2] * 2.5 * anim.mamodel.parts[0][8] / anim.mamodel.ints[0] * bf.sb.siz * ratio;
+					posy += anim.mamodel.confs[1][3] * 2.5 * anim.mamodel.parts[0][9] / anim.mamodel.ints[0] * bf.sb.siz * ratio;
+				}
+			} else {
+				posx -= castw * bf.sb.siz * 1.15;
+				posy -= casth * bf.sb.siz * 0.95 + aux.num[5][0].getImg().getHeight() * bf.sb.siz;
+			}
+
+			Res.getBase(sb.ebase, setSym(gra, bf.sb.siz * 0.8, posx, posy, 0), bf.sb.st.trail);
+
+			posy = (int) (midh - road_h * bf.sb.siz - casth * bf.sb.siz - aux.num[5][0].getImg().getHeight() * bf.sb.siz);
+			posx = (int) (((sb.st.len - 800) * ratio + off) * bf.sb.siz + sb.pos);
+
+			Res.getBase(sb.ubase, setSym(gra, bf.sb.siz * 0.8, posx, posy, 0), false);
 		}
 
 		@SuppressWarnings("UseBulkOperation")

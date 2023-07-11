@@ -13,6 +13,13 @@
         <kotlin.version>1.6.21</kotlin.version>
     </properties>
 
+	<repositories>
+		<repository>
+			<id>jogamp.org</id>
+			<url>https://jogamp.org/deployment/maven/</url>
+		</repository>
+	</repositories>
+
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<resources>
@@ -159,25 +166,25 @@
 		<dependency>
 			<groupId>org.jogamp.jogl</groupId>
 			<artifactId>jogl-all</artifactId>
-			<version>2.3.2</version>
+			<version>2.4.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jogamp.gluegen/gluegen-rt -->
 		<dependency>
 			<groupId>org.jogamp.gluegen</groupId>
 			<artifactId>gluegen-rt</artifactId>
-			<version>2.3.2</version>
+			<version>2.4.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jogamp.jogl/jogl-all-main -->
 		<dependency>
 			<groupId>org.jogamp.jogl</groupId>
 			<artifactId>jogl-all-main</artifactId>
-			<version>2.3.2</version>
+			<version>2.4.0</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jogamp.gluegen/gluegen-rt-main -->
 		<dependency>
 			<groupId>org.jogamp.gluegen</groupId>
 			<artifactId>gluegen-rt-main</artifactId>
-			<version>2.3.2</version>
+			<version>2.4.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.apis</groupId>
@@ -207,8 +214,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
-
-
-
 </project>
