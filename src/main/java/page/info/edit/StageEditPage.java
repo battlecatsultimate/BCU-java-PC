@@ -10,6 +10,7 @@ import common.util.unit.AbEnemy;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
 import page.JBTN;
+import page.JTF;
 import page.Page;
 import page.battle.BattleSetupPage;
 import page.battle.StRecdPage;
@@ -19,6 +20,8 @@ import page.support.RLFIM;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Set;
@@ -46,6 +49,7 @@ public class StageEditPage extends Page {
 	private final JBTN rmst = new JBTN(0, "rmst");
 	private final JBTN recd = new JBTN(0, "replay");
 	private final JBTN elim = new JBTN(0, "limit");
+	private final JTF enam = new JTF();
 	private final StageEditTable jt;
 	private final JScrollPane jspjt;
 	private final RLFIM<StageMap> jlsm = new RLFIM<>(() -> this.changing = true, () -> changing = false,
@@ -157,7 +161,8 @@ public class StageEditPage extends Page {
 		set(jlpst, x, y, 300, 1000, 300, 300);
 
 		set(veif, x, y, 600, 0, 300, 50);
-		set(jspe, x, y, 600, 50, 300, 1250);
+		set(enam, x, y, 600, 50, 300, 50);
+		set(jspe, x, y, 600, 100, 300, 1200);
 		jt.setRowHeight(size(x, y, 50));
 	}
 
@@ -193,6 +198,13 @@ public class StageEditPage extends Page {
 
 		veif.setLnr(x -> changePanel(efp));
 
+		enam.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				efp.setSearch(enam.getText());
+				renew();
+			}
+		});
 	}
 
 	private void addListeners$1() {
@@ -339,6 +351,7 @@ public class StageEditPage extends Page {
 	private void ini() {
 		add(back);
 		add(veif);
+		add(enam);
 		add(adds);
 		add(rems);
 		add(jspjt);

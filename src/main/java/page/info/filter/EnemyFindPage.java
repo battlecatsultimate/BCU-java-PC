@@ -5,6 +5,8 @@ import common.util.unit.Enemy;
 import page.*;
 
 import javax.swing.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
@@ -19,7 +21,6 @@ public class EnemyFindPage extends Page implements SupPage<AbEnemy> {
 	private final EnemyFilterBox efb;
 	private final JScrollPane jsp = new JScrollPane(elt);
 	private final JTF seatf = new JTF();
-	private final JBTN seabt = new JBTN(0, "search");
 
 	public EnemyFindPage(Page p) {
 		super(p);
@@ -76,7 +77,6 @@ public class EnemyFindPage extends Page implements SupPage<AbEnemy> {
 		set(source, x, y, 0, 50, 600, 50);
 		set(show, x, y, 250, 0, 200, 50);
 		set(seatf, x, y, 550, 0, 1000, 50);
-		set(seabt, x, y, 1600, 0, 200, 50);
 		if (show.isSelected()) {
 			int[] siz = efb.getSizer();
 			set(efb, x, y, 50, 100, siz[0], siz[1]);
@@ -101,19 +101,10 @@ public class EnemyFindPage extends Page implements SupPage<AbEnemy> {
 				remove(efb);
 		});
 
-		seabt.setLnr((b) -> {
-			if (efb != null) {
-				efb.name = seatf.getText();
-
-				efb.callBack(null);
-			}
-		});
-
-		seatf.addActionListener(e -> {
-			if (efb != null) {
-				efb.name = seatf.getText();
-
-				efb.callBack(null);
+		seatf.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				setSearch(seatf.getText());
 			}
 		});
 	}
@@ -125,9 +116,14 @@ public class EnemyFindPage extends Page implements SupPage<AbEnemy> {
 		add(jsp);
 		add(source);
 		add(seatf);
-		add(seabt);
 		show.setSelected(true);
 		addListeners();
 	}
 
+	public void setSearch(String t) {
+		if (efb != null) {
+			efb.name = t;
+			efb.callBack(1);
+		}
+	}
 }

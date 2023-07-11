@@ -263,19 +263,20 @@ class EFBList extends EnemyFilterBox {
 	private final JScrollPane jt = new JScrollPane(trait);
 	private final JScrollPane jab = new JScrollPane(abis);
 	private final JScrollPane jat = new JScrollPane(atkt);
+	private final List<Enemy> enem = new ArrayList<>();
 
 	protected EFBList(Page p) {
 		super(p);
 
 		ini();
-		confirm();
+		confirm(0);
 	}
 
 	protected EFBList(Page p, String pack, String... parent) {
 		super(p, pack, parent);
 
 		ini();
-		confirm();
+		confirm(0);
 	}
 
 	@Override
@@ -285,7 +286,7 @@ class EFBList extends EnemyFilterBox {
 
 	@Override
 	public void callBack(Object o) {
-		confirm();
+		confirm((int) o);
 	}
 
 	@Override
@@ -306,10 +307,9 @@ class EFBList extends EnemyFilterBox {
 		set(jat, x, y, 0, 850, 200, 300);
 	}
 
-	private void confirm() {
-		List<Enemy> ans = new ArrayList<>();
-		int minDiff = 5;
-		for(PackData p : UserProfile.getAllPacks()) {
+	private List<Enemy> filterType() {
+		enem.clear();
+		for (PackData p : UserProfile.getAllPacks()) {
 			for (Enemy e : p.enemies.getList()) {
 				int a = e.de.getAbi();
 				List<Trait> ct = e.de.getTraits();
@@ -354,42 +354,38 @@ class EFBList extends EnemyFilterBox {
 						b3 |= isType(e.de, i);
 					else
 						b3 &= isType(e.de, i);
-
-				boolean b4;
-				String fname = MultiLangCont.getStatic().ENAME.getCont(e);
-				if (fname == null)
-					fname = e.names.toString();
-				int diff = UtilPC.damerauLevenshteinDistance(fname.toLowerCase(), name.toLowerCase());
-				minDiff = Math.min(minDiff, diff);
-				b4 = diff == minDiff;
-
-				boolean b5;
-
-				if(pack == null)
-					b5 = true;
-				else {
-					b5 = e.id.pack.equals(Identifier.DEF) || e.id.pack.equals(pack) || parents.contains(e.id.pack);
-				}
+				boolean b4 = pack == null || e.id.pack.equals(Identifier.DEF) || e.id.pack.equals(pack) || parents.contains(e.id.pack);
 
 				b0 = rare.getSelectedIndex() == -1 | b0;
 				b1 = trait.getSelectedIndex() == -1 | b1;
 				b2 = abis.getSelectedIndex() == -1 | b2;
 				b3 = atkt.getSelectedIndex() == -1 | b3;
-				if (b0 & b1 & b2 & b3 & b4 & b5)
-					ans.add(e);
+				if (b0 && b1 && b2 && b3 && b4)
+					enem.add(e);
 			}
 		}
 
-		for (int i = 0; i < ans.size(); i++) {
-			String ename = MultiLangCont.getStatic().ENAME.getCont(ans.get(i));
-			if (ename == null)
-				ename = ans.get(i).names.toString();
-			if (UtilPC.damerauLevenshteinDistance(ename.toLowerCase(), name.toLowerCase()) > minDiff) {
-				ans.remove(i);
-				i--;
-			}
+		return filterName();
+	}
+
+	private List<Enemy> filterName() {
+		int minDiff = 5;
+		List<Enemy> enemf = new ArrayList<>();
+		for (Enemy e : enem) {
+			String fname = MultiLangCont.getStatic().ENAME.getCont(e);
+			if (fname == null)
+				fname = e.names.toString();
+			int diff = UtilPC.damerauLevenshteinDistance(fname.toLowerCase(), name.toLowerCase());
+			minDiff = Math.min(minDiff, diff);
+			if (diff == minDiff)
+				enemf.add(e);
 		}
-		getFront().callBack(ans);
+		getFront().callBack(enemf);
+		return enemf;
+	}
+
+	private void confirm(int type) {
+		getFront().callBack(type == 0 ? filterType() : type == 1 ? filterName() : null);
 	}
 
 	private void ini() {
@@ -427,12 +423,12 @@ class EFBList extends EnemyFilterBox {
 
 	private void set(AbstractButton b) {
 		add(b);
-		b.addActionListener(arg0 -> confirm());
+		b.addActionListener(arg0 -> confirm(0));
 	}
 
 	private void set(JList<?> jl) {
 
-		jl.addListSelectionListener(arg0 -> confirm());
+		jl.addListSelectionListener(arg0 -> confirm(0));
 	}
 
 }
