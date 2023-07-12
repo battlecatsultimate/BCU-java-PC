@@ -181,7 +181,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 		set(jspma, x, y, 500, 650, 900, 650);
 		set(jspmp, x, y, 1400, 650, 900, 650);
 		set(jspm, x, y, 0, 50, 300, 1250);
-		set((Canvas) ab, x, y, 300, 50, 700, 500);
+		set((Component) ab, x, y, 300, 50, 700, 500);
 		set(addl, x, y, 2100, 550, 200, 50);
 		set(reml, x, y, 2100, 600, 200, 50);
 		set(jtl, x, y, 300, 550, 900, 100);
@@ -612,7 +612,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 		add(jtb);
 		add(jtl);
 		add(nex);
-		add((Canvas) ab);
+		add((Component) ab);
 		add(inft);
 		add(inff);
 		add(infv);

@@ -116,7 +116,7 @@ public abstract class AbViewPage extends Page {
 		add(back);
 		add(camres);
 		add(copy);
-		add((Canvas) vb);
+		add((Component) vb);
 		add(jspt);
 		add(jst);
 		add(jtb);
@@ -148,7 +148,7 @@ public abstract class AbViewPage extends Page {
 		set(copy, x, y, 300, 0, 200, 50);
 		set(larges, x, y , 900, 0, 200, 50);
 		if (larges.isSelected()) {
-			set((Canvas) vb, x, y, 500, 50, 1800, 1200);
+			set((Component) vb, x, y, 500, 50, 1800, 1200);
 			set(jspt, x, y, 100, 100, 300, 400);
 			set(jtb, x, y, 25, 550, 200, 50);
 			set(jtl, x, y, 0, 700, 500, 100);
@@ -160,7 +160,7 @@ public abstract class AbViewPage extends Page {
 			set(manualScale, x, y, 200, 50, 150, 50);
 			set(jst, x, y, 0, 0, 0, 0);
 		} else {
-			set((Canvas) vb, x, y, 1000, 100, 1000, 600);
+			set((Component) vb, x, y, 1000, 100, 1000, 600);
 			set(jspt, x, y, 400, 550, 300, 400);
 			set(jst, x, y, 1000, 750, 1000, 100);
 			set(jtl, x, y, 1000, 900, 1000, 100);
@@ -297,9 +297,7 @@ public abstract class AbViewPage extends Page {
 		mp4.addActionListener(arg0 -> setLoader(true, mp4.isSelected()));
 
 		larges.setLnr(x -> {
-			remove((Canvas) vb);
 			resized();
-			add((Canvas) vb);
 		});
 
 		manualScale.addFocusListener(new FocusAdapter() {

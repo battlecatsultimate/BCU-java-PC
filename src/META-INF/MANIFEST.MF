@@ -1,32 +1,19 @@
 Manifest-Version: 1.0
 Main-Class: main.MainBCU
-Class-Path: BCU_lib/jetty-6.1.26.jar BCU_lib/jogl-all-2.4.0-natives-linu
- x-amd64.jar BCU_lib/json-20230227.jar BCU_lib/jogl-all-2.4.0-natives-li
- nux-armv6hf.jar BCU_lib/jcodec-javase-0.2.3.jar BCU_lib/gson-2.8.9.jar 
- BCU_lib/kotlin-stdlib-common-1.6.21.jar BCU_lib/gluegen-rt-2.4.0-native
- s-linux-aarch64.jar BCU_lib/google-oauth-client-jetty-1.23.0.jar BCU_li
- b/gluegen-rt-2.4.0-natives-windows-amd64.jar BCU_lib/jsr305-3.0.2.jar B
- CU_lib/jorbis-0.0.17.4.jar BCU_lib/google-http-client-1.24.1.jar BCU_li
- b/google-http-client-jackson2-1.36.0.jar BCU_lib/guava-29.0-android.jar
-  BCU_lib/jogl-all-2.4.0.jar BCU_lib/google-api-services-drive-v3-rev105
- -1.23.0.jar BCU_lib/listenablefuture-9999.0-empty-to-avoid-conflict-wit
- h-guava.jar BCU_lib/gluegen-rt-2.4.0-natives-android-aarch64.jar BCU_li
- b/kotlin-stdlib-1.6.21.jar BCU_lib/annotations-13.0.jar BCU_lib/gluegen
- -rt-2.4.0-natives-macosx-universal.jar BCU_lib/gluegen-rt-2.4.0.jar BCU
- _lib/jogl-all-2.4.0-natives-macosx-universal.jar BCU_lib/tritonus-share
- -0.3.7.4.jar BCU_lib/jogl-all-main-2.4.0.jar BCU_lib/jogl-all-2.4.0-nat
- ives-windows-amd64.jar BCU_lib/gluegen-rt-main-2.4.0.jar BCU_lib/jogl-a
- ll-2.4.0-natives-linux-aarch64.jar BCU_lib/httpcore-4.4.10.jar BCU_lib/
- commons-io-2.7.jar BCU_lib/servlet-api-2.5-20081211.jar BCU_lib/jackson
- -core-2.11.1.jar BCU_lib/kotlin-stdlib-jdk8-1.6.21.jar BCU_lib/google-o
- auth-client-java6-1.23.0.jar BCU_lib/checker-compat-qual-2.5.5.jar BCU_
- lib/error_prone_annotations-2.3.4.jar BCU_lib/jetty-util-6.1.26.jar BCU
- _lib/kotlin-stdlib-jdk7-1.6.21.jar BCU_lib/jcodec-0.2.3.jar BCU_lib/com
- mons-codec-1.10.jar BCU_lib/j2objc-annotations-1.3.jar BCU_lib/google-o
- auth-client-1.31.0.jar BCU_lib/antlr-2.7.7.jar BCU_lib/google-api-clien
- t-1.30.10.jar BCU_lib/commons-logging-1.2.jar BCU_lib/gluegen-rt-2.4.0-
- natives-linux-armv6hf.jar BCU_lib/httpmime-4.5.6.jar BCU_lib/jogl-all-2
- .4.0-natives-android-aarch64.jar BCU_lib/failureaccess-1.0.1.jar BCU_li
- b/httpclient-4.5.13.jar BCU_lib/vorbisspi-1.0.3.3.jar BCU_lib/gluegen-r
- t-2.4.0-natives-linux-amd64.jar
-
+Class-Path: BCU_lib/annotations-13.0.jar BCU_lib/antlr-2.7.7.jar BCU_lib/checker-qual-3.12.0.jar BCU_lib/commons-codec-
+ 1.16.0.jar BCU_lib/commons-io-2.7.jar BCU_lib/commons-logging-1.2.jar BCU_lib/error_prone_annotations-2.11.0.jar BCU_l
+ ib/failureaccess-1.0.1.jar BCU_lib/gluegen-rt-2.4.0-natives-android-aarch64.jar BCU_lib/gluegen-rt-2.4.0-natives-linux
+ -aarch64.jar BCU_lib/gluegen-rt-2.4.0-natives-linux-amd64.jar BCU_lib/gluegen-rt-2.4.0-natives-linux-armv6hf.jar BCU_l
+ ib/gluegen-rt-2.4.0-natives-macosx-universal.jar BCU_lib/gluegen-rt-2.4.0-natives-windows-amd64.jar BCU_lib/gluegen-rt
+ -2.4.0.jar BCU_lib/gluegen-rt-main-2.4.0.jar BCU_lib/google-api-client-2.2.0.jar BCU_lib/google-api-services-drive-v3-
+ rev105-1.23.0.jar BCU_lib/google-http-client-1.24.1.jar BCU_lib/google-http-client-apache-v2-1.42.3.jar BCU_lib/google
+ -http-client-gson-1.42.3.jar BCU_lib/google-oauth-client-1.34.1.jar BCU_lib/google-oauth-client-java6-1.34.1.jar BCU_l
+ ib/google-oauth-client-jetty-1.34.1.jar BCU_lib/gson-2.8.9.jar BCU_lib/guava-31.1-jre.jar BCU_lib/httpclient-4.5.13.ja
+ r BCU_lib/httpcore-4.4.10.jar BCU_lib/httpmime-4.5.6.jar BCU_lib/j2objc-annotations-1.3.jar BCU_lib/jcodec-0.2.3.jar B
+ CU_lib/jcodec-javase-0.2.3.jar BCU_lib/jogl-all-2.4.0-natives-android-aarch64.jar BCU_lib/jogl-all-2.4.0-natives-linux
+ -aarch64.jar BCU_lib/jogl-all-2.4.0-natives-linux-amd64.jar BCU_lib/jogl-all-2.4.0-natives-linux-armv6hf.jar BCU_lib/j
+ ogl-all-2.4.0-natives-macosx-universal.jar BCU_lib/jogl-all-2.4.0-natives-windows-amd64.jar BCU_lib/jogl-all-2.4.0.jar
+  BCU_lib/jogl-all-main-2.4.0.jar BCU_lib/jorbis-0.0.17.4.jar BCU_lib/json-20230227.jar BCU_lib/jsr305-3.0.2.jar BCU_li
+ b/kotlin-stdlib-1.6.21.jar BCU_lib/kotlin-stdlib-common-1.6.21.jar BCU_lib/kotlin-stdlib-jdk7-1.6.21.jar BCU_lib/kotli
+ n-stdlib-jdk8-1.6.21.jar BCU_lib/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar BCU_lib/tritonus-share
+ -0.3.7.4.jar BCU_lib/vorbisspi-1.0.3.3.jar

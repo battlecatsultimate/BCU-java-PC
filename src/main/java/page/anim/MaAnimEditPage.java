@@ -233,7 +233,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		set(jspu, x, y, 0, 50, 300, 400);
 		set(jspt, x, y, 0, 450, 300, 300);
 		set(jspm, x, y, 0, 750, 300, 550);
-		set((Canvas) ab, x, y, 300, 50, 700, 500);
+		set((Component) ab, x, y, 300, 50, 700, 500);
 		set(jspp, x, y, 1000, 50, 300, 500);
 		set(sb, x, y, 1300, 50, 1000, 500);
 		set(addl, x, y, 2100, 550, 200, 50);
@@ -548,7 +548,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		add(jtl);
 		add(nex);
 		add(sb);
-		add((Canvas) ab);
+		add((Component) ab);
 		add(inft);
 		add(inff);
 		add(infv);

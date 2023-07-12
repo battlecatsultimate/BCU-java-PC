@@ -39,7 +39,14 @@ public abstract class Page extends JPanel implements RetFunc {
 	}
 
 	public static void set(Component jc, int winx, int winy, int x, int y, int w, int h) {
-		jc.setBounds(x * winx / 2300, y * winy / 1300, w * winx / 2300, h * winy / 1300);
+		Rectangle boundary = jc.getBounds();
+		Rectangle target = new Rectangle(x * winx / 2300, y * winy / 1300, w * winx / 2300, h * winy / 1300);
+
+		if (boundary != null && boundary.equals(target)) {
+			return;
+		}
+
+		jc.setBounds(target);
 	}
 
 	protected static int size(int x, int y, int a) {
