@@ -63,6 +63,22 @@ public abstract class EnemyFilterBox extends Page {
 
 	protected abstract int[] getSizer();
 
+	protected List<Enemy> filterName() {
+		int minDiff = 5;
+		List<Enemy> enemf = new ArrayList<>();
+		for (Enemy e : enem) {
+			String fname = MultiLangCont.getStatic().ENAME.getCont(e);
+			if (fname == null)
+				fname = e.names.toString();
+			int diff = UtilPC.damerauLevenshteinDistance(fname.toLowerCase(), name.toLowerCase());
+			minDiff = Math.min(minDiff, diff);
+			if (diff == minDiff)
+				enemf.add(e);
+		}
+		getFront().callBack(enemf);
+		return enemf;
+	}
+
 }
 
 class EFBButton extends EnemyFilterBox {
@@ -80,14 +96,14 @@ class EFBButton extends EnemyFilterBox {
 		super(p);
 
 		ini();
-		confirm();
+		confirm(0);
 	}
 
 	protected EFBButton(Page p, String pack, String... parents) {
 		super(p, pack, parents);
 
 		ini();
-		confirm();
+		confirm(0);
 	}
 
 	@Override
@@ -97,7 +113,7 @@ class EFBButton extends EnemyFilterBox {
 
 	@Override
 	public void callBack(Object o) {
-		confirm();
+		confirm((int) o);
 	}
 
 	@Override
@@ -113,9 +129,8 @@ class EFBButton extends EnemyFilterBox {
 
 	private final List<Trait> trlis = new ArrayList<>();
 
-	private void confirm() {
-		List<Enemy> ans = new ArrayList<>();
-		int minDiff = 5;
+	private List<Enemy> filterType() {
+		enem.clear();
 		for(PackData p : UserProfile.getAllPacks()) {
 			for (Enemy e : p.enemies.getList()) {
 				List<Trait> ct = e.de.getTraits();
@@ -163,40 +178,27 @@ class EFBButton extends EnemyFilterBox {
 							b3 &= isType(e.de, i);
 
 				boolean b4;
-				String fname = MultiLangCont.getStatic().ENAME.getCont(e);
-				if (fname == null)
-					fname = e.names.toString();
-				int diff = UtilPC.damerauLevenshteinDistance(fname.toLowerCase(), name.toLowerCase());
-				minDiff = Math.min(minDiff, diff);
-				b4 = diff == minDiff;
-
-				boolean b5;
 
 				if(pack == null)
-					b5 = true;
+					b4 = true;
 				else {
-					b5 = e.id.pack.equals(Identifier.DEF) || e.id.pack.equals(pack) || parents.contains(e.id.pack);
+					b4 = e.id.pack.equals(Identifier.DEF) || e.id.pack.equals(pack) || parents.contains(e.id.pack);
 				}
 
 				b0 = nonSele(rare) | b0;
 				b1 = nonSele(trait) | b1;
 				b2 = nonSele(abis) & nonSele(proc) | b2;
 				b3 = nonSele(atkt) | b3;
-				if (b0 & b1 & b2 & b3 & b4 && b5)
-					ans.add(e);
+				if (b0 & b1 & b2 & b3 & b4)
+					enem.add(e);
 			}
 		}
 
-		for (int i = 0; i < ans.size(); i++) {
-			String ename = MultiLangCont.getStatic().ENAME.getCont(ans.get(i));
-			if (ename == null)
-				ename = ans.get(i).names.toString();
-			if (UtilPC.damerauLevenshteinDistance(ename.toLowerCase(), name.toLowerCase()) > minDiff) {
-				ans.remove(i);
-				i--;
-			}
-		}
-		getFront().callBack(ans);
+		return filterName();
+	}
+
+	private void confirm(int type) {
+		getFront().callBack(type == 0 ? filterType() : type == 1 ? filterName() : null);
 	}
 
 	private void ini() {
@@ -245,7 +247,7 @@ class EFBButton extends EnemyFilterBox {
 
 	private void set(AbstractButton b) {
 		add(b);
-		b.addActionListener(arg0 -> confirm());
+		b.addActionListener(arg0 -> confirm(0));
 	}
 
 }
@@ -366,22 +368,6 @@ class EFBList extends EnemyFilterBox {
 		}
 
 		return filterName();
-	}
-
-	private List<Enemy> filterName() {
-		int minDiff = 5;
-		List<Enemy> enemf = new ArrayList<>();
-		for (Enemy e : enem) {
-			String fname = MultiLangCont.getStatic().ENAME.getCont(e);
-			if (fname == null)
-				fname = e.names.toString();
-			int diff = UtilPC.damerauLevenshteinDistance(fname.toLowerCase(), name.toLowerCase());
-			minDiff = Math.min(minDiff, diff);
-			if (diff == minDiff)
-				enemf.add(e);
-		}
-		getFront().callBack(enemf);
-		return enemf;
 	}
 
 	private void confirm(int type) {

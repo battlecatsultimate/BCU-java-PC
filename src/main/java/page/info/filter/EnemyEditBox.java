@@ -74,7 +74,7 @@ public class EnemyEditBox extends Page {
 		set(jab, x, y, 300, 0, 300, 500);
 	}
 
-	private void confirm() {
+	private void confirm() { // TODO: fix trait filter on button filter
 		int[] ans = new int[2];
 		for (int i = 0; i < EABIIND.length; i++)
 			if (abis.isSelectedIndex(i))
