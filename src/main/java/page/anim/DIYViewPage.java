@@ -188,7 +188,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 			set(remgroup, x, y, 0, 0, 0, 0);
 		}
 		SwingUtilities.invokeLater(() -> jlt.setUI(new TreeNodeExpander(jlt)));
-		ib.updateControllerDimension(((Component) vb).getWidth(), ((Component) vb).getHeight());
+		ib.updateControllerDimension(((Canvas) vb).getWidth(), ((Canvas) vb).getHeight());
 	}
 
 	@Override

@@ -1,18 +1,14 @@
 package jogl;
 
-import com.jogamp.newt.Window;
-import com.jogamp.newt.event.MouseEvent;
-import com.jogamp.newt.event.MouseListener;
-import com.jogamp.newt.event.awt.AWTMouseAdapter;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
-import com.jogamp.opengl.awt.GLJPanel;
+import com.jogamp.opengl.awt.GLCanvas;
 import jogl.util.ResManager;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public abstract class GLCstd extends GLJPanel implements GLEventListener {
+public abstract class GLCstd extends GLCanvas implements GLEventListener {
 
 	private static final long serialVersionUID = 1L;
 
@@ -41,53 +37,10 @@ public abstract class GLCstd extends GLJPanel implements GLEventListener {
 
 	@Override
 	public void init(GLAutoDrawable drawable) {
-		Object parent = drawable.getUpstreamWidget();
-
-		if (parent instanceof com.jogamp.newt.Window) {
-			((Window) parent).addMouseListener(new GLMouseEventListener());
-		} else if (parent instanceof Component) {
-			new AWTMouseAdapter(new GLMouseEventListener(), drawable).addTo((Component) parent);
-		}
 	}
 
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 	}
 
-	private static class GLMouseEventListener implements MouseListener {
-		@Override
-		public void mouseClicked(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-
-		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseMoved(MouseEvent e) {
-
-		}
-
-		@Override
-		public void mouseDragged(MouseEvent e) {
-		}
-
-		@Override
-		public void mouseWheelMoved(MouseEvent e) {
-		}
-	}
 }

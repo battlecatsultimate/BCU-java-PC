@@ -236,7 +236,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			set(ebase, x, y, 240, 0, 600, 50);
 			set(timer, x, y, 1500, 0, 200, 50);
 			set(ubase, x, y, 1740, 0, 200, 50);
-			set((Component) bb, x, y, 190, 50, 1920, 1200);
+			set((Canvas) bb, x, y, 190, 50, 1920, 1200);
 			set(ctp, x, y, 0, 0, 0, 0);
 			set(eep, x, y, 50, 100, 0, 0);
 			set(eesp, x, y, 50, 100, 0, 0);
@@ -253,7 +253,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			set(ctp, x, y, 50, 850, 1450, 400);
 			set(eep, x, y, 50, 100, 600, 700);
 			set(eesp, x, y, 50, 100, 600, 700);
-			set((Component) bb, x, y, 700, 300, 800, 500);
+			set((Canvas) bb, x, y, 700, 300, 800, 500);
 			set(row, x, y , 1300, 200, 200, 50);
 			set(paus, x, y, 700, 200, 200, 50);
 			set(rply, x, y, 900, 200, 200, 50);
@@ -426,10 +426,11 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	}
 
 	private void addListeners() {
+
 		jtb.setLnr(x -> {
-			remove((Component) bb);
+			remove((Canvas) bb);
 			resized();
-			add((Component) bb);
+			add((Canvas) bb);
 			DEF_LARGE = jtb.isSelected();
 		});
 
@@ -502,7 +503,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		add(eesp);
 		add(ctp);
 		add(utdsp);
-		add((Component) bb);
+		add((Canvas) bb);
 		add(paus);
 		add(next);
 		add(ebase);

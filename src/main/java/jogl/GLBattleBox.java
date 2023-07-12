@@ -1,9 +1,5 @@
 package jogl;
 
-import com.jogamp.newt.Window;
-import com.jogamp.newt.event.MouseEvent;
-import com.jogamp.newt.event.MouseListener;
-import com.jogamp.newt.event.awt.AWTMouseAdapter;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
@@ -14,9 +10,6 @@ import common.util.unit.Form;
 import jogl.util.GLGraphics;
 import page.battle.BBCtrl;
 import page.battle.BattleBox;
-
-import java.awt.*;
-import java.util.Arrays;
 
 public class GLBattleBox extends GLCstd implements BattleBox, GLEventListener {
 
@@ -66,4 +59,5 @@ public class GLBattleBox extends GLCstd implements BattleBox, GLEventListener {
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 		bbp.reset();
 	}
+
 }

@@ -186,7 +186,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		set(jsptr, x, y, 0, 550, 300, 750);
 		set(jspmm, x, y, 300, 550, 2000, 750);
 		set(jspu, x, y, 0, 50, 300, 500);
-		set((Component) mb, x, y, 300, 50, 700, 500);
+		set((Canvas) mb, x, y, 300, 50, 700, 500);
 		set(jspp, x, y, 1000, 50, 300, 500);
 		set(sb, x, y, 1300, 50, 950, 400);
 		set(sort, x, y, 1300, 500, 200, 50);
@@ -349,7 +349,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		add(jsptr);
 		add(sort);
 		add(sb);
-		add((Component) mb);
+		add((Canvas) mb);
 		jlt.setCellRenderer(new AnimTreeRenderer());
 		SwingUtilities.invokeLater(() -> jlt.setUI(new TreeNodeExpander(jlt)));
 		jtr.setExpandsSelectedPaths(true);

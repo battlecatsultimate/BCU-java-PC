@@ -155,8 +155,6 @@ class GLModelBox extends GLCstd implements ModelBox {
 	@Override
 	public void display(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
-		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-
 		int w = getWidth();
 		int h = getHeight();
 		GLGraphics g = new GLGraphics(drawable.getGL().getGL2(), w, h);
