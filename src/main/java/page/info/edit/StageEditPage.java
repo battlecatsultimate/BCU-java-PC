@@ -9,6 +9,7 @@ import common.util.stage.info.CustomStageInfo;
 import common.util.unit.AbEnemy;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
+import main.Opts;
 import page.JBTN;
 import page.JTF;
 import page.Page;
@@ -100,9 +101,8 @@ public class StageEditPage extends Page {
 
 	@Override
 	protected void mouseClicked(MouseEvent e) {
-		int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-		if (e.getSource() == jt && (e.getModifiers() & modifier) == 0)
-			jt.clicked(e.getPoint(), e.getButton());
+		if (e.getSource() == jt && !e.isShiftDown())
+			jt.clicked(e);
 	}
 
 	@Override
@@ -486,4 +486,11 @@ public class StageEditPage extends Page {
 		resized();
 	}
 
+	@Override
+	public void callBack(Object o) {
+		if (jt.findIndex == -1 || o == null || !Opts.conf("Are you sure you want to set the enemy to " + o + "?"))
+			jt.findIndex = -1;
+		else
+			jt.updateAbEnemy((Enemy) o);
+	}
 }

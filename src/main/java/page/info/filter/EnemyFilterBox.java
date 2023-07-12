@@ -44,6 +44,7 @@ public abstract class EnemyFilterBox extends Page {
 	protected String name = "";
 	protected final List<String> parents;
 	protected final String pack;
+	protected final List<Enemy> enem = new ArrayList<>();
 
 	protected EnemyFilterBox(Page p) {
 		super(p);
@@ -263,7 +264,6 @@ class EFBList extends EnemyFilterBox {
 	private final JScrollPane jt = new JScrollPane(trait);
 	private final JScrollPane jab = new JScrollPane(abis);
 	private final JScrollPane jat = new JScrollPane(atkt);
-	private final List<Enemy> enem = new ArrayList<>();
 
 	protected EFBList(Page p) {
 		super(p);
