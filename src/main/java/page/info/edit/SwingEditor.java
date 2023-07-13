@@ -253,7 +253,8 @@ public abstract class SwingEditor extends Editor {
 		public SwingEG(int ind, boolean edit, Runnable cb, Formatter.Context ctx) {
 			super(Data.Proc.getName(ind), edit, cb);
 			jlm = new JL(getItem(ctx));
-			jlm.setIcon(UtilPC.createIcon(1, ind));
+			ImageIcon icon = UtilPC.createIcon(1, ind);
+			jlm.setIcon(icon == null ? null : UtilPC.getScaledIcon(icon, 40, 40));
 		}
 
 		@Override
