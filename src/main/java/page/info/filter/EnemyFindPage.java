@@ -93,7 +93,8 @@ public class EnemyFindPage extends Page implements SupPage<AbEnemy> {
 
 	private void addListeners() {
 		back.addActionListener(arg0 -> {
-			getFront().callBack(elt.getSelectedRow() != -1 ? elt.list.get(elt.getSelectedRow()) : null);
+			int r = elt.getSelectedRow();
+			getFront().callBack(r >= 0 && r < elt.list.size() ? elt.list.get(r) : null);
 			changePanel(getFront());
 		});
 

@@ -63,6 +63,8 @@ public abstract class EnemyFilterBox extends Page {
 
 	protected abstract int[] getSizer();
 
+	protected abstract List<Enemy> filterType();
+
 	protected List<Enemy> filterName() {
 		int minDiff = 5;
 		List<Enemy> enemf = new ArrayList<>();
@@ -75,8 +77,15 @@ public abstract class EnemyFilterBox extends Page {
 			if (diff == minDiff)
 				enemf.add(e);
 		}
-		getFront().callBack(enemf);
 		return enemf;
+	}
+
+	/**
+	 0 - filter both type and name
+	 1 - only filter by name
+	 */
+	protected void confirm(int type) {
+		getFront().callBack(type == 0 ? filterType() : type == 1 ? filterName() : null);
 	}
 
 }
@@ -129,7 +138,8 @@ class EFBButton extends EnemyFilterBox {
 
 	private final List<Trait> trlis = new ArrayList<>();
 
-	private List<Enemy> filterType() {
+	@Override
+	protected List<Enemy> filterType() {
 		enem.clear();
 		for(PackData p : UserProfile.getAllPacks()) {
 			for (Enemy e : p.enemies.getList()) {
@@ -177,13 +187,7 @@ class EFBButton extends EnemyFilterBox {
 						else
 							b3 &= isType(e.de, i);
 
-				boolean b4;
-
-				if(pack == null)
-					b4 = true;
-				else {
-					b4 = e.id.pack.equals(Identifier.DEF) || e.id.pack.equals(pack) || parents.contains(e.id.pack);
-				}
+				boolean b4 = pack == null || e.id.pack.equals(Identifier.DEF) || e.id.pack.equals(pack) || parents.contains(e.id.pack);
 
 				b0 = nonSele(rare) | b0;
 				b1 = nonSele(trait) | b1;
@@ -195,10 +199,6 @@ class EFBButton extends EnemyFilterBox {
 		}
 
 		return filterName();
-	}
-
-	private void confirm(int type) {
-		getFront().callBack(type == 0 ? filterType() : type == 1 ? filterName() : null);
 	}
 
 	private void ini() {
@@ -309,7 +309,8 @@ class EFBList extends EnemyFilterBox {
 		set(jat, x, y, 0, 850, 200, 300);
 	}
 
-	private List<Enemy> filterType() {
+	@Override
+	protected List<Enemy> filterType() {
 		enem.clear();
 		for (PackData p : UserProfile.getAllPacks()) {
 			for (Enemy e : p.enemies.getList()) {
@@ -368,10 +369,6 @@ class EFBList extends EnemyFilterBox {
 		}
 
 		return filterName();
-	}
-
-	private void confirm(int type) {
-		getFront().callBack(type == 0 ? filterType() : type == 1 ? filterName() : null);
 	}
 
 	private void ini() {

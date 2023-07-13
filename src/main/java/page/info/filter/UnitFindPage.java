@@ -5,6 +5,8 @@ import common.util.unit.Unit;
 import page.*;
 
 import javax.swing.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
@@ -18,7 +20,6 @@ public class UnitFindPage extends Page implements SupPage<Unit> {
 	private final JScrollPane jsp = new JScrollPane(ult);
 	private final UnitFilterBox ufb;
 	private final JTF seatf = new JTF();
-	private final JBTN seabt = new JBTN(0, "search");
 
 	public UnitFindPage(Page p) {
 		super(p);
@@ -77,7 +78,6 @@ public class UnitFindPage extends Page implements SupPage<Unit> {
 		set(back, x, y, 0, 0, 200, 50);
 		set(show, x, y, 250, 0, 200, 50);
 		set(seatf, x, y, 550, 0, 1000, 50);
-		set(seabt, x, y, 1600, 0, 200, 50);
 		if (show.isSelected()) {
 			int[] siz = ufb.getSizer();
 			set(ufb, x, y, 50, 100, siz[0], siz[1]);
@@ -102,19 +102,10 @@ public class UnitFindPage extends Page implements SupPage<Unit> {
 				remove(ufb);
 		});
 
-		seabt.setLnr((b) -> {
-			if (ufb != null) {
-				ufb.name = seatf.getText();
-
-				ufb.callBack(null);
-			}
-		});
-
-		seatf.addActionListener(e -> {
-			if (ufb != null) {
-				ufb.name = seatf.getText();
-
-				ufb.callBack(null);
+		seatf.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				setSearch(seatf.getText());
 			}
 		});
 	}
@@ -125,9 +116,14 @@ public class UnitFindPage extends Page implements SupPage<Unit> {
 		add(ufb);
 		add(jsp);
 		add(seatf);
-		add(seabt);
 		show.setSelected(true);
 		addListeners();
 	}
 
+	public void setSearch(String t) {
+		if (ufb != null) {
+			ufb.name = t;
+			ufb.callBack(1);
+		}
+	}
 }
