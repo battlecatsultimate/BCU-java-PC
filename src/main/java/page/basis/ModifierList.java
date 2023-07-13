@@ -50,7 +50,7 @@ public class ModifierList extends JList<Object> {
             list.add("Lv. " + lu.t().deco[lvls[1] - 1] + " "
                     + MainLocale.getLoc(MainLocale.UTIL, "t" + (lvls[1] + 43)) + ": "
                     + Interpret.deco(lvls[1] - 1, lineup));
-        if (lvls[2] > 0 && lu.t().base[lvls[2] - 1] > 0) // lu.t().base[lvls[2] - 1]
+        if (lvls[2] > 0 && lu.t().base[lvls[2] - 1] > 0)
             list.add("Lv. " + lu.t().base[lvls[2] - 1] + " "
                     + MainLocale.getLoc(MainLocale.UTIL, "t" + (lvls[2] + 36)) + ": "
                     + Interpret.base(lvls[2] - 1, lineup));

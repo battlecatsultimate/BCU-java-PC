@@ -151,6 +151,9 @@ public class UtilPC {
 	}
 
 	public static ImageIcon getScaledIcon(ImageIcon i, int w, int h) {
+		if (i == null)
+			return null;
+
 		int pw = MainFrame.F.getRootPane().getWidth();
 		int ph = MainFrame.F.getRootPane().getHeight() - MenuBarHandler.getBar().getHeight();
 		Image img = i.getImage().getScaledInstance(pw * w / 2300, ph * h / 1300, Image.SCALE_SMOOTH);
