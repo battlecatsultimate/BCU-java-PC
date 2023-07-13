@@ -29,10 +29,6 @@ class ComboList extends JList<Combo> {
 		});
 	}
 
-	protected void setList(List<Combo> lf) {
-		setListData(lf.toArray(new Combo[0]));
-	}
-
 	public void setBasis(BasisSet b) {
 		lineup = b;
 	}

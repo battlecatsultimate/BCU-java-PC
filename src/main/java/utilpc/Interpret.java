@@ -119,6 +119,7 @@ public class Interpret extends Data {
 			Data.P_IMUVOLC, Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_DEATHSURGE};
 
 	private static final DecimalFormat df;
+	public static String[] lvl;
 
 	static {
 		redefine();
@@ -173,6 +174,16 @@ public class Interpret extends Data {
 
 	public static String comboInfo(Combo c, BasisSet b) {
 		return combo(c.type, CommonStatic.getBCAssets().values[c.type][c.lv], b);
+	}
+
+	public static String deco(int type, BasisSet b) { // 0 = slow
+		double mag = ((int) ((1.0 - b.t().getDecorationMagnification(type + 1, type)) * 1000)) / 10.0;
+		return MainLocale.getLoc(MainLocale.UTIL, "dec" + type) + " +" + mag + "%";
+	}
+
+	public static String base(int type, BasisSet b) {
+		double mag = ((int) ((1.0 - b.t().getBaseMagnification(type + 1, UserProfile.getBCData().traits.getList())) * 1000)) / 10.0;
+		return MainLocale.getLoc(MainLocale.UTIL, "bas" + type) + " +" + mag + "%";
 	}
 
 	public static class ProcDisplay {

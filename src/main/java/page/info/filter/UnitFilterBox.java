@@ -302,7 +302,8 @@ class UFBList extends UnitFilterBox {
 
 	@Override
 	public void callBack(Object o) {
-		confirm((int) o);
+		if (o != null)
+			confirm((int) o);
 	}
 
 	@Override

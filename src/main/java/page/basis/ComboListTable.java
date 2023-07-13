@@ -19,7 +19,6 @@ public class ComboListTable extends SortTable<Combo> {
 	private static final long serialVersionUID = 1L;
 
 	private static String[] tit;
-	private static String[] lvl;
 
 	static {
 		redefine();
@@ -30,7 +29,7 @@ public class ComboListTable extends SortTable<Combo> {
 		tit = new String[] { "ID", "Lv.", MainLocale.getLoc(MainLocale.INFO, "desc"),
 				MainLocale.getLoc(MainLocale.INFO, "occu"), str + " 1", str + " 2", str + " 3", str + " 4",
 				str + " 5" };
-		lvl = new String[] { "Sm", "M", "L", "XL" };
+		Interpret.lvl = new String[] { "Sm", "M", "L", "XL" };
 	}
 
 	private final LineUp lu;
@@ -71,8 +70,10 @@ public class ComboListTable extends SortTable<Combo> {
 				}
 				ImageIcon icon = UtilPC.getIcon(form.anim.getUni());
 				if (icon != null) {
-					Image img = icon.getImage().getScaledInstance(64, 50, java.awt.Image.SCALE_SMOOTH);
+					Image img = icon.getImage().getScaledInstance(60, 45, java.awt.Image.SCALE_SMOOTH);
 					jl.setIcon(new ImageIcon(img));
+					jl.setHorizontalAlignment(SwingConstants.CENTER);
+					jl.setVerticalAlignment(SwingConstants.CENTER);
 				} else {
 					jl.setIcon(null);
 				}
@@ -134,7 +135,7 @@ public class ComboListTable extends SortTable<Combo> {
 		if (c == 0)
 			return t.toString();
 		if (c == 1)
-			return lvl[t.lv];
+			return Interpret.lvl[t.lv];
 		if (c == 2)
 			return t;
 		if (c == 3)
