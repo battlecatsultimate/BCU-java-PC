@@ -1,11 +1,13 @@
 package page.info.edit;
 
+import common.CommonStatic;
 import common.battle.data.CustomUnit;
 import common.util.Data;
 import common.util.lang.Formatter;
 import common.util.lang.ProcLang;
 import main.MainBCU;
 import page.JL;
+import page.JTF;
 import page.JTG;
 import page.Page;
 import utilpc.Interpret;
@@ -39,7 +41,8 @@ public class PCoinEditTable2 extends Page {
     private static class NPList extends JList<TalentInfo> {
         private static final long serialVersionUID = 1L;
 
-        protected static int[] ints = IntStream.rangeClosed(1, 65).toArray(); // TODO: see if auto is possible
+        protected static int[] ints = IntStream.rangeClosed(1, 65)
+                .filter(v -> v != 29).toArray(); // TODO: see if auto is possible
 
         protected NPList(boolean edit) {
             if (MainBCU.nimbus)
@@ -74,6 +77,9 @@ public class PCoinEditTable2 extends Page {
                         case Data.PC_TRAIT:
                             jl.setIcon(UtilPC.createIcon(3, val[1]));
                             break;
+                        default:
+                            System.out.println("Unknown: " + val[1]);
+                            break;
                     }
                     return jl;
                 }
@@ -84,18 +90,23 @@ public class PCoinEditTable2 extends Page {
     private static final Formatter.Context ctx = new Formatter.Context(false, MainBCU.seconds, new double[]{1.0, 1.0});
     private final JTG soup = new JTG(0, "super");
     private final JL abil = new JL();
-    private final CustomUnit unit;
-    private int ind;
     private final NPList tlst;
     private final JScrollPane jspt;
     private final NPList nlst;
     private final JScrollPane jspn;
-    private SwingEditor.SwingEG editor;
+    private final JL max = new JL(0, "maxlv");
+    private final JTF maxt = new JTF();
+    private final JL[] modl = new JL[4];
+    private final JTF[] modt = new JTF[modl.length];
+    private final CustomUnit unit;
+    private final PCoinEditPage pcep;
+    private int ind;
     private final boolean editable;
     private boolean changing;
 
-    public PCoinEditTable2(Page p, CustomUnit cu, boolean edit) {
+    public PCoinEditTable2(PCoinEditPage p, CustomUnit cu, boolean edit) {
         super(p);
+        pcep = p;
         unit = cu;
         editable = edit;
         tlst = new NPList(editable);
@@ -111,6 +122,18 @@ public class PCoinEditTable2 extends Page {
         set(soup, x, y, 250, 0, 200, 50);
         set(jspn, x, y, 0, 50, 225, 600);
         set(jspt, x, y, 225, 50, 225, 600);
+        if (ind != -1) {
+            int siz = Data.PC_CORRES[unit.pcoin.info.get(ind)[0]][2];
+            if (siz == 0)
+                return;
+
+            set(max, x, y, 500, 50, 150, 50);
+            set(maxt, x, y, 650, 50, 200, 50);
+            for (int i = 0; i < siz; i++) {
+                set(modl[i], x, y, 500, 100 + 50 * i, 150, 50);
+                set(modt[i], x, y, 650, 100 + 50 * i, 200, 50);
+            }
+        }
     }
 
     private void ini() {
@@ -121,12 +144,22 @@ public class PCoinEditTable2 extends Page {
         nlst.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tlst.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
+        for (int i = 0; i < modl.length; i++) {
+            modl[i] = new JL();
+            modt[i] = new JTF();
+        }
+
         addListeners();
         setData(-1);
     }
 
     private void addListeners() {
         soup.addActionListener(x -> unit.pcoin.info.get(ind)[13] = soup.isSelected() ? 1 : 0);
+        maxt.addActionListener(x -> {
+            int m = CommonStatic.parseIntN(maxt.getText());
+            unit.pcoin.info.get(ind)[1] = unit.pcoin.max[ind] = Math.max(m, 1);
+            reset(); // TODO: necessary?
+        });
     }
 
     protected void setTalentList() {
@@ -149,6 +182,7 @@ public class PCoinEditTable2 extends Page {
             else if (type[0] == Data.PC_TRAIT)
                 traits.add(dat);
         }
+        talents.addAll(traits);
         nlst.setListData(talents);
         tlst.setListData(traits);
     }
@@ -169,14 +203,44 @@ public class PCoinEditTable2 extends Page {
             nlst.setEnabled(false);
             tlst.setEnabled(false);
             soup.setEnabled(false);
+            remove(max);
+            remove(maxt);
+            for (int i = 0; i < modl.length; i++) {
+                remove(modl[i]);
+                remove(modt[i]);
+            }
         } else {
             int[] data = unit.pcoin.info.get(ind);
             int[] type = Data.PC_CORRES[data[0]];
             setLabel(type);
-            nlst.setEnabled(true);
-            tlst.setEnabled(true);
-            soup.setEnabled(true);
+            nlst.setEnabled(editable);
+            tlst.setEnabled(editable);
+            soup.setEnabled(editable);
+            maxt.setEnabled(editable);
             soup.setSelected(data[13] == 1);
+
+            if (type[2] > 0) {
+                add(max);
+                add(maxt);
+                maxt.setText(String.valueOf(data[1]));
+                for (int i = 0; i < modl.length; i++) {
+                    if (i >= type[2]) {
+                        remove(modl[i]);
+                        remove(modt[i]);
+                    } else {
+                        add(modl[i]);
+                        add(modt[i]);
+                        modt[i].setEnabled(editable);
+                    }
+                }
+            } else {
+                remove(max);
+                remove(maxt);
+                for (int i = 0; i < modl.length; i++) {
+                    remove(modl[i]);
+                    remove(modt[i]);
+                }
+            }
         }
         setTalentList();
     }

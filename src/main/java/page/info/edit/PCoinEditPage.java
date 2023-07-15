@@ -3,6 +3,7 @@ package page.info.edit;
 
 import common.battle.data.CustomUnit;
 import common.battle.data.PCoin;
+import common.util.Data;
 import common.util.pack.Background;
 import common.util.stage.Music;
 import common.util.unit.Form;
@@ -52,7 +53,7 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
         set(jspc, x, y, 50, 300, 300, 500);
         set(add, x, y, 50, 800, 150, 50);
         set(rem, x, y, 200, 800, 150, 50);
-        set(pcet, x, y, 400, 150, 600, 1200);
+        set(pcet, x, y, 400, 150, 900, 1200);
         set(info, x, y, 850, 850, 200, 50);
     }
 
@@ -72,12 +73,12 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
                 for (int info : unit.pcoin.info.stream().sorted((a, b) -> b[0] - a[0]).mapToInt(a -> a[0]).toArray())
                     if (info == base[0])
                         base[0]++;
+            base[1] = Data.PC_CORRES[base[0]][2] > 0 ? 10 : 1;
             unit.pcoin.info.add(base);
-            unit.pcoin.max = new int[++size];
-            for (int i = 0; i < size; i++)
+            unit.pcoin.max = new int[size + 1];
+            for (int i = 0; i < size + 1; i++)
                 unit.pcoin.max[i] = unit.pcoin.info.get(i)[1];
-            unit.pcoin.max[size - 1] = 10;
-            setCoins(size - 1);
+            setCoins(size);
             changing = false;
         });
 
@@ -89,11 +90,14 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
                 return;
             changing = true;
             unit.pcoin.info.remove(coin.getSelectedIndex());
-            unit.pcoin.max = new int[unit.pcoin.info.size()];
-            for (int i = 0; i < unit.pcoin.info.size(); i++)
-                unit.pcoin.max[i] = unit.pcoin.info.get(i)[1];
             if (unit.pcoin.info.size() == 0)
                 unit.pcoin = null;
+            else {
+                unit.pcoin.max = new int[unit.pcoin.info.size()];
+                for (int i = 0; i < unit.pcoin.info.size(); i++)
+                    unit.pcoin.max[i] = unit.pcoin.info.get(i)[1];
+            }
+
             setCoins(coin.getSelectedIndex());
             changing = false;
         });
