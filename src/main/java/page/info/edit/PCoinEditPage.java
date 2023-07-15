@@ -3,16 +3,18 @@ package page.info.edit;
 
 import common.battle.data.CustomUnit;
 import common.battle.data.PCoin;
+import common.util.pack.Background;
+import common.util.stage.Music;
 import common.util.unit.Form;
 import page.JBTN;
 import page.Page;
-import page.info.UnitInfoTable;
+import page.SupPage;
 import utilpc.UtilPC;
 
 import javax.swing.*;
 import java.util.Vector;
 
-public class PCoinEditPage extends Page {
+public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier {
 
     private static final long serialVersionUID = 1L;
 
@@ -24,7 +26,7 @@ public class PCoinEditPage extends Page {
     private final boolean editable;
     private final CustomUnit unit;
     private final PCoinEditTable2 pcet;
-    private final UnitInfoTable info;
+    private final JBTN info = new JBTN(0, "so i've got this new anime plot");
     boolean changing = false;
 
     public PCoinEditPage(Page p, Form u, boolean edi) {
@@ -32,7 +34,6 @@ public class PCoinEditPage extends Page {
         unit = (CustomUnit) u.du;
         editable = edi;
         pcet = new PCoinEditTable2(this, unit, editable);
-        info = new UnitInfoTable(this, u, false);
 
         ini();
         resized();
@@ -51,7 +52,7 @@ public class PCoinEditPage extends Page {
         set(add, x, y, 50, 800, 150, 50);
         set(rem, x, y, 200, 800, 150, 50);
         set(pcet, x, y, 400, 150, 600, 1200);
-        set(info, x, y, 850, 850 - info.getH(), 1600, info.getH());
+        set(info, x, y, 850, 850, 200, 50);
     }
 
     private void addListeners() {
@@ -147,5 +148,20 @@ public class PCoinEditPage extends Page {
         add.setEnabled(editable && (unit.pcoin == null || unit.pcoin.info.size() < 6));
         rem.setEnabled(editable && coin.getSelectedIndex() != -1);
         pcet.setData(coin.getSelectedIndex());
+    }
+
+    @Override
+    public SupPage<Background> getBGSup(SwingEditor.IdEditor<Background> edi) {
+        return null;
+    }
+
+    @Override
+    public SupPage<Music> getMusicSup(SwingEditor.IdEditor<Music> edi) {
+        return null;
+    }
+
+    @Override
+    public SupPage<?> getEntitySup(SwingEditor.IdEditor<?> edi) {
+        return null;
     }
 }

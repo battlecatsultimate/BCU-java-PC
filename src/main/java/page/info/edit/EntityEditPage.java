@@ -16,10 +16,10 @@ import common.util.anim.AnimU.UType;
 import common.util.lang.Editors;
 import common.util.pack.Background;
 import common.util.pack.Soul;
+import common.util.stage.Music;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
-import common.util.stage.Music;
 import main.Opts;
 import page.*;
 import page.anim.DIYViewPage;
@@ -40,7 +40,7 @@ import java.util.*;
 
 import static common.util.Data.*;
 
-public abstract class EntityEditPage extends Page {
+public abstract class EntityEditPage extends Page implements SwingEditor.EditCtrl.Supplier {
 
 	private static final long serialVersionUID = 1L;
 
