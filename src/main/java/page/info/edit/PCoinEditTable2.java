@@ -2,11 +2,11 @@ package page.info.edit;
 
 import common.battle.data.CustomUnit;
 import common.util.Data;
+import common.util.lang.Formatter;
 import common.util.lang.ProcLang;
 import main.MainBCU;
 import page.JL;
 import page.Page;
-import page.info.filter.TraitList;
 import utilpc.Interpret;
 import utilpc.Theme;
 import utilpc.UtilPC;
@@ -38,7 +38,7 @@ public class PCoinEditTable2 extends Page {
     private static class NPList extends JList<TalentInfo> {
         private static final long serialVersionUID = 1L;
 
-        protected static int[] ints = IntStream.rangeClosed(1, 60).toArray();
+        protected static int[] ints = IntStream.rangeClosed(1, 65).toArray(); // TODO: see if auto is possible
 
         protected NPList(boolean edit) {
             if (MainBCU.nimbus)
@@ -70,6 +70,9 @@ public class PCoinEditTable2 extends Page {
                         case Data.PC_BASE:
                             jl.setIcon(UtilPC.createIcon(4, val[1]));
                             break;
+                        case Data.PC_TRAIT:
+                            jl.setIcon(UtilPC.createIcon(3, val[1]));
+                            break;
                     }
                     return jl;
                 }
@@ -77,13 +80,15 @@ public class PCoinEditTable2 extends Page {
         }
     }
 
+    private static final Formatter.Context ctx = new Formatter.Context(false, MainBCU.seconds, new double[]{1.0, 1.0});
     private final JL abil = new JL();
     private final CustomUnit unit;
     private int ind;
-    private final TraitList tlst;
+    private final NPList tlst;
     private final JScrollPane jspt;
     private final NPList nlst;
     private final JScrollPane jspn;
+    private SwingEditor.SwingEG editor;
     private final boolean editable;
     private boolean changing;
 
@@ -91,7 +96,7 @@ public class PCoinEditTable2 extends Page {
         super(p);
         unit = cu;
         editable = edit;
-        tlst = new TraitList(editable);
+        tlst = new NPList(editable);
         jspt = new JScrollPane(tlst);
         nlst = new NPList(editable);
         jspn = new JScrollPane(nlst);
@@ -109,9 +114,8 @@ public class PCoinEditTable2 extends Page {
         add(abil);
         add(jspt);
         add(jspn);
-//        abil.setLayout(new BoxLayout(abil, BoxLayout.X_AXIS));
-        abil.setHorizontalAlignment(SwingConstants.LEFT);
-        abil.setHorizontalTextPosition(SwingConstants.RIGHT);
+        nlst.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tlst.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         setData(-1);
     }
@@ -137,6 +141,7 @@ public class PCoinEditTable2 extends Page {
                 traits.add(dat);
         }
         nlst.setListData(talents);
+        tlst.setListData(traits);
     }
 
     protected void setData(int i) {
@@ -152,9 +157,13 @@ public class PCoinEditTable2 extends Page {
         if (ind == -1) {
             abil.setIcon(null);
             abil.setText("none");
+            nlst.setEnabled(false);
+            tlst.setEnabled(false);
         } else {
             int[] type = Data.PC_CORRES[unit.pcoin.info.get(ind)[0]];
             setLabel(type);
+            nlst.setEnabled(true);
+            tlst.setEnabled(true);
         }
         setTalentList();
     }
