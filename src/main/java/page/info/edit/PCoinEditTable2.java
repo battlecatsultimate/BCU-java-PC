@@ -2,9 +2,11 @@ package page.info.edit;
 
 import common.CommonStatic;
 import common.battle.data.CustomUnit;
+import common.pack.UserProfile;
 import common.util.Data;
 import common.util.lang.Formatter;
 import common.util.lang.ProcLang;
+import common.util.unit.Trait;
 import main.MainBCU;
 import page.JL;
 import page.JTF;
@@ -88,6 +90,7 @@ public class PCoinEditTable2 extends Page {
     }
 
     private static final Formatter.Context ctx = new Formatter.Context(false, MainBCU.seconds, new double[]{1.0, 1.0});
+    protected static final int[] BASE_TALENT = new int[]{ 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8, 1, 0 };
     private final JTG soup = new JTG(0, "super");
     private final JL abil = new JL();
     private final NPList tlst;
@@ -197,9 +200,37 @@ public class PCoinEditTable2 extends Page {
             });
             changing = false;
         }
+        nlst.addListSelectionListener(x -> {
+            if (nlst.getSelectedIndex() == -1 || changing)
+                return;
+            changing = true;
+            TalentInfo ti = nlst.getSelectedValue();
+            int[] base = BASE_TALENT.clone();
+            base[0] = ti.getValue();
+            base[1] = unit.pcoin.max[ind] = Data.PC_CORRES[base[0]][2] > 0 ? 10 : 1;
+            unit.pcoin.info.set(ind, base);
+            reset();
+            changing = false;
+        });
+
+        tlst.addListSelectionListener(x -> {
+            if (tlst.getSelectedIndex() == -1 || changing)
+                return;
+            changing = true;
+            unit.pcoin.trait.clear();
+            int[] selected = tlst.getSelectedIndices();
+            for (int i : selected) {
+                Trait t = UserProfile.getBCData().traits.get(Data.PC_CORRES[tlst.getModel().getElementAt(i).getValue()][1]);
+                unit.pcoin.trait.add(t);
+            }
+            reset();
+            changing = false;
+        });
     }
 
     protected void setTalentList() {
+        int nlstIndex = nlst.getSelectedIndex();
+        int[] tlstSelected = tlst.getSelectedIndices();
         Vector<TalentInfo> traits = new Vector<>();
         Vector<TalentInfo> talents = new Vector<>();
         for (int i : NPList.ints) {
@@ -221,7 +252,9 @@ public class PCoinEditTable2 extends Page {
         }
         talents.addAll(traits);
         nlst.setListData(talents);
+        nlst.setSelectedIndex(nlstIndex);
         tlst.setListData(traits);
+        tlst.setSelectedIndices(tlstSelected);
     }
 
     protected void setData(int i) {

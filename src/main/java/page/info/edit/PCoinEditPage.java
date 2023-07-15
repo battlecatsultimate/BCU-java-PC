@@ -19,7 +19,7 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
 
     private static final long serialVersionUID = 1L;
 
-    private static final int[] BASE_TALENT = new int[]{ 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8, 1, 0 }; // indexes 10-12 aren't needed
+     // indexes 10-12 aren't needed
     private final JBTN back = new JBTN(0, "back");
     private final JBTN add = new JBTN(0, "add");
     private final JBTN rem = new JBTN(0, "rem");
@@ -68,7 +68,7 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
                 unit.pcoin = new PCoin(unit);
 
             int size = unit.pcoin.info.size(); // 5
-            int[] base = BASE_TALENT.clone();
+            int[] base = PCoinEditTable2.BASE_TALENT.clone();
             for (int i = 0; i < unit.pcoin.info.size(); i++)
                 for (int info : unit.pcoin.info.stream().sorted((a, b) -> b[0] - a[0]).mapToInt(a -> a[0]).toArray())
                     if (info == base[0])
