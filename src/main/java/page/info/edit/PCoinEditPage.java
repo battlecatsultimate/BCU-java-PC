@@ -18,6 +18,7 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
 
     private static final long serialVersionUID = 1L;
 
+    private static final int[] BASE_TALENT = new int[]{ 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8, 1, 0 }; // indexes 10-12 aren't needed
     private final JBTN back = new JBTN(0, "back");
     private final JBTN add = new JBTN(0, "add");
     private final JBTN rem = new JBTN(0, "rem");
@@ -65,20 +66,18 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
             if (unit.pcoin == null)
                 unit.pcoin = new PCoin(unit);
 
-            int slot = unit.pcoin.info.size();
-            unit.pcoin.info.add(new int[]{ slot + 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, slot + 1, 8, 1, -1 });
-            unit.pcoin.max = new int[slot + 1];
-            for(int i = 0; i < slot; i++)
+            int size = unit.pcoin.info.size(); // 5
+            int[] base = BASE_TALENT.clone();
+            for (int i = 0; i < unit.pcoin.info.size(); i++)
+                for (int info : unit.pcoin.info.stream().sorted((a, b) -> b[0] - a[0]).mapToInt(a -> a[0]).toArray())
+                    if (info == base[0])
+                        base[0]++;
+            unit.pcoin.info.add(base);
+            unit.pcoin.max = new int[++size];
+            for (int i = 0; i < size; i++)
                 unit.pcoin.max[i] = unit.pcoin.info.get(i)[1];
-            unit.pcoin.max[slot] = 10;
+            unit.pcoin.max[size - 1] = 10;
 
-//            for (int i = 0; i < slot; i++)
-//                if (unit.pcoin.info.get(i)[0] == slot + 1) {
-//                    PCoinEditTable pc = pCoinEdits.get(i);
-//
-//                    pc.setData();
-//                    pc.randomize();
-//                }
             setCoinTypes();
             changing = false;
         });
