@@ -130,14 +130,14 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
             PCoin p = unit.pcoin;
             p.update();
             for (int i = 0; i < p.max.length; i++)
-                talents.add("talent " + i + ": " + UtilPC.getPCoinAbilityText(p, i));
+                talents.add("talent " + (i + 1) + ": " + UtilPC.getPCoinAbilityText(p, i));
             coin.setListData(talents);
             coin.setSelectedIndex(Math.min(ind, talents.size() - 1));
         } else {
             coin.setListData(new String[0]);
         }
 
-        add.setEnabled(editable && (unit.pcoin == null || unit.pcoin.info.size() < 6));
+        add.setEnabled(editable && (unit.pcoin == null || unit.pcoin.max.length < 8));
         rem.setEnabled(editable && coin.getSelectedIndex() != -1);
         pcet.setData(coin.getSelectedIndex());
     }

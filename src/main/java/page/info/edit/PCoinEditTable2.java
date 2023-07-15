@@ -154,12 +154,49 @@ public class PCoinEditTable2 extends Page {
     }
 
     private void addListeners() {
-        soup.addActionListener(x -> unit.pcoin.info.get(ind)[13] = soup.isSelected() ? 1 : 0);
+        soup.addActionListener(x -> {
+            if (!changing)
+                unit.pcoin.info.get(ind)[13] = soup.isSelected() ? 1 : 0;
+        });
         maxt.addActionListener(x -> {
+            if (changing)
+                return;
+            changing = true;
             int m = CommonStatic.parseIntN(maxt.getText());
             unit.pcoin.info.get(ind)[1] = unit.pcoin.max[ind] = Math.max(m, 1);
             reset(); // TODO: necessary?
+            changing = false;
         });
+        for (int i = 0; i < modt.length; i++) {
+            JTF mod = modt[i];
+            if (changing)
+                return;
+            changing = true;
+            int finalI = i;
+            mod.addActionListener(x -> {
+                if (ind == -1)
+                    return;
+                changing = true;
+                int a, b;
+                int[] mods = CommonStatic.parseIntsN(mod.getText());
+                if (mods.length == 1) {
+                    a = b = mods[0];
+                } else if (mods.length == 2) {
+                    a = Math.min(mods[0], mods[1]);
+                    b = Math.max(mods[0], mods[1]);
+                } else {
+                    reset();
+                    changing = false;
+                    return;
+                }
+                int[] data = unit.pcoin.info.get(ind);
+                data[2 + finalI * 2] = a;
+                data[3 + finalI * 2] = b;
+                reset();
+                changing = false;
+            });
+            changing = false;
+        }
     }
 
     protected void setTalentList() {
@@ -227,9 +264,10 @@ public class PCoinEditTable2 extends Page {
                     if (i >= type[2]) {
                         remove(modl[i]);
                         remove(modt[i]);
-                    } else {
+                    } else { // 1 modif, i is 0
                         add(modl[i]);
                         add(modt[i]);
+                        modt[i].setText(twoInts(data[2 + i * 2], data[3 + i * 2]));
                         modt[i].setEnabled(editable);
                     }
                 }
@@ -273,5 +311,9 @@ public class PCoinEditTable2 extends Page {
     @Override
     protected JButton getBackButton() {
         return null;
+    }
+
+    public static String twoInts(int a, int b) {
+        return a + " -> " + b;
     }
 }
