@@ -6,6 +6,7 @@ import common.util.lang.Formatter;
 import common.util.lang.ProcLang;
 import main.MainBCU;
 import page.JL;
+import page.JTG;
 import page.Page;
 import utilpc.Interpret;
 import utilpc.Theme;
@@ -81,6 +82,7 @@ public class PCoinEditTable2 extends Page {
     }
 
     private static final Formatter.Context ctx = new Formatter.Context(false, MainBCU.seconds, new double[]{1.0, 1.0});
+    private final JTG soup = new JTG(0, "super");
     private final JL abil = new JL();
     private final CustomUnit unit;
     private int ind;
@@ -105,19 +107,26 @@ public class PCoinEditTable2 extends Page {
     }
     @Override
     protected void resized(int x, int y) {
-        set(abil, x, y, 0, 0, 450, 50);
+        set(abil, x, y, 0, 0, 250, 50);
+        set(soup, x, y, 250, 0, 200, 50);
         set(jspn, x, y, 0, 50, 225, 600);
         set(jspt, x, y, 225, 50, 225, 600);
     }
 
     private void ini() {
         add(abil);
+        add(soup);
         add(jspt);
         add(jspn);
         nlst.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tlst.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
+        addListeners();
         setData(-1);
+    }
+
+    private void addListeners() {
+        soup.addActionListener(x -> unit.pcoin.info.get(ind)[13] = soup.isSelected() ? 1 : 0);
     }
 
     protected void setTalentList() {
@@ -159,11 +168,15 @@ public class PCoinEditTable2 extends Page {
             abil.setText("none");
             nlst.setEnabled(false);
             tlst.setEnabled(false);
+            soup.setEnabled(false);
         } else {
-            int[] type = Data.PC_CORRES[unit.pcoin.info.get(ind)[0]];
+            int[] data = unit.pcoin.info.get(ind);
+            int[] type = Data.PC_CORRES[data[0]];
             setLabel(type);
             nlst.setEnabled(true);
             tlst.setEnabled(true);
+            soup.setEnabled(true);
+            soup.setSelected(data[13] == 1);
         }
         setTalentList();
     }
