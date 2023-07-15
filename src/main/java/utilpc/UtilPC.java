@@ -170,21 +170,16 @@ public class UtilPC {
 			}
 
 			StringBuilder lab = new StringBuilder();
-
-			if(pc.trait.size() > 0) {
-				lab.append("[").append(Interpret.getTrait(TraitsHolder, 0)).append("]").append(" ");
-			}
-
 			StringBuilder str = new StringBuilder("Lv." + lv.getLv() + " + " + lv.getPlusLv() + ", {");
 
 			for (int i = 0; i < pc.info.size(); i++) {
 				str.append(lv.getTalents()[i]);
-
-				if(pc.info.get(i)[13] == 1) {
+				if (pc.info.get(i)[13] == 1)
 					str.append("*");
-				}
 
 				lab.append(getPCoinAbilityText(pc, i));
+				if (pc.info.get(i)[12] > 0)
+					lab.append(" [").append(Interpret.getTrait(TraitsHolder, 0)).append("]").append(" ");
 
 				if(i < pc.info.size() - 1) {
 					str.append(", ");
