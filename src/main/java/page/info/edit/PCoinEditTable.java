@@ -7,7 +7,10 @@ import common.util.Data;
 import common.util.lang.ProcLang;
 import main.MainBCU;
 import org.jcodec.common.tools.MathUtil;
-import page.*;
+import page.JBTN;
+import page.JL;
+import page.JTF;
+import page.Page;
 import utilpc.Interpret;
 import utilpc.Theme;
 import utilpc.UtilPC;
@@ -142,7 +145,6 @@ class PCoinEditTable extends Page {
                 unit.pcoin.max[i] = unit.pcoin.info.get(i)[1];
             }
 
-            pcedit.removed();
             changing = false;
         });
 
@@ -174,7 +176,6 @@ class PCoinEditTable extends Page {
                     unit.pcoin.info.get(talent)[9] = Math.max(1, unit.pcoin.info.get(talent)[9] / Data.VOLC_ITV) * Data.VOLC_ITV;
                 }
             }
-            pcedit.setCoinTypes();
             changing = false;
         });
 

@@ -77,8 +77,7 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
             for (int i = 0; i < size; i++)
                 unit.pcoin.max[i] = unit.pcoin.info.get(i)[1];
             unit.pcoin.max[size - 1] = 10;
-
-            setCoinTypes();
+            setCoins(size - 1);
             changing = false;
         });
 
@@ -95,7 +94,7 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
                 unit.pcoin.max[i] = unit.pcoin.info.get(i)[1];
             if (unit.pcoin.info.size() == 0)
                 unit.pcoin = null;
-            setCoinTypes();
+            setCoins(coin.getSelectedIndex());
             changing = false;
         });
 
@@ -110,15 +109,6 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
         });
     }
 
-    protected void setCoinTypes() {
-        setCoins();
-    }
-
-    //Changes the other talent indexes once a talent is removed from the list
-    protected void removed() {
-
-    }
-
     private void ini() {
         add(back);
         add(add);
@@ -127,11 +117,10 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
         add(pcet);
         coin.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         addListeners();
-        setCoins();
+        setCoins(-1);
     }
 
-    private void setCoins() {
-        int ind = coin.getSelectedIndex();
+    protected void setCoins(int ind) {
         if (unit.pcoin != null) {
             Vector<String> talents = new Vector<>();
             PCoin p = unit.pcoin;
