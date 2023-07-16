@@ -2,16 +2,11 @@ package page.info.edit;
 
 import common.CommonStatic;
 import common.battle.data.CustomUnit;
-import common.pack.UserProfile;
 import common.util.Data;
-import common.util.lang.Formatter;
 import common.util.lang.ProcLang;
-import common.util.unit.Trait;
 import main.MainBCU;
-import page.JL;
-import page.JTF;
-import page.JTG;
-import page.Page;
+import page.*;
+import page.info.filter.TraitList;
 import utilpc.Interpret;
 import utilpc.Theme;
 import utilpc.UtilPC;
@@ -89,11 +84,10 @@ public class PCoinEditTable2 extends Page {
         }
     }
 
-    private static final Formatter.Context ctx = new Formatter.Context(false, MainBCU.seconds, new double[]{1.0, 1.0});
-    protected static final int[] BASE_TALENT = new int[]{ 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8, 1, 0 };
+    protected static final int[] BASE_TALENT = new int[]{ 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8, -1, 0 }; // TODO: on increase, set 12th index to -1
     private final JTG soup = new JTG(0, "super");
     private final JL abil = new JL();
-    private final NPList tlst;
+    private final TraitList tlst;
     private final JScrollPane jspt;
     private final NPList nlst;
     private final JScrollPane jspn;
@@ -112,7 +106,7 @@ public class PCoinEditTable2 extends Page {
         pcep = p;
         unit = cu;
         editable = edit;
-        tlst = new NPList(editable);
+        tlst = new TraitList(false);
         jspt = new JScrollPane(tlst);
         nlst = new NPList(editable);
         jspn = new JScrollPane(nlst);
@@ -167,7 +161,7 @@ public class PCoinEditTable2 extends Page {
             changing = true;
             int m = CommonStatic.parseIntN(maxt.getText());
             unit.pcoin.info.get(ind)[1] = unit.pcoin.max[ind] = Math.max(m, 1);
-            reset(); // TODO: necessary?
+            reset(false);
             changing = false;
         });
         for (int i = 0; i < modt.length; i++) {
@@ -188,14 +182,14 @@ public class PCoinEditTable2 extends Page {
                     a = Math.min(mods[0], mods[1]);
                     b = Math.max(mods[0], mods[1]);
                 } else {
-                    reset();
+                    reset(false);
                     changing = false;
                     return;
                 }
                 int[] data = unit.pcoin.info.get(ind);
                 data[2 + finalI * 2] = a;
                 data[3 + finalI * 2] = b;
-                reset();
+                reset(false);
                 changing = false;
             });
             changing = false;
@@ -209,7 +203,7 @@ public class PCoinEditTable2 extends Page {
             base[0] = ti.getValue();
             base[1] = unit.pcoin.max[ind] = Data.PC_CORRES[base[0]][2] > 0 ? 10 : 1;
             unit.pcoin.info.set(ind, base);
-            reset();
+            reset(true);
             changing = false;
         });
 
@@ -219,18 +213,14 @@ public class PCoinEditTable2 extends Page {
             changing = true;
             unit.pcoin.trait.clear();
             int[] selected = tlst.getSelectedIndices();
-            for (int i : selected) {
-                Trait t = UserProfile.getBCData().traits.get(Data.PC_CORRES[tlst.getModel().getElementAt(i).getValue()][1]);
-                unit.pcoin.trait.add(t);
-            }
-            reset();
+            for (int i : selected)
+                unit.pcoin.trait.add(tlst.getModel().getElementAt(i));
+            resetList();
             changing = false;
         });
     }
 
-    protected void setTalentList() {
-        int nlstIndex = nlst.getSelectedIndex();
-        int[] tlstSelected = tlst.getSelectedIndices();
+    protected void resetList() {
         Vector<TalentInfo> traits = new Vector<>();
         Vector<TalentInfo> talents = new Vector<>();
         for (int i : NPList.ints) {
@@ -252,9 +242,15 @@ public class PCoinEditTable2 extends Page {
         }
         talents.addAll(traits);
         nlst.setListData(talents);
-        nlst.setSelectedIndex(nlstIndex);
-        tlst.setListData(traits);
-        tlst.setSelectedIndices(tlstSelected);
+
+        if (unit.pcoin != null && ind != -1) {
+            for (TalentInfo ti : talents) {
+                if (ti.getValue() == unit.pcoin.info.get(ind)[0]) {
+                    nlst.setSelectedValue(ti, true);
+                    break;
+                }
+            }
+        }
     }
 
     protected void setData(int i) {
@@ -262,11 +258,16 @@ public class PCoinEditTable2 extends Page {
             return;
         changing = true;
         ind = i;
-        reset();
+        reset(true);
         changing = false;
     }
 
-    protected void reset() {
+    protected void reset(boolean full) {
+        if (full) {
+            pcep.resetList(ind);
+            resetList();
+        }
+
         if (ind == -1) {
             abil.setIcon(null);
             abil.setText("none");
@@ -294,14 +295,17 @@ public class PCoinEditTable2 extends Page {
                 add(maxt);
                 maxt.setText(String.valueOf(data[1]));
                 for (int i = 0; i < modl.length; i++) {
+                    JL label = modl[i];
+                    JTF text = modt[i];
                     if (i >= type[2]) {
-                        remove(modl[i]);
-                        remove(modt[i]);
+                        remove(label);
+                        remove(text);
                     } else { // 1 modif, i is 0
-                        add(modl[i]);
-                        add(modt[i]);
-                        modt[i].setText(twoInts(data[2 + i * 2], data[3 + i * 2]));
-                        modt[i].setEnabled(editable);
+                        add(label);
+                        add(text);
+                        label.setText(MainLocale.UTIL, "mod" + data[0] + "_" + i);
+                        text.setText(twoInts(data[2 + i * 2], data[3 + i * 2]));
+                        text.setEnabled(editable);
                     }
                 }
             } else {
@@ -313,7 +317,6 @@ public class PCoinEditTable2 extends Page {
                 }
             }
         }
-        setTalentList();
     }
 
     protected void setLabel(int[] type) {
@@ -333,9 +336,11 @@ public class PCoinEditTable2 extends Page {
                 }
             }
         } else if (type[0] == Data.PC_BASE) {
-            text = "TBA";
-//            text = nlst.getSelectedValue().toString() + (pdata[1] <= Data.PC2_SPEED || pdata[1] == Data.PC2_HB ? "+ " : "") + (pdata[1] <= Data.PC2_ATK ? "%" : "");
-//            pCoin.setIcon(UtilPC.createIcon(4, pdata[1]));
+            text = nlst.getSelectedValue().toString();
+            icon = UtilPC.createIcon(4, type[1]);
+        } else if (type[0] == Data.PC_TRAIT) {
+            text = Interpret.TRAIT[type[1]];
+            icon = UtilPC.createIcon(3, type[1]);
         }
         abil.setText(text);
         abil.setIcon(UtilPC.getScaledIcon(icon, 40, 40));

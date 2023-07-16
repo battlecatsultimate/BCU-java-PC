@@ -50,11 +50,11 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
     protected void resized(int x, int y) {
         setBounds(0, 0, x, y);
         set(back, x, y, 0, 0, 200, 50);
-        set(jspc, x, y, 50, 300, 300, 500);
-        set(add, x, y, 50, 800, 150, 50);
-        set(rem, x, y, 200, 800, 150, 50);
-        set(pcet, x, y, 400, 150, 900, 1200);
-        set(info, x, y, 850, 850, 200, 50);
+        set(jspc, x, y, 450, 400, 300, 500);
+        set(add, x, y, 450, 900, 150, 50);
+        set(rem, x, y, 600, 900, 150, 50);
+        set(pcet, x, y, 800, 250, 900, 1200);
+        set(info, x, y, 850, 950, 200, 50);
     }
 
     private void addListeners() {
@@ -124,7 +124,7 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
         setCoins(-1);
     }
 
-    protected void setCoins(int ind) {
+    protected void resetList(int ind) {
         if (unit.pcoin != null) {
             Vector<String> talents = new Vector<>();
             PCoin p = unit.pcoin;
@@ -136,7 +136,10 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
         } else {
             coin.setListData(new String[0]);
         }
+    }
 
+    protected void setCoins(int ind) {
+        resetList(ind);
         add.setEnabled(editable && (unit.pcoin == null || unit.pcoin.max.length < 8));
         rem.setEnabled(editable && coin.getSelectedIndex() != -1);
         pcet.setData(coin.getSelectedIndex());
