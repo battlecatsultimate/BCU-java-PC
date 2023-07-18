@@ -5,7 +5,10 @@ import common.battle.data.CustomUnit;
 import common.util.Data;
 import common.util.lang.ProcLang;
 import main.MainBCU;
-import page.*;
+import page.JL;
+import page.JTF;
+import page.JTG;
+import page.Page;
 import page.info.filter.TraitList;
 import utilpc.Interpret;
 import utilpc.Theme;
@@ -293,6 +296,7 @@ public class PCoinEditTable2 extends Page {
             soup.setSelected(data[13] == 1);
 
             if (type[2] > 0) {
+                ProcLang.ItemLang lang = ProcLang.get().get(type[1]);
                 add(max);
                 add(maxt);
                 maxt.setText(String.valueOf(data[1]));
@@ -305,7 +309,7 @@ public class PCoinEditTable2 extends Page {
                     } else { // 1 modif, i is 0
                         add(label);
                         add(text);
-                        label.setText(MainLocale.UTIL, "mod" + data[0] + "_" + i);
+                        label.setText(lang.get(lang.list()[i]).getNameValue());
                         text.setText(twoInts(data[2 + i * 2], data[3 + i * 2]));
                         text.setEnabled(editable);
                     }
