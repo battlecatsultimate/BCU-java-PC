@@ -313,7 +313,9 @@ public class PCoinEditTable2 extends Page {
                     } else { // 1 modif, i is 0
                         add(label);
                         add(text);
-                        label.setText(lang.get(lang.list()[i]).getNameValue());
+                        label.setText(type[0] == Data.PC_BASE
+                                ? nlst.getSelectedValue().toString() // TODO: figure out better way to do this (proc_talent_XX.json?)
+                                : lang.get(lang.list()[type[1] == Data.P_BSTHUNT ? i + 1 : i]).getNameValue());
                         text.setText(twoInts(data[2 + i * 2], data[3 + i * 2]));
                         text.setEnabled(editable);
                     }
