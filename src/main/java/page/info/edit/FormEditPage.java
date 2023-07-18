@@ -235,8 +235,10 @@ public class FormEditPage extends EntityEditPage {
 				+ cu.getLimit()
 				+ " units away from the max stage length<br>once it passes that threshold.");
 		ueb.setData(cu.abi, data.traits);
-		if (cu.getPCoin() != null)
+		if (cu.getPCoin() != null) {
+			cu.pcoin.verify();
 			cu.pcoin.update();
+		}
 	}
 
 	private String interpretLayer(int back, int front) {

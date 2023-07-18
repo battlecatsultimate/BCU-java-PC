@@ -39,7 +39,7 @@ public class PCoinEditTable2 extends Page {
         private static final long serialVersionUID = 1L;
 
         protected static int[] ints = IntStream.rangeClosed(1, 65)
-                .filter(v -> v != 29).toArray(); // TODO: see if auto is possible
+                .filter(v -> v != 29 && v != 42 && v != 43).toArray(); // TODO: see if auto is possible
 
         protected NPList(boolean edit) {
             if (MainBCU.nimbus)
@@ -233,7 +233,7 @@ public class PCoinEditTable2 extends Page {
 
             if (type[0] == Data.PC_BASE)
                 talents.add(dat);
-            else if (type[0] == Data.PC_P && unit.getProc().getArr(type[1]).get(0) < 100)
+            else if (type[0] == Data.PC_P)
                 talents.add(dat);
             else if (type[0] == Data.PC_AB && (unit.abi & type[1]) == 0)
                 talents.add(dat);
@@ -250,6 +250,7 @@ public class PCoinEditTable2 extends Page {
                     break;
                 }
             }
+//            tlst.setListData(traits.stream().map(ti -> UserProfile.getBCData().traits.get(ti.getValue())).toArray(Trait[]::new));
         }
     }
 
@@ -281,6 +282,7 @@ public class PCoinEditTable2 extends Page {
                 remove(modt[i]);
             }
         } else {
+            unit.pcoin.verify();
             int[] data = unit.pcoin.info.get(ind);
             int[] type = Data.PC_CORRES[data[0]];
             setLabel(type);
