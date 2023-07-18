@@ -155,8 +155,12 @@ public class PCoinEditTable2 extends Page {
 
     private void addListeners() {
         soup.addActionListener(x -> {
-            if (!changing)
-                unit.pcoin.info.get(ind)[13] = soup.isSelected() ? 1 : 0;
+            if (changing)
+                return;
+            changing = true;
+            unit.pcoin.info.get(ind)[13] = soup.isSelected() ? 1 : 0;
+            pcep.resetList(ind);
+            changing = false;
         });
         maxt.addActionListener(x -> {
             if (changing)
