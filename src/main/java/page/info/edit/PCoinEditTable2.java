@@ -2,8 +2,12 @@ package page.info.edit;
 
 import common.CommonStatic;
 import common.battle.data.CustomUnit;
+import common.pack.Identifier;
+import common.pack.PackData;
+import common.pack.UserProfile;
 import common.util.Data;
 import common.util.lang.ProcLang;
+import common.util.unit.Trait;
 import main.MainBCU;
 import page.JL;
 import page.JTF;
@@ -17,6 +21,7 @@ import utilpc.UtilPC;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Vector;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class PCoinEditTable2 extends Page {
@@ -26,16 +31,16 @@ public class PCoinEditTable2 extends Page {
     private static class TalentInfo {
 
         private final String name;
-        private final int key;
+        private final int value;
 
-        private TalentInfo(String text, int ID) {
+        private TalentInfo(String text, int value) {
             name = text;
-            key = ID;
+            this.value = value;
         }
 
         @Override
         public String toString() { return name; }
-        private int getValue() { return key; }
+        private int getValue() { return value; }
     }
 
     private static class NPList extends JList<TalentInfo> {
@@ -99,6 +104,7 @@ public class PCoinEditTable2 extends Page {
     private final JL[] modl = new JL[4];
     private final JTF[] modt = new JTF[modl.length];
     private final CustomUnit unit;
+    private final PackData.UserPack pack;
     private final PCoinEditPage pcep;
     private int ind;
     private final boolean editable;
@@ -108,6 +114,7 @@ public class PCoinEditTable2 extends Page {
         super(p);
         pcep = p;
         unit = cu;
+        pack = (PackData.UserPack) PackData.UserPack.getPack(unit.pack.uid.pack);
         editable = edit;
         tlst = new TraitList(false);
         jspt = new JScrollPane(tlst);
@@ -244,7 +251,7 @@ public class PCoinEditTable2 extends Page {
                 talents.add(dat);
             else if (type[0] == Data.PC_AB && (unit.abi & type[1]) == 0)
                 talents.add(dat);
-            else if (type[0] == Data.PC_TRAIT)
+            else if (type[0] == Data.PC_TRAIT && unit.traits.stream().anyMatch(ut -> type[1] != ut.id.id))
                 traits.add(dat);
         }
         talents.addAll(traits);
@@ -257,6 +264,17 @@ public class PCoinEditTable2 extends Page {
                     break;
                 }
             }
+            Vector<Trait> vt = traits.stream()
+                    .map(t -> Identifier.parseInt(Data.PC_CORRES[t.getValue()][1], Trait.class).get())
+                    .filter(t -> Data.PC_CORRES[nlst.getSelectedValue().getValue()][1] != t.id.id)
+                    .collect(Collectors.toCollection(Vector::new));
+            vt.addAll(pack.traits.getList());
+            for (PackData.UserPack p : UserProfile.getUserPacks())
+                if (pack.desc.dependency.contains(p.desc.id))
+                    vt.addAll(p.traits.getList());
+            vt.removeIf(t -> unit.traits.stream().anyMatch(ut -> t == ut));
+            int[] selected = tlst.getSelectedIndices();
+            tlst.setListData(vt);
 //            tlst.setListData(traits.stream().map(ti -> UserProfile.getBCData().traits.get(ti.getValue())).toArray(Trait[]::new));
         }
     }
