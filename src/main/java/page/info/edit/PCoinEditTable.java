@@ -2,48 +2,58 @@ package page.info.edit;
 
 import common.CommonStatic;
 import common.battle.data.CustomUnit;
+import common.pack.Identifier;
+import common.pack.PackData;
 import common.pack.UserProfile;
 import common.util.Data;
 import common.util.lang.ProcLang;
+import common.util.unit.Trait;
 import main.MainBCU;
-import org.jcodec.common.tools.MathUtil;
-import page.JBTN;
 import page.JL;
 import page.JTF;
+import page.JTG;
 import page.Page;
+import page.info.filter.TraitList;
 import utilpc.Interpret;
 import utilpc.Theme;
 import utilpc.UtilPC;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.Vector;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-class PCoinEditTable extends Page {
+public class PCoinEditTable extends Page {
 
     private static final long serialVersionUID = 1L;
 
-    private static class talentData {
+    private static class TalentInfo {
 
         private final String name;
-        private final int key;
+        private final int value;
 
-        private talentData(String text, int ID) {
+        private TalentInfo(String text, int value) {
             name = text;
-            key = ID;
+            this.value = value;
         }
 
         @Override
         public String toString() { return name; }
-        private int getValue() { return key; }
+        private int getValue() { return value; }
     }
 
-    private static class NPList extends JList<talentData> {
+    private static class NPList extends JList<TalentInfo> {
         private static final long serialVersionUID = 1L;
 
-        protected NPList() {
+        protected static int[] ints = IntStream.rangeClosed(1, 65)
+                .filter(v -> v != 29 && v != 42 && v != 43).toArray(); // TODO: see if auto is possible
+
+        protected NPList(boolean edit) {
             if (MainBCU.nimbus)
                 setSelectionBackground(MainBCU.light ? Theme.LIGHT.NIMBUS_SELECT_BG : Theme.DARK.NIMBUS_SELECT_BG);
+            setEnabled(edit);
+            setListIcons();
         }
         protected void setListIcons() {
             setCellRenderer(new DefaultListCellRenderer() {
@@ -53,7 +63,7 @@ class PCoinEditTable extends Page {
                 @Override
                 public Component getListCellRendererComponent(JList<?> l, Object o, int ind, boolean s, boolean f) {
                     JLabel jl = (JLabel) super.getListCellRendererComponent(l, o, ind, s, f);
-                    talentData td = (talentData)o;
+                    TalentInfo td = (TalentInfo) o;
                     int[] val = Data.PC_CORRES[td.getValue()];
                     switch (val[0]) {
                         case Data.PC_AB:
@@ -72,6 +82,9 @@ class PCoinEditTable extends Page {
                         case Data.PC_TRAIT:
                             jl.setIcon(UtilPC.createIcon(3, val[1]));
                             break;
+                        default:
+                            System.out.println("Unknown: " + val[1]);
+                            break;
                     }
                     return jl;
                 }
@@ -79,33 +92,294 @@ class PCoinEditTable extends Page {
         }
     }
 
-    //ensures not every single talent is here, to avoid touching unused values, each number corresponds to a PC_CORRES array
-    private final int[] allPC = new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 57, 40, 41, 50, 51, 52, 54, 56, 58, 59, 60};
-
+    protected static final int[] BASE_TALENT = new int[]{ 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8, -1, 0 }; // TODO: on increase, set 12th index to -1
+    private final JTG soup = new JTG(0, "super");
+    private final JL abil = new JL();
+    private final TraitList tlst;
+    private final JScrollPane jspt;
+    private final NPList nlst;
+    private final JScrollPane jspn;
+    private final JL max = new JL(0, "maxlv");
+    private final JTF maxt = new JTF();
+    private final JL[] modl = new JL[4];
+    private final JTF[] modt = new JTF[modl.length];
     private final CustomUnit unit;
-    private final NPList ctypes = new NPList();
-    private final JScrollPane stypes = new JScrollPane(ctypes);
-    private final JL pCoin = new JL();
-    private final JL jPCLV = new JL(0,"Max Lv");
-    private final JTF PCoinLV = new JTF();
-    private final JBTN delet = new JBTN(0,"rem");
-    private final PCoinEditPage pcedit;
+    private final PackData.UserPack pack;
+    private final PCoinEditPage pcep;
+    private int ind;
     private final boolean editable;
-    private final JL[] chance = new JL[8];
-    private final JTF[] tchance = new JTF[8];
-    protected final int talent;
-
     private boolean changing;
-    private int cTypesY = 550;
 
-    protected PCoinEditTable(Page p, CustomUnit u, int ind, boolean edi) {
+    public PCoinEditTable(PCoinEditPage p, CustomUnit cu, boolean edit) {
         super(p);
-        pcedit = (PCoinEditPage) p;
-        unit = u;
-        talent = ind;
-        editable = edi;
+        pcep = p;
+        unit = cu;
+        pack = (PackData.UserPack) PackData.UserPack.getPack(unit.pack.uid.pack);
+        editable = edit;
+        tlst = new TraitList(false);
+        jspt = new JScrollPane(tlst);
+        nlst = new NPList(editable);
+        jspn = new JScrollPane(nlst);
 
         ini();
+    }
+    @Override
+    protected void resized(int x, int y) {
+        set(abil, x, y, 0, 0, 250, 50);
+        set(soup, x, y, 250, 0, 200, 50);
+        set(jspn, x, y, 0, 50, 225, 600);
+        set(jspt, x, y, 225, 50, 225, 600);
+        if (ind != -1) {
+            int siz = Data.PC_CORRES[unit.pcoin.info.get(ind)[0]][2];
+            if (siz == 0)
+                return;
+
+            set(max, x, y, 500, 50, 150, 50);
+            set(maxt, x, y, 650, 50, 200, 50);
+            for (int i = 0; i < siz; i++) {
+                set(modl[i], x, y, 500, 100 + 50 * i, 150, 50);
+                set(modt[i], x, y, 650, 100 + 50 * i, 200, 50);
+            }
+        }
+    }
+
+    private void ini() {
+        add(abil);
+        add(soup);
+        add(jspt);
+        add(jspn);
+        nlst.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tlst.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+        for (int i = 0; i < modl.length; i++) {
+            modl[i] = new JL();
+            modt[i] = new JTF();
+        }
+
+        addListeners();
+        setData(-1);
+    }
+
+    private void addListeners() {
+        soup.addActionListener(x -> {
+            if (changing)
+                return;
+            changing = true;
+            unit.pcoin.info.get(ind)[13] = soup.isSelected() ? 1 : 0;
+            pcep.resetList(ind);
+            changing = false;
+        });
+
+        maxt.addActionListener(x -> {
+            if (changing)
+                return;
+            changing = true;
+            int m = CommonStatic.parseIntN(maxt.getText());
+            unit.pcoin.info.get(ind)[1] = unit.pcoin.max[ind] = Math.max(m, 1);
+            reset(false);
+            changing = false;
+        });
+
+        for (int i = 0; i < modt.length; i++) {
+            JTF mod = modt[i];
+            if (changing)
+                return;
+            changing = true;
+            int finalI = i;
+            mod.addActionListener(x -> {
+                if (ind == -1)
+                    return;
+                changing = true;
+                int a, b;
+                int[] mods = CommonStatic.parseIntsN(mod.getText());
+                if (mods.length == 1) {
+                    a = b = mods[0];
+                } else if (mods.length == 2) {
+                    a = Math.min(mods[0], mods[1]);
+                    b = Math.max(mods[0], mods[1]);
+                } else {
+                    reset(false);
+                    changing = false;
+                    return;
+                }
+                int[] data = unit.pcoin.info.get(ind);
+                data[2 + finalI * 2] = a;
+                data[3 + finalI * 2] = b;
+                reset(false);
+                changing = false;
+            });
+            changing = false;
+        }
+
+        nlst.addListSelectionListener(x -> {
+            if (nlst.getSelectedIndex() == -1 || changing)
+                return;
+            changing = true;
+            TalentInfo ti = nlst.getSelectedValue();
+            int[] base = BASE_TALENT.clone();
+            base[0] = ti.getValue();
+            base[1] = unit.pcoin.max[ind] = Data.PC_CORRES[base[0]][2] > 0 ? 10 : 1;
+            unit.pcoin.info.set(ind, base);
+            reset(true);
+            changing = false;
+        });
+
+        tlst.addListSelectionListener(x -> {
+            if (changing)
+                return;
+            changing = true;
+            unit.pcoin.trait.clear();
+            if ((unit.pcoin.info.get(ind)[12] = tlst.getSelectedIndex()) > -1)
+                unit.pcoin.trait.addAll(tlst.getSelectedValuesList());
+            resetList();
+            changing = false;
+        });
+    }
+
+    protected void resetList() {
+        Vector<TalentInfo> traits = new Vector<>();
+        Vector<TalentInfo> talents = new Vector<>();
+        for (int i : NPList.ints) {
+            int[] type = Data.PC_CORRES[i];
+            TalentInfo dat = new TalentInfo(Interpret.PCTX[i], i);
+            if (talents.contains(dat) || unit.pcoin == null)
+                break;
+            if (unit.pcoin.info.stream().anyMatch(v -> unit.pcoin.info.indexOf(v) != ind && v[0] == i))
+                continue;
+
+            if (type[0] == Data.PC_BASE)
+                talents.add(dat);
+            else if (type[0] == Data.PC_P)
+                talents.add(dat);
+            else if (type[0] == Data.PC_AB && (unit.abi & type[1]) == 0)
+                talents.add(dat);
+            else if (type[0] == Data.PC_TRAIT && unit.traits.stream().noneMatch(ut -> type[1] == ut.id.id))
+                traits.add(dat);
+        }
+        if (unit.pcoin == null)
+            talents.addAll(traits);
+        else
+            talents.addAll(traits.stream().filter(t -> unit.pcoin.trait.stream().noneMatch(pt -> Data.PC_CORRES[t.getValue()][1] == pt.id.id)).collect(Collectors.toList()));
+        nlst.setListData(talents);
+
+        if (unit.pcoin != null && ind != -1) {
+            for (TalentInfo ti : talents) {
+                if (ti.getValue() == unit.pcoin.info.get(ind)[0]) {
+                    nlst.setSelectedValue(ti, true);
+                    break;
+                }
+            }
+            int[] type = Data.PC_CORRES[nlst.getSelectedValue().getValue()];
+            Vector<Trait> vt = traits.stream()
+                    .map(t -> Identifier.parseInt(Data.PC_CORRES[t.getValue()][1], Trait.class).get())
+                    .filter(t -> type[0] != Data.PC_TRAIT || type[1] != t.id.id)
+                    .collect(Collectors.toCollection(Vector::new));
+            vt.addAll(pack.traits.getList());
+            for (PackData.UserPack p : UserProfile.getUserPacks())
+                if (pack.desc.dependency.contains(p.desc.id))
+                    vt.addAll(p.traits.getList());
+            vt.removeIf(t -> unit.traits.stream().anyMatch(ut -> t == ut));
+            tlst.setListData(vt);
+            if (unit.pcoin.info.get(ind)[12] > -1)
+                tlst.setSelectedIndices(unit.pcoin.trait.stream().mapToInt(vt::indexOf).toArray());
+        }
+    }
+
+    protected void setData(int i) {
+        if (changing)
+            return;
+        changing = true;
+        ind = i;
+        reset(true);
+        changing = false;
+    }
+
+    protected void reset(boolean full) {
+        if (full) {
+            pcep.resetList(ind);
+            resetList();
+        }
+
+        if (ind == -1) {
+            abil.setIcon(null);
+            abil.setText("none");
+            nlst.setEnabled(false);
+            tlst.setEnabled(false);
+            soup.setEnabled(false);
+            remove(max);
+            remove(maxt);
+            for (int i = 0; i < modl.length; i++) {
+                remove(modl[i]);
+                remove(modt[i]);
+            }
+        } else {
+            unit.pcoin.verify();
+            int[] data = unit.pcoin.info.get(ind);
+            int[] type = Data.PC_CORRES[data[0]];
+            setLabel(type);
+            nlst.setEnabled(editable);
+            tlst.setEnabled(editable && (unit.pcoin.info.stream().noneMatch(d -> d[12] > -1) || data[12] > -1));
+            soup.setEnabled(editable);
+            maxt.setEnabled(editable);
+            soup.setSelected(data[13] == 1);
+
+            if (type[2] > 0) {
+                ProcLang.ItemLang lang = ProcLang.get().get(type[1]);
+                add(max);
+                add(maxt);
+                maxt.setText(String.valueOf(data[1]));
+                for (int i = 0; i < modl.length; i++) {
+                    JL label = modl[i];
+                    JTF text = modt[i];
+                    if (i >= type[2]) { // { 0, P_MINIWAVE, 3, -1 }
+                        remove(label);
+                        remove(text);
+                    } else { // 1 modif, i is 0
+                        add(label);
+                        add(text);
+                        label.setText(type[0] == Data.PC_BASE
+                                ? nlst.getSelectedValue().toString() // TODO: figure out better way to do this (proc_talent_XX.json?)
+                                : lang.get(lang.list()[type[1] == Data.P_BSTHUNT ? i + 1 : i]).getNameValue());
+                        text.setText(twoInts(data[2 + i * 2], data[3 + i * 2]));
+                        text.setEnabled(editable);
+                    }
+                }
+            } else {
+                remove(max);
+                remove(maxt);
+                for (int i = 0; i < modl.length; i++) {
+                    remove(modl[i]);
+                    remove(modt[i]);
+                }
+            }
+        }
+    }
+
+    protected void setLabel(int[] type) {
+        String text = null;
+        ImageIcon icon = null;
+        if (type == null) {
+            text = "unknown";
+        } else if (type[0] == Data.PC_IMU || type[0] == Data.PC_P) {
+            text = ProcLang.get().get(type[1]).full_name;
+            icon = UtilPC.createIcon(1, type[1]);
+        } else if (type[0] == Data.PC_AB) {
+            for (int i = 0; i < Data.ABI_TOT; i++) {
+                if (((type[1] >> i) & 1) == 1) {
+                    text = Interpret.SABIS[i];
+                    icon = UtilPC.createIcon(0, i);
+                    break;
+                }
+            }
+        } else if (type[0] == Data.PC_BASE) {
+            text = nlst.getSelectedValue().toString();
+            icon = UtilPC.createIcon(4, type[1]);
+        } else if (type[0] == Data.PC_TRAIT) {
+            text = Interpret.TRAIT[type[1]];
+            icon = UtilPC.createIcon(3, type[1]);
+        }
+        abil.setText(text);
+        abil.setIcon(UtilPC.getScaledIcon(icon, 40, 40));
     }
 
     @Override
@@ -113,330 +387,7 @@ class PCoinEditTable extends Page {
         return null;
     }
 
-    @Override
-    protected void resized(int x, int y) {
-        set(pCoin, x, y, 0, 0, 400, 50);
-        set(delet, x, y, 0, 50, 400, 50);
-        set(jPCLV, x, y, 0, 100, 200, 50);
-        set(PCoinLV, x, y, 200, 100, 200, 50);
-        for (int i = 0; i < chance.length; i++) {
-            set(chance[i], x, y, 0, 150 + i * 50, 200, 50);
-            set(tchance[i], x, y, 200, 150 + i * 50, 200, 50);
-        }
-        set(stypes, x, y, 0, cTypesY, 400, 1050 - cTypesY);
-    }
-
-    private void addListeners() {
-        PCoinLV.setLnr(arg0 -> {
-            String txt = PCoinLV.getText().trim();
-            int v = CommonStatic.parseIntN(txt);
-            unit.pcoin.info.get(talent)[1] = MathUtil.clip(v, 1, 10);
-            setData();
-        });
-
-        delet.addActionListener(arg0 -> {
-            changing = true;
-
-            unit.pcoin.info.remove(talent);
-
-            unit.pcoin.max = new int[unit.pcoin.info.size()];
-
-            for (int i = 0; i < unit.pcoin.info.size(); i++) {
-                unit.pcoin.max[i] = unit.pcoin.info.get(i)[1];
-            }
-
-            changing = false;
-        });
-
-        ctypes.addListSelectionListener(evt -> {
-            if (changing)
-                return;
-            changing = true;
-
-            talentData np = ctypes.getSelectedValue();
-            if (np == null) {
-                changing = false;
-                return;
-            }
-            unit.pcoin.info.get(talent)[0] = np.getValue();
-            unit.pcoin.info.get(talent)[10] = np.getValue();
-
-            int[] vals = Data.PC_CORRES[np.getValue()];
-            if (vals[0] == Data.PC_P) {
-                int low = unit.getProc().getArr(vals[1]).get(0) == 0 ? 1 : 0;
-                unit.pcoin.info.get(talent)[2] = Math.max(low, unit.pcoin.info.get(talent)[4]);
-                unit.pcoin.info.get(talent)[3] = Math.max(low, unit.pcoin.info.get(talent)[5]);
-                if (!(vals[1] == Data.P_SATK || vals[1] == Data.P_VOLC || vals[1] == Data.P_CRIT)) {
-                    int min = unit.getProc().getArr(vals[1]).get(1) == 0 ? 1 : 0;
-                    unit.pcoin.info.get(talent)[4] = Math.max(min, unit.pcoin.info.get(talent)[4]);
-                    unit.pcoin.info.get(talent)[5] = Math.max(min, unit.pcoin.info.get(talent)[5]);
-                }
-                if (vals[1] == Data.P_VOLC) {
-                    unit.pcoin.info.get(talent)[8] = Math.max(1, unit.pcoin.info.get(talent)[8] / Data.VOLC_ITV) * Data.VOLC_ITV;
-                    unit.pcoin.info.get(talent)[9] = Math.max(1, unit.pcoin.info.get(talent)[9] / Data.VOLC_ITV) * Data.VOLC_ITV;
-                }
-            }
-            changing = false;
-        });
-
-        for (int i = 0; i < tchance.length; i++) {
-            int finalI = i + 2;
-            tchance[i].setLnr(arg0 -> {
-                if (changing)
-                    return;
-                changing = true;
-                String txt = tchance[finalI - 2].getText().trim();
-                int[] v = CommonStatic.parseIntsN(txt);
-
-
-                if (v.length == 0) {
-                    tchance[finalI - 2].setText("" + unit.pcoin.info.get(talent)[finalI]);
-                    changing = false;
-                    return;
-                }
-
-                int ind = finalI % 2 == 0 ? 1 : -1;
-                int w = v.length > 1 ? v[1] : unit.pcoin.info.get(talent)[finalI + ind];
-
-                int[] vals = Data.PC_CORRES[unit.pcoin.info.get(talent)[0]];
-
-                if (vals[0] == Data.PC_BASE) {
-                    if (vals[1] == Data.PC2_COST) {
-                        v[0] = (int) (v[0] / 1.5);
-                        if (v.length > 1)
-                            w = (int) (w / 1.5);
-                    } else if (vals[1] == Data.PC2_HB) {
-                        v[0] = Math.min(v[0], unit.hp - unit.hb);
-                        w = Math.min(w, unit.hp - unit.hb);
-                    }
-                }
-
-                if (finalI < 6 && !(vals[1] == Data.P_SATK || vals[1] == Data.P_VOLC || vals[1] == Data.P_CRIT)) {
-                    v[0] = Math.max(0, v[0]);
-                    w = Math.max(0, w);
-                } else if (finalI >= 8) {
-                    v[0] = Math.max(1, v[0] / Data.VOLC_ITV) * Data.VOLC_ITV;
-                    w = Math.max(1, w / Data.VOLC_ITV) * Data.VOLC_ITV;
-                }
-
-                if (tchance[finalI - 2 + ind].isEnabled())
-                    if (ind == 1) {
-                        unit.pcoin.info.get(talent)[finalI] = Math.min(v[0], w);
-                        unit.pcoin.info.get(talent)[finalI + ind] = Math.max(v[0], w);
-                    } else {
-                        unit.pcoin.info.get(talent)[finalI] = Math.max(v[0], w);
-                        unit.pcoin.info.get(talent)[finalI + ind] = Math.min(v[0], w);
-                    }
-                else {
-                    unit.pcoin.info.get(talent)[finalI] = v[0];
-                    unit.pcoin.info.get(talent)[finalI + ind] = v[0];
-                }
-                setData();
-                changing = false;
-            });
-        }
-    }
-
-    private void ini() {
-        add(delet);
-        add(jPCLV);
-        add(pCoin);
-        add(stypes);
-        add(PCoinLV);
-        setCTypes(unit.pcoin != null && unit.pcoin.info.size() > talent);
-        for (int i = 0; i < chance.length; i++) {
-            add(chance[i] = new JL(0,i % 2 == 0 ? "Lv1 Value " + (1 + i / 2) : "Max Value " + (1 + i / 2)));
-            add(tchance[i] = new JTF());
-        }
-        addListeners();
-    }
-
-    protected void setCTypes(boolean coin) {
-        ArrayList<talentData> available = new ArrayList<>();
-        if (coin) {
-            for (int i : allPC) {
-                int[] type = Data.PC_CORRES[i];
-                talentData dat = new talentData(Interpret.PCTX[i], i);
-                if (available.contains(dat))
-                    break;
-                // Verify if another talent is using this value
-                boolean unused = true;
-                for (int j = 0; j < unit.pcoin.info.size(); j++)
-                    if (j != talent && unit.pcoin.info.get(j)[0] == i) {
-                        unused = false;
-                        break;
-                    }
-
-                boolean add = type[0] == Data.PC_BASE;
-                if (type[0] == Data.PC_P)
-                    add = unit.getProc().getArr(type[1]).get(0) < 100;
-                if (type[0] == Data.PC_AB)
-                    add = (unit.abi & type[1]) == 0;
-                if (type[0] == Data.PC_TRAIT)
-                    add = !(unit.getTraits().contains(UserProfile.getBCData().traits.get(type[1])));
-                if (add && unused) {
-                    available.add(dat);
-                }
-            }
-            talentData[] td = new talentData[available.size()];
-            for (int i = 0; i < td.length; i++)
-                td[i] = available.get(i);
-            ctypes.setListData(td);
-            ctypes.setListIcons();
-        } else
-            ctypes.setListData(new talentData[0]);
-    }
-
-    protected void randomize() {
-        ListModel<talentData> listModel = ctypes.getModel();
-        int dat = listModel.getElementAt((int)(Math.random() * listModel.getSize())).getValue();
-        unit.pcoin.info.get(talent)[0] = dat;
-        unit.pcoin.info.get(talent)[10] = dat;
-    }
-
-    protected void setData() {
-        changing = true;
-        boolean pc = unit.pcoin != null && unit.pcoin.info.size() > talent;
-        int[] type = pc ? Data.PC_CORRES[unit.pcoin.info.get(talent)[0]] : new int[]{-1, 0};
-        PCoinLV.setEnabled(pc && editable && (type[0] == Data.PC_P || type[0] == Data.PC_BASE));
-        if (!PCoinLV.isEnabled() && pc && editable)
-            unit.pcoin.info.get(talent)[1] = 1;
-
-        if (pc) {
-            PCoinLV.setText("" + unit.pcoin.info.get(talent)[1]);
-            int tal = unit.pcoin.info.get(talent)[0];
-            ListModel<talentData> listModel = ctypes.getModel();
-            for (int i = 0; i < listModel.getSize(); i++)
-                if (listModel.getElementAt(i).getValue() == tal) {
-                    ctypes.setSelectedIndex(i);
-                    break;
-                }
-            enableSecondaries(type);
-            for (int i = 0; i < tchance.length; i++)
-                if (i >= 2 || !(type[0] == Data.PC_BASE && type[1] == Data.PC2_COST))
-                    tchance[i].setText("" + unit.pcoin.info.get(talent)[2 + i]);
-                else
-                    tchance[i].setText("" + (int)(unit.pcoin.info.get(talent)[2 + i] * 1.5));
-        }
-        else {
-            ctypes.clearSelection();
-            enableSecondaries(type);
-            PCoinLV.setText("");
-            for (JTF t : tchance)
-                t.setText("");
-        }
-        ctypes.setEnabled(pc && editable);
-        delet.setEnabled(pc && editable);
-        changing = false;
-    }
-
-    //Enables or disables text fields, depending on the needed values for the proc
-    private void enableSecondaries(int[] pdata) {
-        cTypesY = 550;
-        int maxlv = pdata[0] != -1 ? unit.pcoin.info.get(talent)[1] : 0;
-        if (pdata[0] == -1 || pdata[0] == Data.PC_AB || pdata[0] == Data.PC_TRAIT || pdata[0] == Data.PC_IMU) {
-            for (JTF jtf : tchance)
-                jtf.setVisible(false);
-            for (JL jl : chance)
-                jl.setVisible(false);
-            cTypesY -= 400;
-            if (pdata[0] != -1)
-                if (pdata[0] == Data.PC_IMU) {
-                    pCoin.setText(ProcLang.get().get(pdata[1]).full_name);
-                    pCoin.setIcon(UtilPC.createIcon(1, pdata[1]));
-                } else if (pdata[0] == Data.PC_AB) {
-                    for (int i = 0; i < Data.ABI_TOT; i++) {
-                        if (((pdata[1] >> i) & 1) == 1) {
-                            pCoin.setText(Interpret.SABIS[i]);
-                            pCoin.setIcon(UtilPC.createIcon(0, i));
-                            break;
-                        }
-                    }
-                } else {
-                    pCoin.setText(Interpret.TRAIT[pdata[1]]);
-                    pCoin.setIcon(UtilPC.createIcon(3,pdata[1]));
-                }
-            else {
-                pCoin.setText("(None)");
-                pCoin.setIcon(null);
-            }
-        }
-        if (pdata[0] == Data.PC_BASE) {
-            for (int i = 0; i < tchance.length; i++) {
-                chance[i].setVisible(i < 2);
-                tchance[i].setVisible(i < 2);
-            }
-            cTypesY -= 300;
-            String text = ctypes.getSelectedValue().toString() + (pdata[1] <= Data.PC2_SPEED || pdata[1] == Data.PC2_HB ? "+ " : "") + (pdata[1] <= Data.PC2_ATK ? "%" : "");
-            chance[0].setText(text + " (Lv1)");
-            chance[1].setText(text + " (Lv" + maxlv + ")");
-            pCoin.setText(text);
-            pCoin.setIcon(UtilPC.createIcon(4, pdata[1]));
-        }
-        if (pdata[0] == Data.PC_P) {
-            int procChance = unit.getProc().getArr(pdata[1]).get(0);
-            unit.pcoin.info.get(talent)[2] = Math.min(unit.pcoin.info.get(talent)[2], 100 - procChance);
-            unit.pcoin.info.get(talent)[3] = Math.min(unit.pcoin.info.get(talent)[3], 100 - procChance);
-            //This ensures raw proc chance + talent proc chance doesn't goes above 100%
-
-            ProcLang.ItemLang lang = ProcLang.get().get(pdata[1]);
-            String[] langText = lang.list();
-            pCoin.setText(lang.full_name);
-            pCoin.setIcon(UtilPC.createIcon(1, pdata[1]));
-
-            chance[0].setVisible(true);
-            chance[1].setVisible(true);
-            tchance[0].setVisible(true);
-            tchance[1].setVisible(true);
-            chance[0].setText(lang.get(langText[0]).getNameValue() + "(Lv1)");
-            chance[1].setText(lang.get(langText[0]).getNameValue() + "(Lv" + maxlv + ")");
-
-            boolean Field4 = langText.length >= 4;
-            cTypesY -= Field4 ? 0 : 100;
-            chance[6].setVisible(Field4);
-            chance[7].setVisible(Field4);
-            tchance[6].setVisible(Field4);
-            tchance[7].setVisible(Field4);
-            if (Field4) {
-                chance[6].setText(lang.get(langText[3]).getNameValue() + "(Lv1)");
-                chance[7].setText(lang.get(langText[3]).getNameValue() + "(Lv" + maxlv + ")");
-            }
-
-            boolean Field3 = langText.length >= 3;
-            cTypesY -= Field3 ? 0 : 100;
-            chance[4].setVisible(Field3);
-            chance[5].setVisible(Field3);
-            tchance[4].setVisible(Field3);
-            tchance[5].setVisible(Field3);
-            if (Field3) {
-                chance[4].setText(lang.get(langText[2]).getNameValue() + "(Lv1)");
-                chance[5].setText(lang.get(langText[2]).getNameValue() + "(Lv" + maxlv + ")");
-            }
-
-            boolean Field2 = langText.length >= 2;
-            cTypesY -= Field2 ? 0 : 100;
-            chance[2].setVisible(Field2);
-            chance[3].setVisible(Field2);
-            tchance[2].setVisible(Field2);
-            tchance[3].setVisible(Field2);
-            if (Field2) {
-                chance[2].setText(lang.get(langText[1]).getNameValue() + "(Lv1)");
-                chance[3].setText(lang.get(langText[1]).getNameValue() + "(Lv" + maxlv + ")");
-            }
-        }
-        for (int i = 0; i < tchance.length; i++) {
-            if (!tchance[i].isVisible())
-                break;
-            tchance[i].setEnabled(editable && (i % 2 == 0 || maxlv != 1));
-        }
-        if (pdata[0] != -1 && editable) {
-            for (int i = 0; i < tchance.length; i++)
-                if (!tchance[i].isVisible())
-                    unit.pcoin.info.get(talent)[2 + i] = 0;
-                else if (!tchance[i].isEnabled())
-                    unit.pcoin.info.get(talent)[2 + i] = unit.pcoin.info.get(talent)[1 + i];
-                else
-                    unit.pcoin.info.get(talent)[2 + i] = Math.max(0, unit.pcoin.info.get(talent)[2 + i]);
-        }
+    public static String twoInts(int a, int b) {
+        return a + " -> " + b;
     }
 }

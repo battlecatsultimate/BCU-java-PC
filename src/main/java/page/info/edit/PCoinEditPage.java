@@ -27,7 +27,7 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
     private final JScrollPane jspc = new JScrollPane(coin);
     private final boolean editable;
     private final CustomUnit unit;
-    private final PCoinEditTable2 pcet;
+    private final PCoinEditTable pcet;
     private final JBTN info = new JBTN(0, "so i've got this new anime plot");
     boolean changing = false;
 
@@ -35,7 +35,7 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
         super(p);
         unit = (CustomUnit) u.du;
         editable = edi;
-        pcet = new PCoinEditTable2(this, unit, editable);
+        pcet = new PCoinEditTable(this, unit, editable);
 
         ini();
         resized();
@@ -68,7 +68,7 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
                 unit.pcoin = new PCoin(unit);
 
             int size = unit.pcoin.info.size(); // 5
-            int[] base = PCoinEditTable2.BASE_TALENT.clone();
+            int[] base = PCoinEditTable.BASE_TALENT.clone();
             for (int i = 0; i < unit.pcoin.info.size(); i++)
                 for (int info : unit.pcoin.info.stream().sorted((a, b) -> b[0] - a[0]).mapToInt(a -> a[0]).toArray())
                     if (info == base[0])
