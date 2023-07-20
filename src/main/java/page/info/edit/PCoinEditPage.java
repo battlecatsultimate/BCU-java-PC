@@ -28,7 +28,6 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
     private final boolean editable;
     private final CustomUnit unit;
     private final PCoinEditTable pcet;
-    private final JBTN info = new JBTN(0, "so i've got this new anime plot");
     boolean changing = false;
 
     public PCoinEditPage(Page p, Form u, boolean edi) {
@@ -50,11 +49,10 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
     protected void resized(int x, int y) {
         setBounds(0, 0, x, y);
         set(back, x, y, 0, 0, 200, 50);
-        set(jspc, x, y, 450, 400, 300, 500);
-        set(add, x, y, 450, 900, 150, 50);
-        set(rem, x, y, 600, 900, 150, 50);
-        set(pcet, x, y, 800, 250, 900, 1200);
-        set(info, x, y, 850, 950, 200, 50);
+        set(jspc, x, y, 350, 250, 300, 600);
+        set(add, x, y, 350, 850, 150, 50);
+        set(rem, x, y, 500, 850, 150, 50);
+        set(pcet, x, y, 700, 250, 1100, 650);
     }
 
     private void addListeners() {

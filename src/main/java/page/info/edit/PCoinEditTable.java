@@ -125,22 +125,25 @@ public class PCoinEditTable extends Page {
     }
     @Override
     protected void resized(int x, int y) {
-        set(abil, x, y, 0, 0, 250, 50);
-        set(soup, x, y, 250, 0, 200, 50);
+        set(abil, x, y, 0, 0, 450, 50);
+
         set(jspn, x, y, 0, 50, 225, 600);
         set(jspt, x, y, 225, 50, 225, 600);
+
         if (ind != -1) {
             int siz = Data.PC_CORRES[unit.pcoin.info.get(ind)[0]][2];
             if (siz == 0)
                 return;
 
-            set(max, x, y, 500, 50, 150, 50);
-            set(maxt, x, y, 650, 50, 200, 50);
+            set(max, x, y, 500, 0, 150, 50);
+            set(maxt, x, y, 650, 0, 200, 50);
             for (int i = 0; i < siz; i++) {
-                set(modl[i], x, y, 500, 100 + 50 * i, 150, 50);
-                set(modt[i], x, y, 650, 100 + 50 * i, 200, 50);
+                set(modl[i], x, y, 500, 50 + 50 * i, 150, 50);
+                set(modt[i], x, y, 650, 50 + 50 * i, 200, 50);
             }
         }
+
+        set(soup, x, y, 900, 0, 200, 50);
     }
 
     private void ini() {
@@ -305,7 +308,7 @@ public class PCoinEditTable extends Page {
             abil.setText("none");
             nlst.setEnabled(false);
             tlst.setEnabled(false);
-            soup.setEnabled(false);
+            remove(soup);
             remove(max);
             remove(maxt);
             for (int i = 0; i < modl.length; i++) {
@@ -313,6 +316,7 @@ public class PCoinEditTable extends Page {
                 remove(modt[i]);
             }
         } else {
+            add(soup);
             unit.pcoin.verify();
             int[] data = unit.pcoin.info.get(ind);
             int[] type = Data.PC_CORRES[data[0]];
