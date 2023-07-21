@@ -144,10 +144,7 @@ public class UtilPC {
 
 	public static ImageIcon getScaledIcon(VImg v, int w, int h) {
 		ImageIcon i = getIcon(v);
-		if (i == null)
-			return null;
-		else
-			return getScaledIcon(i, w, h);
+		return i == null ? null : getScaledIcon(i, w, h);
 	}
 
 	public static ImageIcon getScaledIcon(ImageIcon i, int w, int h) {

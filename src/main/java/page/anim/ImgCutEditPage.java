@@ -15,7 +15,10 @@ import common.util.anim.Part;
 import common.util.unit.Enemy;
 import main.MainBCU;
 import main.Opts;
-import page.*;
+import page.JBTN;
+import page.JTF;
+import page.MainLocale;
+import page.Page;
 import page.support.AnimTreeRenderer;
 import page.support.Exporter;
 import page.support.Importer;
@@ -167,37 +170,38 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		set(aep, x, y, 800, 0, 1750, 50);
 		set(back, x, y, 0, 0, 200, 50);
 
-		set(jspu, x, y, 50, 250, 300, 500);
-		set(jspic, x, y, 400, 100, 600, 750);
-		set(sb, x, y, 1050, 100, 1200, 750);
+		set(jspu, x, y, 50, 100, 300, 500);
+		set(name, x, y, 50, 600, 300, 50);
 
-		set(add, x, y, 50, 100, 150, 50);
-		set(rem, x, y, 200, 100, 150, 50);
-		set(copy, x, y, 50, 150, 150, 50);
-		set(merg, x, y, 200, 150, 150, 50);
-		set(name, x, y, 50, 200, 300, 50);
+		set(icob, x, y, 50, 750, 150, 50);
+		set(unib, x, y, 200, 750, 150, 50);
+		set(icon, x, y, 50, 800, 150, 150);
+		set(uni, x, y, 200, 800, 150, 150);
 
-		set(impt, x, y, 50, 800, 150, 50);
-		set(expt, x, y, 200, 800, 150, 50);
-		set(spri, x, y, 50, 850, 150, 50);
-		set(loca, x, y, 200, 850, 150, 50);
+		set(swcl, x, y, 50, 1000, 300, 50);
+		set(jspf, x, y, 50, 1050, 150, 200);
+		set(jspt, x, y, 200, 1050, 150, 200);
 
-		set(relo, x, y, 1650, 850, 200, 50);
-		set(save, x, y, 1850, 850, 200, 50);
-		set(white, x, y, 2050, 850, 200, 50);
+		set(add, x, y, 450, 150, 200, 50);
+		set(rem, x, y, 700, 150, 200, 50);
+		set(copy, x, y, 450, 200, 200, 50);
+		set(merg, x, y, 700, 200, 200, 50);
 
-		set(addl, x, y, 400, 850, 200, 50);
-		set(reml, x, y, 600, 850, 200, 50);
-		set(resz, x, y, 800, 850, 200, 50);
+		set(impt, x, y, 450, 250, 200, 50);
+		set(expt, x, y, 700, 250, 200, 50);
+		set(spri, x, y, 450, 300, 200, 50);
+		set(loca, x, y, 700, 300, 200, 50);
 
-		set(swcl, x, y, 575, 950, 300, 50);
-		set(jspf, x, y, 575, 1000, 150, 200);
-		set(jspt, x, y, 725, 1000, 150, 200);
+		set(jspic, x, y, 400, 500, 600, 750);
+		set(addl, x, y, 400, 450, 200, 50);
+		set(reml, x, y, 600, 450, 200, 50);
+		set(resz, x, y, 800, 450, 200, 50);
 
-		set(icob, x, y, 75, 950, 200, 50);
-		set(unib, x, y, 325, 950, 200, 50);
-		set(icon, x, y, 50, 1000, 250, 200);
-		set(uni, x, y, 300, 1000, 250, 200); // one day... the ui will be better... another day...
+		set(sb, x, y, 1050, 500, 1200, 750);
+		set(relo, x, y, 1050, 450, 200, 50);
+		set(save, x, y, 1250, 450, 200, 50);
+		set(white, x, y, 1450, 450, 200, 50);
+
 		SwingUtilities.invokeLater(() -> jta.setUI(new TreeNodeExpander(jta)));
 		aep.componentResized(x, y);
 		icet.setRowHeight(size(x, y, 50));
@@ -378,8 +382,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				return;
 			icet.anim.setEdi(MainBCU.builder.toVImg(bimg));
 			icet.anim.saveIcon();
-			if (icet.anim.getEdi() != null)
-				icon.setIcon(UtilPC.getIcon(icet.anim.getEdi()));
+			icon.setIcon(icet.anim.getEdi() != null ? UtilPC.getScaledIcon(icet.anim.getEdi(), 128, 48) : null);
 		});
 
 		unib.addActionListener(arg0 -> {
@@ -388,8 +391,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 				return;
 			icet.anim.setUni(MainBCU.builder.toVImg(bimg));
 			icet.anim.saveUni();
-			if (icet.anim.getUni() != null)
-				uni.setIcon(UtilPC.getIcon(icet.anim.getUni()));
+			uni.setIcon(icet.anim.getUni() != null ? UtilPC.getScaledIcon(icet.anim.getUni(), 110, 85) : null);
 		});
 
 		white.setLnr(e -> {
@@ -671,10 +673,8 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 		merg.setEnabled(mergeEnabled);
 		if (anim != null) {
-			if (anim.getEdi() != null)
-				icon.setIcon(UtilPC.getIcon(anim.getEdi()));
-			if (anim.getUni() != null)
-				uni.setIcon(UtilPC.getIcon(anim.getUni()));
+			icon.setIcon(anim.getEdi() != null ? UtilPC.getScaledIcon(anim.getEdi(), 128, 48) : null);
+			uni.setIcon(anim.getEdi() != null ? UtilPC.getScaledIcon(anim.getUni(), 110, 85) : null);
 		}
 		setB();
 		changing = boo;
