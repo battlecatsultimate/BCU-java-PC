@@ -379,7 +379,6 @@ public class StageEditPage extends Page {
 		addListeners$0();
 		addListeners$1();
 		addListeners$2();
-
 	}
 
 	private void setAA(StageMap sm) {

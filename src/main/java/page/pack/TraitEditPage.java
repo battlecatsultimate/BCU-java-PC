@@ -2,14 +2,14 @@ package page.pack;
 
 import common.CommonStatic;
 import common.pack.Context;
+import common.pack.FixIndexList.FixIndexMap;
+import common.pack.PackData.UserPack;
 import common.pack.Source;
 import common.pack.UserProfile;
-import common.util.unit.Form;
 import common.util.unit.Enemy;
-import common.util.unit.Unit;
-import common.pack.PackData.UserPack;
+import common.util.unit.Form;
 import common.util.unit.Trait;
-import common.pack.FixIndexList.FixIndexMap;
+import common.util.unit.Unit;
 import main.MainBCU;
 import main.Opts;
 import page.*;
@@ -296,7 +296,7 @@ public class TraitEditPage extends Page {
     }
 
     private void getFile(String str) {
-        BufferedImage bimg = new Importer(str).getImg();
+        BufferedImage bimg = new Importer(str, Importer.FileType.PNG).getImg();
         if (bimg == null)
             return;
         if (bimg.getWidth() != 41 || bimg.getHeight() != 41) {

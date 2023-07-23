@@ -8,6 +8,18 @@ import java.io.File;
 import java.io.IOException;
 
 public class Importer extends JFileChooser {
+	public enum FileType {
+		PNG("PNG Images", "png"),
+		MUS("OGG Music", "ogg");
+
+		public final String[] ext;
+		public final String desc;
+
+		FileType(String description, String... extension) {
+			ext = extension;
+			desc = description;
+		}
+	}
 
 	private static final long serialVersionUID = 1L;
 
@@ -17,10 +29,10 @@ public class Importer extends JFileChooser {
 
 	public File file;
 
-	public Importer(String str) {
+	public Importer(String str, FileType ft) {
 		int t = IMP_IMG;
 		setDialogTitle(str);
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("PNG Images", "png");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter(ft.desc, ft.ext);
 		setCurrentDirectory(curs[t]);
 		setFileFilter(filter);
 		setDragEnabled(true);
@@ -32,17 +44,19 @@ public class Importer extends JFileChooser {
 
 	}
 
+	public boolean exists() {
+		return file != null;
+	}
+
 	public BufferedImage getImg() {
 		if (file == null)
 			return null;
-		BufferedImage bimg = null;
+
 		try {
-			bimg = ImageIO.read(file);
+			return ImageIO.read(file);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
-		return bimg;
 	}
-
 }

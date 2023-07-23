@@ -222,7 +222,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		back.addActionListener(arg0 -> changePanel(getFront()));
 
 		add.addActionListener(arg0 -> {
-			BufferedImage bimg = new Importer("Add your sprite").getImg();
+			BufferedImage bimg = new Importer("Add your sprite", Importer.FileType.PNG).getImg();
 			if (bimg == null)
 				return;
 			int selection = Opts.selection("What kind of animation do you want to create?",
@@ -251,7 +251,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		});
 
 		impt.addActionListener(arg0 -> {
-			BufferedImage bimg = new Importer("Update your sprite").getImg();
+			BufferedImage bimg = new Importer("Update your sprite", Importer.FileType.PNG).getImg();
 			if (bimg != null) {
 				AnimCE ac = icet.anim;
 				ac.setNum(MainBCU.builder.build(bimg));
@@ -377,7 +377,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		save.addActionListener(arg0 -> icet.anim.saveImg());
 
 		icob.addActionListener(arg0 -> {
-			BufferedImage bimg = new Importer("select icon image").getImg();
+			BufferedImage bimg = new Importer("select icon image", Importer.FileType.PNG).getImg();
 			if (bimg == null)
 				return;
 			icet.anim.setEdi(MainBCU.builder.toVImg(bimg));
@@ -386,7 +386,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		});
 
 		unib.addActionListener(arg0 -> {
-			BufferedImage bimg = new Importer("select icon image").getImg();
+			BufferedImage bimg = new Importer("select icon image", Importer.FileType.PNG).getImg();
 			if (bimg == null)
 				return;
 			icet.anim.setUni(MainBCU.builder.toVImg(bimg));
@@ -674,7 +674,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		merg.setEnabled(mergeEnabled);
 		if (anim != null) {
 			icon.setIcon(anim.getEdi() != null ? UtilPC.getScaledIcon(anim.getEdi(), 128, 48) : null);
-			uni.setIcon(anim.getEdi() != null ? UtilPC.getScaledIcon(anim.getUni(), 110, 85) : null);
+			uni.setIcon(anim.getUni() != null ? UtilPC.getScaledIcon(anim.getUni(), 110, 85) : null);
 		}
 		setB();
 		changing = boo;

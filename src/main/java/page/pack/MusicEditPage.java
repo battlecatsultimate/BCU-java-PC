@@ -1,7 +1,10 @@
 package page.pack;
 
 import common.CommonStatic;
+import common.pack.Context;
+import common.pack.Identifier;
 import common.pack.PackData.UserPack;
+import common.pack.Source;
 import common.util.stage.Music;
 import io.BCMusic;
 import main.Opts;
@@ -9,11 +12,14 @@ import page.JBTN;
 import page.JL;
 import page.JTF;
 import page.Page;
+import page.support.Importer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -26,6 +32,10 @@ public class MusicEditPage extends Page {
 	private final JList<Music> jlst = new JList<>();
 	private final JScrollPane jspst = new JScrollPane(jlst);
 
+	private final JBTN addm = new JBTN(0, "add");
+	private final JBTN remm = new JBTN(0, "rem");
+	private final JBTN impt = new JBTN(0, "import");
+	private final JBTN expt = new JBTN(0, "export");
 	private final JBTN relo = new JBTN(0, "read list");
 	private final JBTN play = new JBTN(0, "start");
 	private final JBTN stop = new JBTN(0, "stop");
@@ -48,17 +58,44 @@ public class MusicEditPage extends Page {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);
 		set(jspst, x, y, 50, 100, 300, 1000);
-		set(relo, x, y, 400, 100, 200, 50);
-		set(play, x, y, 400, 200, 200, 50);
-		set(stop, x, y, 400, 300, 200, 500);
+
+		set(addm, x, y, 400, 100, 200, 50);
+		set(remm, x, y, 400, 150, 200, 50);
+		set(impt, x, y, 400, 250, 200, 50);
+		set(expt, x, y, 400, 300, 200, 50);
+
 		set(show, x, y, 400, 400, 200, 50);
-		set(jlp, x, y, 400, 500, 200, 50);
-		set(jtp, x, y, 400, 550, 200, 50);
+		set(relo, x, y, 400, 450, 200, 50);
+		set(play, x, y, 400, 550, 200, 50);
+		set(stop, x, y, 400, 600, 200, 50);
+
+		set(jlp, x, y, 650, 100, 200, 50);
+		set(jtp, x, y, 650, 150, 200, 50);
 	}
 
 	@Override
 	protected JButton getBackButton() {
 		return back;
+	}
+
+	private void getFile(String dialogue, Identifier<Music> mus) {
+		Importer selected = new Importer(dialogue, Importer.FileType.MUS);
+		if (!selected.exists())
+			return;
+		if (mus == null)
+			mus = pack.getNextID(Music.class);
+
+		try {
+			File f = ((Source.Workspace) pack.source).getMusFile(mus);
+			Context.check(f);
+			Files.copy(selected.file.toPath(), f.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		} catch (Exception e) {
+			CommonStatic.ctx.noticeErr(e, Context.ErrType.WARN, "failed to write file");
+			getFile("failed to save file", mus);
+			return;
+		}
+
+		relo.doClick();
 	}
 
 	private void addListeners() {
@@ -70,6 +107,14 @@ public class MusicEditPage extends Page {
 
 			changePanel(getFront());
 		});
+
+		addm.addActionListener(x -> getFile("Choose your file", null));
+
+		remm.addActionListener(x -> {
+
+		});
+
+		impt.addActionListener(x -> getFile("Choose your file", jlst.getSelectedValue().getID()));
 
 		relo.addActionListener(arg0 -> {
 			pack.loadMusics();
@@ -121,8 +166,17 @@ public class MusicEditPage extends Page {
 		add(back);
 		add(jspst);
 		add(show);
+
+		add(addm);
+		add(remm);
+
+		add(impt);
+		add(expt);
+
 		add(relo);
 		add(play);
+		add(stop);
+
 		add(jlp);
 		add(jtp);
 		setList();
@@ -130,9 +184,13 @@ public class MusicEditPage extends Page {
 	}
 
 	private void toggleButtons() {
-		play.setEnabled(sele != null);
-		jtp.setEnabled(sele != null);
-		jtp.setText(sele != null ? convertTime(sele.loop) : "-");
+		boolean exists = sele != null;
+		remm.setEnabled(exists);
+		impt.setEnabled(exists);
+		expt.setEnabled(exists);
+		play.setEnabled(exists);
+		jtp.setEnabled(exists);
+		jtp.setText(exists ? convertTime(sele.loop) : "-");
 		jtp.setToolTipText(getMusTime());
 	}
 

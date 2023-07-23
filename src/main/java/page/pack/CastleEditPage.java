@@ -141,7 +141,7 @@ public class CastleEditPage extends Page {
 
 	private void getFile(String str, CastleImg vimg) {
 		changing = true;
-		BufferedImage bimg = new Importer(str).getImg();
+		BufferedImage bimg = new Importer(str, Importer.FileType.PNG).getImg();
 		if (bimg == null)
 			return;
 		if (bimg.getWidth() != 128 && bimg.getHeight() != 256) {
