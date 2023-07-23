@@ -264,7 +264,7 @@ class SpriteBox extends JPanel implements KeyListener, MouseInputListener, Mouse
 		Point p = e.getPoint();
 		if (!drag) {
 			Point p2 = new Point(p.x + (int) x, p.y + (int) y);
-			if (e.getClickCount() >= 2)
+			if (SwingUtilities.isRightMouseButton(e))
 				newSprite(-1, p2);
 			else
 				sele = findSprite(p2);
@@ -279,15 +279,20 @@ class SpriteBox extends JPanel implements KeyListener, MouseInputListener, Mouse
 			x -= (p1.x - p0.x) * size;
 			y -= (p1.y - p0.y) * size;
 			limit();
+		} else if (SwingUtilities.isRightMouseButton(e)) {
+			int[] line = anim.imgcut.cuts[sele];
+			line[2] = Math.max(line[2] + (p1.x - p0.x), 1);
+			line[3] = Math.max(line[3] + (p1.y - p0.y), 1);
+			anim.ICedited();
 		} else {
 			int[] line = anim.imgcut.cuts[sele];
 			int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 			if ((e.getModifiers() & modifier) > 0) {
-				line[0] += p1.x - p0.x;
-				line[1] += p1.y - p0.y;
-			} else {
 				line[2] = Math.max(line[2] + (p1.x - p0.x), 1);
 				line[3] = Math.max(line[3] + (p1.y - p0.y), 1);
+			} else {
+				line[0] += p1.x - p0.x;
+				line[1] += p1.y - p0.y;
 			}
 			anim.ICedited();
 		}
