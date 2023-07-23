@@ -240,13 +240,17 @@ public class MusicEditPage extends Page {
 			int ind = jlst.getSelectedIndex();
 			Music[] arr = pack.musics.toArray();
 			jlst.setListData(arr);
-			if (ind < 0)
-				ind = 0;
-			if (ind >= arr.length)
-				ind = arr.length - 1;
-			jlst.setSelectedIndex(ind);
-			if (ind >= 0)
+			if (arr.length > 0) {
+				if (ind < 0)
+					ind = 0;
+				if (ind >= arr.length)
+					ind = arr.length - 1;
+				jlst.setSelectedIndex(ind);
 				sele = arr[ind];
+			} else {
+				sele = null;
+			}
+
 			toggleButtons();
 		});
 	}
