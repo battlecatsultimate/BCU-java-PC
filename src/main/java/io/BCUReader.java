@@ -30,15 +30,13 @@ import page.view.ViewBox;
 import utilpc.Interpret;
 
 import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Queue;
 import java.util.stream.Collectors;
 
 public class BCUReader extends DataIO {
@@ -110,9 +108,9 @@ public class BCUReader extends DataIO {
 				}
 				String[] exp = JsonDecoder.decode(jo.get("export_paths"), String[].class);
 				String[] imp = JsonDecoder.decode(jo.get("import_paths"), String[].class);
-				for (int i = 0; i < Exporter.curs.length; i++)
+				for (int i = 0; i < Math.min(Exporter.curs.length, exp.length); i++)
 					Exporter.curs[i] = exp[i] == null ? null : new File(exp[i]);
-				for (int i = 0; i < Importer.curs.length; i++)
+				for (int i = 0; i < Math.min(Importer.curs.length, imp.length); i++)
 					Importer.curs[i] = imp[i] == null ? null : new File(imp[i]);
 			} catch (Exception e) {
 				CommonStatic.ctx.noticeErr(e, ErrType.WARN, "failed to read config");

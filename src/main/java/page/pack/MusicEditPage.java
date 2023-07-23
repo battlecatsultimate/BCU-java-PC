@@ -12,6 +12,7 @@ import page.JBTN;
 import page.JL;
 import page.JTF;
 import page.Page;
+import page.support.Exporter;
 import page.support.Importer;
 
 import javax.swing.*;
@@ -36,7 +37,7 @@ public class MusicEditPage extends Page {
 	private final JBTN remm = new JBTN(0, "rem");
 	private final JBTN impt = new JBTN(0, "import");
 	private final JBTN expt = new JBTN(0, "export");
-	private final JBTN relo = new JBTN(0, "read list");
+	private final JBTN relo = new JBTN(0, "readl");
 	private final JBTN play = new JBTN(0, "start");
 	private final JBTN stop = new JBTN(0, "stop");
 	private final JBTN show = new JBTN(0, "show");
@@ -61,16 +62,18 @@ public class MusicEditPage extends Page {
 
 		set(addm, x, y, 400, 100, 200, 50);
 		set(remm, x, y, 400, 150, 200, 50);
+
 		set(impt, x, y, 400, 250, 200, 50);
 		set(expt, x, y, 400, 300, 200, 50);
 
 		set(show, x, y, 400, 400, 200, 50);
 		set(relo, x, y, 400, 450, 200, 50);
-		set(play, x, y, 400, 550, 200, 50);
-		set(stop, x, y, 400, 600, 200, 50);
 
-		set(jlp, x, y, 650, 100, 200, 50);
-		set(jtp, x, y, 650, 150, 200, 50);
+		set(play, x, y, 700, 100, 200, 50);
+		set(stop, x, y, 700, 150, 200, 50);
+
+		set(jlp, x, y, 700, 250, 200, 50);
+		set(jtp, x, y, 700, 300, 200, 50);
 	}
 
 	@Override
@@ -98,13 +101,16 @@ public class MusicEditPage extends Page {
 		relo.doClick();
 	}
 
+	private void stopBG() {
+		if (BCMusic.BG != null && BCMusic.BG.isPlaying()) {
+			BCMusic.BG.stop();
+			BCMusic.clear();
+		}
+	}
+
 	private void addListeners() {
 		back.addActionListener(arg0 -> {
-			if (BCMusic.BG != null && BCMusic.BG.isPlaying()) {
-				BCMusic.BG.stop();
-				BCMusic.clear();
-			}
-
+			stopBG();
 			changePanel(getFront());
 		});
 
@@ -115,6 +121,21 @@ public class MusicEditPage extends Page {
 		});
 
 		impt.addActionListener(x -> getFile("Choose your file", jlst.getSelectedValue().getID()));
+
+		expt.addActionListener(x -> {
+			try {
+				// OutputStream os = ((Source.Workspace) pack.source).streamFile()
+				Exporter e = new Exporter(Exporter.EXP_OGG);
+				if (e.file == null)
+					return;
+				if (!e.file.getName().endsWith(".ogg"))
+					e.file = new File(e.file + ".ogg");
+				File host = ((Source.Workspace) pack.source).getMusFile(sele.id);
+				Files.copy(host.toPath(), e.file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			} catch (Exception e) {
+				CommonStatic.ctx.noticeErr(e, Context.ErrType.WARN, "failed to write file");
+			}
+		});
 
 		relo.addActionListener(arg0 -> {
 			pack.loadMusics();
@@ -140,9 +161,15 @@ public class MusicEditPage extends Page {
 			}
 		});
 
-		play.addActionListener(arg0 -> BCMusic.setBG(sele));
+		play.addActionListener(arg0 -> {
+			BCMusic.setBG(sele);
+			toggleButtons();
+		});
 
-		stop.addActionListener(arg -> BCMusic.BG.stop());
+		stop.addActionListener(x -> {
+			stopBG();
+			toggleButtons();
+		});
 
 		jlst.addListSelectionListener(arg0 -> {
 			if (isAdj() || arg0.getValueIsAdjusting())
@@ -189,6 +216,7 @@ public class MusicEditPage extends Page {
 		impt.setEnabled(exists);
 		expt.setEnabled(exists);
 		play.setEnabled(exists);
+		stop.setEnabled(BCMusic.BG != null && BCMusic.BG.isPlaying());
 		jtp.setEnabled(exists);
 		jtp.setText(exists ? convertTime(sele.loop) : "-");
 		jtp.setToolTipText(getMusTime());

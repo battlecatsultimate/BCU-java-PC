@@ -9,28 +9,42 @@ import java.io.IOException;
 
 public class Importer extends JFileChooser {
 	public enum FileType {
-		PNG("PNG Images", "png"),
-		MUS("OGG Music", "ogg");
+		PNG("PNG Images", 1, "png"),
+		MUS("OGG Music", 2, "ogg");
 
-		public final String[] ext;
-		public final String desc;
+		private final String[] ext;
+		private final String desc;
+		private final int dir;
 
-		FileType(String description, String... extension) {
+		FileType(String description, int curs, String... extension) {
 			ext = extension;
 			desc = description;
+			dir = curs;
+		}
+
+		public String[] getExt() {
+			return ext;
+		}
+
+		public String getDesc() {
+			return desc;
+		}
+
+		public int getDir() {
+			return dir;
 		}
 	}
 
 	private static final long serialVersionUID = 1L;
 
-	public static final int IMP_DEF = 0, IMP_IMG = 1;
+	public static final int IMP_DEF = 0, IMP_IMG = 1, IMP_OGG = 2;
 
-	public static final File[] curs = new File[2];
+	public static final File[] curs = new File[3];
 
 	public File file;
 
 	public Importer(String str, FileType ft) {
-		int t = IMP_IMG;
+		int t = ft.dir;
 		setDialogTitle(str);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(ft.desc, ft.ext);
 		setCurrentDirectory(curs[t]);

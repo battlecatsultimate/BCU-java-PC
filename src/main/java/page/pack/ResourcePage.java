@@ -78,7 +78,7 @@ public class ResourcePage extends Page {
 		rept.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				File f = new Exporter(Exporter.EXP_RES).file;
+				File f = new Exporter(Exporter.EXP_RES).file.getParentFile(); // TODO: support user-input file name
 				if (f != null)
 					filemove(f.getPath() + "/", sel);
 			}
