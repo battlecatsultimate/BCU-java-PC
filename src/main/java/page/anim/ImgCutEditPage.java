@@ -142,7 +142,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		changing = true;
 		DefaultMutableTreeNode selectedNode = agt.findAnimNode(ac, null);
 
-		if(selectedNode == null) {
+		if (selectedNode == null) {
 			changing = false;
 			return;
 		}
@@ -197,10 +197,10 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		set(reml, x, y, 600, 450, 200, 50);
 		set(resz, x, y, 800, 450, 200, 50);
 
-		set(sb, x, y, 1050, 500, 1200, 750);
-		set(relo, x, y, 1050, 450, 200, 50);
-		set(save, x, y, 1250, 450, 200, 50);
-		set(white, x, y, 1450, 450, 200, 50);
+		set(sb, x, y, 1050, 150, 1200, 1100);
+		set(relo, x, y, 1050, 100, 200, 50);
+		set(save, x, y, 1250, 100, 200, 50);
+		set(white, x, y, 1450, 100, 200, 50);
 
 		SwingUtilities.invokeLater(() -> jta.setUI(new TreeNodeExpander(jta)));
 		aep.componentResized(x, y);
@@ -211,7 +211,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	private void selectAnimNode(AnimCE ac) {
 		DefaultMutableTreeNode selectedNode = agt.findAnimNode(ac, null);
 
-		if(selectedNode != null) {
+		if (selectedNode != null) {
 			agt.expandCurrentAnimNode(selectedNode);
 			jta.setSelectionPath(new TreePath(selectedNode.getPath()));
 		}
@@ -268,10 +268,10 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 			changing = true;
 			TreePath path = jta.getSelectionPath();
 
-			if(path != null && path.getLastPathComponent() instanceof DefaultMutableTreeNode) {
+			if (path != null && path.getLastPathComponent() instanceof DefaultMutableTreeNode) {
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
 
-				if(node.getUserObject() instanceof AnimCE) {
+				if (node.getUserObject() instanceof AnimCE) {
 					setA((AnimCE) node.getUserObject());
 				}
 			}
@@ -324,46 +324,46 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		});
 
 		rem.setLnr(x -> {
-			if (!Opts.conf())
-				return;
-			changing = true;
-			AnimCE ac = icet.anim;
-			ac.delete();
-			agt.renewNodes();
+					if (!Opts.conf())
+						return;
+					changing = true;
+					AnimCE ac = icet.anim;
+					ac.delete();
+					agt.renewNodes();
 
-			DefaultMutableTreeNode leftNode = agt.selectVeryFirstBaseNodeOr();
+					DefaultMutableTreeNode leftNode = agt.selectVeryFirstBaseNodeOr();
 
-			if(leftNode != null) {
-				agt.expandCurrentAnimNode(leftNode);
-				jta.setSelectionPath(new TreePath(leftNode.getPath()));
-			}
+					if (leftNode != null) {
+						agt.expandCurrentAnimNode(leftNode);
+						jta.setSelectionPath(new TreePath(leftNode.getPath()));
+					}
 
-			setA(leftNode == null ? null : (AnimCE) leftNode.getUserObject());
+					setA(leftNode == null ? null : (AnimCE) leftNode.getUserObject());
 
-			changing = false;
-		}
+					changing = false;
+				}
 
 		);
 
 		loca.setLnr(x -> {
-			if (!Opts.conf())
-				return;
-			changing = true;
-			AnimCE ac = icet.anim;
-			ac.localize();
-			agt.renewNodes();
+					if (!Opts.conf())
+						return;
+					changing = true;
+					AnimCE ac = icet.anim;
+					ac.localize();
+					agt.renewNodes();
 
-			DefaultMutableTreeNode leftNode = agt.selectVeryFirstBaseNodeOr();
+					DefaultMutableTreeNode leftNode = agt.selectVeryFirstBaseNodeOr();
 
-			if(leftNode != null) {
-				agt.expandCurrentAnimNode(leftNode);
-				jta.setSelectionPath(new TreePath(leftNode.getPath()));
-			}
+					if (leftNode != null) {
+						agt.expandCurrentAnimNode(leftNode);
+						jta.setSelectionPath(new TreePath(leftNode.getPath()));
+					}
 
-			setA(leftNode == null ? null : (AnimCE) leftNode.getUserObject());
+					setA(leftNode == null ? null : (AnimCE) leftNode.getUserObject());
 
-			changing = false;
-		}
+					changing = false;
+				}
 
 		);
 
@@ -395,7 +395,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		});
 
 		white.setLnr(e -> {
-			if(!sb.isAnimValid())
+			if (!sb.isAnimValid())
 				return;
 
 			white.setText(MainLocale.getLoc(MainLocale.PAGE, sb.white ? "blackBG" : "whiteBG"));
@@ -418,27 +418,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 		addl.addActionListener(arg0 -> {
 			changing = true;
-			ImgCut ic = icet.anim.imgcut;
-			int[][] data = ic.cuts;
-			String[] name = ic.strs;
-			ic.cuts = new int[++ic.n][];
-			ic.strs = new String[ic.n];
-			for (int i = 0; i < data.length; i++) {
-				ic.cuts[i] = data[i];
-				ic.strs[i] = name[i];
-			}
-			int ind = icet.getSelectedRow();
-			if (ind >= 0)
-				ic.cuts[ic.n - 1] = ic.cuts[ind].clone();
-			else
-				ic.cuts[ic.n - 1] = new int[] { 0, 0, 1, 1 };
-			ic.strs[ic.n - 1] = "";
-			icet.anim.unSave("imgcut add line");
-			resized();
-			lsm.setSelectionInterval(ic.n - 1, ic.n - 1);
-			int h = icet.getRowHeight();
-			icet.scrollRectToVisible(new Rectangle(0, h * (ic.n - 1), 1, h));
-			setB();
+			sb.newSprite(icet.getSelectedRow(), null);
 			changing = false;
 		});
 
@@ -519,19 +499,19 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 			TreePath[] paths = jta.getSelectionPaths();
 
-			if(paths == null)
+			if (paths == null)
 				return;
 
 			ArrayList<AnimCE> anims = new ArrayList<>();
 
 			//validation
-			for(TreePath path : paths) {
-				if(!(path.getLastPathComponent() instanceof DefaultMutableTreeNode))
+			for (TreePath path : paths) {
+				if (!(path.getLastPathComponent() instanceof DefaultMutableTreeNode))
 					return;
 
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
 
-				if(!(node.getUserObject() instanceof AnimCE))
+				if (!(node.getUserObject() instanceof AnimCE))
 					return;
 
 				anims.add((AnimCE) node.getUserObject());
@@ -622,7 +602,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 	private void setA(AnimCE anim) {
 		boolean boo = changing;
-		if(anim != null) {
+		if (anim != null) {
 			anim.check();
 		}
 		changing = true;
@@ -653,18 +633,18 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 
 		TreePath[] paths = jta.getSelectionPaths();
 
-		if(paths == null)
+		if (paths == null)
 			mergeEnabled = false;
 		else {
-			for(TreePath path : paths) {
-				if(!(path.getLastPathComponent() instanceof DefaultMutableTreeNode)) {
+			for (TreePath path : paths) {
+				if (!(path.getLastPathComponent() instanceof DefaultMutableTreeNode)) {
 					mergeEnabled = false;
 					break;
 				}
 
 				DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
 
-				if(!(node.getUserObject() instanceof AnimCE)) {
+				if (!(node.getUserObject() instanceof AnimCE)) {
 					mergeEnabled = false;
 					break;
 				}
@@ -699,5 +679,4 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	private void setC() {
 		swcl.setText(jlf.getSelectedValue() + " to " + jlt.getSelectedValue());
 	}
-
 }

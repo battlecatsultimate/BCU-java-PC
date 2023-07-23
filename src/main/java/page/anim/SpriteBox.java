@@ -264,7 +264,10 @@ class SpriteBox extends JPanel implements KeyListener, MouseInputListener, Mouse
 		Point p = e.getPoint();
 		if (!drag) {
 			Point p2 = new Point(p.x + (int) x, p.y + (int) y);
-			sele = findSprite(p2);
+			if (e.getClickCount() >= 2)
+				newSprite(-1, p2);
+			else
+				sele = findSprite(p2);
 			page.callBack(this);
 		}
 
@@ -280,11 +283,11 @@ class SpriteBox extends JPanel implements KeyListener, MouseInputListener, Mouse
 			int[] line = anim.imgcut.cuts[sele];
 			int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 			if ((e.getModifiers() & modifier) > 0) {
-				line[2] = Math.max(line[2] + (p1.x - p0.x), 1);
-				line[3] = Math.max(line[3] + (p1.y - p0.y), 1);
-			} else {
 				line[0] += p1.x - p0.x;
 				line[1] += p1.y - p0.y;
+			} else {
+				line[2] = Math.max(line[2] + (p1.x - p0.x), 1);
+				line[3] = Math.max(line[3] + (p1.y - p0.y), 1);
 			}
 			anim.ICedited();
 		}
@@ -306,5 +309,29 @@ class SpriteBox extends JPanel implements KeyListener, MouseInputListener, Mouse
 		sele = id;
 		if (callback)
 			page.callBack(this);
+	}
+
+	protected void newSprite(int selected, Point p) {
+		if (anim == null)
+			return;
+
+		ImgCut ic = anim.imgcut;
+		int[][] data = ic.cuts;
+		String[] name = ic.strs;
+		ic.cuts = new int[++ic.n][];
+		ic.strs = new String[ic.n];
+		for (int i = 0; i < data.length; i++) {
+			ic.cuts[i] = data[i];
+			ic.strs[i] = name[i];
+		}
+		int ind = ic.n - 1;
+		if (selected == -1)
+			ic.cuts[ind] = p == null ? new int[] { 0, 0, 1, 1 } : new int[] { (int) (p.x / size), (int) (p.y / size), 1, 1 };
+		else
+			ic.cuts[ind] = ic.cuts[selected].clone();
+		ic.strs[ind] = "";
+		anim.unSave("imgcut add line");
+		sele = ind;
+		page.callBack(this);
 	}
 }
