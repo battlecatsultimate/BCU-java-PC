@@ -98,7 +98,7 @@ public class MusicEditPage extends Page {
 			return;
 		}
 
-		relo.doClick();
+		readMusic();
 	}
 
 	private void stopBG() {
@@ -106,6 +106,13 @@ public class MusicEditPage extends Page {
 			BCMusic.BG.stop();
 			BCMusic.clear();
 		}
+	}
+
+	private void readMusic() {
+		pack.loadMusics();
+		for (Music m : pack.musics)
+			BCMusic.CACHE_CUSTOM.remove(m.getID());
+		setList();
 	}
 
 	private void addListeners() {
@@ -117,7 +124,18 @@ public class MusicEditPage extends Page {
 		addm.addActionListener(x -> getFile("Choose your file", null));
 
 		remm.addActionListener(x -> {
+			if (!Opts.conf("Are you sure you want to delete music " + sele.id.id + "?"))
+				return;
 
+			File source = ((Source.Workspace) pack.source).getMusFile(sele.id);
+			try {
+				if (!source.delete())
+					Opts.warnPop("Failed to delete music " + sele.id.id, "Delete Failed");
+				else
+					readMusic();
+			} catch (Exception e) {
+				CommonStatic.ctx.noticeErr(e, Context.ErrType.WARN, "failed to delete file");
+			}
 		});
 
 		impt.addActionListener(x -> getFile("Choose your file", jlst.getSelectedValue().getID()));
@@ -130,19 +148,14 @@ public class MusicEditPage extends Page {
 					return;
 				if (!e.file.getName().endsWith(".ogg"))
 					e.file = new File(e.file + ".ogg");
-				File host = ((Source.Workspace) pack.source).getMusFile(sele.id);
-				Files.copy(host.toPath(), e.file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+				File source = ((Source.Workspace) pack.source).getMusFile(sele.id);
+				Files.copy(source.toPath(), e.file.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			} catch (Exception e) {
 				CommonStatic.ctx.noticeErr(e, Context.ErrType.WARN, "failed to write file");
 			}
 		});
 
-		relo.addActionListener(arg0 -> {
-			pack.loadMusics();
-			for (Music m : pack.musics)
-				BCMusic.CACHE_CUSTOM.remove(m.getID());
-			setList();
-		});
+		relo.addActionListener(arg0 -> readMusic());
 
 		show.addActionListener(arg0 -> {
 			File f = new File(CommonStatic.ctx.getBCUFolder(), "./workspace/" + pack.desc.id + "/musics/");
