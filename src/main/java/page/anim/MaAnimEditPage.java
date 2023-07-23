@@ -155,7 +155,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		});
 	}
 
-//	private P realScale(int[] part, boolean ignoreFirst) { // this is kinda finicky, but it works enough
+	//	private P realScale(int[] part, boolean ignoreFirst) { // this is kinda finicky, but it works enough
 //		P scale = ignoreFirst ? new P(1.0, 1.0) : new P(part[8] / 1000.0, part[9] / 1000.0);
 //		if (part[0] != -1)
 //			scale.times(realScale(mmet.mm.parts[part[0]], false));
@@ -266,7 +266,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 	@Override
 	protected synchronized void resized(int x, int y) {
 		setBounds(0, 0, x, y);
-		set(aep, x, y, 800, 0, 1750, 50);
+		set(aep, x, y, 750, 0, 1500, 50);
 		set(back, x, y, 0, 0, 200, 50);
 
 		set(camres, x, y, 350, 0, 200, 50);

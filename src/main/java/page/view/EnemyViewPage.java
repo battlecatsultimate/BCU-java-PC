@@ -62,12 +62,11 @@ public class EnemyViewPage extends AbViewPage {
 	@Override
 	protected void resized(int x, int y) {
 		super.resized(x, y);
+		set(source, x, y, 0, 50, 600, 50);
 		if (!larges.isSelected()) {
 			set(jspu, x, y, 50, 100, 300, 1100);
 			set(stat, x, y, 400, 1000, 300, 50);
-			set(source, x, y, 0, 50, 600, 50);
 		} else {
-			set(source, x, y, 0, 500, 500, 50);
 			set(jspu, x, y, 50, 800, 300, 400);
 			set(stat, x, y, 150, 1200, 200, 50);
 		}

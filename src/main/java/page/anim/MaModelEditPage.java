@@ -45,6 +45,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	private final JBTN sort = new JBTN(0, "sort");
 	private final JBTN camres = new JBTN(0, "rescam");
 	private final JBTN zomres = new JBTN(0, "reszom");
+	private final JBTN zenm = new JBTN(0, "zenmode");
 	private final EditHead aep;
 	private Point p = null;
 	private MMTree mmt;
@@ -269,25 +270,42 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	@Override
 	protected synchronized void resized(int x, int y) {
 		setBounds(0, 0, x, y);
-		set(aep, x, y, 800, 0, 1750, 50);
+		set(aep, x, y, 750, 0, 1500, 50);
 		set(back, x, y, 0, 0, 200, 50);
-		set(camres, x, y, 350, 0, 200, 50);
-		set(zomres, x, y, 560, 0, 200, 50);
 
-		set(jspu, x, y, 50, 100, 300, 500);
-		set((Canvas) mb, x, y, 350, 100, 800, 500);
-		set(jspp, x, y, 1150, 100, 300, 450);
-		set(sb, x, y, 1450, 100, 800, 450);
+		if (aep.isZenMode()) {
+			set(jspu, x, y, 50, 100, 300, 500);
+			set(camres, x, y, 350, 50, 200, 50);
+			set(zomres, x, y, 560, 50, 200, 50);
+			set((Component) mb, x, y, 350, 100, 750, 450);
+			set(jspp, x, y, 1100, 100, 300, 450);
+			set(sb, x, y, 1400, 100, 850, 450);
 
-		set(jspmm, x, y, 50, 600, 1900, 650);
-		set(jsptr, x, y, 1950, 600, 300, 650);
+			set(jsptr, x, y, 50, 600, 300, 650);
+			set(jspmm, x, y, 350, 600, 1900, 650);
 
-		set(addl, x, y, 1150, 550, 200, 50);
-		set(reml, x, y, 1350, 550, 200, 50);
-		set(rema, x, y, 1550, 550, 200, 50);
-		set(sort, x, y, 1850, 550, 200, 50);
-		set(revt, x, y, 2050, 550, 200, 50);
+			set(addl, x, y, 350, 550, 200, 50);
+			set(reml, x, y, 550, 550, 200, 50);
+			set(rema, x, y, 750, 550, 200, 50);
+			set(sort, x, y, 1850, 550, 200, 50);
+			set(revt, x, y, 2050, 550, 200, 50);
+		} else {
+			set(jspu, x, y, 50, 100, 300, 500);
+			set(camres, x, y, 350, 50, 200, 50);
+			set(zomres, x, y, 560, 50, 200, 50);
+			set((Component) mb, x, y, 350, 100, 750, 450);
+			set(jspp, x, y, 1100, 100, 300, 450);
+			set(sb, x, y, 1400, 100, 850, 450);
 
+			set(jsptr, x, y, 50, 600, 300, 650);
+			set(jspmm, x, y, 350, 600, 1900, 650);
+
+			set(addl, x, y, 350, 550, 200, 50);
+			set(reml, x, y, 550, 550, 200, 50);
+			set(rema, x, y, 750, 550, 200, 50);
+			set(sort, x, y, 1850, 550, 200, 50);
+			set(revt, x, y, 2050, 550, 200, 50);
+		}
 		SwingUtilities.invokeLater(() -> jlt.setUI(new TreeNodeExpander(jlt)));
 		aep.componentResized(x, y);
 		mmet.setRowHeight(size(x, y, 50));

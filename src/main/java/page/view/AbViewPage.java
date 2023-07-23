@@ -34,15 +34,15 @@ public abstract class AbViewPage extends Page {
 	private final JScrollPane jspt = new JScrollPane(jlt);
 	private final JSlider jst = new JSlider(100, 900);
 	private final JSlider jtl = new JSlider();
-	private final JTG jtb = new JTG(MainLocale.PAGE, "pause");
+	private final JTG pau = new JTG(MainLocale.PAGE, "pause");
 	private final JBTN nex = new JBTN(MainLocale.PAGE, "nextf");
 	private final JTG gif = new JTG(MainLocale.PAGE, "gif");
 	private final JTG mp4 = new JTG(MainLocale.PAGE, "expmp4");
 	private final JBTN png = new JBTN(MainLocale.PAGE, "png");
 	protected final JBTN camres = new JBTN(MainLocale.PAGE, "rescam");
 	protected final JTG larges = new JTG(MainLocale.PAGE, "larges");
-	private final JLabel scale = new JLabel(MainLocale.getLoc(MainLocale.PAGE, "zoom"));
-	private final JTF manualScale = new JTF();
+	private final JLabel jlsc = new JLabel(MainLocale.getLoc(MainLocale.PAGE, "zoom"));
+	private final JTF jtfs = new JTF();
 
 	protected final ViewBox vb;
 
@@ -63,7 +63,7 @@ public abstract class AbViewPage extends Page {
 	}
 
 	protected void enabler(boolean b) {
-		jtb.setEnabled(b);
+		pau.setEnabled(b);
 		back.setEnabled(b);
 		copy.setEnabled(b);
 		jlt.setEnabled(b);
@@ -119,15 +119,15 @@ public abstract class AbViewPage extends Page {
 		add((Canvas) vb);
 		add(jspt);
 		add(jst);
-		add(jtb);
+		add(pau);
 		add(jtl);
 		add(nex);
 		add(gif);
 		add(png);
 		add(mp4);
-		add(scale);
+		add(jlsc);
 		add(larges);
-		add(manualScale);
+		add(jtfs);
 		jst.setPaintLabels(true);
 		jst.setPaintTicks(true);
 		jst.setMajorTickSpacing(100);
@@ -144,34 +144,39 @@ public abstract class AbViewPage extends Page {
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);
-		set(camres, x ,y, 600, 0, 200, 50);
-		set(copy, x, y, 300, 0, 200, 50);
-		set(larges, x, y , 900, 0, 200, 50);
+		set(copy, x, y, 250, 0, 200, 50);
+		set(larges, x, y , 500, 0, 200, 50);
 		if (larges.isSelected()) {
-			set((Canvas) vb, x, y, 500, 50, 1800, 1200);
-			set(jspt, x, y, 100, 100, 300, 400);
-			set(jtb, x, y, 25, 550, 200, 50);
-			set(jtl, x, y, 0, 700, 500, 100);
-			set(nex, x, y, 275, 550, 200, 50);
-			set(png, x, y, 0, 650, 150, 50);
-			set(gif, x, y, 175, 650, 150, 50);
-			set(mp4, x, y, 350, 650, 150, 50);
-			set(scale, x, y, 100, 50, 100, 50);
-			set(manualScale, x, y, 200, 50, 150, 50);
+			set((Canvas) vb, x, y, 500, 100, 1600, 1000); // 2300 - 1600 = 700
+			set(jlsc, x, y, 500, 50, 100, 50);
+			set(jtfs, x, y, 600, 50, 150, 50);
+			set(camres, x ,y, 750, 50, 200, 50);
+
+			set(jtl, x, y, 500, 1100, 1600, 100);
+			set(pau, x, y, 500, 1200, 200, 50);
+			set(nex, x, y, 700, 1200, 200, 50);
+			set(png, x, y, 1500, 1200, 200, 50);
+			set(gif, x, y, 1700, 1200, 200, 50);
+			set(mp4, x, y, 1900, 1200, 200, 50);
+
+			set(jspt, x, y, 100, 200, 300, 400);
 			set(jst, x, y, 0, 0, 0, 0);
 		} else {
 			set((Canvas) vb, x, y, 1000, 100, 1000, 600);
+			set(jlsc, x, y, 1000, 50, 100, 50);
+			set(jtfs, x, y, 1075, 50, 150, 50);
+			set(camres, x ,y, 1225, 50, 200, 50);
+
 			set(jspt, x, y, 400, 550, 300, 400);
 			set(jst, x, y, 1000, 750, 1000, 100);
 			set(jtl, x, y, 1000, 900, 1000, 100);
-			set(jtb, x, y, 1300, 1050, 200, 50);
+			set(pau, x, y, 1300, 1050, 200, 50);
 			set(nex, x, y, 1600, 1050, 200, 50);
 			set(png, x, y, 1300, 1150, 200, 50);
 			set(gif, x, y, 1600, 1150, 400, 50);
 			set(mp4, x, y, 1800, 1050, 200, 50);
-			set(scale, x, y, 1000, 50, 100, 50);
-			set(manualScale, x, y, 1075, 50, 150, 50);
 		}
+		jspt.revalidate();
 	}
 
 	protected <T extends Enum<T> & AnimI.AnimType<?, T>> void setAnim(AnimI<?, T> a) {
@@ -229,7 +234,7 @@ public abstract class AbViewPage extends Page {
 		}
 
 		if(!focusOn) {
-			manualScale.setText(df.format(vb.getCtrl().siz * 100.0) + " %");
+			jtfs.setText(df.format(vb.getCtrl().siz * 100.0) + " %");
 		}
 	}
 
@@ -279,8 +284,8 @@ public abstract class AbViewPage extends Page {
 
 		});
 
-		jtb.addActionListener(arg0 -> {
-			pause = jtb.isSelected();
+		pau.addActionListener(arg0 -> {
+			pause = pau.isSelected();
 			enabler(true);
 		});
 
@@ -302,7 +307,7 @@ public abstract class AbViewPage extends Page {
 			add((Canvas) vb);
 		});
 
-		manualScale.addFocusListener(new FocusAdapter() {
+		jtfs.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent e) {
 				super.focusGained(e);
@@ -314,7 +319,7 @@ public abstract class AbViewPage extends Page {
 			public void focusLost(FocusEvent e) {
 				super.focusLost(e);
 
-				String text = manualScale.getText();
+				String text = jtfs.getText();
 
 				double value = CommonStatic.parseDoubleN(text) / 100.0;
 
