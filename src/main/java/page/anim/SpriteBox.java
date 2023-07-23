@@ -234,6 +234,10 @@ class SpriteBox extends JPanel implements KeyListener, MouseInputListener, Mouse
 	@Override
 	public void mousePressed(MouseEvent e) {
 		c = e.getPoint();
+		if (e.getClickCount() >= 2) {
+			if (page instanceof MaModelEditPage)
+				((MaModelEditPage) page).addLine();
+		}
 	}
 
 	@Override
