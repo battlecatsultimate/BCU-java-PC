@@ -83,7 +83,12 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			}
 			if (mb.getEntity() != null)
 				mb.getEntity().organize();
-			if (o instanceof SpriteBox) {
+			if (o instanceof SpriteBox && mmet.anim != null) {
+				String[] name = new String[mmet.anim.imgcut.n];
+				for (int i = 0; i < name.length; i++)
+					name[i] = i + " " + mmet.anim.imgcut.strs[i];
+				jlp.setListData(name);
+
 				if (sb.sele >= 0) {
 					jlp.getSelectionModel().setSelectionInterval(sb.sele, sb.sele);
 					int[] selected = mmet.getSelectedRows();
@@ -290,11 +295,9 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		mb.draw();
 	}
 
-	private void addLine() {
+	protected void addLine() {
 		change(0, o -> {
-			int ind = mmet.getSelectedRow() + 1;
-			if (ind == 0)
-				ind++;
+			int ind = Math.max(1, mmet.getSelectedRow() + 1);
 			MaModel mm = mmet.mm;
 			int[] inds = new int[mm.n];
 			for (int i = 0; i < mm.n; i++)
@@ -353,7 +356,11 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			change((AnimCE) node.getUserObject(), this::setA);
 		});
 
-		jlp.addListSelectionListener(arg0 -> sb.setSprite(jlp.getSelectedIndex(), false)); // TODO: fix when selecting multiple lines >:(
+		jlp.addListSelectionListener(arg0 -> {
+			if (isAdj() || arg0.getValueIsAdjusting())
+				return;
+			sb.setSprite(jlp.getSelectedIndex(), false);
+		}); // TODO: fix when selecting multiple lines >:(
 
 		ListSelectionModel lsm = mmet.getSelectionModel();
 

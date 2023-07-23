@@ -1,7 +1,6 @@
 package page.anim;
 
 import common.CommonStatic;
-import common.system.P;
 import common.util.anim.*;
 import main.Opts;
 import page.JBTN;
@@ -10,7 +9,6 @@ import page.JTG;
 import page.Page;
 import page.support.AnimTreeRenderer;
 import page.support.TreeNodeExpander;
-
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -96,25 +94,30 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 	@Override
 	public void callBack(Object o) {
-		if (o instanceof SpriteBox) {
-			if (sb.sele >= 0) {
-				jlp.getSelectionModel().setSelectionInterval(sb.sele, sb.sele);
-				int[] rows = maet.getSelectedRows();
-				if (rows.length != 1 || maet.ma.parts[rows[0]].ints[1] != 2)
-					return;
+		if (o instanceof SpriteBox && maet.anim != null)
+			change((SpriteBox) o, sbo -> {
+				String[] name = new String[maet.anim.imgcut.n];
+				for (int i = 0; i < name.length; i++)
+					name[i] = i + " " + maet.anim.imgcut.strs[i];
+				jlp.setListData(name);
+				if (sb.sele >= 0) {
+					jlp.getSelectionModel().setSelectionInterval(sb.sele, sb.sele);
+					int[] rows = maet.getSelectedRows();
+					if (rows.length != 1 || maet.ma.parts[rows[0]].ints[1] != 2)
+						return;
 
-				changing = true;
-				int[] selected = mpet.getSelectedRows();
-				int[][] cells = mpet.part.moves;
-				for (int i : selected)
-					cells[i][1] = sb.sele;
-				maet.anim.unSave("maanim sprite select");
-				changing = false;
-			} else {
-				jlp.clearSelection();
-			}
-		}
-		if (o instanceof int[])
+					changing = true;
+					int[] selected = mpet.getSelectedRows();
+					int[][] cells = mpet.part.moves;
+					for (int i : selected)
+						cells[i][1] = sb.sele;
+					maet.anim.unSave("maanim sprite select");
+					changing = false;
+				} else {
+					jlp.clearSelection();
+				}
+			});
+		else if (o instanceof int[])
 			change((int[]) o, rs -> {
 				if (rs[0] == 0) {
 					maet.setRowSelectionInterval(rs[1], rs[2]);
@@ -371,7 +374,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		});
 
 		jlp.addListSelectionListener(arg0 -> {
-			if (isAdj() || jlp.getValueIsAdjusting())
+			if (isAdj() || arg0.getValueIsAdjusting())
 				return;
 			sb.setSprite(jlp.getSelectedIndex(), false);
 		});
