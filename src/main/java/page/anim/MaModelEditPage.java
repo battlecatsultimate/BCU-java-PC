@@ -127,6 +127,13 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		return scale;
 	}
 
+	private int realAngle(int[] part, boolean ignoreFirst) {
+		int angle = ignoreFirst ? 0 : part[10];
+		if (part[0] != -1)
+			angle += realAngle(mmet.mm.parts[part[0]], false);
+		return angle;
+	}
+
 	@Override
 	protected void mouseDragged(MouseEvent e) {
 		if (p == null)
@@ -162,7 +169,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 					for (int i : rows) {
 						part = parts[i];
 						P scale = realScale(part, false);
-						double angle = part[10] / 1800.0 * Math.PI; // TODO adjust speed according to angle
+						double angle = realAngle(part, false) / 1800.0 * Math.PI; // TODO adjust speed according to angle
 						double sin = Math.sin(angle);
 						double cos = Math.cos(angle);
 						int x = i != 0 ? p0.x - p1.x : p1.x - p0.x;
@@ -174,8 +181,13 @@ public class MaModelEditPage extends Page implements AbEditPage {
 					for (int i : rows) {
 						part = parts[i];
 						P scale = realScale(part, true);
-						part[4] += (p1.x - p0.x) / (scale.x);
-						part[5] += (p1.y - p0.y) / (scale.y);
+						double angle = realAngle(part, true) / 1800.0 * Math.PI;
+						double sin = Math.sin(angle);
+						double cos = Math.cos(angle);
+						int x = p1.x - p0.x;
+						int y = p1.y - p0.y;
+						part[4] += ((x * cos) + (y * sin)) / (scale.x);
+						part[5] += ((y * cos) - (x * sin)) / (scale.y);
 					}
 				}
 			}
