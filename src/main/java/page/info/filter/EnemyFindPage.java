@@ -121,6 +121,7 @@ public class EnemyFindPage extends Page implements SupPage<AbEnemy> {
 		add(source);
 		add(seatf);
 		show.setSelected(true);
+		seatf.setHint("Search enemy");
 		addListeners();
 	}
 

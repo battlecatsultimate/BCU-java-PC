@@ -150,7 +150,7 @@ public class EnemyEditPage extends EntityEditPage {
 			eneDesc = new String[]{"","","",""};
 
 		for (int i = 0; i < 4; i++)
-			edesc[i].setText("" + (eneDesc[i].length() > 0 ? eneDesc[i] : "Description Line " + (i + 1)));
+			edesc[i].setHint(eneDesc[i].length() > 0 ? eneDesc[i] : "Description Line " + (i + 1));
 		fsr.setText("star: " + ce.star);
 		fdr.setText("" + Math.floor(ce.getDrop() * bas.t().getDropMulti()) / 100);
 		fli.setText(ce.getLimit() + "");

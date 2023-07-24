@@ -117,6 +117,7 @@ public class UnitFindPage extends Page implements SupPage<Unit> {
 		add(jsp);
 		add(seatf);
 		show.setSelected(true);
+		seatf.setHint("Search cat");
 		addListeners();
 	}
 
