@@ -26,7 +26,6 @@ import utilpc.UtilPC;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -104,7 +103,6 @@ public class BasisPage extends LubCont {
 		ini();
 		resized();
 	}
-
 
 	public void requireResize() {
 		resize = true;
@@ -224,10 +222,10 @@ public class BasisPage extends LubCont {
 		for (int i = 0; i < jbcsR.length; i++) // 1375 - 1170 = 205
 			set(jbcsR[i], x, y, 1350, 160 + 103 * i, 100, 50);
 
-		jlc.setRowHeight(50);
-		jlc.getColumnModel().getColumn(2).setPreferredWidth(size(x, y, 300));
-		trea.resized(x, y);
 		if (resize) {
+			jlc.setRowHeight(50);
+			jlc.setPreferredWidth(x, y);
+			trea.resized(x, y);
 			trea.setPreferredSize(size(x, y, trea.getPWidth(), trea.getPHeight()).toDimension());
 			jspt.getVerticalScrollBar().setUnitIncrement(size(x, y, 25));
 			jspt.revalidate();
@@ -570,7 +568,6 @@ public class BasisPage extends LubCont {
 		add(jspcl);
 		add(jspc);
 		add(jspcn);
-		add(lub);
 		add(jspul);
 		add(setc);
 		add(bsjtf);

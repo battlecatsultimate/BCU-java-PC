@@ -26,7 +26,7 @@ public class ComboListTable extends SortTable<Combo> {
 
 	public static void redefine() {
 		String str = MainLocale.getLoc(MainLocale.INFO, "unit");
-		tit = new String[] { "ID", "Lv.", MainLocale.getLoc(MainLocale.INFO, "desc"),
+		tit = new String[] { "name", "Lv.", MainLocale.getLoc(MainLocale.INFO, "desc"),
 				MainLocale.getLoc(MainLocale.INFO, "occu"), str + " 1", str + " 2", str + " 3", str + " 4",
 				str + " 5" };
 		Interpret.lvl = new String[] { "Sm", "M", "L", "XL" };
@@ -144,5 +144,10 @@ public class ComboListTable extends SortTable<Combo> {
 			return t.forms[c - 4];
 		}
 		return null;
+	}
+
+	protected void setPreferredWidth(int x, int y) {
+		getColumnModel().getColumn(0).setPreferredWidth(Math.min(200 * x / 2300, 200 * y / 1300));
+		getColumnModel().getColumn(2).setPreferredWidth(Math.min(300 * x / 2300, 300 * y / 1300));
 	}
 }

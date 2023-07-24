@@ -33,7 +33,7 @@ public class LineUpBox extends Canvas {
 	protected boolean swap = false;
 
 	protected Limit lim;
-	protected int price;
+	protected int price = 1;
 
 	protected Form sf;
 
