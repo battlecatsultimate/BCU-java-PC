@@ -55,8 +55,8 @@ class LoadPage : Page(null) {
         }
 
         @JvmStatic
-		fun prog(str: String) {
-            lp?.set(str)
+		fun prog(str: String?) {
+            lp?.set(str ?: "unknown")
         }
     }
 }
