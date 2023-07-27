@@ -225,7 +225,10 @@ public class FormEditPage extends EntityEditPage {
 			uniDesc = new String[]{"","","",""};
 
 		for (int i = 0; i < fdesc.length; i++)
-			fdesc[i].setHint(uniDesc[i].length() > 0 ? uniDesc[i] : "Description Line " + (i + 1));
+			if (uniDesc[i].length() == 0)
+				fdesc[i].setHint("Description Line " + (i + 1));
+			else
+				fdesc[i].setText(uniDesc[i]);
 		flv.setText(lv + "");
 		frs.setText(bas.t().getFinRes(cu.getRespawn()) + "");
 		fdr.setText((int) Math.round(cu.getPrice() * 1.5) + "");
