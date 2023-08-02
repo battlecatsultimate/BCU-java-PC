@@ -5,8 +5,6 @@ import common.util.unit.Enemy;
 import page.*;
 
 import javax.swing.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
@@ -105,12 +103,7 @@ public class EnemyFindPage extends Page implements SupPage<AbEnemy> {
 				remove(efb);
 		});
 
-		seatf.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-				setSearch(seatf.getText());
-			}
-		});
+		seatf.setTypeLnr(x -> setSearch(seatf.getText()));
 	}
 
 	private void ini() {

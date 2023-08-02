@@ -21,8 +21,6 @@ import page.support.RLFIM;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Set;
@@ -198,12 +196,9 @@ public class StageEditPage extends Page {
 
 		veif.setLnr(x -> changePanel(efp));
 
-		enam.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-				efp.setSearch(enam.getText());
-				renew();
-			}
+		enam.setTypeLnr(x -> {
+			efp.setSearch(enam.getText());
+			renew();
 		});
 	}
 

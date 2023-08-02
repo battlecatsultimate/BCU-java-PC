@@ -1,10 +1,8 @@
 package page
 
+import main.MainBCU
 import java.awt.*
-import java.awt.event.FocusAdapter
-import java.awt.event.FocusEvent
-import java.awt.event.KeyAdapter
-import java.awt.event.KeyEvent
+import java.awt.event.*
 import java.util.function.Consumer
 import javax.swing.JTextField
 
@@ -28,6 +26,22 @@ class JTF @JvmOverloads constructor(tos: String = "") : JTextField(tos), CustomC
                 c.accept(e)
             }
         })
+    }
+
+    fun setTypeLnr(c: Consumer<ComponentEvent>) {
+        if (MainBCU.searchPerKey) {
+            addKeyListener(object: KeyAdapter() {
+                override fun keyTyped(e: KeyEvent?) {
+                    c.accept(e as ComponentEvent)
+                }
+            })
+        } else {
+            addFocusListener(object: FocusAdapter() {
+                override fun focusLost(e: FocusEvent?) {
+                    c.accept(e as ComponentEvent)
+                }
+            })
+        }
     }
 
     fun setHint(h: String?) {

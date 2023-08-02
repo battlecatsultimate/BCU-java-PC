@@ -245,12 +245,9 @@ public class BasisPage extends LubCont {
 
 		unit.addActionListener(e -> changePanel(ufp));
 
-		ujtf.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-				ufp.search(ujtf.getText());
-				renew();
-			}
+		ujtf.setTypeLnr(x -> {
+			ufp.search(ujtf.getText());
+			renew();
 		});
 
 		ul.addMouseListener(new MouseAdapter() {
@@ -514,14 +511,11 @@ public class BasisPage extends LubCont {
 
 		reset.addActionListener(x -> lub.resetBackup());
 
-		cjtf.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-				comboName = cjtf.getText();
-				changing = true;
-				setCL(jlcs.getSelectedIndex());
-				changing = false;
-			}
+		cjtf.setTypeLnr(x -> {
+			comboName = cjtf.getText();
+			changing = true;
+			setCL(jlcs.getSelectedIndex());
+			changing = false;
 		});
 
 		combo.addActionListener(x -> {

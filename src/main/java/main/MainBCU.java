@@ -308,6 +308,7 @@ public class MainBCU {
 	public static final boolean WRITE = !new File("./.idea").exists();
 	public static boolean preload = false, trueRun = true, loaded = false, USE_JOGL = false;
 	public static boolean light = true, nimbus = false, seconds = false, buttonSound = false;
+	public static boolean searchPerKey = false;
 	public static String author = "";
 	public static ImageBuilder<BufferedImage> builder;
 	public static boolean announce0510 = false;

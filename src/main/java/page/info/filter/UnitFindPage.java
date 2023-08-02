@@ -5,8 +5,6 @@ import common.util.unit.Unit;
 import page.*;
 
 import javax.swing.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
@@ -102,12 +100,7 @@ public class UnitFindPage extends Page implements SupPage<Unit> {
 				remove(ufb);
 		});
 
-		seatf.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-				setSearch(seatf.getText());
-			}
-		});
+		seatf.setTypeLnr(x -> setSearch(seatf.getText()));
 	}
 
 	private void ini() {
