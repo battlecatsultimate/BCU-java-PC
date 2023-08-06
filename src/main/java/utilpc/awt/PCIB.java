@@ -5,14 +5,13 @@ import common.system.fake.FakeImage;
 import common.system.fake.ImageBuilder;
 import common.util.Data;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.function.Supplier;
-
-import javax.imageio.ImageIO;
 
 public class PCIB extends ImageBuilder<BufferedImage> {
 
@@ -34,6 +33,11 @@ public class PCIB extends ImageBuilder<BufferedImage> {
 		}
 
 		return new FIBI(o);
+	}
+
+	@Override
+	public FakeImage build(BufferedImage o, boolean appended) {
+		return null; // TODO: PCIB build(image, boolean)
 	}
 
 	@Override
