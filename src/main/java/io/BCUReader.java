@@ -106,6 +106,9 @@ public class BCUReader extends DataIO {
 				if (jo.has("autosavetime")) {
 					MainBCU.autoSaveTime = jo.get("autosavetime").getAsInt();
 				}
+				if (jo.has("searchtype")) {
+					MainBCU.searchPerKey = jo.get("searchtype").getAsBoolean();
+				}
 				String[] exp = JsonDecoder.decode(jo.get("export_paths"), String[].class);
 				String[] imp = JsonDecoder.decode(jo.get("import_paths"), String[].class);
 				for (int i = 0; i < Math.min(Exporter.curs.length, exp.length); i++)
