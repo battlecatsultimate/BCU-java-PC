@@ -21,6 +21,11 @@ public class GLIB extends ImageBuilder<BufferedImage> {
 	}
 
 	@Override
+	public FakeImage build(BufferedImage o, boolean appended) {
+		return null; // TODO: GLIB build(image, boolean)
+	}
+
+	@Override
 	public FakeImage build(int w, int h) {
 		BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB_PRE);
 
