@@ -312,6 +312,7 @@ public class MainBCU {
 	public static String author = "";
 	public static ImageBuilder<BufferedImage> builder;
 	public static boolean announce0510 = false;
+	public static int searchTolerance = 4;
 	public static AutoSaveTimer ast;
 
 	public static void restartAutoSaveTimer() {

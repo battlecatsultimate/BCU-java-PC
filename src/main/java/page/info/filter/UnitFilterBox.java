@@ -76,7 +76,7 @@ public abstract class UnitFilterBox extends Page {
 	protected abstract List<Form> filterType();
 
 	protected List<Form> filterName() {
-		int minDiff = 5;
+		int minDiff = MainBCU.searchTolerance;
 		List<Form> forms = new ArrayList<>();
 		for (Form f : form) {
 			String fname = MultiLangCont.getStatic().FNAME.getCont(f);

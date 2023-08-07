@@ -66,7 +66,7 @@ public abstract class EnemyFilterBox extends Page {
 	protected abstract List<Enemy> filterType();
 
 	protected List<Enemy> filterName() {
-		int minDiff = 5;
+		int minDiff = MainBCU.searchTolerance;
 		List<Enemy> enemf = new ArrayList<>();
 		for (Enemy e : enem) {
 			String fname = MultiLangCont.getStatic().ENAME.getCont(e);

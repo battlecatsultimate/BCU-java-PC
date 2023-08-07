@@ -63,6 +63,7 @@ public class ConfigPage extends Page {
 	private final JL jlot = new JL(MainLocale.PAGE, "other");
 	private final JL jlre = new JL(MainLocale.PAGE, "render");
 	private final JL mbac = new JL(MainLocale.PAGE, "maxback");
+	private final JL jtol = new JL(MainLocale.PAGE, "tolerance");
 	private final JCB jcbac = new JCB(MainLocale.PAGE, "jcbac");
 	private final JCB jcmus = new JCB(MainLocale.PAGE, "updatemus");
 	private final JBTN theme = new JBTN(MainLocale.PAGE, MainBCU.light ? "themel" : "themed");
@@ -80,6 +81,7 @@ public class ConfigPage extends Page {
 	private final JCB excont = new JCB(MainLocale.PAGE, "excont");
 	private final JL autosave = new JL(MainLocale.PAGE, "autosave");
 	private final JTF savetime = new JTF(MainBCU.autoSaveTime > 0 ? MainBCU.autoSaveTime + "min" : "deactivated");
+	private final JTF tole = new JTF(String.valueOf(MainBCU.searchTolerance));
 	private final JCB reallv = new JCB(MainLocale.PAGE, "reallv");
 
 	private final JScrollPane jsps = new JScrollPane(jls);
@@ -165,14 +167,16 @@ public class ConfigPage extends Page {
 		set(nimbus, x, y, 1425, 325, 200, 50);
 		set(theme, x, y, 1425, 400, 200, 50);
 
-		set(preflv, x, y, 1225, 475, 200, 50);
-		set(prlvmd, x, y, 1425, 475, 200, 50);
-		set(autosave, x, y, 1225, 550, 200, 50);
-		set(savetime, x, y, 1425, 550, 200, 50);
+		set(jtol, x, y, 1225, 475, 200, 50);
+		set(tole, x, y, 1425, 475, 200, 50);
+		set(preflv, x, y, 1225, 550, 200, 50);
+		set(prlvmd, x, y, 1425, 550, 200, 50);
+		set(autosave, x, y, 1225, 625, 200, 50);
+		set(savetime, x, y, 1425, 625, 200, 50);
 
-		set(rlpk, x, y, 1225, 625, 400, 50);
-		set(vcol, x, y, 1225, 700, 400, 50);
-		set(vres, x, y, 1225, 775, 400, 50);
+		set(rlpk, x, y, 1225, 700, 400, 50);
+		set(vcol, x, y, 1225, 775, 400, 50);
+		set(vres, x, y, 1225, 850, 400, 50);
 
 		set(jlla, x, y, 1750, 100, 300, 50);
 		set(jsps, x, y, 1750, 150, 300, 300);
@@ -392,6 +396,11 @@ public class ConfigPage extends Page {
 		shake.addActionListener(c -> CommonStatic.getConfig().shake = shake.isSelected());
 
 		reallv.addActionListener(c -> CommonStatic.getConfig().realLevel = reallv.isSelected());
+
+		tole.setLnr(c -> {
+			MainBCU.searchTolerance = Math.max(0, CommonStatic.parseIntN(tole.getText()));
+			tole.setText(String.valueOf(MainBCU.searchTolerance));
+		});
 	}
 
 	private void ini() {
@@ -448,6 +457,8 @@ public class ConfigPage extends Page {
 		add(jcmus);
 		add(shake);
 		add(reallv);
+		add(tole);
+		add(jtol);
 		excont.setSelected(CommonStatic.getConfig().exContinuation);
 		prlvmd.setText("" + CommonStatic.getConfig().prefLevel);
 		jls.setSelectedIndex(localeIndexOf(cfg().lang));
