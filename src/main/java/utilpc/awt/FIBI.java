@@ -22,6 +22,12 @@ public class FIBI implements FakeImage {
 		bimg = read;
 	}
 
+	protected FIBI(BufferedImage read, int offsetX, int offsetY) {
+		bimg = read;
+
+		//TODO Perform texture offsetting
+	}
+
 	@Override
 	public BufferedImage bimg() {
 		return bimg;

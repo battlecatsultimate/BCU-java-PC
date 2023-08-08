@@ -36,6 +36,11 @@ public class PCIB extends ImageBuilder<BufferedImage> {
 	}
 
 	@Override
+	public FakeImage build(BufferedImage o, int offsetX, int offsetY) {
+		return null;
+	}
+
+	@Override
 	public FakeImage build(int w, int h) {
 		BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB_PRE);
 
