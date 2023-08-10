@@ -41,7 +41,7 @@ public class MusicEditPage extends Page {
 	private final JBTN play = new JBTN(0, "start");
 	private final JBTN stop = new JBTN(0, "stop");
 	private final JBTN show = new JBTN(0, "show");
-	private final JL jlp = new JL("loop");
+	private final JL jlp = new JL(0, "loop");
 	private final JTF jtp = new JTF();
 
 	private final UserPack pack;
@@ -85,6 +85,10 @@ public class MusicEditPage extends Page {
 		Importer selected = new Importer(dialogue, Importer.FileType.MUS);
 		if (!selected.exists())
 			return;
+		if (selected.verify() != 0) {
+			getFile("wrong file type", mus);
+			return;
+		}
 		if (mus == null)
 			mus = pack.getNextID(Music.class);
 

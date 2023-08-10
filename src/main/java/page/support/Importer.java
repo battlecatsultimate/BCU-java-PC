@@ -42,8 +42,10 @@ public class Importer extends JFileChooser {
 	public static final File[] curs = new File[3];
 
 	public File file;
+	private FileType ft;
 
 	public Importer(String str, FileType ft) {
+		this.ft = ft;
 		int t = ft.dir;
 		setDialogTitle(str);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(ft.desc, ft.ext);
@@ -63,7 +65,7 @@ public class Importer extends JFileChooser {
 	}
 
 	public BufferedImage getImg() {
-		if (file == null)
+		if (file == null || verify() == -1)
 			return null;
 
 		try {
@@ -72,5 +74,16 @@ public class Importer extends JFileChooser {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public int verify() {
+		if (ft == null || file == null)
+			return -1;
+
+		for (int i = 0; i < ft.ext.length; i++)
+			if (file.getName().endsWith(ft.ext[i]))
+				return i;
+
+		return -1;
 	}
 }
