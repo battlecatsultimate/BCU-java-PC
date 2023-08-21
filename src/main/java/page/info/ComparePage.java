@@ -368,10 +368,10 @@ public class ComparePage extends Page {
                         preString.append(atkDatum[1]).append("f");
                 }
 
-                main[0][index].setText((int) (hp * mul) + "");
-                main[4][index].setText((int) (m.allAtk() * mula * 30.0 / m.getItv()) + "");
+                main[0][index].setText(String.valueOf((int) (hp * mul)));
+                main[4][index].setText(String.valueOf((int) (m.allAtk() * mula * 30.0 / m.getItv())));
 
-                enem[0][index].setText(Math.floor(enemy.getDrop() * b.t().getDropMulti()) / 100 + "");
+                enem[0][index].setText(String.valueOf(Math.floor(enemy.getDrop() * b.t().getDropMulti()) / 100));
 
                 for (JL[] jls : unit)
                     jls[index].setText("-");
@@ -480,7 +480,7 @@ public class ComparePage extends Page {
 
                 double price = ef.getPrice(1);
 
-                unit[1][index].setText(price + "");
+                unit[1][index].setText(String.valueOf(price));
 
                 if (f.hasEvolveCost()) {
                     int[][] evo = f.unit.info.evo;
@@ -507,7 +507,7 @@ public class ComparePage extends Page {
                     JL xp = evol[0][evolIndex + count];
 
                     xp.setIcon(UtilPC.getScaledIcon(CommonStatic.getBCAssets().XP, 50, 30));
-                    xp.setText(f.unit.info.xp + "");
+                    xp.setText(String.valueOf(f.unit.info.xp));
                     xp.setToolTipText(f.unit.info.xp + " XP");
 
                     for (JL[] jls : evol) {
@@ -552,7 +552,7 @@ public class ComparePage extends Page {
                 if (effectiveHP > hp)
                     main[0][index].setText(hp + " (" + effectiveHP + ")");
                 else
-                    main[0][index].setText(hp + "");
+                    main[0][index].setText(String.valueOf(hp));
 
                 int effectiveDMG = atk;
                 if (overlap && (mu.getAbi() & checkAttack) > 0) {
@@ -576,7 +576,7 @@ public class ComparePage extends Page {
                     main[4][index].setText((int) (atk * 30.0 / m.getItv())
                             + " (" + (int) (effectiveDMG * 30.0 / m.getItv()) + ")");
                 else
-                    main[4][index].setText((int) (atk * 30.0 / m.getItv()) + "");
+                    main[4][index].setText(String.valueOf((int) (atk * 30.0 / m.getItv())));
 
                 for (JBTN btn : swap[i])
                     btn.setEnabled(true);
@@ -588,8 +588,8 @@ public class ComparePage extends Page {
             names[i].setIcon(UtilPC.getIcon(m.getPack().anim.getEdi()));
             names[i].setText(m.getPack().toString());
 
-            main[1][index].setText(m.getHb() + "");
-            main[2][index].setText(m.getRange() + "");
+            main[1][index].setText(String.valueOf(m.getHb()));
+            main[2][index].setText(String.valueOf(m.getRange()));
             main[3][index].setText(atkString.toString());
             main[5][index].setText(preString.toString());
             if (MainBCU.seconds) {
@@ -601,7 +601,7 @@ public class ComparePage extends Page {
                 main[7][index].setText(m.getItv() + "f");
                 main[8][index].setText(m.getTBA() + "f");
             }
-            main[9][index].setText(m.getSpeed() + "");
+            main[9][index].setText(String.valueOf(m.getSpeed()));
 
             ArrayList<Trait> trs = m.getTraits();
             trs.sort(Comparator.comparingInt(t -> t.id.id));

@@ -303,10 +303,8 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 			if (anim == null)
 				return;
 			if (Arrays.stream(anim.parts).anyMatch(p -> p.ints[0] == 0 && p.ints[1] == 9)) {
-				Arrays.stream(anim.parts).filter(p -> p.ints[0] == 0 && p.ints[1] == 9).forEach(p -> {
-					Arrays.stream(p.moves)
-							.forEach(ints -> ints[1] *= -1);
-				});
+				Arrays.stream(anim.parts).filter(p -> p.ints[0] == 0 && p.ints[1] == 9).forEach(p -> Arrays.stream(p.moves)
+						.forEach(ints -> ints[1] *= -1));
 			} else {
 				Part[] data = anim.parts;
 				anim.parts = new Part[++anim.n];

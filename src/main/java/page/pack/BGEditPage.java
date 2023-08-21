@@ -289,7 +289,7 @@ public class BGEditPage extends Page {
 			String temp = get(MainLocale.PAGE, "bgjson"+BackgroundEffect.jsonList.get(i));
 
 			if(temp.equals("bgjson"+BackgroundEffect.jsonList.get(i))) {
-				temp = get(MainLocale.PAGE, "bgeffdum").replace("_", ""+BackgroundEffect.jsonList.get(i));
+				temp = get(MainLocale.PAGE, "bgeffdum").replace("_", String.valueOf(BackgroundEffect.jsonList.get(i)));
 			}
 
 			effVector.add(temp);
@@ -382,7 +382,7 @@ public class BGEditPage extends Page {
 		}
 
 		if(alpha) {
-			os[i].setText(""+bgr.overlayAlpha);
+			os[i].setText(String.valueOf(bgr.overlayAlpha));
 		} else {
 			os[i].setText(bgr.overlay[i][0]+","+bgr.overlay[i][1]+","+bgr.overlay[i][2]);
 		}

@@ -11,13 +11,9 @@ import page.support.Exporter;
 import utilpc.UtilPC;
 
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 public class ResourcePage extends Page {
@@ -68,57 +64,43 @@ public class ResourcePage extends Page {
 
 	private void addListeners() {
 
-		back.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				changePanel(getFront());
-			}
+		back.addActionListener(arg0 -> changePanel(getFront()));
+
+		rept.addActionListener(arg0 -> {
+			File f = new Exporter(Exporter.EXP_RES).file;
+			if (f != null)
+				filemove(f.getPath() + "/", sel);
 		});
 
-		rept.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				File f = new Exporter(Exporter.EXP_RES).file;
-				if (f != null)
-					filemove(f.getPath() + "/", sel);
+		jls.addTreeSelectionListener(arg0 -> {
+			if (changing)
+				return;
+			Object obj = null;
+			TreePath tp = jls.getSelectionPath();
+			if (tp != null) {
+				obj = tp.getLastPathComponent();
+				if (obj != null)
+					obj = ((DefaultMutableTreeNode) obj).getUserObject();
+				sel = obj instanceof VFile ? (VFile) obj : null;
+			} else {
+				sel = null;
 			}
-
-		});
-
-		jls.addTreeSelectionListener(new TreeSelectionListener() {
-
-			@Override
-			public void valueChanged(TreeSelectionEvent arg0) {
-				if (changing)
-					return;
-				Object obj = null;
-				TreePath tp = jls.getSelectionPath();
-				if (tp != null) {
-					obj = tp.getLastPathComponent();
-					if (obj != null)
-						obj = ((DefaultMutableTreeNode) obj).getUserObject();
-					sel = obj instanceof VFile ? (VFile) obj : null;
-				} else {
-					sel = null;
-				}
-				if (sel != null && sel.getName().contains(".")) {
-					if (sel.getName().endsWith(".png")) {
-						jln.setIcon(UtilPC.getIcon(new VImg(sel)));
-						jt.setText(null);
-					} else {
-						jln.setIcon(null);
-						StringBuilder txt = new StringBuilder();
-						for (String str : sel.getData().readLine())
-							txt.append(str).append("\n");
-						jt.setText(txt.toString());
-					}
+			if (sel != null && sel.getName().contains(".")) {
+				if (sel.getName().endsWith(".png")) {
+					jln.setIcon(UtilPC.getIcon(new VImg(sel)));
+					jt.setText(null);
 				} else {
 					jln.setIcon(null);
-					jt.setText(null);
+					StringBuilder txt = new StringBuilder();
+					for (String str : sel.getData().readLine())
+						txt.append(str).append("\n");
+					jt.setText(txt.toString());
 				}
-				setSele();
+			} else {
+				jln.setIcon(null);
+				jt.setText(null);
 			}
-
+			setSele();
 		});
 
 	}

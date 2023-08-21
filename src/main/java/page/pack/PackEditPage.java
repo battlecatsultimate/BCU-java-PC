@@ -397,7 +397,7 @@ public class PackEditPage extends Page {
 		});
 
 		reme.addActionListener(arg0 -> {
-				if (!Opts.conf())
+			if (!Opts.conf())
 				return;
 			changing = true;
 			int ind = jle.getSelectedIndex();

@@ -517,7 +517,7 @@ public class ConfigPage extends Page {
 			if (text.length() > 0) {
 				int[] v = CommonStatic.parseIntsN(text);
 				CommonStatic.getConfig().prefLevel = Math.max(1, v[0]);
-				jtf.setText("" + CommonStatic.getConfig().prefLevel);
+				jtf.setText(String.valueOf(CommonStatic.getConfig().prefLevel));
 			}
 		});
 	}

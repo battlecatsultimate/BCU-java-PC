@@ -244,9 +244,7 @@ public class LevelEditPage extends Page {
 				return;
 
 			if (f.orbs.getSlots() != -1) {
-				for (int i = 0; i < orbs.size(); i++) {
-					orbs.set(i, new int[] {});
-				}
+				orbs.replaceAll(ignored -> new int[]{});
 			} else {
 				orbs.clear();
 			}

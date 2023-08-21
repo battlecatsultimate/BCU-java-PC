@@ -1,6 +1,5 @@
 package main;
 
-import common.CommonStatic;
 import page.MainFrame;
 
 import javax.swing.*;

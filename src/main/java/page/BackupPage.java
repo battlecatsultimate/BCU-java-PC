@@ -544,7 +544,7 @@ public class BackupPage extends Page {
                 }
 
                 for (Object[] dat : data) {
-                    DefaultMutableTreeNode te = new DefaultMutableTreeNode("" + dat[0] + dat[1] + "/");
+                    DefaultMutableTreeNode te = new DefaultMutableTreeNode(String.valueOf(dat[0]) + dat[1] + "/");
                     tst.add(te);
 
                     for (int i = 2; i < dat.length; i++) {

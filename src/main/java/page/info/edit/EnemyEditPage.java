@@ -55,7 +55,7 @@ public class EnemyEditPage extends EntityEditPage {
 			double result = (25 * Math.floor(formatDouble / 25.0)) / 10;
 
 			ce.limit = result;
-			fli.setText(result + "");
+			fli.setText(String.valueOf(result));
 		}
 		if (jtf == fdr) {
 			ce.drop = (int) Math.round(v[0] / bas.t().getDropMulti());
@@ -150,10 +150,10 @@ public class EnemyEditPage extends EntityEditPage {
 			eneDesc = new String[]{"","","",""};
 
 		for (int i = 0; i < 4; i++)
-			edesc[i].setText("" + (eneDesc[i].length() > 0 ? eneDesc[i] : "Description Line " + (i + 1)));
+			edesc[i].setText(eneDesc[i].length() > 0 ? eneDesc[i] : "Description Line " + (i + 1));
 		fsr.setText("star: " + ce.star);
-		fdr.setText("" + Math.floor(ce.getDrop() * bas.t().getDropMulti()) / 100);
-		fli.setText(ce.getLimit() + "");
+		fdr.setText(String.valueOf(Math.floor(ce.getDrop() * bas.t().getDropMulti()) / 100));
+		fli.setText(String.valueOf(ce.getLimit()));
 		fli.setToolTipText("<html>"
 				+ "This enemy will stay at least "
 				+ (ce.getLimit() - 100)

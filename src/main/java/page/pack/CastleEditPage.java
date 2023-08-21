@@ -86,7 +86,7 @@ public class CastleEditPage extends Page {
 				if (s != null)
 					ic = UtilPC.getIcon(s);
 				spwn.setEnabled(true);
-				spwn.setText("" + img.boss_spawn);
+				spwn.setText(String.valueOf(img.boss_spawn));
 			} else {
 				spwn.setEnabled(false);
 			}
@@ -104,7 +104,7 @@ public class CastleEditPage extends Page {
 				double result = (25 * Math.floor(formatDouble / 25.0)) / 100;
 
 				jlst.getSelectedValue().boss_spawn = result;
-				spwn.setText(result + "");
+				spwn.setText(String.valueOf(result));
 				changing = false;
 			}
 		});
@@ -200,7 +200,7 @@ public class CastleEditPage extends Page {
 		if (img != null) {
 			jl.setIcon(UtilPC.getIcon(img.img));
 			spwn.setEnabled(true);
-			spwn.setText(img.boss_spawn + "");
+			spwn.setText(String.valueOf(img.boss_spawn));
 		} else {
 			jl.setIcon(null);
 			spwn.setEnabled(false);
