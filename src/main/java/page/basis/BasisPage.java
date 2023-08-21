@@ -78,7 +78,7 @@ public class BasisPage extends LubCont {
 	private final JBTN[] jbcsL = new JBTN[3];
 	private final JTG cost = new JTG(1,"price");
 
-	private boolean changing = false, outside = false, resize = true;
+	private boolean changing = false, outside = false;
 
 	private UnitFLUPage ufp;
 
@@ -101,11 +101,6 @@ public class BasisPage extends LubCont {
 
 		ini();
 		resized(true);
-	}
-
-
-	public void requireResize() {
-		resize = true;
 	}
 
 	@Override
@@ -215,12 +210,10 @@ public class BasisPage extends LubCont {
 		jlc.setRowHeight(50);
 		jlc.getColumnModel().getColumn(2).setPreferredWidth(size(x, y, 300));
 		trea.resized(x, y);
-		if (resize) {
-			trea.setPreferredSize(size(x, y, trea.getPWidth(), trea.getPHeight()).toDimension());
-			jspt.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
-			jspt.revalidate();
-			resize = false;
-		}
+
+		trea.setPreferredSize(size(x, y, trea.getPWidth(), trea.getPHeight()).toDimension());
+		jspt.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
+		jspt.revalidate();
 	}
 
 	@Override

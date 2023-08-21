@@ -135,8 +135,8 @@ public class TreaTable extends Page {
 					} else {
 						close(n);
 					}
-					if (front instanceof BasisPage)
-						((BasisPage) front).requireResize();
+
+					front.resized(true);
 				});
 
 				jcf[J].addFocusListener(new FocusAdapter() {
