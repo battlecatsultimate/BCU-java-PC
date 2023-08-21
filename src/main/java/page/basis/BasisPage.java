@@ -531,6 +531,7 @@ public class BasisPage extends LubCont {
 
 	private void changeLU() {
 		jlcn.setListData(lu().coms.toArray(new Combo[0]));
+		jlc.setLU(lu());
 		setCN();
 		updateSetC();
 		lub.updateLU();
@@ -708,6 +709,7 @@ public class BasisPage extends LubCont {
 			b = lu().willRem(com);
 		setc.setForeground(b ? Color.RED : Color.BLACK);
 		setc.setText(0, "set" + (b ? "1" : "0"));
-
+		jlc.revalidate();
+		jlc.repaint();
 	}
 }
