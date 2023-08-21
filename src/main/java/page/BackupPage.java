@@ -65,7 +65,7 @@ public class BackupPage extends Page {
         super(p);
 
         ini(ntr);
-        resized();
+        resized(true);
     }
 
     @Override

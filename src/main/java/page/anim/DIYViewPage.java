@@ -49,7 +49,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		aep = new EditHead(this, 0);
 		agt = new AnimGroupTree(jlt);
 		ini();
-		resized();
+		resized(true);
 	}
 
 	public DIYViewPage(Page p, AnimCE ac) {
@@ -60,7 +60,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		if (!ac.inPool())
 			aep.focus = ac;
 		ini();
-		resized();
+		resized(true);
 	}
 
 	public DIYViewPage(Page p, EditHead bar) {
@@ -69,7 +69,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		aep = bar;
 		agt = new AnimGroupTree(jlt);
 		ini();
-		resized();
+		resized(true);
 	}
 
 	@Override

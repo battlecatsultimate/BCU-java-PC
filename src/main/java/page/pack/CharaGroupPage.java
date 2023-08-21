@@ -36,7 +36,7 @@ public class CharaGroupPage extends Page {
 		super(p);
 
 		ini();
-		resized();
+		resized(true);
 	}
 
 	public CharaGroupPage(Page p, CharaGroup chg) {

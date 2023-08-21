@@ -28,7 +28,7 @@ public class AbEnemySelectionPage extends Page implements SupPage<AbEnemy> {
 
         efb = AbEnemyFilterBox.getNew(this);
         ini();
-        resized();
+        resized(true);
         this.table = table;
         this.index = index;
     }
@@ -38,7 +38,7 @@ public class AbEnemySelectionPage extends Page implements SupPage<AbEnemy> {
 
         efb = AbEnemyFilterBox.getNew(this, pack, parents);
         ini();
-        resized();
+        resized(true);
         this.table = table;
         this.index = index;
     }
@@ -52,7 +52,7 @@ public class AbEnemySelectionPage extends Page implements SupPage<AbEnemy> {
     @SuppressWarnings("unchecked")
     public void callBack(Object o) {
         elt.setList((List<AbEnemy>) o);
-        resized();
+        resized(true);
     }
 
     public List<AbEnemy> getList() {

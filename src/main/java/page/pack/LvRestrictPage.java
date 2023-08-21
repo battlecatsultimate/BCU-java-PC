@@ -48,7 +48,7 @@ public class LvRestrictPage extends Page {
 		super(p);
 
 		ini();
-		resized();
+		resized(true);
 	}
 
 	public LvRestrictPage(Page p, LvRestrict lvr) {

@@ -40,7 +40,7 @@ public class MusicEditPage extends Page {
 		super(p);
 		pack = ac;
 		ini();
-		resized();
+		resized(true);
 	}
 
 	@Override

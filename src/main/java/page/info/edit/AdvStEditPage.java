@@ -61,7 +61,7 @@ public class AdvStEditPage extends Page {
 		sget = new SCGroupEditTable(data);
 		jspt = new JScrollPane(sget);
 		ini();
-		resized();
+		resized(true);
 	}
 
 	@Override

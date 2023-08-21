@@ -48,7 +48,7 @@ public class FormEditPage extends EntityEditPage {
 		ueb = new UnitEditBox(this, pac, cu);
 		ini();
 		setData((CustomUnit) f.du);
-		resized();
+		resized(true);
 	}
 
 	@Override
@@ -213,7 +213,7 @@ public class FormEditPage extends EntityEditPage {
 			set(jtf, x, y, 650, h, 750, 50);
 			h += 50;
 		}
-		ueb.resized();
+		ueb.resized(true);
 
 	}
 

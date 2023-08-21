@@ -92,7 +92,7 @@ public class BasisPage extends LubCont {
 		super(p);
 
 		ini();
-		resized();
+		resized(true);
 	}
 
 	public BasisPage(Page p, Limit lim, int price) {
@@ -100,7 +100,7 @@ public class BasisPage extends LubCont {
 		lub.setLimit(lim, price);
 
 		ini();
-		resized();
+		resized(true);
 	}
 
 

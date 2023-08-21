@@ -63,7 +63,7 @@ public class StagePage extends Page {
 			jt.setData(st);
 		}
 		jspjt.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
-		resized();
+		resized(true);
 	}
 
 	private void addListeners() {

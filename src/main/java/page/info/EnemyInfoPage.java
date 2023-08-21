@@ -33,7 +33,7 @@ public class EnemyInfoPage extends Page {
 		info = new EnemyInfoTable(this, de.val, de.mul, de.mula);
 		trea = new TreaTable(this);
 		ini();
-		resized();
+		resized(true);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class EnemyInfoPage extends Page {
 		cont.setPreferredSize(size(x, y, 1600, ih - 50).toDimension());
 		jsp.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
 		set(info, x, y, 0, 0, 1600, ih);
-		info.resized();
+		info.resized(true);
 		jsp.revalidate();
 	}
 

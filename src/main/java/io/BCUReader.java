@@ -20,6 +20,7 @@ import common.util.unit.Enemy;
 import common.util.unit.Unit;
 import main.MainBCU;
 import main.Opts;
+import main.Timer;
 import page.LoadPage;
 import page.MainFrame;
 import page.MainLocale;
@@ -30,6 +31,7 @@ import page.view.ViewBox;
 import utilpc.Interpret;
 
 import java.awt.*;
+import java.awt.color.CMMException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -114,6 +116,15 @@ public class BCUReader extends DataIO {
 					Exporter.curs[i] = exp[i] == null ? null : new File(exp[i]);
 				for (int i = 0; i < Importer.curs.length; i++)
 					Importer.curs[i] = imp[i] == null ? null : new File(imp[i]);
+				if (jo.has("performance")) {
+					CommonStatic.getConfig().performanceMode = jo.get("performance").getAsBoolean();
+				}
+
+				if (CommonStatic.getConfig().performanceMode) {
+					Timer.p = 1000 / 60;
+				} else {
+					Timer.p = 1000 / 30;
+				}
 			} catch (Exception e) {
 				CommonStatic.ctx.noticeErr(e, ErrType.WARN, "failed to read config");
 			}

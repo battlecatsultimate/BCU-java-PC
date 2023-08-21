@@ -39,7 +39,7 @@ public class EnemyEditPage extends EntityEditPage {
 		eeb = new EnemyEditBox(this, pack, ce);
 		ini();
 		setData((CustomEnemy) e.de);
-		resized();
+		resized(true);
 	}
 
 	@Override
@@ -138,7 +138,7 @@ public class EnemyEditPage extends EntityEditPage {
 			set(jtf, x, y, 650, h, 750, 50);
 			h += 50;
 		}
-		eeb.resized();
+		eeb.resized(true);
 
 	}
 

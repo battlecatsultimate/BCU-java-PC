@@ -64,7 +64,7 @@ public class StageSearchPage extends StagePage {
     public StageSearchPage(Page p) {
         super(p);
         ini();
-        resized();
+        resized(true);
     }
 
     @Override

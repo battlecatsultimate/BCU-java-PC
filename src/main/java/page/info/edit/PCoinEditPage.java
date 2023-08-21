@@ -30,7 +30,7 @@ public class PCoinEditPage extends Page {
             pCoinEdits.add(new PCoinEditTable(this, uni, i, editable));
 
         ini();
-        resized();
+        resized(true);
     }
 
     @Override

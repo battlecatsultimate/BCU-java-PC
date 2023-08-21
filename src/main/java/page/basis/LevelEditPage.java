@@ -4,7 +4,6 @@ import common.CommonStatic;
 import common.battle.BasisSet;
 import common.battle.LineUp;
 import common.battle.data.MaskUnit;
-import common.battle.data.Orb;
 import common.util.Data;
 import common.util.unit.Form;
 import common.util.unit.Level;
@@ -76,7 +75,7 @@ public class LevelEditPage extends Page {
 		}
 
 		ini();
-		resized();
+		resized(true);
 	}
 
 	@Override

@@ -9,8 +9,6 @@ import page.JTF;
 import page.Page;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
@@ -30,7 +28,7 @@ public class RecdSavePage extends Page {
 		recd = rec;
 
 		ini();
-		resized();
+		resized(true);
 	}
 
 	@Override

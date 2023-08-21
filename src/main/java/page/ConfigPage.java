@@ -10,6 +10,7 @@ import io.BCMusic;
 import io.BCUReader;
 import main.MainBCU;
 import main.Opts;
+import main.Timer;
 import page.support.ColorPicker;
 import page.view.ViewBox;
 import utilpc.Theme;
@@ -41,6 +42,7 @@ public class ConfigPage extends Page {
 	private final JCB jceff = new JCB(MainLocale.PAGE, "bgeff");
 	private final JCB jcdly = new JCB(MainLocale.PAGE, "btdly");
 	private final JCB stdis = new JCB(MainLocale.PAGE, "stdis");
+	private final JCB perfo = new JCB("60 FPS");
 	private final JL preflv = new JL(MainLocale.PAGE, "preflv");
 	private final JCB shake = new JCB(MainLocale.PAGE, "shake");
 	private final JTF prlvmd = new JTF();
@@ -89,7 +91,7 @@ public class ConfigPage extends Page {
 		super(p);
 
 		ini();
-		resized();
+		resized(true);
 	}
 
 	@Override
@@ -117,6 +119,7 @@ public class ConfigPage extends Page {
 		set(whit, x, y, 50, 200, 300, 50);
 		set(refe, x, y, 50, 250, 300, 50);
 		set(prel, x, y, 50, 300, 300, 50);
+		set(perfo, x, y, 50,  350, 300, 50);
 
 		for (int i = 0; i < 4; i++) {
 			set(name[i], x, y, 350, 100 + i * 75, 200, 50);
@@ -364,6 +367,16 @@ public class ConfigPage extends Page {
 
 		stdis.addActionListener(a -> CommonStatic.getConfig().stageName = !CommonStatic.getConfig().stageName);
 
+		perfo.addActionListener(a -> {
+			cfg().performanceMode = !cfg().performanceMode;
+
+			if (cfg().performanceMode) {
+				Timer.p = 1000 / 60;
+			} else {
+				Timer.p = 1000 / 30;
+			}
+		});
+
 		jceff.addActionListener(a -> CommonStatic.getConfig().drawBGEffect = !CommonStatic.getConfig().drawBGEffect);
 
 		rlpk.addActionListener(l -> UserProfile.reloadExternalPacks());
@@ -433,6 +446,7 @@ public class ConfigPage extends Page {
 		add(jceff);
 		add(jcdly);
 		add(stdis);
+		add(perfo);
 		add(rlpk);
 		add(vcol);
 		add(vres);
@@ -444,7 +458,7 @@ public class ConfigPage extends Page {
 		add(shake);
 		add(reallv);
 		excont.setSelected(CommonStatic.getConfig().exContinuation);
-		prlvmd.setText("" + CommonStatic.getConfig().prefLevel);
+		prlvmd.setText(String.valueOf(CommonStatic.getConfig().prefLevel));
 		jls.setSelectedIndex(localeIndexOf(cfg().lang));
 		jsmin.setValue(cfg().deadOpa);
 		jsmax.setValue(cfg().fullOpa);
@@ -486,6 +500,7 @@ public class ConfigPage extends Page {
 			jsba.setEnabled(false);
 		jceff.setSelected(cfg().drawBGEffect);
 		jcdly.setSelected(cfg().buttonDelay);
+		perfo.setSelected(cfg().performanceMode);
 		stdis.setSelected(cfg().stageName);
 		if (!MainBCU.nimbus) {
 			theme.setEnabled(false);

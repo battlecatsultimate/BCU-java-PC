@@ -12,7 +12,7 @@ public class DefaultPage extends Page {
 		super(p);
 
 		ini();
-		resized();
+		resized(true);
 	}
 
 	@Override

@@ -13,7 +13,7 @@ class LoadPage : Page(null) {
         lp = this
         add(jl)
         add(jpb)
-        resized()
+        resized(true)
     }
 
     fun accept(dl: Double) {

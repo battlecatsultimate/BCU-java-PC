@@ -50,7 +50,7 @@ public class CastleEditPage extends Page {
 		cas = ac.castles;
 
 		ini();
-		resized();
+		resized(true);
 	}
 
 	@Override

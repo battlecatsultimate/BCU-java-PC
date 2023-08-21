@@ -57,7 +57,7 @@ public class BGEditPage extends Page {
 		super(p);
 		pack = ac;
 		ini();
-		resized();
+		resized(true);
 	}
 
 	@Override

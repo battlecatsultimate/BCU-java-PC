@@ -470,7 +470,7 @@ public class StageEditPage extends Page {
 		advs.setEnabled(st != null);
 		elim.setEnabled(st != null && !(st.getCont().getCont() instanceof MapColc.ClipMapColc));
 		jspjt.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
-		resized();
+		resized(true);
 	}
 
 }

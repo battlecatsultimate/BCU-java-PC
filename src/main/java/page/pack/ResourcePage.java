@@ -44,7 +44,7 @@ public class ResourcePage extends Page {
 		super(p);
 
 		ini();
-		resized();
+		resized(true);
 	}
 
 	@Override

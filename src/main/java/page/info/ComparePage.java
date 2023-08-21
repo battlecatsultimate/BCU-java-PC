@@ -65,7 +65,7 @@ public class ComparePage extends Page {
         super(p);
 
         ini();
-        resized();
+        resized(true);
     }
 
     @Override

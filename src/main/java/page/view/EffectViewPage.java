@@ -27,7 +27,7 @@ public class EffectViewPage extends AbViewPage {
 		va.addAll(UserProfile.getBCData().demonSouls.getList().stream().map(s -> s.anim).collect(Collectors.toList()));
 		jlu.setListData(va);
 		ini();
-		resized();
+		resized(true);
 	}
 
 	@Override

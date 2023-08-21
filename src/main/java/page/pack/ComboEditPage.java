@@ -68,7 +68,7 @@ public class ComboEditPage extends Page {
         pac = pack;
 
         ini();
-        resized();
+        resized(true);
     }
 
     @Override

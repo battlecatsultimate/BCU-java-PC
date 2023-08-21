@@ -29,7 +29,7 @@ public class EntityAbilities extends Page {
         lvl = lv;
 
         ini();
-        resized();
+        resized(true);
     }
 
     private void ini() {

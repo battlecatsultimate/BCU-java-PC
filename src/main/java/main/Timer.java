@@ -1,5 +1,6 @@
 package main;
 
+import common.CommonStatic;
 import page.MainFrame;
 
 import javax.swing.*;
@@ -18,11 +19,16 @@ public strictfp class Timer extends Thread {
 	public void run() {
 		while (true) {
 			long m = System.currentTimeMillis();
+
 			state = false;
+
 			Inv thr;
+
 			SwingUtilities.invokeLater(thr = new Inv());
+
 			try {
 				boolean end = false;
+
 				while (!end) {
 					synchronized (thr) {
 						end = state;
@@ -30,9 +36,13 @@ public strictfp class Timer extends Thread {
 					if (!end)
 						sleep(1);
 				}
+
 				thr.join();
+
 				int delay = (int) (System.currentTimeMillis() - m);
+
 				inter = (inter * 9 + 100 * delay / p) / 10;
+
 				int sle = delay >= p ? 1 : p - delay;
 				sleep(sle);
 			} catch (InterruptedException e) {

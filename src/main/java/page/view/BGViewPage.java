@@ -31,14 +31,14 @@ public class BGViewPage extends Page implements SupPage<Background> {
 
 		jlst.setListData(bgs.toArray(new Background[0]));
 		ini();
-		resized();
+		resized(true);
 	}
 
 	public BGViewPage(Page p, String pac) {
 		super(p);
 		jlst.setListData(new Vector<>(UserProfile.getAll(pac, Background.class)));
 		ini();
-		resized();
+		resized(true);
 	}
 
 	public BGViewPage(Page front, String pac, Identifier<Background> bg) {

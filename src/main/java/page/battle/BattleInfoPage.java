@@ -100,7 +100,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			jsl.setMaximum(((SBRply) basis).size());
 		ini();
 		rply.setText(0, recd.rl == null ? "save" : "start");
-		resized();
+		resized(true);
 	}
 
 	protected BattleInfoPage(Page p, SBRply rpl) {
@@ -115,7 +115,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 
 		ini();
 		rply.setText(0, "rply");
-		resized();
+		resized(true);
 		current = this;
 	}
 
@@ -136,7 +136,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 
 		ini();
 		rply.setText(0, "rply");
-		resized();
+		resized(true);
 		current = this;
 	}
 
@@ -342,7 +342,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			respawn.setText("respawn timer: " + MainBCU.toSeconds(sb.respawnTime));
 		else
 			respawn.setText("respawn timer: " + sb.respawnTime + "f");
-		resized();
+		resized(false);
 		if (basis.sb.getEBHP() < basis.sb.st.bgh && basis.sb.st.bg1 != null) {
 			if (!changedBG) {
 				changedBG = true;
@@ -429,7 +429,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 
 		jtb.setLnr(x -> {
 			remove((Canvas) bb);
-			resized();
+			resized(true);
 			add((Canvas) bb);
 			DEF_LARGE = jtb.isSelected();
 		});

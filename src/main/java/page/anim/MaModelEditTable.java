@@ -228,6 +228,8 @@ class MaModelEditTable extends AnimTable<int[]> {
 			cellEditor.stopCellEditing();
 		anim = au;
 		mm = au == null ? null : au.mamodel;
+		revalidate();
+		repaint();
 	}
 
 }

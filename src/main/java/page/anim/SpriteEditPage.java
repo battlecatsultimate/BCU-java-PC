@@ -34,7 +34,7 @@ public class SpriteEditPage extends Page {
 		super(p);
 		curr = base = bimg;
 		ini();
-		resized();
+		resized(true);
 	}
 
 	protected BufferedImage getEdit() {
