@@ -224,7 +224,6 @@ public class BasisPage extends LubCont {
 		trea.setPreferredSize(size(x, y, trea.getPWidth(), trea.getPHeight()).toDimension());
 		jspt.getVerticalScrollBar().setUnitIncrement(size(x, y, 25));
 		jspt.revalidate();
-		resize = false;
 	}
 
 	@Override
