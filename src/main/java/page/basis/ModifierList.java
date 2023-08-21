@@ -29,9 +29,7 @@ public class ModifierList extends JList<Object> {
                     jl.setText(Interpret.lvl[c.lv] + " Combo: " + Interpret.comboInfo(c, lineup));
                 } else {
                     jl.setText(o.toString());
-                    jl.setForeground(Color.BLUE);
-                    if (getSelectedIndex() == ind)
-                        jl.setForeground(Color.WHITE);
+                    jl.setForeground(getSelectedIndex() == ind ? Color.WHITE : Color.BLUE);
                 }
                 return jl;
             }
