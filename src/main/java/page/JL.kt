@@ -15,11 +15,11 @@ class JL() : JLabel(), LocComp {
         lsc.init(binder)
     }
 
-    constructor(i: Int, str: String) : this() {
+    constructor(i: Int, str: String?) : this() {
         lsc.init(i, str)
     }
 
-    constructor(str: String) : this(-1, str)
+    constructor(str: String?) : this(-1, str)
 
     override fun getLSC(): LocSubComp {
         return lsc
