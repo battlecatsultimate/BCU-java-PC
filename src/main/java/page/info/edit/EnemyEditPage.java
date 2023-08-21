@@ -39,7 +39,7 @@ public class EnemyEditPage extends EntityEditPage {
 		eeb = new EnemyEditBox(this, pack, ce);
 		ini();
 		setData((CustomEnemy) e.de);
-		resized();
+		resized(true);
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class EnemyEditPage extends EntityEditPage {
 			double result = (25 * Math.floor(formatDouble / 25.0)) / 10;
 
 			ce.limit = result;
-			fli.setText(result + "");
+			fli.setText(String.valueOf(result));
 		}
 		if (jtf == fdr) {
 			ce.drop = (int) Math.round(v[0] / bas.t().getDropMulti());
@@ -138,7 +138,7 @@ public class EnemyEditPage extends EntityEditPage {
 			set(jtf, x, y, 650, h, 750, 50);
 			h += 50;
 		}
-		eeb.resized();
+		eeb.resized(true);
 
 	}
 
@@ -155,8 +155,8 @@ public class EnemyEditPage extends EntityEditPage {
 			else
 				edesc[i].setText(eneDesc[i]);
 		fsr.setText("star: " + ce.star);
-		fdr.setText("" + Math.floor(ce.getDrop() * bas.t().getDropMulti()) / 100);
-		fli.setText(ce.getLimit() + "");
+		fdr.setText(String.valueOf(Math.floor(ce.getDrop() * bas.t().getDropMulti()) / 100));
+		fli.setText(String.valueOf(ce.getLimit()));
 		fli.setToolTipText("<html>"
 				+ "This enemy will stay at least "
 				+ (ce.getLimit() - 100)

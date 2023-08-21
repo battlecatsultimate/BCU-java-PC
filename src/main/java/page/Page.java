@@ -55,6 +55,7 @@ public abstract class Page extends JPanel implements RetFunc {
 	private boolean resizing = false;
 
 	private int adjusting;
+	private PP previousDimension = getXY();
 
 	protected Page(Page p) {
 		front = p;
@@ -109,9 +110,15 @@ public abstract class Page extends JPanel implements RetFunc {
 		return adjusting > 0;
 	}
 
-	public final void resized() {
-		Point p = getXY().toPoint();
+	public final void resized(boolean manual) {
+		PP dimension = getXY();
+
+		if (!manual && dimension.equals(previousDimension))
+			return;
+
+		Point p = dimension.toPoint();
 		componentResized(p.x, p.y);
+		previousDimension = dimension;
 	}
 
 	protected void change(boolean b) {
@@ -183,7 +190,7 @@ public abstract class Page extends JPanel implements RetFunc {
 	protected abstract JButton getBackButton();
 
 	public synchronized void timer(int t) {
-		resized();
+		resized(false);
 	}
 
 	protected void windowActivated() {

@@ -49,7 +49,7 @@ public class SoulEditPage extends Page {
         super(p);
 
         ini(pack);
-        resized();
+        resized(true);
     }
 
     @Override

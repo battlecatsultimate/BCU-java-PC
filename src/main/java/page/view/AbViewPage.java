@@ -22,6 +22,7 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Hashtable;
 
 public abstract class AbViewPage extends Page {
 
@@ -82,7 +83,11 @@ public abstract class AbViewPage extends Page {
 
 	@Override
 	protected void exit() {
-		Timer.p = 33;
+		if (CommonStatic.getConfig().performanceMode) {
+			Timer.p = 1000 / 60;
+		} else {
+			Timer.p = 1000 / 30;
+		}
 	}
 
 	@Override
@@ -195,7 +200,13 @@ public abstract class AbViewPage extends Page {
 			return;
 		vb.setEntity(a.getEAnim(a.types()[jlt.getSelectedIndex()]));
 		jtl.setMinimum(0);
-		jtl.setMaximum(vb.getEnt().len());
+
+		if (CommonStatic.getConfig().performanceMode) {
+			jtl.setMaximum(vb.getEnt().len() * 2);
+		} else {
+			jtl.setMaximum(vb.getEnt().len());
+		}
+
 		jtl.setLabelTable(null);
 		if (vb.getEnt().len() <= 50) {
 			jtl.setMajorTickSpacing(5);
@@ -212,6 +223,33 @@ public abstract class AbViewPage extends Page {
 		} else {
 			jtl.setMajorTickSpacing(1000);
 			jtl.setMinorTickSpacing(200);
+		}
+
+		if (CommonStatic.getConfig().performanceMode) {
+			Hashtable<Integer, JLabel> labels = new Hashtable<>();
+
+			int f = 0;
+			int gap;
+
+			if (vb.getEnt().len() <= 50) {
+				gap = 5;
+			} else if (vb.getEnt().len() <= 200) {
+				gap = 10;
+			} else if (vb.getEnt().len() <= 1000) {
+				gap = 50;
+			} else if (vb.getEnt().len() <= 5000) {
+				gap = 250;
+			} else {
+				gap = 1000;
+			}
+
+			while (f <= vb.getEnt().len()) {
+				labels.put(f * 2, new JLabel(String.valueOf(f)));
+
+				f += gap;
+			}
+
+			jtl.setLabelTable(labels);
 		}
 	}
 
@@ -273,15 +311,23 @@ public abstract class AbViewPage extends Page {
 		jst.addChangeListener(arg0 -> {
 			if (jst.getValueIsAdjusting())
 				return;
-			Timer.p = jst.getValue() * 33 / 100;
+
+			if (CommonStatic.getConfig().performanceMode) {
+				Timer.p = jst.getValue() / 100 * 1000 / 60;
+			} else {
+				Timer.p = jst.getValue() / 100 * 1000 / 30;
+			}
 		});
 
 		jtl.addChangeListener(arg0 -> {
 			if (changingtl || !pause)
 				return;
-			if (vb.getEnt() != null)
-				vb.getEnt().setTime(jtl.getValue());
 
+			if (vb.getEnt() != null) {
+				vb.getEnt().setTime(jtl.getValue() / 2f);
+			} else {
+				vb.getEnt().setTime(jtl.getValue());
+			}
 		});
 
 		pau.addActionListener(arg0 -> {
@@ -303,7 +349,7 @@ public abstract class AbViewPage extends Page {
 
 		larges.setLnr(x -> {
 			remove((Canvas) vb);
-			resized();
+			resized(true);
 			add((Canvas) vb);
 		});
 
@@ -346,8 +392,17 @@ public abstract class AbViewPage extends Page {
 	private void eupdate() {
 		vb.update();
 		changingtl = true;
-		if (vb.getEnt() != null)
-			jtl.setValue(vb.getEnt().ind());
+		if (vb.getEnt() != null) {
+			int selection;
+
+			if (CommonStatic.getConfig().performanceMode) {
+				selection = (int) (vb.getEnt().ind() * 2);
+			} else {
+				selection = (int) vb.getEnt().ind();
+			}
+
+			jtl.setValue(selection);
+		}
 		changingtl = false;
 	}
 

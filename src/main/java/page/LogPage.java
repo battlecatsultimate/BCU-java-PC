@@ -71,7 +71,10 @@ public class LogPage extends Page {
             files.removeIf(f -> {
                 try {
                     format.parse(f.getName());
-                    return !(new Scanner(f).hasNextLine());
+                    Scanner scanner = new Scanner(f);
+                    boolean nextLine = scanner.hasNextLine();
+                    scanner.close();
+                    return !nextLine;
                 } catch (Exception e) {
                     return true;
                 }

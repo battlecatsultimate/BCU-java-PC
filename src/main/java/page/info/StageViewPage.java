@@ -37,7 +37,7 @@ public class StageViewPage extends StagePage {
 		jlmc.setListData(new Vector<>(collection));
 
 		ini();
-		resized();
+		resized(true);
 	}
 
 	public StageViewPage(Page p, Collection<MapColc> col, Stage st) {

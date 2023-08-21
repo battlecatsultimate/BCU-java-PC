@@ -79,7 +79,7 @@ public class BasisPage extends LubCont {
 	private final JBTN[] jbcsL = new JBTN[3];
 	private final JTG cost = new JTG(1, "price");
 
-	private boolean changing = false, outside = false, resize = true;
+	private boolean changing = false, outside = false;
 
 	private UnitFLUPage ufp;
 
@@ -93,7 +93,7 @@ public class BasisPage extends LubCont {
 		super(p);
 
 		ini();
-		resized();
+		resized(true);
 	}
 
 	public BasisPage(Page p, Limit lim, int price) {
@@ -101,11 +101,7 @@ public class BasisPage extends LubCont {
 		lub.setLimit(lim, price);
 
 		ini();
-		resized();
-	}
-
-	public void requireResize() {
-		resize = true;
+		resized(true);
 	}
 
 	@Override
@@ -222,15 +218,13 @@ public class BasisPage extends LubCont {
 		for (int i = 0; i < jbcsR.length; i++) // 1375 - 1170 = 205
 			set(jbcsR[i], x, y, 1350, 160 + 103 * i, 100, 50);
 
-		if (resize) {
-			jlc.setRowHeight(50);
-			jlc.setPreferredWidth(x, y);
-			trea.resized(x, y);
-			trea.setPreferredSize(size(x, y, trea.getPWidth(), trea.getPHeight()).toDimension());
-			jspt.getVerticalScrollBar().setUnitIncrement(size(x, y, 25));
-			jspt.revalidate();
-			resize = false;
-		}
+		jlc.setRowHeight(50);
+		jlc.setPreferredWidth(x, y);
+		trea.resized(x, y);
+		trea.setPreferredSize(size(x, y, trea.getPWidth(), trea.getPHeight()).toDimension());
+		jspt.getVerticalScrollBar().setUnitIncrement(size(x, y, 25));
+		jspt.revalidate();
+		resize = false;
 	}
 
 	@Override
@@ -537,6 +531,7 @@ public class BasisPage extends LubCont {
 
 	private void changeLU() {
 		jlcn.setComboList(lu().coms);
+		jlc.setLU(lu());
 		setCN();
 		updateSetC();
 		lub.updateLU();
@@ -716,6 +711,7 @@ public class BasisPage extends LubCont {
 			b = lu().willRem(com);
 		setc.setForeground(b ? Color.RED : Color.BLACK);
 		setc.setText(0, "set" + (b ? "1" : "0"));
-
+		jlc.revalidate();
+		jlc.repaint();
 	}
 }

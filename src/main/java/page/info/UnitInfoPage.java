@@ -40,7 +40,7 @@ public class UnitInfoPage extends Page {
 			info[i] = new UnitInfoTable(this, n.val.forms[i], lvs);
 		trea = new TreaTable(this);
 		ini();
-		resized();
+		resized(true);
 	}
 
 	public UnitInfoPage(Page p, Node<Unit> de) {
@@ -58,7 +58,7 @@ public class UnitInfoPage extends Page {
 		trea = new TreaTable(this);
 		extr.setSelected(sp);
 		ini();
-		resized();
+		resized(true);
 	}
 
 	@Override
@@ -86,7 +86,7 @@ public class UnitInfoPage extends Page {
 		for (int i = 0; i < info.length; i++) {
 			int ih = info[i].getH();
 			set(info[i], x, y, 0, h, 1600, ih);
-			info[i].resized();
+			info[i].resized(true);
 			h += ih + (n.val.forms[i].getExplaination().replace("<br>", "").length() == 0 ? 50 : 0);
 		}
 		cont.setPreferredSize(size(x, y, 1600, h).toDimension());

@@ -19,6 +19,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.List;
 
 public class MaAnimEditPage extends Page implements AbEditPage {
@@ -76,7 +77,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 		aep = new EditHead(this, 3);
 		ini();
-		resized();
+		resized(true);
 	}
 
 	public MaAnimEditPage(Page p, EditHead bar) {
@@ -84,7 +85,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 		aep = bar;
 		ini();
-		resized();
+		resized(true);
 	}
 
 	@Override
@@ -131,7 +132,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		AnimCE ac = maet.anim;
 		if (ind < 0 || ac == null)
 			return;
-		int time = ab.getEntity() == null ? 0 : ab.getEntity().ind();
+		float time = ab.getEntity() == null ? 0 : ab.getEntity().ind();
 		ab.setEntity(ac.getEAnim(ac.types[ind]));
 		ab.getEntity().setTime(time);
 	}
@@ -166,8 +167,8 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 	protected void mouseDragged(MouseEvent e) {
 		if (p == null)
 			return;
-		ab.ori.x += p.x - e.getX();
-		ab.ori.y += p.y - e.getY();
+		AnimBox.ori.x += p.x - e.getX();
+		AnimBox.ori.y += p.y - e.getY();
 		p = e.getPoint();
 //		int row = maet.getSelectedRow();
 //		int[] parts = mpet.getSelectedRows();
@@ -300,8 +301,6 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		aep.componentResized(x, y);
 		maet.setRowHeight(size(x, y, 50));
 		mpet.setRowHeight(size(x, y, 50));
-		sb.paint(sb.getGraphics());
-		ab.draw();
 	}
 
 	@Override
@@ -321,7 +320,9 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			infv.setText("");
 			infm.setText("");
 		}
-		resized();
+		resized(false);
+		sb.paint(sb.getGraphics());
+		ab.draw();
 	}
 
 	private void addListeners() {
@@ -329,8 +330,8 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		back.addActionListener(arg0 -> changePanel(getFront()));
 
 		camres.setLnr(x -> {
-			ab.ori.x = 0;
-			ab.ori.y = 0;
+			AnimBox.ori.x = 0;
+			AnimBox.ori.y = 0;
 		});
 
 		zomres.setLnr(x -> ab.setSiz(0.5));
@@ -420,7 +421,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			ma.validate();
 			maet.anim.unSave("maanim add part");
 			callBack(null);
-			resized();
+			resized(true);
 			lsm.setSelectionInterval(ind, ind);
 			setC(ind);
 			int h = mpet.getRowHeight();
@@ -512,7 +513,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			maet.ma.validate();
 			callBack(null);
 			maet.anim.unSave("maanim add line");
-			resized();
+			resized(true);
 			change(p.n - 1, i -> lsm.setSelectionInterval(i, i));
 			setD(p.n - 1);
 			int h = mpet.getRowHeight();
@@ -557,7 +558,12 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		jtl.addChangeListener(arg0 -> {
 			if (isAdj() || !pause)
 				return;
-			ab.getEntity().setTime(jtl.getValue());
+
+			if (CommonStatic.getConfig().performanceMode) {
+				ab.getEntity().setTime(jtl.getValue() / 2f);
+			} else {
+				ab.getEntity().setTime(jtl.getValue());
+			}
 		});
 
 		advs.setLnr(() -> new AdvAnimEditPage(this, maet.anim, maet.anim.types[jlt.getSelectedIndex()]));
@@ -568,8 +574,17 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 	private void eupdate() {
 		ab.update();
-		if (ab.getEntity() != null)
-			change(0, x -> jtl.setValue(ab.getEntity().ind()));
+		if (ab.getEntity() != null) {
+			int selection;
+
+			if (CommonStatic.getConfig().performanceMode) {
+				selection = (int) (ab.getEntity().ind() * 2);
+			} else {
+				selection = (int) ab.getEntity().ind();
+			}
+
+			change(0, x -> jtl.setValue(selection));
+		}
 	}
 
 	private void ini() {
@@ -677,7 +692,13 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			setC(row);
 
 			jtl.setMinimum(0);
-			jtl.setMaximum(ab.getEntity().len());
+
+			if (CommonStatic.getConfig().performanceMode) {
+				jtl.setMaximum(ab.getEntity().len() * 2);
+			} else {
+				jtl.setMaximum(ab.getEntity().len());
+			}
+
 			jtl.setLabelTable(null);
 			if (ab.getEntity().len() <= 50) {
 				jtl.setMajorTickSpacing(5);
@@ -694,6 +715,33 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			} else {
 				jtl.setMajorTickSpacing(1000);
 				jtl.setMinorTickSpacing(200);
+			}
+
+			if (CommonStatic.getConfig().performanceMode) {
+				Hashtable<Integer, JLabel> labels = new Hashtable<>();
+
+				int f = 0;
+				int gap;
+
+				if (ab.getEntity().len() <= 50) {
+					gap = 5;
+				} else if (ab.getEntity().len() <= 200) {
+					gap = 10;
+				} else if (ab.getEntity().len() <= 1000) {
+					gap = 50;
+				} else if (ab.getEntity().len() <= 5000) {
+					gap = 250;
+				} else {
+					gap = 1000;
+				}
+
+				while (f <= ab.getEntity().len()) {
+					labels.put(f * 2, new JLabel(String.valueOf(f)));
+
+					f += gap;
+				}
+
+				jtl.setLabelTable(labels);
 			}
 		});
 	}

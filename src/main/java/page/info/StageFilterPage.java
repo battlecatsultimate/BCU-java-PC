@@ -18,7 +18,7 @@ public class StageFilterPage extends StagePage {
 
 		jlst.setListData(ls.toArray(new Stage[0]));
 		ini();
-		resized();
+		resized(true);
 	}
 
 	@Override

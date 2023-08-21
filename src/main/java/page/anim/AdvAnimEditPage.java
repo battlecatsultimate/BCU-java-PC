@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Hashtable;
 import java.util.List;
 
 public class AdvAnimEditPage extends Page implements TreeCont {
@@ -72,7 +73,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 		animID = id;
 		mmt = new MMTree(this, ac, jlm);
 		ini();
-		resized();
+		resized(true);
 	}
 
 	@Override
@@ -92,7 +93,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 					setD(rs[1]);
 				}
 			});
-		int time = ab.getEntity() == null ? 0 : ab.getEntity().ind();
+		float time = ab.getEntity() == null ? 0 : ab.getEntity().ind();
 		ab.setEntity(ac.getEAnim(animID));
 		ab.getEntity().setTime(time);
 	}
@@ -142,8 +143,8 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 	protected void mouseDragged(MouseEvent e) {
 		if (p == null)
 			return;
-		ab.ori.x += p.x - e.getX();
-		ab.ori.y += p.y - e.getY();
+		AnimBox.ori.x += p.x - e.getX();
+		AnimBox.ori.y += p.y - e.getY();
 		p = e.getPoint();
 	}
 
@@ -224,7 +225,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 			infv.setText("");
 			infm.setText("");
 		}
-		resized();
+		resized(false);
 	}
 
 	private void addListeners$0() {
@@ -302,10 +303,8 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 			if (anim == null)
 				return;
 			if (Arrays.stream(anim.parts).anyMatch(p -> p.ints[0] == 0 && p.ints[1] == 9)) {
-				Arrays.stream(anim.parts).filter(p -> p.ints[0] == 0 && p.ints[1] == 9).forEach(p -> {
-					Arrays.stream(p.moves)
-							.forEach(ints -> ints[1] *= -1);
-				});
+				Arrays.stream(anim.parts).filter(p -> p.ints[0] == 0 && p.ints[1] == 9).forEach(p -> Arrays.stream(p.moves)
+						.forEach(ints -> ints[1] *= -1));
 			} else {
 				Part[] data = anim.parts;
 				anim.parts = new Part[++anim.n];
@@ -405,7 +404,12 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 		jtl.addChangeListener(arg0 -> {
 			if (isAdj() || !pause)
 				return;
-			ab.getEntity().setTime(jtl.getValue());
+
+			if (CommonStatic.getConfig().performanceMode) {
+				ab.getEntity().setTime(jtl.getValue() / 2f);
+			} else {
+				ab.getEntity().setTime(jtl.getValue());
+			}
 		});
 
 	}
@@ -439,7 +443,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 			ma.validate();
 			maet.anim.unSave("maanim add part");
 			callBack(null);
-			resized();
+			resized(true);
 			lsm.setSelectionInterval(ind, ind);
 			setC(ind);
 			int h = mpet.getRowHeight();
@@ -492,7 +496,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 			maet.ma.validate();
 			callBack(null);
 			maet.anim.unSave("maanim add line");
-			resized();
+			resized(true);
 			change(p.n - 1, i -> lsm.setSelectionInterval(i, i));
 			setD(p.n - 1);
 			int h = mpet.getRowHeight();
@@ -555,8 +559,17 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 
 	private void eupdate() {
 		ab.update();
-		if (ab.getEntity() != null)
-			change(0, x -> jtl.setValue(ab.getEntity().ind()));
+		if (ab.getEntity() != null) {
+			int selection;
+
+			if (CommonStatic.getConfig().performanceMode) {
+				selection = (int) (ab.getEntity().ind() * 2);
+			} else {
+				selection = (int) ab.getEntity().ind();
+			}
+
+			change(0, x -> jtl.setValue(selection));
+		}
 	}
 
 	private List<Integer> findRep(Part p) {
@@ -651,8 +664,15 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 		jtl.setPaintTicks(true);
 		jtl.setPaintLabels(true);
 		jtl.setMinimum(0);
-		jtl.setMaximum(ab.getEntity().len());
+
+		if (CommonStatic.getConfig().performanceMode) {
+			jtl.setMaximum(ab.getEntity().len() * 2);
+		} else {
+			jtl.setMaximum(ab.getEntity().len());
+		}
+
 		jtl.setLabelTable(null);
+
 		if (ab.getEntity().len() <= 50) {
 			jtl.setMajorTickSpacing(5);
 			jtl.setMinorTickSpacing(1);
@@ -670,6 +690,32 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 			jtl.setMinorTickSpacing(200);
 		}
 
+		if (CommonStatic.getConfig().performanceMode) {
+			Hashtable<Integer, JLabel> labels = new Hashtable<>();
+
+			int f = 0;
+			int gap;
+
+			if (ab.getEntity().len() <= 50) {
+				gap = 5;
+			} else if (ab.getEntity().len() <= 200) {
+				gap = 10;
+			} else if (ab.getEntity().len() <= 1000) {
+				gap = 50;
+			} else if (ab.getEntity().len() <= 5000) {
+				gap = 250;
+			} else {
+				gap = 1000;
+			}
+
+			while (f <= ab.getEntity().len()) {
+				labels.put(f * 2, new JLabel(String.valueOf(f)));
+
+				f += gap;
+			}
+
+			jtl.setLabelTable(labels);
+		}
 	}
 
 	private void setC(int ind) {

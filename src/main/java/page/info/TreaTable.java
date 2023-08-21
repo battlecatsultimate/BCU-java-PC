@@ -9,7 +9,6 @@ import main.MainBCU;
 import page.JTF;
 import page.JTG;
 import page.Page;
-import page.basis.BasisPage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -135,8 +134,8 @@ public class TreaTable extends Page {
 					} else {
 						close(n);
 					}
-					if (front instanceof BasisPage)
-						((BasisPage) front).requireResize();
+
+					front.resized(true);
 				});
 
 				jcf[J].addFocusListener(new FocusAdapter() {

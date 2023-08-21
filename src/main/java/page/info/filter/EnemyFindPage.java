@@ -25,7 +25,7 @@ public class EnemyFindPage extends Page implements SupPage<AbEnemy> {
 
 		efb = EnemyFilterBox.getNew(this);
 		ini();
-		resized();
+		resized(true);
 	}
 
 	public EnemyFindPage(Page p, String pack, String... parents) {
@@ -33,7 +33,7 @@ public class EnemyFindPage extends Page implements SupPage<AbEnemy> {
 
 		efb = EnemyFilterBox.getNew(this, pack, parents);
 		ini();
-		resized();
+		resized(true);
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class EnemyFindPage extends Page implements SupPage<AbEnemy> {
 	@SuppressWarnings("unchecked")
 	public void callBack(Object o) {
 		elt.setList((List<Enemy>) o);
-		resized();
+		resized(true);
 	}
 
 	public List<Enemy> getList() {

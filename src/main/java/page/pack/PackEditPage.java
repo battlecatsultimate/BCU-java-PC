@@ -46,7 +46,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
-import java.util.stream.Collectors;
 
 public class PackEditPage extends Page {
 
@@ -398,7 +397,7 @@ public class PackEditPage extends Page {
 		});
 
 		reme.addActionListener(arg0 -> {
-				if (!Opts.conf())
+			if (!Opts.conf())
 				return;
 			changing = true;
 			int ind = jle.getSelectedIndex();

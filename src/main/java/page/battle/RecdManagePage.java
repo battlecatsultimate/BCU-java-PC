@@ -1,8 +1,6 @@
 package page.battle;
 
 import common.CommonStatic;
-import common.pack.PackData;
-import common.pack.UserProfile;
 import common.util.stage.Replay;
 import main.MainBCU;
 import main.Opts;
@@ -12,8 +10,6 @@ import page.Page;
 
 import javax.swing.*;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
 public class RecdManagePage extends AbRecdPage {
@@ -29,7 +25,7 @@ public class RecdManagePage extends AbRecdPage {
 		super(p, true);
 		preini();
 		ini();
-		resized();
+		resized(true);
 	}
 
 	@Override

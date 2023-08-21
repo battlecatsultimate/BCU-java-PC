@@ -75,7 +75,7 @@ public class CGLREditPage extends Page {
 		lcg = pack.groups;
 		llr = pack.lvrs;
 		ini();
-		resized();
+		resized(true);
 	}
 
 	@Override

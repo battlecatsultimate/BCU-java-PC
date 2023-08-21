@@ -1,6 +1,5 @@
 package page.battle;
 
-import common.pack.Source;
 import common.util.stage.Replay;
 import common.util.stage.Stage;
 import main.MainBCU;
@@ -33,7 +32,7 @@ public class StRecdPage extends AbRecdPage {
 		st = stage;
 		preini();
 		ini();
-		resized();
+		resized(true);
 	}
 
 	@Override

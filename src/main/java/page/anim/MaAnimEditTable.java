@@ -168,6 +168,8 @@ public class MaAnimEditTable extends AnimTable<Part> {
 			cellEditor.stopCellEditing();
 		anim = au;
 		ma = maa;
+		revalidate();
+		repaint();
 	}
 
 }

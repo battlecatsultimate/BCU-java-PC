@@ -19,7 +19,7 @@ public abstract class LubCont extends Page {
 	@Override
 	protected void keyTyped(KeyEvent e) {
 		if (Character.isDigit(e.getKeyChar())) {
-			int i = Integer.parseInt(e.getKeyChar() + "");
+			int i = Integer.parseInt(String.valueOf(e.getKeyChar()));
 			if (i == 0)
 				i = 9;
 			else
@@ -60,7 +60,7 @@ public abstract class LubCont extends Page {
 	@Override
     public void timer(int t) {
 		getLub().paint(getLub().getGraphics());
-		resized();
+		resized(false);
 	}
 
 }

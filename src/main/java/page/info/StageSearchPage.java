@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@SuppressWarnings("ForLoopReplaceableByForEach")
 public class StageSearchPage extends StagePage {
     private static final String[] ops = {"=", ">", "<"};
     private static final long serialVersionUID = 1L;
@@ -65,7 +66,7 @@ public class StageSearchPage extends StagePage {
     public StageSearchPage(Page p) {
         super(p);
         ini();
-        resized();
+        resized(true);
     }
 
     @Override

@@ -95,7 +95,8 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		}
 
 		ini();
-		resized();
+		resized(true);
+
 	}
 
 	public ImgCutEditPage(Page p, EditHead bar) {
@@ -114,7 +115,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		}
 
 		ini();
-		resized();
+		resized(true);
 	}
 
 	@Override
@@ -165,6 +166,12 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	}
 
 	@Override
+	public synchronized void timer(int t) {
+		resized(false);
+		sb.paint(sb.getGraphics());
+	}
+
+	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(aep, x, y, 750, 0, 1500, 50);
@@ -205,7 +212,6 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 		SwingUtilities.invokeLater(() -> jta.setUI(new TreeNodeExpander(jta)));
 		aep.componentResized(x, y);
 		icet.setRowHeight(size(x, y, 50));
-		sb.paint(sb.getGraphics());
 	}
 
 	private void selectAnimNode(AnimCE ac) {
@@ -601,6 +607,7 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	}
 
 	private void setA(AnimCE anim) {
+		System.out.println("Dss");
 		boolean boo = changing;
 		if (anim != null) {
 			anim.check();

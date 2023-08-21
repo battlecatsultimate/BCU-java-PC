@@ -40,7 +40,7 @@ public class CastleViewPage extends Page {
 		Vector<CastleList> vec = new Vector<>(list);
 		jlsm.setListData(vec);
 		ini();
-		resized();
+		resized(true);
 	}
 
 	public CastleViewPage(Page p, Collection<CastleList> defcas, Identifier<CastleImg> id) {
@@ -94,7 +94,7 @@ public class CastleViewPage extends Page {
 				jl.setIcon(null);
 			else {
 				jl.setIcon(UtilPC.getIcon(s.img));
-				bs.setText("" + s.boss_spawn);
+				bs.setText(String.valueOf(s.boss_spawn));
 			}
 		});
 

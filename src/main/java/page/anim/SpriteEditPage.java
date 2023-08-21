@@ -34,7 +34,7 @@ public class SpriteEditPage extends Page {
 		super(p);
 		curr = base = bimg;
 		ini();
-		resized();
+		resized(true);
 	}
 
 	protected BufferedImage getEdit() {
@@ -62,32 +62,11 @@ public class SpriteEditPage extends Page {
 	private void addListeners() {
 		back.setLnr(e -> changePanel(getFront()));
 
-		jslh.addChangeListener(new ChangeListener() {
+		jslh.addChangeListener(e -> setColor(jslh.getValue(), s, b));
 
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				setColor(jslh.getValue(), s, b);
-			}
+		jsls.addChangeListener(e -> setColor(h, jsls.getValue(), b));
 
-		});
-
-		jsls.addChangeListener(new ChangeListener() {
-
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				setColor(h, jsls.getValue(), b);
-			}
-
-		});
-
-		jslb.addChangeListener(new ChangeListener() {
-
-			@Override
-			public void stateChanged(ChangeEvent e) {
-				setColor(h, s, jslb.getValue());
-			}
-
-		});
+		jslb.addChangeListener(e -> setColor(h, s, jslb.getValue()));
 	}
 
 	private void ini() {

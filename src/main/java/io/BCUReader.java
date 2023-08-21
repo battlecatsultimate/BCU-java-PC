@@ -20,6 +20,7 @@ import common.util.unit.Enemy;
 import common.util.unit.Unit;
 import main.MainBCU;
 import main.Opts;
+import main.Timer;
 import page.LoadPage;
 import page.MainFrame;
 import page.MainLocale;
@@ -118,6 +119,15 @@ public class BCUReader extends DataIO {
 					Exporter.curs[i] = exp[i] == null ? null : new File(exp[i]);
 				for (int i = 0; i < Math.min(Importer.curs.length, imp.length); i++)
 					Importer.curs[i] = imp[i] == null ? null : new File(imp[i]);
+				if (jo.has("performance")) {
+					CommonStatic.getConfig().performanceMode = jo.get("performance").getAsBoolean();
+				}
+
+				if (CommonStatic.getConfig().performanceMode) {
+					Timer.p = 1000 / 60;
+				} else {
+					Timer.p = 1000 / 30;
+				}
 			} catch (Exception e) {
 				CommonStatic.ctx.noticeErr(e, ErrType.WARN, "failed to read config");
 			}

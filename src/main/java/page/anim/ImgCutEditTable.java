@@ -95,6 +95,8 @@ class ImgCutEditTable extends AbJTable {
 		if (cellEditor != null)
 			cellEditor.stopCellEditing();
 		anim = au;
+		revalidate();
+		repaint();
 	}
 
 }
