@@ -30,6 +30,8 @@ public class ModifierList extends JList<Object> {
                 } else {
                     jl.setText(o.toString());
                     jl.setForeground(Color.BLUE);
+                    if (getSelectedIndex() == ind)
+                        jl.setForeground(Color.WHITE);
                 }
                 return jl;
             }
