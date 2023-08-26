@@ -514,7 +514,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			if (isAdj() || !pause)
 				return;
 
-			if (CommonStatic.getConfig().performanceMode) {
+			if (CommonStatic.getConfig().performanceModeAnimation) {
 				ab.getEntity().setTime(jtl.getValue() / 2f);
 			} else {
 				ab.getEntity().setTime(jtl.getValue());
@@ -532,7 +532,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		if (ab.getEntity() != null) {
 			int selection;
 
-			if (CommonStatic.getConfig().performanceMode) {
+			if (CommonStatic.getConfig().performanceModeAnimation) {
 				selection = (int) (ab.getEntity().ind() * 2);
 			} else {
 				selection = (int) ab.getEntity().ind();
@@ -648,7 +648,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 			jtl.setMinimum(0);
 
-			if (CommonStatic.getConfig().performanceMode) {
+			if (CommonStatic.getConfig().performanceModeAnimation) {
 				jtl.setMaximum(ab.getEntity().len() * 2);
 			} else {
 				jtl.setMaximum(ab.getEntity().len());
@@ -672,7 +672,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 				jtl.setMinorTickSpacing(200);
 			}
 
-			if (CommonStatic.getConfig().performanceMode) {
+			if (CommonStatic.getConfig().performanceModeAnimation) {
 				Hashtable<Integer, JLabel> labels = new Hashtable<>();
 
 				int f = 0;

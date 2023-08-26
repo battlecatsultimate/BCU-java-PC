@@ -114,10 +114,11 @@ public class BCUReader extends DataIO {
 				for (int i = 0; i < Importer.curs.length; i++)
 					Importer.curs[i] = imp[i] == null ? null : new File(imp[i]);
 				if (jo.has("performance")) {
-					CommonStatic.getConfig().performanceMode = jo.get("performance").getAsBoolean();
+					CommonStatic.getConfig().performanceModeAnimation = jo.get("performance").getAsBoolean();
+					CommonStatic.getConfig().performanceModeBattle = CommonStatic.getConfig().performanceModeAnimation;
 				}
 
-				if (CommonStatic.getConfig().performanceMode) {
+				if (CommonStatic.getConfig().performanceModeAnimation) {
 					Timer.p = 1000 / 60;
 				} else {
 					Timer.p = 1000 / 30;

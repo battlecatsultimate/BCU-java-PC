@@ -288,7 +288,7 @@ public class BCUWriter extends DataIO {
 		jo.addProperty("ann0510", MainBCU.announce0510);
 		jo.addProperty("autosavetime", MainBCU.autoSaveTime);
 		jo.addProperty("drawBGEffect", CommonStatic.getConfig().drawBGEffect);
-		jo.addProperty("performance", CommonStatic.getConfig().performanceMode);
+		jo.addProperty("performance", CommonStatic.getConfig().performanceModeAnimation);
 		String[] exp = new String[Exporter.curs.length];
 		for (int i = 0; i < exp.length; i++)
 			exp[i] = Exporter.curs[i] == null ? null : Exporter.curs[i].toString();
