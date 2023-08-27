@@ -297,7 +297,7 @@ public class BCUWriter extends DataIO {
 			imp[i] = Importer.curs[i] == null ? null : Importer.curs[i].toString();
 		jo.add("export_paths", JsonEncoder.encode(exp));
 		jo.add("import_paths", JsonEncoder.encode(imp));
-		try (java.io.Writer w = new OutputStreamWriter(new FileOutputStream(f), StandardCharsets.UTF_8)) {
+		try (java.io.Writer w = new OutputStreamWriter(Files.newOutputStream(f.toPath()), StandardCharsets.UTF_8)) {
 			w.write(jo.toString());
 		} catch (Exception e) {
 			CommonStatic.ctx.noticeErr(e, ErrType.ERROR, "failed to write config");
