@@ -25,7 +25,7 @@ public abstract class RecdThread extends Thread {
 		protected GIFThread(Queue<BufferedImage> list, String path, RetFunc bip) {
 			super(list, bip);
 			gif = new AnimatedGifEncoder();
-			gif.setDelay(33);
+			gif.setFrameRate(CommonStatic.getConfig().performanceModeAnimation ? 60 : 30);
 			gif.setRepeat(0);
 			BCUWriter.writeGIF(gif, path);
 		}
@@ -60,7 +60,11 @@ public abstract class RecdThread extends Thread {
 
 			file = new File(CommonStatic.ctx.getBCUFolder(), "./img/" + str + ".mp4");
 			try {
-				encoder = AWTSequenceEncoder.create30Fps(file);
+				if (CommonStatic.getConfig().performanceModeAnimation) {
+					encoder = AWTSequenceEncoder.createSequenceEncoder(file, 60);
+				} else {
+					encoder = AWTSequenceEncoder.create30Fps(file);
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -85,7 +89,6 @@ public abstract class RecdThread extends Thread {
 		@Override
 		void recd(BufferedImage bimg) {
 			try {
-
 				encoder.encodeImage(bimg.getSubimage(0, 0, fw, fh));
 			} catch (IOException e) {
 				e.printStackTrace();
