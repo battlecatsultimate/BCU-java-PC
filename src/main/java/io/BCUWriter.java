@@ -50,6 +50,7 @@ public class BCUWriter extends DataIO {
 		if (ps.writed) {
 			ps.println("version: " + Data.revVer(MainBCU.ver));
 		}
+		ps.flush();
 		ps.close();
 		ph.deleteOnExit();
 		if (log.length() == 0)
@@ -131,12 +132,14 @@ public class BCUWriter extends DataIO {
 			Context.check(f);
 			fos = new FileOutputStream(f);
 			fos.write(bs);
+			fos.flush();
 			fos.close();
 			return true;
 		} catch (IOException e) {
 			Printer.w(130, "IOE!!!");
 			if (fos != null)
 				try {
+					fos.flush();
 					fos.close();
 				} catch (IOException e1) {
 					Printer.w(131, "cannot close fos");
@@ -146,6 +149,7 @@ public class BCUWriter extends DataIO {
 		} finally {
 			if (fos != null)
 				try {
+					fos.flush();
 					fos.close();
 				} catch (IOException e1) {
 					Printer.w(139, "finally cannot close fos neither!");
@@ -229,6 +233,7 @@ public class BCUWriter extends DataIO {
 		try {
 			fos = new FileOutputStream(f);
 			os.flush(fos);
+			fos.flush();
 			fos.close();
 		} catch (IOException e) {
 			suc = false;
@@ -237,6 +242,7 @@ public class BCUWriter extends DataIO {
 			Opts.ioErr("failed to write file " + f);
 			if (fos != null)
 				try {
+					fos.flush();
 					fos.close();
 				} catch (IOException e1) {
 					e1.printStackTrace();
@@ -245,6 +251,7 @@ public class BCUWriter extends DataIO {
 		} finally {
 			if (fos != null)
 				try {
+					fos.flush();
 					fos.close();
 				} catch (IOException e1) {
 					e1.printStackTrace();

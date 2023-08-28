@@ -160,6 +160,7 @@ public class CastleEditPage extends Page {
 		try {
 			OutputStream os = ((Workspace) pack.source).writeFile("castles/" + Data.trio(vimg.id.id) + ".png");
 			ImageIO.write(bimg, "PNG", os);
+			os.flush();
 			os.close();
 		} catch (IOException e) {
 			e.printStackTrace();
