@@ -376,9 +376,10 @@ public class ConfigPage extends Page {
 		stdis.addActionListener(a -> CommonStatic.getConfig().stageName = !CommonStatic.getConfig().stageName);
 
 		perfo.addActionListener(a -> {
-			cfg().performanceMode = !cfg().performanceMode;
+			cfg().performanceModeAnimation = !cfg().performanceModeAnimation;
+			cfg().performanceModeBattle = !cfg().performanceModeBattle;
 
-			if (cfg().performanceMode) {
+			if (cfg().performanceModeAnimation) {
 				Timer.p = 1000 / 60;
 			} else {
 				Timer.p = 1000 / 30;
@@ -517,7 +518,7 @@ public class ConfigPage extends Page {
 			jsba.setEnabled(false);
 		jceff.setSelected(cfg().drawBGEffect);
 		jcdly.setSelected(cfg().buttonDelay);
-		perfo.setSelected(cfg().performanceMode);
+		perfo.setSelected(cfg().performanceModeAnimation);
 		stdis.setSelected(cfg().stageName);
 		if (!MainBCU.nimbus) {
 			theme.setEnabled(false);

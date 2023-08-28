@@ -290,7 +290,7 @@ public class BCUWriter extends DataIO {
 		jo.addProperty("drawBGEffect", CommonStatic.getConfig().drawBGEffect);
 		jo.addProperty("searchtype", MainBCU.searchPerKey);
 		jo.addProperty("tolerance", MainBCU.searchTolerance);
-		jo.addProperty("performance", CommonStatic.getConfig().performanceMode);
+		jo.addProperty("performance", CommonStatic.getConfig().performanceModeAnimation);
 		String[] exp = new String[Exporter.curs.length];
 		for (int i = 0; i < exp.length; i++)
 			exp[i] = Exporter.curs[i] == null ? null : Exporter.curs[i].toString();
@@ -299,7 +299,7 @@ public class BCUWriter extends DataIO {
 			imp[i] = Importer.curs[i] == null ? null : Importer.curs[i].toString();
 		jo.add("export_paths", JsonEncoder.encode(exp));
 		jo.add("import_paths", JsonEncoder.encode(imp));
-		try (java.io.Writer w = new OutputStreamWriter(new FileOutputStream(f), StandardCharsets.UTF_8)) {
+		try (java.io.Writer w = new OutputStreamWriter(Files.newOutputStream(f.toPath()), StandardCharsets.UTF_8)) {
 			w.write(jo.toString());
 		} catch (Exception e) {
 			CommonStatic.ctx.noticeErr(e, ErrType.ERROR, "failed to write config");

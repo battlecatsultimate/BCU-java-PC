@@ -83,7 +83,7 @@ public abstract class AbViewPage extends Page {
 
 	@Override
 	protected void exit() {
-		if (CommonStatic.getConfig().performanceMode) {
+		if (CommonStatic.getConfig().performanceModeAnimation) {
 			Timer.p = 1000 / 60;
 		} else {
 			Timer.p = 1000 / 30;
@@ -201,7 +201,7 @@ public abstract class AbViewPage extends Page {
 		vb.setEntity(a.getEAnim(a.types()[jlt.getSelectedIndex()]));
 		jtl.setMinimum(0);
 
-		if (CommonStatic.getConfig().performanceMode) {
+		if (CommonStatic.getConfig().performanceModeAnimation) {
 			jtl.setMaximum(vb.getEnt().len() * 2);
 		} else {
 			jtl.setMaximum(vb.getEnt().len());
@@ -225,7 +225,7 @@ public abstract class AbViewPage extends Page {
 			jtl.setMinorTickSpacing(200);
 		}
 
-		if (CommonStatic.getConfig().performanceMode) {
+		if (CommonStatic.getConfig().performanceModeAnimation) {
 			Hashtable<Integer, JLabel> labels = new Hashtable<>();
 
 			int f = 0;
@@ -312,7 +312,7 @@ public abstract class AbViewPage extends Page {
 			if (jst.getValueIsAdjusting())
 				return;
 
-			if (CommonStatic.getConfig().performanceMode) {
+			if (CommonStatic.getConfig().performanceModeAnimation) {
 				Timer.p = jst.getValue() / 100 * 1000 / 60;
 			} else {
 				Timer.p = jst.getValue() / 100 * 1000 / 30;
@@ -395,7 +395,7 @@ public abstract class AbViewPage extends Page {
 		if (vb.getEnt() != null) {
 			int selection;
 
-			if (CommonStatic.getConfig().performanceMode) {
+			if (CommonStatic.getConfig().performanceModeAnimation) {
 				selection = (int) (vb.getEnt().ind() * 2);
 			} else {
 				selection = (int) vb.getEnt().ind();

@@ -55,7 +55,7 @@ public class BCUReader extends DataIO {
 	public static void readInfo() {
 		File f = new File(CommonStatic.ctx.getBCUFolder(), "./user/config.json");
 		if (f.exists()) {
-			try (Reader r = new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8)) {
+			try (Reader r = new InputStreamReader(Files.newInputStream(f.toPath()), StandardCharsets.UTF_8)) {
 				JsonElement je = JsonParser.parseReader(r);
 				r.close();
 				Config cfg = CommonStatic.getConfig();
@@ -120,10 +120,11 @@ public class BCUReader extends DataIO {
 				for (int i = 0; i < Math.min(Importer.curs.length, imp.length); i++)
 					Importer.curs[i] = imp[i] == null ? null : new File(imp[i]);
 				if (jo.has("performance")) {
-					CommonStatic.getConfig().performanceMode = jo.get("performance").getAsBoolean();
+					CommonStatic.getConfig().performanceModeAnimation = jo.get("performance").getAsBoolean();
+					CommonStatic.getConfig().performanceModeBattle = CommonStatic.getConfig().performanceModeAnimation;
 				}
 
-				if (CommonStatic.getConfig().performanceMode) {
+				if (CommonStatic.getConfig().performanceModeAnimation) {
 					Timer.p = 1000 / 60;
 				} else {
 					Timer.p = 1000 / 30;

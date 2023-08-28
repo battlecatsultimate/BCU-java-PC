@@ -405,7 +405,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 			if (isAdj() || !pause)
 				return;
 
-			if (CommonStatic.getConfig().performanceMode) {
+			if (CommonStatic.getConfig().performanceModeAnimation) {
 				ab.getEntity().setTime(jtl.getValue() / 2f);
 			} else {
 				ab.getEntity().setTime(jtl.getValue());
@@ -562,7 +562,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 		if (ab.getEntity() != null) {
 			int selection;
 
-			if (CommonStatic.getConfig().performanceMode) {
+			if (CommonStatic.getConfig().performanceModeAnimation) {
 				selection = (int) (ab.getEntity().ind() * 2);
 			} else {
 				selection = (int) ab.getEntity().ind();
@@ -665,7 +665,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 		jtl.setPaintLabels(true);
 		jtl.setMinimum(0);
 
-		if (CommonStatic.getConfig().performanceMode) {
+		if (CommonStatic.getConfig().performanceModeAnimation) {
 			jtl.setMaximum(ab.getEntity().len() * 2);
 		} else {
 			jtl.setMaximum(ab.getEntity().len());
@@ -690,7 +690,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 			jtl.setMinorTickSpacing(200);
 		}
 
-		if (CommonStatic.getConfig().performanceMode) {
+		if (CommonStatic.getConfig().performanceModeAnimation) {
 			Hashtable<Integer, JLabel> labels = new Hashtable<>();
 
 			int f = 0;
