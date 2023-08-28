@@ -100,7 +100,6 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			jsl.setMaximum(((SBRply) basis).size());
 		ini();
 		rply.setText(0, recd.rl == null ? "save" : "start");
-		resized(true);
 	}
 
 	protected BattleInfoPage(Page p, SBRply rpl) {
@@ -115,7 +114,6 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 
 		ini();
 		rply.setText(0, "rply");
-		resized(true);
 		current = this;
 	}
 
@@ -136,7 +134,6 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 
 		ini();
 		rply.setText(0, "rply");
-		resized(true);
 		current = this;
 	}
 
@@ -281,8 +278,11 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	}
 
 	@Override
-	public synchronized void timer(int t) {
+	public synchronized void onTimer(int t) {
+		super.onTimer(t);
+
 		StageBasis sb = basis.sb;
+
 		if (!pause) {
 			upd++;
 
@@ -327,44 +327,58 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 
 			BCMusic.flush(spe < 3 && sb.ebase.health > 0 && sb.ubase.health > 0);
 		}
+
 		if (basis instanceof SBRply && recd.rl != null)
 			change((SBRply) basis, b -> jsl.setValue(b.prog()));
+
 		bb.paint();
+
 		AbEntity eba = sb.ebase;
+
 		long h = eba.health;
 		long mh = eba.maxH;
+
 		ebase.setText("HP: " + h + "/" + mh + ", " + 10000 * h / mh / 100.0 + "%");
 		ubase.setText("HP: " + sb.ubase.health);
+
 		timer.setText(sb.time + "f");
+
 		ecount.setText(sb.entityCount(1) + "/" + sb.st.max);
 		ucount.setText(sb.entityCount(-1) + "/" + sb.max_num);
+
 		if (MainBCU.seconds)
 			respawn.setText("respawn timer: " + MainBCU.toSeconds(sb.respawnTime));
 		else
 			respawn.setText("respawn timer: " + sb.respawnTime + "f");
-		resized(false);
+
 		if (basis.sb.getEBHP() < basis.sb.st.bgh && basis.sb.st.bg1 != null) {
 			if (!changedBG) {
 				changedBG = true;
+
 				basis.sb.changeBG(basis.sb.st.bg1);
 			}
 		} else if (changedBG) {
 			changedBG = false;
+
 			basis.sb.changeBG(basis.sb.st.bg);
 		}
+
 		if (sb.ebase.health <= 0 || sb.ubase.health <= 0) {
 			BCMusic.EndTheme(sb.ebase.health <= 0);
 
 			if (sb.ebase.health <= 0) {
 				if(!exPopupShown && CommonStatic.getConfig().exContinuation && sb.st.info != null && (sb.st.info.exConnection() || sb.st.info.getExStages() != null)) {
 					exPopupShown = true;
+
 					Opts.showExStageSelection("EX stages found", "You can select one of these EX stages and continue the battle", sb.st, this);
+
 					return;
 				}
 			}
 		} else if (basis.sb.mus != null) {
 			if (BCMusic.music != basis.sb.mus) {
 				BCMusic.play(basis.sb.mus);
+
 				musicChanged = sb.getEBHP() > sb.st.mush;
 			}
 		} else {
@@ -375,6 +389,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 					if(!musicChanged && !backClicked) {
 						if(BCMusic.BG != null)
 							BCMusic.BG.stop();
+
 						new Thread(() -> {
 							try {
 								Thread.sleep(Data.MUSIC_DELAY);
@@ -395,6 +410,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 				if(musicChanged && !backClicked) {
 					if(BCMusic.BG != null)
 						BCMusic.BG.stop();
+
 					new Thread(() -> {
 						try {
 							Thread.sleep(Data.MUSIC_DELAY);
@@ -412,10 +428,12 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 				}
 			}
 		}
+
 		if (bb instanceof BBRecd) {
 			BBRecd bbr = (BBRecd) bb;
 			stream.setText("frame left: " + bbr.info());
 		}
+
 		if(bb.getPainter().dragging)
 			bb.getPainter().dragFrame++;
 	}
@@ -426,12 +444,12 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	}
 
 	private void addListeners() {
-
 		jtb.setLnr(x -> {
 			remove((Canvas) bb);
-			resized(true);
 			add((Canvas) bb);
 			DEF_LARGE = jtb.isSelected();
+
+			fireDimensionChanged();
 		});
 
 		back.setLnr(x -> {

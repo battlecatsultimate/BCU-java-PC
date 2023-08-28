@@ -48,7 +48,6 @@ public class FormEditPage extends EntityEditPage {
 		ueb = new UnitEditBox(this, pac, cu);
 		ini();
 		setData((CustomUnit) f.du);
-		resized(true);
 	}
 
 	@Override
@@ -161,6 +160,8 @@ public class FormEditPage extends EntityEditPage {
 			Node<Unit> nu = Node.getList(UserProfile.getAll(cu.getPack().uid.pack, Unit.class), u);
 			changePanel(new UnitInfoPage(this, nu));
 		});
+
+		assignSubPage(ueb);
 	}
 
 	private void changeDesc(int line) {
@@ -189,6 +190,7 @@ public class FormEditPage extends EntityEditPage {
 	@Override
 	protected void resized(int x, int y) {
 		super.resized(x, y);
+
 		set(llv, x, y, 50, 50, 100, 50);
 		set(flv, x, y, 150, 50, 200, 50);
 		set(ldr, x, y, 50, 350, 100, 50);
@@ -198,6 +200,7 @@ public class FormEditPage extends EntityEditPage {
 		set(llr, x, y, 650, 50, 100, 50);
 		set(flr, x, y, 750, 50, 200, 50);
 		set(ueb, x, y, 50, 650, 600, 500);
+
 		if (editable) {
 			set(vuni, x, y, 650, 800, 200, 50);
 			set(stat, x, y, 850, 800, 200, 50);
@@ -205,16 +208,17 @@ public class FormEditPage extends EntityEditPage {
 			set(vuni, x, y, 650, 750, 200, 50);
 			set(stat, x, y, 850, 750, 200, 50);
 		}
+
 		set(impt, x, y, 50, 1150, 200, 50);
 		set(vene, x, y, 250, 1150, 200, 50);
 		set(pcoin, x, y, 450, 1150, 200, 50);
+
 		int h = 1000;
+
 		for (JTF jtf : fdesc) {
 			set(jtf, x, y, 650, h, 750, 50);
 			h += 50;
 		}
-		ueb.resized(true);
-
 	}
 
 	@Override

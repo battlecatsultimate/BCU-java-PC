@@ -36,11 +36,13 @@ public class UnitInfoPage extends Page {
 		b = BasisSet.current();
 
 		info = new UnitInfoTable[u.forms.length];
+
 		for (int i = 0; i < info.length; i++)
 			info[i] = new UnitInfoTable(this, n.val.forms[i], lvs);
+
 		trea = new TreaTable(this);
+
 		ini();
-		resized(true);
 	}
 
 	public UnitInfoPage(Page p, Node<Unit> de) {
@@ -58,7 +60,6 @@ public class UnitInfoPage extends Page {
 		trea = new TreaTable(this);
 		extr.setSelected(sp);
 		ini();
-		resized(true);
 	}
 
 	@Override
@@ -75,24 +76,38 @@ public class UnitInfoPage extends Page {
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 		set(prev, x, y, 300, 0, 200, 50);
 		set(anim, x, y, 600, 0, 200, 50);
 		set(next, x, y, 900, 0, 200, 50);
 		set(find, x, y, 1200, 0, 200, 50);
 		set(extr, x, y, 1500, 0, 200, 50);
+
 		int h = 0;
+
 		set(jsp, x, y, 50, 100, 1650, 1150);
+
 		for (int i = 0; i < info.length; i++) {
 			int ih = info[i].getH();
+
 			set(info[i], x, y, 0, h, 1600, ih);
-			info[i].resized(true);
+
 			h += ih + (n.val.forms[i].getExplaination().replace("<br>", "").length() == 0 ? 50 : 0);
 		}
+
 		cont.setPreferredSize(size(x, y, 1600, h).toDimension());
+
 		jsp.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
-		jsp.revalidate();
+
 		set(trea, x, y, 1750, 100, 400, 1200);
+	}
+
+	@Override
+	public synchronized void onTimer(int t) {
+		super.onTimer(t);
+
+		jsp.revalidate();
 	}
 
 	private void addListeners() {
@@ -142,6 +157,7 @@ public class UnitInfoPage extends Page {
 		prev.setEnabled(n.prev != null);
 		next.setEnabled(n.next != null);
 		addListeners();
+		assignSubPage(info);
 	}
 
 }

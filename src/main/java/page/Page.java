@@ -7,6 +7,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class Page extends JPanel implements RetFunc {
@@ -52,6 +55,9 @@ public abstract class Page extends JPanel implements RetFunc {
 
 	protected final Page front;
 
+	private final List<Page> subPages = new ArrayList<>();
+	private final Set<Field> accumulatedFields = new HashSet<>();
+
 	private boolean resizing = false;
 	public boolean needResize = true;
 
@@ -62,6 +68,14 @@ public abstract class Page extends JPanel implements RetFunc {
 		front = p;
 		setBackground(BGCOLOR);
 		setLayout(null);
+		accumulateField(this.getClass());
+	}
+
+	private void accumulateField(Class<?> cls) {
+		accumulatedFields.addAll(Arrays.asList(cls.getDeclaredFields()));
+
+		if (cls.getSuperclass() != null)
+			accumulateField(cls.getSuperclass());
 	}
 
 	@Override
@@ -70,11 +84,30 @@ public abstract class Page extends JPanel implements RetFunc {
 			CustomComp cc = (CustomComp) c;
 			cc.added(this);
 		}
+
+		needResize = true;
+
 		return super.add(c);
 	}
 
 	@Override
 	public void callBack(Object newParam) {
+	}
+
+	public void assignSubPage(Page... pages) {
+		if (pages == null)
+			return;
+
+		for(int i = 0; i < pages.length; i++) {
+			Page page = pages[i];
+
+			if (page == null)
+				continue;
+
+			if (!subPages.contains(page)) {
+				subPages.add(page);
+			}
+		}
 	}
 
 	public synchronized final void componentResized(int x, int y) {
@@ -111,10 +144,24 @@ public abstract class Page extends JPanel implements RetFunc {
 		return adjusting > 0;
 	}
 
-	public final void resized(boolean manual) {
+	public void fireDimensionChanged() {
+		needResize = true;
+	}
+
+	@Override
+	public void remove(Component comp) {
+		super.remove(comp);
+		needResize = true;
+	}
+
+	/**
+	 * When UI components must be resized
+	 * This "must" not be used for updating UI
+	 */
+	private void resized() {
 		PP dimension = getXY();
 
-		if (!needResize && !manual && dimension.equals(previousDimension))
+		if (!needResize && dimension.equals(previousDimension))
 			return;
 
 		needResize = false;
@@ -122,6 +169,10 @@ public abstract class Page extends JPanel implements RetFunc {
 		Point p = dimension.toPoint();
 		componentResized(p.x, p.y);
 		previousDimension = dimension;
+
+		for(int i = 0; i < subPages.size(); i++) {
+			subPages.get(i).resized();
+		}
 	}
 
 	protected void change(boolean b) {
@@ -192,8 +243,40 @@ public abstract class Page extends JPanel implements RetFunc {
 
 	protected abstract JButton getBackButton();
 
-	public synchronized void timer(int t) {
-		resized(false);
+	public synchronized final void timer(int t) {
+		resized();
+
+		//Revalidate components
+		updateTableFromPage(this);
+
+		for(int i = 0; i < subPages.size(); i++) {
+			updateTableFromPage(subPages.get(i));
+		}
+
+		onTimer(t);
+	}
+
+	private synchronized void updateTableFromPage(Page p) {
+		try {
+			for(Field field : accumulatedFields) {
+				if (!field.isAccessible()) {
+					field.setAccessible(true);
+				}
+
+				Object result = field.get(p);
+
+				if (result instanceof JTable) {
+					((JTable) result).revalidate();
+					((JTable) result).repaint();
+				}
+			}
+		} catch (Exception ignored) {
+
+		}
+	}
+
+	public synchronized void onTimer(int t) {
+
 	}
 
 	protected void windowActivated() {

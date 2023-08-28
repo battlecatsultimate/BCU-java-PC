@@ -42,7 +42,6 @@ public class UnitViewPage extends AbViewPage {
 			jlu.setListData(new Vector<>(pac.units.getList()));
 
 		ini();
-		resized(true);
 	}
 
 	public UnitViewPage(Page p) {
@@ -57,7 +56,6 @@ public class UnitViewPage extends AbViewPage {
 		jlu.setListData(v);
 
 		ini();
-		resized(true);
 	}
 
 	public UnitViewPage(Page p, Unit u) {
@@ -68,6 +66,7 @@ public class UnitViewPage extends AbViewPage {
 	@Override
 	protected void resized(int x, int y) {
 		super.resized(x, y);
+
 		if (!larges.isSelected()) {
 			set(jspu, x, y, 50, 100, 300, 1100);
 			set(jspf, x, y, 400, 100, 300, 400);

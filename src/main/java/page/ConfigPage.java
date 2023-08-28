@@ -91,7 +91,6 @@ public class ConfigPage extends Page {
 		super(p);
 
 		ini();
-		resized(true);
 	}
 
 	@Override

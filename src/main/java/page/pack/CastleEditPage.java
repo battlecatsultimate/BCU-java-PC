@@ -50,7 +50,6 @@ public class CastleEditPage extends Page {
 		cas = ac.castles;
 
 		ini();
-		resized(true);
 	}
 
 	@Override
@@ -61,6 +60,7 @@ public class CastleEditPage extends Page {
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 		set(jspst, x, y, 50, 100, 300, 1000);
 		set(addc, x, y, 400, 100, 200, 50);

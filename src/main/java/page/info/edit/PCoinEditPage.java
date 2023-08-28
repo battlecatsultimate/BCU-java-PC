@@ -24,13 +24,14 @@ public class PCoinEditPage extends Page {
 
     public PCoinEditPage(Page p, Form u, boolean edi) {
         super(p);
+
         uni = (CustomUnit) u.du;
         editable = edi;
+
         for (int i = 0; i < 6; i++)
             pCoinEdits.add(new PCoinEditTable(this, uni, i, editable));
 
         ini();
-        resized(true);
     }
 
     @Override
@@ -41,9 +42,11 @@ public class PCoinEditPage extends Page {
     @Override
     protected void resized(int x, int y) {
         setBounds(0, 0, x, y);
+
         set(back, x, y, 0, 0, 200, 50);
         set(addP, x, y, 400, 50, 300, 50);
         set(remP, x, y, 700, 50, 300, 50);
+
         for (int i = 0; i < 6; i++)
             set(pCoinEdits.get(i), x, y, i * 400, 150, 400, 1300);
     }

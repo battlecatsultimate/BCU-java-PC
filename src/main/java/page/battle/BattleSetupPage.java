@@ -42,7 +42,6 @@ public class BattleSetupPage extends LubCont {
 		st = s;
 		conf = confs;
 		ini();
-		resized(true);
 	}
 
 	@Override
@@ -69,6 +68,7 @@ public class BattleSetupPage extends LubCont {
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 		set(jsps, x, y, 50, 100, 200, 200);
 		set(jl, x, y, 50, 350, 200, 50);

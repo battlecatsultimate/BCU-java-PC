@@ -44,7 +44,6 @@ public class LvRestrictPage extends Page {
 		super(p);
 
 		ini();
-		resized(true);
 	}
 
 	public LvRestrictPage(Page p, LvRestrict lvr) {
@@ -69,6 +68,7 @@ public class LvRestrictPage extends Page {
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 		set(jsppk, x, y, 50, 100, 400, 800);
 		set(cglr, x, y, 50, 950, 400, 50);
@@ -77,6 +77,7 @@ public class LvRestrictPage extends Page {
 		set(jspus, x, y, 1200, 100, 300, 800);
 		set(lal, x, y, 1550, 100, 400, 50);
 		set(lsb, x, y, 1550, 550, 400, 50);
+
 		for (int i = 0; i < lra.length; i++)
 			set(lra[i], x, y, 1550, 200 + 50 * i, 400, 50);
 	}

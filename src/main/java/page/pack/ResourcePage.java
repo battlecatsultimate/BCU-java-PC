@@ -40,7 +40,6 @@ public class ResourcePage extends Page {
 		super(p);
 
 		ini();
-		resized(true);
 	}
 
 	@Override
@@ -51,6 +50,7 @@ public class ResourcePage extends Page {
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 		set(jsps, x, y, 50, 150, 400, 800);
 		set(jspf, x, y, 450, 150, 700, 800);

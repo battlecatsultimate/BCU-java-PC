@@ -28,7 +28,6 @@ public class RecdSavePage extends Page {
 		recd = rec;
 
 		ini();
-		resized(true);
 	}
 
 	@Override
@@ -39,6 +38,7 @@ public class RecdSavePage extends Page {
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 		set(jtf, x, y, 1000, 500, 300, 50);
 		set(save, x, y, 1000, 600, 300, 50);

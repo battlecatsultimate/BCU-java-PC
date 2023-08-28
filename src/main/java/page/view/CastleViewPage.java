@@ -40,7 +40,6 @@ public class CastleViewPage extends Page {
 		Vector<CastleList> vec = new Vector<>(list);
 		jlsm.setListData(vec);
 		ini();
-		resized(true);
 	}
 
 	public CastleViewPage(Page p, Collection<CastleList> defcas, Identifier<CastleImg> id) {
@@ -65,6 +64,7 @@ public class CastleViewPage extends Page {
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 		set(jspsm, x, y, 50, 100, 300, 1100);
 		set(jspst, x, y, 400, 550, 300, 650);

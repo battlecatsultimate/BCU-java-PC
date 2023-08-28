@@ -52,7 +52,6 @@ public class MaModelEditPage extends Page implements AbEditPage {
 
 		aep = new EditHead(this, 2);
 		ini();
-		resized(true);
 		agt.renewNodes();
 	}
 
@@ -61,7 +60,6 @@ public class MaModelEditPage extends Page implements AbEditPage {
 
 		aep = bar;
 		ini();
-		resized(true);
 		agt.renewNodes();
 	}
 
@@ -177,10 +175,13 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	}
 
 	@Override
-	public synchronized void timer(int t) {
-		resized(false);
+	public synchronized void onTimer(int t) {
+		super.onTimer(t);
+
 		sb.paint(sb.getGraphics());
 		mb.draw();
+
+		SwingUtilities.invokeLater(() -> jlt.setUI(new TreeNodeExpander(jlt)));
 	}
 
 	@Override
@@ -201,7 +202,6 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		set(addl, x, y, 1700, 500, 200, 50);
 		set(reml, x, y, 1900, 500, 200, 50);
 		set(rema, x, y, 2100, 500, 200, 50);
-		SwingUtilities.invokeLater(() -> jlt.setUI(new TreeNodeExpander(jlt)));
 		aep.componentResized(x, y);
 		mmet.setRowHeight(size(x, y, 50));
 	}
@@ -232,7 +232,6 @@ public class MaModelEditPage extends Page implements AbEditPage {
 								ints[1]++;
 			mmet.anim.unSave("mamodel add line");
 			callBack(null);
-			resized(true);
 			mmet.setRowSelectionInterval(ind, ind);
 			setB(ind);
 			int h = mmet.getRowHeight();
@@ -241,7 +240,6 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	}
 
 	private void addListeners$0() {
-
 		back.setLnr(x -> changePanel(getFront()));
 
 		camres.setLnr(x -> {
@@ -283,7 +281,6 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		reml.setLnr(x -> removeLine());
 
 		rema.setLnr(x -> removeTree());
-
 	}
 
 	private void addListeners$1() {

@@ -36,7 +36,6 @@ public class CharaGroupPage extends Page {
 		super(p);
 
 		ini();
-		resized(true);
 	}
 
 	public CharaGroupPage(Page p, CharaGroup chg) {
@@ -71,6 +70,7 @@ public class CharaGroupPage extends Page {
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 		set(jsppk, x, y, 50, 100, 400, 800);
 		set(cglr, x, y, 50, 950, 400, 50);

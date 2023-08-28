@@ -27,10 +27,11 @@ public class LimitEditPage extends Page {
 
 	protected LimitEditPage(Page p, Stage stage) {
 		super(p);
+
 		st = stage;
 		lt = new LimitTable(this, this, ((PackMapColc) stage.getCont().getCont()).pack);
+
 		ini();
-		resized(true);
 	}
 
 	@Override
@@ -51,6 +52,7 @@ public class LimitEditPage extends Page {
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 		set(jspl, x, y, 50, 100, 400, 800);
 		set(addl, x, y, 50, 900, 200, 50);

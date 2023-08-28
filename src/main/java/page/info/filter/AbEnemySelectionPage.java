@@ -28,7 +28,6 @@ public class AbEnemySelectionPage extends Page implements SupPage<AbEnemy> {
 
         efb = AbEnemyFilterBox.getNew(this);
         ini();
-        resized(true);
         this.table = table;
         this.index = index;
     }
@@ -38,7 +37,6 @@ public class AbEnemySelectionPage extends Page implements SupPage<AbEnemy> {
 
         efb = AbEnemyFilterBox.getNew(this, pack, parents);
         ini();
-        resized(true);
         this.table = table;
         this.index = index;
     }
@@ -52,7 +50,6 @@ public class AbEnemySelectionPage extends Page implements SupPage<AbEnemy> {
     @SuppressWarnings("unchecked")
     public void callBack(Object o) {
         elt.setList((List<AbEnemy>) o);
-        resized(true);
     }
 
     public List<AbEnemy> getList() {
@@ -78,22 +75,29 @@ public class AbEnemySelectionPage extends Page implements SupPage<AbEnemy> {
     @Override
     protected void resized(int x, int y) {
         setBounds(0, 0, x, y);
+
         set(back, x, y, 0, 0, 200, 50);
         set(source, x, y, 0, 50, 600, 50);
         set(show, x, y, 250, 0, 200, 50);
         set(seatf, x, y, 550, 0, 1000, 50);
         set(seabt, x, y, 1600, 0, 200, 50);
+
         if (show.isSelected()) {
             int[] siz = efb.getSizer();
+
             set(efb, x, y, 50, 100, siz[0], siz[1]);
+
             int mx = 0, my = 0;
+
             if (siz[2] == 0)
                 mx = siz[3];
             else
                 my = siz[3];
+
             set(jsp, x, y, 50 + mx, 100 + my, 2200 - mx, 1150 - my);
         } else
             set(jsp, x, y, 50, 100, 2200, 1150);
+
         elt.setRowHeight(size(x, y, 50));
     }
 

@@ -132,6 +132,7 @@ public class StageEditPage extends Page {
 	@Override
 	protected synchronized void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 		set(info, x, y, 900, 50, 1400, 300);
 		set(addl, x, y, 900, 400, 200, 50);
@@ -158,6 +159,7 @@ public class StageEditPage extends Page {
 
 		set(veif, x, y, 600, 0, 300, 50);
 		set(jspe, x, y, 600, 50, 300, 1250);
+
 		jt.setRowHeight(size(x, y, 50));
 	}
 
@@ -470,7 +472,6 @@ public class StageEditPage extends Page {
 		advs.setEnabled(st != null);
 		elim.setEnabled(st != null && !(st.getCont().getCont() instanceof MapColc.ClipMapColc));
 		jspjt.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
-		resized(true);
 	}
 
 }

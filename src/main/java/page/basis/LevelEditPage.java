@@ -75,7 +75,6 @@ public class LevelEditPage extends Page {
 		}
 
 		ini();
-		resized(true);
 	}
 
 	@Override
@@ -86,6 +85,7 @@ public class LevelEditPage extends Page {
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(bck, x, y, 0, 0, 200, 50);
 		set(pcoin, x, y, 50, 100, 1200, 50);
 		set(levels, x, y, 50, 150, 700, 50);
@@ -100,9 +100,10 @@ public class LevelEditPage extends Page {
 	}
 
 	@Override
-    public void timer(int t) {
+    public synchronized void onTimer(int t) {
+		super.onTimer(t);
+
 		orbb.paint(orbb.getGraphics());
-		super.timer(t);
 	}
 
 	private void addListeners() {

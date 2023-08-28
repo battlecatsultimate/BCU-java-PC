@@ -28,6 +28,7 @@ class SpriteBox extends Canvas {
 
 	protected SpriteBox(Page p) {
 		page = p;
+
 		setIgnoreRepaint(true);
 		setFocusable(true);
 		setFocusTraversalKeysEnabled(false);
@@ -60,15 +61,23 @@ class SpriteBox extends Canvas {
 	protected synchronized BufferedImage getImage() {
 		int w = getWidth();
 		int h = getHeight();
+
 		BufferedImage img = (BufferedImage) createImage(w, h);
+		setSize(w, h);
+
 		if (img == null)
 			return null;
+
 		Graphics2D gra = (Graphics2D) img.getGraphics();
+
 		gra.translate(-x , -y);
+
 		if (anim != null) {
 			BufferedImage spr = (BufferedImage) anim.getNum().bimg();
+
 			int aw = spr.getWidth();
 			int ah = spr.getHeight();
+
 			int rw = (int) (size * aw);
 			int rh = (int) (size * ah);
 
@@ -76,21 +85,27 @@ class SpriteBox extends Canvas {
 			int bh = rh % 20 != 0 ? 20 * (1 + rh / 20) : rh;
 
 			gra.setColor(white ? Color.WHITE : new Color(64, 64, 64));
+
 			gra.fillRect(0, 0, bw, bh);
 
 			gra.setColor(Color.LIGHT_GRAY);
+
 			for (int i = 0; i < rw; i += 20)
 				for (int j = i / 20 % 2 * 20; j < rh; j += 40)
 					gra.fillRect(i, j, 20, 20);
 
 			gra.drawImage(spr, 0, 0, rw, rh, null);
+
 			ImgCut ic = anim.imgcut;
+
 			for (int i = 0; i < ic.n; i++) {
 				int[] val = ic.cuts[i];
+
 				int sx = (int) (val[0] * size - 1);
 				int sy = (int) (val[1] * size - 1);
 				int sw = (int) (val[2] * size + 2);
 				int sh = (int) (val[3] * size + 2);
+
 				if (i == sele) {
 					gra.setColor(Color.RED);
 					gra.fillRect(sx - 5, sy - 5, sw + 5, 5);
@@ -101,10 +116,11 @@ class SpriteBox extends Canvas {
 					gra.setColor(Color.BLACK);
 					gra.drawRect(sx, sy, sw, sh);
 				}
-
 			}
 		}
+
 		gra.dispose();
+
 		return img;
 	}
 
@@ -263,8 +279,9 @@ class SpriteBox extends Canvas {
 
 		initSize = Math.min(1.0 * w / spriteW, 1.0 * h / spriteH);
 
-		if(first)
+		if(first || size == 0.0) {
 			size = initSize;
+		}
 	}
 
 	private void relativeScaling(Point p, double factor) {

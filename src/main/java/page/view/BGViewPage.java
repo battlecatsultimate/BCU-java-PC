@@ -31,14 +31,12 @@ public class BGViewPage extends Page implements SupPage<Background> {
 
 		jlst.setListData(bgs.toArray(new Background[0]));
 		ini();
-		resized(true);
 	}
 
 	public BGViewPage(Page p, String pac) {
 		super(p);
 		jlst.setListData(new Vector<>(UserProfile.getAll(pac, Background.class)));
 		ini();
-		resized(true);
 	}
 
 	public BGViewPage(Page front, String pac, Identifier<Background> bg) {
@@ -59,12 +57,21 @@ public class BGViewPage extends Page implements SupPage<Background> {
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 		set(jspst, x, y, 50, 100, 300, 1100);
 		set(jl, x, y, 400, 50, 1800, 1100);
+	}
+
+	@Override
+	public synchronized void onTimer(int t) {
+		super.onTimer(t);
+
 		Background s = jlst.getSelectedValue();
+
 		if (s == null)
 			return;
+
 		jl.setIcon(UtilPC.getBg(s, jl.getWidth(), jl.getHeight()));
 	}
 

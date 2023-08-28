@@ -6,8 +6,6 @@ import page.Page;
 import utilpc.Algorithm;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.image.BufferedImage;
 
 public class SpriteEditPage extends Page {
@@ -34,7 +32,6 @@ public class SpriteEditPage extends Page {
 		super(p);
 		curr = base = bimg;
 		ini();
-		resized(true);
 	}
 
 	protected BufferedImage getEdit() {
@@ -49,6 +46,7 @@ public class SpriteEditPage extends Page {
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 		set(jsp, x, y, 0, 50, 2000, 1000);
 		set(jslh, x, y, 0, 1100, 300, 100);

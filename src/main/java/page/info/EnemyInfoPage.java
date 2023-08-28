@@ -32,8 +32,8 @@ public class EnemyInfoPage extends Page {
 
 		info = new EnemyInfoTable(this, de.val, de.mul, de.mula);
 		trea = new TreaTable(this);
+
 		ini();
-		resized(true);
 	}
 
 	@Override
@@ -49,6 +49,7 @@ public class EnemyInfoPage extends Page {
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 		set(source, x, y, 0, 50, 600, 50);
 		set(prev, x, y, 300, 0, 200, 50);
@@ -58,11 +59,20 @@ public class EnemyInfoPage extends Page {
 		set(extr, x, y, 1500, 0, 200, 50);
 		set(jsp, x, y, 50, 100, 1650, 1150);
 		set(trea, x, y, 1700, 100, 400, 1200);
+
 		int ih = info.getH();
+
 		cont.setPreferredSize(size(x, y, 1600, ih - 50).toDimension());
+
 		jsp.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
+
 		set(info, x, y, 0, 0, 1600, ih);
-		info.resized(true);
+	}
+
+	@Override
+	public synchronized void onTimer(int t) {
+		super.onTimer(t);
+
 		jsp.revalidate();
 	}
 
@@ -86,9 +96,13 @@ public class EnemyInfoPage extends Page {
 	}
 
 	private void ini() {
+		assignSubPage(info);
+
 		add(back);
+
 		cont.add(info);
 		cont.setLayout(null);
+
 		add(jsp);
 		add(trea);
 		add(prev);
@@ -97,8 +111,10 @@ public class EnemyInfoPage extends Page {
 		add(find);
 		add(extr);
 		add(source);
+
 		prev.setEnabled(e.prev != null);
 		next.setEnabled(e.next != null);
+
 		addListeners();
 	}
 
