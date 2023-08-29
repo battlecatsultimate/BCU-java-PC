@@ -56,7 +56,7 @@ public abstract class Page extends JPanel implements RetFunc {
 	protected final Page front;
 
 	private final List<Page> subPages = new ArrayList<>();
-	private final Set<Field> accumulatedFields = new HashSet<>();
+	private final Set<Field> accumulatedTables = new HashSet<>();
 
 	private boolean resizing = false;
 	public boolean needResize = true;
@@ -65,17 +65,26 @@ public abstract class Page extends JPanel implements RetFunc {
 	private PP previousDimension = getXY();
 
 	protected Page(Page p) {
+		System.out.println("==========");
 		front = p;
 		setBackground(BGCOLOR);
 		setLayout(null);
-		accumulateField(this.getClass());
+		accumulateJTable(this.getClass());
 	}
 
-	private void accumulateField(Class<?> cls) {
-		accumulatedFields.addAll(Arrays.asList(cls.getDeclaredFields()));
+	private void accumulateJTable(Class<?> cls) {
+		Field[] fields = cls.getDeclaredFields();
 
-		if (cls.getSuperclass() != null)
-			accumulateField(cls.getSuperclass());
+		for (int i = 0; i < cls.getDeclaredFields().length; i++) {
+			System.out.println(fields[i].getName() + " = " + fields[i].getType());
+
+			if (JTable.class.isAssignableFrom(fields[i].getType())) {
+				accumulatedTables.add(fields[i]);
+			}
+		}
+
+		if (cls.getSuperclass() != null && Page.class.isAssignableFrom(cls.getSuperclass()))
+			accumulateJTable(cls.getSuperclass());
 	}
 
 	@Override
@@ -258,17 +267,15 @@ public abstract class Page extends JPanel implements RetFunc {
 
 	private synchronized void updateTableFromPage(Page p) {
 		try {
-			for(Field field : accumulatedFields) {
+			for(Field field : accumulatedTables) {
 				if (!field.isAccessible()) {
 					field.setAccessible(true);
 				}
 
-				Object result = field.get(p);
+				JTable result = (JTable) field.get(p);
 
-				if (result instanceof JTable) {
-					((JTable) result).revalidate();
-					((JTable) result).repaint();
-				}
+				result.revalidate();
+				result.repaint();
 			}
 		} catch (Exception ignored) {
 
