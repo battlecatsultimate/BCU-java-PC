@@ -65,7 +65,6 @@ public abstract class Page extends JPanel implements RetFunc {
 	private PP previousDimension = getXY();
 
 	protected Page(Page p) {
-		System.out.println("==========");
 		front = p;
 		setBackground(BGCOLOR);
 		setLayout(null);
@@ -76,8 +75,6 @@ public abstract class Page extends JPanel implements RetFunc {
 		Field[] fields = cls.getDeclaredFields();
 
 		for (int i = 0; i < cls.getDeclaredFields().length; i++) {
-			System.out.println(fields[i].getName() + " = " + fields[i].getType());
-
 			if (JTable.class.isAssignableFrom(fields[i].getType())) {
 				accumulatedTables.add(fields[i]);
 			}

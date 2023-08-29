@@ -79,6 +79,9 @@ public class BGViewPage extends Page implements SupPage<Background> {
 		back.addActionListener(arg0 -> changePanel(getFront()));
 
 		jlst.addListSelectionListener(arg0 -> {
+			if (needResize)
+				return;
+
 			if (arg0.getValueIsAdjusting())
 				return;
 			Background s = jlst.getSelectedValue();
