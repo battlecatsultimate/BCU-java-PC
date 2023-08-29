@@ -79,7 +79,7 @@ public class ColorPickPage extends Page {
             add(texts[i]);
         }
 
-        picker.invalidate();
+        picker.repaint();
 
         updateTexts();
 
@@ -228,6 +228,7 @@ public class ColorPickPage extends Page {
             getFront().callBack(picker);
         } else if(newParam instanceof ColorPicker) {
             updateTexts();
+            picker.repaint();
         }
     }
 
