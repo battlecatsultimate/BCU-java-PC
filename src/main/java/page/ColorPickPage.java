@@ -248,13 +248,13 @@ public class ColorPickPage extends Page {
                     texts[i].setText(Math.round(hsb[2] * 100)+"%");
                     break;
                 case 3:
-                    texts[i].setText(rgb[0]+"");
+                    texts[i].setText(String.valueOf(rgb[0]));
                     break;
                 case 4:
-                    texts[i].setText(rgb[1]+"");
+                    texts[i].setText(String.valueOf(rgb[1]));
                     break;
                 case 5:
-                    texts[i].setText(rgb[2]+"");
+                    texts[i].setText(String.valueOf(rgb[2]));
                     break;
                 case 6:
                     int c = rgb[0];
