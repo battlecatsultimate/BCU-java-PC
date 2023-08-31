@@ -173,11 +173,11 @@ public abstract class SwingEditor extends Editor {
 
 			if(obj instanceof Identifier<?>)
 				if(((Identifier<?>) obj).cls == EneRand.class)
-					jl.setText("" + field.get() + " [Random]");
+					jl.setText(field.get() + " [Random]");
 				else
-					jl.setText("" + field.get());
+					jl.setText(String.valueOf(field.get()));
 			else
-				jl.setText("" + field.get());
+				jl.setText(String.valueOf(field.get()));
 
 			input.setEnabled(edit && field.obj != null);
 		}
@@ -222,7 +222,7 @@ public abstract class SwingEditor extends Editor {
 			if (field.obj == null)
 				input.setText("");
 			else
-				input.setText("" + field.getInt());
+				input.setText(String.valueOf(field.getInt()));
 			input.setEnabled(edit && field.obj != null);
 		}
 
