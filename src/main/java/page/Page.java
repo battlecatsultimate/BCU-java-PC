@@ -116,6 +116,20 @@ public abstract class Page extends JPanel implements RetFunc {
 		}
 	}
 
+	public void detachSubPage(Page... pages) {
+		if (pages == null)
+			return;
+
+		for(int i = 0; i < pages.length; i++) {
+			Page page = pages[i];
+
+			if (page == null)
+				continue;
+
+			subPages.remove(page);
+		}
+	}
+
 	public synchronized final void componentResized(int x, int y) {
 		if (resizing)
 			return;
@@ -167,14 +181,13 @@ public abstract class Page extends JPanel implements RetFunc {
 	private void resized() {
 		PP dimension = getXY();
 
-		if (!needResize && dimension.equals(previousDimension))
-			return;
+		if (needResize || !dimension.equals(previousDimension)) {
+			needResize = false;
 
-		needResize = false;
-
-		Point p = dimension.toPoint();
-		componentResized(p.x, p.y);
-		previousDimension = dimension;
+			Point p = dimension.toPoint();
+			componentResized(p.x, p.y);
+			previousDimension = dimension;
+		}
 
 		for(int i = 0; i < subPages.size(); i++) {
 			subPages.get(i).resized();
