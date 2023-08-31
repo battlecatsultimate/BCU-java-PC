@@ -349,7 +349,13 @@ public class ComparePage extends Page {
                 double mul = (((Magnification) multi).hp * enemy.multi(b)) / 100.0;
                 double mula = (((Magnification) multi).atk * enemy.multi(b)) / 100.0;
 
-                abilityPanes[i].setViewportView(abilities[i] = new EntityAbilities(getFront(), m, multi));
+                detachSubPage(abilities[i]);
+
+                abilities[i] = new EntityAbilities(getFront(), m, multi);
+
+                assignSubPage(abilities[i]);
+
+                abilityPanes[i].setViewportView(abilities[i]);
 
                 for (int[] atkDatum : atkData) {
                     if (atkString.length() > 0) {
@@ -397,7 +403,14 @@ public class ComparePage extends Page {
                 Form f = mu.getPack();
                 EForm ef = new EForm(f, multi);
 
-                abilityPanes[i].setViewportView(abilities[i] = new EntityAbilities(getFront(), mu, multi));
+
+                detachSubPage(abilities[i]);
+
+                abilities[i] = new EntityAbilities(getFront(), m, multi);
+
+                assignSubPage(abilities[i]);
+
+                abilityPanes[i].setViewportView(abilities[i]);
 
                 double mul = f.unit.lv.getMult(multi.getLv() + multi.getPlusLv());
                 double atkLv = b.t().getAtkMulti();
