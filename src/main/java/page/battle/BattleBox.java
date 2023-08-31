@@ -748,7 +748,7 @@ public interface BattleBox {
 				gra.setComposite(FakeGraphics.GRAY, 0, 0);
 				gra.fillRect(0, 0, w, h);
 
-				if((sb.ebase.getAbi() * Data.AB_TIMEI) != 0) {
+				if((sb.ebase.getAbi() & Data.AB_TIMEI) != 0) {
 					double shake = 0.0;
 
 					if(sb.ebase.health <= 0 || (sb.ebase instanceof ECastle && ((ECastle) sb.ebase).hit > 0) || (sb.ebase instanceof EEnemy && ((EEnemy) sb.ebase).hit > 0)) {
@@ -798,6 +798,22 @@ public interface BattleBox {
 							e.anim.drawEff(gra, setP(p, y), bf.sb.siz);
 						}
 					}
+				}
+
+				for(int i = 0; i < sb.lea.size(); i++) {
+					EAnimCont eac = sb.lea.get(i);
+
+					if (!(eac instanceof WaprCont) || !((WaprCont) eac).timeImmune)
+						continue;
+
+					int dep = eac.layer * DEP;
+
+					gra.setTransform(at);
+					double p = getX(eac.pos);
+					double y = midh - (road_h - dep) * bf.sb.siz;
+
+					double dx = ((WaprCont) eac).dire == -1 ? -27 * bf.sb.siz : -24 * bf.sb.siz;
+					eac.draw(gra, setP(p + dx, y - 24 * bf.sb.siz), psiz);
 				}
 			}
 			gra.setTransform(at);
