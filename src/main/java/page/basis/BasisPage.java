@@ -592,6 +592,8 @@ public class BasisPage extends LubCont {
 		addListeners$1();
 		addListeners$2();
 		lvorb.setEnabled(lub.sf != null);
+
+		assignSubPage(trea);
 	}
 
 	private LineUp lu() {
