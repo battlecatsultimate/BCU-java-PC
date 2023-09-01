@@ -47,6 +47,7 @@ public class BGEditPage extends Page {
 	private final JL[] ol = new JL[3];
 	private final JTF[] os = new JTF[3];
 	private final JComboBox<String> eff = new JComboBox<>();
+	private final JBTN reset = new JBTN(MainLocale.PAGE, "reset");
 
 	private final UserPack pack;
 	private BGViewPage bvp;
@@ -100,6 +101,7 @@ public class BGEditPage extends Page {
 		set(top, x, y, 650, 50, 200, 50);
 		set(overlay, x, y, 650, 1200, 200, 50);
 		set(eff, x, y , 1900, 50, 200, 50);
+		set(reset, x, y, 2100, 50, 200, 50);
 
 		for (int i = 0; i < 4; i++) {
 			set(cs[i], x, y, 900 + 250 * i, 50, 200, 50);
@@ -233,6 +235,13 @@ public class BGEditPage extends Page {
 				}
 			}
 		});
+
+		reset.setLnr(e -> {
+			bgr.effect = -1;
+			eff.setEnabled(true);
+			eff.setSelectedIndex(0);
+			eff.setToolTipText(null);
+		});
 	}
 
 	private void getFile(String str, Background bgr) {
@@ -275,6 +284,7 @@ public class BGEditPage extends Page {
 		add(top);
 		add(eff);
 		add(overlay);
+		add(reset);
 		for (int i = 0; i < 4; i++) {
 			add(cs[i] = new JTF());
 		}
@@ -363,6 +373,9 @@ public class BGEditPage extends Page {
 
 			if(bgr.effect == -1) {
 				eff.setSelectedIndex(0);
+			} else if (bgr.effect < 0 || bgr.effect >= eff.getItemCount()) {
+				eff.setEnabled(false);
+				eff.setToolTipText("<html>This background uses effect that can't be selected in the list<br>Please click reset button to change it</html>");
 			} else {
 				eff.setSelectedIndex(bgr.effect + 1);
 			}
