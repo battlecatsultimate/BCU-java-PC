@@ -39,7 +39,6 @@ public class EnemyEditPage extends EntityEditPage {
 		eeb = new EnemyEditBox(this, pack, ce);
 		ini();
 		setData((CustomEnemy) e.de);
-		resized(true);
 	}
 
 	@Override
@@ -68,16 +67,18 @@ public class EnemyEditPage extends EntityEditPage {
 
 	@Override
 	protected void ini() {
-
 		set(ldr);
 		set(fdr);
 		set(fsr);
+
 		super.ini();
+
 		add(eeb);
 		add(vene);
 		add(stat);
 		add(impt);
 		add(vuni);
+
 		for (int i = 0 ; i < edesc.length ; i++)
 			add(edesc[i] = new JTF());
 
@@ -91,6 +92,8 @@ public class EnemyEditPage extends EntityEditPage {
 
 		stat.setLnr(x -> changePanel(new EnemyInfoPage(this, ENode.getList(UserProfile.getAll(ene.id.pack, Enemy.class), ene))));
 		subListener(impt, vuni, vene, ene);
+
+		assignSubPage(eeb);
 	}
 
 	private void changeDesc(int line) {
@@ -119,10 +122,12 @@ public class EnemyEditPage extends EntityEditPage {
 	@Override
 	protected void resized(int x, int y) {
 		super.resized(x, y);
+
 		set(ldr, x, y, 50, 350, 100, 50);
 		set(fdr, x, y, 150, 350, 200, 50);
 		set(eeb, x, y, 50, 650, 600, 500);
 		set(fsr, x, y, 50, 1150, 200, 50);
+
 		if (editable) {
 			set(vene, x, y, 650, 800, 200, 50);
 			set(stat, x, y, 850, 800, 200, 50);
@@ -133,13 +138,13 @@ public class EnemyEditPage extends EntityEditPage {
 
 		set(impt, x, y, 250, 1150, 200, 50);
 		set(vuni, x, y, 450, 1150, 200, 50);
+
 		int h = 1000;
+
 		for (JTF jtf : edesc) {
 			set(jtf, x, y, 650, h, 750, 50);
 			h += 50;
 		}
-		eeb.resized(true);
-
 	}
 
 	@Override

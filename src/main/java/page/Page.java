@@ -7,6 +7,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class Page extends JPanel implements RetFunc {
@@ -52,7 +55,11 @@ public abstract class Page extends JPanel implements RetFunc {
 
 	protected final Page front;
 
+	private final List<Page> subPages = new ArrayList<>();
+	private final Set<Field> accumulatedTables = new HashSet<>();
+
 	private boolean resizing = false;
+	public boolean needResize = true;
 
 	private int adjusting;
 	private PP previousDimension = getXY();
@@ -61,6 +68,20 @@ public abstract class Page extends JPanel implements RetFunc {
 		front = p;
 		setBackground(BGCOLOR);
 		setLayout(null);
+		accumulateJTable(this.getClass());
+	}
+
+	private void accumulateJTable(Class<?> cls) {
+		Field[] fields = cls.getDeclaredFields();
+
+		for (int i = 0; i < cls.getDeclaredFields().length; i++) {
+			if (JTable.class.isAssignableFrom(fields[i].getType())) {
+				accumulatedTables.add(fields[i]);
+			}
+		}
+
+		if (cls.getSuperclass() != null && Page.class.isAssignableFrom(cls.getSuperclass()))
+			accumulateJTable(cls.getSuperclass());
 	}
 
 	@Override
@@ -69,11 +90,44 @@ public abstract class Page extends JPanel implements RetFunc {
 			CustomComp cc = (CustomComp) c;
 			cc.added(this);
 		}
+
+		needResize = true;
+
 		return super.add(c);
 	}
 
 	@Override
 	public void callBack(Object newParam) {
+	}
+
+	public void assignSubPage(Page... pages) {
+		if (pages == null)
+			return;
+
+		for(int i = 0; i < pages.length; i++) {
+			Page page = pages[i];
+
+			if (page == null)
+				continue;
+
+			if (!subPages.contains(page)) {
+				subPages.add(page);
+			}
+		}
+	}
+
+	public void detachSubPage(Page... pages) {
+		if (pages == null)
+			return;
+
+		for(int i = 0; i < pages.length; i++) {
+			Page page = pages[i];
+
+			if (page == null)
+				continue;
+
+			subPages.remove(page);
+		}
 	}
 
 	public synchronized final void componentResized(int x, int y) {
@@ -110,15 +164,34 @@ public abstract class Page extends JPanel implements RetFunc {
 		return adjusting > 0;
 	}
 
-	public final void resized(boolean manual) {
+	public void fireDimensionChanged() {
+		needResize = true;
+	}
+
+	@Override
+	public void remove(Component comp) {
+		super.remove(comp);
+		needResize = true;
+	}
+
+	/**
+	 * When UI components must be resized
+	 * This "must" not be used for updating UI
+	 */
+	private void resized() {
 		PP dimension = getXY();
 
-		if (!manual && dimension.equals(previousDimension))
-			return;
+		if (needResize || !dimension.equals(previousDimension)) {
+			needResize = false;
 
-		Point p = dimension.toPoint();
-		componentResized(p.x, p.y);
-		previousDimension = dimension;
+			Point p = dimension.toPoint();
+			componentResized(p.x, p.y);
+			previousDimension = dimension;
+		}
+
+		for(int i = 0; i < subPages.size(); i++) {
+			subPages.get(i).resized();
+		}
 	}
 
 	protected void change(boolean b) {
@@ -189,8 +262,38 @@ public abstract class Page extends JPanel implements RetFunc {
 
 	protected abstract JButton getBackButton();
 
-	public synchronized void timer(int t) {
-		resized(false);
+	public synchronized final void timer(int t) {
+		resized();
+
+		//Revalidate components
+		updateTableFromPage(this);
+
+		for(int i = 0; i < subPages.size(); i++) {
+			updateTableFromPage(subPages.get(i));
+		}
+
+		onTimer(t);
+	}
+
+	private synchronized void updateTableFromPage(Page p) {
+		try {
+			for(Field field : accumulatedTables) {
+				if (!field.isAccessible()) {
+					field.setAccessible(true);
+				}
+
+				JTable result = (JTable) field.get(p);
+
+				result.revalidate();
+				result.repaint();
+			}
+		} catch (Exception ignored) {
+
+		}
+	}
+
+	public synchronized void onTimer(int t) {
+
 	}
 
 	protected void windowActivated() {

@@ -33,7 +33,6 @@ public class UnitFLUPage extends LubCont {
 		lub.setLimit(lim, price);
 		ufb = UnitFilterBox.getNew(this, lim, price);
 		ini();
-		resized(true);
 	}
 
 	@Override
@@ -41,7 +40,6 @@ public class UnitFLUPage extends LubCont {
 	public void callBack(Object o) {
 		if (o instanceof List)
 			ult.setList((List<Form>) o);
-		resized(true);
 	}
 
 	public List<Form> getList() {
@@ -81,14 +79,21 @@ public class UnitFLUPage extends LubCont {
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 		set(show, x, y, 250, 0, 200, 50);
 		set(seatf, x, y, 550, 0, 1000, 50);
+		set(seabt, x, y, 1600, 0, 200, 50);
+
 		int[] end = new int[] { 650, 350 };
+
 		if (show.isSelected()) {
 			int[] siz = ufb.getSizer();
+
 			set(ufb, x, y, 50, 100, siz[0], siz[1]);
+
 			int mx = 50, my = 100, ax = 2200, ay = 1150;
+
 			if (siz[2] == 0) {
 				mx += siz[3];
 				ax -= siz[3];
@@ -98,10 +103,13 @@ public class UnitFLUPage extends LubCont {
 				ax -= end[1 - siz[2]];
 				ay -= siz[3];
 			}
+
 			set(jsp, x, y, mx, my, ax, ay);
 		} else
 			set(jsp, x, y, 50, 100, 1550, 1150);
+
 		set(lub, x, y, 1650, 950, 600, 300);
+
 		ult.setRowHeight(size(x, y, 50));
 	}
 

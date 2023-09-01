@@ -93,7 +93,6 @@ public class BasisPage extends LubCont {
 		super(p);
 
 		ini();
-		resized(true);
 	}
 
 	public BasisPage(Page p, Limit lim, int price) {
@@ -101,7 +100,6 @@ public class BasisPage extends LubCont {
 		lub.setLimit(lim, price);
 
 		ini();
-		resized(true);
 	}
 
 	@Override
@@ -227,9 +225,11 @@ public class BasisPage extends LubCont {
 	}
 
 	@Override
-    public void timer(int t) {
+    public synchronized void onTimer(int t) {
+		super.onTimer(t);
+
 		ncb.paint(ncb.getGraphics());
-		super.timer(t);
+		jspt.revalidate();
 	}
 
 	private void addListeners$0() {
@@ -608,12 +608,20 @@ public class BasisPage extends LubCont {
 
 	private void setB(BasisLU b) {
 		current().sele = b;
+
 		lub.setLU(b == null ? null : b.lu);
+
 		brem.setEnabled(current().lb.size() > 1);
+
 		bjtf.setText(BasisSet.current().sele.name);
-		ncb.set(b.nyc);
+
+		if (b != null)
+			ncb.set(b.nyc);
+
 		changeLU();
+		
 		callBack(lub.sf);
+
 		trea.callBack(null);
 	}
 

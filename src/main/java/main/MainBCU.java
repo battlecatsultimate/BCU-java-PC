@@ -267,6 +267,7 @@ public class MainBCU {
 					prog.accept(progress/max);
 				}
 
+				fos.flush();
 				fos.close();
 			} else {
 				int num = getFileNumber(vf);

@@ -49,7 +49,6 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		aep = new EditHead(this, 0);
 		agt = new AnimGroupTree(jlt);
 		ini();
-		resized(true);
 	}
 
 	public DIYViewPage(Page p, AnimCE ac) {
@@ -60,7 +59,6 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		if (!ac.inPool())
 			aep.focus = ac;
 		ini();
-		resized(true);
 	}
 
 	public DIYViewPage(Page p, EditHead bar) {
@@ -69,7 +67,6 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		aep = bar;
 		agt = new AnimGroupTree(jlt);
 		ini();
-		resized(true);
 	}
 
 	@Override
@@ -187,6 +184,12 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 			set(remgroup, x, y, 0, 0, 0, 0);
 		}
 		jspu.revalidate();
+	}
+
+	@Override
+	public synchronized void onTimer(int t) {
+		super.onTimer(t);
+
 		SwingUtilities.invokeLater(() -> jlt.setUI(new TreeNodeExpander(jlt)));
 		ib.updateControllerDimension(((Canvas) vb).getWidth(), ((Canvas) vb).getHeight());
 	}

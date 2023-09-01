@@ -37,7 +37,6 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
         pcet = new PCoinEditTable(this, unit, editable);
 
         ini();
-        resized(true);
     }
 
     @Override
@@ -48,6 +47,7 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
     @Override
     protected void resized(int x, int y) {
         setBounds(0, 0, x, y);
+
         set(back, x, y, 0, 0, 200, 50);
         set(jspc, x, y, 350, 250, 300, 600);
         set(add, x, y, 350, 850, 150, 50);

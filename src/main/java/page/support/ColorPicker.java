@@ -85,6 +85,8 @@ public class ColorPicker extends JPanel {
 
         changeBarPos();
         changeCirclePos();
+
+        repaint();
     }
 
     public void setMode(MODE mode) {
@@ -95,6 +97,8 @@ public class ColorPicker extends JPanel {
 
         changeBarPos();
         changeCirclePos();
+
+        repaint();
     }
 
     @Override
@@ -427,7 +431,7 @@ public class ColorPicker extends JPanel {
                 updateBar();
             }
 
-            invalidate();
+            repaint();
         } else if(e.getPoint().x >= iGap + ihw + gap && e.getPoint().x <= iGap + ihw + gap + barH && e.getPoint().y >= iGap && e.getPoint().y <= iGap + ihw) {
             dragmode = DRAGMODE.BAR;
 
@@ -472,12 +476,12 @@ public class ColorPicker extends JPanel {
 
             updateField();
 
-            invalidate();
+            repaint();
         } else {
             dragmode = null;
         }
 
-        invalidate();
+        repaint();
     }
 
     public void mouseDragged(MouseEvent e) {
@@ -535,7 +539,7 @@ public class ColorPicker extends JPanel {
                 updateBar();
             }
 
-            invalidate();
+            repaint();
         } else if(dragmode == DRAGMODE.BAR) {
             double y = Math.min(iGap + ihw, Math.max(iGap, e.getPoint().y)) - iGap;
 
@@ -576,7 +580,7 @@ public class ColorPicker extends JPanel {
 
             updateField();
 
-            invalidate();
+            repaint();
         }
     }
 

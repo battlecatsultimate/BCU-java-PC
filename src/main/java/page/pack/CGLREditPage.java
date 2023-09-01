@@ -75,7 +75,6 @@ public class CGLREditPage extends Page {
 		lcg = pack.groups;
 		llr = pack.lvrs;
 		ini();
-		resized(true);
 	}
 
 	@Override
@@ -102,6 +101,7 @@ public class CGLREditPage extends Page {
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 		set(jspcg, x, y, 50, 100, 300, 800);
 		set(addcg, x, y, 50, 950, 150, 50);
@@ -122,6 +122,7 @@ public class CGLREditPage extends Page {
 		set(jtfsb, x, y, 1800, 550, 400, 50);
 		set(jtfna, x, y, 50, 900, 300, 50);
 		set(jtflr, x, y, 1100, 900, 300, 50);
+
 		for (int i = 0; i < jtfra.length; i++)
 			set(jtfra[i], x, y, 1800, 200 + 50 * i, 400, 50);
 

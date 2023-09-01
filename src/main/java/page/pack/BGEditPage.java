@@ -56,8 +56,8 @@ public class BGEditPage extends Page {
 	public BGEditPage(Page p, UserPack ac) {
 		super(p);
 		pack = ac;
+
 		ini();
-		resized(true);
 	}
 
 	@Override
@@ -89,6 +89,7 @@ public class BGEditPage extends Page {
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 		set(jspst, x, y, 50, 100, 300, 1000);
 		set(addc, x, y, 400, 100, 200, 50);
@@ -99,6 +100,7 @@ public class BGEditPage extends Page {
 		set(top, x, y, 650, 50, 200, 50);
 		set(overlay, x, y, 650, 1200, 200, 50);
 		set(eff, x, y , 1900, 50, 200, 50);
+
 		for (int i = 0; i < 4; i++) {
 			set(cs[i], x, y, 900 + 250 * i, 50, 200, 50);
 		}
@@ -106,15 +108,21 @@ public class BGEditPage extends Page {
 		for(int i = 0; i < 5; i++) {
 			set(cl[i], x, y, 900 + 250 * i, 0, 200, 50);
 		}
+
 		set(jl, x, y, 650, 150, 1600, 1000);
 
 		for(int i = 0; i < 3; i++) {
 			set(ol[i], x, y, 900 + 250 * i, 1150, 200, 50);
 			set(os[i], x, y, 900 + 250 * i, 1200, 200, 50);
 		}
+	}
+
+	@Override
+	public synchronized void onTimer(int t) {
+		super.onTimer(t);
+
 		if (bgr != null)
 			jl.setIcon(UtilPC.getBg(bgr, jl.getWidth(), jl.getHeight()));
-
 	}
 
 	private void addListeners$0() {

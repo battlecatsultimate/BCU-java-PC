@@ -66,13 +66,14 @@ public class StageSearchPage extends StagePage {
     public StageSearchPage(Page p) {
         super(p);
         ini();
-        resized(true);
     }
 
     @Override
     protected void resized(int x, int y) {
         super.resized(x, y);
+
         set(strt, x, y, 400, 0, 200, 50);
+
         if (!resultFound) {
             set(mapN, x, y, 0, 50, 200, 50);
             set(mapName, x, y, 200, 50, 600, 50);
@@ -103,6 +104,12 @@ public class StageSearchPage extends StagePage {
             set(jspst, x, y, 400, 50, 400, 1150);
         } else
             set(jspst, x, y, 0, 50, 400, 1150);
+    }
+
+    @Override
+    public synchronized void onTimer(int t) {
+        super.onTimer(t);
+
         setVisibility();
     }
 

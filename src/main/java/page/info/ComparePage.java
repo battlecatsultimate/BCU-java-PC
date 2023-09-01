@@ -57,15 +57,12 @@ public class ComparePage extends Page {
     private UnitFindPage ufp = null;
     private int s = -1;
 
-    private boolean resize = true;
-
     private final BasisLU b = BasisSet.current().sele;
 
     public ComparePage(Page p) {
         super(p);
 
         ini();
-        resized(true);
     }
 
     @Override
@@ -282,7 +279,7 @@ public class ComparePage extends Page {
         }
 
         for (JCB b : boxes)
-            b.addActionListener(x -> requireResize());
+            b.addActionListener(x -> fireDimensionChanged());
     }
 
     private void reset() {
@@ -352,7 +349,13 @@ public class ComparePage extends Page {
                 double mul = (((Magnification) multi).hp * enemy.multi(b)) / 100.0;
                 double mula = (((Magnification) multi).atk * enemy.multi(b)) / 100.0;
 
-                abilityPanes[i].setViewportView(abilities[i] = new EntityAbilities(getFront(), m, multi));
+                detachSubPage(abilities[i]);
+
+                abilities[i] = new EntityAbilities(getFront(), m, multi);
+
+                assignSubPage(abilities[i]);
+
+                abilityPanes[i].setViewportView(abilities[i]);
 
                 for (int[] atkDatum : atkData) {
                     if (atkString.length() > 0) {
@@ -400,7 +403,14 @@ public class ComparePage extends Page {
                 Form f = mu.getPack();
                 EForm ef = new EForm(f, multi);
 
-                abilityPanes[i].setViewportView(abilities[i] = new EntityAbilities(getFront(), mu, multi));
+
+                detachSubPage(abilities[i]);
+
+                abilities[i] = new EntityAbilities(getFront(), m, multi);
+
+                assignSubPage(abilities[i]);
+
+                abilityPanes[i].setViewportView(abilities[i]);
 
                 double mul = f.unit.lv.getMult(multi.getLv() + multi.getPlusLv());
                 double atkLv = b.t().getAtkMulti();
@@ -619,7 +629,7 @@ public class ComparePage extends Page {
             seco[0][index].setText(Interpret.getTrait(TraitBox, m instanceof MaskEnemy ? ((MaskEnemy) m).getStar() : 0));
         }
 
-        requireResize();
+        fireDimensionChanged();
     }
 
     @Override
@@ -774,12 +784,14 @@ public class ComparePage extends Page {
 
         for (int i = 0; i < sele.length; i++) {
             int p = (width * 3 / 4) + width * i;
+
             set(sele[i][0], x, y, p, 50, 200, 50);
             set(sele[i][1], x, y, p, 100, 200, 50);
         }
 
         for (int i = 0; i < swap.length; i++) {
             int p = (width * 3 / 4) + width * i;
+
             set(swap[i][0], x, y, p - 100, 100, 100, 50);
             set(swap[i][1], x, y, p + 200, 100, 100, 50);
         }
@@ -788,11 +800,13 @@ public class ComparePage extends Page {
 
         for (JCB b : boxes) {
             set(b, x, y, 275 + ((main[0].length - 1) * width), posY, 200, 50);
+
             posY += 50;
         }
 
         for (int i = 0; i < names.length; i++)
             set(names[i], x, y, 250 + (i * width), 200, width, 50);
+
         for (int i = 0; i < level.length; i++)
             set(level[i], x, y, 250 + (i * width), 150, width, 50);
 
@@ -800,49 +814,64 @@ public class ComparePage extends Page {
 
         for (int i = 0; i < main.length; i++) {
             JL[] d = main[i];
+
             if (!boxes[i].isSelected()) {
                 for (JL ex : d)
                     set(ex, x, y, 0, 0, 0, 0);
+
                 continue;
             }
 
             int posX = 50;
+
             for (int j = 0; j < d.length; j++) {
                 set(d[j], x, y, posX, posY, j == 0 ? 200 : width, 50);
+
                 if (j == 0)
                     posX += 200;
                 else
                     posX += width;
             }
+
             posY += 50;
         }
 
         for (int i = 0; i < unit.length; i++) {
             JL[] d = unit[i];
+
             if (!boxes[i + main.length].isSelected()) {
                 for (JL ex : d)
                     set(ex, x, y, 0, 0, 0, 0);
+
                 continue;
             }
+
             int posX = 50;
+
             for (int j = 0; j < d.length; j++) {
                 set(d[j], x, y, posX, posY, j == 0 ? 200 : width, 50);
+
                 if (j == 0)
                     posX += 200;
                 else
                     posX += width;
             }
+
             posY += 50;
         }
 
         for (int i = 0; i < enem.length; i++) {
             JL[] d = enem[i];
+
             if (!boxes[i + main.length + unit.length].isSelected()) {
                 for (JL ex : d)
                     set(ex, x, y, 0, 0, 0, 0);
+
                 continue;
             }
+
             int posX = 50;
+
             for (int j = 0; j < d.length; j++) {
                 set(d[j], x, y, posX, posY, j == 0 ? 200 : width, 50);
                 if (j == 0)
@@ -850,43 +879,58 @@ public class ComparePage extends Page {
                 else
                     posX += width;
             }
+
             posY += 50;
         }
 
         for (int i = 0; i < evol.length; i++) {
             JL[] d = evol[i];
+
             if (!boxes[i + main.length + unit.length + enem.length].isSelected()) {
                 for (JL jl : d)
                     set(jl, x, y, 0, 0, 0, 0);
+
                 continue;
             }
+
             int posX = 250;
+
             set(d[0], x, y, 50, posY, 200, 50);
+
             for (int j = 1; j < evol[i].length; j++) {
                 JL jl = evol[i][j];
+
                 int l = j - 1;
                 int localPosX = posX + (l % 3 * 200) + (l / 6 * 600);
                 int localPosY = posY + (l / 3 % 2 * 50);
+
                 set(jl, x, y, localPosX, localPosY, width / 3, 50);
             }
+
             posY += 100;
         }
 
         for (int i = 0; i < seco.length; i++) {
             JL[] d = seco[i];
+
             if (!boxes[i + main.length + unit.length + enem.length + evol.length].isSelected()) {
                 for (JL ex : d)
                     set(ex, x, y, 0, 0, 0, 0);
+
                 continue;
             }
+
             int posX = 50;
+
             for (int j = 0; j < d.length; j++) {
                 set(d[j], x, y, posX, posY, j == 0 ? 200 : width, 50);
+
                 if (j == 0)
                     posX += 200;
                 else
                     posX += width;
             }
+
             posY += 50;
         }
 
@@ -896,32 +940,29 @@ public class ComparePage extends Page {
 
         for (int i = 0; i < abilityPanes.length; i++) {
             JScrollPane pane = abilityPanes[i];
+
             if (!boxes[boxes.length - 1].isSelected()) {
                 set(pane, x, y, 0, 0, 0, 0);
+
                 continue;
             }
 
-            if (resize) {
-                EntityAbilities e = abilities[i];
-                if (e != null) {
-                    e.setPreferredSize(size(x, y, e.getPWidth(), e.getPHeight()).toDimension());
-                    pane.getHorizontalScrollBar().setUnitIncrement(size(x, y, 20));
-                    pane.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
-                    pane.revalidate();
-                }
+            EntityAbilities e = abilities[i];
+
+            if (e != null) {
+                e.setPreferredSize(size(x, y, e.getPWidth(), e.getPHeight()).toDimension());
+
+                pane.getHorizontalScrollBar().setUnitIncrement(size(x, y, 20));
+                pane.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
+
+                pane.revalidate();
             }
 
             set(pane, x, y, posX + i * 600, posY, width, height);
         }
 
         set(tlst, x, y, 50, posY, 200, height);
-        if (resize)
-            tlst.revalidate();
 
-        resize = false;
-    }
-
-    public void requireResize() {
-        resize = true;
+        tlst.revalidate();
     }
 }

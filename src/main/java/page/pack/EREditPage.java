@@ -57,7 +57,6 @@ public class EREditPage extends Page {
 		jt = new EREditTable(this, pac);
 		jspjt = new JScrollPane(jt);
 		ini();
-		resized(true);
 	}
 
 	public EREditPage(Page page, UserPack pac, EneRand e) {
@@ -103,6 +102,7 @@ public class EREditPage extends Page {
 	@Override
 	protected synchronized void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 
 		set(jspst, x, y, 500, 150, 400, 800);
@@ -115,8 +115,10 @@ public class EREditPage extends Page {
 
 		for (int i = 0; i < 3; i++)
 			set(type[i], x, y, 1550 + 250 * i, 250, 200, 50);
+
 		set(addl, x, y, 1800, 350, 200, 50);
 		set(reml, x, y, 2050, 350, 200, 50);
+
 		jt.setRowHeight(size(x, y, 50));
 		jle.setFixedCellHeight(size(x, y, 50));
 	}
@@ -246,7 +248,6 @@ public class EREditPage extends Page {
 				type[i].setSelected(i == t);
 			jspjt.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
 		});
-		resized(true);
 	}
 
 	private void setES() {

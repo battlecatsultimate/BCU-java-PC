@@ -51,12 +51,12 @@ public class MusicEditPage extends Page {
 		super(p);
 		pack = ac;
 		ini();
-		resized(true);
 	}
 
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 		set(jspst, x, y, 50, 100, 300, 1000);
 

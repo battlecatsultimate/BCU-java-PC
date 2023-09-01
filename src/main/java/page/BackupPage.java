@@ -65,7 +65,6 @@ public class BackupPage extends Page {
         super(p);
 
         ini(ntr);
-        resized(true);
     }
 
     @Override
@@ -76,6 +75,7 @@ public class BackupPage extends Page {
     @Override
     protected void resized(int x, int y) {
         setBounds(0, 0, x, y);
+
         set(back, x, y, 0, 0, 200, 50);
         set(jspm, x, y, 50, 100, 400, 800);
         set(read, x, y, 500, 100, 200, 50);
@@ -91,7 +91,6 @@ public class BackupPage extends Page {
 
         set(jli, x, y, 1450, 50, 750, 50);
         set(jspf, x, y, 1450, 100, 400, 800);
-
     }
 
     private void addListeners$0() {

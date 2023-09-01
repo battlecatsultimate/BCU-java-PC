@@ -13,7 +13,6 @@ class LoadPage : Page(null) {
         lp = this
         add(jl)
         add(jpb)
-        resized(true)
     }
 
     fun accept(dl: Double) {
@@ -27,11 +26,13 @@ class LoadPage : Page(null) {
 
     override fun resized(x: Int, y: Int) {
         setBounds(0, 0, x, y)
+
         set(jl, x, y, 100, 500, 2000, 50)
         set(jpb, x, y, 100, 600, 2100, 50)
     }
 
-    override fun timer(t: Int) {
+    @Synchronized
+    override fun onTimer(t: Int) {
         if (temp != null) {
             jl.text = temp
             temp = null

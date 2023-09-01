@@ -32,7 +32,6 @@ public class StRecdPage extends AbRecdPage {
 		st = stage;
 		preini();
 		ini();
-		resized(true);
 	}
 
 	@Override
@@ -64,6 +63,7 @@ public class StRecdPage extends AbRecdPage {
 	@Override
 	protected void resized(int x, int y) {
 		super.resized(x, y);
+
 		set(jsp, x, y, 50, 100, 500, 1100);
 		set(addr, x, y, 600, 400, 300, 50);
 		set(remr, x, y, 950, 400, 300, 50);

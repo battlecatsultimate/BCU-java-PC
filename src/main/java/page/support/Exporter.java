@@ -90,6 +90,7 @@ public class Exporter extends JFileChooser {
 					fos.write(b, 0, len);
 				}
 
+				fos.flush();
 				fos.close();
 
 				Opts.pop(target.getName()+" is successfully exported", "Exporting complete");

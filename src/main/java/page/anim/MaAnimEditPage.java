@@ -77,7 +77,6 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 		aep = new EditHead(this, 3);
 		ini();
-		resized(true);
 	}
 
 	public MaAnimEditPage(Page p, EditHead bar) {
@@ -85,7 +84,6 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 		aep = bar;
 		ini();
-		resized(true);
 	}
 
 	@Override
@@ -297,14 +295,17 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		set(infm, x, y, 1650, 600, 250, 50);
 		set(advs, x, y, 1900, 550, 200, 50);
 		set(sort, x, y, 1900, 600, 200, 50);
-		SwingUtilities.invokeLater(() -> jta.setUI(new TreeNodeExpander(jta)));
 		aep.componentResized(x, y);
 		maet.setRowHeight(size(x, y, 50));
 		mpet.setRowHeight(size(x, y, 50));
 	}
 
 	@Override
-    public void timer(int t) {
+	public synchronized void onTimer(int t) {
+		super.onTimer(t);
+
+		SwingUtilities.invokeLater(() -> jta.setUI(new TreeNodeExpander(jta)));
+
 		if (!pause)
 			eupdate();
 		if (ab.getEntity() != null && mpet.part != null) {
@@ -320,7 +321,6 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			infv.setText("");
 			infm.setText("");
 		}
-		resized(false);
 		sb.paint(sb.getGraphics());
 		ab.draw();
 	}
@@ -421,7 +421,6 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			ma.validate();
 			maet.anim.unSave("maanim add part");
 			callBack(null);
-			resized(true);
 			lsm.setSelectionInterval(ind, ind);
 			setC(ind);
 			int h = mpet.getRowHeight();
@@ -513,7 +512,6 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			maet.ma.validate();
 			callBack(null);
 			maet.anim.unSave("maanim add line");
-			resized(true);
 			change(p.n - 1, i -> lsm.setSelectionInterval(i, i));
 			setD(p.n - 1);
 			int h = mpet.getRowHeight();

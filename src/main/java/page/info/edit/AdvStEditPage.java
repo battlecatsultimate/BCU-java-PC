@@ -61,7 +61,6 @@ public class AdvStEditPage extends Page {
 		sget = new SCGroupEditTable(data);
 		jspt = new JScrollPane(sget);
 		ini();
-		resized(true);
 	}
 
 	@Override
@@ -72,6 +71,7 @@ public class AdvStEditPage extends Page {
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 		set(groups, x, y, 50, 100, 300, 50);
 		set(jsps, x, y, 50, 150, 300, 750);
@@ -92,6 +92,7 @@ public class AdvStEditPage extends Page {
 		set(jltprob, x, y, 1200, 900, 150, 50);
 		set(jtprob, x, y, 1350, 900, 150, 50);
 		set(equal, x, y, 1200, 950, 300, 50);
+
 		sget.setRowHeight(size(x, y, 50));
 	}
 

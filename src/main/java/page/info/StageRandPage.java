@@ -25,7 +25,6 @@ public class StageRandPage extends Page {
 		stages = mc == null ? MapColc.DefMapColc.getMap("N") : mc;
 
 		ini();
-		resized(true);
 	}
 
 	@Override
@@ -36,6 +35,7 @@ public class StageRandPage extends Page {
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 		set(strt, x, y, 300, 50, 200, 50);
 		set(jsps, x, y, 50, 100, 200, 600);

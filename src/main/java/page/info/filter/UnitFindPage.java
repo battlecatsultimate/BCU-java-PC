@@ -24,7 +24,6 @@ public class UnitFindPage extends Page implements SupPage<Unit> {
 
 		ufb = UnitFilterBox.getNew(this, null, 0);
 		ini();
-		resized(true);
 	}
 
 	public UnitFindPage(Page p, String pack, List<String> parents) {
@@ -32,14 +31,12 @@ public class UnitFindPage extends Page implements SupPage<Unit> {
 
 		ufb = UnitFilterBox.getNew(this, pack, parents);
 		ini();
-		resized(true);
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public void callBack(Object o) {
 		ult.setList((List<Form>) o);
-		resized(true);
 	}
 
 	@Override
@@ -73,6 +70,7 @@ public class UnitFindPage extends Page implements SupPage<Unit> {
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 		set(show, x, y, 250, 0, 200, 50);
 		set(seatf, x, y, 550, 0, 1000, 50);
@@ -87,6 +85,7 @@ public class UnitFindPage extends Page implements SupPage<Unit> {
 			set(jsp, x, y, 50 + mx, 100 + my, 2200 - mx, 1150 - my);
 		} else
 			set(jsp, x, y, 50, 100, 2200, 1150);
+
 		ult.setRowHeight(size(x, y, 50));
 	}
 

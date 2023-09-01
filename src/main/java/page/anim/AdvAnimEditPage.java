@@ -73,7 +73,6 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 		animID = id;
 		mmt = new MMTree(this, ac, jlm);
 		ini();
-		resized(true);
 	}
 
 	@Override
@@ -205,11 +204,14 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 
 		maet.setRowHeight(size(x, y, 50));
 		mpet.setRowHeight(size(x, y, 50));
-		ab.draw();
 	}
 
 	@Override
-    public void timer(int t) {
+    public synchronized void onTimer(int t) {
+		super.onTimer(t);
+
+		ab.draw();
+
 		if (!pause)
 			eupdate();
 		if (ab.getEntity() != null && mpet.part != null) {
@@ -225,7 +227,6 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 			infv.setText("");
 			infm.setText("");
 		}
-		resized(false);
 	}
 
 	private void addListeners$0() {
@@ -443,7 +444,6 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 			ma.validate();
 			maet.anim.unSave("maanim add part");
 			callBack(null);
-			resized(true);
 			lsm.setSelectionInterval(ind, ind);
 			setC(ind);
 			int h = mpet.getRowHeight();
@@ -496,7 +496,6 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 			maet.ma.validate();
 			callBack(null);
 			maet.anim.unSave("maanim add line");
-			resized(true);
 			change(p.n - 1, i -> lsm.setSelectionInterval(i, i));
 			setD(p.n - 1);
 			int h = mpet.getRowHeight();

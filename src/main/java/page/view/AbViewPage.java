@@ -148,6 +148,7 @@ public abstract class AbViewPage extends Page {
 	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
+
 		set(back, x, y, 0, 0, 200, 50);
 		set(copy, x, y, 250, 0, 200, 50);
 		set(larges, x, y , 500, 0, 200, 50);
@@ -254,10 +255,14 @@ public abstract class AbViewPage extends Page {
 	}
 
 	@Override
-    public void timer(int t) {
+    public synchronized void onTimer(int t) {
+		super.onTimer(t);
+
 		if (!pause)
 			eupdate();
+
 		vb.paint();
+
 		if (loader == null) {
 			gif.setText(0, "gif");
 			mp4.setText(0, "expmp4");
@@ -349,8 +354,9 @@ public abstract class AbViewPage extends Page {
 
 		larges.setLnr(x -> {
 			remove((Canvas) vb);
-			resized(true);
 			add((Canvas) vb);
+
+			fireDimensionChanged();
 		});
 
 		jtfs.addFocusListener(new FocusAdapter() {

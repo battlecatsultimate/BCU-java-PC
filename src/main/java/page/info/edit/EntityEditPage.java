@@ -125,6 +125,8 @@ public abstract class EntityEditPage extends Page implements SwingEditor.EditCtr
 		editable = edit;
 		if (!editable)
 			jli.setDragEnabled(false);
+
+		assignSubPage(mpt);
 	}
 
 	@Override
@@ -423,19 +425,19 @@ public abstract class EntityEditPage extends Page implements SwingEditor.EditCtr
 	protected void setData(CustomEntity data) {
 		changing = true;
 
-		fhp.setText("" + (int) (ce.hp * getDef()));
-		fhb.setText("" + ce.hb);
-		fsp.setText("" + ce.speed);
-		fra.setText("" + ce.range);
-		fwd.setText("" + ce.width);
-		ftb.setText("" + ce.tba);
-		fbs.setText("" + ce.base);
-		vpst.setText("" + ce.getPost());
-		vitv.setText("" + ce.getItv());
-		ftp.setText("" + ce.touch);
-		fct.setText("" + ce.loop);
-		fwp.setText("" + (ce.will + 1));
-		cdps.setText("" + (int) (Math.round(getLvAtk() * ce.allAtk()) * getAtk()) * 30 / ce.getItv());
+		fhp.setText(String.valueOf((int) (ce.hp * getDef())));
+		fhb.setText(String.valueOf(ce.hb));
+		fsp.setText(String.valueOf(ce.speed));
+		fra.setText(String.valueOf(ce.range));
+		fwd.setText(String.valueOf(ce.width));
+		ftb.setText(String.valueOf(ce.tba));
+		fbs.setText(String.valueOf(ce.base));
+		vpst.setText(String.valueOf(ce.getPost()));
+		vitv.setText(String.valueOf(ce.getItv()));
+		ftp.setText(String.valueOf(ce.touch));
+		fct.setText(String.valueOf(ce.loop));
+		fwp.setText(String.valueOf(ce.will + 1));
+		cdps.setText(String.valueOf((int) (Math.round(getLvAtk() * ce.allAtk()) * getAtk()) * 30 / ce.getItv()));
 
 		comm.setSelected(data.common);
 
@@ -524,6 +526,8 @@ public abstract class EntityEditPage extends Page implements SwingEditor.EditCtr
 		vres.setText(ce.res == null ? "x" : s == null ? "-" : (s.anim.len(UType.SOUL) - ce.res.pre + "f"));
 
 		changing = false;
+
+		fireDimensionChanged();
 	}
 
 	protected void subListener(JBTN e, JBTN u, JBTN a, Object o) {

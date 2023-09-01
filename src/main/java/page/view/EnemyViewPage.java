@@ -42,7 +42,6 @@ public class EnemyViewPage extends AbViewPage {
 			jlu.setListData(new Vector<>(pack.enemies.getList()));
 		}
 		ini();
-		resized(true);
 	}
 
 	public EnemyViewPage(Page p) {
@@ -56,7 +55,6 @@ public class EnemyViewPage extends AbViewPage {
 		jlu.setListData(v);
 
 		ini();
-		resized(true);
 	}
 
 	@Override
@@ -70,6 +68,7 @@ public class EnemyViewPage extends AbViewPage {
 			set(jspu, x, y, 50, 800, 300, 400);
 			set(stat, x, y, 150, 1200, 200, 50);
 		}
+
 		jlu.setFixedCellHeight(size(x, y, 50));
 	}
 
