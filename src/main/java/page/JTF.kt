@@ -5,6 +5,8 @@ import java.awt.*
 import java.awt.event.*
 import java.util.function.Consumer
 import javax.swing.JTextField
+import javax.swing.event.DocumentEvent
+import javax.swing.event.DocumentListener
 
 
 class JTF @JvmOverloads constructor(tos: String = "") : JTextField(tos), CustomComp {
@@ -28,11 +30,23 @@ class JTF @JvmOverloads constructor(tos: String = "") : JTextField(tos), CustomC
         })
     }
 
-    fun setTypeLnr(c: Consumer<ComponentEvent>) {
+    fun setTypeLnr(c: Consumer<ComponentEvent?>) {
         if (MainBCU.searchPerKey) {
-            addKeyListener(object: KeyAdapter() {
-                override fun keyTyped(e: KeyEvent?) {
-                    c.accept(e as ComponentEvent)
+            document.addDocumentListener(object: DocumentListener {
+                fun update() {
+                    c.accept(null)
+                }
+
+                override fun insertUpdate(e: DocumentEvent?) {
+                    update()
+                }
+
+                override fun removeUpdate(e: DocumentEvent?) {
+                    update()
+                }
+
+                override fun changedUpdate(e: DocumentEvent?) {
+                    update()
                 }
             })
         } else {
