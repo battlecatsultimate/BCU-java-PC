@@ -65,11 +65,12 @@ public class EnemyViewPage extends AbViewPage {
 			set(jspu, x, y, 50, 100, 300, 1100);
 			set(stat, x, y, 400, 1000, 300, 50);
 		} else {
-			set(jspu, x, y, 50, 800, 300, 400);
-			set(stat, x, y, 150, 1200, 200, 50);
+			set(jspu, x, y, 100, 700, 300, 400);
+			set(stat, x, y, 150, 1100, 200, 50);
 		}
 
 		jlu.setFixedCellHeight(size(x, y, 50));
+		jspu.revalidate();
 	}
 
 	@Override
