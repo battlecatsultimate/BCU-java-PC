@@ -83,7 +83,6 @@ public class UnitFLUPage extends LubCont {
 		set(back, x, y, 0, 0, 200, 50);
 		set(show, x, y, 250, 0, 200, 50);
 		set(seatf, x, y, 550, 0, 1000, 50);
-		set(seabt, x, y, 1600, 0, 200, 50);
 
 		int[] end = new int[] { 650, 350 };
 
