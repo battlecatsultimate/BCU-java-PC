@@ -101,10 +101,10 @@ class HeadEditTable extends Page {
 		if (mp != null) {
 			Identifier<Music> val = mp.getSelectedID();
 			if (musl == 0) {
-				jm0.setText("" + val);
+				jm0.setText(String.valueOf(val));
 				sta.mus0 = val;
 			} else {
-				jm1.setText("" + val);
+				jm1.setText(String.valueOf(val));
 				sta.mus1 = val;
 			}
 		}
@@ -164,18 +164,18 @@ class HeadEditTable extends Page {
 			jhea.setText(st.timeLimit + " min");
 		} else {
 			hea.setText(get(MainLocale.INFO, "ht00"));
-			jhea.setText("" + st.health);
+			jhea.setText(String.valueOf(st.health));
 		}
-		jlen.setText("" + st.len);
-		jbg.setText("" + st.bg);
+		jlen.setText(String.valueOf(st.len));
+		jbg.setText(String.valueOf(st.bg));
 		jbgh.setText("<" + st.bgh + "% health:");
-		jbg1.setText("" + st.bg1);
-		jcas.setText("" + st.castle);
-		jm0.setText("" + st.mus0);
+		jbg1.setText(String.valueOf(st.bg1));
+		jcas.setText(String.valueOf(st.castle));
+		jm0.setText(String.valueOf(st.mus0));
 		jmh.setText("<" + st.mush + "% health:");
-		jm1.setText("" + st.mus1);
-		jmax.setText("" + st.max);
-		cos.setText("" + (st.getCont().price + 1));
+		jm1.setText(String.valueOf(st.mus1));
+		jmax.setText(String.valueOf(st.max));
+		cos.setText(String.valueOf(st.getCont().price + 1));
 		con.setSelected(!st.non_con);
 		dojo.setSelected(st.trail);
 		String str = get(MainLocale.INFO, "star") + ": ";
@@ -246,7 +246,7 @@ class HeadEditTable extends Page {
 			} else {
 				sta.timeLimit = 0;
 				hea.setText(get(MainLocale.INFO, "ht00"));
-				jhea.setText("" + sta.health);
+				jhea.setText(String.valueOf(sta.health));
 			}
 		});
 
@@ -290,8 +290,13 @@ class HeadEditTable extends Page {
 			return;
 		if (jtf == name) {
 			str = str.trim();
+
 			if (str.length() > 0)
 				sta.names.put(str);
+
+			if (front != null)
+				front.callBack(null);
+
 			return;
 		}
 		int val = CommonStatic.parseIntN(str);

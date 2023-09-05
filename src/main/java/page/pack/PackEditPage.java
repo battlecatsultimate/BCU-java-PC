@@ -321,10 +321,16 @@ public class PackEditPage extends Page {
 			@Override
 			public void focusLost(FocusEvent fe) {
 				String str = jtfp.getText().trim();
+
 				if (pac.desc.names == null || pac.desc.names.toString().equals(str))
 					return;
+
 				pac.desc.names.put(str);
+
 				jtfp.setText(pac.desc.names.toString());
+
+				jlp.revalidate();
+				jlp.repaint();
 			}
 
 		});
@@ -387,6 +393,10 @@ public class PackEditPage extends Page {
 			changing = true;
 			CustomEnemy ce = new CustomEnemy();
 			AnimCE anim = getSelectedAnim();
+
+			if (anim == null)
+				return;
+
 			ce.limit = CommonStatic.customEnemyMinPos(anim.mamodel);
 			Enemy e = new Enemy(pac.getNextID(Enemy.class), anim, ce);
 			pac.enemies.add(e);
@@ -429,6 +439,9 @@ public class PackEditPage extends Page {
 				Enemy e = jle.getSelectedValue();
 				AnimCE anim = getSelectedAnim();
 
+				if (anim == null)
+					return;
+
 				((CustomEnemy) e.de).limit = Math.abs(anim.mamodel.parts[0][6] * 6);
 				e.anim = anim;
 
@@ -447,6 +460,9 @@ public class PackEditPage extends Page {
 		jtfe.setLnr(e -> {
 			ene.names.put(jtfe.getText().trim());
 			jtfe.setText(ene.names.toString());
+
+			jle.revalidate();
+			jle.repaint();
 		});
 
 		vene.setLnr(() -> new EnemyViewPage(getThis(), pac.getSID()));
@@ -489,6 +505,9 @@ public class PackEditPage extends Page {
 			if (sm != null) {
 				sm.names.put(jtfs.getText().trim());
 				jtfs.setText(sm.names.toString());
+
+				jls.revalidate();
+				jls.repaint();
 			}
 		});
 
