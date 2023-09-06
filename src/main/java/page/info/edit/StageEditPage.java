@@ -93,8 +93,13 @@ public class StageEditPage extends Page {
 	}
 
 	@Override
-	public void callBack(Object newParam) {
-		super.callBack(newParam);
+	public void callBack(Object o) {
+		super.callBack(o);
+
+		if (jt.findIndex == -1 || o == null || !Opts.conf("Are you sure you want to set the enemy to " + o + "?"))
+			jt.findIndex = -1;
+		else
+			jt.updateAbEnemy((Enemy) o);
 
 		jlst.revalidate();
 		jlst.repaint();
@@ -486,13 +491,5 @@ public class StageEditPage extends Page {
 		advs.setEnabled(st != null);
 		elim.setEnabled(st != null && !(st.getCont().getCont() instanceof MapColc.ClipMapColc));
 		jspjt.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
-	}
-
-	@Override
-	public void callBack(Object o) {
-		if (jt.findIndex == -1 || o == null || !Opts.conf("Are you sure you want to set the enemy to " + o + "?"))
-			jt.findIndex = -1;
-		else
-			jt.updateAbEnemy((Enemy) o);
 	}
 }
