@@ -193,8 +193,13 @@ public class EREditPage extends Page {
 			public void focusLost(FocusEvent fe) {
 				if (rand == null)
 					return;
+
 				rand.name = name.getText().trim();
+
 				setER(rand);
+
+				jlst.revalidate();
+				jlst.repaint();
 			}
 
 		});

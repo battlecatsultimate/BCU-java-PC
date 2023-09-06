@@ -598,6 +598,8 @@ public class BasisPage extends LubCont {
 		addListeners$1();
 		addListeners$2();
 		lvorb.setEnabled(lub.sf != null);
+
+		assignSubPage(trea);
 		cost.setSelected(true);
 		ufp = new UnitFLUPage(getThis(), lub.lim, lub.price);
 	}

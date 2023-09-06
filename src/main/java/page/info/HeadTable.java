@@ -154,17 +154,17 @@ public class HeadTable extends AbJTable {
 				int i = 0;
 				if (lim.min > 0) {
 					reg[0] = limits[3];
-					reg[1] = "" + lim.min;
+					reg[1] = String.valueOf(lim.min);
 					i = 2;
 				}
 				if (lim.max > 0) {
 					reg[i] = limits[4];
-					reg[i + 1] = "" + lim.max;
+					reg[i + 1] = String.valueOf(lim.max);
 					i += 2;
 				}
 				if (lim.num > 0) {
 					reg[i] = limits[1];
-					reg[i + 1] = "" + lim.num;
+					reg[i + 1] = String.valueOf(lim.num);
 					i += 2;
 				}
 				if (lim.line > 0)

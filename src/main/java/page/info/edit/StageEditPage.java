@@ -93,6 +93,14 @@ public class StageEditPage extends Page {
 	}
 
 	@Override
+	public void callBack(Object newParam) {
+		super.callBack(newParam);
+
+		jlst.revalidate();
+		jlst.repaint();
+	}
+
+	@Override
 	protected JButton getBackButton() {
 		return back;
 	}

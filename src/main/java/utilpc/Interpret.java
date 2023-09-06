@@ -96,7 +96,7 @@ public class Interpret extends Data {
 	/**
 	 * combo string formatter
 	 */
-	private static final int[][] CDC = { { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 3 }, { 1, 0 }, { 1, 1 }, { 2, 2 },
+	private static final int[][] CDC = { { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 3 }, { 1, 0 }, { 1, 1 }, { 2, 1 },
 			{ 1, 1 }, { 1, 1 }, { 1, 1 }, { 2, 2 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 },
 			{ 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 } };
 
@@ -701,9 +701,9 @@ public class Interpret extends Data {
 		int[] con = CDC[t];
 		if (t == C_RESP) {
 			double research = (b.t().tech[LV_RES] - 1) * 6 + b.t().trea[T_RES] * 0.3;
-			return COMN[t] + " " + CDP[0][con[0]] + CDP[1][con[1]].replaceAll("_", "" + research * val / 100);
+			return COMN[t] + " " + CDP[0][con[0]] + CDP[1][con[1]].replaceAll("_", String.valueOf(research * val / 100));
 		} else {
-			return COMN[t] + " " + CDP[0][con[0]] + CDP[1][con[1]].replaceAll("_", "" + val);
+			return COMN[t] + " " + CDP[0][con[0]] + CDP[1][con[1]].replaceAll("_", String.valueOf(val));
 		}
 	}
 

@@ -66,11 +66,18 @@ public class RecdPackPage extends AbRecdPage {
 		rena.setLnr(x -> {
 			if (isAdj() || jlr.getValueIsAdjusting())
 				return;
+
 			Replay r = jlr.getSelectedValue();
+
 			if (r == null)
 				return;
+
 			r.rename(rena.getText().trim(), true);
+
 			rena.setText(r.rl.id);
+
+			jlr.revalidate();
+			jlr.repaint();
 		});
 
 	}

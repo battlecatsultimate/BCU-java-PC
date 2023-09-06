@@ -197,6 +197,10 @@ public class UnitManagePage extends Page {
 			changing = true;
 			CustomUnit cu = new CustomUnit();
 			AnimCE anim = getSelectedAnim();
+
+			if (anim == null)
+				return;
+
 			cu.limit = CommonStatic.customFormMinPos(anim.mamodel);
 			Unit u = new Unit(pac.getNextID(Unit.class), anim, cu);
 			pac.units.add(u);
@@ -256,7 +260,7 @@ public class UnitManagePage extends Page {
 				int lv = CommonStatic.parseIntN(maxl.getText());
 				if (lv > 0)
 					uni.max = lv;
-				maxl.setText("" + uni.max);
+				maxl.setText(String.valueOf(uni.max));
 			}
 
 		});
@@ -270,7 +274,7 @@ public class UnitManagePage extends Page {
 				int lv = CommonStatic.parseIntN(maxp.getText());
 				if (lv >= 0)
 					uni.maxp = lv;
-				maxp.setText("" + uni.maxp);
+				maxp.setText(String.valueOf(uni.maxp));
 			}
 
 		});
@@ -336,6 +340,10 @@ public class UnitManagePage extends Page {
 			changing = true;
 			CustomUnit cu = new CustomUnit();
 			AnimCE ac = getSelectedAnim();
+
+			if (ac == null)
+				return;
+
 			cu.limit = CommonStatic.customFormMinPos(ac.mamodel);
 			frm = new Form(uni, uni.forms.length, "new form", ac, cu);
 			uni.forms = Arrays.copyOf(uni.forms, uni.forms.length + 1);
@@ -370,6 +378,9 @@ public class UnitManagePage extends Page {
 			@Override
 			public void focusLost(FocusEvent fe) {
 				frm.names.put(jtff.getText().trim());
+
+				jlf.revalidate();
+				jlf.repaint();
 			}
 
 		});
@@ -571,8 +582,8 @@ public class UnitManagePage extends Page {
 			cbl.setSelectedItem(null);
 		} else {
 			jlf.setListData(unit.forms);
-			maxl.setText("" + uni.max);
-			maxp.setText("" + uni.maxp);
+			maxl.setText(String.valueOf(uni.max));
+			maxp.setText(String.valueOf(uni.maxp));
 			rar.setSelectedIndex(uni.rarity);
 			cbl.setSelectedItem(uni.lv);
 		}
