@@ -19,6 +19,7 @@ import common.util.stage.StageMap;
 import common.util.stage.info.CustomStageInfo;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
+import javafx.util.Pair;
 import main.MainBCU;
 import main.Opts;
 import page.*;
@@ -115,6 +116,7 @@ public class PackEditPage extends Page {
 	private final JBTN recd = new JBTN(MainLocale.PAGE, "replay");
 	private final JBTN csol = new JBTN(MainLocale.PAGE, "csoul");
 	private final JTG cmbo = new JTG(MainLocale.PAGE, "usecombo");
+	private final JBTN vali = new JBTN(MainLocale.PAGE, "validate");
 	private final JTF jtfp = new JTF();
 	private final JTF jtfe = new JTF();
 	private final JTF jtfs = new JTF();
@@ -171,6 +173,7 @@ public class PackEditPage extends Page {
 		set(pauth, x, y, w, 1100, 400, 50);
 		set(animall, x, y, w, 1150, 400, 50);
 		set(cmbo, x, y, w, 1000, 400, 50);
+		set(vali, x, y, w, 750, 400, 50);
 
 		w += 450;
 
@@ -271,12 +274,10 @@ public class PackEditPage extends Page {
 			adde.setEnabled(pac != null && getSelectedAnim() != null && pac.editable);
 			erea.setEnabled(adde.isEnabled() && jle.getSelectedValue() != null);
 			changing = false;
-
 		});
 	}
 
 	private void addListeners$1() {
-
 		addp.addActionListener(arg0 -> {
 			changing = true;
 			String str = Workspace.validateWorkspace(Workspace.generatePackID());
@@ -377,6 +378,15 @@ public class PackEditPage extends Page {
 			}
 		});
 
+		vali.setLnr(x -> {
+			List<Pair<Object, List<String>>> result = pac.collectInvalidAnimation();
+
+			if (result.isEmpty()) {
+				Opts.pop(get(MainLocale.PAGE, "noinvcont"), get(MainLocale.PAGE, "noinvalid"));
+			} else {
+				changePanel(new PackValidationPage(this, result));
+			}
+		});
 	}
 
 	private void addListeners$2() {
@@ -683,6 +693,7 @@ public class PackEditPage extends Page {
 		add(recd);
 		add(csol);
 		add(cmbo);
+		add(vali);
 
 		cmbo.setToolTipText("Decide whether to apply or not this pack's custom CatCombos onto your lineups");
 
@@ -749,6 +760,7 @@ public class PackEditPage extends Page {
 		pac = pack;
 		boolean b = pac != null && pac.editable;
 		remp.setEnabled(pac != null && canBeDeleted(pac));
+		vali.setEnabled(b);
 
 		if(pac != null)
 			if(!canBeDeleted(pac)) {
