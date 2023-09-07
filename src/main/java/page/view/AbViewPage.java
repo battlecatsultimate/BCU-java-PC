@@ -325,9 +325,11 @@ public abstract class AbViewPage extends Page {
 				return;
 
 			if (vb.getEnt() != null) {
-				vb.getEnt().setTime(jtl.getValue() / 2f);
-			} else {
-				vb.getEnt().setTime(jtl.getValue());
+				if (CommonStatic.getConfig().performanceModeAnimation) {
+					vb.getEnt().setTime(jtl.getValue() / 2f);
+				} else {
+					vb.getEnt().setTime(jtl.getValue());
+				}
 			}
 		});
 
