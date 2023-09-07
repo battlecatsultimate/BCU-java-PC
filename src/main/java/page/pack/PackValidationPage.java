@@ -42,6 +42,8 @@ public class PackValidationPage extends Page {
 
     @Override
     protected void resized(int x, int y) {
+        setBounds(0, 0, x, y);
+
         set(back, x, y, 0, 0, 200, 50);
         set(scroll, x, y, 50, 100, 300, 1100);
         set(animationTitle, x, y, 400, 100, 600, 50);
@@ -54,6 +56,11 @@ public class PackValidationPage extends Page {
     }
 
     private void initialize() {
+        add(back);
+        add(scroll);
+        add(animationTitle);
+        add(fileScroll);
+
         Vector<Object> containerData = new Vector<>();
 
         for (int i = 0; i < data.size(); i++) {
@@ -114,6 +121,8 @@ public class PackValidationPage extends Page {
         });
 
         list.addListSelectionListener(event -> setPair(findPair(list.getSelectedValue())));
+
+        back.setLnr(x -> changePanel(getFront()));
     }
 
     private void setPair(Pair<Object, List<String>> pair) {
