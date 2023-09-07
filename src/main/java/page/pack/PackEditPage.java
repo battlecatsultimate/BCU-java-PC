@@ -19,7 +19,7 @@ import common.util.stage.StageMap;
 import common.util.stage.info.CustomStageInfo;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
-import javafx.util.Pair;
+import kotlin.Pair;
 import main.MainBCU;
 import main.Opts;
 import page.*;

@@ -9,7 +9,7 @@ import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
-import javafx.util.Pair;
+import kotlin.Pair;
 import page.JBTN;
 import page.JL;
 import page.MainLocale;
@@ -64,7 +64,7 @@ public class PackValidationPage extends Page {
         Vector<Object> containerData = new Vector<>();
 
         for (int i = 0; i < data.size(); i++) {
-            containerData.add(data.get(i).getKey());
+            containerData.add(data.get(i).getFirst());
         }
 
         list.setListData(containerData);
@@ -133,11 +133,11 @@ public class PackValidationPage extends Page {
             fileScroll.setVisible(false);
             animationTitle.setVisible(false);
         } else {
-            fileNames.setListData(pair.getValue().toArray(new String[0]));
+            fileNames.setListData(pair.getSecond().toArray(new String[0]));
 
             String animationName;
 
-            Object key = pair.getKey();
+            Object key = pair.getFirst();
 
             if (key instanceof Form) {
                 AnimD<?, ?> animation = ((Form) key).anim;
@@ -178,7 +178,7 @@ public class PackValidationPage extends Page {
             return null;
 
         for (int i = 0; i < data.size(); i++) {
-            if (data.get(i).getKey().equals(key))
+            if (data.get(i).getFirst().equals(key))
                 return data.get(i);
         }
 
