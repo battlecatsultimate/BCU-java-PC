@@ -22,7 +22,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final double res = 0.95;
+	private static final float res = 0.95f;
 
 	private final JBTN back = new JBTN(0, "back");
 	private final JTree jlt = new JTree();
@@ -129,8 +129,8 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		if (!(e.getSource() instanceof ModelBox))
 			return;
 		MouseWheelEvent mwe = (MouseWheelEvent) e;
-		double d = mwe.getPreciseWheelRotation();
-		mb.setSiz(mb.getSiz() * Math.pow(res, d));
+		float d = (float) mwe.getPreciseWheelRotation();
+		mb.setSiz(mb.getSiz() * (float) Math.pow(res, d));
 	}
 
 	@Override
@@ -247,7 +247,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			mb.ori.y = 0;
 		});
 
-		zomres.setLnr(x -> mb.setSiz(0.5));
+		zomres.setLnr(x -> mb.setSiz(0.5f));
 
 		jlt.addTreeSelectionListener(a -> {
 			if(isAdj())

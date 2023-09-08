@@ -28,9 +28,9 @@ interface ModelBox {
 
 	void setEntity(EAnimS anim);
 
-	double getSiz();
+	float getSiz();
 
-	void setSiz(double siz);
+	void setSiz(float siz);
 
 	void draw();
 }
@@ -42,7 +42,7 @@ class BufferedModel extends Canvas implements ModelBox {
 
 	public BufferedImage prev = null;
 
-	protected double siz = 0.5;
+	protected float siz = 0.5f;
 
 	private EAnimS ent;
 
@@ -68,12 +68,12 @@ class BufferedModel extends Canvas implements ModelBox {
 	}
 
 	@Override
-	public double getSiz() {
+	public float getSiz() {
 		return siz;
 	}
 
 	@Override
-	public void setSiz(double siz) {
+	public void setSiz(float siz) {
 		this.siz = siz;
 	}
 
@@ -120,7 +120,7 @@ class BufferedModel extends Canvas implements ModelBox {
 class GLModelBox extends GLCstd implements ModelBox {
 	private static final long serialVersionUID = 1L;
 
-	private double siz = 0.5;
+	private float siz = 0.5f;
 
 	private EAnimS ent;
 
@@ -138,12 +138,12 @@ class GLModelBox extends GLCstd implements ModelBox {
 	}
 
 	@Override
-	public double getSiz() {
+	public float getSiz() {
 		return siz;
 	}
 
 	@Override
-	public void setSiz(double siz) {
+	public void setSiz(float siz) {
 		this.siz = siz;
 	}
 

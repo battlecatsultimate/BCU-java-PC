@@ -138,7 +138,7 @@ public class AnimatedGifEncoder {
 	 * @param ms int delay time in milliseconds
 	 */
 	public void setDelay(int ms) {
-		delay = Math.round(ms / 10.0f);
+		delay = Math.round(ms / 10f);
 	}
 
 	/**

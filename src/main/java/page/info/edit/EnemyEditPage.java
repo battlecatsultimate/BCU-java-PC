@@ -49,15 +49,15 @@ public class EnemyEditPage extends EntityEditPage {
 	@Override
 	protected void getInput(JTF jtf, int[] v) {
 		if (jtf == fli) {
-			double firstDouble = CommonStatic.parseDoubleN(fli.getText());
+			float firstDouble = CommonStatic.parseFloatN(fli.getText());
 			int formatDouble = (int) (Interpret.formatDouble(firstDouble, 1) * 10);
-			double result = (25 * Math.floor(formatDouble / 25.0)) / 10;
+			float result = (25 * (float) Math.floor(formatDouble / 25f)) / 10;
 
 			ce.limit = result;
 			fli.setText(String.valueOf(result));
 		}
 		if (jtf == fdr) {
-			ce.drop = (int) Math.round(v[0] / bas.t().getDropMulti());
+			ce.drop = Math.round(v[0] / bas.t().getDropMulti());
 		}
 		if (jtf == fsr) {
 			v[0] = MathUtil.clip(v[0], 0, 4);

@@ -30,8 +30,8 @@ public class OrbBox extends Canvas {
 			return;
 		}
 
-		double a = Math.min(getWidth(), getHeight());
-		double w = getWidth(), h = getHeight();
+		float a = Math.min(getWidth(), getHeight());
+		float w = getWidth(), h = getHeight();
 
 		BufferedImage img = (BufferedImage) createImage((int) a, (int) a);
 

@@ -100,7 +100,7 @@ public interface IconBox extends ViewBox {
 				int bw = bimg.getWidth();
 				int bh = bimg.getHeight();
 
-				double r = Math.min(1.0 * line[2] / bw, 1.0 * line[3] / bh);
+				float r = Math.min(1f * line[2] / bw, 1f * line[3] / bh);
 
 				gra.setColor(FakeGraphics.BLACK);
 				gra.drawRect(line[0] - 1, line[1] - 1, line[2] + 1, line[3] + 1);
@@ -136,7 +136,7 @@ public interface IconBox extends ViewBox {
 					int bw = bimg.getWidth();
 					int bh = bimg.getHeight();
 
-					double r = Math.min(1.0 * line[2] / bw, 1.0 * line[3] / bh);
+					float r = Math.min(1f * line[2] / bw, 1f * line[3] / bh);
 
 					gra.drawImage(bimg, line[0], line[1], bw * r, bh * r);
 				}
