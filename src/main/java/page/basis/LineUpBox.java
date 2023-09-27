@@ -78,14 +78,14 @@ public class LineUpBox extends Canvas {
 							new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
 					} else if (swap) {
 						Res.getCost((int) ef.getPrice(price), true,
-								new SymCoord(gra, 0.8, 120 * j, 100 * i + (img.getImg().getHeight() / 3.5), 2));
+								new SymCoord(gra, 0.8f, 120 * j, 100 * i + (img.getImg().getHeight() / 3.5f), 2));
 						Res.getLv(lu.getLv(f).getLv() + lu.getLv(f).getPlusLv(),
 								new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
 					} else {
 						Res.getCost((int) ef.getPrice(price), true,
 								new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
 						Res.getLv(lu.getLv(f).getLv() + lu.getLv(f).getPlusLv(),
-								new SymCoord(gra, 0.8, 120 * j, 100 * i + (img.getImg().getHeight() / 3.5), 2));
+								new SymCoord(gra, 0.8f, 120 * j, 100 * i + (img.getImg().getHeight() / 3.5f), 2));
 					}
 				}
 			}
@@ -99,14 +99,14 @@ public class LineUpBox extends Canvas {
 				Res.getCost(-1, true, new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
 			} else if (swap) {
 				Res.getCost((int) ef.getPrice(price), true,
-						new SymCoord(gra, 0.8, p.x, p.y + (uni.getHeight() / 3.5), 2));
+						new SymCoord(gra, 0.8f, p.x, p.y + (uni.getHeight() / 3.5f), 2));
 				Res.getLv(lu.getLv(sf).getLv() + lu.getLv(sf).getPlusLv(),
 						new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
 			} else {
 				Res.getCost((int) ef.getPrice(price), true,
 						new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
 				Res.getLv(lu.getLv(sf).getLv() + lu.getLv(sf).getPlusLv(),
-						new SymCoord(gra, 0.8, p.x, p.y + (uni.getHeight() / 3.5), 2));
+						new SymCoord(gra, 0.8f, p.x, p.y + (uni.getHeight() / 3.5f), 2));
 			}
 
 		}

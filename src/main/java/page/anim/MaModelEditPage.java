@@ -125,7 +125,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	}
 
 	private P realScale(int[] part, boolean ignoreFirst) { // this is kinda finicky, but it works enough
-		P scale = ignoreFirst ? new P(1.0, 1.0) : new P(part[8] / 1000.0, part[9] / 1000.0);
+		P scale = ignoreFirst ? new P(1.0f, 1.0f) : new P(part[8] / 1000.0f, part[9] / 1000.0f);
 		if (part[0] != -1)
 			scale.times(realScale(mmet.mm.parts[part[0]], false));
 		return scale;
