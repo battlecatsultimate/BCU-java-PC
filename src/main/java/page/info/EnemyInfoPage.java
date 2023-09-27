@@ -92,7 +92,11 @@ public class EnemyInfoPage extends Page {
 
 		find.addActionListener(arg0 -> changePanel(new StageFilterPage(getThis(), e.val.findApp())));
 
-		extr.addActionListener(arg0 -> info.setDisplaySpecial(extr.isSelected()));
+		extr.addActionListener(arg0 -> {
+			info.setDisplaySpecial(extr.isSelected());
+
+			fireDimensionChanged();
+		});
 	}
 
 	private void ini() {
