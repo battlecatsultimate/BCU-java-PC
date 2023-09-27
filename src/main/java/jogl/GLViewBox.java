@@ -68,7 +68,7 @@ class GLIconBox extends GLViewBox implements IconBox {
 			int bw = img.getWidth();
 			int bh = img.getHeight();
 
-			double a = Math.min(1.0 * line[2] / bw, 1.0 * line[3] / bh);
+			float a = Math.min(1f * line[2] / bw, 1f * line[3] / bh);
 
 			Image tmp = clip.getScaledInstance((int) (line[2] / a), (int) (line[3] /a), Image.SCALE_SMOOTH);
 
@@ -241,7 +241,7 @@ class GLViewBox extends GLCstd implements ViewBox, GLEventListener {
 	protected void draw(FakeGraphics g) {
 		int w = getWidth();
 		int h = getHeight();
-		g.translate(w / 2.0, h * 3 / 4.0);
+		g.translate(w / 2f, h * 3 / 4f);
 		g.setColor(FakeGraphics.BLACK);
 		if (ent != null)
 			ent.draw(g, ctrl.ori.copy().times(-1), ctrl.siz);

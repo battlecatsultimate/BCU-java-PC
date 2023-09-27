@@ -23,7 +23,7 @@ class NyCasBox extends Canvas {
 		int w = getWidth();
 		int h = getHeight();
 		int sw = 128, sh = 258;
-		double r = Math.min(1.0 * w / sw, 1.0 * h / sh);
+		float r = Math.min(1f * w / sw, 1f * h / sh);
 		if (w * h == 0)
 			return;
 		BufferedImage img = (BufferedImage) createImage(w, h);

@@ -35,9 +35,9 @@ interface AnimBox {
 
 	void update();
 
-	void setSiz(double siz);
+	void setSiz(float siz);
 
-	double getSiz();
+	float getSiz();
 
 	void draw();
 
@@ -53,7 +53,7 @@ class BufferedAnim extends Canvas implements AnimBox {
 
 	private EAnimD<?> ent;
 
-	private double siz = 0.5;
+	private float siz = 0.5f;
 
 	protected BufferedAnim() {
 		setIgnoreRepaint(true);
@@ -130,12 +130,12 @@ class BufferedAnim extends Canvas implements AnimBox {
 	}
 
 	@Override
-	public void setSiz(double siz) {
+	public void setSiz(float siz) {
 		this.siz = siz;
 	}
 
 	@Override
-	public double getSiz() {
+	public float getSiz() {
 		return siz;
 	}
 
@@ -152,7 +152,7 @@ class GLAnimBox extends GLCstd implements AnimBox {
 	int[] c = new int[] { 70, 140, 160 };
 	int[] f = new int[] { 85, 185, 205 };
 
-	private double siz = 0.5;
+	private float siz = 0.5f;
 
 	private EAnimD<?> ent;
 
@@ -222,12 +222,12 @@ class GLAnimBox extends GLCstd implements AnimBox {
 	}
 
 	@Override
-	public void setSiz(double siz) {
+	public void setSiz(float siz) {
 		this.siz = siz;
 	}
 
 	@Override
-	public double getSiz() {
+	public float getSiz() {
 		return siz;
 	}
 

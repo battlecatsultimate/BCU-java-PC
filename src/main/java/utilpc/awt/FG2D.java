@@ -42,46 +42,46 @@ public class FG2D implements FakeGraphics {
 	}
 
 	@Override
-	public void colRect(int x, int y, int w, int h, int r, int gr, int b, int a) {
+	public void colRect(float x, float y, float w, float h, int r, int gr, int b, int a) {
 		int al = a >= 0 ? a : 255;
 		Color c = new Color(r, gr, b, al);
 		g.setColor(c);
-		g.fillRect(x, y, w, h);
+		g.fillRect((int) x, (int) y, (int) w, (int) h);
 	}
 
 	@Override
-	public void drawImage(FakeImage bimg, double i, double j) {
+	public void drawImage(FakeImage bimg, float i, float j) {
 		g.drawImage((Image) bimg.bimg(), (int) i, (int) j, null);
 	}
 
 	@Override
-	public void drawImage(FakeImage bimg, double ix, double iy, double iw, double ih) {
+	public void drawImage(FakeImage bimg, float ix, float iy, float iw, float ih) {
 		g.drawImage((Image) bimg.bimg(), (int) ix, (int) iy, (int) iw, (int) ih, null);
 	}
 
 	@Override
-	public void drawLine(int i, int j, int x, int y) {
-		g.drawLine(i, j, x, y);
+	public void drawLine(float i, float j, float x, float y) {
+		g.drawLine((int) i, (int) j, (int) x, (int) y);
 	}
 
 	@Override
-	public void drawOval(int i, int j, int k, int l) {
-		g.drawOval(i, j, k, l);
+	public void drawOval(float i, float j, float k, float l) {
+		g.drawOval((int) i, (int) j, (int) k, (int) l);
 	}
 
 	@Override
-	public void drawRect(int x, int y, int x2, int y2) {
-		g.drawRect(x, y, x2, y2);
+	public void drawRect(float x, float y, float x2, float y2) {
+		g.drawRect((int) x, (int) y, (int) x2, (int) y2);
 	}
 
 	@Override
-	public void fillOval(int i, int j, int k, int l) {
-		g.fillOval(i, j, k, l);
+	public void fillOval(float i, float j, float k, float l) {
+		g.fillOval((int) i, (int) j, (int) k, (int) l);
 	}
 
 	@Override
-	public void fillRect(int x, int y, int w, int h) {
-		g.fillRect(x, y, w, h);
+	public void fillRect(float x, float y, float w, float h) {
+		g.fillRect((int) x, (int) y, (int) w, (int) h);
 	}
 
 	@Override
@@ -90,24 +90,24 @@ public class FG2D implements FakeGraphics {
 	}
 
 	@Override
-	public void gradRect(int x, int y, int w, int h, int a, int b, int[] c, int d, int e, int[] f) {
+	public void gradRect(float x, float y, float w, float h, float a, float b, int[] c, float d, float e, int[] f) {
 		g.setPaint(new GradientPaint(a, b, new Color(c[0], c[1], c[2]), d, e, new Color(f[0], f[1], f[2])));
-		g.fillRect(x, y, w, h);
+		g.fillRect((int) x, (int) y, (int) w, (int) h);
 	}
 
 	@Override
-	public void gradRectAlpha(int x, int y, int w, int h, int a, int b, int al, int[] c, int d, int e, int al2, int[] f) {
+	public void gradRectAlpha(float x, float y, float w, float h, float a, float b, int al, int[] c, float d, float e, int al2, int[] f) {
 		g.setPaint(new GradientPaint(a, b, new Color(c[0], c[1], c[2], al), d, e, new Color(f[0], f[1], f[2], al2)));
-		g.fillRect(x, y, w, h);
+		g.fillRect((int) x, (int) y, (int) w, (int) h);
 	}
 
 	@Override
-	public void rotate(double d) {
+	public void rotate(float d) {
 		g.rotate(d);
 	}
 
 	@Override
-	public void scale(int hf, int vf) {
+	public void scale(float hf, float vf) {
 		g.scale(hf, vf);
 	}
 
@@ -158,7 +158,7 @@ public class FG2D implements FakeGraphics {
 	}
 
 	@Override
-	public void translate(double x, double y) {
+	public void translate(float x, float y) {
 		g.translate(x, y);
 	}
 

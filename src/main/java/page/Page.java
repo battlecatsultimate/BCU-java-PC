@@ -50,7 +50,7 @@ public abstract class Page extends JPanel implements RetFunc {
 	}
 
 	protected static PP size(int x, int y, int a, int v) {
-		return new PP(a * x / 2300.0, v * y / 1300.0);
+		return new PP(a * x / 2300f, v * y / 1300f);
 	}
 
 	protected final Page front;

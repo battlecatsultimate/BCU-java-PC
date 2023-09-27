@@ -115,7 +115,7 @@ class LSCPop extends MouseAdapter {
 	public void mouseClicked(MouseEvent arg0) {
 		if (arg0.getButton() == MouseEvent.BUTTON3 && lsc.page != null && lsc.binder != null) {
 			JPanel panel = new JPanel();
-			PP size = new PP(lsc.page.getRootPage().getSize()).times(0.25);
+			PP size = new PP(lsc.page.getRootPage().getSize()).times(0.25f);
 			panel.setPreferredSize(size.toDimension());
 			panel.setLayout(new BorderLayout());
 			JPanel top = new JPanel(new GridLayout(2, 2));

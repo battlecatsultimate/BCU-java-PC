@@ -28,7 +28,7 @@ public class GLGraphics implements GeoAuto {
 			g = gl2;
 		}
 
-		protected void colRect(int x, int y, int w, int h, int r, int gr, int b, int a) {
+		protected void colRect(float x, float y, float w, float h, int r, int gr, int b, int a) {
 			checkMode();
 			if (a == -1)
 				setColor(r, gr, b);
@@ -43,7 +43,7 @@ public class GLGraphics implements GeoAuto {
 			g.glEnd();
 		}
 
-		protected void drawLine(int i, int j, int x, int y) {
+		protected void drawLine(float i, float j, float x, float y) {
 			checkMode();
 			setColor();
 			g.glBegin(GL.GL_LINES);
@@ -54,30 +54,30 @@ public class GLGraphics implements GeoAuto {
 		}
 
 
-		protected void drawOval(int i, int j, int k, int l) {
+		protected void drawOval(float i, float j, float k, float l) {
 			checkMode();
 			setColor();
 
-			int endX = i+k;
+			float endX = i+k;
 
 			//Formula : (x-i-k/2)^2/(k/2)^2 + (y-j-l/2)^2/(l/2)^2 = 1
 
 			g.glBegin(GL_LINE_LOOP);
 
 			//y > 0
-			for(int s = i; s < endX; s++) {
+			for(float s = i; s < endX; s++) {
 				addP(s, (int) ((l /2)*Math.sqrt(1-Math.pow((s- i -(k /2.0))/(k /2.0), 2))+ j + l /2));
 			}
 
 			//y < 0
-			for(int s = endX; s >= i; s--) {
+			for(float s = endX; s >= i; s--) {
 				addP(s, - (int) ((l /2)*Math.sqrt(1-Math.pow((s- i -(k /2.0))/(k /2.0), 2))+ j + l /2));
 			}
 
 			g.glEnd();
 		}
 
-		protected void drawRect(int x, int y, int w, int h) {
+		protected void drawRect(float x, float y, float w, float h) {
 			checkMode();
 			setColor();
 			g.glBegin(GL.GL_LINE_LOOP);
@@ -88,30 +88,30 @@ public class GLGraphics implements GeoAuto {
 			g.glEnd();
 		}
 
-		protected void fillOval(int i, int j, int k, int l) {
+		protected void fillOval(float i, float j, float k, float l) {
 			checkMode();
 			setColor();
 
-			int endX = i+k;
+			float endX = i+k;
 
 			//Formula : (x-i-k/2)^2/(k/2)^2 + (y-j-l/2)^2/(l/2)^2 = 1
 
 			g.glBegin(GL2.GL_POLYGON);
 
 			//y > 0
-			for(int s = i; s < endX; s++) {
+			for(float s = i; s < endX; s++) {
 				addP(s, (int) ((l /2)*Math.sqrt(1-Math.pow((s- i -(k /2.0))/(k /2.0), 2))+ j + l /2));
 			}
 
 			//y < 0
-			for(int s = endX; s >= i; s--) {
+			for(float s = endX; s >= i; s--) {
 				addP(s, - (int) ((l /2)*Math.sqrt(1-Math.pow((s- i -(k /2.0))/(k /2.0), 2))+ j + l /2));
 			}
 
 			g.glEnd();
 		}
 
-		protected void fillRect(int x, int y, int w, int h) {
+		protected void fillRect(float x, float y, float w, float h) {
 			checkMode();
 			setColor();
 			g.glBegin(GL2ES3.GL_QUADS);
@@ -122,54 +122,76 @@ public class GLGraphics implements GeoAuto {
 			g.glEnd();
 		}
 
-		protected void gradRect(int x, int y, int w, int h, int a, int b, int[] c, int d, int e, int[] f) {
+		protected void gradRect(float x, float y, float w, float h, float a, float b, int[] c, float d, float e, int[] f) {
 			checkMode();
+
 			P vec = new P(d - a, e - b);
-			double l = vec.abs();
+
+			float l = vec.abs();
+
 			l *= l;
+
 			g.glBegin(GL2ES3.GL_QUADS);
 
 			for (int i = 0; i < 4; i++) {
-				int px = x, py = y;
+				float px = x, py = y;
+
 				if (i == 2 || i == 3)
 					px += w;
+
 				if (i == 1 || i == 2)
 					py += h;
-				float cx = (float) (vec.dotP(new P(px - a, py - b)) / l);
+
+				float cx = vec.dotP(new P(px - a, py - b)) / l;
+
 				cx = P.reg(cx);
+
 				float[] cs = new float[3];
+
 				for (int j = 0; j < 3; j++)
 					cs[j] = c[j] + cx * (f[j] - c[j]);
+
 				applyColor(cs[0], cs[1], cs[2]);
+
 				addP(px, py);
 			}
+
 			g.glEnd();
+
 			color = null;
 		}
 
-		protected void gradRectAlpha(int x, int y, int w, int h, int a, int b, int al, int[] c, int d, int e, int al2, int[] f) {
+		protected void gradRectAlpha(float x, float y, float w, float h, float a, float b, int al, int[] c, float d, float e, int al2, int[] f) {
 			checkMode();
 			P vec = new P(d - a, e - b);
-			double l = vec.abs();
+			float l = vec.abs();
 			l *= l;
 			g.glBegin(GL2ES3.GL_QUADS);
 
 			for (int i = 0; i < 4; i++) {
-				int px = x, py = y;
+				float px = x, py = y;
+
 				if (i == 2 || i == 3)
 					px += w;
 				if (i == 1 || i == 2)
 					py += h;
+
 				int alpha;
+
 				if( i == 0 || i == 2)
 					alpha = al;
 				else
 					alpha = al2;
-				float cx = (float) (vec.dotP(new P(px - a, py - b)) / l);
+
+				float cx = vec.dotP(new P(px - a, py - b)) / l;
+
 				cx = P.reg(cx);
+
 				float[] cs = new float[3];
+
 				for (int j = 0; j < 3; j++)
 					cs[j] = c[j] + cx * (f[j] - c[j]);
+
 				applyColorWithOpacity(cs[0], cs[1], cs[2], alpha);
 				addP(px, py);
 			}
@@ -194,7 +216,7 @@ public class GLGraphics implements GeoAuto {
 				color = Color.WHITE.getRGB();
 		}
 
-		private void addP(int x, int y) {
+		private void addP(float x, float y) {
 			gra.addP(x, y);
 		}
 
@@ -281,12 +303,12 @@ public class GLGraphics implements GeoAuto {
 	}
 
 	@Override
-	public void drawImage(FakeImage bimg, double x, double y) {
+	public void drawImage(FakeImage bimg, float x, float y) {
 		drawImage(bimg, x, y, bimg.getWidth(), bimg.getHeight());
 	}
 
 	@Override
-	public void drawImage(FakeImage bimg, double x, double y, double w, double h) {
+	public void drawImage(FakeImage bimg, float x, float y, float w, float h) {
 		checkMode(IMG);
 		GLImage gl = (GLImage) bimg.gl();
 		if (gl == null)
@@ -320,7 +342,7 @@ public class GLGraphics implements GeoAuto {
 	}
 
 	@Override
-	public void rotate(double d) {
+	public void rotate(float d) {
 		float c = (float) Math.cos(d);
 		float s = (float) Math.sin(d);
 		float f0 = trans[0] * c + trans[1] * s;
@@ -334,7 +356,7 @@ public class GLGraphics implements GeoAuto {
 	}
 
 	@Override
-	public void scale(int hf, int vf) {
+	public void scale(float hf, float vf) {
 		trans[0] *= hf;
 		trans[3] *= hf;
 		trans[1] *= vf;
@@ -377,7 +399,7 @@ public class GLGraphics implements GeoAuto {
 	}
 
 	@Override
-	public void translate(double x, double y) {
+	public void translate(float x, float y) {
 		trans[2] += trans[0] * x + trans[1] * y;
 		trans[5] += trans[3] * x + trans[4] * y;
 	}
@@ -389,10 +411,11 @@ public class GLGraphics implements GeoAuto {
 		bind = id;
 	}
 
-	private void addP(double x, double y) {
-		double fx = trans[0] * x + trans[1] * y + trans[2];
-		double fy = trans[3] * x + trans[4] * y + trans[5];
-		g.glVertex2f((float) (2 * fx / sw - 1), (float) (1 - 2 * fy / sh));
+	private void addP(float x, float y) {
+		float fx = trans[0] * x + trans[1] * y + trans[2];
+		float fy = trans[3] * x + trans[4] * y + trans[5];
+
+		g.glVertex2f(2 * fx / sw - 1, 1 - 2 * fy / sh);
 	}
 
 	private void checkMode(int i) {
@@ -426,10 +449,10 @@ public class GLGraphics implements GeoAuto {
 		if (mode == TRANS) {
 			g.glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 			g.glUniform1i(tm.mode, 1);
-			g.glUniform1f(tm.para, comp.p0 * 1.0f / 256);
+			g.glUniform1f(tm.para, comp.p0 * 1f / 256);
 		}
 		if (mode == BLEND) {
-			g.glUniform1f(tm.para, comp.p0 * 1.0f / 256);
+			g.glUniform1f(tm.para, comp.p0 * 1f / 256);
 			if(comp.p1 == -1) {
 				g.glBlendEquation(GL_FUNC_REVERSE_SUBTRACT);
 			}
@@ -460,44 +483,44 @@ public class GLGraphics implements GeoAuto {
 interface GeoAuto extends FakeGraphics {
 
 	@Override
-	default void colRect(int x, int y, int w, int h, int r, int gr, int b, int a) {
+	default void colRect(float x, float y, float w, float h, int r, int gr, int b, int a) {
 		getGeo().colRect(x, y, w, h, r, gr, b, a);
 	}
 
 	@Override
-	default void drawLine(int i, int j, int x, int y) {
+	default void drawLine(float i, float j, float x, float y) {
 		getGeo().drawLine(i, j, x, y);
 	}
 
 	@Override
-	default void drawOval(int i, int j, int k, int l) {
+	default void drawOval(float i, float j, float k, float l) {
 		getGeo().drawOval(i, j, k, l);
 	}
 
 	@Override
-	default void drawRect(int x, int y, int x2, int y2) {
+	default void drawRect(float x, float y, float x2, float y2) {
 		getGeo().drawRect(x, y, x2, y2);
 	}
 
 	@Override
-	default void fillOval(int i, int j, int k, int l) {
+	default void fillOval(float i, float j, float k, float l) {
 		getGeo().fillOval(i, j, k, l);
 	}
 
 	@Override
-	default void fillRect(int x, int y, int w, int h) {
+	default void fillRect(float x, float y, float w, float h) {
 		getGeo().fillRect(x, y, w, h);
 	}
 
 	GeomG getGeo();
 
 	@Override
-	default void gradRect(int x, int y, int w, int h, int a, int b, int[] c, int d, int e, int[] f) {
+	default void gradRect(float x, float y, float w, float h, float a, float b, int[] c, float d, float e, int[] f) {
 		getGeo().gradRect(x, y, w, h, a, b, c, d, e, f);
 	}
 
 	@Override
-	default void gradRectAlpha(int x, int y, int w, int h, int a, int b, int al, int[] c, int d, int e, int al2, int[] f) {
+	default void gradRectAlpha(float x, float y, float w, float h, float a, float b, int al, int[] c, float d, float e, int al2, int[] f) {
 		getGeo().gradRectAlpha(x, y, w, h, a, b, al, c, d, e, al2, f);
 	}
 

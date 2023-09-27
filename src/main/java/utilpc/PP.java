@@ -9,19 +9,19 @@ import java.awt.geom.Rectangle2D;
 public strictfp class PP extends P {
 
 	public PP(Dimension d) {
-		super(d.getWidth(), d.getHeight());
+		super((float) d.getWidth(), (float) d.getHeight());
 	}
 
-	public PP(double d, double e) {
+	public PP(float d, float e) {
 		super(d, e);
 	}
 
 	public PP(Point p) {
-		super(p.getX(), p.getY());
+		super((float) p.getX(), (float) p.getY());
 	}
 
 	public PP(Point2D p) {
-		super(p.getX(), p.getY());
+		super((float) p.getX(), (float) p.getY());
 	}
 
 	@Override
@@ -42,14 +42,14 @@ public strictfp class PP extends P {
 	}
 
 	@Override
-	public PP times(double d) {
+	public PP times(float d) {
 		x *= d;
 		y *= d;
 		return this;
 	}
 
 	@Override
-	public PP times(double hf, double vf) {
+	public PP times(float hf, float vf) {
 		x *= hf;
 		y *= vf;
 		return this;

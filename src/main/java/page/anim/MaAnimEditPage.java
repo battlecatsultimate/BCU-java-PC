@@ -26,7 +26,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final double res = 0.95;
+	private static final float res = 0.95f;
 
 	private static final String[] mod = new String[] { "0 parent", "1 id", "2 sprite", "3 z-order", "4 pos-x",
 			"5 pos-y", "6 pivot-x", "7 pivot-y", "8 scale", "9 scale-x", "10 scale-y", "11 angle", "12 opacity",
@@ -209,8 +209,8 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 		if (!(e.getSource() instanceof AnimBox))
 			return;
 		MouseWheelEvent mwe = (MouseWheelEvent) e;
-		double d = mwe.getPreciseWheelRotation();
-		ab.setSiz(ab.getSiz() * Math.pow(res, d));
+		float d = (float) mwe.getPreciseWheelRotation();
+		ab.setSiz(ab.getSiz() * (float) Math.pow(res, d));
 	}
 
 	@Override
@@ -334,7 +334,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 			AnimBox.ori.y = 0;
 		});
 
-		zomres.setLnr(x -> ab.setSiz(0.5));
+		zomres.setLnr(x -> ab.setSiz(0.5f));
 
 		jta.addTreeSelectionListener(a -> {
 			if(isAdj())
@@ -458,7 +458,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 				return;
 			changing = true;
 
-			double d = CommonStatic.parseIntN(tmul.getText()) * 0.01;
+				float d = CommonStatic.parseIntN(tmul.getText()) * 0.01f;
 
 			if(d <= 0) {
 				tmul.setText("");
