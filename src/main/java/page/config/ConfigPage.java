@@ -1,16 +1,16 @@
-package page;
+package page.config;
 
 import common.CommonStatic;
 import common.CommonStatic.Config;
 import common.io.Backup;
 import common.pack.UserProfile;
-import common.util.ImgCore;
 import common.util.lang.MultiLangCont;
 import io.BCMusic;
 import io.BCUReader;
 import main.MainBCU;
 import main.Opts;
 import main.Timer;
+import page.*;
 import page.support.ColorPicker;
 import page.view.ViewBox;
 import utilpc.Theme;
@@ -19,6 +19,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ConfigPage extends Page {
+
+	public interface ConfigPanel {
+		int getH();
+	}
 
 	private static final long serialVersionUID = 1L;
 
@@ -47,10 +51,8 @@ public class ConfigPage extends Page {
 	private final JL preflv = new JL(MainLocale.PAGE, "preflv");
 	private final JCB shake = new JCB(MainLocale.PAGE, "shake");
 	private final JTF prlvmd = new JTF();
-	private final JBTN[] left = new JBTN[4];
-	private final JBTN[] right = new JBTN[4];
-	private final JL[] name = new JL[4];
-	private final JL[] vals = new JL[4];
+	private final RenderPanel rend = new RenderPanel(this);
+	private final JScrollPane jspr = new JScrollPane(rend);
 	private final JL jlmin = new JL(MainLocale.PAGE, "opamin");
 	private final JL jlmax = new JL(MainLocale.PAGE, "opamax");
 	private final JL jlbg = new JL(MainLocale.PAGE, "BGvol");
@@ -90,7 +92,7 @@ public class ConfigPage extends Page {
 
 	private boolean changing = false;
 
-	protected ConfigPage(Page p) {
+	public ConfigPage(Page p) {
 		super(p);
 
 		ini();
@@ -105,10 +107,6 @@ public class ConfigPage extends Page {
 	protected void renew() {
 		jlmin.setText(0, "opamin");
 		jlmax.setText(0, "opamax");
-		for (int i = 0; i < 4; i++) {
-			name[i].setText(0, ImgCore.NAME[i]);
-			vals[i].setText(0, ImgCore.VAL[cfg().ints[i]]);
-		}
 	}
 
 	@Override
@@ -122,13 +120,6 @@ public class ConfigPage extends Page {
 		set(refe, x, y, 50, 250, 300, 50);
 		set(prel, x, y, 50, 300, 300, 50);
 		set(perfo, x, y, 50,  350, 300, 50);
-
-		for (int i = 0; i < 4; i++) {
-			set(name[i], x, y, 350, 100 + i * 75, 200, 50);
-			set(left[i], x, y, 575, 100 + i * 75, 75, 50);
-			set(vals[i], x, y, 650, 100 + i * 75, 200, 50);
-			set(right[i], x, y, 850, 100 + i * 75, 75, 50);
-		}
 
 		set(jlmin, x, y, 50, 425, 300, 50);
 		set(jsmin, x, y, 350, 425, 750, 75);
@@ -185,6 +176,9 @@ public class ConfigPage extends Page {
 		set(exla, x, y, 1750, 475, 300, 50);
 		set(extt, x, y, 1750, 550, 300, 50);
 		set(rlla, x, y, 1750, 625, 300, 50);
+
+		set(jspr, x, y, 350, 100, 500, 200);
+		jspr.revalidate();
 	}
 
 	@Override
@@ -237,25 +231,6 @@ public class ConfigPage extends Page {
 			} else
 				jogl.setSelected(MainBCU.USE_JOGL);
 		});
-
-		for (int i = 0; i < 4; i++) {
-			int I = i;
-
-			left[i].addActionListener(arg0 -> {
-				cfg().ints[I]--;
-				vals[I].setText(0, ImgCore.VAL[cfg().ints[I]]);
-				left[I].setEnabled(cfg().ints[I] > 0);
-				right[I].setEnabled(cfg().ints[I] < 2);
-			});
-
-			right[i].addActionListener(arg0 -> {
-				cfg().ints[I]++;
-				vals[I].setText(0, ImgCore.VAL[cfg().ints[I]]);
-				left[I].setEnabled(cfg().ints[I] > 0);
-				right[I].setEnabled(cfg().ints[I] < 2);
-			});
-
-		}
 
 		jsmin.addChangeListener(arg0 -> cfg().deadOpa = jsmin.getValue());
 
@@ -473,6 +448,8 @@ public class ConfigPage extends Page {
 		add(reallv);
 		add(tole);
 		add(jtol);
+		add(jspr);
+		assignSubPage(rend);
 		excont.setSelected(CommonStatic.getConfig().exContinuation);
 		prlvmd.setText(String.valueOf(CommonStatic.getConfig().prefLevel));
 		jls.setSelectedIndex(localeIndexOf(cfg().lang));
@@ -481,22 +458,6 @@ public class ConfigPage extends Page {
 		jsbg.setValue(BCMusic.VOL_BG);
 		jsse.setValue(BCMusic.VOL_SE);
 		jsui.setValue(BCMusic.VOL_UI);
-		for (int i = 0; i < 4; i++) {
-			left[i] = new JBTN("<");
-			right[i] = new JBTN(">");
-			name[i] = new JL(0, ImgCore.NAME[i]);
-			vals[i] = new JL(0, ImgCore.VAL[cfg().ints[i]]);
-			add(left[i]);
-			add(right[i]);
-			add(name[i]);
-			add(vals[i]);
-			name[i].setHorizontalAlignment(SwingConstants.CENTER);
-			vals[i].setHorizontalAlignment(SwingConstants.CENTER);
-			name[i].setBorder(BorderFactory.createEtchedBorder());
-			vals[i].setBorder(BorderFactory.createEtchedBorder());
-			left[i].setEnabled(cfg().ints[i] > 0);
-			right[i].setEnabled(cfg().ints[i] < 2);
-		}
 		exla.setSelected(MainLocale.exLang);
 		extt.setSelected(MainLocale.exTTT);
 		prel.setSelected(MainBCU.preload);

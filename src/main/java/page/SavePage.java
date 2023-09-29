@@ -10,7 +10,7 @@ public class SavePage extends Page {
     private final JLabel save = new JLabel(Page.get(MainLocale.PAGE, "savepro"));
     private boolean[] saveOpts = new boolean[]{true, false};
 
-    protected SavePage() {
+    public SavePage() {
         super(null);
 
         MainFrame.closeClicked = true;
