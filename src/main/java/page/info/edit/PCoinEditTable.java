@@ -129,18 +129,11 @@ public class PCoinEditTable extends Page {
 
         set(jspn, x, y, 0, 50, 225, 600);
         set(jspt, x, y, 225, 50, 225, 600);
-
-        if (ind != -1) {
-            int siz = Data.PC_CORRES[unit.pcoin.info.get(ind)[0]][2];
-            if (siz == 0)
-                return;
-
-            set(max, x, y, 500, 0, 150, 50);
-            set(maxt, x, y, 650, 0, 200, 50);
-            for (int i = 0; i < siz; i++) {
-                set(modl[i], x, y, 500, 50 + 50 * i, 150, 50);
-                set(modt[i], x, y, 650, 50 + 50 * i, 200, 50);
-            }
+        set(max, x, y, 500, 0, 150, 50);
+        set(maxt, x, y, 650, 0, 200, 50);
+        for (int i = 0; i < modl.length; i++) {
+            set(modl[i], x, y, 500, 50 + 50 * i, 150, 50);
+            set(modt[i], x, y, 650, 50 + 50 * i, 200, 50);
         }
 
         set(soup, x, y, 900, 0, 200, 50);
@@ -151,12 +144,15 @@ public class PCoinEditTable extends Page {
         add(soup);
         add(jspt);
         add(jspn);
+        add(soup);
+        add(max);
+        add(maxt);
         nlst.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tlst.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         for (int i = 0; i < modl.length; i++) {
-            modl[i] = new JL();
-            modt[i] = new JTF();
+            add(modl[i] = new JL());
+            add(modt[i] = new JTF());
         }
 
         addListeners();
@@ -308,15 +304,11 @@ public class PCoinEditTable extends Page {
             abil.setText("none");
             nlst.setEnabled(false);
             tlst.setEnabled(false);
-            remove(soup);
-            remove(max);
-            remove(maxt);
-            for (int i = 0; i < modl.length; i++) {
-                remove(modl[i]);
-                remove(modt[i]);
-            }
+            maxt.setEnabled(false);
+            soup.setEnabled(false);
+            for (JTF modif : modt)
+                modif.setEnabled(false);
         } else {
-            add(soup);
             unit.pcoin.verify();
             int[] data = unit.pcoin.info.get(ind);
             int[] type = Data.PC_CORRES[data[0]];
@@ -324,36 +316,23 @@ public class PCoinEditTable extends Page {
             nlst.setEnabled(editable);
             tlst.setEnabled(editable && (unit.pcoin.info.stream().noneMatch(d -> d[12] > -1) || data[12] > -1));
             soup.setEnabled(editable);
-            maxt.setEnabled(editable);
             soup.setSelected(data[13] == 1);
 
-            if (type[2] > 0) {
-                ProcLang.ItemLang lang = ProcLang.get().get(type[1]);
-                add(max);
-                add(maxt);
-                maxt.setText(String.valueOf(data[1]));
-                for (int i = 0; i < modl.length; i++) {
-                    JL label = modl[i];
-                    JTF text = modt[i];
-                    if (i >= type[2]) { // { 0, P_MINIWAVE, 3, -1 }
-                        remove(label);
-                        remove(text);
-                    } else { // 1 modif, i is 0
-                        add(label);
-                        add(text);
-                        label.setText(type[0] == Data.PC_BASE
-                                ? nlst.getSelectedValue().toString() // TODO: figure out better way to do this (proc_talent_XX.json?)
-                                : lang.get(lang.list()[type[1] == Data.P_BSTHUNT ? i + 1 : i]).getNameValue());
-                        text.setText(twoInts(data[2 + i * 2], data[3 + i * 2]));
-                        text.setEnabled(editable);
-                    }
-                }
-            } else {
-                remove(max);
-                remove(maxt);
-                for (int i = 0; i < modl.length; i++) {
-                    remove(modl[i]);
-                    remove(modt[i]);
+            ProcLang.ItemLang lang = ProcLang.get().get(type[1]);
+            maxt.setEnabled(type[2] > 0 && editable);
+            maxt.setText(String.valueOf(data[1]));
+            for (int i = 0; i < modl.length; i++) {
+                JL label = modl[i];
+                JTF modif = modt[i];
+                modif.setEnabled(i < type[2] && editable);
+                if (i >= type[2]) {
+                    label.setText(null);
+                    modif.setText(null);
+                } else {
+                    label.setText(type[0] == Data.PC_BASE
+                            ? nlst.getSelectedValue().toString() // TODO: figure out better way to do this (proc_talent_XX.json?)
+                            : lang.get(lang.list()[type[1] == Data.P_BSTHUNT ? i + 1 : i]).getNameValue());
+                    modif.setText(twoInts(data[2 + i * 2], data[3 + i * 2]));
                 }
             }
         }
