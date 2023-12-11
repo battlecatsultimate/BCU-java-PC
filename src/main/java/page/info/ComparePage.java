@@ -492,9 +492,20 @@ public class ComparePage extends Page {
 
                 unit[1][index].setText(String.valueOf(price));
 
-                if (f.hasEvolveCost()) {
-                    int[][] evo = f.unit.info.evo;
+                int[][] evo;
+                int xpAmount = 0;
 
+                if (f.hasEvolveCost()) {
+                    evo = f.unit.info.evo;
+                    xpAmount = f.unit.info.xp;
+                } else if(f.hasZeroForm()) {
+                    evo = f.unit.info.zeroEvo;
+                    xpAmount = f.unit.info.zeroXp;
+                } else {
+                    evo = null;
+                }
+
+                if (evo != null) {
                     int count = 0;
 
                     for (int j = 0; j < evo.length; j++) {
@@ -517,8 +528,8 @@ public class ComparePage extends Page {
                     JL xp = evol[0][evolIndex + count];
 
                     xp.setIcon(UtilPC.getScaledIcon(CommonStatic.getBCAssets().XP, 50, 30));
-                    xp.setText(String.valueOf(f.unit.info.xp));
-                    xp.setToolTipText(f.unit.info.xp + " XP");
+                    xp.setText(String.valueOf(xpAmount));
+                    xp.setToolTipText(xpAmount + " XP");
 
                     for (JL[] jls : evol) {
                         for (int j = evolIndex + count + 1; j < evolIndex + 6; j++) {

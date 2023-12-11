@@ -106,7 +106,7 @@ public class UnitInfoTable extends Page {
 		int l = main.length + 1;
 		if (displaySpecial)
 			l += special.length;
-		if (f.hasEvolveCost())
+		if (f.hasEvolveCost() || f.hasZeroForm())
 			l += upgrade.length;
 		return (l + (proc.length + 1) / 2) * 50 + (f.getExplaination().replace("<br>", "").length() > 0 ? 200 : 0);
 	}
@@ -211,7 +211,7 @@ public class UnitInfoTable extends Page {
 		for (int i = 0; i < proc.length; i++)
 			set(proc[i], x, y, i % 2 * 800, h + 50 * (i / 2), i % 2 == 0 && i + 1 == proc.length ? 1600 : 800, 50);
 		h += proc.length * 25 + (proc.length % 2 == 1 ? 25 : 0);
-		if (f.hasEvolveCost()) {
+		if (f.hasEvolveCost() || f.hasZeroForm()) {
 			set(cfdesc, x, y, 800, h, 800, 150);
 			for (JL[] ug : upgrade) {
 				for (int j = 0; j < ug.length; j++)
@@ -262,6 +262,16 @@ public class UnitInfoTable extends Page {
 					special[i][j].setHorizontalAlignment(SwingConstants.CENTER);
 			}
 		}
+		if (f.hasEvolveCost() || f.hasZeroForm()) {
+			for (int i = 0; i < upgrade.length; i++) {
+				for (int j = 0; j < upgrade[i].length; j++) {
+					add(upgrade[i][j] = new JL());
+					upgrade[i][j].setBorder(BorderFactory.createEtchedBorder());
+				}
+			}
+		}
+		add(cfdesc);
+		cfdesc.setBorder(BorderFactory.createEtchedBorder());
 		add(jtf);
 		String[] strs = UtilPC.lvText(f, multi);
 		jtf.setText(strs[0]);
@@ -315,17 +325,18 @@ public class UnitInfoTable extends Page {
 		else
 			special[0][7].setText(Math.min(back, front) + " ~ " + Math.max(back, front));
 
-		if (f.hasEvolveCost()) {
-			for (int i = 0; i < upgrade.length; i++) {
-				for (int j = 0; j < upgrade[i].length; j++) {
-					add(upgrade[i][j] = new JL());
-					upgrade[i][j].setBorder(BorderFactory.createEtchedBorder());
-				}
+		if (f.hasEvolveCost() || f.hasZeroForm()) {
+			int[][] evo;
+			int xpAmount = 0;
+
+			if (f.hasEvolveCost()) {
+				evo = f.unit.info.evo;
+				xpAmount = f.unit.info.xp;
+			} else {
+				evo = f.unit.info.zeroEvo;
+				xpAmount = f.unit.info.zeroXp;
 			}
 
-			add(cfdesc);
-			cfdesc.setBorder(BorderFactory.createEtchedBorder());
-			int[][] evo = f.unit.info.evo;
 			int count = 0;
 			for (int i = 0; i < evo.length; i++) {
 				int id = evo[i][0];
@@ -339,10 +350,14 @@ public class UnitInfoTable extends Page {
 			}
 			JL xp = upgrade[count / 2][count % 2];
 			xp.setIcon(UtilPC.getScaledIcon(CommonStatic.getBCAssets().XP, 50, 30));
-			xp.setText(f.unit.info.xp + " XP");
-			String desc = f.unit.info.getCatfruitExplanation();
-			if (desc != null)
-				cfdesc.setText(desc.replace("<br>", "\n"));
+			xp.setText(xpAmount + " XP");
+
+			if (f.hasEvolveCost()) {
+				String desc = f.unit.info.getCatfruitExplanation();
+
+				if (desc != null)
+					cfdesc.setText(desc.replace("<br>", "\n"));
+			}
 		}
 
 		atks[0].setText(1, "atk");
@@ -414,5 +429,6 @@ public class UnitInfoTable extends Page {
 
 	public void setDisplaySpecial(boolean s) {
 		displaySpecial = s;
+		fireDimensionChanged();
 	}
 }

@@ -139,6 +139,8 @@ public class UnitInfoPage extends Page {
 			for (UnitInfoTable inf : info) {
 				inf.setDisplaySpecial(extr.isSelected());
 			}
+
+			fireDimensionChanged();
 		});
 	}
 

@@ -487,6 +487,11 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		next.addActionListener(arg0 -> {
 			pause = false;
 			timer(0);
+
+			if (CommonStatic.getConfig().performanceModeBattle) {
+				timer(0);
+			}
+
 			pause = true;
 		});
 
