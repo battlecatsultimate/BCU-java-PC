@@ -13,7 +13,6 @@ import page.anim.MaModelEditPage;
 import page.basis.BasisPage;
 import page.battle.BattleInfoPage;
 import page.battle.RecdManagePage;
-import page.config.ConfigPage;
 import page.info.ComparePage;
 import page.info.StageViewPage;
 import page.info.filter.EnemyFindPage;
