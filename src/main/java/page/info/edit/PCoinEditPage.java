@@ -52,7 +52,7 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
         set(jspc, x, y, 350, 250, 300, 600);
         set(add, x, y, 350, 850, 150, 50);
         set(rem, x, y, 500, 850, 150, 50);
-        set(pcet, x, y, 700, 250, 1100, 650);
+        set(pcet, x, y, 700, 250, 1200, 650);
     }
 
     private void addListeners() {

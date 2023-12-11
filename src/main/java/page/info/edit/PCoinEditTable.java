@@ -9,10 +9,7 @@ import common.util.Data;
 import common.util.lang.ProcLang;
 import common.util.unit.Trait;
 import main.MainBCU;
-import page.JL;
-import page.JTF;
-import page.JTG;
-import page.Page;
+import page.*;
 import page.info.filter.TraitList;
 import utilpc.Interpret;
 import utilpc.Theme;
@@ -94,6 +91,7 @@ public class PCoinEditTable extends Page {
 
     protected static final int[] BASE_TALENT = new int[]{ 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 1, 8, -1, 0 }; // TODO: on increase, set 12th index to -1
     private final JTG soup = new JTG(0, "super");
+    private final JBTN sett = new JBTN(0, "set");
     private final JL abil = new JL();
     private final TraitList tlst;
     private final JScrollPane jspt;
@@ -125,18 +123,19 @@ public class PCoinEditTable extends Page {
     }
     @Override
     protected void resized(int x, int y) {
-        set(abil, x, y, 0, 0, 450, 50);
+        set(abil, x, y, 0, 0, 550, 50);
 
-        set(jspn, x, y, 0, 50, 225, 600);
-        set(jspt, x, y, 225, 50, 225, 600);
-        set(max, x, y, 500, 0, 150, 50);
-        set(maxt, x, y, 650, 0, 200, 50);
+        set(jspn, x, y, 0, 50, 275, 550);
+        set(sett, x, y, 0, 600, 200, 50);
+        set(jspt, x, y, 275, 50, 275, 550);
+        set(max, x, y, 600, 0, 150, 50);
+        set(maxt, x, y, 750, 0, 200, 50);
         for (int i = 0; i < modl.length; i++) {
-            set(modl[i], x, y, 500, 50 + 50 * i, 150, 50);
-            set(modt[i], x, y, 650, 50 + 50 * i, 200, 50);
+            set(modl[i], x, y, 600, 50 + 50 * i, 150, 50);
+            set(modt[i], x, y, 750, 50 + 50 * i, 200, 50);
         }
 
-        set(soup, x, y, 900, 0, 200, 50);
+        set(soup, x, y, 1000, 0, 200, 50);
     }
 
     private void ini() {
@@ -147,6 +146,7 @@ public class PCoinEditTable extends Page {
         add(soup);
         add(max);
         add(maxt);
+        add(sett);
         nlst.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tlst.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
@@ -211,6 +211,13 @@ public class PCoinEditTable extends Page {
         }
 
         nlst.addListSelectionListener(x -> {
+            if (nlst.getSelectedIndex() == -1 || changing)
+                return;
+            TalentInfo ti = nlst.getSelectedValue();
+            sett.setEnabled(ti != null && unit.pcoin.info.get(ind)[0] != ti.getValue());
+        });
+
+        sett.addActionListener(x -> {
             if (nlst.getSelectedIndex() == -1 || changing)
                 return;
             changing = true;
@@ -318,7 +325,7 @@ public class PCoinEditTable extends Page {
             soup.setEnabled(editable);
             soup.setSelected(data[13] == 1);
 
-            ProcLang.ItemLang lang = ProcLang.get().get(type[1]);
+            ProcLang.ItemLang lang = type[2] == 0 ? null : ProcLang.get().get(type[1]);
             maxt.setEnabled(type[2] > 0 && editable);
             maxt.setText(String.valueOf(data[1]));
             for (int i = 0; i < modl.length; i++) {
@@ -336,6 +343,7 @@ public class PCoinEditTable extends Page {
                 }
             }
         }
+        sett.setEnabled(false);
     }
 
     protected void setLabel(int[] type) {
