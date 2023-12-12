@@ -438,5 +438,6 @@ public class UnitInfoTable extends Page {
 
 	public void setDisplaySpecial(boolean s) {
 		displaySpecial = s;
+		fireDimensionChanged();
 	}
 }
