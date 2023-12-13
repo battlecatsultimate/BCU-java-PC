@@ -123,16 +123,16 @@ public class PCoinEditTable extends Page {
     }
     @Override
     protected void resized(int x, int y) {
-        set(abil, x, y, 0, 0, 550, 50);
-
-        set(jspn, x, y, 0, 50, 275, 550);
+        set(jspn, x, y, 0, 0, 275, 600);
         set(sett, x, y, 0, 600, 200, 50);
-        set(jspt, x, y, 275, 50, 275, 550);
-        set(max, x, y, 600, 0, 150, 50);
-        set(maxt, x, y, 750, 0, 200, 50);
+        set(jspt, x, y, 275, 0, 275, 600);
+
+        set(abil, x, y, 600, 0, 350, 50);
+        set(max, x, y, 600, 50, 150, 50);
+        set(maxt, x, y, 750, 50, 200, 50);
         for (int i = 0; i < modl.length; i++) {
-            set(modl[i], x, y, 600, 50 + 50 * i, 150, 50);
-            set(modt[i], x, y, 750, 50 + 50 * i, 200, 50);
+            set(modl[i], x, y, 600, 100 + 50 * i, 150, 50);
+            set(modt[i], x, y, 750, 100 + 50 * i, 200, 50);
         }
 
         set(soup, x, y, 1000, 0, 200, 50);
@@ -211,10 +211,12 @@ public class PCoinEditTable extends Page {
         }
 
         nlst.addListSelectionListener(x -> {
-            if (nlst.getSelectedIndex() == -1 || changing)
+            if (changing)
                 return;
+            changing = true;
             TalentInfo ti = nlst.getSelectedValue();
             sett.setEnabled(ti != null && unit.pcoin.info.get(ind)[0] != ti.getValue());
+            changing = false;
         });
 
         sett.addActionListener(x -> {
@@ -319,7 +321,7 @@ public class PCoinEditTable extends Page {
             unit.pcoin.verify();
             int[] data = unit.pcoin.info.get(ind);
             int[] type = Data.PC_CORRES[data[0]];
-            setLabel(type);
+            setLabel(type, ind);
             nlst.setEnabled(editable);
             tlst.setEnabled(editable && (unit.pcoin.info.stream().noneMatch(d -> d[12] > -1) || data[12] > -1));
             soup.setEnabled(editable);
@@ -346,31 +348,24 @@ public class PCoinEditTable extends Page {
         sett.setEnabled(false);
     }
 
-    protected void setLabel(int[] type) {
-        String text = null;
+    protected void setLabel(int[] type, int ind) {
         ImageIcon icon = null;
-        if (type == null) {
-            text = "unknown";
-        } else if (type[0] == Data.PC_IMU || type[0] == Data.PC_P) {
-            text = ProcLang.get().get(type[1]).full_name;
+        if (type[0] == Data.PC_IMU || type[0] == Data.PC_P) {
             icon = UtilPC.createIcon(1, type[1]);
         } else if (type[0] == Data.PC_AB) {
             for (int i = 0; i < Data.ABI_TOT; i++) {
                 if (((type[1] >> i) & 1) == 1) {
-                    text = Interpret.SABIS[i];
                     icon = UtilPC.createIcon(0, i);
                     break;
                 }
             }
         } else if (type[0] == Data.PC_BASE) {
-            text = nlst.getSelectedValue().toString();
             icon = UtilPC.createIcon(4, type[1]);
         } else if (type[0] == Data.PC_TRAIT) {
-            text = Interpret.TRAIT[type[1]];
             icon = UtilPC.createIcon(3, type[1]);
         }
-        abil.setText(text);
-        abil.setIcon(UtilPC.getScaledIcon(icon, 40, 40));
+        abil.setText(UtilPC.getPCoinAbilityText(unit.pcoin, ind));
+        abil.setIcon(icon != null ? UtilPC.getScaledIcon(icon, 40, 40) : null);
     }
 
     @Override
