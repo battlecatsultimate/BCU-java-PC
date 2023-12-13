@@ -27,8 +27,10 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class Interpret extends Data {
 
@@ -177,12 +179,12 @@ public class Interpret extends Data {
 	}
 
 	public static String deco(int type, BasisSet b) { // 0 = slow
-		double mag = ((int) ((1.0 - b.t().getDecorationMagnification(type + 1, type)) * 1000)) / 10.0;
+		double mag = ((int) ((b.t().getDecorationMagnification(type + 1, type, true)))) / 100.0;
 		return MainLocale.getLoc(MainLocale.UTIL, "dec" + type) + " +" + mag + "%";
 	}
 
 	public static String base(int type, BasisSet b) {
-		double mag = ((int) ((1.0 - b.t().getBaseMagnification(type + 1, UserProfile.getBCData().traits.getList())) * 1000)) / 10.0;
+		double mag = ((int) (b.t().getBaseMagnification(type + 1, UserProfile.getBCData().traits.getList(), true))) / 100.0;
 		return MainLocale.getLoc(MainLocale.UTIL, "bas" + type) + " +" + mag + "%";
 	}
 
