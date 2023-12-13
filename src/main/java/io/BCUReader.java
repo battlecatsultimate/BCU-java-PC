@@ -297,12 +297,20 @@ public class BCUReader extends DataIO {
 								Queue<String> qs = readLines(fl);
 								if (qs != null)
 									for (String str : qs) {
-										String[] strs = str.trim().split("\\s", 2);
+										String[] strs = str.trim().split("\t", 3);
+
 										if (strs.length < 2 || strs[1].equals("<br><br>"))
 											continue;
+
 										Unit u = UserProfile.getBCData().units.get(CommonStatic.parseIntN(strs[0]));
-										if (u != null)
+
+										if (u != null) {
 											MultiLangCont.getStatic().CFEXP.put(ni, u.info, strs[1]);
+
+											if (strs.length == 3 && !strs[2].equals("<br><br>")) {
+												MultiLangCont.getStatic().UFEXP.put(ni, u.info, strs[2]);
+											}
+										}
 									}
 							}
 							if (nl.equals("EnemyExplanation.txt")) {
