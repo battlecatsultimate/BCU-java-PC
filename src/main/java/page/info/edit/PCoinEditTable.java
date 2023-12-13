@@ -125,16 +125,15 @@ public class PCoinEditTable extends Page {
     protected void resized(int x, int y) {
         set(jspn, x, y, 0, 0, 275, 600);
         set(sett, x, y, 0, 600, 200, 50);
-        set(jspt, x, y, 275, 0, 275, 600);
 
-        set(abil, x, y, 600, 0, 350, 50);
-        set(max, x, y, 600, 50, 150, 50);
-        set(maxt, x, y, 750, 50, 200, 50);
+        set(abil, x, y, 325, 0, 350, 50);
+        set(max, x, y, 325, 50, 150, 50);
+        set(maxt, x, y, 475, 50, 200, 50);
         for (int i = 0; i < modl.length; i++) {
-            set(modl[i], x, y, 600, 100 + 50 * i, 150, 50);
-            set(modt[i], x, y, 750, 100 + 50 * i, 200, 50);
+            set(modl[i], x, y, 325, 100 + 50 * i, 150, 50);
+            set(modt[i], x, y, 475, 100 + 50 * i, 200, 50);
         }
-
+        set(jspt, x, y, 700, 0, 275, 600);
         set(soup, x, y, 1000, 0, 200, 50);
     }
 
