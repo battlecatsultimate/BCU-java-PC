@@ -142,13 +142,13 @@ public class UnitInfoTable extends Page {
 				TraitBox[i] = trait.name;
 		}
 		main[1][3].setText(hp + " / " + ef.du.getHb());
-		main[2][3].setText("" + (attack * 30 / ef.du.getItv()));
-		main[2][5].setText("" + (int) (ef.du.getSpeed() * (1 + b.getInc(Data.C_SPE) * 0.01)));
+		main[2][3].setText(String.valueOf(attack * 30 / ef.du.getItv()));
+		main[2][5].setText(String.valueOf((int) (ef.du.getSpeed() * (1 + b.getInc(Data.C_SPE) * 0.01))));
 
 		if(MainBCU.seconds) {
 			main[3][5].setText(MainBCU.toSeconds(ef.du.getTBA()));
 		} else {
-			main[3][5].setText("" + ef.du.getTBA() + "f");
+			main[3][5].setText(ef.du.getTBA() + "f");
 		}
 
 		int respawn = b.t().getFinRes(ef.du.getRespawn());
@@ -156,7 +156,7 @@ public class UnitInfoTable extends Page {
 			main[1][5].setText(MainBCU.toSeconds(respawn));
 		else
 			main[1][5].setText(respawn + "f");
-		main[1][7].setText("" + ef.getPrice(1));
+		main[1][7].setText(String.valueOf(ef.getPrice(1)));
 		main[0][4].setText(Interpret.getTrait(TraitBox, 0));
 		int[][] atkData = ef.du.rawAtkData();
 		StringBuilder satk = new StringBuilder();
@@ -299,15 +299,15 @@ public class UnitInfoTable extends Page {
 		main[1][4].setText(MainLocale.INFO, "cdo");
 		main[1][6].setText(MainLocale.INFO, "price");
 		main[2][0].setText(MainLocale.INFO, "range");
-		main[2][1].setText("" + f.du.getRange());
+		main[2][1].setText(String.valueOf(f.du.getRange()));
 		main[2][2].setText("dps");
 		main[2][4].setText(MainLocale.INFO, "speed");
 		main[2][6].setText(MainLocale.INFO, "atkf");
 
 		main[3][0].setText(MainLocale.INFO, "isr");
-		main[3][1].setText("" + f.du.isRange());
+		main[3][1].setText(String.valueOf(f.du.isRange()));
 		main[3][2].setText(MainLocale.INFO, "will");
-		main[3][3].setText("" + (f.du.getWill() + 1));
+		main[3][3].setText(String.valueOf(f.du.getWill() + 1));
 		main[3][4].setText(MainLocale.INFO, "TBA");
 		main[3][6].setText(MainLocale.INFO, "postaa");
 
@@ -322,22 +322,22 @@ public class UnitInfoTable extends Page {
 		}
 
 		special[0][0].setText(MainLocale.INFO, "count");
-		special[0][1].setText(f.du.getAtkLoop() < 0 ? "infinite" : f.du.getAtkLoop() + "");
+		special[0][1].setText(f.du.getAtkLoop() < 0 ? "infinite" : String.valueOf(f.du.getAtkLoop()));
 		special[0][2].setText(MainLocale.INFO, "width");
-		special[0][3].setText(f.du.getWidth() + "");
+		special[0][3].setText(String.valueOf(f.du.getWidth()));
 		special[0][4].setText(MainLocale.INFO, "minpos");
-		special[0][5].setText(f.du.getLimit() + "");
+		special[0][5].setText(String.valueOf(f.du.getLimit()));
 		special[0][6].setText(MainLocale.INFO, "t7");
 		int back = Math.min(f.du.getBack(), f.du.getFront());
 		int front = Math.max(f.du.getBack(), f.du.getFront());
 		if (back == front)
-			special[0][7].setText(back + "");
+			special[0][7].setText(String.valueOf(back));
 		else
 			special[0][7].setText(Math.min(back, front) + " ~ " + Math.max(back, front));
 
 		if (f.hasEvolveCost() || f.hasZeroForm()) {
 			int[][] evo;
-			int xpAmount = 0;
+			int xpAmount;
 
 			if (f.hasEvolveCost()) {
 				evo = f.unit.info.evo;
@@ -362,8 +362,13 @@ public class UnitInfoTable extends Page {
 			xp.setIcon(UtilPC.getScaledIcon(CommonStatic.getBCAssets().XP, 50, 30));
 			xp.setText(xpAmount + " XP");
 
-			if (f.hasEvolveCost()) {
+			if (f.fid == 2 && f.hasEvolveCost()) {
 				String desc = f.unit.info.getCatfruitExplanation();
+
+				if (desc != null)
+					cfdesc.setText(desc.replace("<br>", "\n"));
+			} else if (f.fid == 3 && f.hasZeroForm()) {
+				String desc = f.unit.info.getUltraFormEvolveExplanation();
 
 				if (desc != null)
 					cfdesc.setText(desc.replace("<br>", "\n"));
