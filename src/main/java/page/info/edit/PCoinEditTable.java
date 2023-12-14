@@ -338,7 +338,7 @@ public class PCoinEditTable extends Page {
                     modif.setText(null);
                 } else {
                     label.setText(type[0] == Data.PC_BASE
-                            ? nlst.getSelectedValue().toString() // TODO: figure out better way to do this (proc_talent_XX.json?)
+                            ? UtilPC.getPCoinAbilityText(unit.pcoin, ind) // TODO: figure out better way to do this (proc_talent_XX.json?)
                             : lang.get(lang.list()[type[1] == Data.P_BSTHUNT ? i + 1 : i]).getNameValue());
                     modif.setText(twoInts(data[2 + i * 2], data[3 + i * 2]));
                 }
