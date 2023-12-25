@@ -107,8 +107,8 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	protected void mouseDragged(MouseEvent e) {
 		if (p == null)
 			return;
-		mb.ori.x += p.x - e.getX();
-		mb.ori.y += p.y - e.getY();
+		ModelBox.ori.x += p.x - e.getX();
+		ModelBox.ori.y += p.y - e.getY();
 		p = e.getPoint();
 	}
 
@@ -243,8 +243,8 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		back.setLnr(x -> changePanel(getFront()));
 
 		camres.setLnr(x -> {
-			mb.ori.x = 0;
-			mb.ori.y = 0;
+			ModelBox.ori.x = 0;
+			ModelBox.ori.y = 0;
 		});
 
 		zomres.setLnr(x -> mb.setSiz(0.5f));

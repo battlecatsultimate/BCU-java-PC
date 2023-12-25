@@ -1,8 +1,6 @@
 package main;
 
 import common.CommonStatic;
-import common.util.Data;
-import common.util.lang.MultiLangCont;
 import common.util.stage.MapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
