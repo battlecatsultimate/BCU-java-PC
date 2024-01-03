@@ -542,7 +542,7 @@ public interface BattleBox {
 
 							g.drawImage(summonText, (int) (x + (iw - stw) / 2.0), (int) (y + (ih - sth) / 2.0), stw, sth);
 
-							int alpha = (int) (64 * (-0.5 * Math.cos(Math.PI / 15 * (bf.sb.spiritEmphasizeStartTime[index][i] - bf.sb.time)) + 0.5));
+							int alpha = (int) (64 * (-0.5 * Math.cos(Math.PI / 15 * (sb.spiritEmphasizeStartTime[index][i] - sb.time)) + 0.5));
 
 							g.setComposite(FakeGraphics.MASK, alpha, 0);
 
