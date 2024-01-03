@@ -418,7 +418,7 @@ public class ComparePage extends Page {
 
                 ArrayList<Trait> traits = new ArrayList<>(trait.getSelectedValuesList());
                 ArrayList<Trait> spTraits = new ArrayList<>(UserProfile.getBCData().traits.getList()
-                        .subList(Data.TRAIT_EVA, Data.TRAIT_BEAST + 1));
+                        .subList(Data.TRAIT_EVA, Data.TRAIT_SAGE + 1));
 
                 spTraits.retainAll(traits);
 

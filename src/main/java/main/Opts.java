@@ -428,7 +428,7 @@ public class Opts {
 		for(int i = 0; i < exStages.size(); i++) {
 			Stage e = exStages.get(i);
 
-			JRadioButton rb = new JRadioButton(e.getCont().toString()+" - "+e.toString());
+			JRadioButton rb = new JRadioButton(e.getCont().toString()+" - "+ e);
 
 			int finalI = i;
 

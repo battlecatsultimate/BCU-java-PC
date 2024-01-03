@@ -34,6 +34,7 @@ public class EnemyEditBox extends Page {
 		trait.list.addAll(UserProfile.getBCData().traits.getList().subList(TRAIT_RED,TRAIT_EVA));
 		trait.list.add(UserProfile.getBCData().traits.get(TRAIT_BARON));
 		trait.list.add(UserProfile.getBCData().traits.get(TRAIT_BEAST));
+		trait.list.add(UserProfile.getBCData().traits.get(TRAIT_SAGE));
 		trait.list.addAll(pack.traits.getList());
 		for (UserPack pacc : UserProfile.getUserPacks())
 			if (pack.desc.dependency.contains(pacc.desc.id))

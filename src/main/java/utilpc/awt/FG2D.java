@@ -144,7 +144,8 @@ public class FG2D implements FakeGraphics {
 			g.setComposite(new Blender(p0, p1));
 		if (mode == GRAY)
 			g.setComposite(new Converter(p0));
-
+		if (mode == MASK)
+			g.setComposite(new Masker(p0));
 	}
 
 	@Override

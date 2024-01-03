@@ -15,7 +15,7 @@ import static com.jogamp.opengl.GL.*;
 
 public class GLGraphics implements GeoAuto {
 
-	static class GeomG {
+	public static class GeomG {
 
 		private final GLGraphics gra;
 
@@ -227,6 +227,7 @@ public class GLGraphics implements GeoAuto {
 		private void setColor() {
 			if (color == null)
 				return;
+
 			applyColor(color >> 16 & 255, color >> 8 & 255, color & 255);
 		}
 
@@ -475,6 +476,11 @@ public class GLGraphics implements GeoAuto {
 				g.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 				g.glUniform1i(tm.mode, 1);
 			}
+		}
+		if (mode == MASK) {
+			g.glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+			g.glUniform1i(tm.mode, 4);
+			g.glUniform4f(tm.solid, 0f, 0f, 0f, comp.p0 / 256f);
 		}
 	}
 

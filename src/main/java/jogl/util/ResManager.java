@@ -41,7 +41,7 @@ public class ResManager {
 		return source;
 	}
 
-	protected int mode, para, prog;
+	protected int mode, para, prog, solid;
 
 	private final GL2 gl;
 
@@ -123,6 +123,7 @@ public class ResManager {
 		gl.glLinkProgram(prog);
 		mode = gl.glGetUniformLocation(prog, "mode");
 		para = gl.glGetUniformLocation(prog, "para");
+		solid = gl.glGetUniformLocation(prog, "solid");
 	}
 
 	private void readShader$1() {
@@ -140,6 +141,7 @@ public class ResManager {
 		prog = sp0.program();
 		mode = gl.glGetUniformLocation(prog, "mode");
 		para = gl.glGetUniformLocation(prog, "para");
+		solid = gl.glGetUniformLocation(prog, "solid");
 	}
 
 	private void setupShader(GL2 gl) {
