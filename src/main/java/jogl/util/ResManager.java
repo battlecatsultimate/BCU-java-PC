@@ -11,6 +11,7 @@ import main.MainBCU;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.Buffer;
 import java.nio.charset.Charset;
 import java.util.Arrays;
@@ -34,11 +35,20 @@ public class ResManager {
 
 	private static String load(String name) throws IOException {
 		String path = (MainBCU.WRITE ? "src/" : "") + "jogl/util/shader/" + name;
-		List<String> ls = IOUtils.readLines(ClassLoader.getSystemResourceAsStream(path), Charset.defaultCharset());
-		String source = "";
+
+		InputStream stream = ClassLoader.getSystemResourceAsStream(path);
+
+		if (stream == null)
+			throw new IOException("Failed to get resource : " + path);
+
+		List<String> ls = IOUtils.readLines(stream, Charset.defaultCharset());
+
+		StringBuilder source = new StringBuilder();
+
 		for (String str : ls)
-			source += str;
-		return source;
+			source.append(str);
+
+		return source.toString();
 	}
 
 	protected int mode, para, prog, solid;

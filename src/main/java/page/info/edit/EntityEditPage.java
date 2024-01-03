@@ -742,11 +742,11 @@ public abstract class EntityEditPage extends Page {
 			return;
 		}
 
-		if (text.length() > 0) {
+		if (!text.isEmpty()) {
 			int[] v = CommonStatic.parseIntsN(text);
 			if (v.length > 0) {
 				if (jtf == fhp) {
-					v[0] /= getDef();
+					v[0] = (int) (v[0] / getDef());
 					if (v[0] <= 0)
 						v[0] = 1;
 					ce.hp = v[0];
