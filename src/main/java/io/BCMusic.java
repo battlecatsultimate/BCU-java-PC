@@ -1,8 +1,6 @@
 package io;
 
-import common.battle.data.CustomEntity;
 import common.pack.Identifier;
-import common.pack.PackData;
 import common.pack.UserProfile;
 import common.util.Data;
 import common.util.stage.Music;
@@ -315,14 +313,9 @@ public class BCMusic extends Data {
 	}
 
 	private static void loadSound(int ind, byte[] bytes) throws Exception {
-		ArrayDeque<BCPlayer> clips = sounds.get(ind);
+        ArrayDeque<BCPlayer> clips = sounds.computeIfAbsent(ind, k -> new ArrayDeque<>());
 
-		if (clips == null) {
-			clips = new ArrayDeque<>();
-			sounds.put(ind, clips);
-		}
-
-		BCPlayer player = clips.poll();
+        BCPlayer player = clips.poll();
 
 		if (player != null) {
 			player.rewind();

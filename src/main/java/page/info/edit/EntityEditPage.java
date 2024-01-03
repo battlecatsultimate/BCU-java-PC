@@ -187,6 +187,23 @@ public abstract class EntityEditPage extends Page {
 		return ans;
 	}
 
+	public SupPage<?> getUnitSup(IdEditor<?> edi) {
+		editor = edi;
+
+		PackData.UserPack p = UserProfile.getUserPack(pack);
+		SupPage<?> ans;
+
+		if(p != null) {
+			ans = new UnitFindPage(this, pack, p.desc.dependency);
+		} else {
+			ans = new UnitFindPage(this);
+		}
+
+		sup = ans;
+
+		return ans;
+	}
+
 	protected double getAtk() {
 		return 1;
 	}
