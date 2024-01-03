@@ -420,9 +420,9 @@ public interface BattleBox {
 							g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 64, 0, 0, 160);
 						} else {
 							if (sb.spiritEmphasizeCount[i][j] % 2 == 0) {
-								g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 38, 115, 153, 100);
+								g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 30, 92, 123, 100);
 							} else {
-								g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 51, 153, 204, 100);
+								g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 50, 153, 205, 100);
 							}
 
 							if (sb.spiritCooldown[i][j] == 0) {
@@ -529,9 +529,9 @@ public interface BattleBox {
 						g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 64, 0, 0, 160);
 					} else {
 						if (sb.spiritEmphasizeCount[index][i] % 2 == 0) {
-							g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 38, 115, 153, 100);
+							g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 30, 92, 123, 100);
 						} else {
-							g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 51, 153, 204, 100);
+							g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 50, 153, 205, 100);
 						}
 
 						if (!isBehind && sb.spiritCooldown[index][i] == 0) {
