@@ -1,8 +1,6 @@
 package main;
 
 import common.CommonStatic;
-import common.util.Data;
-import common.util.lang.MultiLangCont;
 import common.util.stage.MapColc;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
@@ -430,7 +428,7 @@ public class Opts {
 		for(int i = 0; i < exStages.size(); i++) {
 			Stage e = exStages.get(i);
 
-			JRadioButton rb = new JRadioButton(e.getCont().toString()+" - "+e.toString());
+			JRadioButton rb = new JRadioButton(e.getCont().toString()+" - "+ e);
 
 			int finalI = i;
 

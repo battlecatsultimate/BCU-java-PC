@@ -144,8 +144,8 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			return;
 		int[] rows = mmet.getSelectedRows();
 		if (rows.length == 0 || e.isShiftDown()) {
-			mb.ori.x += p.x - e.getX();
-			mb.ori.y += p.y - e.getY();
+			ModelBox.ori.x += p.x - e.getX();
+			ModelBox.ori.y += p.y - e.getY();
 			p = e.getPoint();
 		} else {
 			dragged = true;
@@ -165,7 +165,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 					Point p2 = mb.getPoint(new Point(size(x, y, 400), size(x, y, 250))); // pivot placeholder
 					double sA = Math.atan2(p0.y - p2.y, p0.x - p2.x);
 					double sB = Math.atan2(p1.y - p2.y, p1.x - p2.x);
-					part[10] += (sB - sA) * 1800 / Math.PI;
+					part[10] += (int) ((sB - sA) * 1800 / Math.PI);
 					part[10] %= 3600;
 				}
 			} else {
@@ -178,8 +178,8 @@ public class MaModelEditPage extends Page implements AbEditPage {
 						double cos = Math.cos(angle);
 						int x = i != 0 ? p0.x - p1.x : p1.x - p0.x;
 						int y = i != 0 ? p0.y - p1.y : p1.y - p0.y;
-						part[6] += ((x * cos) + (y * sin)) / scale.x;
-						part[7] += ((y * cos) - (x * sin)) / scale.y;
+						part[6] += (int) (((x * cos) + (y * sin)) / scale.x);
+						part[7] += (int) (((y * cos) - (x * sin)) / scale.y);
 					}
 				} else {
 					for (int i : rows) {
@@ -190,8 +190,8 @@ public class MaModelEditPage extends Page implements AbEditPage {
 						double cos = Math.cos(angle);
 						int x = p1.x - p0.x;
 						int y = p1.y - p0.y;
-						part[4] += ((x * cos) + (y * sin)) / (scale.x);
-						part[5] += ((y * cos) - (x * sin)) / (scale.y);
+						part[4] += (int) (((x * cos) + (y * sin)) / (scale.x));
+						part[5] += (int) (((y * cos) - (x * sin)) / (scale.y));
 					}
 				}
 			}
@@ -355,8 +355,8 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		back.setLnr(x -> changePanel(getFront()));
 
 		camres.setLnr(x -> {
-			mb.ori.x = 0;
-			mb.ori.y = 0;
+			ModelBox.ori.x = 0;
+			ModelBox.ori.y = 0;
 		});
 
 		zomres.setLnr(x -> mb.setSiz(0.5f));

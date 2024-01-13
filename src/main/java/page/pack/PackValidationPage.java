@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Vector;
 
 public class PackValidationPage extends Page {
+    private static final long serialVersionUID = 1L;
+
     private final List<Pair<Object, List<String>>> data;
     private final JBTN back = new JBTN(MainLocale.PAGE, "back");
 

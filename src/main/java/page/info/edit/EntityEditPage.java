@@ -186,6 +186,23 @@ public abstract class EntityEditPage extends Page implements SwingEditor.EditCtr
 		return ans;
 	}
 
+	public SupPage<?> getUnitSup(IdEditor<?> edi) {
+		editor = edi;
+
+		PackData.UserPack p = UserProfile.getUserPack(pack);
+		SupPage<?> ans;
+
+		if(p != null) {
+			ans = new UnitFindPage(this, pack, p.desc.dependency);
+		} else {
+			ans = new UnitFindPage(this);
+		}
+
+		sup = ans;
+
+		return ans;
+	}
+
 	protected double getAtk() {
 		return 1;
 	}
@@ -724,11 +741,11 @@ public abstract class EntityEditPage extends Page implements SwingEditor.EditCtr
 			return;
 		}
 
-		if (text.length() > 0) {
+		if (!text.isEmpty()) {
 			int[] v = CommonStatic.parseIntsN(text);
 			if (v.length > 0) {
 				if (jtf == fhp) {
-					v[0] /= getDef();
+					v[0] = (int) (v[0] / getDef());
 					if (v[0] <= 0)
 						v[0] = 1;
 					ce.hp = v[0];

@@ -1,8 +1,6 @@
 package io;
 
-import common.battle.data.CustomEntity;
 import common.pack.Identifier;
-import common.pack.PackData;
 import common.pack.UserProfile;
 import common.util.Data;
 import common.util.stage.Music;
@@ -16,7 +14,7 @@ import java.util.Map;
 
 public class BCMusic extends Data {
 	private static final byte INVALID = 0, CANNON_CHARGE = 1, TOUCH = 2;
-	private static final short TOT = 160;
+	private static final short TOT = 163;
 	private static final byte[][] CACHE = new byte[TOT][];
 	public final static Map<Identifier<Music>, byte[]> CACHE_CUSTOM = new LinkedHashMap<>();
 
@@ -315,14 +313,9 @@ public class BCMusic extends Data {
 	}
 
 	private static void loadSound(int ind, byte[] bytes) throws Exception {
-		ArrayDeque<BCPlayer> clips = sounds.get(ind);
+        ArrayDeque<BCPlayer> clips = sounds.computeIfAbsent(ind, k -> new ArrayDeque<>());
 
-		if (clips == null) {
-			clips = new ArrayDeque<>();
-			sounds.put(ind, clips);
-		}
-
-		BCPlayer player = clips.poll();
+        BCPlayer player = clips.poll();
 
 		if (player != null) {
 			player.rewind();
