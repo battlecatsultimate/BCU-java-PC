@@ -74,6 +74,7 @@ public abstract class SwingEditor extends Editor {
 			SupPage<Background> getBGSup(IdEditor<Background> edi);
 			SupPage<Music> getMusicSup(IdEditor<Music> edi);
 			SupPage<?> getEntitySup(IdEditor<?> edi);
+			SupPage<?> getUnitSup(IdEditor<?> edi);
 		}
 
 		private final boolean isEnemy;

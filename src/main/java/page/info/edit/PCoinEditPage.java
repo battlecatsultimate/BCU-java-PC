@@ -157,4 +157,9 @@ public class PCoinEditPage extends Page implements SwingEditor.EditCtrl.Supplier
     public SupPage<?> getEntitySup(SwingEditor.IdEditor<?> edi) {
         return null;
     }
+
+    @Override
+    public SupPage<?> getUnitSup(SwingEditor.IdEditor<?> edi) {
+        return null;
+    }
 }
