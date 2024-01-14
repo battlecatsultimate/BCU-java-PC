@@ -11,6 +11,7 @@ import common.util.unit.Form;
 import common.util.unit.Unit;
 import main.Opts;
 import page.JBTN;
+import page.JL;
 import page.Page;
 import page.anim.ImgCutEditPage;
 import page.info.UnitInfoPage;
@@ -29,6 +30,8 @@ public class UnitViewPage extends AbViewPage {
 	private final JList<Form> jlf = new JList<>();
 	private final JScrollPane jspf = new JScrollPane(jlf);
 	private final JBTN stat = new JBTN(0, "stat");
+	private final JBTN righ = new JBTN(0, ">");
+	private final JL name = new JL();
 
 	private final String pac;
 
@@ -71,11 +74,18 @@ public class UnitViewPage extends AbViewPage {
 			set(jspu, x, y, 50, 100, 300, 1100);
 			set(jspf, x, y, 400, 100, 300, 400);
 			set(stat, x, y, 400, 1000, 300, 50);
+			set(righ, x, y, 0, 0, 0, 0);
+			set(name, x, y, 0, 0, 0, 0);
 		} else {
-			set(jspf, x, y, 100, 800, 300, 400);
-			set(stat, x, y, 100, 1200, 300, 50);
-			set(jspu, x, y, 0, 0, 0, 0);
+			set(righ, x, y, 300, 650, 100, 50);
+			set(name, x, y, 100, 650, 200, 50);
+			set(jspu, x, y, 100, 700, 300, 400);
+			set(stat, x, y, 150, 1100, 200, 50);
+			set(jspf, x, y, 0, 0, 0, 0);
 		}
+
+		jspu.revalidate();
+		jspf.revalidate();
 	}
 
 	@Override
@@ -84,6 +94,7 @@ public class UnitViewPage extends AbViewPage {
 		if (f == null)
 			return;
 		setAnim(f.anim);
+		name.setText(f.toString());
 	}
 
 	private void addListeners() {
@@ -156,6 +167,13 @@ public class UnitViewPage extends AbViewPage {
 				}
 			}
 		});
+
+		righ.addActionListener(x -> {
+			Form f = jlf.getSelectedValue();
+			if (f == null)
+				return;
+			jlf.setSelectedIndex((f.fid + 1) % f.unit.forms.length);
+		});
 	}
 
 	private void ini() {
@@ -163,6 +181,8 @@ public class UnitViewPage extends AbViewPage {
 		add(jspu);
 		add(jspf);
 		add(stat);
+		add(righ);
+		add(name);
 		jlu.setCellRenderer(new UnitLCR());
 		jlf.setCellRenderer(new UnitLCR());
 		addListeners();

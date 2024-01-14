@@ -163,27 +163,27 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 	@Override
 	protected void resized(int x, int y) {
 		super.resized(x, y);
-		set(camres, x ,y, 400, 0, 200, 50);
-		set(copy, x, y, 200, 0, 200, 50);
-		set(larges, x, y , 600, 0, 200, 50);
-		set(aep, x, y, 800, 0, 1500, 50);
+		set(aep, x, y, 750, 0, 1500, 50);
 		if (!larges.isSelected()) {
+			set(uni, x, y, 750, 500, 200, 200);
+			set(jcb, x, y, 750, 700, 200, 50);
+
 			set(jspu, x, y, 50, 100, 300, 1050);
 			set(ics, x, y, 1000, 1050, 200, 50);
-			set(uni, x, y, 750, 500, 200, 200);
-			set(jcb, x, y, 750, 750, 200, 50);
 			set(icc, x, y, 1000, 1150, 200, 50);
 			set(group, x, y, 50, 1150, 300, 50);
 			set(remgroup, x, y, 50, 1200, 300, 50);
 		} else {
-			set(uni, x, y, 200, 800, 200, 150);
-			set(jcb, x, y, 150, 950, 200, 50);
-			set(ics, x, y, 50, 1200, 200, 50);
-			set(icc, x, y, 250, 1200, 200, 50);
-			set(jspu, x, y, 50, 1000, 400, 200);
+			set(uni, x, y, 150, 650, 200, 200);
+			set(jcb, x, y, 150, 850, 200, 50);
+			set(ics, x, y, 150, 900, 200, 50);
+			set(icc, x, y, 150, 950, 200, 50);
+
+			set(jspu, x, y, 0, 0, 0, 0);
 			set(group, x, y, 0, 0, 0, 0);
 			set(remgroup, x, y, 0, 0, 0, 0);
 		}
+		jspu.revalidate();
 	}
 
 	@Override
@@ -209,7 +209,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		if(((DefaultMutableTreeNode) o).getUserObject() instanceof AnimCE) {
 			AnimCE e = (AnimCE) ((DefaultMutableTreeNode) o).getUserObject();
 			aep.setAnim(e);
-			uni.setIcon(e == null ? null : UtilPC.getIcon(e.getUni()));
+			uni.setIcon(e == null ? null : UtilPC.getScaledIcon(e.getUni(), 180, 140));
 			if (e == null)
 				return;
 			setAnim(e);
@@ -305,7 +305,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 				AnimCE ac = aep.anim;
 				ac.setUni(MainBCU.builder.toVImg(ib.getClip()));
 				ac.saveUni();
-				uni.setIcon(UtilPC.getIcon(ac.getUni()));
+				uni.setIcon(UtilPC.getScaledIcon(ac.getUni(), 180, 140));
 			}
 		});
 
@@ -333,6 +333,9 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 		add(uni);
 		add(group);
 		add(remgroup);
+		uni.setBorder(BorderFactory.createEtchedBorder());
+		uni.setVerticalAlignment(SwingConstants.CENTER);
+		uni.setHorizontalAlignment(SwingConstants.CENTER);
 		jcb.setSelectedIndex(IconBox.IBConf.type);
 		ics.setEnabled(false);
 		icc.setEnabled(false);

@@ -8,19 +8,47 @@ import java.io.File;
 import java.io.IOException;
 
 public class Importer extends JFileChooser {
+	public enum FileType {
+		PNG("PNG Images", 1, "png"),
+		MUS("OGG Music", 2, "ogg");
+
+		private final String[] ext;
+		private final String desc;
+		private final int dir;
+
+		FileType(String description, int curs, String... extension) {
+			ext = extension;
+			desc = description;
+			dir = curs;
+		}
+
+		public String[] getExt() {
+			return ext;
+		}
+
+		public String getDesc() {
+			return desc;
+		}
+
+		public int getDir() {
+			return dir;
+		}
+	}
 
 	private static final long serialVersionUID = 1L;
 
-	public static final int IMP_DEF = 0, IMP_IMG = 1;
+	public static final int IMP_DEF = 0, IMP_IMG = 1, IMP_OGG = 2;
 
-	public static final File[] curs = new File[2];
+	public static final File[] curs = new File[3];
 
 	public File file;
+	private FileType ft;
 
-	public Importer(String str) {
-		int t = IMP_IMG;
+	public Importer(String str, FileType ft) {
+		this.ft = ft;
+		int t = ft.dir;
 		setDialogTitle(str);
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("PNG Images", "png");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter(ft.desc, ft.ext);
 		setCurrentDirectory(curs[t]);
 		setFileFilter(filter);
 		setDragEnabled(true);
@@ -32,17 +60,30 @@ public class Importer extends JFileChooser {
 
 	}
 
+	public boolean exists() {
+		return file != null;
+	}
+
 	public BufferedImage getImg() {
-		if (file == null)
+		if (file == null || verify() == -1)
 			return null;
-		BufferedImage bimg = null;
+
 		try {
-			bimg = ImageIO.read(file);
+			return ImageIO.read(file);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
-		return bimg;
 	}
 
+	public int verify() {
+		if (ft == null || file == null)
+			return -1;
+
+		for (int i = 0; i < ft.ext.length; i++)
+			if (file.getName().endsWith(ft.ext[i]))
+				return i;
+
+		return -1;
+	}
 }

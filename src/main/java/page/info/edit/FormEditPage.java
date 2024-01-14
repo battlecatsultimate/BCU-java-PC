@@ -229,18 +229,23 @@ public class FormEditPage extends EntityEditPage {
 			uniDesc = new String[]{"","","",""};
 
 		for (int i = 0; i < fdesc.length; i++)
-			fdesc[i].setText(uniDesc[i].length() > 0 ? uniDesc[i] : "Description Line " + (i + 1));
-		flv.setText(String.valueOf(lv));
-		frs.setText(String.valueOf(bas.t().getFinRes(cu.getRespawn())));
-		fdr.setText(String.valueOf((int) Math.round(cu.getPrice() * 1.5)));
+			if (uniDesc[i].length() == 0)
+				fdesc[i].setHint("Description Line " + (i + 1));
+			else
+				fdesc[i].setText(uniDesc[i]);
+		flv.setText(lv + "");
+		frs.setText(bas.t().getFinRes(cu.getRespawn()) + "");
+		fdr.setText((int) Math.round(cu.getPrice() * 1.5) + "");
 		flr.setText(interpretLayer(cu.back, cu.front));
 		fli.setText(String.valueOf(cu.getLimit()));
 		fli.setToolTipText("<html>This unit will always stay at least "
 				+ cu.getLimit()
 				+ " units away from the max stage length<br>once it passes that threshold.");
 		ueb.setData(cu.abi, data.traits);
-		if (cu.getPCoin() != null)
+		if (cu.getPCoin() != null) {
+			cu.pcoin.verify();
 			cu.pcoin.update();
+		}
 	}
 
 	private String interpretLayer(int back, int front) {

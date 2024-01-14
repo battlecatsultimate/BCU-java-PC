@@ -48,12 +48,12 @@ public class BasisPage extends LubCont {
 	private final JBTN bcop = new JBTN(0, "copy");
 	private final JBTN form = new JBTN(0, "form");
 	private final JBTN reset = new JBTN(0, "renew");
-	private final JBTN search = new JBTN(0, "search");
 	private final JTG combo = new JTG(0, "combo");
 	private final JTF bsjtf = new JTF();
 	private final JTF bjtf = new JTF();
 	private final JTF lvjtf = new JTF();
 	private final JTF cjtf = new JTF();
+	private final JTF ujtf = new JTF();
 	private final JBTN lvorb = new JBTN(0, "orb");
 	private final JLabel pcoin = new JLabel();
 	private final Vector<BasisSet> vbs = new Vector<>(BasisSet.list());
@@ -68,15 +68,16 @@ public class BasisPage extends LubCont {
 	private final JScrollPane jspcl = new JScrollPane(jlcl);
 	private final ComboListTable jlc = new ComboListTable(this, lu());
 	private final JScrollPane jspc = new JScrollPane(jlc);
-	private final ComboList jlcn = new ComboList();
+	private final ModifierList jlcn = new ModifierList();
 	private final JScrollPane jspcn = new JScrollPane(jlcn);
 	private final LineUpBox lub = new LineUpBox(this);
 	private final JList<Form> ul = new JList<>();
 	private final JScrollPane jspul = new JScrollPane(ul);
 	private final NyCasBox ncb = new NyCasBox();
+	private final JBTN[] formX = new JBTN[2];
 	private final JBTN[] jbcsR = new JBTN[3];
 	private final JBTN[] jbcsL = new JBTN[3];
-	private final JTG cost = new JTG(1,"price");
+	private final JTG cost = new JTG(1, "price");
 
 	private boolean changing = false, outside = false;
 
@@ -148,6 +149,8 @@ public class BasisPage extends LubCont {
 			return;
 		if (cjtf.isFocusOwner())
 			return;
+		if (ujtf.isFocusOwner())
+			return;
 		super.keyTyped(e);
 		e.consume();
 	}
@@ -172,45 +175,53 @@ public class BasisPage extends LubCont {
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 		set(back, x, y, 0, 0, 200, 50);
+
 		set(jspbs, x, y, 50, 100, 200, 500);
 		set(bsadd, x, y, 50, 600, 200, 50);
 		set(bsrem, x, y, 50, 650, 200, 50);
 		set(bscop, x, y, 50, 700, 200, 50);
 		set(bsjtf, x, y, 50, 750, 200, 50);
+
 		set(jspb, x, y, 275, 100, 200, 500);
 		set(badd, x, y, 275, 600, 200, 50);
 		set(brem, x, y, 275, 650, 200, 50);
 		set(bcop, x, y, 275, 700, 200, 50);
 		set(bjtf, x, y, 275, 750, 200, 50);
-		set(ncb, x, y, 1036, 500, 128, 256);
-		set(jspt, x, y, 1600, 150, 450, 600);
-		set(lub, x, y, 500, 150, 600, 300);
-		set(unit, x, y, 1350, 100, 200, 50);
-		set(jspcs, x, y, 1500, 800, 300, 450);
-		set(jspcl, x, y, 1800, 800, 300, 450);
-		set(jspc, x, y, 50, 800, 1450, 450);
+
+		set(unit, x, y, 1500, 50, 200, 50);
+		set(ujtf, x, y, 1450, 100, 300, 50);
+		set(jspul, x, y, 1450, 150, 300, 600);
+		set(jspt, x, y, 1750, 150, 450, 600);
+
+		set(jspc, x, y, 50, 800, 1550, 450);
+		set(jspcs, x, y, 1600, 800, 300, 450);
+		set(jspcl, x, y, 1900, 800, 300, 450);
 		set(cjtf, x, y, 500, 750, 400, 50);
-		set(search, x, y, 900, 750, 200, 50);
-		set(setc, x, y, 1100, 750, 200, 50);
-		set(jspcn, x, y, 500, 500, 400, 250);
-		set(jspul, x, y, 1300, 150, 300, 600);
+		set(setc, x, y, 900, 750, 200, 50);
+		set(combo, x, y, 1100, 750, 200, 50);
+
 		set(pcoin, x, y, 500, 50, 1200, 50);
-		set(lvjtf, x, y, 500, 100, 600, 50);
+		set(lvjtf, x, y, 500, 100, 400, 50);
+		set(lvorb, x, y, 900, 100, 200, 50);
 		set(form, x, y, 500, 450, 200, 50);
 		set(reset, x, y, 700, 450, 200, 50);
-		set(lvorb, x, y, 1100, 100, 200, 50);
-		set(combo, x, y, 900, 450, 200, 50);
-		set(cost, x, y, 1100, 450, 200, 50);
-		for (int i = 0; i < jbcsL.length; i++)
-			set(jbcsL[i], x, y, 930, 500 + 103 * i, 100, 50);
-		for (int i = 0; i < jbcsR.length; i++)
-			set(jbcsR[i], x, y, 1170, 500 + 103 * i, 100, 50);
-		jlc.setRowHeight(50);
-		jlc.getColumnModel().getColumn(2).setPreferredWidth(size(x, y, 300));
-		trea.resized(x, y);
+		set(cost, x, y, 900, 450, 200, 50);
 
+		set(jspcn, x, y, 500, 500, 600, 250);
+
+		set(lub, x, y, 500, 150, 600, 300);
+		set(ncb, x, y, 1220, 160, 128, 256);
+		for (int i = 0; i < jbcsL.length; i++)
+			set(jbcsL[i], x, y, 1100, 160 + 103 * i, 100, 50);
+		for (int i = 0; i < jbcsR.length; i++) // 1375 - 1170 = 205
+			set(jbcsR[i], x, y, 1350, 160 + 103 * i, 100, 50);
+
+		jlc.setRowHeight(50);
+		jlc.setPreferredWidth(x, y);
+		trea.resized(x, y);
 		trea.setPreferredSize(size(x, y, trea.getPWidth(), trea.getPHeight()).toDimension());
-		jspt.getVerticalScrollBar().setUnitIncrement(size(x, y, 50));
+		jspt.getVerticalScrollBar().setUnitIncrement(size(x, y, 25));
+		jspt.revalidate();
 	}
 
 	@Override
@@ -225,10 +236,11 @@ public class BasisPage extends LubCont {
 
 		back.addActionListener(arg0 -> changePanel(getFront()));
 
-		unit.addActionListener(e -> {
-			if (ufp == null)
-				ufp = new UnitFLUPage(getThis(), lub.lim, lub.price);
-			changePanel(ufp);
+		unit.addActionListener(e -> changePanel(ufp));
+
+		ujtf.setTypeLnr(x -> {
+			ufp.search(ujtf.getText());
+			renew();
 		});
 
 		ul.addMouseListener(new MouseAdapter() {
@@ -281,6 +293,7 @@ public class BasisPage extends LubCont {
 			jbcsR[i].addActionListener(e -> {
 				current().sele.nyc[I]++;
 				current().sele.nyc[I] %= NyCastle.TOT;
+				jlcn.reset();
 			});
 
 			jbcsL[i].addActionListener(e -> {
@@ -288,6 +301,7 @@ public class BasisPage extends LubCont {
 					current().sele.nyc[I] = NyCastle.TOT - 1;
 				else
 					current().sele.nyc[I] = (current().sele.nyc[I] - 1) % NyCastle.TOT;
+				jlcn.reset();
 			});
 		}
 
@@ -490,14 +504,7 @@ public class BasisPage extends LubCont {
 
 		reset.addActionListener(x -> lub.resetBackup());
 
-		search.addActionListener(x -> {
-			comboName = cjtf.getText();
-			changing = true;
-			setCL(jlcs.getSelectedIndex());
-			changing = false;
-		});
-
-		cjtf.addActionListener(x -> {
+		cjtf.setTypeLnr(x -> {
 			comboName = cjtf.getText();
 			changing = true;
 			setCL(jlcs.getSelectedIndex());
@@ -518,11 +525,11 @@ public class BasisPage extends LubCont {
 			changing = false;
 		});
 
-		cost.addActionListener(x -> lub.enableCost = cost.isSelected());
+		cost.addActionListener(x -> lub.swap = !cost.isSelected());
 	}
 
 	private void changeLU() {
-		jlcn.setListData(lu().coms.toArray(new Combo[0]));
+		jlcn.setComboList(lu().coms);
 		jlc.setLU(lu());
 		setCN();
 		updateSetC();
@@ -549,7 +556,6 @@ public class BasisPage extends LubCont {
 		add(jspcl);
 		add(jspc);
 		add(jspcn);
-		add(lub);
 		add(jspul);
 		add(setc);
 		add(bsjtf);
@@ -561,7 +567,7 @@ public class BasisPage extends LubCont {
 		add(ncb);
 		add(reset);
 		add(cjtf);
-		add(search);
+		add(ujtf);
 		add(combo);
 		add(cost);
 		add(jbcsR[0] = new JBTN(0, ">"));
@@ -594,6 +600,8 @@ public class BasisPage extends LubCont {
 		lvorb.setEnabled(lub.sf != null);
 
 		assignSubPage(trea);
+		cost.setSelected(true);
+		ufp = new UnitFLUPage(getThis(), lub.lim, lub.price);
 	}
 
 	private LineUp lu() {
@@ -678,7 +686,8 @@ public class BasisPage extends LubCont {
 	}
 
 	private void setCN() {
-		lub.select(jlcn.getSelectedValue());
+		Object v = jlcn.getSelectedValue();
+		lub.select(v instanceof Combo ? (Combo) v : null);
 	}
 
 	private void setCS(int cs) {

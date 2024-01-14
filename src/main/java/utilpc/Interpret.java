@@ -7,6 +7,7 @@ import common.battle.Treasure;
 import common.battle.data.*;
 import common.pack.Identifier;
 import common.pack.UserProfile;
+import common.system.P;
 import common.util.Data;
 import common.util.Data.Proc.ProcItem;
 import common.util.lang.Formatter;
@@ -26,8 +27,10 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class Interpret extends Data {
 
@@ -118,6 +121,7 @@ public class Interpret extends Data {
 			Data.P_IMUVOLC, Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_DEATHSURGE};
 
 	private static final DecimalFormat df;
+	public static String[] lvl;
 
 	static {
 		redefine();
@@ -172,6 +176,16 @@ public class Interpret extends Data {
 
 	public static String comboInfo(Combo c, BasisSet b) {
 		return combo(c.type, CommonStatic.getBCAssets().values[c.type][c.lv], b);
+	}
+
+	public static String deco(int type, BasisSet b) { // 0 = slow
+		double mag = ((int) ((b.t().getDecorationMagnification(type + 1, type, true)))) / 100.0;
+		return MainLocale.getLoc(MainLocale.UTIL, "dec" + type) + " +" + mag + "%";
+	}
+
+	public static String base(int type, BasisSet b) {
+		double mag = ((int) (b.t().getBaseMagnification(type + 1, UserProfile.getBCData().traits.getList(), true))) / 100.0;
+		return MainLocale.getLoc(MainLocale.UTIL, "bas" + type) + " +" + mag + "%";
 	}
 
 	public static class ProcDisplay {
@@ -943,5 +957,13 @@ public class Interpret extends Data {
 		});
 
 		label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+	}
+
+	public static Point getPoint(Point p, double x, double y, double size) {
+		return new Point((int) ((p.x + x) / size), (int) ((p.y + y) / size));
+	}
+
+	public static Point getPoint(Point p, P pp, double size) {
+		return new Point((int) ((p.x + pp.x) / size), (int) ((p.y + pp.y) / size));
 	}
 }

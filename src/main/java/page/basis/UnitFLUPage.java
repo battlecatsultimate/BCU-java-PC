@@ -26,7 +26,6 @@ public class UnitFLUPage extends LubCont {
 	private final JScrollPane jsp = new JScrollPane(ult);
 	private final UnitFilterBox ufb;
 	private final JTF seatf = new JTF();
-	private final JBTN seabt = new JBTN(0, "search");
 
 	public UnitFLUPage(Page p, Limit lim, int price) {
 		super(p);
@@ -84,7 +83,6 @@ public class UnitFLUPage extends LubCont {
 		set(back, x, y, 0, 0, 200, 50);
 		set(show, x, y, 250, 0, 200, 50);
 		set(seatf, x, y, 550, 0, 1000, 50);
-		set(seabt, x, y, 1600, 0, 200, 50);
 
 		int[] end = new int[] { 650, 350 };
 
@@ -137,16 +135,13 @@ public class UnitFLUPage extends LubCont {
 			lub.select(f);
 			lsm.clearSelection();
 		});
-
-		seabt.setLnr(e -> search());
-
-		seatf.addActionListener(e -> search());
+		seatf.setTypeLnr(x -> search(seatf.getText()));
 	}
 
-	private void search() {
+	protected void search(String text) {
 		if (ufb != null) {
-			ufb.name = seatf.getText();
-			ufb.callBack(null);
+			ufb.name = text;
+			ufb.callBack(1);
 		}
 	}
 
@@ -157,7 +152,6 @@ public class UnitFLUPage extends LubCont {
 		add(jsp);
 		add(lub);
 		add(seatf);
-		add(seabt);
 		show.setSelected(true);
 		addListeners();
 	}

@@ -18,9 +18,9 @@ public class Exporter extends JFileChooser {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final int EXP_DEF = 0, EXP_IMG = 1, EXP_BAC = 2, EXP_ERR = 3, EXP_RES = 4;
+	public static final int EXP_DEF = 0, EXP_IMG = 1, EXP_BAC = 2, EXP_ERR = 3, EXP_RES = 4, EXP_OGG = 5;
 
-	public static final File[] curs = new File[5];
+	public static final File[] curs = new File[6];
 
 	public File file;
 
@@ -34,11 +34,8 @@ public class Exporter extends JFileChooser {
 			file = getSelectedFile();
 			if (!file.getName().endsWith(".png"))
 				file.renameTo(new File(file + ".png"));
-			if (file.exists()) {
-				boolean verifyFile = Opts.conf("A file with this name already exists. Save anyway?");
-				if (!verifyFile)
-					return;
-			}
+			if (file.exists() && !Opts.conf("A file with this name already exists. Save anyway?"))
+				return;
 			curs[t] = getCurrentDirectory();
 			BCUWriter.writeImage(bimg, file);
 		}
@@ -52,8 +49,6 @@ public class Exporter extends JFileChooser {
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			file = getSelectedFile();
 			curs[t] = getCurrentDirectory();
-			if (!file.isDirectory())
-				file = file.getParentFile();
 		}
 	}
 

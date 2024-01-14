@@ -124,30 +124,33 @@ class HeadEditTable extends Page {
 	protected void resized(int x, int y) {
 		int w = 1400 / 8;
 		set(name, x, y, 0, 0, w * 2, 50);
+		for (int i = 0; i < 4; i++)
+			set(star[i], x, y, w * (2 + i), 0, w, 50);
+		set(cost, x, y, w * 6, 0, w, 50);
+		set(cos, x, y, w * 7, 0, w, 50);
+
 		set(hea, x, y, 0, 50, w, 50);
 		set(jhea, x, y, w, 50, w, 50);
 		set(len, x, y, w * 2, 50, w, 50);
 		set(jlen, x, y, w * 3, 50, w, 50);
 		set(max, x, y, w * 4, 50, w, 50);
 		set(jmax, x, y, w * 5, 50, w, 50);
-		set(con, x, y, w * 6, 50, w, 50);
+		set(res, x, y, w * 6, 50, w, 50);
+		set(jres, x, y, w * 7, 50, w, 50);
+
 		set(bg, x, y, 0, 100, w, 50);
 		set(jbg, x, y, w, 100, w, 50); // line 2
 		set(jbgh, x, y, w * 2, 100, w, 50);
 		set(jbg1, x, y, w * 3, 100, w, 50);
 		set(cas, x, y, w * 4, 100, w, 50);
 		set(jcas, x, y, w * 5, 100, w, 50);
-		set(res, x, y, w * 6, 100, w, 50);
-		set(jres, x, y, w * 7, 100, w, 50);
-		set(cost, x, y, w * 6, 0, w, 50);
-		set(cos, x, y, w * 7, 0, w, 50);
+		set(con, x, y, w * 6, 100, w, 50);
+		set(dojo, x, y, w * 7, 100, w, 50);
+
 		set(mus, x, y, 0, 150, w, 50);
 		set(jm0, x, y, w, 150, w, 50);
 		set(jmh, x, y, w * 2, 150, w, 50);
 		set(jm1, x, y, w * 3, 150, w, 50);
-		set(dojo, x, y, w * 4, 150, w, 50);
-		for (int i = 0; i < 4; i++)
-			set(star[i], x, y, w * (2 + i), 0, w, 50);
 		set(lt, x, y, 0, 200, 1400, 100);
 		lt.componentResized(x, y);
 	}

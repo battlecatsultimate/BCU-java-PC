@@ -18,10 +18,11 @@ import page.MainFrame;
 import page.MainLocale;
 import page.Page;
 import page.info.EnemyInfoPage;
-import page.info.filter.AbEnemySelectionPage;
+import page.info.filter.EnemyFindPage;
 import page.pack.EREditPage;
 import page.support.*;
 
+import javax.swing.*;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -49,6 +50,7 @@ public class StageEditTable extends AbJTable implements Reorderable {
 	private final UserPack pack;
 
 	private boolean changing = false;
+	protected int findIndex = -1;
 
 	protected StageEditTable(Page p, UserPack pac) {
 		super(title);
@@ -99,11 +101,9 @@ public class StageEditTable extends AbJTable implements Reorderable {
 		return stage.datas.length;
 	}
 
-	public void updateAbEnemy(AbEnemySelectionPage page) {
-		if(page.getSelected() == null)
-			stage.datas[page.index].enemy = null;
-		else
-			stage.datas[page.index].enemy = page.getSelected().getID();
+	public void updateAbEnemy(Enemy e) {
+		stage.datas[findIndex].enemy = e.id;
+		findIndex = -1;
 	}
 
 	@Override
@@ -256,7 +256,8 @@ public class StageEditTable extends AbJTable implements Reorderable {
 		return ind;
 	}
 
-	protected synchronized void clicked(Point p, int button) {
+	protected synchronized void clicked(MouseEvent event) {
+		Point p = event.getPoint();
 		if (stage == null)
 			return;
 		int c = getColumnModel().getColumnIndexAtX(p.x);
@@ -270,7 +271,7 @@ public class StageEditTable extends AbJTable implements Reorderable {
 		if (info[ind] == null)
 			return;
 
-		if(button == MouseEvent.BUTTON1) {
+		if (SwingUtilities.isLeftMouseButton(event)) {
 			AbEnemy e = Identifier.get(info[ind].enemy);
 			if (e instanceof Enemy) {
 				List<Enemy> eList = new ArrayList<>();
@@ -288,15 +289,11 @@ public class StageEditTable extends AbJTable implements Reorderable {
 				MainFrame.changePanel(new EnemyInfoPage(page, ENode.getList(eList, (Enemy)e, muls)));
 			} if (e instanceof EneRand)
 				MainFrame.changePanel(new EREditPage(page, pack, (EneRand) e));
-		} else if(button == MouseEvent.BUTTON3) {
-			AbEnemySelectionPage find;
-
-			if(pack == null) {
-				find = new AbEnemySelectionPage(page, this, ind);
-			} else {
-				find = new AbEnemySelectionPage(page, this, ind, pack.getSID(), pack.desc.dependency.toArray(new String[0]));
-			}
-
+		} else if (SwingUtilities.isRightMouseButton(event)) {
+			findIndex = ind;
+			EnemyFindPage find = pack != null
+					? new EnemyFindPage(page, pack.desc.id, pack.desc.dependency.toArray(new String[0]))
+					: new EnemyFindPage(page);
 			MainFrame.changePanel(find);
 		}
 	}

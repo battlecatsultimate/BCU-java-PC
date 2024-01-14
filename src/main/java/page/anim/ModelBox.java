@@ -9,6 +9,7 @@ import common.util.anim.EAnimS;
 import jogl.GLCstd;
 import jogl.util.GLGraphics;
 import main.MainBCU;
+import utilpc.Interpret;
 import utilpc.awt.FG2D;
 
 import java.awt.*;
@@ -33,6 +34,8 @@ interface ModelBox {
 	void setSiz(float siz);
 
 	void draw();
+
+	Point getPoint(Point p);
 }
 
 class BufferedModel extends Canvas implements ModelBox {
@@ -115,6 +118,10 @@ class BufferedModel extends Canvas implements ModelBox {
 		ent = ieAnim;
 	}
 
+	@Override
+	public Point getPoint(Point p) {
+		return Interpret.getPoint(p, ori, siz);
+	}
 }
 
 class GLModelBox extends GLCstd implements ModelBox {
@@ -186,5 +193,10 @@ class GLModelBox extends GLCstd implements ModelBox {
 		g.setColor(FakeGraphics.BLACK);
 		if(ent != null)
 			ent.draw(g, ori.copy().times(-1), siz);
+	}
+
+	@Override
+	public Point getPoint(Point p) {
+		return Interpret.getPoint(p, ori, siz);
 	}
 }

@@ -35,7 +35,7 @@ public class TraitList extends JList<Trait> {
                     jl.setText(Interpret.TRAIT[trait.id.id]);
                     jl.setIcon(UtilPC.createIcon(3, trait.id.id));
                 } else {
-                    if (!editing)
+                    if (!id)
                         jl.setText(trait.name);
                     if (trait.icon != null)
                         jl.setIcon(new ImageIcon((BufferedImage)trait.icon.getImg().bimg()));

@@ -6,6 +6,7 @@ import common.util.stage.SCDef.Line;
 import common.util.stage.Stage;
 import common.util.stage.StageMap;
 import common.util.unit.Enemy;
+import main.MainBCU;
 import page.*;
 import page.info.filter.EnemyFindPage;
 import page.support.AnimLCR;
@@ -143,7 +144,7 @@ public class StageSearchPage extends StagePage {
 
         for (MapColc mc : MapColc.values())
             for (StageMap sm : mc.maps)
-                if (UtilPC.damerauLevenshteinDistance(sm.toString().toLowerCase(),str) < 5)
+                if (UtilPC.damerauLevenshteinDistance(sm.toString().toLowerCase(),str) < MainBCU.searchTolerance)
                     chaptersFound.add(sm);
         return chaptersFound;
     }
@@ -152,14 +153,14 @@ public class StageSearchPage extends StagePage {
         String str = stageName.getText().toLowerCase();
         List<Stage> stagesFound = new ArrayList<>();
         List<Integer> diffs = new ArrayList<>();
-        int minDiff = 5;
+        int minDiff = MainBCU.searchTolerance;
 
         if (mapsFound.isEmpty()) {
             for (MapColc mc : MapColc.values())
                 for (StageMap sm : mc.maps)
                     for (Stage s : sm.list) {
                         int diff = UtilPC.damerauLevenshteinDistance(s.toString().toLowerCase(), str);
-                        if (diff <= minDiff) {
+                        if (diff < minDiff) {
                             stagesFound.add(s);
                             diffs.add(diff);
                             minDiff = diff;

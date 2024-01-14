@@ -30,10 +30,10 @@ public class LineUpBox extends Canvas {
 	private int pt = 0, time = 0;
 	private Combo sc;
 	private PP relative, mouse;
-	protected boolean enableCost = false;
+	protected boolean swap = false;
 
 	protected Limit lim;
-	protected int price;
+	protected int price = 1;
 
 	protected Form sf;
 
@@ -76,12 +76,17 @@ public class LineUpBox extends Canvas {
 						gra.colRect(120 * j, 100 * i, img.getImg().getWidth(), img.getImg().getHeight(), 255, 0, 0, 100);
 						Res.getCost(-1, false,
 							new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
-					} else if (enableCost)
+					} else if (swap) {
 						Res.getCost((int) ef.getPrice(price), true,
-							new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
-					else
+								new SymCoord(gra, 0.8f, 120 * j, 100 * i + (img.getImg().getHeight() / 3.5f), 2));
 						Res.getLv(lu.getLv(f).getLv() + lu.getLv(f).getPlusLv(),
-							new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
+								new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
+					} else {
+						Res.getCost((int) ef.getPrice(price), true,
+								new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
+						Res.getLv(lu.getLv(f).getLv() + lu.getLv(f).getPlusLv(),
+								new SymCoord(gra, 0.8f, 120 * j, 100 * i + (img.getImg().getHeight() / 3.5f), 2));
+					}
 				}
 			}
 		if (relative != null && sf != null) {
@@ -92,11 +97,18 @@ public class LineUpBox extends Canvas {
 			if (lim != null && lim.unusable(ef.du, price)) {
 				gra.colRect(p.x, p.y, uni.getWidth(), uni.getHeight(), 255, 0, 0, 100);
 				Res.getCost(-1, true, new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
-			} else if (enableCost)
+			} else if (swap) {
 				Res.getCost((int) ef.getPrice(price), true,
-					new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
-			else
-				Res.getLv(lu.getLv(sf).getLv() + lu.getLv(sf).getPlusLv(), new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
+						new SymCoord(gra, 0.8f, p.x, p.y + (uni.getHeight() / 3.5f), 2));
+				Res.getLv(lu.getLv(sf).getLv() + lu.getLv(sf).getPlusLv(),
+						new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
+			} else {
+				Res.getCost((int) ef.getPrice(price), true,
+						new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
+				Res.getLv(lu.getLv(sf).getLv() + lu.getLv(sf).getPlusLv(),
+						new SymCoord(gra, 0.8f, p.x, p.y + (uni.getHeight() / 3.5f), 2));
+			}
+
 		}
 		g.drawImage(bimg, 0, 0, getWidth(), getHeight(), null);
 		pt++;

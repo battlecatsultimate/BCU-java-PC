@@ -1,8 +1,10 @@
 package page.anim;
 
 import common.CommonStatic;
+import common.system.P;
 import common.util.anim.*;
 import page.JBTN;
+import page.MenuBarHandler;
 import page.Page;
 import page.support.AnimTreeRenderer;
 import page.support.TreeNodeExpander;
@@ -43,9 +45,11 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	private final JBTN sort = new JBTN(0, "sort");
 	private final JBTN camres = new JBTN(0, "rescam");
 	private final JBTN zomres = new JBTN(0, "reszom");
+	private final JBTN zenm = new JBTN(0, "zenmode");
 	private final EditHead aep;
 	private Point p = null;
 	private MMTree mmt;
+	boolean dragged = false;
 
 	public MaModelEditPage(Page p) {
 		super(p);
@@ -78,6 +82,23 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			}
 			if (mb.getEntity() != null)
 				mb.getEntity().organize();
+			if (o instanceof SpriteBox && mmet.anim != null) {
+				String[] name = new String[mmet.anim.imgcut.n];
+				for (int i = 0; i < name.length; i++)
+					name[i] = i + " " + mmet.anim.imgcut.strs[i];
+				jlp.setListData(name);
+
+				if (sb.sele >= 0) {
+					jlp.getSelectionModel().setSelectionInterval(sb.sele, sb.sele);
+					int[] selected = mmet.getSelectedRows();
+					int[][] cells = mmet.mm.parts;
+					for (int i : selected)
+						cells[i][2] = sb.sele;
+					mmet.anim.unSave("mamodel sprite select");
+				} else {
+					jlp.clearSelection();
+				}
+			}
 			setTree(mmet.anim);
 		});
 
@@ -103,13 +124,79 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		});
 	}
 
+	private P realScale(int[] part, boolean ignoreFirst) { // this is kinda finicky, but it works enough
+		P scale = ignoreFirst ? new P(1.0f, 1.0f) : new P(part[8] / 1000.0f, part[9] / 1000.0f);
+		if (part[0] != -1)
+			scale.times(realScale(mmet.mm.parts[part[0]], false));
+		return scale;
+	}
+
+	private int realAngle(int[] part, boolean ignoreFirst) {
+		int angle = ignoreFirst ? 0 : part[10];
+		if (part[0] != -1)
+			angle += realAngle(mmet.mm.parts[part[0]], false);
+		return angle;
+	}
+
 	@Override
 	protected void mouseDragged(MouseEvent e) {
 		if (p == null)
 			return;
-		ModelBox.ori.x += p.x - e.getX();
-		ModelBox.ori.y += p.y - e.getY();
-		p = e.getPoint();
+		int[] rows = mmet.getSelectedRows();
+		if (rows.length == 0 || e.isShiftDown()) {
+			ModelBox.ori.x += p.x - e.getX();
+			ModelBox.ori.y += p.y - e.getY();
+			p = e.getPoint();
+		} else {
+			dragged = true;
+			int[][] parts = mmet.mm.parts;
+			Point p0 = mb.getPoint(p);
+			Point p1 = mb.getPoint(p = e.getPoint());
+			int modifiers = e.getModifiers();
+			int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+			boolean isCtrlDown = (modifiers & modifier) != 0; // note: do NOT use for right mouse check
+			int[] part;
+
+			if (SwingUtilities.isRightMouseButton(e)) {
+				for (int i : rows) {
+					part = parts[i];
+					int x = getRootPane().getWidth();
+					int y = getRootPane().getHeight() - MenuBarHandler.getBar().getHeight();
+					Point p2 = mb.getPoint(new Point(size(x, y, 400), size(x, y, 250))); // pivot placeholder
+					double sA = Math.atan2(p0.y - p2.y, p0.x - p2.x);
+					double sB = Math.atan2(p1.y - p2.y, p1.x - p2.x);
+					part[10] += (int) ((sB - sA) * 1800 / Math.PI);
+					part[10] %= 3600;
+				}
+			} else {
+				if (isCtrlDown) {
+					for (int i : rows) {
+						part = parts[i];
+						P scale = realScale(part, false);
+						double angle = realAngle(part, false) / 1800.0 * Math.PI; // TODO adjust speed according to angle
+						double sin = Math.sin(angle);
+						double cos = Math.cos(angle);
+						int x = i != 0 ? p0.x - p1.x : p1.x - p0.x;
+						int y = i != 0 ? p0.y - p1.y : p1.y - p0.y;
+						part[6] += (int) (((x * cos) + (y * sin)) / scale.x);
+						part[7] += (int) (((y * cos) - (x * sin)) / scale.y);
+					}
+				} else {
+					for (int i : rows) {
+						part = parts[i];
+						P scale = realScale(part, true);
+						double angle = realAngle(part, true) / 1800.0 * Math.PI;
+						double sin = Math.sin(angle);
+						double cos = Math.cos(angle);
+						int x = p1.x - p0.x;
+						int y = p1.y - p0.y;
+						part[4] += (int) (((x * cos) + (y * sin)) / (scale.x));
+						part[5] += (int) (((y * cos) - (x * sin)) / (scale.y));
+					}
+				}
+			}
+			mb.getEntity().organize();
+		}
 	}
 
 	@Override
@@ -122,6 +209,10 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	@Override
 	protected void mouseReleased(MouseEvent e) {
 		p = null;
+		if (dragged) {
+			mmet.anim.unSave("mamodel drag");
+			dragged = false;
+		}
 	}
 
 	@Override
@@ -187,30 +278,50 @@ public class MaModelEditPage extends Page implements AbEditPage {
 	@Override
 	protected synchronized void resized(int x, int y) {
 		setBounds(0, 0, x, y);
-		set(aep, x, y, 800, 0, 1750, 50);
+		set(aep, x, y, 750, 0, 1500, 50);
 		set(back, x, y, 0, 0, 200, 50);
-		set(camres, x, y, 350, 0, 200, 50);
-		set(zomres, x, y, 560, 0, 200, 50);
-		set(jsptr, x, y, 0, 550, 300, 750);
-		set(jspmm, x, y, 300, 550, 2000, 750);
-		set(jspu, x, y, 0, 50, 300, 500);
-		set((Canvas) mb, x, y, 300, 50, 700, 500);
-		set(jspp, x, y, 1000, 50, 300, 500);
-		set(sb, x, y, 1300, 50, 950, 400);
-		set(sort, x, y, 1300, 500, 200, 50);
-		set(revt, x, y, 1500, 500, 200, 50);
-		set(addl, x, y, 1700, 500, 200, 50);
-		set(reml, x, y, 1900, 500, 200, 50);
-		set(rema, x, y, 2100, 500, 200, 50);
+
+		if (aep.isZenMode()) {
+			set(jspu, x, y, 50, 100, 300, 500);
+			set(camres, x, y, 350, 50, 200, 50);
+			set(zomres, x, y, 560, 50, 200, 50);
+			set((Component) mb, x, y, 350, 100, 750, 450);
+			set(jspp, x, y, 1100, 100, 300, 450);
+			set(sb, x, y, 1400, 100, 850, 450);
+
+			set(jsptr, x, y, 50, 600, 300, 650);
+			set(jspmm, x, y, 350, 600, 1900, 650);
+
+			set(addl, x, y, 350, 550, 200, 50);
+			set(reml, x, y, 550, 550, 200, 50);
+			set(rema, x, y, 750, 550, 200, 50);
+			set(sort, x, y, 1850, 550, 200, 50);
+			set(revt, x, y, 2050, 550, 200, 50);
+		} else {
+			set(jspu, x, y, 50, 100, 300, 500);
+			set(camres, x, y, 350, 50, 200, 50);
+			set(zomres, x, y, 560, 50, 200, 50);
+			set((Component) mb, x, y, 350, 100, 750, 450);
+			set(jspp, x, y, 1100, 100, 300, 450);
+			set(sb, x, y, 1400, 100, 850, 450);
+
+			set(jsptr, x, y, 50, 600, 300, 650);
+			set(jspmm, x, y, 350, 600, 1900, 650);
+
+			set(addl, x, y, 350, 550, 200, 50);
+			set(reml, x, y, 550, 550, 200, 50);
+			set(rema, x, y, 750, 550, 200, 50);
+			set(sort, x, y, 1850, 550, 200, 50);
+			set(revt, x, y, 2050, 550, 200, 50);
+		}
+		SwingUtilities.invokeLater(() -> jlt.setUI(new TreeNodeExpander(jlt)));
 		aep.componentResized(x, y);
 		mmet.setRowHeight(size(x, y, 50));
 	}
 
-	private void addLine() {
+	protected void addLine() {
 		change(0, o -> {
-			int ind = mmet.getSelectedRow() + 1;
-			if (ind == 0)
-				ind++;
+			int ind = Math.max(1, mmet.getSelectedRow() + 1);
 			MaModel mm = mmet.mm;
 			int[] inds = new int[mm.n];
 			for (int i = 0; i < mm.n; i++)
@@ -222,6 +333,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 				move[i] = i < ind ? i : i - 1;
 			mm.reorder(move);
 			int[] newl = new int[14];
+			newl[2] = Math.max(jlp.getSelectedIndex(), 0);
 			newl[8] = newl[9] = newl[11] = 1000;
 			mm.parts[ind] = newl;
 			for (MaAnim ma : mmet.anim.anims)
@@ -266,7 +378,11 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			change((AnimCE) node.getUserObject(), this::setA);
 		});
 
-		jlp.addListSelectionListener(arg0 -> sb.sele = jlp.getSelectedIndex());
+		jlp.addListSelectionListener(arg0 -> {
+			if (isAdj() || arg0.getValueIsAdjusting())
+				return;
+			sb.setSprite(jlp.getSelectedIndex(), false);
+		}); // TODO: fix when selecting multiple lines >:(
 
 		ListSelectionModel lsm = mmet.getSelectionModel();
 
@@ -395,6 +511,7 @@ public class MaModelEditPage extends Page implements AbEditPage {
 			mm.reorder(move);
 			mmet.anim.unSave("mamodel remove line");
 			callBack(null);
+			ind = row[0];
 			if (ind >= mm.n)
 				ind--;
 			mmet.setRowSelectionInterval(ind, ind);
@@ -483,12 +600,16 @@ public class MaModelEditPage extends Page implements AbEditPage {
 		jlp.setSelectedIndex(val);
 		for (int row : mmet.getSelectedRows()) {
 			for (int[] ints : mmet.mm.parts)
-				if (ints[0] == row)
+				if (ints[0] == row) {
 					reml.setEnabled(false);
+					reml.setToolTipText("part is parent of another");
+				}
 			for (MaAnim ma : mmet.anim.anims)
 				for (Part p : ma.parts)
-					if (p.ints[0] == row)
+					if (p.ints[0] == row) {
 						reml.setEnabled(false);
+						reml.setToolTipText("part is used in animation");
+					}
 		}
 	}
 

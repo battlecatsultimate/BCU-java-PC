@@ -107,11 +107,17 @@ public class BCUReader extends DataIO {
 				if (jo.has("autosavetime")) {
 					MainBCU.autoSaveTime = jo.get("autosavetime").getAsInt();
 				}
+				if (jo.has("searchtype")) {
+					MainBCU.searchPerKey = jo.get("searchtype").getAsBoolean();
+				}
+				if (jo.has("tolerance")) {
+					MainBCU.searchTolerance = jo.get("tolerance").getAsInt();
+				}
 				String[] exp = JsonDecoder.decode(jo.get("export_paths"), String[].class);
 				String[] imp = JsonDecoder.decode(jo.get("import_paths"), String[].class);
-				for (int i = 0; i < Exporter.curs.length; i++)
+				for (int i = 0; i < Math.min(Exporter.curs.length, exp.length); i++)
 					Exporter.curs[i] = exp[i] == null ? null : new File(exp[i]);
-				for (int i = 0; i < Importer.curs.length; i++)
+				for (int i = 0; i < Math.min(Importer.curs.length, imp.length); i++)
 					Importer.curs[i] = imp[i] == null ? null : new File(imp[i]);
 				if (jo.has("performance")) {
 					CommonStatic.getConfig().performanceModeAnimation = jo.get("performance").getAsBoolean();
