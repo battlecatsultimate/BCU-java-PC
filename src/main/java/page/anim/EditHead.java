@@ -4,7 +4,6 @@ import common.CommonStatic.EditLink;
 import common.util.anim.AnimCE;
 import io.BCUWriter;
 import page.JBTN;
-import page.JTG;
 import page.Page;
 
 import javax.swing.*;
@@ -19,7 +18,6 @@ public class EditHead extends Page implements EditLink {
 	private final JBTN icut = new JBTN(0, "caic");
 	private final JBTN mmdl = new JBTN(0, "camm");
 	private final JBTN manm = new JBTN(0, "cama");
-	private final JTG zenm = new JTG(0, "zenmode");
 
 	protected AnimCE focus;
 
@@ -71,19 +69,16 @@ public class EditHead extends Page implements EditLink {
 		review();
 	}
 
-	public boolean isZenMode() {
-		return zenm.isSelected();
-	}
-
 	@Override
 	protected void resized(int x, int y) {
 		set(undo, x, y, 0, 0, 200, 50);
 		set(save, x, y, 200, 0, 200, 50);
-		set(zenm, x, y, 450, 0, 200, 50);
-		set(view, x, y, 700, 0, 200, 50);
-		set(icut, x, y, 900, 0, 200, 50);
-		set(mmdl, x, y, 1100, 0, 200, 50);
-		set(manm, x, y, 1300, 0, 200, 50);
+
+		set(view, x, y, 450, 0, 200, 50);
+		set(icut, x, y, 650, 0, 200, 50);
+		set(mmdl, x, y, 850, 0, 200, 50);
+		set(manm, x, y, 1050, 0, 200, 50);
+		// 1500 - 1250 = 250
 	}
 
 	private void addListeners() {
@@ -161,9 +156,7 @@ public class EditHead extends Page implements EditLink {
 		add(manm);
 		add(save);
 		add(undo);
-		add(zenm);
 		addListeners();
-		zenm.setEnabled(false); // for now
 	}
 
 }

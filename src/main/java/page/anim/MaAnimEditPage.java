@@ -265,7 +265,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 	@Override
 	protected synchronized void resized(int x, int y) {
 		setBounds(0, 0, x, y);
-		set(aep, x, y, 750, 0, 1500, 50);
+		set(aep, x, y, 950, 0, 1250, 50);
 		set(back, x, y, 0, 0, 200, 50);
 
 		set(camres, x, y, 350, 0, 200, 50);
