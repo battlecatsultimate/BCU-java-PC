@@ -168,7 +168,7 @@ public class PCoinEditTable extends Page {
             changing = false;
         });
 
-        maxt.addActionListener(x -> {
+        maxt.setLnr(x -> {
             if (changing)
                 return;
             changing = true;
@@ -184,7 +184,7 @@ public class PCoinEditTable extends Page {
                 return;
             changing = true;
             int finalI = i;
-            mod.addActionListener(x -> {
+            mod.setLnr(x -> {
                 if (ind == -1)
                     return;
                 changing = true;
