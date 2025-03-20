@@ -195,7 +195,7 @@ public class LimitTable extends Page {
 			lim.min = val;
 		}
 		if (jtf == num) {
-			if (val < 0 || val > 500)
+			if (val < 0 || val > 200)
 				return;
 			lim.num = val;
 			if (val > 80 && lim.num > lastLimit)
