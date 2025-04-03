@@ -74,6 +74,10 @@ public class BattleSetupPage extends LubCont {
 			strt.setEnabled(st.lim.lvr.isValid(b.sele.lu));
 		else
 			tmax.setEnabled(false);
+		if (st.lim != null && st.lim.rich == 1)
+			rich.setEnabled(false);
+		if (st.lim != null && st.lim.sniper == 1)
+			snip.setEnabled(false);
 		if (lub.getLU() != b.sele.lu)
 			lub.setLU(b.sele.lu);
 		mod.setBasis(BasisSet.current());
