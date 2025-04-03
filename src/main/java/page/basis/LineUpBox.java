@@ -79,8 +79,10 @@ public class LineUpBox extends Canvas {
 							new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
 					} else {
 						int cost = (int) ef.getPrice(price);
-						if (hasLimit)
+						if (hasLimit) {
+							if(lim.stageLimit.globalCost > 0) cost = lim.stageLimit.globalCost;
 							cost = cost * lim.stageLimit.costMultiplier[f.unit.rarity] / 100;
+						}
 						int lv = lu.getLv(f).getLv() + lu.getLv(f).getPlusLv();
 						if (swap) {
 							Res.getCost(cost, true,

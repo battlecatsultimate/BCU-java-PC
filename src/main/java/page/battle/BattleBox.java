@@ -416,7 +416,7 @@ public interface BattleBox {
 						g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 0, 255, 0, 100);
 
 					if (sb.summonerSummoned[i][j]) {
-						if (sb.spiritSummoned[i][j] || (sb.summoner[i][j] != null && sb.summoner[i][j].anim.dead >= 0)) {
+						if (sb.spiritSummoned[i][j] || !sb.checkSummonAlive(i,j)) {
 							g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 64, 0, 0, 160);
 						} else {
 							if (sb.spiritEmphasizeCount[i][j] % 2 == 0) {
@@ -526,7 +526,7 @@ public interface BattleBox {
 					g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 0, 255, 0, 100);
 
 				if (sb.summonerSummoned[index][i]) {
-					if (sb.spiritSummoned[index][i] || (sb.summoner[index][i] != null && sb.summoner[index][i].anim.dead >= 0)) {
+					if (sb.spiritSummoned[index][i] || !sb.checkSummonAlive(index,i)) {
 						g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 64, 0, 0, 160);
 					} else {
 						if (sb.spiritEmphasizeCount[index][i] % 2 == 0) {
