@@ -263,7 +263,12 @@ public class LevelEditPage extends Page {
 			int[] o = orbs.get(i);
 
 			if (o.length != 0) {
-				res[i] = "Orb" + (i + 1) + " - {" + getType(o[0]) + ", " + getTrait(o[1]) + ", " + getGrade(o[2]) + "}";
+				if(o[0] <= 4){
+					res[i] = "Orb" + (i + 1) + " - {" + getType(o[0]) + ", " + getTrait(o[1]) + ", " + getGrade(o[2]) + "}";
+				}
+				else {
+					res[i] = "Orb" + (i + 1) + " - {" + getType(o[0]) + ", " + getGrade(o[2]) + "}";
+				}
 			} else {
 				res[i] = "Orb" + (i + 1) + " - None";
 			}
@@ -319,7 +324,7 @@ public class LevelEditPage extends Page {
 	}
 
 	private String getType(int type) {
-		if (type <= 4) {
+		if (type <= 11) {
 			return MainLocale.getLoc(MainLocale.UTIL, "ot"+type);
 		} else {
 			return "Unknown Type " + type;
@@ -433,6 +438,24 @@ public class LevelEditPage extends Page {
 			typeData.add(Data.ORB_RESISTANT);
 		}
 
+		typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot5"));
+		typeData.add(Data.ORB_DEATH_SURGE);
+
+		typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot6"));
+		typeData.add(Data.ORB_WAVE_RESIST);
+
+		typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot7"));
+		typeData.add(Data.ORB_MONEY_BACK);
+
+		typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot8"));
+		typeData.add(Data.ORB_KB_RESIST);
+
+		typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot9"));
+		typeData.add(Data.ORB_LEGEND_STORY);
+
+		typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot10"));
+		typeData.add(Data.ORB_BARON_KILLER);
+
 		if (f.orbs.getSlots() != -1 && data.length == 0) {
 			type.setModel(new DefaultComboBoxModel<>(typeText.toArray(new String[0])));
 
@@ -454,7 +477,7 @@ public class LevelEditPage extends Page {
 			return;
 		}
 
-		trait.setEnabled(true);
+        trait.setEnabled(data[Data.ORB_TYPE] <= 4);
 		grade.setEnabled(true);
 
 		String[] traits;
@@ -468,32 +491,32 @@ public class LevelEditPage extends Page {
 
 				List<Trait> traitList = new ArrayList<>();
 
-				if(f.orbs.getSlots() == -1) {
-					for(Form form : f.unit.forms) {
+				if (f.orbs.getSlots() == -1) {
+					for (Form form : f.unit.forms) {
 						MaskUnit mu;
 
-						if(form.du.getPCoin() != null) {
+						if (form.du.getPCoin() != null) {
 							mu = form.du.getPCoin().improve(lv.getTalents());
 						} else {
 							mu = form.du;
 						}
 
-						for(Trait t : mu.getTraits()) {
-							if(t.BCTrait && !traitList.contains(t))
+						for (Trait t : mu.getTraits()) {
+							if (t.BCTrait && !traitList.contains(t))
 								traitList.add(t);
 						}
 					}
 				} else {
 					MaskUnit mu;
 
-					if(f.du.getPCoin() != null) {
+					if (f.du.getPCoin() != null) {
 						mu = f.du.getPCoin().improve(lv.getTalents());
 					} else {
 						mu = f.du;
 					}
 
-					for(Trait t : mu.getTraits()) {
-						if(t.BCTrait && !traitList.contains(t))
+					for (Trait t : mu.getTraits()) {
+						if (t.BCTrait && !traitList.contains(t))
 							traitList.add(t);
 					}
 				}
@@ -503,7 +526,7 @@ public class LevelEditPage extends Page {
 						traitData.add(1 << t.id.id);
 				}
 
-				if(traitData.isEmpty())
+				if (traitData.isEmpty())
 					traitData = allTraits;
 				else
 					traitData.sort(Integer::compareTo);
