@@ -116,6 +116,7 @@ public class StageLimitTable extends Page {
         jcre.setText(stli.globalCooldown + "");
         cdst.setSelected(stli.coolStart);
         jlco.repaint();
+
         abler(true);
     }
 
