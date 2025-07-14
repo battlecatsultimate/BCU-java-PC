@@ -477,7 +477,7 @@ public class ComparePage extends Page {
                     if (spTraits.contains(trait.list.get(Data.TRAIT_BARON)) && (mu.getAbi() & Data.AB_BAKILL) > 0)
                         effectiveDMG = (int) (effectiveDMG * 1.6);
 
-                    if (spTraits.contains(trait.list.get(Data.TRAIT_BEAST)) && mu.getProc().BSTHUNT.type.active)
+                    if (spTraits.contains(trait.list.get(Data.TRAIT_BEAST)) && mu.getProc().BSTHUNT.active > 0)
                         effectiveDMG = (int) (effectiveDMG * 2.5);
 
                     if (spTraits.contains(trait.list.get(Data.TRAIT_SAGE)) && (mu.getAbi() & Data.AB_SKILL) > 0)
@@ -578,7 +578,7 @@ public class ComparePage extends Page {
                 if (spTraits.contains(trait.list.get(Data.TRAIT_BARON)) && (mu.getAbi() & Data.AB_BAKILL) > 0)
                     effectiveHP = (int) (effectiveHP / 0.7);
 
-                if (spTraits.contains(trait.list.get(Data.TRAIT_BEAST)) && mu.getProc().BSTHUNT.type.active)
+                if (spTraits.contains(trait.list.get(Data.TRAIT_BEAST)) && mu.getProc().BSTHUNT.active > 0)
                     effectiveHP = (int) (effectiveHP / 0.6);
 
                 if (spTraits.contains(trait.list.get(Data.TRAIT_SAGE)) && (mu.getAbi() & Data.AB_SKILL) > 0)
@@ -611,7 +611,7 @@ public class ComparePage extends Page {
                 if (spTraits.contains(trait.list.get(Data.TRAIT_BARON)) && (mu.getAbi() & Data.AB_BAKILL) > 0)
                     effectiveDMG = (int) (effectiveDMG * 1.6);
 
-                if (spTraits.contains(trait.list.get(Data.TRAIT_BEAST)) && mu.getProc().BSTHUNT.type.active)
+                if (spTraits.contains(trait.list.get(Data.TRAIT_BEAST)) && mu.getProc().BSTHUNT.active > 0)
                     effectiveDMG = (int) (effectiveDMG * 2.5);
 
                 if (spTraits.contains(trait.list.get(Data.TRAIT_SAGE)) && (mu.getAbi() & Data.AB_SKILL) > 0)
