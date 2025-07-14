@@ -196,4 +196,12 @@ public class StageLimitTable extends Page {
     protected JButton getBackButton() {
         return null;
     }
+
+    public int getPWidth() {
+        return (int) (1400 / 7.5);
+    }
+
+    public int getPHeight() {
+        return 350;
+    }
 }
