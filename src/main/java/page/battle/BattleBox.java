@@ -454,7 +454,7 @@ public interface BattleBox {
 						int xw2 = (int) (iw - dw * 2);
 
 						g.colRect(x + iw - dw - xw2, y + ih - dh * 2, xw2, dh, 0, 0, 0, -1);
-						g.colRect((x + dw + 2f), (y + ih - dh * 2) + 2f, (iw - dw * 2 - xw) - 4, dh - 4, 100, 212, 255, -1);
+						g.colRect((x + dw + 2f), (y + ih - dh * 2) + 2f, (iw - dw * 2 - xw) - 4, dh - 4, 0, 255, 255, -1);
 					} else if (pri != -1 && !sb.summonerSummoned[i][j]) {
 						Res.getCost(pri / 100, !b, setSym(g, hr, x + iw, y + ih, 3));
 					}
@@ -562,9 +562,10 @@ public interface BattleBox {
 						float cd = 1f * cool / sb.elu.maxC[index][i];
 
 						int xw = (int) (cd * (iw - dw * 2));
+						int xw2 = (int) (iw - dw * 2);
 
-						g.colRect(x + iw - dw - xw, y + ih - dh * 2, xw, dh, 0, 0, 0, -1);
-						g.colRect(x + dw, y + ih - dh * 2, iw - dw * 2 - xw, dh, 100, 212, 255, -1);
+						g.colRect(x + iw - dw - xw2, y + ih - dh * 2, xw2, dh, 0, 0, 0, -1);
+						g.colRect((x + dw + 2f), (y + ih - dh * 2) + 2f, (iw - dw * 2 - xw) - 4, dh - 4, 0, 255, 255, -1);
 					} else if (pri != -1 && !sb.summonerSummoned[index][i]) {
 						Res.getCost(pri / 100, !b, setSym(g, hr, x + iw, y + ih, 3));
 					}
