@@ -65,7 +65,7 @@ public class LimitEditPage extends Page {
 		set(stag, x, y, 50, 950, 200, 50);
 		set(star, x, y, 250, 950, 200, 50);
 		set(lt, x, y, 500, 100, 1400, 100);
-		set(slt, x, y, 500, 250, 1400, 300);
+		set(slt, x, y, 500, 250, 1400, slt.getPHeight());
 	}
 
 	private void addListeners$0() {

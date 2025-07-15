@@ -16,24 +16,36 @@ public class StageLimitTable extends Page {
 
     private static final long serialVersionUID = 1L;
 
-    private static String[] rarity;
+    private static String[] rarityTxt;
 
     static {
         redefine();
     }
 
     protected static void redefine() {
-        rarity = new String[] { "N", "EX", "R", "SR", "UR", "LR" };
+        rarityTxt = new String[] { "N", "EX", "R", "SR", "UR", "LR" };
     }
 
-    private final JL bank = new JL(MainLocale.INFO, "ht20");
+    private final JL mone = new JL(MainLocale.INFO, "ht20");
+    private final JL cano = new JL(MainLocale.INFO, "ht26");
     private final JL cres = new JL(MainLocale.INFO, "ht21");
+    private final JL cost = new JL(MainLocale.INFO, "ht23");
+    private final JL uspe = new JL(MainLocale.INFO, "ht24");
+    private final JL espe = new JL(MainLocale.INFO, "ht25");
     private final JL racost = new JL(MainLocale.INFO, "price");
     private final JL racool = new JL(MainLocale.INFO, "cdo");
-    private final JTF jban = new JTF();
+    private final JL ralimi = new JL(MainLocale.INFO, "ht11");
+    private final JL radupe = new JL(MainLocale.INFO, "ht27");
+    private final JTF jmon = new JTF();
+    private final JTF jcan = new JTF();
     private final JTF jcre = new JTF();
-    private final JTF[] jcool = new JTF[rarity.length];
-    private final JTF[] jcost = new JTF[rarity.length];
+    private final JTF jcos = new JTF();
+    private final JTF jusp = new JTF();
+    private final JTF jesp = new JTF();
+    private final JTF[] jcool = new JTF[rarityTxt.length];
+    private final JTF[] jcost = new JTF[rarityTxt.length];
+    private final JTF[] jlimi = new JTF[rarityTxt.length];
+    private final JTF[] jdupe = new JTF[rarityTxt.length];
     private final JTG cdst = new JTG(MainLocale.INFO, "ht22");
 
     private final CrossList<String> jlco = new CrossList<>(Interpret.getComboFilter(0));
@@ -55,37 +67,67 @@ public class StageLimitTable extends Page {
         int w = 1400 / 8;
         int r = 4;
 
-        set(bank, x, y, 0, 0, w, 50);
-        set(jban, x, y, w, 0, w, 50);
-        set(cres, x, y, w * 2, 0, w, 50);
-        set(jcre, x, y, w * 3, 0, w, 50);
+        set(mone, x, y, 0, 0, w, 50);
+        set(jmon, x, y, w, 0, w, 50);
+        set(cano, x, y, w * 2, 0, w, 50);
+        set(jcan, x, y, w * 3, 0, w, 50);
 
-        set(racost, x, y, 0, 50, w, 50);
-        set(racool, x, y, 0, 150, w, 50);
-        for (int i = 0; i < rarity.length; i++) {
-            set(jcost[i], x, y, w * ((i % r) + 1), 50 * ((i / r) + 1), w, 50);
-            set(jcool[i], x, y, w * ((i % r) + 1), 50 * ((i / r) + 3), w, 50);
+        set(cost, x, y, 0, 50, w, 50);
+        set(jcos, x, y, w, 50, w, 50);
+        set(cres, x, y, w * 2, 50, w, 50);
+        set(jcre, x, y, w * 3, 50, w, 50);
+        set(cdst, x, y, w * 4, 50, w, 50);
+
+        set(uspe, x, y, 0, 100, w, 50);
+        set(jusp, x, y, w, 100, w, 50);
+        set(espe, x, y, w * 2, 100, w, 50);
+        set(jesp, x, y, w * 3, 100, w, 50);
+
+        set(racost, x, y, 0, 150, w, 50);
+        set(racool, x, y, 0, 250, w, 50);
+        set(ralimi, x, y, 0, 350, w, 50);
+        set(radupe, x, y, 0, 450, w, 50);
+        for (int i = 0; i < rarityTxt.length; i++) {
+            int wid = w * ((i % r) + 1);
+            set(jcost[i], x, y, wid, 50 * ((i / r) + 3), w, 50);
+            set(jcool[i], x, y, wid, 50 * ((i / r) + 5), w, 50);
+            set(jlimi[i], x, y, wid, 50 * ((i / r) + 7), w, 50);
+            set(jdupe[i], x, y, wid, 50 * ((i / r) + 9), w, 50);
         }
-        set(cdst, x, y, 0, 250, w, 50);
 
         set(jsco, x, y, (int) (w * 5.5), 0, w * 2, 250);
         set(banc, x, y, w * 6, 250, w, 50);
     }
 
     private void ini() {
-        add(bank);
-        reg(jban);
+        add(mone);
+        reg(jmon);
+        add(cano);
+        reg(jcan);
+
+        add(cost);
+        reg(jcos);
         add(cres);
         reg(jcre);
+
+        add(uspe);
+        reg(jusp);
+        add(espe);
+        reg(jesp);
+
         add(jsco);
         add(banc);
         add(racool);
         add(racost);
+        add(ralimi);
+        add(radupe);
         add(cdst);
 
-        for (int i = 0; i < rarity.length; i++) {
+        for (int i = 0; i < rarityTxt.length; i++) {
             reg(jcool[i] = new JTF());
             reg(jcost[i] = new JTF());
+            reg(jlimi[i] = new JTF());
+            reg(jdupe[i] = new JTF());
         }
 
         jlco.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -108,12 +150,19 @@ public class StageLimitTable extends Page {
             return;
         }
         stli = sl;
-        for (int i = 0; i < rarity.length; i++) {
-            jcost[i].setText(rarity[i] + ": " + stli.costMultiplier[i] + "%");
-            jcool[i].setText(rarity[i] + ": " + stli.cooldownMultiplier[i] + "%");
+        for (int i = 0; i < rarityTxt.length; i++) {
+            String r = rarityTxt[i] + ": ";
+            jcost[i].setText(r + stli.costMultiplier[i] + "%");
+            jcool[i].setText(r + stli.cooldownMultiplier[i] + "%");
+            jlimi[i].setText(r + (stli.rarityDeployLimit[i] == -1 ? "--" : stli.rarityDeployLimit[i]));
+            jdupe[i].setText(r + (stli.deployDuplicationTimes[i] == 0 ? "--" : stli.deployDuplicationTimes[i] + ", " + stli.deployDuplicationDelay[i] + "f"));
         }
-        jban.setText(stli.maxMoney + "");
-        jcre.setText(stli.globalCooldown + "");
+        jmon.setText(stli.maxMoney == 0 ? "--" : stli.maxMoney + "");
+        jcan.setText(stli.cannonMultiplier + "%");
+        jcos.setText(stli.globalCost == -1 ? "--" : stli.globalCost + "");
+        jcre.setText(stli.globalCooldown == 0 ? "--" : stli.globalCooldown + "");
+        jusp.setText(stli.unitSpeedOverride == -1 ? "--" : stli.unitSpeedOverride + "");
+        jesp.setText(stli.enemySpeedOverride == -1 ? "--" : stli.enemySpeedOverride + "");
         cdst.setSelected(stli.coolStart);
         jlco.repaint();
 
@@ -121,12 +170,20 @@ public class StageLimitTable extends Page {
     }
 
     private void abler(boolean b) {
-        for (int i = 0; i < rarity.length; i++) {
+        for (int i = 0; i < rarityTxt.length; i++) {
             jcost[i].setEnabled(b);
             jcool[i].setEnabled(b);
+            jlimi[i].setEnabled(b);
+            jdupe[i].setEnabled(b);
         }
-        jban.setEnabled(b);
+
+        jmon.setEnabled(b);
+        jcan.setEnabled(b);
         jcre.setEnabled(b);
+        jcos.setEnabled(b);
+        jusp.setEnabled(b);
+        jesp.setEnabled(b);
+
         jlco.setEnabled(b);
         cdst.setEnabled(b);
         banc.setEnabled(b && jlco.getSelectedIndex() != -1);
@@ -147,17 +204,40 @@ public class StageLimitTable extends Page {
     }
 
     private void input(JTF jtf, String text) {
-        if (jtf == jban) {
+        if (jtf == jmon)
             stli.maxMoney = Math.max(CommonStatic.parseIntN(text), 0);
-        } else if (jtf == jcre)
+        else if (jtf == jcan)
+            stli.cannonMultiplier = Math.max(CommonStatic.parseIntN(text), 0);
+        else if (jtf == jcos)
+            stli.globalCost = Math.max(CommonStatic.parseIntN(text), -1);
+        else if (jtf == jcre)
             stli.globalCooldown = Math.max(CommonStatic.parseIntN(text), 0);
+        else if (jtf == jusp)
+            stli.unitSpeedOverride = Math.max(CommonStatic.parseIntN(text), -1);
+        else if (jtf == jesp)
+            stli.enemySpeedOverride = Math.max(CommonStatic.parseIntN(text), -1);
+
         else {
-            for (int i = 0; i < rarity.length; i++) {
+            for (int i = 0; i < rarityTxt.length; i++) {
                 if (jcost[i] == jtf) {
                     stli.costMultiplier[i] = Math.max(CommonStatic.parseIntN(text), 0);
                     break;
                 } else if (jcool[i] == jtf) {
                     stli.cooldownMultiplier[i] = Math.max(CommonStatic.parseIntN(text), 0);
+                    break;
+                } else if (jlimi[i] == jtf) {
+                    stli.rarityDeployLimit[i] = Math.max(CommonStatic.parseIntN(text), -1);
+                } else if (jdupe[i] == jtf) {
+                    int[] nums = CommonStatic.parseIntsN(text);
+                    if (nums.length == 0) {
+                        stli.deployDuplicationDelay[i] = stli.deployDuplicationTimes[i] = 0;
+                    } else if (nums.length == 1) {
+                        stli.deployDuplicationTimes[i] = nums[0];
+                        stli.deployDuplicationDelay[i] = 60;
+                    } else {
+                        stli.deployDuplicationTimes[i] = nums[0];
+                        stli.deployDuplicationDelay[i] = nums[1];
+                    }
                     break;
                 }
             }
@@ -202,6 +282,6 @@ public class StageLimitTable extends Page {
     }
 
     public int getPHeight() {
-        return 350;
+        return 600;
     }
 }
