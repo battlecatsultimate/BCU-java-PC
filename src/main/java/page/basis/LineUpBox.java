@@ -83,17 +83,20 @@ public class LineUpBox extends Canvas {
 						if (hasLimit)
 							cost = cost * lim.stageLimit.costMultiplier[f.unit.rarity] / 100;
 						int lv = lu.getLv(f).getLv() + lu.getLv(f).getPlusLv();
-						Res.getRarity(f.unit.rarity, new SymCoord(gra, 0.9f, baseX + 50, 100 * i + (img.getImg().getHeight() / 3.5f), 2));
 						if (swap) {
 							Res.getCost(cost, true,
 									new SymCoord(gra, 0.8f, 120 * j, 100 * i + (img.getImg().getHeight() / 3.5f), 2));
 							Res.getLv(lv,
 									new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
+							Res.getRarity(f.unit.rarity,
+									new SymCoord(gra, 0.9f, baseX + 50, 100 * i + (img.getImg().getHeight()), 2));
 						} else {
 							Res.getCost(cost, true,
 									new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
 							Res.getLv(lv,
 									new SymCoord(gra, 0.8f, 120 * j, 100 * i + (img.getImg().getHeight() / 3.5f), 2));
+							Res.getRarity(f.unit.rarity,
+									new SymCoord(gra, 0.9f, baseX + 50, 100 * i + (img.getImg().getHeight() / 3.5f), 2));
 						}
 					}
 				}
