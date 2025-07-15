@@ -88,9 +88,11 @@ public class ResourcePage extends Page {
 			File f = new Exporter(Exporter.EXP_RES).file;
 			if (f != null) {
 				String name = f.getName();
-				String suffix = sel.getName().split("\\.")[1];
-				if (!name.endsWith(suffix))
-					name += "." + suffix;
+				if (sel.getName().contains(".")) {
+					String suffix = sel.getName().split("\\.")[1];
+					if (!name.endsWith(suffix))
+						name += "." + suffix;
+				}
 				filemove(f.getParentFile() + "/", sel, name);
 			}
 		});
