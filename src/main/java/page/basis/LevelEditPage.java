@@ -432,15 +432,18 @@ public class LevelEditPage extends Page {
 			typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot2"));
 			typeData.add(Data.ORB_STRONG);
 		}
-
 		if(mas) {
 			typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot3"));
 			typeData.add(Data.ORB_MASSIVE);
 		}
-
 		if(res) {
 			typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot4"));
 			typeData.add(Data.ORB_RESISTANT);
+		}
+
+		for (int i = 0; i < Data.ORB_ABILITY_TOT; i++) {
+			typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot" + (5 + i)));
+			typeData.add(i + 5);
 		}
 
 		if (f.unit.orbs.getSlots() != -1 && data.length == 0) {
