@@ -39,6 +39,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public interface BattleBox {
 
@@ -416,7 +418,8 @@ public interface BattleBox {
 						g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 0, 255, 0, 100);
 
 					if (sb.summonerSummoned[i][j]) {
-						if (sb.spiritSummoned[i][j] || (sb.summoner[i][j] != null && sb.summoner[i][j].anim.dead >= 0)) {
+						List<Entity> summoners = sb.findEntitiesOf(i, j).stream().filter(e -> e.anim.dead >= 0).collect(Collectors.toList());
+						if (sb.spiritSummoned[i][j] || !summoners.isEmpty()) {
 							g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 64, 0, 0, 160);
 						} else {
 							if (sb.spiritEmphasizeCount[i][j] % 2 == 0) {
@@ -529,7 +532,8 @@ public interface BattleBox {
 					g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 0, 255, 0, 100);
 
 				if (sb.summonerSummoned[index][i]) {
-					if (sb.spiritSummoned[index][i] || (sb.summoner[index][i] != null && sb.summoner[index][i].anim.dead >= 0)) {
+					List<Entity> summoners = sb.findEntitiesOf(index, i).stream().filter(e -> e.anim.dead >= 0).collect(Collectors.toList());
+					if (sb.spiritSummoned[index][i] || !summoners.isEmpty()) {
 						g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 64, 0, 0, 160);
 					} else {
 						if (sb.spiritEmphasizeCount[index][i] % 2 == 0) {
