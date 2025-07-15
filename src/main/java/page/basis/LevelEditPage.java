@@ -227,7 +227,7 @@ public class LevelEditPage extends Page {
 				res[i] = (i + 1) + ": None";
 			}
 
-			if (maxOrbSize <= i)
+			if (CommonStatic.getConfig().realLevel && maxOrbSize <= i)
 				res[i] += " (Req: Lv. " + (f.unit.orbs.getLimits()[i] == 1 ? "60" : "?") + ")";
 		}
 
@@ -314,7 +314,8 @@ public class LevelEditPage extends Page {
 			@Override
 			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 				JLabel jl = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-				jl.setEnabled(index < f.unit.orbs.getSlots(f.fid, lv.getLv() + lv.getPlusLv()));
+				if (CommonStatic.getConfig().realLevel)
+					jl.setEnabled(index < f.unit.orbs.getSlots(f.fid, lv.getLv() + lv.getPlusLv()));
 				return jl;
 			}
 		});
