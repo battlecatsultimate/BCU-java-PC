@@ -89,9 +89,9 @@ public class ResourcePage extends Page {
 			if (f != null) {
 				String name = f.getName();
 				if (sel.getName().contains(".")) {
-					String suffix = sel.getName().split("\\.")[1];
+					String suffix = "." + sel.getName().split("\\.")[1];
 					if (!name.endsWith(suffix))
-						name += "." + suffix;
+						name += suffix;
 				}
 				filemove(f.getParentFile() + "/", sel, name);
 			}
