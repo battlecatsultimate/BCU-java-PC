@@ -444,6 +444,8 @@ public interface BattleBox {
 						}
 					}
 
+					int rar = sb.b.lu.fs[i][j].unit.rarity;
+
 					if (cool > 0) {
 						int dw = (int) (hr * 10);
 						int dh = (int) (hr * 12);
@@ -455,8 +457,13 @@ public interface BattleBox {
 
 						g.colRect(x + iw - dw - xw2, y + ih - dh * 2, xw2, dh, 0, 0, 0, -1);
 						g.colRect((x + dw + 2f), (y + ih - dh * 2) + 2f, (iw - dw * 2 - xw) - 4, dh - 4, 0, 255, 255, -1);
-					} else if (pri != -1 && !sb.summonerSummoned[i][j]) {
+					} else if (pri != -1 && !sb.summonerSummoned[i][j] && sb.maxRarityNum[rar] != -1 && sb.entityCountRar(rar) <= sb.maxRarityNum[rar] - sb.b.lu.fs[i][j].du.getWill()) {
 						Res.getCost(pri / 100, !b, setSym(g, hr, x + iw, y + ih, 3));
+					}
+					if (sb.maxRarityNum[rar] != -1) {
+						if (pri != -1 && sb.entityCountRar(rar) >= sb.maxRarityNum[rar])
+							g.colRect(x, y, iw, ih, 255, 0, 0, 100);
+						Res.getRarity(rar, setSym(g, hr, x + iw * 1.1f, y + ih / 4f, 3));
 					}
 				}
 			}
