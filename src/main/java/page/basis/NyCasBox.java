@@ -1,5 +1,6 @@
 package page.basis;
 
+import common.CommonStatic;
 import page.battle.BattleBox;
 import utilpc.awt.FG2D;
 
@@ -29,7 +30,9 @@ class NyCasBox extends Canvas {
 		BufferedImage img = (BufferedImage) createImage(w, h);
 		if (img == null)
 			return;
-		BattleBox.BBPainter.drawNyCast(new FG2D(img.getGraphics()), h, 0, r, ints);
+		FG2D f = new FG2D(img.getGraphics());
+		f.setRenderingHint(3, CommonStatic.getConfig().ints[2]);
+		BattleBox.BBPainter.drawNyCast(f, h, 0, r, ints);
 		g.drawImage(img, 0, 0, null);
 		g.dispose();
 	}
