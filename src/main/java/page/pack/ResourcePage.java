@@ -86,8 +86,13 @@ public class ResourcePage extends Page {
 
 		rept.addActionListener(arg0 -> {
 			File f = new Exporter(Exporter.EXP_RES).file;
-			if (f != null)
-				filemove(f.getPath() + "/", sel);
+			if (f != null) {
+				String name = f.getName();
+				String suffix = sel.getName().split("\\.")[1];
+				if (!name.endsWith(suffix))
+					name += "." + suffix;
+				filemove(f.getParentFile() + "/", sel, name);
+			}
 		});
 
 		jls.addTreeSelectionListener(arg0 -> {
@@ -158,12 +163,12 @@ public class ResourcePage extends Page {
 		}
 	}
 
-	private void filemove(String dst, VFile src) {
+	private void filemove(String dst, VFile src, String name) {
 		if (src.list() != null)
 			for (VFile c : src.list())
-				filemove(dst + src.getName() + "/", c);
+				filemove(dst + src.getName() + "/", c, c.getName());
 		else
-			BCUWriter.writeBytes(src.getData().getBytes(), dst + src.getName());
+			BCUWriter.writeBytes(src.getData().getBytes(), dst + name);
 	}
 
 	private void ini() {
