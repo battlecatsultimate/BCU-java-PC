@@ -17,6 +17,7 @@ import utilpc.Interpret;
 import utilpc.UtilPC;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.ArrayList;
@@ -58,19 +59,20 @@ public class LevelEditPage extends Page {
 		this.lv = lv;
 		this.f = f;
 
-		if(f != null && f.unit != null) {
-			BasisSet.synchronizeOrb(f.unit);
-		}
+		boolean exists = f != null && f.unit != null;
 
-		if (f != null && f.orbs != null) {
-			if (lv.getOrbs() == null) {
-				if (f.orbs.getSlots() != -1) {
-					for (int i = 0; i < f.orbs.getSlots(); i++) {
-						orbs.add(new int[] {});
+		if (exists) {
+			BasisSet.synchronizeOrb(f.unit);
+			if (f.unit.orbs != null) {
+				if (lv.getOrbs() == null) {
+					if (f.unit.orbs.getSlots() != -1) {
+						for (int i = 0; i < f.unit.orbs.getSlots(); i++) {
+							orbs.add(new int[] {});
+						}
 					}
+				} else {
+					orbs.addAll(Arrays.asList(lv.getOrbs()));
 				}
-			} else {
-				orbs.addAll(Arrays.asList(lv.getOrbs()));
 			}
 		}
 
@@ -117,7 +119,6 @@ public class LevelEditPage extends Page {
 				setLvOrb(lvs, generateOrb());
 
 				updateOrbConsideringAbilities();
-
 				orbList.setListData(generateNames());
 
 				levels.setText(UtilPC.lvText(f, lv)[0]);
@@ -173,7 +174,7 @@ public class LevelEditPage extends Page {
 			if (orbList.getSelectedIndex() != -1 && orbList.getSelectedIndex() < orbs.size()) {
 				int[] data = orbs.get(orbList.getSelectedIndex());
 
-				if (f.orbs != null && f.orbs.getSlots() != -1) {
+				if (f.unit.orbs != null && f.unit.orbs.getSlots() != -1) {
 					if (type.getSelectedIndex() == 0) {
 						data = new int[] {};
 					} else {
@@ -241,10 +242,10 @@ public class LevelEditPage extends Page {
 			if (!Opts.conf())
 				return;
 
-			if (f.orbs == null)
+			if (f.unit.orbs == null)
 				return;
 
-			if (f.orbs.getSlots() != -1) {
+			if (f.unit.orbs.getSlots() != -1) {
 				orbs.replaceAll(ignored -> new int[]{});
 			} else {
 				orbs.clear();
@@ -257,9 +258,10 @@ public class LevelEditPage extends Page {
 	}
 
 	private String[] generateNames() {
+		int maxOrbSize = f.unit.orbs.getSlots(f.fid, lv.getLv() + lv.getPlusLv());
 		String[] res = new String[orbs.size()];
 
-		for (int i = 0; i < orbs.size(); i++) {
+		for (int i = 0; i < res.length; i++) {
 			int[] o = orbs.get(i);
 
 			if (o.length != 0) {
@@ -267,6 +269,9 @@ public class LevelEditPage extends Page {
 			} else {
 				res[i] = "Orb" + (i + 1) + " - None";
 			}
+
+			if (maxOrbSize <= i)
+				res[i] += " (Req: Lv. " + (f.unit.orbs.getLimits()[i] == 1 ? "60" : "?") + ")";
 		}
 
 		return res;
@@ -332,13 +337,13 @@ public class LevelEditPage extends Page {
 		add(levels);
 		add(orbb);
 
-		if (f.orbs != null) {
+		if (f.unit.orbs != null) {
 			add(orbScroll);
 			add(type);
 			add(trait);
 			add(grade);
 
-			if (f.orbs.getSlots() == -1) {
+			if (f.unit.orbs.getSlots() == -1) {
 				add(add);
 				add(rem);
 			}
@@ -355,6 +360,14 @@ public class LevelEditPage extends Page {
 
 		orbList.setListData(generateNames());
 		orbList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		orbList.setCellRenderer(new DefaultListCellRenderer() {
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+				JLabel jl = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				jl.setEnabled(index < f.unit.orbs.getSlots(f.fid, lv.getLv() + lv.getPlusLv()));
+				return jl;
+			}
+		});
 		rem.setEnabled(valid());
 		type.setEnabled(valid());
 		trait.setEnabled(valid());
@@ -366,7 +379,7 @@ public class LevelEditPage extends Page {
 
 		updating = true;
 
-		if (f.orbs == null) {
+		if (f.unit.orbs == null) {
 			return;
 		}
 
@@ -376,10 +389,7 @@ public class LevelEditPage extends Page {
 		boolean mas = false;
 		boolean res = false;
 
-		if(f.unit == null)
-			return;
-
-		if(f.orbs.getSlots() == -1) {
+        if(f.unit.orbs.getSlots() == -1) {
 			for(Form form : f.unit.forms) {
 				MaskUnit mu;
 
@@ -407,7 +417,7 @@ public class LevelEditPage extends Page {
 			res = (mu.getAbi() & Data.AB_RESIST) != 0;
 		}
 
-		if (f.orbs.getSlots() != -1) {
+		if (f.unit.orbs.getSlots() != -1) {
 			typeText.add("None");
 		}
 
@@ -433,7 +443,7 @@ public class LevelEditPage extends Page {
 			typeData.add(Data.ORB_RESISTANT);
 		}
 
-		if (f.orbs.getSlots() != -1 && data.length == 0) {
+		if (f.unit.orbs.getSlots() != -1 && data.length == 0) {
 			type.setModel(new DefaultComboBoxModel<>(typeText.toArray(new String[0])));
 
 			type.setSelectedIndex(0);
@@ -468,7 +478,7 @@ public class LevelEditPage extends Page {
 
 				List<Trait> traitList = new ArrayList<>();
 
-				if(f.orbs.getSlots() == -1) {
+				if(f.unit.orbs.getSlots() == -1) {
 					for(Form form : f.unit.forms) {
 						MaskUnit mu;
 
@@ -540,7 +550,7 @@ public class LevelEditPage extends Page {
 		trait.setModel(new DefaultComboBoxModel<>(traits));
 		grade.setModel(new DefaultComboBoxModel<>(grades));
 
-		if (f.orbs.getSlots() != -1) {
+		if (f.unit.orbs.getSlots() != -1) {
 			type.setSelectedIndex(typeData.indexOf(data[0]) + 1);
 		} else {
 			type.setSelectedIndex(typeData.indexOf(data[0]));
@@ -574,7 +584,7 @@ public class LevelEditPage extends Page {
 	}
 
 	private boolean valid() {
-		return orbList.getSelectedIndex() != -1 && orbs.size() != 0;
+		return orbList.getSelectedIndex() != -1 && !orbs.isEmpty();
 	}
 
 	private void updateOrbConsideringAbilities() {
@@ -584,7 +594,7 @@ public class LevelEditPage extends Page {
 
 		List<Integer> possibleTraits = new ArrayList<>();
 
-		if(f.orbs.getSlots() == -1) {
+		if(f.unit.orbs.getSlots() == -1) {
 			for(Form form : f.unit.forms) {
 				MaskUnit mu;
 
