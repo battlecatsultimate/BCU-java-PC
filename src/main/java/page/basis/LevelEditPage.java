@@ -8,7 +8,6 @@ import common.util.Data;
 import common.util.unit.Form;
 import common.util.unit.Level;
 import common.util.unit.Trait;
-import main.Opts;
 import page.JBTN;
 import page.JTF;
 import page.MainLocale;
@@ -23,6 +22,9 @@ import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static common.util.Data.ORB_ABILITY_TOT;
+import static common.util.Data.ORB_TOT;
 
 public class LevelEditPage extends Page {
 
@@ -39,13 +41,10 @@ public class LevelEditPage extends Page {
 	private final JTF levels = new JTF();
 	private final JList<String> orbList = new JList<>();
 	private final JScrollPane orbScroll = new JScrollPane(orbList);
-	private final JBTN add = new JBTN(0, "add");
-	private final JBTN rem = new JBTN(0, "rem");
-	private final JBTN clear = new JBTN(0, "clear");
 	private final OrbBox orbb = new OrbBox(new int[] {});
 	private final JComboBox<String> type = new JComboBox<>();
-	private final JComboBox<String> trait = new JComboBox<>();
 	private final JComboBox<String> grade = new JComboBox<>();
+	private final JComboBox<String> trait = new JComboBox<>();
 
 	private List<Integer> typeData = new ArrayList<>();
 	private List<Integer> traitData = new ArrayList<>();
@@ -89,16 +88,13 @@ public class LevelEditPage extends Page {
 		setBounds(0, 0, x, y);
 
 		set(bck, x, y, 0, 0, 200, 50);
-		set(pcoin, x, y, 50, 100, 1200, 50);
-		set(levels, x, y, 50, 150, 700, 50);
-		set(orbScroll, x, y, 50, 225, 350, 600);
-		set(add, x, y, 50, 875, 175, 50);
-		set(rem, x, y, 225, 875, 175, 50);
-		set(orbb, x, y, 450, 425, 200, 200);
-		set(type, x, y, 700, 425, 200, 50);
-		set(trait, x, y, 700, 500, 200, 50);
-		set(grade, x, y, 700, 575, 200, 50);
-		set(clear, x, y, 50, 975, 350, 50);
+		set(pcoin, x, y, 450, 150, 1200, 50);
+		set(levels, x, y, 450, 200, 700, 50);
+		set(orbScroll, x, y, 450, 275, 350, 600);
+		set(orbb, x, y, 850, 475, 200, 200);
+		set(type, x, y, 1100, 475, 200, 50);
+		set(grade, x, y, 1100, 550, 200, 50);
+		set(trait, x, y, 1100, 625, 200, 50);
 	}
 
 	@Override
@@ -130,7 +126,6 @@ public class LevelEditPage extends Page {
 				return;
 			}
 
-			rem.setEnabled(valid());
 			type.setEnabled(valid());
 			trait.setEnabled(valid());
 			grade.setEnabled(valid());
@@ -142,28 +137,6 @@ public class LevelEditPage extends Page {
 			} else {
 				orbb.changeOrb(new int[] {});
 			}
-		});
-
-		rem.setLnr(x -> {
-			int index = orbList.getSelectedIndex();
-
-			if (index != -1 && index < orbs.size()) {
-				orbs.remove(index);
-			}
-
-			orbList.setListData(generateNames());
-
-			setLvOrb(lv, generateOrb());
-		});
-
-		add.setLnr(x -> {
-			int[] data = { 0, CommonStatic.getBCAssets().DATA.get(0), 0 };
-
-			orbs.add(data);
-
-			orbList.setListData(generateNames());
-
-			setLvOrb(lv, generateOrb());
 		});
 
 		type.addActionListener(arg0 -> {
@@ -237,24 +210,6 @@ public class LevelEditPage extends Page {
 				setLvOrb(lv, generateOrb());
 			}
 		});
-
-		clear.setLnr(x -> {
-			if (!Opts.conf())
-				return;
-
-			if (f.unit.orbs == null)
-				return;
-
-			if (f.unit.orbs.getSlots() != -1) {
-				orbs.replaceAll(ignored -> new int[]{});
-			} else {
-				orbs.clear();
-			}
-
-			orbb.changeOrb(new int[] {});
-			setLvOrb(lv, generateOrb());
-			orbList.setListData(generateNames());
-		});
 	}
 
 	private String[] generateNames() {
@@ -265,9 +220,11 @@ public class LevelEditPage extends Page {
 			int[] o = orbs.get(i);
 
 			if (o.length != 0) {
-				res[i] = "Orb" + (i + 1) + " - {" + getType(o[0]) + ", " + getTrait(o[1]) + ", " + getGrade(o[2]) + "}";
+				res[i] = i + 1 + ": Grade " + getGrade(o[2]) + " " + getType(o[0]);
+				if (o[1] != 0)
+					res[i] += " vs " + getTrait(o[1]);
 			} else {
-				res[i] = "Orb" + (i + 1) + " - None";
+				res[i] = (i + 1) + ": None";
 			}
 
 			if (maxOrbSize <= i)
@@ -324,7 +281,7 @@ public class LevelEditPage extends Page {
 	}
 
 	private String getType(int type) {
-		if (type <= 4) {
+		if (type <= ORB_TOT + ORB_ABILITY_TOT) {
 			return MainLocale.getLoc(MainLocale.UTIL, "ot"+type);
 		} else {
 			return "Unknown Type " + type;
@@ -342,14 +299,7 @@ public class LevelEditPage extends Page {
 			add(type);
 			add(trait);
 			add(grade);
-
-			if (f.unit.orbs.getSlots() == -1) {
-				add(add);
-				add(rem);
-			}
 		}
-
-		add(clear);
 
 		String[] strs = UtilPC.lvText(f, lu().getLv(f));
 
@@ -368,7 +318,6 @@ public class LevelEditPage extends Page {
 				return jl;
 			}
 		});
-		rem.setEnabled(valid());
 		type.setEnabled(valid());
 		trait.setEnabled(valid());
 		grade.setEnabled(valid());
@@ -441,7 +390,7 @@ public class LevelEditPage extends Page {
 			typeData.add(Data.ORB_RESISTANT);
 		}
 
-		for (int i = 0; i < Data.ORB_ABILITY_TOT; i++) {
+		for (int i = 0; i < ORB_ABILITY_TOT; i++) {
 			typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot" + (5 + i)));
 			typeData.add(i + 5);
 		}
@@ -466,9 +415,6 @@ public class LevelEditPage extends Page {
 
 			return;
 		}
-
-		trait.setEnabled(true);
-		grade.setEnabled(true);
 
 		String[] traits;
 		String[] grades;
@@ -552,6 +498,8 @@ public class LevelEditPage extends Page {
 		type.setModel(new DefaultComboBoxModel<>(typeText.toArray(new String[0])));
 		trait.setModel(new DefaultComboBoxModel<>(traits));
 		grade.setModel(new DefaultComboBoxModel<>(grades));
+		trait.setEnabled(traitData.get(0) != 0);
+		grade.setEnabled(true);
 
 		if (f.unit.orbs.getSlots() != -1) {
 			type.setSelectedIndex(typeData.indexOf(data[0]) + 1);
