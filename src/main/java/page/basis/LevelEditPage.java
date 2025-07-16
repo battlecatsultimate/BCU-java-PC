@@ -8,6 +8,7 @@ import common.util.Data;
 import common.util.unit.Form;
 import common.util.unit.Level;
 import common.util.unit.Trait;
+import main.MainBCU;
 import page.JBTN;
 import page.JTF;
 import page.MainLocale;
@@ -318,8 +319,10 @@ public class LevelEditPage extends Page {
 			@Override
 			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 				JLabel jl = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-				if (CommonStatic.getConfig().realLevel)
-					jl.setEnabled(f.checkOrb(lv.getLv() + lv.getPlusLv(), index));
+				if (!f.checkOrb(lv.getLv() + lv.getPlusLv(), index)) {
+					jl.setText("<html><strike>" + jl.getText() + "<html><strike>");
+					jl.setForeground(isSelected ? Color.WHITE : !MainBCU.light ? Color.GRAY : Color.RED);
+				}
 				return jl;
 			}
 		});
