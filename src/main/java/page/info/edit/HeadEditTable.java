@@ -11,6 +11,7 @@ import common.util.stage.CastleImg;
 import common.util.stage.CastleList;
 import common.util.stage.Music;
 import common.util.stage.Stage;
+import main.Opts;
 import org.jcodec.common.tools.MathUtil;
 import page.*;
 import page.view.BGViewPage;
@@ -25,6 +26,8 @@ import java.util.Arrays;
 class HeadEditTable extends Page {
 
 	private static final long serialVersionUID = 1L;
+
+	private static int lastLimit = 0;
 
 	private final JL hea = new JL(MainLocale.INFO, "ht00");
 	private final JL len = new JL(MainLocale.INFO, "ht01");
@@ -316,16 +319,19 @@ class HeadEditTable extends Page {
 				sta.timeLimit = val;
 		}
 		if (jtf == jlen) {
-			if (val > 8000)
-				val = 8000;
-			if (val < 2000)
-				val = 2000;
+			if (val > 100000)
+				val = 100000;
+			if (val < 1600)
+				val = 1600;
 			sta.len = val;
 		}
 		if (jtf == jmax) {
-			if (val <= 0 || val > 50)
+			if (val <= 0 || val > 200)
 				return;
 			sta.max = val;
+			if (val > 80 && sta.max > lastLimit)
+				Opts.pop("Excessive enemy spawns will cause performance problems","Performance warning");
+			lastLimit = sta.max;
 		}
 		for (int i = 0; i < 4; i++)
 			if (jtf == star[i]) {

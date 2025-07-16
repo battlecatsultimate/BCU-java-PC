@@ -4,6 +4,7 @@ import common.CommonStatic;
 import common.pack.PackData.UserPack;
 import common.util.stage.Limit;
 import common.util.stage.StageLimit;
+import main.Opts;
 import page.*;
 import page.pack.CharaGroupPage;
 import page.pack.LvRestrictPage;
@@ -15,6 +16,8 @@ import java.awt.event.FocusEvent;
 public class LimitTable extends Page {
 
 	private static final long serialVersionUID = 1L;
+
+	private static int lastLimit = 0;
 
 	private static String[] limits, rarity;
 
@@ -192,9 +195,12 @@ public class LimitTable extends Page {
 			lim.min = val;
 		}
 		if (jtf == num) {
-			if (val < 0 || val > 50)
+			if (val < 0 || val > 200)
 				return;
 			lim.num = val;
+			if (val > 80 && lim.num > lastLimit)
+				Opts.pop("Excessive unit spawns will cause performance problems","Performance warning");
+			lastLimit = lim.num;
 		}
 	}
 
