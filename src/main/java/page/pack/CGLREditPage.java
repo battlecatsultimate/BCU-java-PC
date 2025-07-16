@@ -14,6 +14,7 @@ import page.MainLocale;
 import page.Page;
 import page.info.filter.UnitFindPage;
 import page.support.UnitLCR;
+import utilpc.UtilPC;
 
 import javax.swing.*;
 import java.awt.event.FocusAdapter;
@@ -370,15 +371,7 @@ public class CGLREditPage extends Page {
 	}
 
 	private void set(JTF jtf, String str, int[] lvs) {
-		if (lvs != null) {
-			str += "Lv." + lvs[0] + " {";
-			StringBuilder strBuilder = new StringBuilder(str);
-			for (int i = 1; i < 5; i++)
-				strBuilder.append(lvs[i]).append(",");
-			str = strBuilder.toString();
-			str += lvs[5] + "}";
-		}
-		jtf.setText(str);
+		jtf.setText(UtilPC.lvText(lvs));
 	}
 
 	private void updateCG() {
