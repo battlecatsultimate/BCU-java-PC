@@ -76,6 +76,7 @@ public class StageEditPage extends Page {
 	private final HeadEditTable hinf;
 	private final LimitTable linf;
 	private final StageLimitTable sinf;
+	private final JScrollPane jssl;
 
 	private final MapColc mc;
 	private final String pack;
@@ -94,6 +95,7 @@ public class StageEditPage extends Page {
 		hinf = new HeadEditTable(this, pac);
 		linf = new LimitTable(this, pac);
 		sinf = new StageLimitTable(this, pac);
+		jssl = new JScrollPane(sinf);
 		jlsm.setListData(mc, mc.maps);
 		efp = new AbEnemyFindPage(getThis(), pac.desc.id, pac.desc.dependency.toArray(new String[0]));
 		ini();
@@ -164,11 +166,11 @@ public class StageEditPage extends Page {
 		if (headEdit == 0) {
 			set(hinf, x, y, 900, 50, 1400, 200);
 			set(linf, x, y, 900, 250, 1400, 100);
-			set(sinf, x, y, 900, 50, 0, 0);
+			set(jssl, x, y, 900, 50, 0, 0);
 		} else if (headEdit == 1) {
 			set(hinf, x, y, 900, 50, 0, 0);
 			set(linf, x, y, 900, 50, 0, 0);
-			set(sinf, x, y, 900, 50, 1400, 350);
+			set(jssl, x, y, 900, 50, 1400, 350);
 		}
 
 		set(addl, x, y, 900, subY + 100, 200, 50);
@@ -198,6 +200,11 @@ public class StageEditPage extends Page {
 		set(enam, x, y, 600, 50, 300, 50);
 		set(jspe, x, y, 600, 100, 300, 1200);
 		jt.setRowHeight(size(x, y, 50));
+		sinf.resized(x, y);
+		sinf.setPreferredSize(size(x, y, sinf.getPWidth(), sinf.getPHeight()).toDimension());
+		jssl.getHorizontalScrollBar().setUnitIncrement(25);
+		jssl.getVerticalScrollBar().setUnitIncrement(25);
+		jssl.revalidate();
 	}
 
 	private void addListeners$0() {
@@ -345,7 +352,6 @@ public class StageEditPage extends Page {
 		});
 
 		adds.setLnr(jlst::addItem);
-
 		rems.setLnr(jlst::deleteItem);
 
 		data.setLnr(x -> {
@@ -393,7 +399,7 @@ public class StageEditPage extends Page {
 		add(jspjt);
 		add(hinf);
 		add(linf);
-		add(sinf);
+		add(jssl);
 		add(strt);
 		add(jspsm);
 		add(jspst);
@@ -415,6 +421,7 @@ public class StageEditPage extends Page {
 		setAA(null);
 		setBA(null);
 		jle.setCellRenderer(new AnimLCR());
+		assignSubPage(sinf);
 		addListeners$0();
 		addListeners$1();
 		addListeners$2();

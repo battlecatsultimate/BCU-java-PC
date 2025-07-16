@@ -173,6 +173,27 @@ public class UtilPC {
 		return new Dimension(a * x / 2300, v * y / 1300);
 	}
 
+	public static String lvText(int[] lvs) {
+		if (lvs == null)
+			return "";
+		if (lvs.length == 0)
+			return "";
+		else if (lvs.length == 1)
+			return "Lv. " + lvs[0];
+		else if (lvs.length == 2)
+			return "Lv. " + lvs[0] + " + " + lvs[1];
+
+		StringBuilder str = new StringBuilder("Lv." + lvs[0] + " + " + lvs[1] + ", {");
+		for (int i = 2; i < lvs.length; i++) {
+			str.append(lvs[i]);
+			if (i + 1 != lvs.length)
+				str.append(", ");
+		}
+		str.append("}");
+
+		return str.toString();
+	}
+
 	public static String[] lvText(Form f, Level lv) {
 		PCoin pc = f.du.getPCoin();
 
