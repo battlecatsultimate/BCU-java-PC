@@ -461,7 +461,7 @@ public interface BattleBox {
 						g.colRect((x + dw + 2f), (y + ih - dh * 2) + 2f, (iw - dw * 2 - xw) - 4, dh - 4, 0, 255, 255, -1);
 					} else if (canPlay && !sb.summonerSummoned[i][j]) {
 						Res.getCost(pri / 100, !b, setSym(g, hr, x + iw, y + ih, 3));
-						if (sb.elu.tick[i][j] == 1) { // todo: handle non-dupe supporting orbs
+						if (sb.elu.tick[i][j] == 1) {
 							int[][] orbs = sb.b.lu.map.get(f.unit.id).getOrbs();
 							float orbX = 0;
                             for (int[] orb : orbs) {
@@ -480,6 +480,16 @@ public interface BattleBox {
                                         y + 2f - (ballH / 3f) + (ballH - iconH) / 2f, iconW, iconH);
                                 orbX += ballW;
                             }
+							if (sb.time - sb.frameOffCd[i][j] < 10) {
+								float diff = sb.time - sb.frameOffCd[i][j]; // first frame: 100%
+
+								g.setComposite(FakeGraphics.BLEND, (int) Math.max(0, 256 * (1f - 0.1f * diff)), 1);
+								FakeImage glowBox = aux.battle[1][22].getImg();
+								float glowW = glowBox.getWidth() * hr * (1f + Math.min(0.12f, 0.02f * diff));
+								float glowH = glowBox.getHeight() * hr * (1f + Math.min(0.12f, 0.02f * diff));
+								g.drawImage(glowBox, x + (iw - glowW) / 2f, y + (ih - glowH) / 2f, glowW, glowH);
+								g.setComposite(FakeGraphics.DEF, 0, 0);
+							}
 						}
 					}
 					if (sb.maxRarityNum[f.unit.rarity] != -1) {
@@ -606,13 +616,10 @@ public interface BattleBox {
 			FakeImage cann = aux.battle[1][21].getImg();
 
 			float rang = sb.ubase.pos + 100 + 56 * 4;
-
-			for(int i = 0; i < sb.b.t().tech[Data.LV_CRG]+2; i++) {
+			for(int i = 0; i < sb.b.t().tech[Data.LV_CRG]+2; i++)
 				rang -= 405;
-			}
 
 			rang = Math.max(rang, sb.ebase.pos * ratio - off / 2f);
-
 			rang = getX(rang);
 
 			float rw = range.getWidth() * 0.75f * bf.sb.siz;
