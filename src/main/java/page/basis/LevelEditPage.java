@@ -213,7 +213,6 @@ public class LevelEditPage extends Page {
 	}
 
 	private String[] generateNames() {
-		int maxOrbSize = f.unit.orbs.getSlots(f.fid, lv.getLv() + lv.getPlusLv());
 		String[] res = new String[orbs.size()];
 
 		for (int i = 0; i < res.length; i++) {
@@ -227,8 +226,13 @@ public class LevelEditPage extends Page {
 				res[i] = (i + 1) + ": None";
 			}
 
-			if (CommonStatic.getConfig().realLevel && maxOrbSize <= i)
-				res[i] += " (Req: Lv. " + (f.unit.orbs.getLimits()[i] == 1 ? "60" : "?") + ")";
+			if (!f.checkOrb(lv.getLv() + lv.getPlusLv(), i)) {
+				int lim = f.unit.orbs.getLimits()[i];
+				if (lim == 0)
+					res[i] += " (Req: True Form)";
+				if (lim == 1)
+					res[i] += " (Req: Lv. 60)";
+			}
 		}
 
 		return res;
@@ -315,7 +319,7 @@ public class LevelEditPage extends Page {
 			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 				JLabel jl = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 				if (CommonStatic.getConfig().realLevel)
-					jl.setEnabled(index < f.unit.orbs.getSlots(f.fid, lv.getLv() + lv.getPlusLv()));
+					jl.setEnabled(f.checkOrb(lv.getLv() + lv.getPlusLv(), index));
 				return jl;
 			}
 		});
