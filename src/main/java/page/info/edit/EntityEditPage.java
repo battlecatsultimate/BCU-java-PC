@@ -770,8 +770,6 @@ public abstract class EntityEditPage extends Page implements SwingEditor.EditCtr
 					ce.width = v[0];
 				}
 				if (jtf == ftb) {
-					if (v[0] < 0)
-						v[0] = 0;
 					ce.tba = v[0];
 				}
 				if (jtf == fbs) {
