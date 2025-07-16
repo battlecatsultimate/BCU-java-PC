@@ -8,6 +8,7 @@ import common.battle.StageBasis;
 import common.battle.attack.ContAb;
 import common.battle.attack.ContWaveAb;
 import common.battle.data.DataEnemy;
+import common.battle.data.Orb;
 import common.battle.entity.*;
 import common.pack.Identifier;
 import common.system.P;
@@ -460,6 +461,26 @@ public interface BattleBox {
 						g.colRect((x + dw + 2f), (y + ih - dh * 2) + 2f, (iw - dw * 2 - xw) - 4, dh - 4, 0, 255, 255, -1);
 					} else if (canPlay && !sb.summonerSummoned[i][j]) {
 						Res.getCost(pri / 100, !b, setSym(g, hr, x + iw, y + ih, 3));
+						if (sb.elu.tick[i][j] == 1) { // todo: handle non-dupe supporting orbs
+							int[][] orbs = sb.b.lu.map.get(f.unit.id).getOrbs();
+							float orbX = 0;
+                            for (int[] orb : orbs) {
+                                if (orb[0] < Data.ORB_DEATH_SURGE)
+                                    continue;
+                                FakeImage orbBall = aux.TRAITS[1][Orb.reverse(orb[1])];
+                                FakeImage orbIcon = aux.TYPES[1][orb[0]];
+                                float ballW = orbBall.getWidth() * hr;
+                                float iconW = orbIcon.getWidth() * hr;
+                                float ballH = orbBall.getHeight() * hr;
+                                float iconH = orbIcon.getHeight() * hr;
+                                g.setRenderingHint(3, 2);
+                                g.drawImage(orbBall, x - 4f + orbX,
+                                        y + 2f - (ballH / 3f), ballW, ballH);
+                                g.drawImage(orbIcon, x - 4f + (orbX) + (ballW - iconW) / 2f,
+                                        y + 2f - (ballH / 3f) + (ballH - iconH) / 2f, iconW, iconH);
+                                orbX += ballW;
+                            }
+						}
 					}
 					if (sb.maxRarityNum[f.unit.rarity] != -1) {
 						Res.getRarity(f.unit.rarity, setSym(g, hr, x + iw * 1.1f, y + ih / 4f, 3));
