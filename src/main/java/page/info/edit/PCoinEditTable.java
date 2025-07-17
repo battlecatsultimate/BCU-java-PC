@@ -43,7 +43,7 @@ public class PCoinEditTable extends Page {
     private static class NPList extends JList<TalentInfo> {
         private static final long serialVersionUID = 1L;
 
-        protected static int[] ints = IntStream.rangeClosed(1, 65)
+        protected static int[] ints = IntStream.rangeClosed(1, 67)
                 .filter(v -> v != 29 && v != 42 && v != 43).toArray(); // TODO: see if auto is possible
 
         protected NPList(boolean edit) {
