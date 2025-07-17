@@ -131,11 +131,11 @@ public class UnitInfoTable extends Page {
 		ArrayList<Trait> trs = ef.du.getTraits();
 		trs.sort(Comparator.comparingInt(t -> t.id.id));
 		trs.sort(Comparator.comparing(t -> t.id.pack));
-		trs.sort(Comparator.comparing(t -> !t.BCTrait));
+		trs.sort(Comparator.comparing(t -> !t.id.pack.equals("000000")));
 		String[] traits = new String[trs.size()];
 		for (int i = 0; i < trs.size(); i++) {
 			Trait trait = ef.du.getTraits().get(i);
-			if (trait.BCTrait)
+			if (trait.id.pack.equals("000000"))
 				traits[i] = Interpret.TRAIT[trait.id.id];
 			else
 				traits[i] = trait.name;

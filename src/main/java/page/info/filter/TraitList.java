@@ -31,7 +31,7 @@ public class TraitList extends JList<Trait> {
             public Component getListCellRendererComponent(JList<?> l, Object o, int ind, boolean s, boolean f) {
                 JLabel jl = (JLabel) super.getListCellRendererComponent(l, o, ind, s, f);
                 Trait trait = (Trait)o;
-                if (trait.BCTrait) {
+                if (trait.id.pack.equals("000000")) {
                     jl.setText(Interpret.TRAIT[trait.id.id]);
                     jl.setIcon(UtilPC.createIcon(3, trait.id.id));
                 } else {

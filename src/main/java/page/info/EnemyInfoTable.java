@@ -176,11 +176,11 @@ public class EnemyInfoTable extends Page {
 		ArrayList<Trait> trs = e.de.getTraits();
 		trs.sort(Comparator.comparingInt(t -> t.id.id));
 		trs.sort(Comparator.comparing(t -> t.id.pack));
-		trs.sort(Comparator.comparing(t -> !t.BCTrait));
+		trs.sort(Comparator.comparing(t -> !t.id.pack.equals("000000")));
 		String[] TraitBox = new String[trs.size()];
 		for (int i = 0; i < trs.size(); i++) {
 			Trait trait = e.de.getTraits().get(i);
-			if (trait.BCTrait)
+			if (trait.id.pack.equals("000000"))
 				TraitBox[i] = Interpret.TRAIT[trait.id.id];
 			else
 				TraitBox[i] = trait.name;

@@ -445,7 +445,7 @@ public class LevelEditPage extends Page {
 						}
 
 						for(Trait t : mu.getTraits()) {
-							if(t.BCTrait && !traitList.contains(t))
+							if(t.id.pack.equals("000000") && !traitList.contains(t))
 								traitList.add(t);
 						}
 					}
@@ -459,7 +459,7 @@ public class LevelEditPage extends Page {
 					}
 
 					for(Trait t : mu.getTraits()) {
-						if(t.BCTrait && !traitList.contains(t))
+						if(t.id.pack.equals("000000") && !traitList.contains(t))
 							traitList.add(t);
 					}
 				}
@@ -567,7 +567,7 @@ public class LevelEditPage extends Page {
 				res |= (mu.getAbi() & Data.AB_RESIST) != 0;
 
 				for(Trait t : mu.getTraits()) {
-					if(!t.BCTrait)
+					if(!t.id.pack.equals("000000"))
 						continue;
 
 					int bitMask = 1 << t.id.id;
@@ -590,7 +590,7 @@ public class LevelEditPage extends Page {
 			res = (mu.getAbi() & Data.AB_RESIST) != 0;
 
 			for(Trait t : mu.getTraits()) {
-				if(!t.BCTrait)
+				if(!t.id.pack.equals("000000"))
 					continue;
 
 				int bitMask = 1 << t.id.id;

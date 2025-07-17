@@ -320,7 +320,7 @@ public abstract class EntityEditPage extends Page implements SwingEditor.EditCtr
 			Enemy e = efp.getSelected();
 			ce.importData(e.de);
 			ce.traits.removeIf(t -> {
-				if(t.BCTrait)
+				if(t.id.pack.equals("000000"))
 					return false;
 
 				return p == null || !p.desc.dependency.contains(t.id.pack);
@@ -331,12 +331,7 @@ public abstract class EntityEditPage extends Page implements SwingEditor.EditCtr
 				&& Opts.conf("do you want to overwrite stats? This operation cannot be undone")) {
 			Form f = ufp.getForm();
 			ce.importData(f.du);
-			ce.traits.removeIf(t -> {
-				if(t.BCTrait)
-					return false;
-
-				return p == null || !p.desc.dependency.contains(t.id.pack);
-			});
+			ce.traits.removeIf(t -> !t.id.pack.equals("000000") || p == null || !p.desc.dependency.contains(t.id.pack));
 			setData(ce);
 		}
 		if (sup != null && editor != null) {

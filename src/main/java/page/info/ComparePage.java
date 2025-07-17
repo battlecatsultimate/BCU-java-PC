@@ -651,11 +651,11 @@ public class ComparePage extends Page {
             ArrayList<Trait> trs = m.getTraits();
             trs.sort(Comparator.comparingInt(t -> t.id.id));
             trs.sort(Comparator.comparing(t -> t.id.pack));
-            trs.sort(Comparator.comparing(t -> !t.BCTrait));
+            trs.sort(Comparator.comparing(t -> !t.id.pack.equals("000000")));
             String[] TraitBox = new String[trs.size()];
             for (int t = 0; t < trs.size(); t++) {
                 Trait trait = m.getTraits().get(t);
-                if (trait.BCTrait)
+                if (trait.id.pack.equals("000000"))
                     TraitBox[t] = Interpret.TRAIT[trait.id.id];
                 else
                     TraitBox[t] = trait.name;
