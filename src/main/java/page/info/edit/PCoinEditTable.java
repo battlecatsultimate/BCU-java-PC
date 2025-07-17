@@ -2,6 +2,7 @@ package page.info.edit;
 
 import common.CommonStatic;
 import common.battle.data.CustomUnit;
+import common.battle.data.PCoin;
 import common.pack.Identifier;
 import common.pack.PackData;
 import common.pack.UserProfile;
@@ -43,14 +44,15 @@ public class PCoinEditTable extends Page {
     private static class NPList extends JList<TalentInfo> {
         private static final long serialVersionUID = 1L;
 
-        protected static int[] ints = IntStream.rangeClosed(1, 67)
-                .filter(v -> v != 29 && v != 42 && v != 43).toArray(); // TODO: see if auto is possible
+        protected static int[] ints; // TODO: see if auto is possible
 
         protected NPList(boolean edit) {
             if (MainBCU.nimbus)
                 setSelectionBackground(MainBCU.light ? Theme.LIGHT.NIMBUS_SELECT_BG : Theme.DARK.NIMBUS_SELECT_BG);
             setEnabled(edit);
             setListIcons();
+            ints = IntStream.rangeClosed(PCoin.PCOIN_MIN, PCoin.PCOIN_MAX)
+                    .filter(v -> v != 29 && v != 42 && v != 43).toArray();
         }
         protected void setListIcons() {
             setCellRenderer(new DefaultListCellRenderer() {
