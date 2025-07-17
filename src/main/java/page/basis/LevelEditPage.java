@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static common.util.Data.ORB_ABILITY_TOT;
 import static common.util.Data.ORB_TOT;
 
 public class LevelEditPage extends Page {
@@ -286,7 +285,7 @@ public class LevelEditPage extends Page {
 	}
 
 	private String getType(int type) {
-		if (type <= ORB_TOT + ORB_ABILITY_TOT) {
+		if (type < ORB_TOT) {
 			return MainLocale.getLoc(MainLocale.UTIL, "ot"+type);
 		} else {
 			return "Unknown Type " + type;
@@ -398,9 +397,9 @@ public class LevelEditPage extends Page {
 			typeData.add(Data.ORB_RESISTANT);
 		}
 
-		for (int i = 0; i < ORB_ABILITY_TOT; i++) {
-			typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot" + (5 + i)));
-			typeData.add(i + 5);
+		for (int i = 5; i < ORB_TOT; i++) {
+			typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot" + i));
+			typeData.add(i);
 		}
 
 		if (f.unit.orbs.getSlots() != -1 && data.length == 0) {
