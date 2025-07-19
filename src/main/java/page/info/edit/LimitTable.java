@@ -35,12 +35,12 @@ public class LimitTable extends Page {
 	private final JTF max = new JTF();
 	private final JTF jcg = new JTF();
 	private final JTF jlr = new JTF();
-	private final JBTN cgb = new JBTN(1, "ht15");
-	private final JBTN lrb = new JBTN(1, "ht16");
-	private final JTG one = new JTG(1, "ht12");
-	private final JTG rich = new JTG(1, "ht17");
-	private final JTG snip = new JTG(1, "ht18");
-	private final JL rar = new JL(1, "ht10");
+	private final JBTN cgb = new JBTN(MainLocale.INFO, "ht15");
+	private final JBTN lrb = new JBTN(MainLocale.INFO, "ht16");
+	private final JTG one = new JTG(MainLocale.INFO, "ht12");
+	private final JTG rich = new JTG(MainLocale.INFO, "ht17");
+	private final JTG snip = new JTG(MainLocale.INFO, "ht18");
+	private final JL rar = new JL(MainLocale.INFO, "ht10");
 	private final JTG[] brars = new JTG[6];
 
 	private final UserPack pac;
