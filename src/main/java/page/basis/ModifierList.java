@@ -26,7 +26,7 @@ public class ModifierList extends JList<Object> {
         ComboListTable.redefine();
     }
 
-    public ModifierList() {
+    public ModifierList() { // todo: include orb modifiers
         super();
         setCellRenderer(new DefaultListCellRenderer() {
             private static final long serialVersionUID = 1L;

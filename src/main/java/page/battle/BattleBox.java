@@ -8,6 +8,7 @@ import common.battle.StageBasis;
 import common.battle.attack.ContAb;
 import common.battle.attack.ContWaveAb;
 import common.battle.data.DataEnemy;
+import common.battle.data.OrbInfo;
 import common.battle.entity.*;
 import common.pack.Identifier;
 import common.system.P;
@@ -39,6 +40,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public interface BattleBox {
 
@@ -401,8 +404,9 @@ public interface BattleBox {
 						continue;
 
 					int pri = sb.elu.price[i][j];
+					boolean canPlay = pri != -1 && sb.maxCatSpawns != 0 && (sb.maxRarityNum[f.unit.rarity] == -1 || sb.entityCountRar(f.unit.rarity) < sb.maxRarityNum[f.unit.rarity] - f.du.getWill());
 
-					if (pri == -1)
+					if (!canPlay)
 						g.colRect(x, y, iw, ih, 255, 0, 0, 100);
 
 					int cool = sb.elu.cool[i][j];
@@ -411,12 +415,12 @@ public interface BattleBox {
 
 					if (b && !sb.summonerSummoned[i][j])
 						g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 0, 0, 0, 100);
-
 					if (sb.locks[i][j])
 						g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 0, 255, 0, 100);
 
 					if (sb.summonerSummoned[i][j]) {
-						if (sb.spiritSummoned[i][j] || (sb.summoner[i][j] != null && sb.summoner[i][j].anim.dead >= 0)) {
+						List<Entity> summoners = sb.findEntitiesOf(i, j).stream().filter(e -> e.anim.dead >= 0).collect(Collectors.toList());
+						if (sb.spiritSummoned[i][j] || !summoners.isEmpty()) {
 							g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 64, 0, 0, 160);
 						} else {
 							if (sb.spiritEmphasizeCount[i][j] % 2 == 0) {
@@ -455,8 +459,41 @@ public interface BattleBox {
 
 						g.colRect(x + iw - dw - xw2, y + ih - dh * 2, xw2, dh, 0, 0, 0, -1);
 						g.colRect((x + dw + 2f), (y + ih - dh * 2) + 2f, (iw - dw * 2 - xw) - 4, dh - 4, 0, 255, 255, -1);
-					} else if (pri != -1 && !sb.summonerSummoned[i][j]) {
+					} else if (canPlay && !sb.summonerSummoned[i][j]) {
 						Res.getCost(pri / 100, !b, setSym(g, hr, x + iw, y + ih, 3));
+						if (sb.elu.tick[i][j] == 1) {
+							int[][] orbs = sb.b.lu.map.get(f.unit.id).getOrbs();
+							float orbX = 0;
+                            for (int[] orb : orbs) {
+                                if (orb[0] < Data.ORB_DEATH_SURGE)
+                                    continue;
+                                FakeImage orbBall = aux.TRAITS[1][OrbInfo.reverse(orb[1])];
+                                FakeImage orbIcon = aux.TYPES[1][orb[0]];
+                                float ballW = orbBall.getWidth() * hr;
+                                float iconW = orbIcon.getWidth() * hr;
+                                float ballH = orbBall.getHeight() * hr;
+                                float iconH = orbIcon.getHeight() * hr;
+                                g.setRenderingHint(3, 2);
+                                g.drawImage(orbBall, x - 4f + orbX,
+                                        y + 2f - (ballH / 3f), ballW, ballH);
+                                g.drawImage(orbIcon, x - 4f + (orbX) + (ballW - iconW) / 2f,
+                                        y + 2f - (ballH / 3f) + (ballH - iconH) / 2f, iconW, iconH);
+                                orbX += ballW;
+                            }
+							if (sb.time - sb.frameOffCd[i][j] < 10) {
+								float diff = sb.time - sb.frameOffCd[i][j]; // first frame: 100%
+
+								g.setComposite(FakeGraphics.BLEND, (int) Math.max(0, 256 * (1f - 0.1f * diff)), 1);
+								FakeImage glowBox = aux.battle[1][22].getImg();
+								float glowW = glowBox.getWidth() * hr * (1f + Math.min(0.12f, 0.02f * diff));
+								float glowH = glowBox.getHeight() * hr * (1f + Math.min(0.12f, 0.02f * diff));
+								g.drawImage(glowBox, x + (iw - glowW) / 2f, y + (ih - glowH) / 2f, glowW, glowH);
+								g.setComposite(FakeGraphics.DEF, 0, 0);
+							}
+						}
+					}
+					if (sb.maxRarityNum[f.unit.rarity] != -1) {
+						Res.getRarity(f.unit.rarity, setSym(g, hr, x + iw * 1.1f, y + ih / 4f, 3));
 					}
 				}
 			}
@@ -526,7 +563,8 @@ public interface BattleBox {
 					g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 0, 255, 0, 100);
 
 				if (sb.summonerSummoned[index][i]) {
-					if (sb.spiritSummoned[index][i] || (sb.summoner[index][i] != null && sb.summoner[index][i].anim.dead >= 0)) {
+					List<Entity> summoners = sb.findEntitiesOf(index, i).stream().filter(e -> e.anim.dead >= 0).collect(Collectors.toList());
+					if (sb.spiritSummoned[index][i] || !summoners.isEmpty()) {
 						g.colRect((int) (x - (imw - iw) / 2.0), (int) (y - (imh - ih) / 2.0), imw, imh, 64, 0, 0, 160);
 					} else {
 						if (sb.spiritEmphasizeCount[index][i] % 2 == 0) {
@@ -578,13 +616,10 @@ public interface BattleBox {
 			FakeImage cann = aux.battle[1][21].getImg();
 
 			float rang = sb.ubase.pos + 100 + 56 * 4;
-
-			for(int i = 0; i < sb.b.t().tech[Data.LV_CRG]+2; i++) {
+			for(int i = 0; i < sb.b.t().tech[Data.LV_CRG]+2; i++)
 				rang -= 405;
-			}
 
 			rang = Math.max(rang, sb.ebase.pos * ratio - off / 2f);
-
 			rang = getX(rang);
 
 			float rw = range.getWidth() * 0.75f * bf.sb.siz;
@@ -963,6 +998,9 @@ public interface BattleBox {
 					drawTime(g, snam.img.getHeight() * 0.9f);
 			} else if(bf.sb.st.timeLimit != 0)
 				drawTime(g, 0);
+
+			if (bf.sb.maxCatSpawns != -1)
+				drawMaxSpawn(g);
 		}
 
 		private void drawTime(FakeGraphics g, float nameheight) {
@@ -1030,6 +1068,27 @@ public interface BattleBox {
 				}
 			}
 
+			P.delete(p);
+		}
+
+		protected synchronized void drawMaxSpawn(FakeGraphics gra) {
+			P p = P.newP(box.getWidth() / 2.1f, box.getHeight() * 0.01f);
+			float ratio = box.getHeight() * 0.1f / aux.timer[0].getImg().getHeight() * 0.8f;
+
+			FakeImage current = aux.maxcat[10].getImg();
+			FakeImage descriptor = aux.maxcat[11].getImg();
+			String maxSpawns = String.valueOf(sb.maxCatSpawns);
+
+			p.x -= maxSpawns.length() * aux.maxcat[0].getImg().getWidth() * ratio;
+
+			gra.drawImage(current, p.x, p.y + 10f * ratio, current.getWidth() * ratio, current.getHeight() * ratio);
+			int nWidth = 0;
+			for (int i = 0; i < maxSpawns.length(); i++) {
+				FakeImage n = aux.maxcat[maxSpawns.charAt(i) - '0'].getImg();
+				gra.drawImage(n, p.x + (4f + current.getWidth() + n.getWidth() * i) * ratio, p.y, n.getWidth() * ratio, n.getHeight() * ratio);
+				nWidth += n.getWidth();
+			}
+			gra.drawImage(descriptor, p.x + (7f + current.getWidth() + nWidth) * ratio, p.y + 10f * ratio, descriptor.getWidth() * ratio, descriptor.getHeight() * ratio);
 			P.delete(p);
 		}
 

@@ -58,27 +58,28 @@ public class LineUpBox extends Canvas {
 					img = slot[0];
 				else
 					img = f.anim.getUni();
+				int baseX = 120 * j;
 				if (sf == null || sf != f || relative == null)
-					gra.drawImage(img.getImg(), 120 * j, 100 * i);
+					gra.drawImage(img.getImg(), baseX, 100 * i);
 				if (f == null)
 					continue;
 				if (time == 0 && sc != null)
 					for (Form fc : sc.forms)
 						if (f.unit == fc.unit && f.fid >= fc.fid)
-							gra.drawImage(slot[2].getImg(), 120 * j, 100 * i);
+							gra.drawImage(slot[2].getImg(), baseX, 100 * i);
 				if (sf != null && f.unit == sf.unit && relative == null)
 					if(time == 1)
-						gra.drawImage(slot[1].getImg(), 120 * j, 100 * i);
+						gra.drawImage(slot[1].getImg(), baseX, 100 * i);
 					else
-						gra.drawImage(slot[2].getImg(), 120 * j, 100 * i);
+						gra.drawImage(slot[2].getImg(), baseX, 100 * i);
 				if (sf == null || sf != f || relative == null) {
 					EForm ef = i != 2 ? lu.efs[i][j] : new EForm(f, lu.getLv(f));
 					if (lim != null && ((lim.line == 1 && i == 1) || lim.unusable(ef.du, price))) {
-						gra.colRect(120 * j, 100 * i, img.getImg().getWidth(), img.getImg().getHeight(), 255, 0, 0, 100);
+						gra.colRect(baseX, 100 * i, img.getImg().getWidth(), img.getImg().getHeight(), 255, 0, 0, 100);
 						Res.getCost(-1, false,
-							new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
+							new SymCoord(gra, 1, baseX, 100 * i + img.getImg().getHeight(), 2));
 					} else {
-						int cost = (int) ef.getPrice(price);
+						int cost = hasLimit && lim.stageLimit.globalCost > -1 ? lim.stageLimit.globalCost : (int) ef.getPrice(price);
 						if (hasLimit)
 							cost = cost * lim.stageLimit.costMultiplier[f.unit.rarity] / 100;
 						int lv = lu.getLv(f).getLv() + lu.getLv(f).getPlusLv();
@@ -87,11 +88,15 @@ public class LineUpBox extends Canvas {
 									new SymCoord(gra, 0.8f, 120 * j, 100 * i + (img.getImg().getHeight() / 3.5f), 2));
 							Res.getLv(lv,
 									new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
+							Res.getRarity(f.unit.rarity,
+									new SymCoord(gra, 0.9f, baseX + 50, 100 * i + (img.getImg().getHeight()), 2));
 						} else {
 							Res.getCost(cost, true,
 									new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
 							Res.getLv(lv,
 									new SymCoord(gra, 0.8f, 120 * j, 100 * i + (img.getImg().getHeight() / 3.5f), 2));
+							Res.getRarity(f.unit.rarity,
+									new SymCoord(gra, 0.9f, baseX + 50, 100 * i + (img.getImg().getHeight() / 3.5f), 2));
 						}
 					}
 				}

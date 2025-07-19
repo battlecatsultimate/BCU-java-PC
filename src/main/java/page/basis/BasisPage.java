@@ -701,7 +701,7 @@ public class BasisPage extends LubCont {
 	}
 
 	private void setLvs(Form f) {
-		lvorb.setEnabled(f != null);
+		lvorb.setEnabled(f != null && f.unit.orbs != null && f.unit.orbs.getSlots() != -1);
 
 		if (f == null) {
 			lvjtf.setText("");
@@ -709,10 +709,7 @@ public class BasisPage extends LubCont {
 			return;
 		}
 
-		lvorb.setEnabled(f.orbs != null);
-
 		String[] strs = UtilPC.lvText(f, lu().getLv(f));
-
 		lvjtf.setText(strs[0]);
 		pcoin.setText(strs[1]);
 	}
