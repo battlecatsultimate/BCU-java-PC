@@ -35,10 +35,12 @@ public class LimitTable extends Page {
 	private final JTF max = new JTF();
 	private final JTF jcg = new JTF();
 	private final JTF jlr = new JTF();
-	private final JBTN cgb = new JBTN(1, "ht15");
-	private final JBTN lrb = new JBTN(1, "ht16");
-	private final JTG one = new JTG(1, "ht12");
-	private final JL rar = new JL(1, "ht10");
+	private final JBTN cgb = new JBTN(MainLocale.INFO, "ht15");
+	private final JBTN lrb = new JBTN(MainLocale.INFO, "ht16");
+	private final JTG one = new JTG(MainLocale.INFO, "ht12");
+	private final JTG rich = new JTG(MainLocale.INFO, "ht17");
+	private final JTG snip = new JTG(MainLocale.INFO, "ht18");
+	private final JL rar = new JL(MainLocale.INFO, "ht10");
 	private final JTG[] brars = new JTG[6];
 
 	private final UserPack pac;
@@ -59,6 +61,8 @@ public class LimitTable extends Page {
 		num.setEnabled(b);
 		max.setEnabled(b);
 		one.setEnabled(b);
+		rich.setEnabled(b);
+		snip.setEnabled(b);
 		cgb.setEnabled(b);
 		jcg.setEnabled(b);
 		lrb.setEnabled(b);
@@ -101,8 +105,8 @@ public class LimitTable extends Page {
 		set(jcg, x, y, w * 5, 50, w, 50);
 		set(lrb, x, y, w * 6, 50, w, 50);
 		set(jlr, x, y, w * 7, 50, w, 50);
-
-
+		set(rich, x, y, 0, 100, w, 50);
+		set(snip, x, y, w, 100, w, 50);
 	}
 
 	protected void setLimit(Limit l) {
@@ -116,6 +120,8 @@ public class LimitTable extends Page {
 			jcg.setText("");
 			jlr.setText("");
 			one.setSelected(false);
+			rich.setSelected(true);
+			snip.setSelected(true);
 			abler(false);
 			return;
 		}
@@ -133,6 +139,8 @@ public class LimitTable extends Page {
 		jcg.setText("" + lim.group);
 		jlr.setText("" + lim.lvr);
 		one.setSelected(lim.line == 1);
+		rich.setSelected(lim.rich == 0);
+		snip.setSelected(lim.sniper == 0);
 	}
 
 	protected void setStageLimit(StageLimit sl) {
@@ -162,6 +170,9 @@ public class LimitTable extends Page {
 			lrp = new LvRestrictPage(getFront(), pac, false);
 			changePanel(lrp);
 		});
+
+		rich.addActionListener(arg0 -> lim.rich = rich.isSelected() ? 0 : 1);
+		snip.addActionListener(arg0 -> lim.sniper = snip.isSelected() ? 0 : 1);
 	}
 
 	private void ini() {
@@ -169,6 +180,8 @@ public class LimitTable extends Page {
 		add(cgb);
 		add(lrb);
 		add(one);
+		add(rich);
+		add(snip);
 		set(min);
 		set(max);
 		set(num);

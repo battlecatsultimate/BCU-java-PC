@@ -3,6 +3,7 @@ package page.battle;
 import common.CommonStatic;
 import common.battle.BasisLU;
 import common.battle.BasisSet;
+import common.util.stage.Limit;
 import common.util.stage.RandStage;
 import common.util.stage.Stage;
 import page.JBTN;
@@ -70,10 +71,13 @@ public class BattleSetupPage extends LubCont {
 	protected void renew() {
 		BasisSet b = BasisSet.current();
 		jl.setText(b + "-" + b.sele);
-		if (st.lim != null && st.lim.lvr != null)
+		Limit lim = st.getLim(jls.getSelectedIndex());
+		if (lim.lvr != null)
 			strt.setEnabled(st.lim.lvr.isValid(b.sele.lu));
 		else
 			tmax.setEnabled(false);
+		rich.setEnabled(lim.rich == 0);
+		snip.setEnabled(lim.sniper == 0);
 		if (lub.getLU() != b.sele.lu)
 			lub.setLU(b.sele.lu);
 		mod.setBasis(BasisSet.current());
@@ -131,9 +135,10 @@ public class BattleSetupPage extends LubCont {
 		strt.addActionListener(arg0 -> {
 			int star = jls.getSelectedIndex();
 			int[] ints = new int[1];
-			if (rich.isSelected())
+			Limit lim = st.getLim(star);
+			if (rich.isSelected() && lim.rich == 0)
 				ints[0] |= 1;
-			if (snip.isSelected())
+			if (snip.isSelected() && lim.rich == 0)
 				ints[0] |= 2;
 			BasisLU b = BasisSet.current().sele;
 			if (conf == 0) {
