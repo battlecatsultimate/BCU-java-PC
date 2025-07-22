@@ -108,7 +108,7 @@ public class UnitInfoTable extends Page {
 			l += special.length;
 		if (f.hasEvolveCost() || f.hasZeroForm())
 			l += upgrade.length;
-		return (l + (proc.length + 1) / 2) * 50 + (f.getExplaination().replace("<br>", "").length() > 0 ? 200 : 0);
+		return (l + (proc.length + 1) / 2) * 50 + (!f.getExplaination().replace("<br>", "").isEmpty() ? 200 : 0);
 	}
 
 	protected void reset() {
@@ -129,16 +129,12 @@ public class UnitInfoTable extends Page {
 		}
 
 		ArrayList<Trait> trs = ef.du.getTraits();
-		trs.sort(Comparator.comparingInt(t -> t.id.id));
-		trs.sort(Comparator.comparing(t -> t.id.pack));
-		trs.sort(Comparator.comparing(t -> !t.id.pack.equals("000000")));
+		trs.sort(Comparator.comparing((Trait t) -> t.id.id)
+				.thenComparing(t -> !t.id.pack.equals("000000")));
 		String[] traits = new String[trs.size()];
 		for (int i = 0; i < trs.size(); i++) {
-			Trait trait = ef.du.getTraits().get(i);
-			if (trait.id.pack.equals("000000"))
-				traits[i] = Interpret.TRAIT[trait.id.id];
-			else
-				traits[i] = trait.name;
+			Trait trait = trs.get(i);
+			traits[i] = trait.id.pack.equals("000000") ? Interpret.TRAIT[trait.id.id] : trait.name;
 		}
 		main[1][3].setText(hp + " / " + ef.du.getHb());
 		main[2][3].setText(String.valueOf(attack * 30 / ef.du.getItv()));
@@ -157,7 +153,7 @@ public class UnitInfoTable extends Page {
 
 			int a = (int) (Math.round(atkDatum[0] * mul) * b.t().getAtkMulti());
 			if (pc != null)
-				a *= pc.getAtkMultiplication(multi.getTalents());
+				a = (int) (a * pc.getAtkMultiplication(multi.getTalents()));
 
 			satk.append(a);
 		}
@@ -391,7 +387,7 @@ public class UnitInfoTable extends Page {
 				+ f.du.getLimit()
 				+ " units away from the max stage length<br>once it passes that threshold.");
 		String fDesc = f.getExplaination().replace("<br>", "\n");
-		if (fDesc.replace("\n", "").length() > 0)
+		if (!fDesc.replace("\n", "").isEmpty())
 			add(descr);
 		descr.setText(f.toString().replace((f.uid == null ? "NULL" : f.uid.id) + "-" + f.fid + " ", "") + "\n" + fDesc);
 		descr.setEditable(false);

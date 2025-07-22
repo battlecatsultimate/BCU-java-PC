@@ -5,8 +5,6 @@ import common.pack.Context;
 import common.pack.FixIndexList.FixIndexMap;
 import common.pack.PackData.UserPack;
 import common.pack.Source;
-import common.pack.UserProfile;
-import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Trait;
 import common.util.unit.Unit;
@@ -25,7 +23,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class TraitEditPage extends Page {
@@ -54,7 +51,7 @@ public class TraitEditPage extends Page {
     private final ReorderList<Form> tlf = new ReorderList<>();
     private final JScrollPane tspf = new JScrollPane(tlf);
 
-    private final UserPack packpack;
+    private final UserPack pack;
     private final FixIndexMap<Trait> pct;
     private UnitFindPage ufp;
 
@@ -64,7 +61,7 @@ public class TraitEditPage extends Page {
 
     public TraitEditPage(Page p, UserPack pac) {
         super(p);
-        packpack = pac;
+        pack = pac;
         pct = pac.traits;
         editable = pac.editable;
         ini();
@@ -81,14 +78,14 @@ public class TraitEditPage extends Page {
             changing = true;
             ArrayList<Form> list = new ArrayList<>(ufp.getList());
             if (t != null)
-                list.removeAll(t.others);
-            for (Unit u : packpack.units)
+                list.removeAll(t.targetForms);
+            for (Unit u : pack.units)
                 for (Form f : u.forms)
                     list.remove(f);
 
             jlf.setListData(list.toArray(new Form[0]));
             jlf.clearSelection();
-            if (list.size() > 0)
+            if (!list.isEmpty())
                 jlf.setSelectedIndex(0);
             else
                 jlf.clearSelection();
@@ -123,7 +120,7 @@ public class TraitEditPage extends Page {
         adicn.addActionListener(arg0 -> getFile("Choose your file"));
 
         reicn.addActionListener(arg0 -> {
-            File file = ((Source.Workspace) packpack.source).getTraitIconFile(t.id);
+            File file = ((Source.Workspace) pack.source).getTraitIconFile(t.id);
             if (file.delete()) {
                 t.icon = null;
                 jl.setIcon(null);
@@ -136,7 +133,7 @@ public class TraitEditPage extends Page {
     private void addListeners$CG() {
         addct.addActionListener(arg0 -> {
             changing = true;
-            t = new Trait(packpack.getNextID(Trait.class));
+            t = new Trait(pack.getNextID(Trait.class));
             pct.add(t);
             updateCTL();
             jlct.setSelectedValue(t, true);
@@ -151,7 +148,7 @@ public class TraitEditPage extends Page {
             int ind = list.indexOf(t) - 1;
             if (ind < 0 && list.size() > 1)
                 ind = 0;
-            File file = ((Source.Workspace) packpack.source).getTraitIconFile(t.id);
+            File file = ((Source.Workspace) pack.source).getTraitIconFile(t.id);
             if (file.exists()) {
                 if (!file.delete()) {
                     Opts.warnPop("Failed to delete file : " + file.getAbsolutePath(), "Delete Failed");
@@ -204,27 +201,27 @@ public class TraitEditPage extends Page {
 
         addu.addActionListener(arg0 -> {
             List<Form> formList = jlf.getSelectedValuesList();
-            if (formList.size() == 0 || changing || jlct.getValueIsAdjusting())
+            if (formList.isEmpty() || changing || jlct.getValueIsAdjusting())
                 return;
             changing = true;
-            t.others.addAll(formList);
+            t.targetForms.addAll(formList);
             updateCT();
             changing = false;
         });
 
         remu.addActionListener(arg0 -> {
             List<Form> formList = tlf.getSelectedValuesList();
-            if (formList.size() == 0 ||changing || jlct.getValueIsAdjusting())
+            if (formList.isEmpty() ||changing || jlct.getValueIsAdjusting())
                 return;
             changing = true;
-            t.others.removeAll(formList);
+            t.targetForms.removeAll(formList);
             updateCT();
             changing = false;
         });
 
         vuif.addActionListener(arg0 -> {
             if (ufp == null)
-                ufp = new UnitFindPage(getThis(), packpack.getSID(), packpack.desc.dependency);
+                ufp = new UnitFindPage(getThis(), pack.getSID(), pack.desc.dependency);
             changePanel(ufp);
         });
     }
@@ -237,7 +234,7 @@ public class TraitEditPage extends Page {
 
     private void updateCT() {
         altrg.setEnabled(t != null && editable);
-        remct.setEnabled(t != null && !isUsedTrait(t) && editable);
+        remct.setEnabled(t != null && !Trait.isUsed(t) && editable);
         ctrna.setEnabled(t != null && editable);
         adicn.setEnabled(t != null && editable);
         setIconImage(t);
@@ -245,7 +242,7 @@ public class TraitEditPage extends Page {
         if (t != null) {
             ctrna.setText(t.name);
             altrg.setSelected(t.targetType);
-            tlf.setListData(t.others.toArray(new Form[0]));
+            tlf.setListData(t.targetForms.toArray(new Form[0]));
             if (t.icon != null)
                 jl.setIcon(new ImageIcon((BufferedImage)t.icon.getImg().bimg()));
             else
@@ -258,22 +255,6 @@ public class TraitEditPage extends Page {
         reicn.setEnabled(t != null && t.icon != null && editable);
         addu.setEnabled(editable && t != null);
         remu.setEnabled(editable && t != null);
-    }
-
-    private boolean isUsedTrait(Trait tr) {
-        Collection<UserPack> pacs = UserProfile.getUserPacks();
-        for (UserPack pacc : pacs) {
-            if (pacc.desc.dependency.contains(packpack.desc.id) || pacc.desc.id.equals(packpack.desc.id)) {
-                for (Enemy en : pacc.enemies.getList())
-                    if (en.de.getTraits().contains(tr))
-                        return true;
-                for (Unit un : pacc.units.getList())
-                    for (Form uf : un.forms)
-                        if (uf.du.getTraits().contains(tr))
-                            return true;
-            }
-        }
-        return false;
     }
 
     private void ini() {
@@ -314,7 +295,7 @@ public class TraitEditPage extends Page {
         else
             t.icon = MainBCU.builder.toVImg(bimg);
         try {
-            File file = ((Source.Workspace) packpack.source).getTraitIconFile(t.id);
+            File file = ((Source.Workspace) pack.source).getTraitIconFile(t.id);
             Context.check(file);
             ImageIO.write(bimg, "PNG", file);
         } catch (IOException e) {

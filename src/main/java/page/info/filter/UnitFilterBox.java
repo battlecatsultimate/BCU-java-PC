@@ -205,7 +205,7 @@ class UFBButton extends UnitFilterBox {
 					boolean b0 = rare[u.rarity].isSelected();
 					boolean b1 = !orop[0].isSelected();
 					for (int i = 0; i < trait.length; i++)
-						if (ct.size() > 0) {
+						if (!ct.isEmpty()) {
 							if (orop[0].isSelected())
 								for (Trait diyt : ct) {
 									b1 |= trlis.get(i).equals(diyt);
@@ -372,15 +372,15 @@ class UFBList extends UnitFilterBox {
 					boolean b0 = rare.isSelectedIndex(u.rarity);
 					boolean b1 = !orop[0].isSelected();
 					for (int i : trait.getSelectedIndices())
-						if (traits.size() > 0) {
+						if (!traits.isEmpty()) {
 							if (orop[0].isSelected())
 								for (Trait tr : traits) {
-									b1 |= trait.list.get(i).equals(tr) || trait.list.get(i).others.contains(f);
+									b1 |= trait.list.get(i).equals(tr) || trait.list.get(i).targetForms.contains(f);
 									if (b1)
 										break;
 								}
 							else {
-								b1 &= traits.contains(trait.list.get(i)) || trait.list.get(i).others.contains(f);
+								b1 &= traits.contains(trait.list.get(i)) || trait.list.get(i).targetForms.contains(f);
 								if (!b1)
 									break;
 							}

@@ -311,9 +311,9 @@ public class EnemyInfoTable extends Page {
 					+ " units inside the base<br>once it passes that threshold."
 					+ "</html>");
 		String eDesc = e.getExplaination().replace("<br>", "\n");
-		if (eDesc.replace("\n", "").length() > 0)
+		if (!eDesc.replace("\n", "").isEmpty())
 			add(desc);
-		descr.setText(e.toString().replace(Data.trio(e.id.id) + " - ", "") + (e.de.getTraits().size() > 0 && !e.de.getTraits().contains(UserProfile.getBCData().traits.get(Data.TRAIT_WHITE)) ? " (" + Interpret.getTrait(TraitBox, 0) + ")" : "") + (e.de.getStar() > 2 ? " (Cool Dude)" : "") + "\n" + eDesc);
+		descr.setText(e.toString().replace(Data.trio(e.id.id) + " - ", "") + (!e.de.getTraits().isEmpty() && !e.de.getTraits().contains(UserProfile.getBCData().traits.get(Data.TRAIT_WHITE)) ? " (" + Interpret.getTrait(TraitBox, 0) + ")" : "") + (e.de.getStar() > 2 ? " (Cool Dude)" : "") + "\n" + eDesc);
 		descr.setEditable(false);
 		reset();
 		addListeners();
