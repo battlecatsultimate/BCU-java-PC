@@ -452,13 +452,28 @@ public interface BattleBox {
 						int dw = (int) (hr * 10);
 						int dh = (int) (hr * 12);
 
-						float cd = 1f * cool / sb.elu.maxC[i][j];
+						float cooldownscalar = 1f * cool / sb.elu.maxC[i][j];
+						cooldownscalar = 1f - cooldownscalar;
 
-						int xw = (int) (cd * (iw - dw * 2));
-						int xw2 = (int) (iw - dw * 2);
+						int xwidth = (int) (iw - dw * 2);
+						int startX = x + iw - dw - xwidth;
+						int startY = y + ih - dh * 2;
 
-						g.colRect(x + iw - dw - xw2, y + ih - dh * 2, xw2, dh, 0, 0, 0, -1);
-						g.colRect((x + dw + 2f), (y + ih - dh * 2) + 2f, (iw - dw * 2 - xw) - 4, dh - 4, 0, 255, 255, -1);
+						boolean full = (h >= 500); // not sure how to get the BattleInfoPage from this, so this is a 'temporary' workaround that breaks on small window sizes
+
+						boolean windowTooSmall = (h < 200); // see if the window is really small to not break the drawing
+						// really small windows break lots of BCU drawing anyways, but it's worth it to check
+
+						g.colRect(startX, startY, xwidth, dh, 0, 0, 0, -1); // background draw black square
+						if (full) {
+							g.colRect(startX + 2, startY + 2, (xwidth - 4) * cooldownscalar, dh - 4, 0, 255, 255, -1);
+						} else {
+							if (windowTooSmall) {
+								g.colRect(startX , startY, xwidth * cooldownscalar, dh, 0, 255, 255, -1);
+							} else {
+								g.colRect(startX + 1, startY + 1, (xwidth - 2) * cooldownscalar, dh - 2, 0, 255, 255, -1);
+							}
+						}
 					} else if (canPlay && !sb.summonerSummoned[i][j]) {
 						Res.getCost(pri / 100, !b, setSym(g, hr, x + iw, y + ih, 3));
 						if (sb.elu.tick[i][j] == 1) {
@@ -597,13 +612,28 @@ public interface BattleBox {
 						int dw = (int) (hr * 10);
 						int dh = (int) (hr * 12);
 
-						float cd = 1f * cool / sb.elu.maxC[index][i];
+						float cooldownscalar = 1f * cool / sb.elu.maxC[index][i];
+						cooldownscalar = 1f - cooldownscalar;
 
-						int xw = (int) (cd * (iw - dw * 2));
-						int xw2 = (int) (iw - dw * 2);
+						int xwidth = (int) (iw - dw * 2);
+						int startX = x + iw - dw - xwidth;
+						int startY = y + ih - dh * 2;
 
-						g.colRect(x + iw - dw - xw2, y + ih - dh * 2, xw2, dh, 0, 0, 0, -1);
-						g.colRect((x + dw + 2f), (y + ih - dh * 2) + 2f, (iw - dw * 2 - xw) - 4, dh - 4, 0, 255, 255, -1);
+						boolean full = (h >= 500); // not sure how to get the BattleInfoPage from this, so this is a 'temporary' workaround that breaks on small window sizes
+
+						boolean windowTooSmall = (h < 200); // see if the window is really small to not break the drawing
+						// really small windows break lots of BCU drawing anyways, but it's worth it to check
+
+						g.colRect(startX, startY, xwidth, dh, 0, 0, 0, -1); // background draw black square
+						if (full) {
+							g.colRect(startX + 2, startY + 2, (xwidth - 4) * cooldownscalar, dh - 4, 0, 255, 255, -1);
+						} else {
+							if (windowTooSmall) {
+								g.colRect(startX , startY, xwidth * cooldownscalar, dh, 0, 255, 255, -1);
+							} else {
+								g.colRect(startX + 1, startY + 1, (xwidth - 2) * cooldownscalar, dh - 2, 0, 255, 255, -1);
+							}
+						}
 					} else if (pri != -1 && !sb.summonerSummoned[index][i]) {
 						Res.getCost(pri / 100, !b, setSym(g, hr, x + iw, y + ih, 3));
 					}
