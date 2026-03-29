@@ -57,16 +57,14 @@ public class BCUReader extends DataIO {
 
 	public static void readInfo() {
 		File f = new File(CommonStatic.ctx.getBCUFolder(), "./user/config.json");
+
+
 		if (f.exists()) {
 			try (Reader r = new InputStreamReader(Files.newInputStream(f.toPath()), StandardCharsets.UTF_8)) {
-
 				JsonElement je = JsonParser.parseReader(r);
-
 				r.close();
-				Config cfg = CommonStatic.getConfig();
 
-				// for some reason je isn't a json object
-				System.out.print(je.isJsonObject());
+				Config cfg = CommonStatic.getConfig();
 
 				JsonDecoder.inject(je, Config.class, cfg);
 
