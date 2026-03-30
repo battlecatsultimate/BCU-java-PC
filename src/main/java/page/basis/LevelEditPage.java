@@ -9,10 +9,7 @@ import common.util.unit.Form;
 import common.util.unit.Level;
 import common.util.unit.Trait;
 import main.MainBCU;
-import page.JBTN;
-import page.JTF;
-import page.MainLocale;
-import page.Page;
+import page.*;
 import utilpc.Interpret;
 import utilpc.UtilPC;
 
@@ -42,6 +39,9 @@ public class LevelEditPage extends Page {
 	private final JList<String> orbList = new JList<>();
 	private final JScrollPane orbScroll = new JScrollPane(orbList);
 	private final OrbBox orbb = new OrbBox(new int[] {});
+	private final JL ltyp = new JL(0, "type");
+	private final JL lgra = new JL(0, "grade");
+	private final JL ltra = new JL(0, "trait");
 	private final JComboBox<String> type = new JComboBox<>();
 	private final JComboBox<String> grade = new JComboBox<>();
 	private final JComboBox<String> trait = new JComboBox<>();
@@ -92,9 +92,12 @@ public class LevelEditPage extends Page {
 		set(levels, x, y, 450, 200, 700, 50);
 		set(orbScroll, x, y, 450, 275, 350, 600);
 		set(orbb, x, y, 850, 475, 200, 200);
-		set(type, x, y, 1100, 475, 200, 50);
-		set(grade, x, y, 1100, 550, 200, 50);
-		set(trait, x, y, 1100, 625, 200, 50);
+		set(ltyp, x, y, 1100, 350, 300, 50);
+		set(type, x, y, 1100, 400, 300, 50);
+		set(lgra, x, y, 1100, 500, 300, 50);
+		set(grade, x, y, 1100, 550, 300, 50);
+		set(ltra, x, y, 1100, 650, 300, 50);
+		set(trait, x, y, 1100, 700, 300, 50);
 	}
 
 	@Override
@@ -300,8 +303,11 @@ public class LevelEditPage extends Page {
 
 		if (f.unit.orbs != null) {
 			add(orbScroll);
+			add(ltyp);
 			add(type);
+			add(ltra);
 			add(trait);
+			add(lgra);
 			add(grade);
 		}
 
