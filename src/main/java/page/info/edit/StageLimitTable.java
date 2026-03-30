@@ -114,6 +114,8 @@ public class StageLimitTable extends Page {
         reg(jusp);
         add(espe);
         reg(jesp);
+        jusp.setToolTipText("<html>Use \"=\" to set speed equal to value (ex. =10)<br>Use \"x\" to multiply speed by value (ex. x10)");
+        jesp.setToolTipText("<html>Use \"=\" to set speed equal to value (ex. =10)<br>Use \"x\" to multiply speed by value (ex. x10)");
 
         add(jsco);
         add(banc);
@@ -161,8 +163,8 @@ public class StageLimitTable extends Page {
         jcan.setText(stli.cannonMultiplier + "%");
         jcos.setText(stli.globalCost == -1 ? "--" : stli.globalCost + "");
         jcre.setText(stli.globalCooldown == 0 ? "--" : stli.globalCooldown + "");
-        jusp.setText(stli.unitSpeedOverride == -1 ? "--" : stli.unitSpeedOverride + "");
-        jesp.setText(stli.enemySpeedOverride == -1 ? "--" : stli.enemySpeedOverride + "");
+        jusp.setText(stli.unitSpeedOverride == -1 ? "--" : ((stli.unitSpeedOverrideMode == StageLimit.SpeedOverrideMode.MULTIPLY ? "x" : "=") + stli.unitSpeedOverride));
+        jesp.setText(stli.enemySpeedOverride == -1 ? "--" : ((stli.enemySpeedOverrideMode == StageLimit.SpeedOverrideMode.MULTIPLY ? "x" : "=") + stli.enemySpeedOverride + ""));
         cdst.setSelected(stli.coolStart);
         jlco.repaint();
 
@@ -212,10 +214,20 @@ public class StageLimitTable extends Page {
             stli.globalCost = Math.max(CommonStatic.parseIntN(text), -1);
         else if (jtf == jcre)
             stli.globalCooldown = Math.max(CommonStatic.parseIntN(text), 0);
-        else if (jtf == jusp)
+        else if (jtf == jusp) {
             stli.unitSpeedOverride = Math.max(CommonStatic.parseIntN(text), -1);
-        else if (jtf == jesp)
+            if (text.startsWith("x") || text.startsWith("*"))
+                stli.unitSpeedOverrideMode = StageLimit.SpeedOverrideMode.MULTIPLY;
+            else
+                stli.unitSpeedOverrideMode = StageLimit.SpeedOverrideMode.SET;
+        }
+        else if (jtf == jesp) {
             stli.enemySpeedOverride = Math.max(CommonStatic.parseIntN(text), -1);
+            if (text.startsWith("x") || text.startsWith("*"))
+                stli.enemySpeedOverrideMode = StageLimit.SpeedOverrideMode.MULTIPLY;
+            else
+                stli.enemySpeedOverrideMode = StageLimit.SpeedOverrideMode.SET;
+        }
 
         else {
             for (int i = 0; i < rarityTxt.length; i++) {
