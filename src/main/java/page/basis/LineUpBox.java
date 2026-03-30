@@ -3,6 +3,7 @@ package page.basis;
 
 import common.CommonStatic;
 import common.battle.LineUp;
+import common.battle.data.OrbInfo;
 import common.system.P;
 import common.system.SymCoord;
 import common.system.VImg;
@@ -23,6 +24,8 @@ import java.util.TreeSet;
 public class LineUpBox extends Canvas {
 
 	private static final long serialVersionUID = 1L;
+
+	private float ORB_SIZE_MULTIPLIER = 1.2f;
 
 	private Form[] backup = new Form[5];
 	private final Page page;
@@ -79,26 +82,33 @@ public class LineUpBox extends Canvas {
 						Res.getCost(-1, false,
 							new SymCoord(gra, 1, baseX, 100 * i + img.getImg().getHeight(), 2));
 					} else {
-						int cost = hasLimit && lim.stageLimit.globalCost > -1 ? lim.stageLimit.globalCost : (int) ef.getPrice(price);
+						int cost = lim != null && hasLimit && lim.stageLimit.globalCost > -1 ? lim.stageLimit.globalCost : (int) ef.getPrice(price);
 						if (hasLimit)
 							cost = cost * lim.stageLimit.costMultiplier[f.unit.rarity] / 100;
 						int lv = lu.getLv(f).getLv() + lu.getLv(f).getPlusLv();
-						if (swap) {
-							Res.getCost(cost, true,
-									new SymCoord(gra, 0.8f, 120 * j, 100 * i + (img.getImg().getHeight() / 3.5f), 2));
-							Res.getLv(lv,
-									new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
-							Res.getRarity(f.unit.rarity,
-									new SymCoord(gra, 0.9f, baseX + 50, 100 * i + (img.getImg().getHeight()), 2));
-						} else {
-							Res.getCost(cost, true,
-									new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
-							Res.getLv(lv,
-									new SymCoord(gra, 0.8f, 120 * j, 100 * i + (img.getImg().getHeight() / 3.5f), 2));
-							Res.getRarity(f.unit.rarity,
-									new SymCoord(gra, 0.9f, baseX + 50, 100 * i + (img.getImg().getHeight() / 3.5f), 2));
+						Res.getCost(cost, true,
+								new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
+						Res.getLv(lv,
+								new SymCoord(gra, 0.8f, 120 * j, 100 * i + (img.getImg().getHeight() / 3.5f), 2));
+						float orbX = 85f;
+						int[][] orbs = ef.getLevel().getOrbs();
+						if (orbs != null)
+							for (int[] orb : orbs) {
+								if (orb.length == 0)
+									continue;
+								FakeImage orbBall = CommonStatic.getBCAssets().TRAITS[1][OrbInfo.reverse(orb[1])];
+								FakeImage orbIcon = CommonStatic.getBCAssets().TYPES[1][orb[0]];
+								float ballW = orbBall.getWidth() * ORB_SIZE_MULTIPLIER;
+								float iconW = orbIcon.getWidth() * ORB_SIZE_MULTIPLIER;
+								float ballH = orbBall.getHeight() * ORB_SIZE_MULTIPLIER;
+								float iconH = orbIcon.getHeight() * ORB_SIZE_MULTIPLIER;
+								gra.drawImage(orbBall, baseX - 4f + orbX,
+										100 * i + 10f - (ballH / 3f), ballW, ballH);
+								gra.drawImage(orbIcon, baseX - 4f + (orbX) + (ballW - iconW) / 2f,
+										100 * i + 10f - (ballH / 3f) + (ballH - iconH) / 2f, iconW, iconH);
+								orbX -= ballW;
+							}
 						}
-					}
 				}
 			}
 		if (relative != null && sf != null) {
@@ -109,17 +119,13 @@ public class LineUpBox extends Canvas {
 			if (lim != null && lim.unusable(ef.du, price)) {
 				gra.colRect(p.x, p.y, uni.getWidth(), uni.getHeight(), 255, 0, 0, 100);
 				Res.getCost(-1, true, new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
-			} else if (swap) {
-				Res.getCost((int) ef.getPrice(price), true,
-						new SymCoord(gra, 0.8f, p.x, p.y + (uni.getHeight() / 3.5f), 2));
-				Res.getLv(lu.getLv(sf).getLv() + lu.getLv(sf).getPlusLv(),
-						new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
-			} else {
-				Res.getCost((int) ef.getPrice(price), true,
-						new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
-				Res.getLv(lu.getLv(sf).getLv() + lu.getLv(sf).getPlusLv(),
-						new SymCoord(gra, 0.8f, p.x, p.y + (uni.getHeight() / 3.5f), 2));
 			}
+			Res.getCost((int) ef.getPrice(price), true,
+					new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
+			Res.getLv(lu.getLv(sf).getLv() + lu.getLv(sf).getPlusLv(),
+					new SymCoord(gra, 0.8f, p.x, p.y + (uni.getHeight() / 3.5f), 2));
+			Res.getRarity(sf.unit.rarity,
+					new SymCoord(gra, 0.9f, p.x + 50, p.y + (uni.getHeight() / 3.5f), 2));
 
 		}
 		g.drawImage(bimg, 0, 0, getWidth(), getHeight(), null);

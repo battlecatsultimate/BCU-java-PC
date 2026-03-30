@@ -91,7 +91,7 @@ public class LevelEditPage extends Page {
 		set(pcoin, x, y, 450, 150, 1200, 50);
 		set(levels, x, y, 450, 200, 700, 50);
 		set(orbScroll, x, y, 450, 275, 350, 600);
-		set(orbb, x, y, 850, 475, 200, 200);
+		set(orbb, x, y, 850, 450, 200, 200);
 		set(ltyp, x, y, 1100, 350, 300, 50);
 		set(type, x, y, 1100, 400, 300, 50);
 		set(lgra, x, y, 1100, 500, 300, 50);

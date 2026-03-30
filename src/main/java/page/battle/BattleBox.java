@@ -499,7 +499,7 @@ public interface BattleBox {
 			}
 		}
 
-		private void drawLineup(FakeGraphics g, int w, int h, float hr, float term, boolean isBehind, int index) {
+		private void drawLineup(FakeGraphics g, int w, int h, float hr, float term, boolean isBehind, int index) { // TODO: ability orb vfx
 			int iw;
 			int ih;
 			int imw;

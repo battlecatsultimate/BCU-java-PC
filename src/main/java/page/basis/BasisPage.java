@@ -77,7 +77,6 @@ public class BasisPage extends LubCont {
 	private final JBTN[] formX = new JBTN[2];
 	private final JBTN[] jbcsR = new JBTN[3];
 	private final JBTN[] jbcsL = new JBTN[3];
-	private final JTG cost = new JTG(1, "price");
 
 	private boolean changing = false, outside = false;
 
@@ -207,7 +206,6 @@ public class BasisPage extends LubCont {
 		set(lvorb, x, y, 900, 100, 200, 50);
 		set(form, x, y, 500, 450, 200, 50);
 		set(reset, x, y, 700, 450, 200, 50);
-		set(cost, x, y, 900, 450, 200, 50);
 
 		set(jspcn, x, y, 500, 500, 600, 250);
 
@@ -529,8 +527,6 @@ public class BasisPage extends LubCont {
 			setCL(jlcs.getSelectedIndex());
 			changing = false;
 		});
-
-		cost.addActionListener(x -> lub.swap = !cost.isSelected());
 	}
 
 	private void changeLU() {
@@ -574,7 +570,6 @@ public class BasisPage extends LubCont {
 		add(cjtf);
 		add(ujtf);
 		add(combo);
-		add(cost);
 		add(jbcsR[0] = new JBTN(0, ">"));
 		add(jbcsR[1] = new JBTN(0, ">"));
 		add(jbcsR[2] = new JBTN(0, ">"));
@@ -605,7 +600,6 @@ public class BasisPage extends LubCont {
 		lvorb.setEnabled(lub.sf != null);
 
 		assignSubPage(trea);
-		cost.setSelected(true);
 		ufp = new UnitFLUPage(getThis(), lub.lim, lub.price);
 	}
 
