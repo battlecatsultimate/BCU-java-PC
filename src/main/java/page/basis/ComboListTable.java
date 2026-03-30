@@ -30,7 +30,6 @@ public class ComboListTable extends SortTable<Combo> {
 		tit = new String[] { "name", "Lv.", MainLocale.getLoc(MainLocale.INFO, "desc"),
 				MainLocale.getLoc(MainLocale.INFO, "occu"), str + " 1", str + " 2", str + " 3", str + " 4",
 				str + " 5" };
-		Interpret.lvl = new String[] { "Sm", "M", "L", "XL" };
 	}
 
 	@NonNull

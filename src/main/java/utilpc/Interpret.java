@@ -101,6 +101,16 @@ public class Interpret extends Data {
 
     /**
      * combo string formatter
+     * ---
+     * 1st num (modification):
+     * 1 = add
+     * 2 = minus
+     * ---
+     * 2nd num (unit):
+     * 0 = no unit
+     * 1 = x%
+     * 2 = x frames
+     * 3 = Lv. x
      */
     private static final int[][] CDC = {{1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 3}, {1, 0}, {1, 1}, {2, 1},
             {1, 1}, {1, 1}, {1, 1}, {2, 2}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1},
@@ -125,7 +135,7 @@ public class Interpret extends Data {
             Data.P_IMUVOLC, Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_DEATHSURGE, Data.P_SPIRIT, Data.P_BLAST, Data.P_IMUBLAST };
 
     private static final DecimalFormat df;
-    public static String[] lvl;
+    public static String[] lvl = new String[] { "Sm", "M", "L", "XL", "XXL", "XXXL" };
 
     static {
         redefine();
@@ -339,7 +349,7 @@ public class Interpret extends Data {
         int[] res = CommonStatic.getBCAssets().filter[n];
         String[] strs = new String[res.length];
         for (int i = 0; i < res.length; i++)
-            strs[i] = COMN[res[i]];
+            strs[i] = Interpret.getComboName(res[i]);
         return strs;
     }
 
@@ -691,7 +701,7 @@ public class Interpret extends Data {
         ATKCONF = Page.get(MainLocale.UTIL, "aa", 8);
         TREA = Page.get(MainLocale.UTIL, "t", 51);
         COMF = Page.get(MainLocale.UTIL, "na", 6);
-        COMN = Page.get(MainLocale.UTIL, "nb", 25);
+        COMN = Page.get(MainLocale.UTIL, "nb", 28);
         TCTX = Page.get(MainLocale.UTIL, "tc", 6);
         PCTX = Page.get(MainLocale.UTIL, "aq", PC_CORRES.length);
         EABI = new String[EABIIND.length];
@@ -711,12 +721,14 @@ public class Interpret extends Data {
     }
 
     private static String combo(int t, int val, BasisSet b) {
+        if (CDC.length <= t)
+            return "unknown modifier " + val;
         int[] con = CDC[t];
         if (t == C_RESP) {
             double research = (b.t().tech[LV_RES] - 1) * 6 + b.t().trea[T_RES] * 0.3;
-            return COMN[t] + " " + CDP[0][con[0]] + CDP[1][con[1]].replaceAll("_", String.valueOf(research * val / 100));
+            return getComboName(t) + " " + CDP[0][con[0]] + CDP[1][con[1]].replaceAll("_", String.valueOf(research * val / 100));
         } else {
-            return COMN[t] + " " + CDP[0][con[0]] + CDP[1][con[1]].replaceAll("_", String.valueOf(val));
+            return getComboName(t) + " " + CDP[0][con[0]] + CDP[1][con[1]].replaceAll("_", String.valueOf(val));
         }
     }
 
@@ -1222,5 +1234,12 @@ public class Interpret extends Data {
         ans.append("</table></html>");
 
         return ans.toString();
+    }
+
+    public static String getComboName(int ind) {
+        if (COMN.length > ind)
+            return COMN[ind];
+        else
+            return "nb" + ind;
     }
 }
