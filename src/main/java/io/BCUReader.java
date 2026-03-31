@@ -57,12 +57,17 @@ public class BCUReader extends DataIO {
 
 	public static void readInfo() {
 		File f = new File(CommonStatic.ctx.getBCUFolder(), "./user/config.json");
+
+
 		if (f.exists()) {
 			try (Reader r = new InputStreamReader(Files.newInputStream(f.toPath()), StandardCharsets.UTF_8)) {
 				JsonElement je = JsonParser.parseReader(r);
 				r.close();
+
 				Config cfg = CommonStatic.getConfig();
+
 				JsonDecoder.inject(je, Config.class, cfg);
+
 				JsonObject jo = je.getAsJsonObject();
 				int[] rect = JsonDecoder.decode(jo.get("crect"), int[].class);
 				MainFrame.crect = new Rectangle(rect[0], rect[1], rect[2], rect[3]);
