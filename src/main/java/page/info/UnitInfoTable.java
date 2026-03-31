@@ -138,10 +138,10 @@ public class UnitInfoTable extends Page {
 		}
 		main[1][3].setText(hp + " / " + ef.du.getHb());
 		main[2][3].setText(String.valueOf(attack * 30 / ef.du.getItv()));
-		main[2][5].setText(String.valueOf((int) (ef.du.getSpeed() * (1 + b.getInc(Data.C_SPE) * 0.01))));
+		main[2][5].setText(String.valueOf((int) (ef.du.getSpeed() * (1 + b.sele.getInc(Data.C_SPE, f.unit) * 0.01))));
 		main[3][5].setText(MainBCU.seconds ? MainBCU.toSeconds(ef.du.getTBA()) : ef.du.getTBA() + "f");
 
-		int respawn = b.t().getFinRes(ef.du.getRespawn(), false);
+		int respawn = b.t().getFinRes(ef.du.getRespawn(), b.sele.getInc(Data.C_RESP, f.unit));
 		main[1][5].setText(MainBCU.seconds ? MainBCU.toSeconds(respawn) : respawn + "f");
 		main[1][7].setText(String.valueOf(ef.getPrice(1)));
 		main[0][4].setText(Interpret.getTrait(traits, 0));

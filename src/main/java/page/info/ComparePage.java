@@ -376,7 +376,7 @@ public class ComparePage extends Page {
                 main[0][index].setText(String.valueOf((int) (hp * mul)));
                 main[4][index].setText(String.valueOf((int) (m.allAtk() * mula * 30.0 / m.getItv())));
 
-                enem[0][index].setText(String.valueOf(Math.floor(enemy.getDrop() * b.t().getDropMulti(false)) / 100));
+                enem[0][index].setText(String.valueOf(Math.floor(enemy.getDrop() * b.t().getDropMulti() * b.getInc(Data.C_MEAR)) / 100));
 
                 for (JL[] jls : unit)
                     jls[index].setText("-");
@@ -462,23 +462,20 @@ public class ComparePage extends Page {
                         if ((mu.getAbi() & Data.AB_MASSIVES) > 0)
                             effectiveDMG = (int) (effectiveDMG * b.t().getMASSIVESATK(traits));
                         if ((mu.getAbi() & Data.AB_MASSIVE) > 0)
-                            effectiveDMG = (int) (effectiveDMG * b.t().getMASSIVEATK(traits, false));
+                            effectiveDMG = (int) (effectiveDMG * b.t().getMASSIVEATK(traits, b.getInc(Data.C_MASSIVE, f.unit)));
                         if ((mu.getAbi() & Data.AB_GOOD) > 0)
-                            effectiveDMG = (int) (effectiveDMG * b.t().getGOODATK(traits, false));
+                            effectiveDMG = (int) (effectiveDMG * b.t().getGOODATK(traits, b.getInc(Data.C_GOOD, f.unit)));
                     }
 
                     if (spTraits.contains(trait.list.get(Data.TRAIT_WITCH)) && (mu.getAbi() & Data.AB_WKILL) > 0)
-                        effectiveDMG = (int) (effectiveDMG * b.t().getWKAtk(false));
-
+                        effectiveDMG = (int) (effectiveDMG * b.t().getWKAtk(b.getInc(Data.C_WKILL, f.unit)));
                     if (spTraits.contains(trait.list.get(Data.TRAIT_EVA)) && (mu.getAbi() & Data.AB_EKILL) > 0)
-                        effectiveDMG = (int) (effectiveDMG * b.t().getEKAtk(false));
+                        effectiveDMG = (int) (effectiveDMG * b.t().getEKAtk(b.getInc(Data.C_EKILL, f.unit)));
 
                     if (spTraits.contains(trait.list.get(Data.TRAIT_BARON)) && (mu.getAbi() & Data.AB_BAKILL) > 0)
                         effectiveDMG = (int) (effectiveDMG * 1.6);
-
                     if (spTraits.contains(trait.list.get(Data.TRAIT_BEAST)) && mu.getProc().BSTHUNT.active > 0)
                         effectiveDMG = (int) (effectiveDMG * 2.5);
-
                     if (spTraits.contains(trait.list.get(Data.TRAIT_SAGE)) && (mu.getAbi() & Data.AB_SKILL) > 0)
                         effectiveDMG = (int) (effectiveDMG * 1.2);
 
@@ -486,7 +483,7 @@ public class ComparePage extends Page {
                         atkString.append(" (").append(effectiveDMG).append(")");
                 }
 
-                int respawn = b.t().getFinRes(mu.getRespawn(), false);
+                int respawn = b.t().getFinRes(mu.getRespawn(), b.getInc(Data.C_RESP, f.unit));
 
                 if (MainBCU.seconds)
                     unit[0][index].setText(MainBCU.toSeconds(respawn));
@@ -560,26 +557,21 @@ public class ComparePage extends Page {
                 if (overlap && (mu.getAbi() & checkHealth) > 0) {
                     if ((mu.getAbi() & Data.AB_RESISTS) > 0)
                         effectiveHP = (int) (effectiveHP / b.t().getRESISTSDEF(traits));
-
                     if ((mu.getAbi() & Data.AB_RESIST) > 0)
-                        effectiveHP = (int) (effectiveHP / b.t().getRESISTDEF(traits, traits, null, multi.clone(), false));
-
+                        effectiveHP = (int) (effectiveHP / b.t().getRESISTDEF(traits, traits, null, multi.clone(), b.getInc(Data.C_RESIST, f.unit)));
                     if ((mu.getAbi() & Data.AB_GOOD) > 0)
-                        effectiveHP = (int) (effectiveHP / b.t().getGOODDEF(traits, traits, null, multi.clone(), false));
+                        effectiveHP = (int) (effectiveHP / b.t().getGOODDEF(traits, traits, null, multi.clone(), b.getInc(Data.C_GOOD, f.unit)));
                 }
 
                 if (spTraits.contains(trait.list.get(Data.TRAIT_WITCH)) && (mu.getAbi() & Data.AB_WKILL) > 0)
-                    effectiveHP = (int) (effectiveHP / b.t().getWKDef(false));
-
+                    effectiveHP = (int) (effectiveHP / b.t().getWKDef(b.getInc(Data.C_WKILL, f.unit)));
                 if (spTraits.contains(trait.list.get(Data.TRAIT_EVA)) && (mu.getAbi() & Data.AB_EKILL) > 0)
-                    effectiveHP = (int) (effectiveHP / b.t().getEKDef(false));
+                    effectiveHP = (int) (effectiveHP / b.t().getEKDef(b.getInc(Data.C_EKILL, f.unit)));
 
                 if (spTraits.contains(trait.list.get(Data.TRAIT_BARON)) && (mu.getAbi() & Data.AB_BAKILL) > 0)
                     effectiveHP = (int) (effectiveHP / 0.7);
-
                 if (spTraits.contains(trait.list.get(Data.TRAIT_BEAST)) && mu.getProc().BSTHUNT.active > 0)
                     effectiveHP = (int) (effectiveHP / 0.6);
-
                 if (spTraits.contains(trait.list.get(Data.TRAIT_SAGE)) && (mu.getAbi() & Data.AB_SKILL) > 0)
                     effectiveHP = (int) (effectiveHP / 0.5);
 
@@ -593,19 +585,17 @@ public class ComparePage extends Page {
                 if (overlap && (mu.getAbi() & checkAttack) > 0) {
                     if ((mu.getAbi() & Data.AB_MASSIVES) > 0)
                         effectiveDMG = (int) (effectiveDMG * b.t().getMASSIVESATK(traits));
-
                     if ((mu.getAbi() & Data.AB_MASSIVE) > 0)
-                        effectiveDMG = (int) (effectiveDMG * b.t().getMASSIVEATK(traits, false));
-
+                        effectiveDMG = (int) (effectiveDMG * b.t().getMASSIVEATK(traits, b.getInc(Data.C_MASSIVE, f.unit)));
                     if ((mu.getAbi() & Data.AB_GOOD) > 0)
-                        effectiveDMG = (int) (effectiveDMG * b.t().getGOODATK(traits, false));
+                        effectiveDMG = (int) (effectiveDMG * b.t().getGOODATK(traits, b.getInc(Data.C_GOOD, f.unit)));
                 }
 
                 if (spTraits.contains(trait.list.get(Data.TRAIT_WITCH)) && (mu.getAbi() & Data.AB_WKILL) > 0)
-                    effectiveDMG = (int) (effectiveDMG * b.t().getWKAtk(false));
+                    effectiveDMG = (int) (effectiveDMG * b.t().getWKAtk(b.getInc(Data.C_WKILL, f.unit)));
 
                 if (spTraits.contains(trait.list.get(Data.TRAIT_EVA)) && (mu.getAbi() & Data.AB_EKILL) > 0)
-                    effectiveDMG = (int) (effectiveDMG * b.t().getEKAtk(false));
+                    effectiveDMG = (int) (effectiveDMG * b.t().getEKAtk(b.getInc(Data.C_EKILL, f.unit)));
 
                 if (spTraits.contains(trait.list.get(Data.TRAIT_BARON)) && (mu.getAbi() & Data.AB_BAKILL) > 0)
                     effectiveDMG = (int) (effectiveDMG * 1.6);
