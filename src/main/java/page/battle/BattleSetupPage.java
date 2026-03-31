@@ -48,10 +48,10 @@ public class BattleSetupPage extends LubCont {
 
 	public BattleSetupPage(Page p, Stage s, int confs) {
 		super(p);
+		conf = confs;
 		sttb = new StageTable(this);
 		jstt = new JScrollPane(sttb);
 		st = s;
-		conf = confs;
 
 		ini();
 		renew();
@@ -71,7 +71,7 @@ public class BattleSetupPage extends LubCont {
 	protected void renew() {
 		BasisSet b = BasisSet.current();
 		jl.setText(b + "-" + b.sele);
-		Limit lim = st.getLim(jls.getSelectedIndex());
+		Limit lim = st.getLim(getStarLevel());
 		if (lim.lvr != null)
 			strt.setEnabled(st.lim.lvr.isValid(b.sele.lu));
 		else
@@ -125,15 +125,15 @@ public class BattleSetupPage extends LubCont {
 				return;
 			if (jls.getSelectedIndex() == -1)
 				jls.setSelectedIndex(0);
-			lub.setLimit(st.getLim(jls.getSelectedIndex()), st.getCont().price);
-			sttb.setData(st, jls.getSelectedIndex());
+			lub.setLimit(st.getLim(getStarLevel()), st.getCont().price);
+			sttb.setData(st, getStarLevel());
 			renew();
 		});
 
-		jlu.addActionListener(arg0 -> changePanel(new BasisPage(getThis(), st, conf == 1 ? jls.getSelectedIndex() : -1, st.getCont().price)));
+		jlu.addActionListener(arg0 -> changePanel(new BasisPage(getThis(), st, getStarLevel(), st.getCont().price)));
 
 		strt.addActionListener(arg0 -> {
-			int star = jls.getSelectedIndex();
+			int star = getStarLevel();
 			int[] ints = new int[1];
 			Limit lim = st.getLim(star);
 			if (rich.isSelected() && lim.rich == 0)
@@ -209,8 +209,11 @@ public class BattleSetupPage extends LubCont {
 			jls.setListData(tit);
 		}
 		jls.setSelectedIndex(0);
-		lub.setLimit(st.getLim(conf == 1 ? jls.getSelectedIndex() : -1), st.getCont().price);
+		lub.setLimit(st.getLim(getStarLevel()), st.getCont().price);
 		addListeners();
 	}
 
+	int getStarLevel() {
+		return conf == 1 ? jls.getSelectedIndex() : 0;
+	}
 }
