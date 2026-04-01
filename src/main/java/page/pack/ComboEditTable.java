@@ -155,7 +155,7 @@ public class ComboEditTable extends AbJTable {
         int r = p.y / getRowHeight();
         if (r < 0 || r >= pack.combos.size() || c < 3)
             return;
-        if (c == 3) {
+        if (c == 3 && pack.editable) {
             fr.callBack(new CharaGroupPage(fr, pack, false));
             return;
         }
