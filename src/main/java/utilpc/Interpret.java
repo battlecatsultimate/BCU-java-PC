@@ -13,6 +13,7 @@ import common.util.Data.Proc.ProcItem;
 import common.util.lang.Formatter;
 import common.util.lang.MultiLangCont;
 import common.util.lang.ProcLang;
+import common.util.stage.CharaGroup;
 import common.util.stage.MapColc;
 import common.util.stage.MapColc.DefMapColc;
 import common.util.stage.Stage;
@@ -21,6 +22,7 @@ import common.util.stage.info.DefStageInfo;
 import common.util.stage.info.StageInfo;
 import common.util.unit.Combo;
 import common.util.unit.Enemy;
+import common.util.unit.Unit;
 import io.BCJSON;
 import main.MainBCU;
 import page.MainLocale;
@@ -35,6 +37,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Interpret extends Data {
 
@@ -1242,5 +1245,10 @@ public class Interpret extends Data {
             return COMN[ind];
         else
             return "nb" + ind;
+    }
+
+    public static String getGroupTooltip(CharaGroup group) {
+        String type = Page.get(0, group.type == 0 ? "include" : "exclude");
+        return "<html>" + type + "<br>" + group.set.stream().map(Unit::toString).collect(Collectors.joining("<br>")) + "</html>";
     }
 }

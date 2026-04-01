@@ -4,7 +4,6 @@ import common.battle.BasisSet;
 import common.util.stage.CharaGroup;
 import common.util.unit.Combo;
 import common.util.unit.Form;
-import common.util.unit.Unit;
 import page.MainLocale;
 import page.Page;
 import page.support.SortTable;
@@ -14,7 +13,6 @@ import utilpc.UtilPC;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
-import java.util.stream.Collectors;
 
 public class ComboListTable extends SortTable<Combo> {
 
@@ -50,7 +48,7 @@ public class ComboListTable extends SortTable<Combo> {
 				CharaGroup group = (CharaGroup) o;
 				if (group != null) {
 					jl.setText(group.name.isEmpty() ? group.id.toString() : group.name + " - " + group.id);
-					jl.setToolTipText("<html>" + group.set.stream().map(Unit::toString).collect(Collectors.joining("<br>")) + "</html>");
+					jl.setToolTipText(Interpret.getGroupTooltip(group));
 				} else {
 					jl.setText("");
 					jl.setToolTipText(null);
