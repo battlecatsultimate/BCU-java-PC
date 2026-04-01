@@ -234,8 +234,8 @@ public class ComboEditTable extends AbJTable {
     }
 
     public void setPreferredWidth(int x, int y) {
-        getColumnModel().getColumn(0).setPreferredWidth(Math.min(200 * x / 2300, 200 * y / 1300));
-        getColumnModel().getColumn(2).setPreferredWidth(Math.min(300 * x / 2300, 300 * y / 1300));
+        getColumnModel().getColumn(lnk[0]).setPreferredWidth(Math.min(200 * x / 2300, 200 * y / 1300));
+        getColumnModel().getColumn(lnk[2]).setPreferredWidth(Math.min(300 * x / 2300, 300 * y / 1300));
     }
 
     public void setPack(PackData.UserPack pack) {

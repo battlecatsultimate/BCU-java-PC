@@ -304,21 +304,18 @@ public class ComboEditPage extends Page {
         set(lbp, x, y, 50, 100, 400, 50);
         set(jspp, x, y, 50, 150, 400, 600);
 
-        set(jspc, x, y, 50, 800, 1450, 450);
-        set(addc, x, y, 500, 750, 200, 50);
-        set(remc, x, y, 750, 750, 200, 50);
-        set(form, x, y, 1000, 750, 200, 50);
-        set(remcf, x, y, 1250, 750, 200, 50);
+        set(jspc, x, y, 500, 150, 1450, 450);
+        set(addc, x, y, 500, 600, 200, 50);
+        set(remc, x, y, 750, 600, 200, 50);
+        set(form, x, y, 1000, 600, 200, 50);
+        set(remcf, x, y, 1250, 600, 200, 50);
 
-        set(lbu, x, y, 1550, 100, 300, 50);
-        set(jspu, x, y, 1550, 150, 300, 600);
-        set(vuif, x, y, 1550, 750, 300, 50);
-        set(lbf, x, y, 1850, 100, 300, 50);
-        set(jspf, x, y, 1850, 150, 300, 600);
-        set(addf, x, y, 1850, 750, 300, 50);
-
-        set(jlna, x, y, 600, 200, 150, 50);
-        set(comboname, x, y, 750, 200, 450, 50);
+        set(lbu, x, y, 700, 700, 300, 50);
+        set(jspu, x, y, 700, 750, 300, 400);
+        set(vuif, x, y, 700, 1150, 300, 50);
+        set(lbf, x, y, 1000, 700, 300, 50);
+        set(jspf, x, y, 1000, 750, 300, 250);
+        set(addf, x, y, 1000, 1000, 300, 50);
 
         jlc.setRowHeight(50);
         jlc.getColumnModel().getColumn(2).setPreferredWidth(size(x, y, 300));
