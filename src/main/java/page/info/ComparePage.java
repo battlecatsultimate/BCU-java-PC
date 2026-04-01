@@ -376,7 +376,7 @@ public class ComparePage extends Page {
                 main[0][index].setText(String.valueOf((int) (hp * mul)));
                 main[4][index].setText(String.valueOf((int) (m.allAtk() * mula * 30.0 / m.getItv())));
 
-                enem[0][index].setText(String.valueOf(Math.floor(enemy.getDrop() * b.t().getDropMulti() * b.getInc(Data.C_MEAR)) / 100));
+                enem[0][index].setText(String.valueOf(Math.floor(enemy.getDrop() * b.t().getDropMulti() * (1 + b.getInc(Data.C_MEAR) * 0.01f)) / 100));
 
                 for (JL[] jls : unit)
                     jls[index].setText("-");

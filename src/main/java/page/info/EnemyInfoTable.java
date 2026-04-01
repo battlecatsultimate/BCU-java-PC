@@ -78,7 +78,7 @@ public class EnemyInfoTable extends Page {
 		double mul = multi * e.de.multi(b) / 100;
 		double mula = mulatk * e.de.multi(b) / 100;
 		main[1][3].setText("" + (int) (e.de.getHp() * mul));
-		main[1][7].setText("" + Math.floor(e.de.getDrop() * b.t().getDropMulti() * b.getInc(Data.C_MEAR)) / 100);
+		main[1][7].setText("" + Math.floor(e.de.getDrop() * b.t().getDropMulti() * (1 + b.sele.getInc(Data.C_MEAR) * 0.01f)) / 100);
 		main[2][3].setText("" + (int) (e.de.allAtk() * mula * 30 / e.de.getItv()));
 		int[][] atkData = e.de.rawAtkData();
 		for (int i = 0; i < atkData.length; i++)
@@ -222,7 +222,7 @@ public class EnemyInfoTable extends Page {
 		main[1][4].setText(MainLocale.INFO, "hb");
 		main[1][5].setText("" + e.de.getHb());
 		main[1][6].setText(MainLocale.INFO, "drop");
-		main[1][7].setText("" + Math.floor(e.de.getDrop() * b.t().getDropMulti() * b.getInc(Data.C_MEAR)) / 100);
+		main[1][7].setText("" + Math.floor(e.de.getDrop() * b.t().getDropMulti() * (1 + b.sele.getInc(Data.C_MEAR) * 0.01f)) / 100);
 		main[2][0].setText(MainLocale.INFO, "range");
 		main[2][1].setText("" + e.de.getRange());
 		main[2][2].setText("dps");
