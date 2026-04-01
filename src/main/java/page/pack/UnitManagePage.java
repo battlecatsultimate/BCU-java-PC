@@ -68,7 +68,7 @@ public class UnitManagePage extends Page {
 	private final JL lbd = new JL(0, "seleanim");
 	private final JL lbml = new JL(0, "maxl");
 	private final JL lbmp = new JL(0, "maxp");
-	private final JL lbf = new JL(1, "forms");
+	private final JL lbf = new JL(0, "forms");
 
 	private UserPack pac;
 	private Unit uni;

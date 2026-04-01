@@ -93,7 +93,6 @@ public class MainPage extends Page {
 		set(vbgr, x, y, 600, 600, 200, 50);
 		set(vmsc, x, y, 600, 700, 200, 50);
 		set(allf, x, y, 600, 800, 200, 50);
-		set(tips, x, y, 600, 1050, 1200, 200);
 
 		set(conf, x, y, 900, 200, 200, 50);
 		set(save, x, y, 900, 300, 200, 50);
@@ -115,6 +114,8 @@ public class MainPage extends Page {
 		set(caic, x, y, 1500, 300, 200, 50);
 		set(camm, x, y, 1500, 400, 200, 50);
 		set(cama, x, y, 1500, 500, 200, 50);
+
+		set(tips, x, y, 600, 900, 1100, 200);
 	}
 
 	private void addListeners() {
@@ -246,6 +247,8 @@ public class MainPage extends Page {
 
 		add(refr);
 		add(tips);
+		tips.setBorder(BorderFactory.createEtchedBorder());
+		tips.setHorizontalAlignment(SwingConstants.CENTER);
 
 		welcome.setVisible(!MainBCU.author.isEmpty());
 
@@ -263,8 +266,8 @@ public class MainPage extends Page {
 	}
 
 	private void refrTips() {
-		String[] ALLTIPS = get(MainLocale.PAGE, "tip", 13);
-		tips.setText("<html>" + ALLTIPS[(int)(Math.random() * ALLTIPS.length)] + "</html>");
+		String[] tipLang = get(MainLocale.PAGE, "tip", 13);
+		tips.setText("<html>" + tipLang[(int)(Math.random() * tipLang.length)] + "</html>");
 	}
 
 }

@@ -4,6 +4,7 @@ import common.battle.Basis;
 import common.battle.BasisSet;
 import common.pack.UserProfile;
 import common.system.ENode;
+import common.util.Data;
 import common.util.unit.AbEnemy;
 import common.util.unit.EneRand;
 import common.util.unit.Enemy;
@@ -118,7 +119,7 @@ public class AbEnemyListTable  extends SortTable<AbEnemy> {
             else if (c == 7)
                 return e.de.getSpeed();
             else if (c == 8)
-                return Math.floor(e.de.getDrop() * b.t().getDropMulti(false)) / 100;
+                return Math.floor(e.de.getDrop() * b.t().getDropMulti() * b.getInc(Data.C_MEAR)) / 100;
             else if (c == 9)
                 return e.de.rawAtkData()[0][1];
             else if (c == 10)

@@ -24,6 +24,7 @@ import common.util.anim.AnimU;
 import common.util.pack.EffAnim;
 import common.util.pack.bgeffect.BackgroundEffect;
 import common.util.stage.CastleImg;
+import common.util.stage.StageLimit;
 import common.util.unit.Form;
 import main.MainBCU;
 import page.RetFunc;
@@ -406,6 +407,8 @@ public interface BattleBox {
 					int pri = sb.elu.price[i][j];
 					if (sb.elu.priceDownOrb[i][j] > 0 && sb.elu.tick[i][j] == 1)
 						pri -= pri * sb.elu.priceDownOrb[i][j] / 100;
+					if (!StageLimit.isComboBanned(sb.est.lim, Data.C_DISCOUNT))
+						pri -= pri * sb.b.getInc(Data.C_DISCOUNT, f.unit) / 100;
 					boolean canPlay = pri != -1 && sb.maxCatSpawns != 0 && (sb.maxRarityNum[f.unit.rarity] == -1 || sb.entityCountRar(f.unit.rarity) < sb.maxRarityNum[f.unit.rarity] - f.du.getWill());
 
 					if (!canPlay)

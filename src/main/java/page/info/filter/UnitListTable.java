@@ -4,6 +4,7 @@ import common.battle.Basis;
 import common.battle.BasisSet;
 import common.battle.data.MaskUnit;
 import common.system.Node;
+import common.util.Data;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
@@ -108,7 +109,7 @@ public class UnitListTable extends SortTable<Form> {
 		else if (c == 9)
 			return du.rawAtkData()[0][1];
 		else if (c == 10)
-			return b.t().getFinRes(du.getRespawn(), false);
+			return b.t().getFinRes(du.getRespawn(), BasisSet.current().sele.getInc(Data.C_RESP, du.getPack().unit));
 		else if (c == 11)
 			return e.getDefaultPrice(1);
 		else if (c == 12)

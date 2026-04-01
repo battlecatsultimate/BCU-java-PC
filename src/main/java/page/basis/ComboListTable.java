@@ -2,8 +2,10 @@ package page.basis;
 
 import common.battle.BasisSet;
 import common.battle.LineUp;
+import common.util.stage.CharaGroup;
 import common.util.unit.Combo;
 import common.util.unit.Form;
+import common.util.unit.Unit;
 import org.checkerframework.checker.nullness.qual.NonNull;
 import page.MainLocale;
 import page.Page;
@@ -14,6 +16,7 @@ import utilpc.UtilPC;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
+import java.util.stream.Collectors;
 
 public class ComboListTable extends SortTable<Combo> {
 
@@ -28,7 +31,7 @@ public class ComboListTable extends SortTable<Combo> {
 	public static void redefine() {
 		String str = MainLocale.getLoc(MainLocale.INFO, "unit");
 		tit = new String[] { "name", "Lv.", MainLocale.getLoc(MainLocale.INFO, "desc"),
-				MainLocale.getLoc(MainLocale.INFO, "occu"), str + " 1", str + " 2", str + " 3", str + " 4",
+				MainLocale.getLoc(MainLocale.INFO, "group"), str + " 1", str + " 2", str + " 3", str + " 4",
 				str + " 5" };
 	}
 
@@ -41,6 +44,26 @@ public class ComboListTable extends SortTable<Combo> {
 
 		fr = p;
 		lu = line;
+
+		setDefaultRenderer(CharaGroup.class, new DefaultTableCellRenderer() {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getTableCellRendererComponent(JTable l, Object o, boolean s, boolean f, int r, int c) {
+				JLabel jl = (JLabel) super.getTableCellRendererComponent(l, c, s, f, r, c);
+				CharaGroup group = (CharaGroup) o;
+				if (group != null) {
+					jl.setText(group.name.isEmpty() ? group.id.toString() : group.name + " - " + group.id);
+					jl.setToolTipText("<html>" + group.set.stream().map(Unit::toString).collect(Collectors.joining("<br>")) + "</html>");
+				} else {
+					jl.setText("");
+					jl.setToolTipText(null);
+				}
+				return jl;
+			}
+
+		});
 
 		setDefaultRenderer(Combo.class, new DefaultTableCellRenderer() {
 
@@ -103,9 +126,12 @@ public class ComboListTable extends SortTable<Combo> {
 		c = lnk[c];
 		if (c == 2)
 			return Combo.class;
-		if (c > 3)
+		else if (c == 3)
+			return CharaGroup.class;
+		else if (c > 3)
 			return Form.class;
-		return String.class;
+		else
+			return String.class;
 	}
 
 	@Override
@@ -140,7 +166,7 @@ public class ComboListTable extends SortTable<Combo> {
 		if (c == 2)
 			return t;
 		if (c == 3)
-			return lu.occupance(t);
+			return t.group;
 		if (t.forms.length > c - 4) {
 			return t.forms[c - 4];
 		}

@@ -107,14 +107,15 @@ public class Interpret extends Data {
      * 2 = minus
      * ---
      * 2nd num (unit):
-     * 0 = no unit
+     * -1 = do not include number
+     * 0 = include number with no units
      * 1 = x%
      * 2 = x frames
      * 3 = Lv. x
      */
     private static final int[][] CDC = {{1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 3}, {1, 0}, {1, 1}, {2, 1},
             {1, 1}, {1, 1}, {1, 1}, {2, 2}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1},
-            {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}};
+            {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, -1}, {1, -1}, {2, 1}};
 
     //Filters abilities and procs that are available for enemies. Also gives better organization to the UI
     public static final int[] EABIIND = {ABI_CSUR, ABI_WAVES, ABI_SNIPERI, ABI_TIMEI, ABI_GHOST, ABI_GLASS, ABI_THEMEI};
@@ -135,7 +136,7 @@ public class Interpret extends Data {
             Data.P_IMUVOLC, Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_DEATHSURGE, Data.P_SPIRIT, Data.P_BLAST, Data.P_IMUBLAST };
 
     private static final DecimalFormat df;
-    public static String[] lvl = new String[] { "Sm", "M", "L", "XL", "XXL", "XXXL" };
+    public static String[] lvl = new String[] { "Sm", "M", "L", "XL", "XXL", "EX" };
 
     static {
         redefine();
@@ -726,9 +727,9 @@ public class Interpret extends Data {
         int[] con = CDC[t];
         if (t == C_RESP) {
             double research = (b.t().tech[LV_RES] - 1) * 6 + b.t().trea[T_RES] * 0.3;
-            return getComboName(t) + " " + CDP[0][con[0]] + CDP[1][con[1]].replaceAll("_", String.valueOf(research * val / 100));
+            return getComboName(t) + (con[1] == -1 ? "" : " " + CDP[0][con[0]] + CDP[1][con[1]].replaceAll("_", String.valueOf(research * val / 100)));
         } else {
-            return getComboName(t) + " " + CDP[0][con[0]] + CDP[1][con[1]].replaceAll("_", String.valueOf(val));
+            return getComboName(t) + (con[1] == -1 ? "" : " " + CDP[0][con[0]] + CDP[1][con[1]].replaceAll("_", String.valueOf(val)));
         }
     }
 
