@@ -135,7 +135,7 @@ public class Interpret extends Data {
             Data.P_IMUVOLC, Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_DEATHSURGE, Data.P_SPIRIT, Data.P_BLAST, Data.P_IMUBLAST };
 
     private static final DecimalFormat df;
-    public static String[] lvl = new String[] { "Sm", "M", "L", "XL", "XXL", "XXXL" };
+    public static String[] lvl = new String[] { "Sm", "M", "L", "XL", "XXL", "EX" };
 
     static {
         redefine();
