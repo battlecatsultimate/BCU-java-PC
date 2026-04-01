@@ -2,6 +2,7 @@
 package page.basis;
 
 import common.CommonStatic;
+import common.battle.BasisLU;
 import common.battle.LineUp;
 import common.battle.data.OrbInfo;
 import common.system.P;
@@ -9,8 +10,10 @@ import common.system.SymCoord;
 import common.system.VImg;
 import common.system.fake.FakeGraphics;
 import common.system.fake.FakeImage;
+import common.util.Data;
 import common.util.Res;
 import common.util.stage.Limit;
+import common.util.stage.StageLimit;
 import common.util.unit.*;
 import page.Page;
 import utilpc.PP;
@@ -25,11 +28,11 @@ public class LineUpBox extends Canvas {
 
 	private static final long serialVersionUID = 1L;
 
-	private float ORB_SIZE_MULTIPLIER = 1.2f;
+	private static final float ORB_SIZE_MULTIPLIER = 1.2f;
 
 	private Form[] backup = new Form[5];
 	private final Page page;
-	protected LineUp lu;
+	protected BasisLU blu;
 	private int pt = 0, time = 0;
 	private Combo sc;
 	private PP relative, mouse;
@@ -76,7 +79,7 @@ public class LineUpBox extends Canvas {
 					else
 						gra.drawImage(slot[2].getImg(), baseX, 100 * i);
 				if (sf == null || sf != f || relative == null) {
-					EForm ef = i != 2 ? lu.efs[i][j] : new EForm(f, lu.getLv(f));
+					EForm ef = i != 2 ? blu.lu.efs[i][j] : new EForm(f, blu.lu.getLv(f));
 					if (lim != null && ((lim.line == 1 && i == 1) || lim.unusable(ef.du, price))) {
 						gra.colRect(baseX, 100 * i, img.getImg().getWidth(), img.getImg().getHeight(), 255, 0, 0, 100);
 						Res.getCost(-1, false,
@@ -85,7 +88,10 @@ public class LineUpBox extends Canvas {
 						int cost = lim != null && hasLimit && lim.stageLimit.globalCost > -1 ? lim.stageLimit.globalCost : (int) ef.getPrice(price);
 						if (hasLimit)
 							cost = cost * lim.stageLimit.costMultiplier[f.unit.rarity] / 100;
-						int lv = lu.getLv(f).getLv() + lu.getLv(f).getPlusLv();
+						if (!StageLimit.isComboBanned(lim, Data.C_DISCOUNT))
+							cost -= cost * blu.getInc(Data.C_DISCOUNT, f.unit) / 100;
+
+						int lv = blu.lu.getLv(f).getLv() + blu.lu.getLv(f).getPlusLv();
 						Res.getCost(cost, true,
 								new SymCoord(gra, 1, 120 * j, 100 * i + img.getImg().getHeight(), 2));
 						Res.getLv(lv,
@@ -115,14 +121,14 @@ public class LineUpBox extends Canvas {
 			Point p = relative.sf(mouse).toPoint();
 			FakeImage uni = sf.anim.getUni().getImg();
 			gra.drawImage(uni, p.x, p.y);
-			EForm ef = new EForm(sf, lu.getLv(sf));
+			EForm ef = new EForm(sf, blu.lu.getLv(sf));
 			if (lim != null && lim.unusable(ef.du, price)) {
 				gra.colRect(p.x, p.y, uni.getWidth(), uni.getHeight(), 255, 0, 0, 100);
 				Res.getCost(-1, true, new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
 			}
 			Res.getCost((int) ef.getPrice(price), true,
 					new SymCoord(gra, 1, p.x, p.y + uni.getHeight(), 2));
-			Res.getLv(lu.getLv(sf).getLv() + lu.getLv(sf).getPlusLv(),
+			Res.getLv(blu.lu.getLv(sf).getLv() + blu.lu.getLv(sf).getPlusLv(),
 					new SymCoord(gra, 0.8f, p.x, p.y + (uni.getHeight() / 3.5f), 2));
 			Res.getRarity(sf.unit.rarity,
 					new SymCoord(gra, 0.9f, p.x + 50, p.y + (uni.getHeight() / 3.5f), 2));
@@ -135,8 +141,8 @@ public class LineUpBox extends Canvas {
 		pt %= 5;
 	}
 
-	public void setLU(LineUp l) {
-		lu = l;
+	public void setLU(BasisLU l) {
+		blu = l;
 		backup = new Form[5];
 	}
 
@@ -154,7 +160,7 @@ public class LineUpBox extends Canvas {
 			Form[] ufs = sf.unit.forms;
 			sf = ufs[(getForm(i).fid + 1) % ufs.length];
 			setForm(i, sf);
-			lu.renew();
+			blu.lu.renew();
 			page.callBack(null);
 		}
 
@@ -218,7 +224,7 @@ public class LineUpBox extends Canvas {
 		if (sf == null)
 			return;
 
-		lu.setLv(sf.unit, sf.regulateLv(lv, lu.getLv(sf)));
+		blu.lu.setLv(sf.unit, sf.regulateLv(lv, blu.lu.getLv(sf)));
 	}
 
 	protected void setPos(int pos) {
@@ -243,11 +249,11 @@ public class LineUpBox extends Canvas {
 	}
 
 	private Form getForm(int pos) {
-		return pos < 10 ? lu.fs[pos / 5][pos % 5] : backup[pos % 5];
+		return pos < 10 ? blu.lu.fs[pos / 5][pos % 5] : backup[pos % 5];
 	}
 
 	private Form getForm(int i, int j) {
-		return i < 2 ? lu.fs[i][j] : backup[j];
+		return i < 2 ? blu.lu.fs[i][j] : backup[j];
 	}
 
 	private int getPos(Form f) {
@@ -298,22 +304,22 @@ public class LineUpBox extends Canvas {
 			for (int i = dest; i >= origin; i--)
 				f = setForm(i, f);
 		}
-		lu.arrange();
-		lu.renew();
+		blu.lu.arrange();
+		blu.lu.renew();
 		page.callBack(null);
 	}
 
 	private Form setForm(int pos, Form f) {
 		Form ans = getForm(pos);
 		if (pos < 10)
-			lu.fs[pos / 5][pos % 5] = f;
+			blu.lu.fs[pos / 5][pos % 5] = f;
 		else
 			backup[pos % 5] = f;
 		return ans;
 	}
 
 	public LineUp getLU() {
-		return lu;
+		return blu == null ? null : blu.lu;
 	}
 
 	public Limit getLim() {

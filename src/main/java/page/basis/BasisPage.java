@@ -3,7 +3,6 @@ package page.basis;
 import common.CommonStatic;
 import common.battle.BasisLU;
 import common.battle.BasisSet;
-import common.battle.LineUp;
 import common.pack.UserProfile;
 import common.system.Node;
 import common.util.pack.NyCastle;
@@ -66,7 +65,7 @@ public class BasisPage extends LubCont {
 	private final JScrollPane jspcs = new JScrollPane(jlcs);
 	private final JList<String> jlcl = new JList<>();
 	private final JScrollPane jspcl = new JScrollPane(jlcl);
-	private final ComboListTable jlc = new ComboListTable(this, lu());
+	private final ComboListTable jlc = new ComboListTable(this, lu().lu);
 	private final JScrollPane jspc = new JScrollPane(jlc);
 	private final ModifierList jlcn = new ModifierList();
 	private final JScrollPane jspcn = new JScrollPane(jlcn);
@@ -286,7 +285,7 @@ public class BasisPage extends LubCont {
 
 		lvorb.setLnr(x -> {
 			if (lub.sf != null) {
-				changePanel(new LevelEditPage(this, lu().getLv(lub.sf), lub.sf));
+				changePanel(new LevelEditPage(this, lu().lu.getLv(lub.sf), lub.sf));
 			}
 		});
 
@@ -501,7 +500,7 @@ public class BasisPage extends LubCont {
 		});
 
 		setc.addActionListener(arg0 -> {
-			lu().set(jlc.list.get(jlc.getSelectedRow()).forms);
+			lu().lu.set(jlc.list.get(jlc.getSelectedRow()).forms);
 			changeLU();
 		});
 
@@ -530,8 +529,8 @@ public class BasisPage extends LubCont {
 	}
 
 	private void changeLU() {
-		jlcn.setComboList(lu().coms);
-		jlc.setLU(lu());
+		jlcn.setComboList(lu().lu.coms);
+		jlc.setLU(lu().lu);
 		setCN();
 		updateSetC();
 		lub.updateLU();
@@ -603,14 +602,14 @@ public class BasisPage extends LubCont {
 		ufp = new UnitFLUPage(getThis(), lub.lim, lub.price);
 	}
 
-	private LineUp lu() {
-		return BasisSet.current().sele.lu;
+	private BasisLU lu() {
+		return BasisSet.current().sele;
 	}
 
 	private void setB(BasisLU b) {
 		current().sele = b;
 
-		lub.setLU(b == null ? null : b.lu);
+		lub.setLU(b);
 
 		brem.setEnabled(current().lb.size() > 1);
 
@@ -703,17 +702,17 @@ public class BasisPage extends LubCont {
 			return;
 		}
 
-		String[] strs = UtilPC.lvText(f, lu().getLv(f));
+		String[] strs = UtilPC.lvText(f, lu().lu.getLv(f));
 		lvjtf.setText(strs[0]);
 		pcoin.setText(strs[1]);
 	}
 
 	private void updateSetC() {
 		Combo com = !jlc.list.isEmpty() && jlc.getSelectedRow() != -1 ? jlc.list.get(jlc.getSelectedRow()) : null;
-		setc.setEnabled(com != null && !lu().contains(com));
+		setc.setEnabled(com != null && !lu().lu.contains(com));
 		boolean b = false;
 		if (com != null)
-			b = lu().willRem(com);
+			b = lu().lu.willRem(com);
 		setc.setForeground(b ? Color.RED : Color.BLACK);
 		setc.setText(0, "set" + (b ? "1" : "0"));
 	}
