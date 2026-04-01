@@ -193,7 +193,10 @@ public class Interpret extends Data {
     }
 
     public static String comboInfo(Combo c, BasisSet b) {
-        return combo(c.type, CommonStatic.getBCAssets().values[c.type][c.lv], b);
+        String str = combo(c.type, CommonStatic.getBCAssets().values[c.type][c.lv], b);
+        if (c.group != null)
+            str += " (" + c.group + ")";
+        return str;
     }
 
     public static String deco(int type, BasisSet b) { // 0 = slow

@@ -36,15 +36,18 @@ public class ModifierList extends JList<Object> {
                 JLabel jl = (JLabel) super.getListCellRendererComponent(l, o, ind, s, f);
                 if (o instanceof Combo) {
                     Combo c = (Combo) o;
-                    if (banned != null && banned.contains(c.type) || (c.id.pack != Identifier.DEF && !UserProfile.getUserPack(c.id.pack).useCombos)) {
+                    if (banned != null && banned.contains(c.type) || (!c.id.pack.equals(Identifier.DEF) && !UserProfile.getUserPack(c.id.pack).useCombos)) {
                         jl.setText("<html><strike>" + Interpret.lvl[c.lv] + " Combo: " + Interpret.comboInfo(c, lineup) + "</strike></html>");
                         jl.setForeground(getSelectedIndex() == ind ? Color.WHITE : Color.GRAY);
+                        jl.setToolTipText(null);
                     } else {
                         jl.setText(Interpret.lvl[c.lv] + " Combo: " + Interpret.comboInfo(c, lineup));
+                        jl.setToolTipText(c.group != null ? Interpret.getGroupTooltip(c.group) : null);
                     }
                 } else {
                     jl.setText(o.toString());
                     jl.setForeground(getSelectedIndex() == ind ? Color.WHITE : MainBCU.light ? Color.BLUE : Color.CYAN);
+                    jl.setToolTipText(null);
                 }
                 return jl;
             }
