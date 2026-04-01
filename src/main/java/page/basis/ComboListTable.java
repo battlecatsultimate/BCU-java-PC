@@ -1,12 +1,10 @@
 package page.basis;
 
 import common.battle.BasisSet;
-import common.battle.LineUp;
 import common.util.stage.CharaGroup;
 import common.util.unit.Combo;
 import common.util.unit.Form;
 import common.util.unit.Unit;
-import org.checkerframework.checker.nullness.qual.NonNull;
 import page.MainLocale;
 import page.Page;
 import page.support.SortTable;
@@ -35,15 +33,12 @@ public class ComboListTable extends SortTable<Combo> {
 				str + " 5" };
 	}
 
-	@NonNull
-	private LineUp lu;
 	private final Page fr;
 
-	public ComboListTable(Page p, @NonNull LineUp line) {
+	public ComboListTable(Page p) {
 		super(tit);
 
 		fr = p;
-		lu = line;
 
 		setDefaultRenderer(CharaGroup.class, new DefaultTableCellRenderer() {
 
@@ -141,9 +136,11 @@ public class ComboListTable extends SortTable<Combo> {
 		} else if (c == 2) {
 			return Integer.compare(e0.type, e1.type);
 		} else if (c == 3) {
-			int o0 = lu.occupance(e0);
-			int o1 = lu.occupance(e1);
-			return Integer.compare(o0, o1);
+			if (e0.group == null)
+				return -1;
+			else if (e1.group == null)
+				return 1;
+			return e0.group.id.compareTo(e1.group.id);
 		} else if (c >= 4 && c <= 8) {
 			if (e0.forms.length <= c - 3)
 				return -1;
@@ -173,9 +170,7 @@ public class ComboListTable extends SortTable<Combo> {
 		return null;
 	}
 
-	public void setLU(@NonNull LineUp lu) {
-		this.lu = lu;
-
+	public void refresh() {
 		revalidate();
 		repaint();
 	}

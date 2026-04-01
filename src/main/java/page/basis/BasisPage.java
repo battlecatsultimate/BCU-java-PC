@@ -65,7 +65,7 @@ public class BasisPage extends LubCont {
 	private final JScrollPane jspcs = new JScrollPane(jlcs);
 	private final JList<String> jlcl = new JList<>();
 	private final JScrollPane jspcl = new JScrollPane(jlcl);
-	private final ComboListTable jlc = new ComboListTable(this, lu().lu);
+	private final ComboListTable jlc = new ComboListTable(this);
 	private final JScrollPane jspc = new JScrollPane(jlc);
 	private final ModifierList jlcn = new ModifierList();
 	private final JScrollPane jspcn = new JScrollPane(jlcn);
@@ -529,7 +529,7 @@ public class BasisPage extends LubCont {
 
 	private void changeLU() {
 		jlcn.setComboList(lu().lu.coms);
-		jlc.setLU(lu().lu);
+		jlc.refresh();
 		setCN();
 		updateSetC();
 		lub.updateLU();

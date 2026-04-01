@@ -73,7 +73,7 @@ public class StageEditTable extends AbJTable implements Reorderable {
 		JTextComponent jtf = ((JTextComponent) editor);
 		if (e instanceof KeyEvent)
 			jtf.selectAll();
-		if (lnk[c] == 1 && jtf.getText().length() > 0) {
+		if (lnk[c] == 1 && !jtf.getText().isEmpty()) {
 			Object obj = get(r, c);
 
 			if(obj != null)
