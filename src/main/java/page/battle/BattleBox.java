@@ -24,7 +24,6 @@ import common.util.anim.AnimU;
 import common.util.pack.EffAnim;
 import common.util.pack.bgeffect.BackgroundEffect;
 import common.util.stage.CastleImg;
-import common.util.stage.StageLimit;
 import common.util.unit.Form;
 import main.MainBCU;
 import page.RetFunc;
@@ -407,8 +406,6 @@ public interface BattleBox {
 					int pri = sb.elu.price[i][j];
 					if (sb.elu.priceDownOrb[i][j] > 0 && sb.elu.tick[i][j] == 1)
 						pri -= pri * sb.elu.priceDownOrb[i][j] / 100;
-					if (!StageLimit.isComboBanned(sb.est.lim, Data.C_DISCOUNT))
-						pri -= pri * sb.b.getInc(Data.C_DISCOUNT, f.unit) / 100;
 					boolean canPlay = pri != -1 && sb.maxCatSpawns != 0 && (sb.maxRarityNum[f.unit.rarity] == -1 || sb.entityCountRar(f.unit.rarity) < sb.maxRarityNum[f.unit.rarity] - f.du.getWill());
 
 					if (!canPlay)
@@ -557,8 +554,10 @@ public interface BattleBox {
 				if (pri == -1)
 					g.colRect(x, y, iw, ih, 255, 0, 0, 100);
 
-				int cool = sb.elu.cool[index][i];
+				if (sb.elu.priceDownOrb[index][i] > 0 && sb.elu.tick[index][i] == 1)
+					pri -= pri * sb.elu.priceDownOrb[index][i] / 100;
 
+				int cool = sb.elu.cool[index][i];
 				boolean b = isBehind || pri > sb.money || cool > 0;
 
 				if (b && !sb.summonerSummoned[index][i])
@@ -605,12 +604,42 @@ public interface BattleBox {
 						float cd = 1f * cool / sb.elu.maxC[index][i];
 
 						int xw = (int) (cd * (iw - dw * 2));
-						int xw2 = (int) (iw - dw * 2);
+						int xw2 = iw - dw * 2;
 
 						g.colRect(x + iw - dw - xw2, y + ih - dh * 2, xw2, dh, 0, 0, 0, -1);
 						g.colRect((x + dw + 2f), (y + ih - dh * 2) + 2f, (iw - dw * 2 - xw) - 4, dh - 4, 0, 255, 255, -1);
 					} else if (pri != -1 && !sb.summonerSummoned[index][i]) {
 						Res.getCost(pri / 100, !b, setSym(g, hr, x + iw, y + ih, 3));
+						if (sb.elu.tick[index][i] == 1) {
+							int[][] orbs = sb.b.lu.map.get(f.unit.id).getOrbs();
+							float orbX = 0;
+							for (int[] orb : orbs) {
+								if (orb[0] < Data.ORB_DEATH_SURGE)
+									continue;
+								FakeImage orbBall = aux.TRAITS[1][OrbInfo.reverse(orb[1])];
+								FakeImage orbIcon = aux.TYPES[1][orb[0]];
+								float ballW = orbBall.getWidth() * hr;
+								float iconW = orbIcon.getWidth() * hr;
+								float ballH = orbBall.getHeight() * hr;
+								float iconH = orbIcon.getHeight() * hr;
+								g.setRenderingHint(3, 2);
+								g.drawImage(orbBall, x - 4f + orbX,
+										y + 2f - (ballH / 3f), ballW, ballH);
+								g.drawImage(orbIcon, x - 4f + (orbX) + (ballW - iconW) / 2f,
+										y + 2f - (ballH / 3f) + (ballH - iconH) / 2f, iconW, iconH);
+								orbX += ballW;
+							}
+							if (sb.time - sb.frameOffCd[index][i] < 10) {
+								float diff = sb.time - sb.frameOffCd[index][i]; // first frame: 100%
+
+								g.setComposite(FakeGraphics.BLEND, (int) Math.max(0, 256 * (1f - 0.1f * diff)), 1);
+								FakeImage glowBox = aux.battle[1][22].getImg();
+								float glowW = glowBox.getWidth() * hr * (1f + Math.min(0.12f, 0.02f * diff));
+								float glowH = glowBox.getHeight() * hr * (1f + Math.min(0.12f, 0.02f * diff));
+								g.drawImage(glowBox, x + (iw - glowW) / 2f, y + (ih - glowH) / 2f, glowW, glowH);
+								g.setComposite(FakeGraphics.DEF, 0, 0);
+							}
+						}
 					}
 				}
 			}
