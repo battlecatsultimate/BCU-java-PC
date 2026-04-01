@@ -129,6 +129,7 @@ public class ComboListTable extends SortTable<Combo> {
 
 	@Override
 	protected int compare(Combo e0, Combo e1, int c) {
+		c = lnk[c];
 		if (c == 0) {
 			return e0.getID().compareTo(e1.getID());
 		} else if (c == 2) {

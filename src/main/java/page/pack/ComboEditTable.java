@@ -135,6 +135,7 @@ public class ComboEditTable extends AbJTable {
 
     @Override
     public TableCellEditor getCellEditor(int r, int c) {
+        c = lnk[c];
         Object v = getValueAt(r, c);
         if (c == 1)
             return new DefaultCellEditor(clvl);
@@ -196,6 +197,7 @@ public class ComboEditTable extends AbJTable {
 
     @Override
     public boolean isCellEditable(int r, int c) {
+        c = lnk[c];
         if (r < 0 || c < 0 || r > pack.combos.size() || c >= 3)
             return false;
         return pack.editable;
@@ -206,6 +208,7 @@ public class ComboEditTable extends AbJTable {
         if (pack == null)
             return;
         Combo combo = pack.combos.get(r);
+        c = lnk[c];
 
         if (c == 0)
             combo.name = (String) o;
@@ -216,7 +219,6 @@ public class ComboEditTable extends AbJTable {
     }
 
     protected Object get(Combo t, int c) {
-        c = lnk[c];
         if (c == 0)
             return t.name;
         if (c == 1)
