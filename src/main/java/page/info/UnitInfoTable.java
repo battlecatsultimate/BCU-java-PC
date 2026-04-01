@@ -118,7 +118,6 @@ public class UnitInfoTable extends Page {
 		double def = b.t().getDefMulti();
 
 		int attack = (int) (Math.round(ef.du.allAtk() * mul) * atk);
-
 		int hp = (int) (Math.round(ef.du.getHp() * mul) * def);
 
 		PCoin pc = f.du.getPCoin();
