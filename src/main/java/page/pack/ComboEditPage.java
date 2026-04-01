@@ -324,7 +324,7 @@ public class ComboEditPage extends Page {
 
     @SuppressWarnings("UnusedAssignment")
     private void setPack(PackData.UserPack pack) {
-        pac = pack;
+        jlc.setPack(pac = pack);
         boolean pre = changing;
         if (jlp.getSelectedValue() != pack) {
             changing = true;

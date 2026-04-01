@@ -15,6 +15,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
+import java.util.EventObject;
 import java.util.stream.IntStream;
 
 public class ComboEditTable extends AbJTable {
@@ -38,8 +39,8 @@ public class ComboEditTable extends AbJTable {
 
     private final Page fr;
     private PackData.UserPack pack;
-    private final JComboBox<Integer> clvl = new JComboBox<>();
-    private final JComboBox<Integer> ctyp = new JComboBox<>();
+    private final JComboBox<Integer> clvl = new JComboBox<>(IntStream.rangeClosed(0, 3).boxed().toArray(Integer[]::new));
+    private final JComboBox<Integer> ctyp = new JComboBox<>(IntStream.range(0, typ.length).boxed().toArray(Integer[]::new));
 
     public ComboEditTable(Page p, PackData.UserPack pack) {
         super(tit);
@@ -47,7 +48,6 @@ public class ComboEditTable extends AbJTable {
         fr = p;
         this.pack = pack;
 
-        clvl.setModel(new DefaultComboBoxModel<>(IntStream.rangeClosed(0, 3).boxed().toArray(Integer[]::new)));
         clvl.setRenderer(new DefaultListCellRenderer() {
             private static final long serialVersionUID = 1L;
 
@@ -59,7 +59,6 @@ public class ComboEditTable extends AbJTable {
             }
         });
 
-        ctyp.setModel(new DefaultComboBoxModel<>(IntStream.range(0, typ.length).boxed().toArray(Integer[]::new)));
         ctyp.setRenderer(new DefaultListCellRenderer() {
             private static final long serialVersionUID = 1L;
 
@@ -137,10 +136,14 @@ public class ComboEditTable extends AbJTable {
     public TableCellEditor getCellEditor(int r, int c) {
         c = lnk[c];
         Object v = getValueAt(r, c);
-        if (c == 1)
+        Combo com = pack.combos.get(r);
+        if (c == 1) {
+            clvl.setSelectedIndex(com.lv);
             return new DefaultCellEditor(clvl);
-        else if (c == 2)
+        } else if (c == 2) {
+            ctyp.setSelectedIndex(com.type);
             return new DefaultCellEditor(ctyp);
+        }
         else if (v != null)
             return getDefaultEditor(v.getClass());
         else
@@ -163,6 +166,18 @@ public class ComboEditTable extends AbJTable {
         if (f == null)
             return;
         fr.callBack(f.unit);
+    }
+
+    @Override
+    public boolean editCellAt(int row, int col, EventObject e) {
+        boolean result = super.editCellAt(row, col, e);
+//        int c = lnk[col];
+//        if (c == 1) {
+//            clvl.setSelectedIndex(pack.combos.get(row).lv);
+//        } else if (c == 2) {
+//            ctyp.setSelectedIndex(pack.combos.get(row).type);
+//        }
+        return result;
     }
 
     @Override
