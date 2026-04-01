@@ -1,4 +1,4 @@
-package page.basis;
+package page.pack;
 
 import common.battle.BasisSet;
 import common.pack.PackData;
@@ -8,7 +8,6 @@ import common.util.unit.Form;
 import common.util.unit.Unit;
 import page.MainLocale;
 import page.Page;
-import page.pack.CharaGroupPage;
 import page.support.AbJTable;
 import utilpc.Interpret;
 import utilpc.UtilPC;
@@ -18,6 +17,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ComboEditTable extends AbJTable {
 
@@ -40,8 +40,8 @@ public class ComboEditTable extends AbJTable {
 
     private final Page fr;
     private PackData.UserPack pack;
-    private final JComboBox<Integer> clvl = new JComboBox<>(new Integer[Interpret.lvl.length - 2]);
-    private final JComboBox<Integer> ctyp = new JComboBox<>(new Integer[typ.length]);
+    private final JComboBox<Integer> clvl = new JComboBox<>();
+    private final JComboBox<Integer> ctyp = new JComboBox<>();
 
     public ComboEditTable(Page p, PackData.UserPack pack) {
         super(tit);
@@ -49,26 +49,26 @@ public class ComboEditTable extends AbJTable {
         fr = p;
         this.pack = pack;
 
+        clvl.setModel(new DefaultComboBoxModel<>(IntStream.rangeClosed(0, 3).boxed().toArray(Integer[]::new)));
         clvl.setRenderer(new DefaultListCellRenderer() {
             private static final long serialVersionUID = 1L;
 
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel jl = ((JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus));
-                if (index != -1)
-                    jl.setText(Interpret.lvl[index]);
+                jl.setText(index == -1 ? Interpret.lvl[(int) value] : Interpret.lvl[index]);
                 return jl;
             }
         });
 
+        ctyp.setModel(new DefaultComboBoxModel<>(IntStream.range(0, typ.length).boxed().toArray(Integer[]::new)));
         ctyp.setRenderer(new DefaultListCellRenderer() {
             private static final long serialVersionUID = 1L;
 
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 JLabel jl = ((JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus));
-                if (index != -1)
-                    jl.setText(typ[index]);
+                jl.setText(index == -1 ? typ[(int) value]  : typ[index]);
                 return jl;
             }
         });
