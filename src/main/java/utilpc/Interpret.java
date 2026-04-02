@@ -192,9 +192,9 @@ public class Interpret extends Data {
         return true;
     }
 
-    public static String comboInfo(Combo c, BasisSet b) {
+    public static String comboInfo(Combo c, BasisSet b, boolean checkGroup) {
         String str = combo(c.type, CommonStatic.getBCAssets().values[c.type][c.lv], b);
-        if (c.group != null)
+        if (checkGroup && c.group != null)
             str += " (" + c.group + ")";
         return str;
     }

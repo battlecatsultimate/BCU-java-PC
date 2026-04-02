@@ -98,7 +98,7 @@ public class ComboEditTable extends AbJTable {
             public Component getTableCellRendererComponent(JTable l, Object o, boolean s, boolean f, int r, int c) {
                 JLabel jl = (JLabel) super.getTableCellRendererComponent(l, c, s, f, r, c);
                 Combo com = (Combo) o;
-                jl.setText(com != null ? Interpret.comboInfo(com, BasisSet.current()) : "?");
+                jl.setText(com != null ? Interpret.comboInfo(com, BasisSet.current(), false) : "?");
                 return jl;
             }
 
