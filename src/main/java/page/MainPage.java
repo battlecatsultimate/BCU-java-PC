@@ -266,7 +266,7 @@ public class MainPage extends Page {
 	}
 
 	private void refrTips() {
-		String[] tipLang = get(MainLocale.PAGE, "tip", 13);
+		String[] tipLang = get(MainLocale.PAGE, "tip", 16);
 		tips.setText("<html>" + tipLang[(int)(Math.random() * tipLang.length)] + "</html>");
 	}
 
