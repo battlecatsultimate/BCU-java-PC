@@ -89,6 +89,7 @@ public class PackEditPage extends Page {
 	private final JBTN ener = new JBTN(MainLocale.PAGE, "ener");
 	private final JBTN vmsc = new JBTN(MainLocale.PAGE, "vmsc");
 	private final JBTN unpk = new JBTN(MainLocale.PAGE, "unpack");
+	private final JBTN ccmb = new JBTN(MainLocale.PAGE, "combo");
 	private final JBTN recd = new JBTN(MainLocale.PAGE, "replay");
 	private final JBTN csol = new JBTN(MainLocale.PAGE, "csoul");
 	private final JTG cmbo = new JTG(MainLocale.PAGE, "usecombo");
@@ -195,7 +196,7 @@ public class PackEditPage extends Page {
 		set(addr, x, y, w, 800, 175, 50);
 		set(remr, x, y, w + 175, 800, 175, 50);
 
-		set(recd, x, y, w, 950, 300, 50);
+		set(ccmb, x, y, w, 950, 300, 50);
 		set(tdiy, x, y, w, 1050, 300, 50);
 		set(csol, x, y, w, 1150, 300, 50);
 
@@ -203,6 +204,9 @@ public class PackEditPage extends Page {
 
 		set(lbt, x, y, w, 100, 350, 50);
 		set(jspt, x, y, w, 150, 350, 600);
+
+		set(recd, x, y, w, 950, 300, 50);
+
 		SwingUtilities.invokeLater(() -> jtd.setUI(new TreeNodeExpander(jtd)));
 	}
 
@@ -355,6 +359,8 @@ public class PackEditPage extends Page {
 				}
 			}
 		});
+
+		ccmb.addActionListener(x -> changePanel(new ComboEditPage(getThis(), pac)));
 
 		vali.setLnr(x -> {
 			List<Pair<Object, List<String>>> result = pac.collectInvalidAnimation();
@@ -672,6 +678,7 @@ public class PackEditPage extends Page {
 		add(csol);
 		add(cmbo);
 		add(vali);
+		add(ccmb);
 
 		cmbo.setToolTipText("Decide whether to apply or not this pack's custom CatCombos onto your lineups");
 
