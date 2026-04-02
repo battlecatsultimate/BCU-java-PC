@@ -1,24 +1,36 @@
 Manifest-Version: 1.0
 Main-Class: main.MainBCU
-Manifest-Version: 1.0
-Main-Class: main.MainBCU
-Class-Path: ./BCU_lib/kotlin-stdlib-jdk8-1.9.23.jar ./BCU_lib/httpcore-4.4.16.jar ./BCU_lib/guava-33.0.0-jre.jar ./BCU_l
- ib/kotlin-stdlib-1.9.23.jar ./BCU_lib/j2objc-annotations-2.8.jar ./BCU_lib/jogl-all-2.5.0-natives-linux-armv6hf.jar ./B
- CU_lib/gluegen-rt-2.5.0-natives-linux-aarch64.jar ./BCU_lib/jogl-all-2.5.0-natives-linux-amd64.jar ./BCU_lib/gluegen-rt
- -2.5.0.jar ./BCU_lib/commons-logging-1.3.1.jar ./BCU_lib/google-oauth-client-1.35.0.jar ./BCU_lib/google-api-client-2.4
- .0.jar ./BCU_lib/gson-2.10.1.jar ./BCU_lib/jogl-all-2.5.0.jar ./BCU_lib/opencensus-api-0.31.1.jar ./BCU_lib/grpc-api-1.
- 60.1.jar ./BCU_lib/commons-io-2.16.1.jar ./BCU_lib/vorbisspi-1.0.3.3.jar ./BCU_lib/google-api-services-drive-v3-rev2024
- 0327-2.0.0.jar ./BCU_lib/kotlin-stdlib-jdk7-1.9.23.jar ./BCU_lib/gluegen-rt-2.5.0-natives-android-aarch64.jar ./BCU_lib
- /grpc-context-1.60.1.jar ./BCU_lib/gluegen-rt-2.5.0-natives-linux-armv6hf.jar ./BCU_lib/jcodec-0.2.5.jar ./BCU_lib/glue
- gen-rt-main-2.5.0.jar ./BCU_lib/annotations-13.0.jar ./BCU_lib/jogl-all-2.5.0-natives-macosx-universal.jar ./BCU_lib/go
- ogle-oauth-client-jetty-1.35.0.jar ./BCU_lib/commons-codec-1.16.1.jar ./BCU_lib/failureaccess-1.0.2.jar ./BCU_lib/jogl-
- all-2.5.0-natives-linux-aarch64.jar ./BCU_lib/google-http-client-1.44.1.jar ./BCU_lib/gluegen-rt-2.5.0-natives-windows-
- amd64.jar ./BCU_lib/gluegen-rt-2.5.0-natives-linux-amd64.jar ./BCU_lib/error_prone_annotations-2.23.0.jar ./BCU_lib/lis
- tenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar ./BCU_lib/opencensus-contrib-http-util-0.31.1.jar ./BCU_lib
- /checker-qual-3.41.0.jar ./BCU_lib/jogl-all-main-2.5.0.jar ./BCU_lib/jcodec-javase-0.2.5.jar ./BCU_lib/auto-value-annot
- ations-1.10.4.jar ./BCU_lib/jogl-all-2.5.0-natives-android-aarch64.jar ./BCU_lib/tritonus-share-0.3.7.4.jar ./BCU_lib/j
- son-20240303.jar ./BCU_lib/google-oauth-client-java6-1.35.0.jar ./BCU_lib/google-http-client-gson-1.44.1.jar ./BCU_lib/
- gluegen-rt-2.5.0-natives-macosx-universal.jar ./BCU_lib/google-http-client-apache-v2-1.44.1.jar ./BCU_lib/jogl-all-2.5.
- 0-natives-windows-amd64.jar ./BCU_lib/httpmime-4.5.14.jar ./BCU_lib/jorbis-0.0.17.4.jar ./BCU_lib/google-auth-library-c
- redentials-1.23.0.jar ./BCU_lib/antlr-2.7.7.jar ./BCU_lib/google-auth-library-oauth2-http-1.23.0.jar ./BCU_lib/jsr305-3
- .0.2.jar ./BCU_lib/httpclient-4.5.14.jar
+Class-Path: ./BCU_lib/httpcore-4.4.16.jar ./BCU_lib/kotlin-stdlib-jdk7-2
+ .2.0.jar ./BCU_lib/guava-33.0.0-jre.jar ./BCU_lib/j2objc-annotations-2.
+ 8.jar ./BCU_lib/jogl-all-2.5.0-natives-linux-armv6hf.jar ./BCU_lib/glue
+ gen-rt-2.5.0-natives-linux-aarch64.jar ./BCU_lib/jogl-all-2.5.0-natives
+ -linux-amd64.jar ./BCU_lib/gluegen-rt-2.5.0.jar ./BCU_lib/commons-loggi
+ ng-1.3.1.jar ./BCU_lib/google-oauth-client-1.35.0.jar ./BCU_lib/google-
+ api-client-2.4.0.jar ./BCU_lib/gson-2.10.1.jar ./BCU_lib/jogl-all-2.5.0
+ .jar ./BCU_lib/opencensus-api-0.31.1.jar ./BCU_lib/grpc-api-1.60.1.jar
+ ./BCU_lib/commons-io-2.16.1.jar ./BCU_lib/vorbisspi-1.0.3.3.jar ./BCU_l
+ ib/google-api-services-drive-v3-rev20240327-2.0.0.jar ./BCU_lib/gluegen
+ -rt-2.5.0-natives-android-aarch64.jar ./BCU_lib/kotlin-stdlib-2.2.0.jar
+  ./BCU_lib/grpc-context-1.60.1.jar ./BCU_lib/gluegen-rt-2.5.0-natives-l
+ inux-armv6hf.jar ./BCU_lib/jcodec-0.2.5.jar ./BCU_lib/gluegen-rt-main-2
+ .5.0.jar ./BCU_lib/annotations-13.0.jar ./BCU_lib/jogl-all-2.5.0-native
+ s-macosx-universal.jar ./BCU_lib/google-oauth-client-jetty-1.35.0.jar .
+ /BCU_lib/commons-codec-1.16.1.jar ./BCU_lib/failureaccess-1.0.2.jar ./B
+ CU_lib/jogl-all-2.5.0-natives-linux-aarch64.jar ./BCU_lib/google-http-c
+ lient-1.44.1.jar ./BCU_lib/gluegen-rt-2.5.0-natives-windows-amd64.jar .
+ /BCU_lib/gluegen-rt-2.5.0-natives-linux-amd64.jar ./BCU_lib/error_prone
+ _annotations-2.23.0.jar ./BCU_lib/listenablefuture-9999.0-empty-to-avoi
+ d-conflict-with-guava.jar ./BCU_lib/opencensus-contrib-http-util-0.31.1
+ .jar ./BCU_lib/checker-qual-3.41.0.jar ./BCU_lib/jogl-all-main-2.5.0.ja
+ r ./BCU_lib/jcodec-javase-0.2.5.jar ./BCU_lib/kotlin-stdlib-jdk8-2.2.0.
+ jar ./BCU_lib/auto-value-annotations-1.10.4.jar ./BCU_lib/jogl-all-2.5.
+ 0-natives-android-aarch64.jar ./BCU_lib/tritonus-share-0.3.7.4.jar ./BC
+ U_lib/json-20240303.jar ./BCU_lib/google-oauth-client-java6-1.35.0.jar
+ ./BCU_lib/google-http-client-gson-1.44.1.jar ./BCU_lib/gluegen-rt-2.5.0
+ -natives-macosx-universal.jar ./BCU_lib/google-http-client-apache-v2-1.
+ 44.1.jar ./BCU_lib/jogl-all-2.5.0-natives-windows-amd64.jar ./BCU_lib/h
+ ttpmime-4.5.14.jar ./BCU_lib/jorbis-0.0.17.4.jar ./BCU_lib/google-auth-
+ library-credentials-1.23.0.jar ./BCU_lib/antlr-2.7.7.jar ./BCU_lib/goog
+ le-auth-library-oauth2-http-1.23.0.jar ./BCU_lib/jsr305-3.0.2.jar ./BCU
+ _lib/httpclient-4.5.14.jar
+

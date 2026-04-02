@@ -5,6 +5,7 @@
 plugins {
     `java-library`
     `maven-publish`
+    kotlin("jvm") version "2.2.0"
 }
 
 repositories {
@@ -16,6 +17,7 @@ repositories {
     maven {
         url = uri("https://repo.maven.apache.org/maven2/")
     }
+    mavenCentral()
 }
 
 sourceSets {
@@ -55,7 +57,6 @@ dependencies {
 group = "com.battlecatsultimate"
 version = "0.0.1-SNAPSHOT"
 description = "BCU-java-PC"
-java.sourceCompatibility = JavaVersion.VERSION_1_8
 
 publishing {
     publications.create<MavenPublication>("maven") {
@@ -65,8 +66,13 @@ publishing {
 
 tasks.withType<JavaCompile>() {
     options.encoding = "UTF-8"
+    options.release = 8
 }
 
 tasks.withType<Javadoc>() {
     options.encoding = "UTF-8"
+}
+
+kotlin {
+    jvmToolchain(8)
 }
