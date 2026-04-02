@@ -30,3 +30,5 @@
 /classes/
 *.iml
 *.jar
+/.gradle/
+/build/
