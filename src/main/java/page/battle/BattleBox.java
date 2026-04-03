@@ -8,7 +8,7 @@ import common.battle.StageBasis;
 import common.battle.attack.ContAb;
 import common.battle.attack.ContWaveAb;
 import common.battle.data.DataEnemy;
-import common.battle.data.OrbInfo;
+import common.battle.data.Orb;
 import common.battle.entity.*;
 import common.pack.Identifier;
 import common.system.P;
@@ -469,7 +469,7 @@ public interface BattleBox {
                             for (int[] orb : orbs) {
                                 if (orb[0] < Data.ORB_DEATH_SURGE)
                                     continue;
-                                FakeImage orbBall = aux.TRAITS[1][OrbInfo.reverse(orb[1])];
+                                FakeImage orbBall = aux.TRAITS[1][Orb.reverse(orb[1])];
                                 FakeImage orbIcon = aux.TYPES[1][orb[0]];
                                 float ballW = orbBall.getWidth() * hr;
                                 float iconW = orbIcon.getWidth() * hr;
@@ -616,7 +616,7 @@ public interface BattleBox {
 							for (int[] orb : orbs) {
 								if (orb[0] < Data.ORB_DEATH_SURGE)
 									continue;
-								FakeImage orbBall = aux.TRAITS[1][OrbInfo.reverse(orb[1])];
+								FakeImage orbBall = aux.TRAITS[1][Orb.reverse(orb[1])];
 								FakeImage orbIcon = aux.TYPES[1][orb[0]];
 								float ballW = orbBall.getWidth() * hr;
 								float iconW = orbIcon.getWidth() * hr;

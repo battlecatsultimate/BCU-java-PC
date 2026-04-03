@@ -558,9 +558,9 @@ public class ComparePage extends Page {
                     if ((mu.getAbi() & Data.AB_RESISTS) > 0)
                         effectiveHP = (int) (effectiveHP / b.t().getRESISTSDEF(traits));
                     if ((mu.getAbi() & Data.AB_RESIST) > 0)
-                        effectiveHP = (int) (effectiveHP / b.t().getRESISTDEF(traits, traits, null, multi.clone(), b.getInc(Data.C_RESIST, f.unit)));
+                        effectiveHP = (int) (effectiveHP / b.t().getRESISTDEF(traits, traits, multi.clone(), b.getInc(Data.C_RESIST, f.unit)));
                     if ((mu.getAbi() & Data.AB_GOOD) > 0)
-                        effectiveHP = (int) (effectiveHP / b.t().getGOODDEF(traits, traits, null, multi.clone(), b.getInc(Data.C_GOOD, f.unit)));
+                        effectiveHP = (int) (effectiveHP / b.t().getGOODDEF(traits, traits, multi.clone(), b.getInc(Data.C_GOOD, f.unit)));
                 }
 
                 if (spTraits.contains(trait.list.get(Data.TRAIT_WITCH)) && (mu.getAbi() & Data.AB_WKILL) > 0)

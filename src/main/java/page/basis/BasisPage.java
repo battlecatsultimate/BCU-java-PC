@@ -693,7 +693,7 @@ public class BasisPage extends LubCont {
 	}
 
 	private void setLvs(Form f) {
-		lvorb.setEnabled(f != null && f.unit.orbs != null && f.unit.orbs.getSlots() != -1);
+		lvorb.setEnabled(f != null && !f.unit.orbs.isEmpty());
 
 		if (f == null) {
 			lvjtf.setText("");

@@ -4,7 +4,7 @@ package page.basis;
 import common.CommonStatic;
 import common.battle.BasisLU;
 import common.battle.LineUp;
-import common.battle.data.OrbInfo;
+import common.battle.data.Orb;
 import common.system.P;
 import common.system.SymCoord;
 import common.system.VImg;
@@ -102,7 +102,7 @@ public class LineUpBox extends Canvas {
 							for (int[] orb : orbs) {
 								if (orb.length == 0)
 									continue;
-								FakeImage orbBall = CommonStatic.getBCAssets().TRAITS[1][OrbInfo.reverse(orb[1])];
+								FakeImage orbBall = CommonStatic.getBCAssets().TRAITS[1][Orb.reverse(orb[1])];
 								FakeImage orbIcon = CommonStatic.getBCAssets().TYPES[1][orb[0]];
 								float ballW = orbBall.getWidth() * ORB_SIZE_MULTIPLIER;
 								float iconW = orbIcon.getWidth() * ORB_SIZE_MULTIPLIER;

@@ -4,6 +4,7 @@ import common.CommonStatic;
 import common.battle.BasisSet;
 import common.battle.LineUp;
 import common.battle.data.MaskUnit;
+import common.battle.data.Orb;
 import common.util.Data;
 import common.util.unit.Form;
 import common.util.unit.Level;
@@ -62,16 +63,11 @@ public class LevelEditPage extends Page {
 
 		if (exists) {
 			BasisSet.synchronizeOrb(f.unit);
-			if (f.unit.orbs != null) {
-				if (lv.getOrbs() == null) {
-					if (f.unit.orbs.getSlots() != -1) {
-						for (int i = 0; i < f.unit.orbs.getSlots(); i++) {
-							orbs.add(new int[] {});
-						}
-					}
-				} else {
-					orbs.addAll(Arrays.asList(lv.getOrbs()));
-				}
+			if (lv.getOrbs() == null && !f.unit.orbs.isEmpty()) {
+				for (int i = 0; i < f.unit.orbs.size(); i++)
+					orbs.add(new int[0]);
+			} else {
+				orbs.addAll(Arrays.asList(lv.getOrbs()));
 			}
 		}
 
@@ -90,14 +86,14 @@ public class LevelEditPage extends Page {
 		set(bck, x, y, 0, 0, 200, 50);
 		set(pcoin, x, y, 450, 150, 1200, 50);
 		set(levels, x, y, 450, 200, 700, 50);
-		set(orbScroll, x, y, 450, 275, 350, 600);
-		set(orbb, x, y, 850, 450, 200, 200);
-		set(ltyp, x, y, 1100, 350, 300, 50);
-		set(type, x, y, 1100, 400, 300, 50);
-		set(lgra, x, y, 1100, 500, 300, 50);
-		set(grade, x, y, 1100, 550, 300, 50);
-		set(ltra, x, y, 1100, 650, 300, 50);
-		set(trait, x, y, 1100, 700, 300, 50);
+		set(orbScroll, x, y, 450, 275, 500, 600);
+		set(orbb, x, y, 1050, 450, 200, 200);
+		set(ltyp, x, y, 1300, 350, 300, 50);
+		set(type, x, y, 1300, 400, 300, 50);
+		set(lgra, x, y, 1300, 500, 300, 50);
+		set(grade, x, y, 1300, 550, 300, 50);
+		set(ltra, x, y, 1300, 650, 300, 50);
+		set(trait, x, y, 1300, 700, 300, 50);
 	}
 
 	@Override
@@ -150,7 +146,7 @@ public class LevelEditPage extends Page {
 			if (orbList.getSelectedIndex() != -1 && orbList.getSelectedIndex() < orbs.size()) {
 				int[] data = orbs.get(orbList.getSelectedIndex());
 
-				if (f.unit.orbs != null && f.unit.orbs.getSlots() != -1) {
+				if (f.unit.orbs != null && !f.unit.orbs.isEmpty()) {
 					if (type.getSelectedIndex() == 0) {
 						data = new int[] {};
 					} else {
@@ -229,12 +225,15 @@ public class LevelEditPage extends Page {
 				res[i] = (i + 1) + ": None";
 			}
 
-			if (!f.checkOrb(lv.getLv() + lv.getPlusLv(), i)) {
-				int lim = f.unit.orbs.getLimits()[i];
-				if (lim == 0)
-					res[i] += " (Req: True Form)";
-				if (lim == 1)
-					res[i] += " (Req: Lv. 60)";
+			Orb orb = f.unit.orbs.get(i);
+			int totalLv = lv.getLv() + lv.getPlusLv();
+			if (orb.isRestricted(f.fid, totalLv)) {
+				res[i] += " (Req:";
+				if (f.fid < orb.minForm)
+					res[i] += " " +  Interpret.getNumberExtension(orb.minForm + 1) + " Form";
+				if (lv.getLv() + lv.getPlusLv() < orb.minLv)
+					res[i] += " " + "Lv. " + orb.minLv;
+				res[i] += ")";
 			}
 		}
 
@@ -324,7 +323,8 @@ public class LevelEditPage extends Page {
 			@Override
 			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 				JLabel jl = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-				if (!f.checkOrb(lv.getLv() + lv.getPlusLv(), index)) {
+				Orb orb = f.unit.orbs.get(index);
+				if (orb.isRestricted(f.fid, lv.getLv() + lv.getPlusLv())) {
 					jl.setText("<html><strike>" + jl.getText() + "<html><strike>");
 					jl.setForeground(isSelected ? Color.WHITE : !MainBCU.light ? Color.GRAY : Color.RED);
 				}
@@ -340,10 +340,7 @@ public class LevelEditPage extends Page {
 		CommonStatic.BCAuxAssets aux = CommonStatic.getBCAssets();
 
 		updating = true;
-
-		if (f.unit.orbs == null) {
-			return;
-		}
+		boolean hasOrbs = !f.unit.orbs.isEmpty();
 
 		ArrayList<String> typeText = new ArrayList<>();
 
@@ -351,7 +348,7 @@ public class LevelEditPage extends Page {
 		boolean mas = false;
 		boolean res = false;
 
-        if(f.unit.orbs.getSlots() == -1) {
+        if (hasOrbs) {
 			for(Form form : f.unit.forms) {
 				MaskUnit mu;
 
@@ -379,7 +376,7 @@ public class LevelEditPage extends Page {
 			res = (mu.getAbi() & Data.AB_RESIST) != 0;
 		}
 
-		if (f.unit.orbs.getSlots() != -1) {
+		if (hasOrbs) {
 			typeText.add("None");
 		}
 
@@ -408,7 +405,7 @@ public class LevelEditPage extends Page {
 			typeData.add(i);
 		}
 
-		if (f.unit.orbs.getSlots() != -1 && data.length == 0) {
+		if (hasOrbs && data.length == 0) {
 			type.setModel(new DefaultComboBoxModel<>(typeText.toArray(new String[0])));
 
 			type.setSelectedIndex(0);
@@ -440,7 +437,7 @@ public class LevelEditPage extends Page {
 
 				List<Trait> traitList = new ArrayList<>();
 
-				if(f.unit.orbs.getSlots() == -1) {
+				if (hasOrbs) {
 					for(Form form : f.unit.forms) {
 						MaskUnit mu;
 
@@ -514,7 +511,7 @@ public class LevelEditPage extends Page {
 		trait.setEnabled(traitData.get(0) != 0);
 		grade.setEnabled(true);
 
-		if (f.unit.orbs.getSlots() != -1) {
+		if (hasOrbs) {
 			type.setSelectedIndex(typeData.indexOf(data[0]) + 1);
 		} else {
 			type.setSelectedIndex(typeData.indexOf(data[0]));
@@ -558,7 +555,7 @@ public class LevelEditPage extends Page {
 
 		List<Integer> possibleTraits = new ArrayList<>();
 
-		if(f.unit.orbs.getSlots() == -1) {
+		if(!f.unit.orbs.isEmpty()) {
 			for(Form form : f.unit.forms) {
 				MaskUnit mu;
 
