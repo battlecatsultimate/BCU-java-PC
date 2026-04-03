@@ -5,6 +5,7 @@ import common.CommonStatic;
 import common.battle.BasisLU;
 import common.battle.BasisSet;
 import common.battle.data.CustomUnit;
+import common.battle.data.Orb;
 import common.pack.PackData.UserPack;
 import common.pack.Source;
 import common.pack.UserProfile;
@@ -36,14 +37,21 @@ public class UnitManagePage extends Page {
 	private final Vector<UserPack> vpack = new Vector<>(UserProfile.getUserPacks());
 	private final JList<UserPack> jlp = new JList<>(vpack);
 	private final JScrollPane jspp = new JScrollPane(jlp);
+
 	private final JList<Unit> jlu = new JList<>();
 	private final JScrollPane jspu = new JScrollPane(jlu);
+
 	private final ReorderList<Form> jlf = new ReorderList<>();
 	private final JScrollPane jspf = new JScrollPane(jlf);
+
 	private final JTree jtd = new JTree();
 	private final JScrollPane jspd = new JScrollPane(jtd);
+
 	private final JList<UnitLevel> jll = new JList<>();
 	private final JScrollPane jspl = new JScrollPane(jll);
+
+	private final JList<Orb> jor = new JList<>();
+	private final JScrollPane jsor = new JScrollPane(jor);
 
 	private final JBTN addu = new JBTN(0, "add");
 	private final JBTN remu = new JBTN(0, "rem");
@@ -51,23 +59,28 @@ public class UnitManagePage extends Page {
 	private final JBTN remf = new JBTN(0, "rem");
 	private final JBTN addl = new JBTN(0, "add");
 	private final JBTN reml = new JBTN(0, "rem");
+	private final JBTN addo = new JBTN(0, "add");
+	private final JBTN remo = new JBTN(0, "rem");
 	private final JBTN edit = new JBTN(0, "edit");
 	private final JBTN frea = new JBTN(0, "reassign");
 	private final JBTN vuni = new JBTN(0, "vuni");
 
 	private final JTF jtff = new JTF();
 	private final JTF maxl = new JTF();
-	private final JTF maxp = new JTF();
 	private final JTF jtfl = new JTF();
+	private final JTF jtfo = new JTF();
 	private final JComboBox<String> rar = new JComboBox<>(Interpret.RARITY);
 	private final JComboBox<UnitLevel> cbl = new JComboBox<>();
 
 	private final JL lbp = new JL(0, "pack");
 	private final JL lbu = new JL(0, "unit");
-	private final JL lbd = new JL(0, "seleanim");
-	private final JL lbml = new JL(0, "maxl");
-	private final JL lbmp = new JL(0, "maxp");
 	private final JL lbf = new JL(0, "forms");
+	private final JL lbd = new JL(0, "seleanim");
+
+	private final JL lbml = new JL(0, "maxl");
+	private final JL lbra = new JL(0, "rarity");
+	private final JL lbor = new JL(0, "maxo");
+	private final JL lbul = new JL(0, "lvlscale");
 
 	private UserPack pac;
 	private Unit uni;
@@ -103,12 +116,14 @@ public class UnitManagePage extends Page {
 
 		set(lbp, x, y, w, 100, 400, 50);
 		set(jspp, x, y, w, 150, 400, 600);
+
 		w += 450;
 		set(lbu, x, y, w, 100, 300, 50);
 		set(jspu, x, y, w, 150, 300, 600);
 		set(addu, x, y, w, 800, 150, 50);
 		set(remu, x, y, w + dw, 800, 150, 50);
 		set(vuni, x, y, w, 950, 300, 50);
+
 		w += 300;
 		set(lbf, x, y, w, 100, 300, 50);
 		set(jspf, x, y, w, 150, 300, 600);
@@ -121,18 +136,25 @@ public class UnitManagePage extends Page {
 		w += 300;
 		set(lbd, x, y, w, 100, 300, 50);
 		set(jspd, x, y, w, 150, 300, 600);
+
 		w += 350;
 		set(lbml, x, y, w, 100, 300, 50);
 		set(maxl, x, y, w, 150, 300, 50);
-		set(lbmp, x, y, w, 200, 300, 50);
-		set(maxp, x, y, w, 250, 300, 50);
+		set(lbra, x, y, w, 250, 300, 50);
 		set(rar, x, y, w, 300, 300, 50);
-		set(cbl, x, y, w, 400, 300, 50);
-		w += 500;
-		set(jspl, x, y, w, 150, 300, 500);
-		set(jtfl, x, y, w, 700, 300, 50);
-		set(addl, x, y, w, 750, 150, 50);
-		set(reml, x, y, w + dw, 750, 150, 50);
+		set(lbor, x, y, w, 400, 300, 50);
+		set(jsor, x, y, w, 450, 300, 300);
+		set(jtfo, x, y, w, 750, 300, 50);
+		set(addo, x, y, w, 800, 150, 50);
+		set(remo, x, y, w + dw, 800, 150, 50);
+
+		w += 350;
+		set(lbul, x, y, w, 100, 300, 50);
+		set(cbl, x, y, w, 150, 300, 50);
+		set(jspl, x, y, w, 300, 300, 500);
+		set(jtfl, x, y, w, 800, 300, 50);
+		set(addl, x, y, w, 850, 150, 50);
+		set(reml, x, y, w + dw, 850, 150, 50);
 		SwingUtilities.invokeLater(() -> jtd.setUI(new TreeNodeExpander(jtd)));
 
 	}
@@ -258,24 +280,12 @@ public class UnitManagePage extends Page {
 			public void focusLost(FocusEvent fe) {
 				if (changing || uni == null)
 					return;
-				int lv = CommonStatic.parseIntN(maxl.getText());
-				if (lv > 0)
-					uni.max = lv;
-				maxl.setText(String.valueOf(uni.max));
-			}
-
-		});
-
-		maxp.addFocusListener(new FocusAdapter() {
-
-			@Override
-			public void focusLost(FocusEvent fe) {
-				if (changing || uni == null)
-					return;
-				int lv = CommonStatic.parseIntN(maxp.getText());
-				if (lv >= 0)
-					uni.maxp = lv;
-				maxp.setText(String.valueOf(uni.maxp));
+				int[] lv = CommonStatic.parseIntsN(maxl.getText());
+				if (lv.length >= 1)
+					uni.max = lv[0];
+				if (lv.length == 2)
+					uni.maxp = lv[1];
+				maxl.setText(uni.max + " + " + uni.maxp);
 			}
 
 		});
@@ -323,6 +333,42 @@ public class UnitManagePage extends Page {
 			}
 		});
 
+		jor.addListSelectionListener(x -> {
+			if (changing)
+				return;
+			changing = true;
+			int index = jor.getSelectedIndex();
+			boolean canEdit = pac.editable && index != -1;
+			jtfo.setEditable(canEdit);
+			jtfo.setText(jor.getSelectedValue().toString());
+			remo.setEnabled(canEdit);
+			changing = false;
+		});
+
+		addo.setLnr(x -> {
+			if (changing)
+				return;
+			changing = true;
+			uni.orbs.add(new Orb(0, 0));
+			setUnit(uni);
+			changing = false;
+		});
+
+		remo.setLnr(x -> {
+			if (changing)
+				return;
+			changing = true;
+			uni.orbs.remove(jor.getSelectedIndex());
+			setUnit(uni);
+			changing = false;
+		});
+
+		jtfo.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				super.focusLost(e);
+			}
+		});
 	}
 
 	private void addListeners$2() {
@@ -422,7 +468,7 @@ public class UnitManagePage extends Page {
 			@Override
 			public void focusLost(FocusEvent fe) {
 				int[] lvs = CommonStatic.parseIntsN(jtfl.getText());
-				for (int i = 0; i < lvs.length; i++)
+				for (int i = 0; i < Math.min(ul.lvs.length, lvs.length); i++)
 					if (lvs[i] > 0 && (i == 0 || lvs[i] >= ul.lvs[i - 1]))
 						ul.lvs[i] = lvs[i];
 				jtfl.setText(ul.toString());
@@ -451,19 +497,24 @@ public class UnitManagePage extends Page {
 		add(edit);
 		add(vuni);
 		add(maxl);
-		add(maxp);
 		add(cbl);
 		add(rar);
 		add(lbp);
 		add(lbu);
 		add(lbd);
 		add(lbml);
-		add(lbmp);
+		add(lbra);
+		add(lbul);
 		add(lbf);
 		add(jspl);
 		add(addl);
 		add(reml);
 		add(jtfl);
+		add(lbor);
+		add(jsor);
+		add(jtfo);
+		add(addo);
+		add(remo);
 		jlu.setCellRenderer(new UnitLCR());
 		jlf.setCellRenderer(new AnimLCR());
 		jtd.setCellRenderer(new AnimTreeRenderer());
@@ -518,6 +569,10 @@ public class UnitManagePage extends Page {
 		reml.setEnabled(b && ul.units.isEmpty());
 	}
 
+	private void updateOrb() {
+
+	}
+
 	private void setPack(UserPack pack) {
 		pac = pack;
 		if (jlp.getSelectedValue() != pack) {
@@ -569,19 +624,22 @@ public class UnitManagePage extends Page {
 		cbl.setEnabled(b);
 		addf.setEnabled(b && getSelectedAnim() != null && unit.forms.length < 3);
 		maxl.setEditable(b);
-		maxp.setEditable(b);
+		addo.setEnabled(b && unit.orbs.size() < 2);
+		remo.setEnabled(b && jor.getSelectedIndex() != -1);
 		boolean boo = changing;
 		changing = true;
 		if (unit == null) {
 			jlf.setListData(new Form[0]);
-			maxl.setText("");
-			maxp.setText("");
+			jor.setListData(new Orb[0]);
+			jor.clearSelection();
+			maxl.setText(null);
+			jtfo.setText(null);
 			rar.setSelectedItem(null);
 			cbl.setSelectedItem(null);
 		} else {
 			jlf.setListData(unit.forms);
-			maxl.setText(String.valueOf(uni.max));
-			maxp.setText(String.valueOf(uni.maxp));
+			jor.setListData(unit.orbs.toArray(new Orb[0]));
+			maxl.setText(uni.max + " + " + uni.maxp);
 			rar.setSelectedIndex(uni.rarity);
 			cbl.setSelectedItem(uni.lv);
 		}

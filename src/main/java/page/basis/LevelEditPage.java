@@ -63,11 +63,12 @@ public class LevelEditPage extends Page {
 
 		if (exists) {
 			BasisSet.synchronizeOrb(f.unit);
-			if (lv.getOrbs() == null && !f.unit.orbs.isEmpty()) {
+			int[][] orbLv = lv.getOrbs();
+			if (orbLv == null) {
 				for (int i = 0; i < f.unit.orbs.size(); i++)
 					orbs.add(new int[0]);
 			} else {
-				orbs.addAll(Arrays.asList(lv.getOrbs()));
+				orbs.addAll(Arrays.asList(orbLv));
 			}
 		}
 
