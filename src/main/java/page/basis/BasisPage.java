@@ -533,6 +533,7 @@ public class BasisPage extends LubCont {
 		setCN();
 		updateSetC();
 		lub.updateLU();
+		lub.blu.lu.renew();
 		setLvs(lub.sf);
 		trea.callBack(null);
 	}

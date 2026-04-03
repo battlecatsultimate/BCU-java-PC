@@ -80,6 +80,7 @@ public class BattleSetupPage extends LubCont {
 		snip.setEnabled(lim.sniper == 0);
 		if (lub.getLU() != b.sele.lu)
 			lub.setLU(b.sele);
+		b.sele.lu.renew();
 		mod.setBasis(BasisSet.current());
 		mod.setComboList(BasisSet.current().sele.lu.coms);
 		mod.setBanned(lub.getLim().stageLimit != null ? lub.getLim().stageLimit.bannedCatCombo : null);
