@@ -3,6 +3,7 @@
 ###### NOTE: If you just want to install BCU, stop reading and go to the README!!
 ###### ANOTHER NOTE: This is still a work in progress, but should be sufficient for experienced contributors.
 
+# NOTE: This guide is severely outdated, please do not follow it at this time
 ## References
 - Terminal: The Terminal or Console.
 - <kbd>Keybind</kbd>: A key combination. For example, <kbd>Ctrl Shift T</kbd> opens a new tab (on most browsers)!
