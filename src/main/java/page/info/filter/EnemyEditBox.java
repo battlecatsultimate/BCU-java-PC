@@ -9,6 +9,7 @@ import page.Page;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
 
 import static utilpc.Interpret.*;
@@ -31,10 +32,9 @@ public class EnemyEditBox extends Page {
 	public EnemyEditBox(Page p, UserPack pack, CustomEnemy cen) {
 		super(p);
 		editable = pack.editable;
-		trait.list.addAll(UserProfile.getBCData().traits.getList().subList(TRAIT_RED,TRAIT_EVA));
-		trait.list.add(UserProfile.getBCData().traits.get(TRAIT_BARON));
-		trait.list.add(UserProfile.getBCData().traits.get(TRAIT_BEAST));
-		trait.list.add(UserProfile.getBCData().traits.get(TRAIT_SAGE));
+		List<Trait> traits = UserProfile.getBCData().traits.getList();
+		trait.list.addAll(traits.subList(TRAIT_RED,TRAIT_EVA));
+		trait.list.addAll(traits.subList(TRAIT_BARON, TRAIT_VILLAIN + 1));
 		trait.list.addAll(pack.traits.getList());
 		for (UserPack pacc : UserProfile.getUserPacks())
 			if (pack.desc.dependency.contains(pacc.desc.id))
