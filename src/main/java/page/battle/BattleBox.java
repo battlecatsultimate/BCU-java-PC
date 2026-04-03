@@ -759,12 +759,12 @@ public interface BattleBox {
 				if(e.dead)
 					continue;
 
-				int dep = e.layer * DEP;
+				int dep = e.currentLayer * DEP;
 
 				while(efList.size() > 0f) {
 					ContAb wc = efList.get(0);
 
-					if(wc.layer + 1 <= e.layer) {
+					if(wc.layer + 1 <= e.currentLayer) {
 						drawEff(gra, wc, at, psiz);
 						efList.remove(0);
 					} else
@@ -936,7 +936,7 @@ public interface BattleBox {
 						continue;
 
 					if ((e.getAbi() & Data.AB_TIMEI) > 0) {
-						int dep = e.layer * DEP;
+						int dep = e.currentLayer * DEP;
 
 						gra.setTransform(at);
 
