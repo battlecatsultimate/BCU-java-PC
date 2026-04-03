@@ -951,7 +951,7 @@ public class Interpret extends Data {
         }
     }
 
-    private static String getNumberExtension(int i) {
+    public static String getNumberExtension(int i) {
         if (i != 11 && i % 10 == 1) {
             return i + "st";
         } else if (i != 12 && i % 10 == 2) {
