@@ -15,7 +15,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
-import java.util.EventObject;
 import java.util.stream.IntStream;
 
 public class ComboEditTable extends AbJTable {
@@ -166,18 +165,6 @@ public class ComboEditTable extends AbJTable {
         if (f == null)
             return;
         fr.callBack(f.unit);
-    }
-
-    @Override
-    public boolean editCellAt(int row, int col, EventObject e) {
-        boolean result = super.editCellAt(row, col, e);
-//        int c = lnk[col];
-//        if (c == 1) {
-//            clvl.setSelectedIndex(pack.combos.get(row).lv);
-//        } else if (c == 2) {
-//            ctyp.setSelectedIndex(pack.combos.get(row).type);
-//        }
-        return result;
     }
 
     @Override

@@ -29,6 +29,6 @@
 /.idea/
 /classes/
 *.iml
-*.jar
+./*.jar
 /.gradle/
 /build/

@@ -291,6 +291,8 @@ public class BackupPage extends Page {
 
     private void setList() {
         changing = true;
+        Backup.backups.clear();
+        Backup.loadBackups();
         jlm.setListData(Backup.backups.toArray(new Backup[0]));
         changing = false;
 

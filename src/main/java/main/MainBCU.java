@@ -300,8 +300,8 @@ public class MainBCU {
 		}
 	}
 
-	public static final int ver = 50500;
-	public static final boolean isBeta = false;
+	public static final int ver = 50501;
+	public static final boolean isPrerelease = false;
 	private static final DecimalFormat df = new DecimalFormat("#.##");
 
 	public static byte FILTER_TYPE = 1;
@@ -368,7 +368,7 @@ public class MainBCU {
 			announce0510 = true;
 		}
 
-		if (isBeta && !Opts.conf("This is a beta release. Are you sure you want to continue?"))
+		if (isPrerelease && !Opts.conf("This is a pre-release. Are you sure you want to continue?"))
 			System.exit(0);
 
 		MenuBarHandler.initialize();

@@ -26,6 +26,7 @@ import page.support.InTableTH;
 import page.support.Reorderable;
 
 import javax.swing.*;
+import javax.swing.table.TableCellEditor;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -33,6 +34,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class StageEditTable extends AbJTable implements Reorderable {
 
@@ -54,6 +56,7 @@ public class StageEditTable extends AbJTable implements Reorderable {
 
 	private boolean changing = false;
 	protected int findIndex = -1;
+	private final JComboBox<Integer> cbos = new JComboBox<>(IntStream.rangeClosed(0, 2).boxed().toArray(Integer[]::new));
 
 	protected StageEditTable(Page p, UserPack pac) {
 		super(title);
@@ -62,6 +65,31 @@ public class StageEditTable extends AbJTable implements Reorderable {
 		pack = pac;
 		setTransferHandler(new InTableTH(this));
 		setDefaultRenderer(String.class, new EnemyTCR());
+
+		cbos.setRenderer(new DefaultListCellRenderer() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+				JLabel jl = ((JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus));
+				jl.setText(getBossStr(index == -1 ? (int) value : index));
+				return jl;
+			}
+		});
+	}
+
+	@Override
+	public TableCellEditor getCellEditor(int r, int c) {
+		c = lnk[c];
+		Object v = getValueAt(r, c);
+		if (c == 0) {
+			cbos.setSelectedIndex(stage.datas[r].boss);
+			return new DefaultCellEditor(cbos);
+		} else if (v != null) {
+			return getDefaultEditor(v.getClass());
+		} else {
+			return super.getCellEditor(r, c);
+		}
 	}
 
 	@Override
@@ -176,13 +204,7 @@ public class StageEditTable extends AbJTable implements Reorderable {
 			else
 				set(r, c, is[0], is[1]);
 		} else if (c == 0) {
-			if(arg0.equals("2")) {
-				set(r, c, 2, 0);
-			} else {
-				int i = ((String) arg0).length();
-
-				set(r, c, i > 0 ? 1 : 0, 0);
-			}
+			set(r, c, (int) arg0, 0);
 		} else if (c == 2) {
 			int[] data = CommonStatic.parseIntsN((String) arg0);
 
@@ -330,6 +352,10 @@ public class StageEditTable extends AbJTable implements Reorderable {
 		clearSelection();
 	}
 
+	private String getBossStr(int v) {
+		return v == 1 ? "Boss" : v == 2 ? "Boss (Shake)" : " "; // the space is so it can be clicked for no boss effect
+	}
+
 	private Object get(int r, int c) {
 		if (r < 0 || r >= stage.datas.length)
 			return null;
@@ -338,7 +364,7 @@ public class StageEditTable extends AbJTable implements Reorderable {
 		if (data == null)
 			return null;
 		if (c == 0)
-			return data.boss == 1 ? "Boss" : data.boss == 2 ? "Boss (Shake)" : "";
+			return getBossStr(data.boss);
 		else if (c == 1)
 			return Identifier.get(data.enemy);
 		else if (c == 2)
