@@ -25,9 +25,11 @@ import utilpc.Interpret;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
+import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.*;
+import java.util.List;
 
 public class UnitManagePage extends Page {
 
@@ -68,7 +70,8 @@ public class UnitManagePage extends Page {
 	private final JTF jtff = new JTF();
 	private final JTF maxl = new JTF();
 	private final JTF jtfl = new JTF();
-	private final JTF jtfo = new JTF();
+	private final JTF ofrm = new JTF();
+	private final JTF olvl = new JTF();
 	private final JComboBox<String> rar = new JComboBox<>(Interpret.RARITY);
 	private final JComboBox<UnitLevel> cbl = new JComboBox<>();
 
@@ -80,6 +83,8 @@ public class UnitManagePage extends Page {
 	private final JL lbml = new JL(0, "maxl");
 	private final JL lbra = new JL(0, "rarity");
 	private final JL lbor = new JL(0, "maxo");
+	private final JL lbof = new JL(0, "minfrm");
+	private final JL lbol = new JL(0, "minlvl");
 	private final JL lbul = new JL(0, "lvlscale");
 
 	private UserPack pac;
@@ -140,13 +145,18 @@ public class UnitManagePage extends Page {
 		w += 350;
 		set(lbml, x, y, w, 100, 300, 50);
 		set(maxl, x, y, w, 150, 300, 50);
+
 		set(lbra, x, y, w, 250, 300, 50);
 		set(rar, x, y, w, 300, 300, 50);
+
 		set(lbor, x, y, w, 400, 300, 50);
 		set(jsor, x, y, w, 450, 300, 300);
-		set(jtfo, x, y, w, 750, 300, 50);
-		set(addo, x, y, w, 800, 150, 50);
-		set(remo, x, y, w + dw, 800, 150, 50);
+		set(lbof, x, y, w, 750, 150, 50);
+		set(ofrm, x, y, w + dw, 750, 150, 50);
+		set(lbol, x, y, w, 800, 150, 50);
+		set(olvl, x, y, w + dw, 800, 150, 50);
+		set(addo, x, y, w, 850, 150, 50);
+		set(remo, x, y, w + dw, 850, 150, 50);
 
 		w += 350;
 		set(lbul, x, y, w, 100, 300, 50);
@@ -339,8 +349,10 @@ public class UnitManagePage extends Page {
 			changing = true;
 			int index = jor.getSelectedIndex();
 			boolean canEdit = pac.editable && index != -1;
-			jtfo.setEditable(canEdit);
-			jtfo.setText(jor.getSelectedValue().toString());
+			ofrm.setEnabled(canEdit);
+			ofrm.setText(index != -1 ? jor.getSelectedValue().minForm + "" : null);
+			olvl.setEnabled(canEdit);
+			olvl.setText(index != -1 ? jor.getSelectedValue().minLv + "" : null);
 			remo.setEnabled(canEdit);
 			changing = false;
 		});
@@ -365,10 +377,21 @@ public class UnitManagePage extends Page {
 			changing = false;
 		});
 
-		jtfo.addFocusListener(new FocusAdapter() {
+		ofrm.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent e) {
-				super.focusLost(e);
+				int v = CommonStatic.parseIntN(ofrm.getText());
+				uni.orbs.get(jor.getSelectedIndex()).minForm = v == -1 ? 0 : Math.min(v, uni.forms.length - 1);
+				setOrb(uni);
+			}
+		});
+
+		olvl.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent e) {
+				int v = CommonStatic.parseIntN(olvl.getText());
+				uni.orbs.get(jor.getSelectedIndex()).minLv = v == -1 ? 0 : Math.min(v, uni.max + uni.maxp);
+				setOrb(uni);
 			}
 		});
 	}
@@ -514,12 +537,23 @@ public class UnitManagePage extends Page {
 		add(jtfl);
 		add(lbor);
 		add(jsor);
-		add(jtfo);
+		add(lbof);
+		add(ofrm);
+		add(lbol);
+		add(olvl);
 		add(addo);
 		add(remo);
 		jlu.setCellRenderer(new UnitLCR());
 		jlf.setCellRenderer(new AnimLCR());
 		jtd.setCellRenderer(new AnimTreeRenderer());
+		jor.setCellRenderer(new DefaultListCellRenderer() {
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+				JLabel jl = ((JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus));
+				jl.setText("slot " + index + ": " + value);
+				return jl;
+			}
+		});
 		SwingUtilities.invokeLater(() -> jtd.setUI(new TreeNodeExpander(jtd)));
 		setPack(pac);
 		addListeners();
@@ -646,17 +680,23 @@ public class UnitManagePage extends Page {
 		boolean boo = changing;
 		boolean exists = unit != null;
 		boolean editable = exists && pac.editable;
+		int index = jor.getSelectedIndex();
+		boolean valid = editable && index != -1 && index < unit.orbs.size();
 		changing = true;
 		if (exists) {
 			jor.setListData(unit.orbs.toArray(new Orb[0]));
+			if (valid)
+				jor.setSelectedIndex(index);
 		} else {
 			jor.setListData(new Orb[0]);
 			jor.clearSelection();
 		}
-		boolean valid = editable && jor.getSelectedIndex() != -1 && jor.getSelectedIndex() < unit.orbs.size();
 		addo.setEnabled(editable && unit.orbs.size() < 2);
 		remo.setEnabled(editable && valid);
-		jtfo.setText(valid ? jor.getSelectedValue().toString() : null);
+		ofrm.setEnabled(editable && valid);
+		olvl.setEnabled(editable && valid);
+		ofrm.setText(valid ? jor.getSelectedValue().minForm + "" : null);
+		olvl.setText(valid ? jor.getSelectedValue().minLv + "" : null);
 		changing = boo;
 	}
 
