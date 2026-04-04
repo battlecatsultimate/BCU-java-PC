@@ -361,10 +361,13 @@ public class UnitManagePage extends Page {
 			if (changing)
 				return;
 			changing = true;
-			uni.orbs.add(new Orb(0, 0));
+			Orb orb = new Orb(0, 0);
+			uni.orbs.add(orb);
 			jor.setListData(uni.orbs.toArray(new Orb[0]));
 			jor.setSelectedIndex(uni.orbs.size() - 1);
 			remo.setEnabled(pac.editable);
+			ofrm.setText(orb.minForm + "");
+			olvl.setText(orb.minLv + "");
 			changing = false;
 		});
 
