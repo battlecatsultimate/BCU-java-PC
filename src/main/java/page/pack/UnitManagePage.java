@@ -350,7 +350,9 @@ public class UnitManagePage extends Page {
 				return;
 			changing = true;
 			uni.orbs.add(new Orb(0, 0));
-			setUnit(uni);
+			jor.setListData(uni.orbs.toArray(new Orb[0]));
+			jor.setSelectedIndex(uni.orbs.size() - 1);
+			remo.setEnabled(pac.editable);
 			changing = false;
 		});
 
@@ -359,7 +361,7 @@ public class UnitManagePage extends Page {
 				return;
 			changing = true;
 			uni.orbs.remove(jor.getSelectedIndex());
-			setUnit(uni);
+			setOrb(uni);
 			changing = false;
 		});
 
@@ -569,10 +571,6 @@ public class UnitManagePage extends Page {
 		reml.setEnabled(b && ul.units.isEmpty());
 	}
 
-	private void updateOrb() {
-
-	}
-
 	private void setPack(UserPack pack) {
 		pac = pack;
 		if (jlp.getSelectedValue() != pack) {
@@ -624,21 +622,15 @@ public class UnitManagePage extends Page {
 		cbl.setEnabled(b);
 		addf.setEnabled(b && getSelectedAnim() != null && unit.forms.length < 3);
 		maxl.setEditable(b);
-		addo.setEnabled(b && unit.orbs.size() < 2);
-		remo.setEnabled(b && jor.getSelectedIndex() != -1);
 		boolean boo = changing;
 		changing = true;
 		if (unit == null) {
 			jlf.setListData(new Form[0]);
-			jor.setListData(new Orb[0]);
-			jor.clearSelection();
 			maxl.setText(null);
-			jtfo.setText(null);
 			rar.setSelectedItem(null);
 			cbl.setSelectedItem(null);
 		} else {
 			jlf.setListData(unit.forms);
-			jor.setListData(unit.orbs.toArray(new Orb[0]));
 			maxl.setText(uni.max + " + " + uni.maxp);
 			rar.setSelectedIndex(uni.rarity);
 			cbl.setSelectedItem(uni.lv);
@@ -646,7 +638,26 @@ public class UnitManagePage extends Page {
 		changing = boo;
 		if (frm != null && frm.unit != unit)
 			frm = null;
+		setOrb(uni);
 		setForm(frm);
+	}
+
+	private void setOrb(Unit unit) {
+		boolean boo = changing;
+		boolean exists = unit != null;
+		boolean editable = exists && pac.editable;
+		changing = true;
+		if (exists) {
+			jor.setListData(unit.orbs.toArray(new Orb[0]));
+		} else {
+			jor.setListData(new Orb[0]);
+			jor.clearSelection();
+		}
+		boolean valid = editable && jor.getSelectedIndex() != -1 && jor.getSelectedIndex() < unit.orbs.size();
+		addo.setEnabled(editable && unit.orbs.size() < 2);
+		remo.setEnabled(editable && valid);
+		jtfo.setText(valid ? jor.getSelectedValue().toString() : null);
+		changing = boo;
 	}
 
 	private AnimCE getSelectedAnim() {
