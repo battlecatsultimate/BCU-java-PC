@@ -657,7 +657,7 @@ public class UnitManagePage extends Page {
 		remu.setEnabled(b && comboList(unit).isEmpty());
 		rar.setEnabled(b);
 		cbl.setEnabled(b);
-		addf.setEnabled(b && getSelectedAnim() != null && unit.forms.length < 3);
+		addf.setEnabled(b && getSelectedAnim() != null && unit.forms.length < 4);
 		maxl.setEditable(b);
 		boolean boo = changing;
 		changing = true;
