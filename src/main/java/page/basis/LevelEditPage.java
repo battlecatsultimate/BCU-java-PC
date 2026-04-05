@@ -228,15 +228,15 @@ public class LevelEditPage extends Page {
 				res[i] = i + 1 + ": Grade " + getGrade(o[2]) + " " + getType(o[0]);
 				if (o[1] != 0)
 					res[i] += " vs " + getTrait(o[1]);
+				if (sl != null && sl.bannedOrb.contains(o[0])) {
+					res[i] += " (Banned)";
+				}
 			} else {
 				res[i] = (i + 1) + ": None";
 			}
 
 			Orb orb = f.unit.orbs.get(i);
 			int totalLv = lv.getLv() + lv.getPlusLv();
-			if (sl != null && sl.bannedOrb.contains(o[0])) {
-				res[i] += " (Banned)";
-			}
 			if (orb.isRestricted(f.fid, totalLv)) {
 				res[i] += " (Req:";
 				if (f.fid < orb.minForm)
@@ -333,8 +333,9 @@ public class LevelEditPage extends Page {
 			@Override
 			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 				JLabel jl = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-				Orb orb = f.unit.orbs.get(index);
-				if (orb.isRestricted(f.fid, lv.getLv() + lv.getPlusLv()) || (sl != null && sl.bannedOrb.contains(orbs.get(index)[0]))) {
+				Orb orbSlot = f.unit.orbs.get(index);
+				int[] orbData = orbs.get(index);
+				if (orbSlot.isRestricted(f.fid, lv.getLv() + lv.getPlusLv()) || (sl != null && orbData.length != 0 && sl.bannedOrb.contains(orbData[0]))) {
 					jl.setText("<html><strike>" + jl.getText() + "<html><strike>");
 					jl.setForeground(isSelected ? Color.WHITE : !MainBCU.light ? Color.GRAY : Color.RED);
 				}
