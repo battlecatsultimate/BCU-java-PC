@@ -84,6 +84,7 @@ public class BasisPage extends LubCont {
 	private final TreaTable trea = new TreaTable(this);
 	private final JScrollPane jspt = new JScrollPane(trea);
 	private Unit cunit;
+	private Stage stage;
 
 	private String comboName = "";
 
@@ -95,7 +96,8 @@ public class BasisPage extends LubCont {
 
 	public BasisPage(Page p, Stage st, int star, int price) {
 		super(p);
-		lub.setLimit(st.getLim(star), price);
+		stage = st;
+		lub.setLimit(stage.getLim(star), price);
 		if (lub.lim.stageLimit != null)
 			jlcn.setBanned(lub.lim.stageLimit.bannedCatCombo);
 
@@ -284,7 +286,7 @@ public class BasisPage extends LubCont {
 
 		lvorb.setLnr(x -> {
 			if (lub.sf != null) {
-				changePanel(new LevelEditPage(this, lu().lu.getLv(lub.sf), lub.sf));
+				changePanel(new LevelEditPage(this, lu().lu.getLv(lub.sf), lub.sf, lub.lim.stageLimit));
 			}
 		});
 

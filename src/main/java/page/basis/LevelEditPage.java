@@ -6,6 +6,7 @@ import common.battle.LineUp;
 import common.battle.data.MaskUnit;
 import common.battle.data.Orb;
 import common.util.Data;
+import common.util.stage.StageLimit;
 import common.util.unit.Form;
 import common.util.unit.Level;
 import common.util.unit.Trait;
@@ -36,6 +37,7 @@ public class LevelEditPage extends Page {
 	private final Form f;
 	private final Level lv;
 	private final List<int[]> orbs = new ArrayList<>();
+	private final StageLimit sl;
 
 	private final JBTN bck = new JBTN(0, "back");
 	private final JLabel pcoin = new JLabel();
@@ -56,11 +58,12 @@ public class LevelEditPage extends Page {
 
 	private boolean updating = false;
 
-	protected LevelEditPage(Page p, Level lv, Form f) {
+	protected LevelEditPage(Page p, Level lv, Form f, StageLimit sl) {
 		super(p);
 		this.p = p;
 		this.lv = lv;
 		this.f = f;
+		this.sl = sl;
 
 		boolean exists = f != null && f.unit != null;
 
@@ -231,6 +234,9 @@ public class LevelEditPage extends Page {
 
 			Orb orb = f.unit.orbs.get(i);
 			int totalLv = lv.getLv() + lv.getPlusLv();
+			if (sl != null && sl.bannedOrb.contains(o[0])) {
+				res[i] += " (Banned)";
+			}
 			if (orb.isRestricted(f.fid, totalLv)) {
 				res[i] += " (Req:";
 				if (f.fid < orb.minForm)
@@ -328,7 +334,7 @@ public class LevelEditPage extends Page {
 			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 				JLabel jl = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 				Orb orb = f.unit.orbs.get(index);
-				if (orb.isRestricted(f.fid, lv.getLv() + lv.getPlusLv())) {
+				if (orb.isRestricted(f.fid, lv.getLv() + lv.getPlusLv()) || (sl != null && sl.bannedOrb.contains(orbs.get(index)[0]))) {
 					jl.setText("<html><strike>" + jl.getText() + "<html><strike>");
 					jl.setForeground(isSelected ? Color.WHITE : !MainBCU.light ? Color.GRAY : Color.RED);
 				}

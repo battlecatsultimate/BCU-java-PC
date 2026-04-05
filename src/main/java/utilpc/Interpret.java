@@ -78,6 +78,7 @@ public class Interpret extends Data {
     public static String[] COMN;
     public static String[] TCTX;
     public static String[] PCTX;
+    public static String[] ORB;
 
     /**
      * treasure orderer
@@ -711,6 +712,7 @@ public class Interpret extends Data {
         COMN = Page.get(MainLocale.UTIL, "nb", 28);
         TCTX = Page.get(MainLocale.UTIL, "tc", 6);
         PCTX = Page.get(MainLocale.UTIL, "aq", PC_CORRES.length);
+        ORB = Page.get(MainLocale.UTIL, "ot", ORB_TOT);
         EABI = new String[EABIIND.length];
         for (int i = 0; i < EABI.length; i++)
             EABI[i] = SABIS[EABIIND[i]];
