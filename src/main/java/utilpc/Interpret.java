@@ -17,6 +17,7 @@ import common.util.stage.CharaGroup;
 import common.util.stage.MapColc;
 import common.util.stage.MapColc.DefMapColc;
 import common.util.stage.Stage;
+import common.util.stage.StageLimit;
 import common.util.stage.info.CustomStageInfo;
 import common.util.stage.info.DefStageInfo;
 import common.util.stage.info.StageInfo;
@@ -1002,22 +1003,43 @@ public class Interpret extends Data {
     public static String readHTMLStage(Stage st, boolean noHtml) { // TODO: cleanup html
         boolean exists = st.lim != null && st.lim.stageLimit != null;
         if (!exists)
-            return noHtml ? "<html>No stage limit</html>" : "No limits";
-        StringBuilder ans = new StringBuilder((noHtml ? "" : "<html>") + Page.get(MainLocale.INFO, "comboban") + ": ");
+            return "No stage limit";
+        StageLimit lim = st.lim.stageLimit;
+        String none = Page.get(MainLocale.PAGE, "none");
 
-        if (!st.lim.stageLimit.bannedCatCombo.isEmpty()) {
-            String[] comboData = new String[st.lim.stageLimit.bannedCatCombo.size()];
+        StringBuilder ans = new StringBuilder((noHtml ? "" : "<html>") + Page.get(MainLocale.INFO, "comboban") + ": ");
+        if (!lim.bannedCatCombo.isEmpty()) {
+            String[] comboData = new String[lim.bannedCatCombo.size()];
             int i = 0;
-            for (int id : st.lim.stageLimit.bannedCatCombo)
+            for (int id : lim.bannedCatCombo)
                 comboData[i++] = Page.get(MainLocale.UTIL, "nb" + id);
             ans.append(String.join(", ", comboData));
         } else {
-            ans.append(Page.get(MainLocale.PAGE, "none"));
+            ans.append(none);
+        }
+        ans.append("<br>").append(Page.get(MainLocale.INFO, "orbban")).append(": ");
+        if (!lim.bannedOrb.isEmpty()) {
+            for (int id : lim.bannedOrb)
+                ans.append(Interpret.ORB[id]);
+        } else {
+            ans.append(none);
         }
 
-        ans.append("<br>Cooldown on Start: ").append(st.lim.stageLimit.coolStart);
-        ans.append("<br>Cooldown Multipliers: ").append(Arrays.toString(st.lim.stageLimit.cooldownMultiplier));
-        ans.append("<br>Cost Multipliers: ").append(Arrays.toString(st.lim.stageLimit.costMultiplier));
+        ans.append("<br>Cooldown on start: ").append(lim.coolStart);
+        ans.append("<br>Cooldown multipliers: ").append(Arrays.toString(lim.cooldownMultiplier));
+        ans.append("<br>Cost multipliers: ").append(Arrays.toString(lim.costMultiplier));
+        ans.append("<br>Enemy speed: ");
+        if (lim.enemySpeedOverride > -1) {
+            ans.append(lim.enemySpeedOverrideMode.getPre()).append(lim.enemySpeedOverride).append(lim.enemySpeedOverrideMode.getPost());
+        } else {
+            ans.append(none);
+        }
+        ans.append("<br>Unit speed: ");
+        if (lim.unitSpeedOverride > -1) {
+            ans.append(lim.unitSpeedOverrideMode.getPre()).append(lim.unitSpeedOverride).append(lim.unitSpeedOverrideMode.getPost());
+        } else {
+            ans.append(none);
+        }
 
         if (!noHtml)
             ans.append("</html>");
@@ -1056,7 +1078,7 @@ public class Interpret extends Data {
             }
         }
 
-        ans.append("<br>").append(readHTMLStage(data.getStage(), true));
+        ans.append("<br><br>").append(readHTMLStage(data.getStage(), true));
 
         if (isDef) {
             ans.append("<br><br>").append(Page.get(MainLocale.INFO, "exstage")).append(": ")

@@ -173,8 +173,16 @@ public class StageLimitTable extends Page {
         jcan.setText(stli.cannonMultiplier + "%");
         jcos.setText(stli.globalCost == -1 ? "--" : stli.globalCost + "");
         jcre.setText(stli.globalCooldown == 0 ? "--" : stli.globalCooldown + "");
-        jusp.setText(stli.unitSpeedOverride == -1 ? "--" : ((stli.unitSpeedOverrideMode == StageLimit.SpeedOverrideMode.MULTIPLY ? "x" : "=") + stli.unitSpeedOverride));
-        jesp.setText(stli.enemySpeedOverride == -1 ? "--" : ((stli.enemySpeedOverrideMode == StageLimit.SpeedOverrideMode.MULTIPLY ? "x" : "=") + stli.enemySpeedOverride + ""));
+        StageLimit.SpeedOverrideMode uniMode = stli.unitSpeedOverrideMode;
+        if (stli.unitSpeedOverride == -1)
+            jusp.setText("--");
+        else
+            jusp.setText(uniMode.getPre() + stli.unitSpeedOverride + uniMode.getPost());
+        StageLimit.SpeedOverrideMode eneMode = stli.enemySpeedOverrideMode;
+        if (stli.enemySpeedOverride == -1)
+            jesp.setText("--");
+        else
+            jesp.setText(eneMode.getPre() + stli.enemySpeedOverride + eneMode.getPost());
         cdst.setSelected(stli.coolStart);
         jlco.repaint();
         jlorb.repaint();
