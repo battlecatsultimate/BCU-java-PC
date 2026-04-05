@@ -99,7 +99,7 @@ public class LineUpBox extends Canvas {
 						float orbX = 85f;
 						int[][] orbs = ef.getLevel().getOrbs();
 						if (orbs != null)
-							for (int orbId = 0; orbId < orbs.length; orbId++) {
+							for (int orbId = orbs.length - 1; orbId > -1; orbId--) {
 								int[] orb = orbs[orbId];
 								if (orb.length == 0)
 									continue;
