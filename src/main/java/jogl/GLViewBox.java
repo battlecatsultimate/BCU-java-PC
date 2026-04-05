@@ -243,8 +243,9 @@ class GLViewBox extends GLCstd implements ViewBox, GLEventListener {
 		int h = getHeight();
 		g.translate(w / 2f, h * 3 / 4f);
 		g.setColor(FakeGraphics.BLACK);
-		if (ent != null)
+		if (ent != null) {
 			ent.draw(g, ctrl.ori.copy().times(-1), ctrl.siz);
+		}
 	}
 
 	@Override

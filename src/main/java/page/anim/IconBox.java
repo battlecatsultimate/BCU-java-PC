@@ -93,21 +93,21 @@ public interface IconBox extends ViewBox {
 			if (cont.isBlank()) {
 				BCAuxAssets aux = CommonStatic.getBCAssets();
 
-				int t = mode == 0 ? (type == 1 || type == 2) ? type : 0 : 3;
+				int t = mode == 0 ? (type == 1 || type == 2) ? type : 0 : 4;
 
+				// black outline
 				FakeImage bimg = aux.ico[mode][t].getImg();
-
 				int bw = bimg.getWidth();
 				int bh = bimg.getHeight();
-
 				float r = Math.min(1f * line[2] / bw, 1f * line[3] / bh);
 
 				gra.setColor(FakeGraphics.BLACK);
 				gra.drawRect(line[0] - 1, line[1] - 1, line[2] + 1, line[3] + 1);
 
+				// glow effect
 				if (glow == 1) {
 					gra.setComposite(FakeGraphics.BLEND, 255, 3);
-					bimg = aux.ico[0][5].getImg();
+					bimg = aux.ico[0][6].getImg();
 					gra.drawImage(bimg, line[0], line[1], (int) (bw * r), (int) (bh * r));
 //					gra.setComposite(FakeGraphics.BLEND, 117, 3);
 //					bimg = aux.ico[0][6].getImg();
@@ -116,7 +116,7 @@ public interface IconBox extends ViewBox {
 				}
 
 				if (mode == 0 && type > 2) {
-					bimg = aux.ico[0][6].getImg();
+					bimg = aux.ico[0][7].getImg();
 				} else {
 					bimg = aux.ico[mode][t].getImg();
 				}
