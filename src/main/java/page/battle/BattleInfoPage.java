@@ -122,7 +122,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		long seed = new Random().nextLong();
 
 		BasisLU lu = bl.copy();
-		lu.performRealisticLeveling();
+		lu.performRealisticLeveling(st.lim != null ? st.lim.stageLimit : null);
 
 		SBCtrl sb = new SBCtrl(this, st, star, lu, ints, seed);
 		bb = BBBuilder.def.getCtrl(this, sb);
