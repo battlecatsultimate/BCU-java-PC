@@ -113,7 +113,7 @@ public class LineUpBox extends Canvas {
 								float y = 100 * i + 10f - (ballH / 3f);
 								gra.drawImage(orbBall, x, y, ballW, ballH);
 								gra.drawImage(orbIcon, x + (ballW - iconW) / 2f, y + (ballH - iconH) / 2f, iconW, iconH);
-								if (f.unit.orbs.get(orbId).isRestricted(f.fid, lv) || (lim != null && lim.stageLimit.bannedOrb.contains(orb[0]))) {
+								if (f.unit.orbs.get(orbId).isRestricted(f.fid, lv) || (hasLimit && lim.stageLimit.bannedOrb.contains(orb[0]))) {
 									gra.setColor(FakeGraphics.RED);
 									gra.setComposite(FakeGraphics.TRANS, 100, 0);
 									gra.fillOval(x, y, ballW, ballH);
