@@ -10,7 +10,10 @@ import common.util.unit.Form;
 import common.util.unit.Level;
 import common.util.unit.Trait;
 import main.MainBCU;
-import page.*;
+import page.JBTN;
+import page.JL;
+import page.JTF;
+import page.Page;
 import utilpc.Interpret;
 import utilpc.UtilPC;
 
@@ -289,7 +292,7 @@ public class LevelEditPage extends Page {
 
 	private String getType(int type) {
 		if (type < ORB_TOT) {
-			return MainLocale.getLoc(MainLocale.UTIL, "ot"+type);
+			return Interpret.ORB[type];
 		} else {
 			return "Unknown Type " + type;
 		}
@@ -383,26 +386,26 @@ public class LevelEditPage extends Page {
 
 		typeData = new ArrayList<>();
 
-		typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot0"));
+		typeText.add(getType(0));
 		typeData.add(Data.ORB_ATK);
-		typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot1"));
+		typeText.add(getType(1));
 		typeData.add(Data.ORB_RES);
 
 		if(str) {
-			typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot2"));
+			typeText.add(getType(2));
 			typeData.add(Data.ORB_STRONG);
 		}
 		if(mas) {
-			typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot3"));
+			typeText.add(getType(3));
 			typeData.add(Data.ORB_MASSIVE);
 		}
 		if(res) {
-			typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot4"));
+			typeText.add(getType(4));
 			typeData.add(Data.ORB_RESISTANT);
 		}
 
 		for (int i = 5; i < ORB_TOT; i++) {
-			typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot" + i));
+			typeText.add(getType(i));
 			typeData.add(i);
 		}
 
