@@ -407,6 +407,8 @@ public abstract class EntityEditPage extends Page implements SwingEditor.EditCtr
 		apt.setPreferredSize(size(x, y, 750, apt.height).toDimension());
 		apt.resized(x, y);
 		set(jsp, x, y, 1050, 100, 800, 900);
+		jsp.revalidate();
+		jspm.revalidate();
 	}
 
 	protected void set(JL jl) {
