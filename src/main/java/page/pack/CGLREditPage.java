@@ -8,6 +8,7 @@ import common.util.stage.CharaGroup;
 import common.util.stage.LvRestrict;
 import common.util.unit.Form;
 import common.util.unit.Unit;
+import org.jcodec.common.tools.MathUtil;
 import page.*;
 import page.info.filter.UnitFindPage;
 import page.support.UnitLCR;
@@ -19,8 +20,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.List;
-
-import static utilpc.Interpret.RARITY;
 
 public class CGLREditPage extends Page {
 
@@ -52,6 +51,7 @@ public class CGLREditPage extends Page {
 	private final JTF jtfsb = new JTF();
 	private final JTF jtfal = new JTF();
 	private final JTF[] jtfra = new JTF[Data.RARITY_TOT];
+	private final JTF[] jtfor = new JTF[Data.RARITY_TOT];
 	private final JTF jtfna = new JTF();
 	private final JTF jtflr = new JTF();
 
@@ -130,13 +130,15 @@ public class CGLREditPage extends Page {
 
 		set(jlba, x, y, 1650, 200, 150, 50);
 		set(jtfal, x, y, 1800, 200, 400, 50);
-		set(jlbg, x, y, 1650, 650, 150, 50);
-		set(jtfsb, x, y, 1800, 650, 400, 50);
 
 		for (int i = 0; i < jtfra.length; i++) {
-			set(jlra[i], x, y, 1650, 300 + 50 * i, 150, 50);
-			set(jtfra[i], x, y, 1800, 300 + 50 * i, 400, 50);
+			set(jlra[i], x, y, 1650, 300 + 100 * i, 150, 50);
+			set(jtfra[i], x, y, 1800, 300 + 100 * i, 400, 50);
+			set(jtfor[i], x, y, 1800, 350 + 100 * i, 400, 50);
 		}
+
+		set(jlbg, x, y, 1650, 950, 150, 50);
+		set(jtfsb, x, y, 1800, 950, 400, 50);
 
 	}
 
@@ -346,6 +348,7 @@ public class CGLREditPage extends Page {
 		for (int i = 0; i < Data.RARITY_TOT; i++) {
 			add(jlra[i] = new JL(Interpret.RARITY[i]));
 			set(jtfra[i] = new JTF());
+			set(jtfor[i] = new JTF());
 		}
 		jlus.setCellRenderer(new UnitLCR());
 		jlua.setCellRenderer(new UnitLCR());
@@ -379,6 +382,9 @@ public class CGLREditPage extends Page {
 				for (int i = 0; i < jtfra.length; i++)
 					if (jtf == jtfra[i])
 						put(lr.rares[i], inp);
+                for (int i = 0; i < jtfor.length; i++)
+                    if (jtf == jtfor[i])
+                        lr.orb[i] = inp.length == 0 ? -1 : MathUtil.clip(inp[0], -1, 2);
 				updateSB();
 			}
 
@@ -386,7 +392,7 @@ public class CGLREditPage extends Page {
 
 	}
 
-	private void set(JTF jtf, String str, int[] lvs) {
+	private void setLv(JTF jtf, int[] lvs) {
 		jtf.setText(UtilPC.lvText(lvs));
 	}
 
@@ -447,19 +453,23 @@ public class CGLREditPage extends Page {
 		jtfsb.setEnabled(sb != null);
 
 		if (lr != null) {
-			set(jtfal, "all: ", lr.all);
-			for (int i = 0; i < jtfra.length; i++)
-				set(jtfra[i], RARITY[i] + ": ", lr.rares[i]);
+			setLv(jtfal, lr.all);
+			for (int i = 0; i < jtfra.length; i++) {
+				setLv(jtfra[i], lr.rares[i]);
+				jtfor[i].setText("Max orb: " + (lr.orb[i] == -1 ? "--" : lr.orb[i]));
+			}
 		} else {
-			set(jtfal, "all: ", null);
-			for (int i = 0; i < jtfra.length; i++)
-				set(jtfra[i], RARITY[i] + ": ", null);
+			setLv(jtfal, null);
+			for (int i = 0; i < jtfra.length; i++) {
+				setLv(jtfra[i], null);
+				jtfor[i].setText(null);
+			}
 		}
 
 		if (lr == null || sb == null)
-			set(jtfsb, "group: ", null);
+			setLv(jtfsb, null);
 		else
-			set(jtfsb, "group: ", lr.res.get(sb));
+			setLv(jtfsb, lr.res.get(sb));
 		remsb.setEnabled(sb != null);
 	}
 
