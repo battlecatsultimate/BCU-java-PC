@@ -342,7 +342,7 @@ public class CGLREditPage extends Page {
 		add(jspua);
 		add(cgt);
 		set(jcglv);
-		set(jcgor);
+//		set(jcgor);
 		set(jtfal);
 		set(jtfna);
 		set(jtflr);
@@ -351,7 +351,8 @@ public class CGLREditPage extends Page {
 		for (int i = 0; i < Data.RARITY_TOT; i++) {
 			add(jlra[i] = new JL(Interpret.RARITY[i]));
 			set(jtfra[i] = new JTF());
-			set(jtfor[i] = new JTF());
+			jtfor[i] = new JTF();
+//			set(jtfor[i] = new JTF());
 		}
 		jlus.setCellRenderer(new UnitLCR());
 		jlua.setCellRenderer(new UnitLCR());
