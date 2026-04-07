@@ -49,8 +49,11 @@ public class StageLimitTable extends Page {
     private final JTG cdst = new JTG(MainLocale.INFO, "ht22");
 
     private final CrossList<String> jlco = new CrossList<>(Interpret.getComboFilter(0));
+    private final CrossList<String> jlorb = new CrossList<>(Interpret.ORB);
     private final JScrollPane jsco = new JScrollPane(jlco);
+    private final JScrollPane jsorb = new JScrollPane(jlorb);
     private final JBTN banc = new JBTN(MainLocale.PAGE, "ban0");
+    private final JBTN bano = new JBTN(MainLocale.PAGE, "ban0");
 
     private final PackData.UserPack pac;
 
@@ -97,6 +100,9 @@ public class StageLimitTable extends Page {
 
         set(jsco, x, y, (int) (w * 5.5), 0, w * 2, 250);
         set(banc, x, y, w * 6, 250, w, 50);
+
+        set(jsorb, x, y, (int) (w * 5.5), 350, w * 2, 250);
+        set(bano, x, y, w * 6, 600, w, 50);
     }
 
     private void ini() {
@@ -118,7 +124,9 @@ public class StageLimitTable extends Page {
         jesp.setToolTipText("<html>Use \"=\" to set speed equal to value (ex. =10)<br>Use \"x\" to multiply speed by value (ex. x10)");
 
         add(jsco);
+        add(jsorb);
         add(banc);
+        add(bano);
         add(racool);
         add(racost);
         add(ralimi);
@@ -134,6 +142,8 @@ public class StageLimitTable extends Page {
 
         jlco.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jlco.setCheck(i -> stli != null && stli.bannedCatCombo.contains(i));
+        jlorb.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        jlorb.setCheck(i -> stli != null && stli.bannedOrb.contains(i));
 
         addListeners();
     }
@@ -163,10 +173,19 @@ public class StageLimitTable extends Page {
         jcan.setText(stli.cannonMultiplier + "%");
         jcos.setText(stli.globalCost == -1 ? "--" : stli.globalCost + "");
         jcre.setText(stli.globalCooldown == 0 ? "--" : stli.globalCooldown + "");
-        jusp.setText(stli.unitSpeedOverride == -1 ? "--" : ((stli.unitSpeedOverrideMode == StageLimit.SpeedOverrideMode.MULTIPLY ? "x" : "=") + stli.unitSpeedOverride));
-        jesp.setText(stli.enemySpeedOverride == -1 ? "--" : ((stli.enemySpeedOverrideMode == StageLimit.SpeedOverrideMode.MULTIPLY ? "x" : "=") + stli.enemySpeedOverride + ""));
+        StageLimit.SpeedOverrideMode uniMode = stli.unitSpeedOverrideMode;
+        if (stli.unitSpeedOverride == -1)
+            jusp.setText("--");
+        else
+            jusp.setText(uniMode.getPre() + stli.unitSpeedOverride + uniMode.getPost());
+        StageLimit.SpeedOverrideMode eneMode = stli.enemySpeedOverrideMode;
+        if (stli.enemySpeedOverride == -1)
+            jesp.setText("--");
+        else
+            jesp.setText(eneMode.getPre() + stli.enemySpeedOverride + eneMode.getPost());
         cdst.setSelected(stli.coolStart);
         jlco.repaint();
+        jlorb.repaint();
 
         abler(true);
     }
@@ -187,8 +206,10 @@ public class StageLimitTable extends Page {
         jesp.setEnabled(b);
 
         jlco.setEnabled(b);
+        jlorb.setEnabled(b);
         cdst.setEnabled(b);
         banc.setEnabled(b && jlco.getSelectedIndex() != -1);
+        bano.setEnabled(b && jlorb.getSelectedIndex() != -1);
     }
 
     private void reg(JTF jtf) { // using "reg" for "register" because "set" is already used for ui
@@ -259,7 +280,12 @@ public class StageLimitTable extends Page {
     private void addListeners() {
         jlco.addListSelectionListener(x -> {
             banc.setEnabled(jlco.getSelectedIndex() != -1);
-            banc.setText(MainLocale.PAGE, "ban" + (!stli.bannedCatCombo.contains(jlco.getSelectedIndex()) ? "0" : "1"));
+            banc.setText(MainLocale.PAGE, stli.bannedCatCombo.contains(jlco.getSelectedIndex()) ? "ban1" : "ban0");
+        });
+
+        jlorb.addListSelectionListener(x -> {
+            bano.setEnabled(jlorb.getSelectedIndex() != -1);
+            bano.setText(MainLocale.PAGE, stli.bannedOrb.contains(jlorb.getSelectedIndex()) ? "ban1" : "ban0");
         });
 
         banc.setLnr(x -> {
@@ -275,6 +301,21 @@ public class StageLimitTable extends Page {
             }
 
             jlco.repaint();
+        });
+
+        bano.setLnr(x -> {
+            if (stli == null || jlorb.getSelectedIndex() == -1)
+                return;
+
+            if (stli.bannedOrb.contains(jlorb.getSelectedIndex())) {
+                stli.bannedOrb.remove(jlorb.getSelectedIndex());
+                bano.setText(MainLocale.PAGE, "ban0");
+            } else {
+                stli.bannedOrb.add(jlorb.getSelectedIndex());
+                bano.setText(MainLocale.PAGE, "ban1");
+            }
+
+            jlorb.repaint();
         });
 
         cdst.setLnr(x -> {
@@ -294,6 +335,6 @@ public class StageLimitTable extends Page {
     }
 
     public int getPHeight() {
-        return 600;
+        return 700;
     }
 }

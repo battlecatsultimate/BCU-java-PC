@@ -6,11 +6,15 @@ import common.battle.LineUp;
 import common.battle.data.MaskUnit;
 import common.battle.data.Orb;
 import common.util.Data;
+import common.util.stage.StageLimit;
 import common.util.unit.Form;
 import common.util.unit.Level;
 import common.util.unit.Trait;
 import main.MainBCU;
-import page.*;
+import page.JBTN;
+import page.JL;
+import page.JTF;
+import page.Page;
 import utilpc.Interpret;
 import utilpc.UtilPC;
 
@@ -33,6 +37,7 @@ public class LevelEditPage extends Page {
 	private final Form f;
 	private final Level lv;
 	private final List<int[]> orbs = new ArrayList<>();
+	private final StageLimit sl;
 
 	private final JBTN bck = new JBTN(0, "back");
 	private final JLabel pcoin = new JLabel();
@@ -53,11 +58,12 @@ public class LevelEditPage extends Page {
 
 	private boolean updating = false;
 
-	protected LevelEditPage(Page p, Level lv, Form f) {
+	protected LevelEditPage(Page p, Level lv, Form f, StageLimit sl) {
 		super(p);
 		this.p = p;
 		this.lv = lv;
 		this.f = f;
+		this.sl = sl;
 
 		boolean exists = f != null && f.unit != null;
 
@@ -222,6 +228,9 @@ public class LevelEditPage extends Page {
 				res[i] = i + 1 + ": Grade " + getGrade(o[2]) + " " + getType(o[0]);
 				if (o[1] != 0)
 					res[i] += " vs " + getTrait(o[1]);
+				if (sl != null && sl.bannedOrb.contains(o[0])) {
+					res[i] += " (Banned)";
+				}
 			} else {
 				res[i] = (i + 1) + ": None";
 			}
@@ -289,7 +298,7 @@ public class LevelEditPage extends Page {
 
 	private String getType(int type) {
 		if (type < ORB_TOT) {
-			return MainLocale.getLoc(MainLocale.UTIL, "ot"+type);
+			return Interpret.ORB[type];
 		} else {
 			return "Unknown Type " + type;
 		}
@@ -324,8 +333,9 @@ public class LevelEditPage extends Page {
 			@Override
 			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 				JLabel jl = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-				Orb orb = f.unit.orbs.get(index);
-				if (orb.isRestricted(f.fid, lv.getLv() + lv.getPlusLv())) {
+				Orb orbSlot = f.unit.orbs.get(index);
+				int[] orbData = orbs.get(index);
+				if (orbSlot.isRestricted(f.fid, lv.getLv() + lv.getPlusLv()) || (sl != null && orbData.length != 0 && sl.bannedOrb.contains(orbData[0]))) {
 					jl.setText("<html><strike>" + jl.getText() + "<html><strike>");
 					jl.setForeground(isSelected ? Color.WHITE : !MainBCU.light ? Color.GRAY : Color.RED);
 				}
@@ -383,26 +393,26 @@ public class LevelEditPage extends Page {
 
 		typeData = new ArrayList<>();
 
-		typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot0"));
+		typeText.add(getType(0));
 		typeData.add(Data.ORB_ATK);
-		typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot1"));
+		typeText.add(getType(1));
 		typeData.add(Data.ORB_RES);
 
 		if(str) {
-			typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot2"));
+			typeText.add(getType(2));
 			typeData.add(Data.ORB_STRONG);
 		}
 		if(mas) {
-			typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot3"));
+			typeText.add(getType(3));
 			typeData.add(Data.ORB_MASSIVE);
 		}
 		if(res) {
-			typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot4"));
+			typeText.add(getType(4));
 			typeData.add(Data.ORB_RESISTANT);
 		}
 
 		for (int i = 5; i < ORB_TOT; i++) {
-			typeText.add(MainLocale.getLoc(MainLocale.UTIL, "ot" + i));
+			typeText.add(getType(i));
 			typeData.add(i);
 		}
 

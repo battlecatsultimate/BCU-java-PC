@@ -414,9 +414,8 @@ class EFBList extends EnemyFilterBox {
 	private void ini() {
 		for (int i = 0; i < orop.length; i++)
 			set(orop[i] = new JTG(get(0, "orop")));
-		FixIndexMap<Trait> BCtraits = UserProfile.getBCData().traits;
-		for (int i = 0 ; i < BCtraits.size() - 1 ; i++)
-			trait.list.add(BCtraits.get(i));
+		for (Trait t : UserProfile.getBCData().traits)
+			trait.list.add(t);
 		Collection<PackData.UserPack> pacs = UserProfile.getUserPacks();
 		for (PackData.UserPack pacc : pacs)
 			for (Trait ctra : pacc.traits)

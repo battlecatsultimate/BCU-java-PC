@@ -67,6 +67,7 @@ public abstract class ProcTable extends Page {
 				if (i == SEC - 1)
 					h = 0;
 			}
+			setPreferredSize(size(x, y, getWidth(), h).toDimension());
 		}
 
 	}
