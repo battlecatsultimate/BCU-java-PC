@@ -147,7 +147,7 @@ public class LvRestrictPage extends Page {
 			set(lsb, "group: ", null);
 			jlus.setListData(new Unit[0]);
 		} else {
-			set(lsb, "group: ", lr.res.get(cg));
+			set(lsb, "group: ", lr.groups.get(cg).lv);
 			jlus.setListData(cg.set.toArray(new Unit[0]));
 		}
 	}
@@ -167,7 +167,7 @@ public class LvRestrictPage extends Page {
 			for (int i = 0; i < lra.length; i++)
 				set(lra[i], RARITY[i] + ": ", lr.rares[i]);
 
-			Set<CharaGroup> scg = lr.res.keySet();
+			Set<CharaGroup> scg = lr.groups.keySet();
 			if (cg != null && !scg.contains(cg))
 				cg = null;
 			jlcg.setListData(scg.toArray(new CharaGroup[0]));

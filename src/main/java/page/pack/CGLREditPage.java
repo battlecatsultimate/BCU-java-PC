@@ -279,7 +279,7 @@ public class CGLREditPage extends Page {
 		addsb.addActionListener(arg0 -> {
 			changing = true;
 			int[] lv = new int[] { 120, 10, 10, 10, 10, 10 };
-			lr.res.put(cg, lv);
+			lr.groups.put(cg, new LvRestrict.GroupRestrict(lv, -1));
 			sb = cg;
 			updateLR();
 			changing = false;
@@ -290,10 +290,10 @@ public class CGLREditPage extends Page {
 				return;
 			changing = true;
 			int ind = jlsb.getSelectedIndex();
-			lr.res.remove(sb);
+			lr.groups.remove(sb);
 			updateLR();
-			if (lr.res.size() >= ind)
-				ind = lr.res.size() - 1;
+			if (lr.groups.size() >= ind)
+				ind = lr.groups.size() - 1;
 			jlsb.setSelectedIndex(ind);
 			sb = jlsb.getSelectedValue();
 			updateSB();
@@ -378,7 +378,7 @@ public class CGLREditPage extends Page {
 				if (jtf == jtfal)
 					put(lr.all, inp);
 				if (jtf == jtfsb)
-					put(lr.res.get(sb), inp);
+					put(lr.groups.get(sb).lv, inp);
 				for (int i = 0; i < jtfra.length; i++)
 					if (jtf == jtfra[i])
 						put(lr.rares[i], inp);
@@ -405,7 +405,7 @@ public class CGLREditPage extends Page {
 		jtfna.setEnabled(cg != null);
 		cgt.setText("");
 		jtfna.setText("");
-		addsb.setEnabled(lr != null && cg != null && !lr.res.containsKey(cg));
+		addsb.setEnabled(lr != null && cg != null && !lr.groups.containsKey(cg));
 
 		if (cg == null)
 			jlus.setListData(new Unit[0]);
@@ -425,16 +425,16 @@ public class CGLREditPage extends Page {
 	private void updateLR() {
 		remlr.setEnabled(lr != null && !lr.used());
 		jlsb.setEnabled(lr != null);
-		addsb.setEnabled(lr != null && cg != null && !lr.res.containsKey(cg));
+		addsb.setEnabled(lr != null && cg != null && !lr.groups.containsKey(cg));
 		jtflr.setEnabled(lr != null);
 		jtflr.setText("");
 		if (lr == null)
 			jlsb.setListData(new CharaGroup[0]);
 		else {
-			jlsb.setListData(lr.res.keySet().toArray(new CharaGroup[0]));
+			jlsb.setListData(lr.groups.keySet().toArray(new CharaGroup[0]));
 			jtflr.setText(lr.name);
 		}
-		if (lr == null || sb == null || !lr.res.containsKey(sb))
+		if (lr == null || sb == null || !lr.groups.containsKey(sb))
 			sb = null;
 		jlsb.setSelectedValue(sb, true);
 		jtfal.setEnabled(lr != null);
@@ -469,7 +469,7 @@ public class CGLREditPage extends Page {
 		if (lr == null || sb == null)
 			setLv(jtfsb, null);
 		else
-			setLv(jtfsb, lr.res.get(sb));
+			setLv(jtfsb, lr.groups.get(sb).lv);
 		remsb.setEnabled(sb != null);
 	}
 

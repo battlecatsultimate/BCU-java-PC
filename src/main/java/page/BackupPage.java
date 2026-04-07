@@ -583,8 +583,8 @@ public class BackupPage extends Page {
             DefaultMutableTreeNode tl = new DefaultMutableTreeNode(lr + "/");
             tlr.add(tl);
 
-            for (CharaGroup cg : lr.res.keySet()) {
-                String str = cg.getID().pack + cg + ": " + Form.lvString(lr.res.get(cg));
+            for (CharaGroup cg : lr.groups.keySet()) {
+                String str = cg.getID().pack + cg + ": " + Form.lvString(lr.groups.get(cg).lv);
 
                 DefaultMutableTreeNode tc = new DefaultMutableTreeNode(str);
                 tl.add(tc);
