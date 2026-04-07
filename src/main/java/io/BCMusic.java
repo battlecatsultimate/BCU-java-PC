@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class BCMusic extends Data {
 	private static final byte INVALID = 0, CANNON_CHARGE = 1, TOUCH = 2;
-	private static final short TOT = 181;
+	private static final short TOT = 191;
 	private static final byte[][] CACHE = new byte[TOT][];
 	public final static Map<Identifier<Music>, byte[]> CACHE_CUSTOM = new LinkedHashMap<>();
 
