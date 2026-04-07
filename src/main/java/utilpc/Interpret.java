@@ -120,7 +120,7 @@ public class Interpret extends Data {
      */
     private static final int[][] CDC = {{1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 3}, {1, 0}, {1, 1}, {2, 1},
             {1, 1}, {1, 1}, {1, 1}, {2, 2}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1},
-            {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, -1}, {1, -1}, {2, 1}};
+            {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, 1}, {1, -1}, {1, -1}, {2, 1}, {1, -1}};
 
     //Filters abilities and procs that are available for enemies. Also gives better organization to the UI
     public static final int[] EABIIND = {ABI_CSUR, ABI_WAVES, ABI_SNIPERI, ABI_TIMEI, ABI_GHOST, ABI_GLASS, ABI_THEMEI};
@@ -711,7 +711,7 @@ public class Interpret extends Data {
         ATKCONF = Page.get(MainLocale.UTIL, "aa", 8);
         TREA = Page.get(MainLocale.UTIL, "t", 51);
         COMF = Page.get(MainLocale.UTIL, "na", 6);
-        COMN = Page.get(MainLocale.UTIL, "nb", 28);
+        COMN = Page.get(MainLocale.UTIL, "nb", C_TOT);
         TCTX = Page.get(MainLocale.UTIL, "tc", 6);
         PCTX = Page.get(MainLocale.UTIL, "aq", PC_CORRES.length);
         ORB = Page.get(MainLocale.UTIL, "ot", ORB_TOT);
