@@ -130,7 +130,7 @@ public class Interpret extends Data {
             Data.P_POISON, Data.P_ARMOR, Data.P_SPEED, Data.P_STRONG, Data.P_SPEEDUP, Data.P_LETHAL, Data.P_BURROW, Data.P_REVIVE, Data.P_HPREGEN, Data.P_CRITI, Data.P_COUNTER,
             Data.P_IMUATK, Data.P_DMGCUT, Data.P_DMGCAP, Data.P_IMUKB, Data.P_IMUSTOP, Data.P_IMUSLOW, Data.P_IMUWAVE, Data.P_IMUWEAK,
             Data.P_IMUWARP, Data.P_IMUCURSE, Data.P_IMUSEAL, Data.P_IMUMOVING, Data.P_IMUARMOR, Data.P_IMUPOI, Data.P_IMUPOIATK, Data.P_IMUVOLC,
-            Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_IMUCANNON, Data.P_DEATHSURGE, Data.P_BLAST, Data.P_IMUBLAST };
+            Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_IMUCANNON, Data.P_DEATHSURGE, Data.P_BLAST, Data.P_IMUBLAST, Data.P_DELAY, Data.P_LETHARGY };
     //Filters abilities and procs that are available for units. Also gives better organization to the UI
     public static final int[] UPROCIND = {Data.P_BSTHUNT, Data.P_KB, Data.P_STOP, Data.P_SLOW, Data.P_WEAK, Data.P_BOUNTY, Data.P_CRIT, Data.P_METALKILL, Data.P_WAVE,
             Data.P_MINIWAVE, Data.P_VOLC, Data.P_MINIVOLC, Data.P_BARRIER, Data.P_DEMONSHIELD, Data.P_BREAK, Data.P_SHIELDBREAK, Data.P_WARP, Data.P_CURSE,
@@ -138,7 +138,8 @@ public class Interpret extends Data {
             Data.P_THEME, Data.P_POISON, Data.P_ARMOR, Data.P_SPEED, Data.P_STRONG, Data.P_SPEEDUP, Data.P_LETHAL, Data.P_BURROW, Data.P_REVIVE, Data.P_HPREGEN, Data.P_CRITI,
             Data.P_COUNTER, Data.P_IMUATK, Data.P_DMGCUT, Data.P_DMGCAP, Data.P_IMUKB, Data.P_IMUSTOP, Data.P_IMUSLOW, Data.P_IMUWAVE,
             Data.P_IMUWEAK, Data.P_IMUWARP, Data.P_IMUCURSE, Data.P_IMUSEAL, Data.P_IMUMOVING, Data.P_IMUARMOR, Data.P_IMUPOI, Data.P_IMUPOIATK,
-            Data.P_IMUVOLC, Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_DEATHSURGE, Data.P_SPIRIT, Data.P_BLAST, Data.P_IMUBLAST };
+            Data.P_IMUVOLC, Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_DEATHSURGE, Data.P_SPIRIT, Data.P_BLAST, Data.P_IMUBLAST,
+            Data.P_IMUDELAY, Data.P_LETHARGY };
 
     private static final DecimalFormat df;
     public static String[] lvl = new String[] { "Sm", "M", "L", "XL", "XXL", "EX" };
