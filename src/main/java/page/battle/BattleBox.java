@@ -467,7 +467,7 @@ public interface BattleBox {
 						float barW = Math.max(0, (iw - dw * 2 - xw) - 4);
 						float barH = dh - 4;
 
-						int[] delay = sb.cdDelay[i][j];
+						int[] delay = sb.cdDelayVisual[i][j];
 
 						if (delay[1] > 0) {
 							float delayCd = 1f * delay[0] / maxC;
