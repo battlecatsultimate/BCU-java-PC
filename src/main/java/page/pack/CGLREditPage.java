@@ -48,10 +48,11 @@ public class CGLREditPage extends Page {
 	private final JBTN addsb = new JBTN(MainLocale.PAGE, "add");
 	private final JBTN remsb = new JBTN(MainLocale.PAGE, "rem");
 
-	private final JTF jtfsb = new JTF();
 	private final JTF jtfal = new JTF();
 	private final JTF[] jtfra = new JTF[Data.RARITY_TOT];
 	private final JTF[] jtfor = new JTF[Data.RARITY_TOT];
+	private final JTF jcglv = new JTF();
+	private final JTF jcgor = new JTF();
 	private final JTF jtfna = new JTF();
 	private final JTF jtflr = new JTF();
 
@@ -138,7 +139,8 @@ public class CGLREditPage extends Page {
 		}
 
 		set(jlbg, x, y, 1650, 950, 150, 50);
-		set(jtfsb, x, y, 1800, 950, 400, 50);
+		set(jcglv, x, y, 1800, 950, 400, 50);
+		set(jcgor, x, y, 1800, 1000, 400, 50);
 
 	}
 
@@ -339,7 +341,8 @@ public class CGLREditPage extends Page {
 		add(vuif);
 		add(jspua);
 		add(cgt);
-		set(jtfsb);
+		set(jcglv);
+		set(jcgor);
 		set(jtfal);
 		set(jtfna);
 		set(jtflr);
@@ -372,19 +375,21 @@ public class CGLREditPage extends Page {
 			@Override
 			public void focusLost(FocusEvent fe) {
 				int[] inp = CommonStatic.parseIntsN(jtf.getText());
+				if (jtf == jcgor)
+					lr.groups.get(sb).orb = inp.length == 0 ? -1 : MathUtil.clip(inp[0], -1, 2);
+				for (int i = 0; i < jtfor.length; i++)
+					if (jtf == jtfor[i])
+						lr.orb[i] = inp.length == 0 ? -1 : MathUtil.clip(inp[0], -1, 2);
 				for (int i = 0; i < inp.length; i++)
 					if (inp[i] < 0)
 						inp[i] = 0;
 				if (jtf == jtfal)
 					put(lr.all, inp);
-				if (jtf == jtfsb)
+				if (jtf == jcglv)
 					put(lr.groups.get(sb).lv, inp);
 				for (int i = 0; i < jtfra.length; i++)
 					if (jtf == jtfra[i])
 						put(lr.rares[i], inp);
-                for (int i = 0; i < jtfor.length; i++)
-                    if (jtf == jtfor[i])
-                        lr.orb[i] = inp.length == 0 ? -1 : MathUtil.clip(inp[0], -1, 2);
 				updateSB();
 			}
 
@@ -450,7 +455,8 @@ public class CGLREditPage extends Page {
 	}
 
 	private void updateSB() {
-		jtfsb.setEnabled(sb != null);
+		jcglv.setEnabled(sb != null);
+		jcgor.setEnabled(sb != null);
 
 		if (lr != null) {
 			setLv(jtfal, lr.all);
@@ -466,10 +472,14 @@ public class CGLREditPage extends Page {
 			}
 		}
 
-		if (lr == null || sb == null)
-			setLv(jtfsb, null);
-		else
-			setLv(jtfsb, lr.groups.get(sb).lv);
+		if (lr == null || sb == null) {
+			setLv(jcglv, null);
+			jcgor.setText(null);
+		} else {
+			LvRestrict.GroupRestrict gr = lr.groups.get(sb);
+			setLv(jcglv, gr.lv);
+			jcgor.setText("Max orb: " + (gr.orb == -1 ? "--" : gr.orb));
+		}
 		remsb.setEnabled(sb != null);
 	}
 
