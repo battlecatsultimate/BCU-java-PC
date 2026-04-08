@@ -127,6 +127,9 @@ public class UnitInfoTable extends Page {
 			hp = (int) (hp * pc.getHPMultiplication(multi.getTalents()));
 		}
 
+		hp = (int) (hp * (1 + b.sele.getInc(Data.C_DEF) / 100f));
+		attack = (int) (attack * (1 + b.sele.getInc(Data.C_ATK) / 100f));
+
 		ArrayList<Trait> trs = ef.du.getTraits();
 		trs.sort(Comparator.comparing((Trait t) -> t.id.id)
 				.thenComparing(t -> !t.id.pack.equals("000000")));
@@ -142,7 +145,9 @@ public class UnitInfoTable extends Page {
 
 		int respawn = b.t().getFinRes(ef.du.getRespawn(), b.sele.getInc(Data.C_RESP, f.unit));
 		main[1][5].setText(MainBCU.seconds ? MainBCU.toSeconds(respawn) : respawn + "f");
-		main[1][7].setText(String.valueOf(ef.getPrice(1)));
+		float cost = ef.getPrice(1);
+		cost -= cost * b.sele.getInc(Data.C_DISCOUNT, f.unit) / 100;
+		main[1][7].setText(cost + "");
 		main[0][4].setText(Interpret.getTrait(traits, 0));
 		int[][] atkData = ef.du.rawAtkData();
 		StringBuilder satk = new StringBuilder();
@@ -153,6 +158,7 @@ public class UnitInfoTable extends Page {
 			int a = (int) (Math.round(atkDatum[0] * mul) * b.t().getAtkMulti());
 			if (pc != null)
 				a = (int) (a * pc.getAtkMultiplication(multi.getTalents()));
+			a = (int) (a * (1 + b.sele.getInc(Data.C_ATK) / 100f));
 
 			satk.append(a);
 		}

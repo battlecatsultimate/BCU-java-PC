@@ -88,7 +88,7 @@ public abstract class ProcTable extends Page {
 				Data.P_IMUSLOW, Data.P_IMUWAVE, Data.P_IMUWEAK, Data.P_IMUWARP, Data.P_IMUCURSE,
 				Data.P_IMUSEAL, Data.P_IMUMOVING, Data.P_IMUARMOR, Data.P_IMUPOI, Data.P_IMUPOIATK, Data.P_IMUVOLC,
 				Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_BARRIER, Data.P_DEMONSHIELD, Data.P_DEATHSURGE,
-				Data.P_IMUCANNON, Data.P_IMUBLAST, Data.P_IMULETH
+				Data.P_IMUCANNON, Data.P_IMUBLAST, Data.P_IMUDELAY, Data.P_IMULETH
 		}; //Procs for enemies
 
 		protected MainProcTable(Page p, boolean edit, boolean unit) {
