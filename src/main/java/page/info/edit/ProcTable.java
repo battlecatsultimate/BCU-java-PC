@@ -26,7 +26,7 @@ public abstract class ProcTable extends Page {
 				Data.P_BREAK, Data.P_SHIELDBREAK, Data.P_WARP, Data.P_CURSE, Data.P_SATK, Data.P_POIATK, Data.P_VOLC,
 				Data.P_MINIVOLC, Data.P_BOUNTY, Data.P_ATKBASE, Data.P_METALKILL, Data.P_BLAST,
 				Data.P_SEAL, Data.P_SUMMON, Data.P_MOVEWAVE, Data.P_SNIPER, Data.P_BOSS, Data.P_TIME, Data.P_THEME,
-				Data.P_POISON, Data.P_ARMOR, Data.P_SPEED, Data.P_LETHARGY
+				Data.P_POISON, Data.P_ARMOR, Data.P_SPEED, Data.P_DELAY, Data.P_LETHARGY
 		};
 
 		//Procs for enemies
@@ -35,7 +35,7 @@ public abstract class ProcTable extends Page {
 				Data.P_BREAK, Data.P_SHIELDBREAK, Data.P_WARP, Data.P_CURSE, Data.P_SATK, Data.P_POIATK, Data.P_VOLC,
 				Data.P_MINIVOLC, Data.P_ATKBASE, Data.P_METALKILL, Data.P_BLAST,
 				Data.P_SEAL, Data.P_SUMMON, Data.P_MOVEWAVE, Data.P_SNIPER, Data.P_BOSS, Data.P_TIME, Data.P_THEME,
-				Data.P_POISON, Data.P_ARMOR, Data.P_SPEED, Data.P_LETHARGY, Data.P_DELAY
+				Data.P_POISON, Data.P_ARMOR, Data.P_SPEED, Data.P_DELAY, Data.P_LETHARGY
 		};
 
 		protected AtkProcTable(Page p, boolean edit, boolean unit) {
@@ -88,7 +88,7 @@ public abstract class ProcTable extends Page {
 				Data.P_IMUSLOW, Data.P_IMUWAVE, Data.P_IMUWEAK, Data.P_IMUWARP, Data.P_IMUCURSE,
 				Data.P_IMUSEAL, Data.P_IMUMOVING, Data.P_IMUARMOR, Data.P_IMUPOI, Data.P_IMUPOIATK, Data.P_IMUVOLC,
 				Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_BARRIER, Data.P_DEMONSHIELD, Data.P_DEATHSURGE,
-				Data.P_IMUCANNON,  Data.P_IMUBLAST, Data.P_IMULETH
+				Data.P_IMUCANNON, Data.P_IMUBLAST, Data.P_IMULETH
 		}; //Procs for enemies
 
 		protected MainProcTable(Page p, boolean edit, boolean unit) {
