@@ -81,15 +81,11 @@ public class StageEditTable extends AbJTable implements Reorderable {
 	@Override
 	public TableCellEditor getCellEditor(int r, int c) {
 		c = lnk[c];
-		Object v = getValueAt(r, c);
 		if (c == 0) {
 			cbos.setSelectedIndex(stage.datas[r].boss);
 			return new DefaultCellEditor(cbos);
-		} else if (v != null) {
-			return getDefaultEditor(v.getClass());
-		} else {
+		} else
 			return super.getCellEditor(r, c);
-		}
 	}
 
 	@Override
