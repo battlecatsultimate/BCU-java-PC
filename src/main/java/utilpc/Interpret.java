@@ -216,8 +216,10 @@ public class Interpret extends Data {
     public static class ProcDisplay {
         private String text;
         private ImageIcon icon = null;
+        private ProcItem proc;
 
-        public ProcDisplay(String desc, BufferedImage img) {
+        public ProcDisplay(String desc, BufferedImage img, ProcItem p) {
+            proc = p;
             text = desc;
             if (img != null)
                 icon = new ImageIcon(img);
@@ -230,6 +232,10 @@ public class Interpret extends Data {
 
         public ImageIcon getIcon() {
             return icon;
+        }
+
+        public ProcItem getProc() {
+            return proc;
         }
     }
 
@@ -287,12 +293,12 @@ public class Interpret extends Data {
             for (String key : LDInts.keySet()) {
                 List<Integer> inds = LDInts.get(key);
                 if (inds == null) {
-                    l.add(new ProcDisplay(key, ics.get(i++)));
+                    l.add(new ProcDisplay(key, ics.get(i++), null));
                 } else {
                     if (inds.size() == me.getAtkCount()) {
-                        l.add(new ProcDisplay(key, ics.get(i++)));
+                        l.add(new ProcDisplay(key, ics.get(i++), null));
                     } else {
-                        l.add(new ProcDisplay(key + " " + getAtkNumbers(inds), ics.get(i++)));
+                        l.add(new ProcDisplay(key + " " + getAtkNumbers(inds), ics.get(i++), null));
                     }
                 }
             }
@@ -307,7 +313,7 @@ public class Interpret extends Data {
                 bi = UtilPC.getIcon(2, ATK_LD);
             }
             l.add(new ProcDisplay(Page.get(MainLocale.UTIL, "ld0") + ": " + tb + ", " + Page.get(MainLocale.UTIL, "ld1") + ": " + p0 + "~" + p1 + ", "
-                    + Page.get(MainLocale.UTIL, "ld2") + ": " + r, bi));
+                    + Page.get(MainLocale.UTIL, "ld2") + ": " + r, bi, null));
         }
         AtkDataModel rev = me.getRevenge();
         for (int z = 0; z < 6; z++) {
@@ -322,7 +328,7 @@ public class Interpret extends Data {
                         bi = (UtilPC.getIcon(2, ATK_LD));
                     l.add(new ProcDisplay(Page.get(MainLocale.UTIL, "ld1") + ": " + revs + "~" + revl +
                             ", " + Page.get(MainLocale.UTIL, "ld2") + ": " + (revl - revs) +
-                            " [" + Page.get(MainLocale.UTIL, "aa" + (z + 6)) + "]", bi));
+                            " [" + Page.get(MainLocale.UTIL, "aa" + (z + 6)) + "]", bi, null));
                 }
             }
             switch (z) {
@@ -349,9 +355,9 @@ public class Interpret extends Data {
         for (int i = 0; i < ABIS.length; i++)
             if (((me.getAbi() >> i) & 1) > 0)
                 if (ABIS[i].startsWith("IMU"))
-                    l.add(new ProcDisplay(imu + ABIS[i].substring(3), UtilPC.getIcon(0, i)));
+                    l.add(new ProcDisplay(imu + ABIS[i].substring(3), UtilPC.getIcon(0, i), null));
                 else {
-                    l.add(new ProcDisplay(ABIS[i], UtilPC.getIcon(0, i)));
+                    l.add(new ProcDisplay(ABIS[i], UtilPC.getIcon(0, i), null));
                 }
         return l;
     }
@@ -412,7 +418,7 @@ public class Interpret extends Data {
                 String format = ProcLang.get().get(i).format;
                 String formatted = Formatter.format(format, item, ctx);
 
-                l.add(new ProcDisplay(formatted, UtilPC.getIcon(1, i)));
+                l.add(new ProcDisplay(formatted, UtilPC.getIcon(1, i), item));
             }
         } else {
             LinkedHashMap<String, List<Integer>> atkMap = new LinkedHashMap<>();
@@ -428,7 +434,7 @@ public class Interpret extends Data {
 
                 String format = ProcLang.get().get(i).format;
                 String formatted = Formatter.format(format, item, ctx);
-                l.add(new ProcDisplay(formatted, UtilPC.getIcon(1, i)));
+                l.add(new ProcDisplay(formatted, UtilPC.getIcon(1, i), item));
             }
 
             for (int i = 0; i < du.getAtkCount(); i++) {
@@ -463,12 +469,12 @@ public class Interpret extends Data {
                 List<Integer> inds = atkMap.get(key);
 
                 if (inds == null) {
-                    l.add(new ProcDisplay(key, procIcons.get(i++)));
+                    l.add(new ProcDisplay(key, procIcons.get(i++), null));
                 } else {
                     if (inds.size() == du.getAtkCount()) {
-                        l.add(new ProcDisplay(key, procIcons.get(i++)));
+                        l.add(new ProcDisplay(key, procIcons.get(i++), null));
                     } else {
-                        l.add(new ProcDisplay(key + " " + getAtkNumbers(inds), procIcons.get(i++)));
+                        l.add(new ProcDisplay(key + " " + getAtkNumbers(inds), procIcons.get(i++), null));
                     }
                 }
             }
@@ -496,7 +502,7 @@ public class Interpret extends Data {
 
                     String format = ProcLang.get().get(j).format;
                     String formatted = Formatter.format(format, item, ctx);
-                    l.add(new ProcDisplay(formatted + " [" + Page.get(MainLocale.UTIL, "aa" + (6 + i)) + "]", UtilPC.getIcon(1, j)));
+                    l.add(new ProcDisplay(formatted + " [" + Page.get(MainLocale.UTIL, "aa" + (6 + i)) + "]", UtilPC.getIcon(1, j), item));
                 }
             }
             switch (i) {

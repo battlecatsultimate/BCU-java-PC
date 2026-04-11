@@ -4,12 +4,10 @@ import common.CommonStatic;
 import common.battle.BasisSet;
 import common.battle.data.MaskUnit;
 import common.battle.data.PCoin;
+import common.system.ENode;
 import common.system.VImg;
 import common.util.Data;
-import common.util.unit.EForm;
-import common.util.unit.Form;
-import common.util.unit.Level;
-import common.util.unit.Trait;
+import common.util.unit.*;
 import main.MainBCU;
 import page.JL;
 import page.JTF;
@@ -22,6 +20,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -59,13 +59,30 @@ public class UnitInfoTable extends Page {
 		double mul = f.unit.lv.getMult(multi.getLv() + multi.getPlusLv());
 		ls.addAll(Interpret.getProc(du, false, new double[]{Math.round(du.getHp() * mul) * b.t().getDefMulti(), multi.getLv() + multi.getPlusLv()}));
 		if (pc)
-			ls.add(new Interpret.ProcDisplay("", null));
+			ls.add(new Interpret.ProcDisplay("", null, null));
 		proc = new JLabel[ls.size()];
 		for (int i = 0; i < ls.size(); i++) {
 			Interpret.ProcDisplay display = ls.get(i);
 			add(proc[i] = new JLabel(display.toString()));
 			proc[i].setBorder(BorderFactory.createEtchedBorder());
-			proc[i].setIcon(UtilPC.getScaledIcon(display.getIcon(), 40, 40));
+			proc[i].setIcon(UtilPC.getScaledIcon(display.getIcon(), 40, 40));Data.Proc.ProcItem item = display.getProc();
+			if (item instanceof Data.Proc.SUMMON && ((Data.Proc.SUMMON) item).id != null) {
+				Object summon = ((Data.Proc.SUMMON) item).id.get();
+				if (!(summon instanceof EneRand)) {
+					proc[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
+					proc[i].addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							int mult = ((Data.Proc.SUMMON) item).mult;
+							if (summon instanceof Unit)
+								changePanel(new UnitInfoPage(getFront(), (Unit) summon, new Level(mult, 0, new int[0])));
+							else if (summon instanceof Enemy)
+								changePanel(new EnemyInfoPage(getFront(), new ENode((Enemy) summon, new int[] { mult, mult })));
+						}
+					});
+				}
+			}
+
 		}
 		pcoin = pc ? proc[ls.size() - 1] : null;
 		ini();
@@ -85,13 +102,39 @@ public class UnitInfoTable extends Page {
 		ls.addAll(Interpret.getProc(du, false, new double[]{Math.round(du.getHp() * mul) * b.t().getDefMulti(), multi.getLv() + multi.getPlusLv()}));
 		boolean pc = de.du.getPCoin() != null;
 		if (pc)
-			ls.add(new Interpret.ProcDisplay("", null));
+			ls.add(new Interpret.ProcDisplay("", null, null));
 		proc = new JLabel[ls.size()];
 		for (int i = 0; i < ls.size(); i++) {
 			Interpret.ProcDisplay display = ls.get(i);
 			add(proc[i] = new JLabel(display.toString()));
 			proc[i].setBorder(BorderFactory.createEtchedBorder());
 			proc[i].setIcon(UtilPC.getScaledIcon(display.getIcon(), 40, 40));
+			Data.Proc.ProcItem item = display.getProc();
+			if (item instanceof Data.Proc.SUMMON && ((Data.Proc.SUMMON) item).id != null) {
+				Object summon = ((Data.Proc.SUMMON) item).id.get();
+				if (!(summon instanceof EneRand)) {
+					proc[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
+					proc[i].addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							int mult = ((Data.Proc.SUMMON) item).mult;
+							if (summon instanceof Unit)
+								changePanel(new UnitInfoPage(getFront(), (Unit) summon, new Level(mult, 0, new int[0])));
+							else if (summon instanceof Enemy)
+								changePanel(new EnemyInfoPage(getFront(), new ENode((Enemy) summon, new int[] { mult, mult })));
+						}
+					});
+				}
+			}
+			if (item instanceof Data.Proc.SPIRIT && item.exists()) {
+				proc[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
+				proc[i].addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						changePanel(new UnitInfoPage(getFront(), (Unit) ((Data.Proc.SPIRIT) item).id.get(), multi));
+					}
+				});
+			}
 		}
 		pcoin = pc ? proc[ls.size() - 1] : null;
 		ini();
@@ -175,6 +218,23 @@ public class UnitInfoTable extends Page {
 			Interpret.ProcDisplay display = ls.get(i);
 			proc[i].setText(display.toString());
 			proc[i].setIcon(UtilPC.getScaledIcon(display.getIcon(), 40, 40));
+			Data.Proc.ProcItem item = display.getProc();
+			if (item instanceof Data.Proc.SUMMON && ((Data.Proc.SUMMON) item).id != null) {
+				Object summon = ((Data.Proc.SUMMON) item).id.get();
+				if (!(summon instanceof EneRand)) {
+					proc[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
+					proc[i].addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							int mult = ((Data.Proc.SUMMON) item).mult;
+							if (summon instanceof Unit)
+								changePanel(new UnitInfoPage(getFront(), (Unit) summon, new Level(mult, 0, new int[0])));
+							else if (summon instanceof Enemy)
+								changePanel(new EnemyInfoPage(getFront(), new ENode((Enemy) summon, new int[] { mult, mult })));
+						}
+					});
+				}
+			}
 		}
 		updateTooltips();
 	}

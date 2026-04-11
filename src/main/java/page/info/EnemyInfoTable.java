@@ -5,9 +5,9 @@ import common.battle.BasisSet;
 import common.battle.data.AtkDataModel;
 import common.battle.data.CustomEnemy;
 import common.pack.UserProfile;
+import common.system.ENode;
 import common.util.Data;
-import common.util.unit.Enemy;
-import common.util.unit.Trait;
+import common.util.unit.*;
 import main.MainBCU;
 import page.JL;
 import page.JTF;
@@ -20,6 +20,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -70,6 +72,23 @@ public class EnemyInfoTable extends Page {
 			add(proc[i] = new JLabel(disp.toString()));
 			proc[i].setBorder(BorderFactory.createEtchedBorder());
 			proc[i].setIcon(UtilPC.getScaledIcon(disp.getIcon(), 40, 40));
+			Data.Proc.ProcItem item = disp.getProc();
+			if (item instanceof Data.Proc.SUMMON && ((Data.Proc.SUMMON) item).id != null) {
+				Object summon = ((Data.Proc.SUMMON) item).id.get();
+				if (!(summon instanceof EneRand)) {
+					proc[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
+					proc[i].addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							int mult = ((Data.Proc.SUMMON) item).mult;
+							if (summon instanceof Unit)
+								changePanel(new UnitInfoPage(getFront(), (Unit) summon, new Level(mult, 0, new int[0])));
+							else if (summon instanceof Enemy)
+								changePanel(new EnemyInfoPage(getFront(), new ENode((Enemy) summon, new int[] { mult, mult })));
+						}
+					});
+				}
+			}
 		}
 		ini();
 	}
@@ -92,6 +111,23 @@ public class EnemyInfoTable extends Page {
 		for (int i = 0; i < ls.size(); i++) {
 			Interpret.ProcDisplay disp = ls.get(i);
 			proc[i].setText(disp.toString());
+			Data.Proc.ProcItem item = disp.getProc();
+			if (item instanceof Data.Proc.SUMMON && ((Data.Proc.SUMMON) item).id != null) {
+				Object summon = ((Data.Proc.SUMMON) item).id.get();
+				if (!(summon instanceof EneRand)) {
+					proc[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
+					proc[i].addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							int mult = ((Data.Proc.SUMMON) item).mult;
+							if (summon instanceof Unit)
+								changePanel(new UnitInfoPage(getFront(), (Unit) summon, new Level(mult, 0, new int[0])));
+							else if (summon instanceof Enemy)
+								changePanel(new EnemyInfoPage(getFront(), new ENode((Enemy) summon, new int[] { mult, mult })));
+						}
+					});
+				}
+			}
 			updateTooltips();
 		}
 	}
