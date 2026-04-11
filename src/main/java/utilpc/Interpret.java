@@ -1176,8 +1176,8 @@ public class Interpret extends Data {
                         .append("%</td></tr>");
         }
 
-        if (!st.score_bonus.isEmpty()) {
-            for (Stage.ScoreBonus bonus : st.score_bonus)
+        if (!st.scoreBonus.isEmpty()) {
+            for (Stage.ScoreBonus bonus : st.scoreBonus)
                 ans.append("\nScoreBonus: ").append(bonus.proc).append(" score ").append(bonus.score);
         }
 
