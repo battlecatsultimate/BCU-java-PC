@@ -54,6 +54,7 @@ class HeadEditTable extends Page {
 	private final JTF jres = new JTF();
 	private final JTF cos = new JTF();
 	private final JTG dojo = new JTG(MainLocale.PAGE,"dojo");
+	private final JTG drop = new JTG(MainLocale.PAGE, "drop");
 
 	private Stage sta;
 	private final UserPack pac;
@@ -149,6 +150,7 @@ class HeadEditTable extends Page {
 		set(cas, x, y, w * 4, 100, w, 50);
 		set(jcas, x, y, w * 5, 100, w, 50);
 		set(con, x, y, w * 6, 100, w, 50);
+		set(drop, x, y, w * 6, 150, w, 50);
 		set(bgrd, x, y, w * 7, 100, w, 50);
 		set(dojo, x, y, w * 7, 150, w, 50);
 
@@ -185,6 +187,7 @@ class HeadEditTable extends Page {
 		con.setSelected(!st.non_con);
 		bgrd.setSelected(st.bossGuard);
 		dojo.setSelected(st.trail);
+		drop.setSelected(st.drop);
 		String str = get(MainLocale.INFO, "star") + ": ";
 		for (int i = 0; i < 4; i++)
 			if (i < st.getCont().stars.length)
@@ -215,6 +218,7 @@ class HeadEditTable extends Page {
 		jmh.setEnabled(b);
 		jm1.setEnabled(b);
 		dojo.setEnabled(b);
+		drop.setEnabled(b);
 		for (JTF jtf : star)
 			jtf.setEnabled(b);
 		cos.setEnabled(b);
@@ -260,6 +264,10 @@ class HeadEditTable extends Page {
 			}
 		});
 
+		drop.addActionListener(x -> {
+			sta.drop = drop.isSelected();
+			setData(sta);
+		});
 	}
 
 	private void ini() {
@@ -271,6 +279,7 @@ class HeadEditTable extends Page {
 		add(con);
 		add(bgrd);
 		add(dojo);
+		add(drop);
 		add(mus);
 		set(jhea);
 		set(jlen);
