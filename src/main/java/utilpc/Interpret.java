@@ -1049,7 +1049,8 @@ public class Interpret extends Data {
         return ans.toString();
     }
 
-    public static String readHTML(StageInfo data) { // todo: figure out how to do this with custom stages without stage info (hopefully figure out how to attach all custom stages with stage info????)
+    public static String readHTML(Stage st) {
+        StageInfo data = st.info;// todo: figure out how to do this with custom stages without stage info (hopefully figure out how to attach all custom stages with stage info????)
         boolean isDef = data instanceof DefStageInfo;
         StringBuilder ans = new StringBuilder("<html>");
 
@@ -1175,6 +1176,10 @@ public class Interpret extends Data {
                         .append("%</td></tr>");
         }
 
+        if (!st.score_bonus.isEmpty()) {
+            for (Stage.ScoreBonus bonus : st.score_bonus)
+                ans.append("\nScoreBonus: ").append(bonus.proc).append(" score ").append(bonus.score);
+        }
 
         return ans.toString();
     }

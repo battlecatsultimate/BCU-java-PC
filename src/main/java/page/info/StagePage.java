@@ -83,7 +83,7 @@ public class StagePage extends Page {
 			if (stage == null)
 				return;
 			if (stage.info != null)
-				Opts.pop(Interpret.readHTML(stage.info), "stage info");
+				Opts.pop(Interpret.readHTML(stage), "stage info");
 			else
 				Opts.pop(Interpret.readHTMLStage(stage, false), "stage info");
 		});
