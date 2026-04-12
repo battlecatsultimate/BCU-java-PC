@@ -24,6 +24,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 @SuppressWarnings({"ResultOfMethodCallIgnored", "ForLoopReplaceableByForEach"})
 public class BGEditPage extends Page {
@@ -294,7 +295,7 @@ public class BGEditPage extends Page {
 		Vector<Integer> effVector = new Vector<>();
 
 		effVector.add(-1);
-		effVector.addAll(CommonStatic.getBCAssets().bgEffects.keySet());
+		effVector.addAll(CommonStatic.getBCAssets().bgEffects.keySet().stream().sorted().collect(Collectors.toList()));
 
 		eff.setModel(new DefaultComboBoxModel<>(effVector));
 		eff.setRenderer(new DefaultListCellRenderer() {
