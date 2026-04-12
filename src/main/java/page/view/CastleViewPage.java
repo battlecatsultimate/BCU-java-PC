@@ -7,6 +7,7 @@ import page.JBTN;
 import page.JL;
 import page.MainLocale;
 import page.Page;
+import page.info.StageFilterPage;
 import utilpc.UtilPC;
 
 import javax.swing.*;
@@ -18,6 +19,7 @@ public class CastleViewPage extends Page {
 	private static final long serialVersionUID = 1L;
 
 	private final JBTN back = new JBTN(0, "back");
+	private final JBTN find = new JBTN(0, "stage");
 	private final JList<CastleList> jlsm = new JList<>();
 	private final JScrollPane jspsm = new JScrollPane(jlsm);
 	private final JList<CastleImg> jlst = new JList<>();
@@ -66,9 +68,12 @@ public class CastleViewPage extends Page {
 		setBounds(0, 0, x, y);
 
 		set(back, x, y, 0, 0, 200, 50);
+
 		set(jspsm, x, y, 50, 100, 300, 1100);
 		set(jspst, x, y, 400, 550, 300, 650);
 		set(jl, x, y, 800, 50, 1000, 1000);
+
+		set(find, x, y, 450, 300, 200, 50);
 		set(jbs, x, y, 400, 500, 200, 50);
 		set(bs, x, y, 600, 500, 100, 50);
 	}
@@ -98,10 +103,17 @@ public class CastleViewPage extends Page {
 			}
 		});
 
+		find.addActionListener(x -> {
+			if (jlst.getSelectedValue() == null)
+				return;
+
+			changePanel(new StageFilterPage(this, jlst.getSelectedValue().getStages()));
+		});
 	}
 
 	private void ini() {
 		add(back);
+		add(find);
 		add(jspsm);
 		add(jspst);
 		add(jl);
