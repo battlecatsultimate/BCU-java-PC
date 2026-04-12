@@ -80,9 +80,9 @@ public class HeadTable extends AbJTable {
 		int r = p.y / getRowHeight();
 		if (r == 0 && c > 1 && c < Math.min(sta.getCont().stars.length + 2, 6))
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		else if (r == 1 && c == 5)
+		else if (r == 1 && c == 5 && sta.mus0 != null)
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		else if (r == 1 && c == 7)
+		else if (r == 1 && c == 7 && sta.mus1 != null)
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		else if (r == 3 && c == 1)
 			setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -105,9 +105,9 @@ public class HeadTable extends AbJTable {
 		int r = p.y / getRowHeight();
 		if (r == 0 && c > 1 && c < Math.min(sta.getCont().stars.length + 2, 6))
 			page.callBack(c - 2);
-		if (r == 1 && c == 5)
+		if (r == 1 && c == 5 && sta.mus0 != null)
 			MainFrame.changePanel(new MusicPage(page, sta.mus0));
-		if (r == 1 && c == 7)
+		if (r == 1 && c == 7 && sta.mus1 != null)
 			MainFrame.changePanel(new MusicPage(page, sta.mus1));
 		if (r == 3 && c == 1)
 			MainFrame.changePanel(new BGViewPage(page, null, sta.bg));
