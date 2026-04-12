@@ -35,7 +35,7 @@ public class StageTable extends AbJTable {
 	}
 
 	public static void redefine() {
-		title = Page.get(MainLocale.INFO, "t", 10);
+		title = Page.get(MainLocale.INFO, "t", 11);
 	}
 
 	protected Object[][] data;
@@ -199,6 +199,7 @@ public class StageTable extends AbJTable {
 
 			data[ind][9] = scg == null ? g != 0 ? Data.trio(g) + " - invalid" : "" : scg.toString();
 
+			data[ind][10] = info[i].score;
 		}
 	}
 

@@ -47,7 +47,7 @@ public class StageEditTable extends AbJTable implements Reorderable {
 	}
 
 	protected static void redefine() {
-		title = Page.get(MainLocale.INFO, "t", 10);
+		title = Page.get(MainLocale.INFO, "t", 11);
 	}
 
 	private SCDef stage;
@@ -383,6 +383,8 @@ public class StageEditTable extends AbJTable implements Reorderable {
 			SCGroup scg = stage.sub.get(g);
 
 			return scg == null ? g != 0 ? Data.trio(g) + " - invalid" : "" : scg.toString();
+		} else if (c == 10) {
+			return data.score;
 		}
 		return null;
 	}
@@ -390,21 +392,16 @@ public class StageEditTable extends AbJTable implements Reorderable {
 	private void set(int r, int c, int v, int para) {
 		if (changing)
 			return;
-
 		if (r < 0 || r >= stage.datas.length)
 			return;
-
 		if (c == 1 && (v < 0 || para == -1))
 			return;
-
 		if (c != 5 && c != 7 && v < 0)
 			v = 0;
-
 		if (c == 0 && v > 2)
 			return;
 
 		Line[] info = stage.datas;
-
 		Line data = info[info.length - r - 1];
 
 		if (c == 0)
@@ -462,6 +459,8 @@ public class StageEditTable extends AbJTable implements Reorderable {
 			data.kill_count = v;
 		else if (c == 9)
 			data.group = v;
+		else if (c == 10)
+			data.score = v;
 	}
 
 	private void setEnemy(int r, String pack, String id) {
