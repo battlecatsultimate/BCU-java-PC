@@ -17,6 +17,7 @@ import utilpc.UtilPC;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
@@ -46,7 +47,7 @@ public class BGEditPage extends Page {
 	private final JTF[] cs = new JTF[4];
 	private final JL[] ol = new JL[3];
 	private final JTF[] os = new JTF[3];
-	private final JComboBox<String> eff = new JComboBox<>();
+	private final JComboBox<Integer> eff = new JComboBox<>();
 	private final JBTN reset = new JBTN(MainLocale.PAGE, "reset");
 
 	private final UserPack pack;
@@ -204,11 +205,7 @@ public class BGEditPage extends Page {
 		}
 
 		eff.addActionListener(e -> {
-			if(eff.getSelectedIndex() == 0) {
-				bgr.effect = -1;
-			} else {
-				bgr.effect = eff.getSelectedIndex() - 1;
-			}
+			bgr.effect = (int) eff.getSelectedItem();
 		});
 
 		overlay.setLnr(c -> {
@@ -237,9 +234,8 @@ public class BGEditPage extends Page {
 		});
 
 		reset.setLnr(e -> {
-			bgr.effect = -1;
+			eff.setSelectedItem(bgr.effect = -1);
 			eff.setEnabled(true);
-			eff.setSelectedIndex(0);
 			eff.setToolTipText(null);
 		});
 	}
@@ -295,25 +291,33 @@ public class BGEditPage extends Page {
 			add(os[i] = new JTF());
 			add(ol[i] = new JL(MainLocale.PAGE, "bgcl"+(i+5)));
 		}
-		Vector<String> effVector = new Vector<>();
+		Vector<Integer> effVector = new Vector<>();
 
-		effVector.add(get(MainLocale.PAGE, "none"));
-
-		for(int i = 0; i < 10; i++) {
-			effVector.add(get(MainLocale.PAGE, "bgeff"+i));
-		}
-
-		for(int i = 0; i < BackgroundEffect.jsonList.size(); i++) {
-			String temp = get(MainLocale.PAGE, "bgjson"+BackgroundEffect.jsonList.get(i));
-
-			if(temp.equals("bgjson"+BackgroundEffect.jsonList.get(i))) {
-				temp = get(MainLocale.PAGE, "bgeffdum").replace("_", String.valueOf(BackgroundEffect.jsonList.get(i)));
-			}
-
-			effVector.add(temp);
-		}
+		effVector.add(-1);
+		effVector.addAll(CommonStatic.getBCAssets().bgEffects.keySet());
 
 		eff.setModel(new DefaultComboBoxModel<>(effVector));
+		eff.setRenderer(new DefaultListCellRenderer() {
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+				JLabel l = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				int v = (int) value;
+				if (v == -1)
+					l.setText(get(MainLocale.PAGE, "none"));
+				else if (v >= 0 && v <= 9) {
+					l.setText(get(MainLocale.PAGE, "bgeff"+v));
+				} else if (BackgroundEffect.jsonList.contains(v)) {
+					String temp = get(MainLocale.PAGE, "bgjson"+v);
+					if(temp.equals("bgjson"+v))
+						temp = get(MainLocale.PAGE, "bgeffdum").replace("_", String.valueOf(v));
+
+					l.setText(temp);
+				} else {
+					l.setText("unknown bg effect " + value);
+				}
+				return l;
+			}
+		});
 
 		setList(null);
 		addListeners$0();
@@ -371,13 +375,12 @@ public class BGEditPage extends Page {
 				}
 			}
 
-			if(bgr.effect == -1) {
-				eff.setSelectedIndex(0);
-			} else if (bgr.effect < 0 || bgr.effect >= eff.getItemCount()) {
+			if (bgr.effect != -1 && !CommonStatic.getBCAssets().bgEffects.containsKey(bgr.effect)) {
 				eff.setEnabled(false);
 				eff.setToolTipText("<html>This background uses effect that can't be selected in the list<br>Please click reset button to change it</html>");
 			} else {
-				eff.setSelectedIndex(bgr.effect + 1);
+				eff.setSelectedItem(bgr.effect);
+				eff.setToolTipText(null);
 			}
 		} else {
 			top.setEnabled(false);
