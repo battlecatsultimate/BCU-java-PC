@@ -338,7 +338,10 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 		long h = eba.health;
 		long mh = eba.maxH;
 
-		ebase.setText("HP: " + h + "/" + mh + ", " + 10000 * h / mh / 100.0 + "%");
+		if (!sb.st.trail)
+			ebase.setText("HP: " + h + "/" + mh + ", " + 10000 * h / mh / 100.0 + "%");
+		else
+			ebase.setText("SCORE: " + sb.score);
 		ubase.setText("HP: " + sb.ubase.health);
 
 		timer.setText(sb.time + "f");

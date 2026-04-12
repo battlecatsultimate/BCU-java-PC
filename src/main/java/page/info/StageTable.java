@@ -199,8 +199,7 @@ public class StageTable extends AbJTable {
 
 			data[ind][9] = scg == null ? g != 0 ? Data.trio(g) + " - invalid" : "" : scg.toString();
 
-			data[ind][10] = info[i].score;
+			data[ind][10] = st.trail ? info[i].score : "--";
 		}
 	}
-
 }
