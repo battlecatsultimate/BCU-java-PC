@@ -15,8 +15,10 @@ import page.JTF;
 import page.Page;
 import page.info.StageViewPage;
 import page.support.AnimLCR;
+import utilpc.Interpret;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +40,14 @@ public class AdvStEditPage extends Page {
 	private final JBTN remg = new JBTN(0, "rem");
 	private final JBTN addt = new JBTN(0, "addl");
 	private final JBTN remt = new JBTN(0, "reml");
+
+	private final JL scores = new JL(0, "scores");
+	private final JL jlsc = new JL(0, "score");
+	private final JTF jtfs = new JTF();
+	private final JBTN adds = new JBTN(0, "add");
+	private final JBTN rems = new JBTN(0, "rem");
+	private final JList<Stage.ScoreBonus> jsco = new JList<>();
+	private final JScrollPane jssc = new JScrollPane(jsco);
 
 	private final JList<Stage> jex = new JList<>();
 	private final JScrollPane jsex = new JScrollPane(jex);
@@ -78,11 +88,13 @@ public class AdvStEditPage extends Page {
 		set(addg, x, y, 50, 900, 150, 50);
 		set(remg, x, y, 200, 900, 150, 50);
 		set(smax, x, y, 50, 950, 300, 50);
+
 		set(jspe, x, y, 400, 100, 300, 800);
 		set(sdef, x, y, 400, 900, 300, 50);
 		set(jspt, x, y, 750, 150, 400, 800);
 		set(addt, x, y, 750, 100, 200, 50);
 		set(remt, x, y, 950, 100, 200, 50);
+
 		set(exSt, x, y, 1200, 100, 300, 50);
 		set(jsex, x, y, 1200, 200, 300, 650);
 		set(addex, x, y, 1200, 150, 150, 50);
@@ -92,6 +104,11 @@ public class AdvStEditPage extends Page {
 		set(jltprob, x, y, 1200, 900, 150, 50);
 		set(jtprob, x, y, 1350, 900, 150, 50);
 		set(equal, x, y, 1200, 950, 300, 50);
+
+		set(scores, x, y, 1550, 100, 300, 50);
+		set(jssc, x, y, 1550, 150, 300, 450);
+		set(adds, x, y, 1550, 600, 150, 50);
+		set(rems, x, y, 1700, 600, 150, 50);
 
 		sget.setRowHeight(size(x, y, 50));
 	}
@@ -223,6 +240,10 @@ public class AdvStEditPage extends Page {
 			add(remt);
 		}
 
+		jle.setCellRenderer(new AnimLCR());
+		jle.setListData(aes);
+		sdef.setText("default: " + data.sdef);
+
 		add(jsex);
 		add(exSt);
 		add(addex);
@@ -232,9 +253,29 @@ public class AdvStEditPage extends Page {
 		add(jltprob);
 		add(jtprob);
 		add(equal);
-		jle.setCellRenderer(new AnimLCR());
-		jle.setListData(aes);
-		sdef.setText("default: " + data.sdef);
+
+		if (st.trail) {
+			add(scores);
+			add(jssc);
+			add(adds);
+			add(rems);
+			add(jlsc);
+			add(jtfs);
+		}
+		jsco.setListData(st.scoreBonus.toArray(new Stage.ScoreBonus[0]));
+		jsco.setCellRenderer(new DefaultListCellRenderer() {
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+				JLabel jl = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				Stage.ScoreBonus bonus = (Stage.ScoreBonus) value;
+				if (value != null) {
+					jl.setText(Interpret.SCORES[bonus.proc] + " " + bonus.dire + " " + bonus.score);
+				} else {
+					jl.setText("?");
+				}
+				return jl;
+			}
+		});
 
 		if (st.info != null) {
 			jex.setListData(st.info.getExStages());
