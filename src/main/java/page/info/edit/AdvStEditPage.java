@@ -2,6 +2,7 @@ package page.info.edit;
 
 import common.CommonStatic;
 import common.pack.PackData.UserPack;
+import common.util.Data;
 import common.util.stage.MapColc;
 import common.util.stage.SCDef;
 import common.util.stage.SCGroup;
@@ -21,6 +22,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class AdvStEditPage extends Page {
 
@@ -41,13 +43,13 @@ public class AdvStEditPage extends Page {
 	private final JBTN addt = new JBTN(0, "addl");
 	private final JBTN remt = new JBTN(0, "reml");
 
-	private final JL scores = new JL(0, "scores");
-	private final JL jlsc = new JL(0, "score");
-	private final JTF jtfs = new JTF();
+	private final JL scores = new JL(0, "bscores");
 	private final JBTN adds = new JBTN(0, "add");
 	private final JBTN rems = new JBTN(0, "rem");
 	private final JList<Stage.ScoreBonus> jsco = new JList<>();
 	private final JScrollPane jssc = new JScrollPane(jsco);
+	private final JComboBox<Integer> jcbs = new JComboBox<>(IntStream.range(0, Data.SCORE_TOT).boxed().toArray(Integer[]::new));
+	private final JTF jtfs = new JTF();
 
 	private final JList<Stage> jex = new JList<>();
 	private final JScrollPane jsex = new JScrollPane(jex);
@@ -109,6 +111,8 @@ public class AdvStEditPage extends Page {
 		set(jssc, x, y, 1550, 150, 300, 450);
 		set(adds, x, y, 1550, 600, 150, 50);
 		set(rems, x, y, 1700, 600, 150, 50);
+		set(jcbs, x, y, 1550, 650, 300, 50);
+		set(jtfs, x, y, 1550, 700, 300, 50);
 
 		sget.setRowHeight(size(x, y, 50));
 	}
@@ -219,8 +223,14 @@ public class AdvStEditPage extends Page {
 
 	private void addListeners$1() {
 		addt.setLnr(e -> sget.addLine(jle.getSelectedValue()));
-
 		remt.setLnr(e -> sget.remLine());
+
+		jsco.addListSelectionListener(x -> {
+			if (isAdj() || jsco.getValueIsAdjusting())
+				return;
+
+			setScoreBonus(jsco.getSelectedValue());
+		});
 	}
 
 	private void ini() {
@@ -259,8 +269,8 @@ public class AdvStEditPage extends Page {
 			add(jssc);
 			add(adds);
 			add(rems);
-			add(jlsc);
 			add(jtfs);
+			add(jcbs);
 		}
 		jsco.setListData(st.scoreBonus.toArray(new Stage.ScoreBonus[0]));
 		jsco.setCellRenderer(new DefaultListCellRenderer() {
@@ -276,6 +286,17 @@ public class AdvStEditPage extends Page {
 				return jl;
 			}
 		});
+		jcbs.setRenderer(new DefaultListCellRenderer() {
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+				JLabel jl = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				if (Interpret.SCORES.length > (int) value) // 5, 5
+					jl.setText(Interpret.SCORES[(int) value]);
+				else
+					jl.setText("UNKNOWN ID " + value);
+				return jl;
+			}
+		});
 
 		if (st.info != null) {
 			jex.setListData(st.info.getExStages());
@@ -283,6 +304,7 @@ public class AdvStEditPage extends Page {
 		} else
 			setFollowups(null);
 		setListG();
+		setScoreBonus(null);
 		addListeners$0();
 		addListeners$1();
 	}
@@ -306,6 +328,18 @@ public class AdvStEditPage extends Page {
 		remg.setEnabled(scg != null);
 		smax.setEnabled(scg != null);
 		smax.setText(scg != null ? "max: " + scg.getMax(0) : "");
+	}
+
+	private void setScoreBonus(Stage.ScoreBonus bonus) {
+		if (jsco.getSelectedValue() != bonus)
+			change(bonus, b -> jsco.setSelectedValue(bonus, true));
+		rems.setEnabled(bonus != null);
+		jcbs.setEnabled(bonus != null);
+		jtfs.setEnabled(bonus != null);
+		if (bonus != null) {
+			jcbs.setSelectedItem(bonus.proc);
+			jtfs.setText("score: " + bonus.score + ", dire: " + bonus.dire);
+		}
 	}
 
 	private void setFollowups(CustomStageInfo si) {
