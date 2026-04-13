@@ -80,6 +80,7 @@ public class Interpret extends Data {
     public static String[] TCTX;
     public static String[] PCTX;
     public static String[] ORB;
+    public static String[] SCORES;
 
     /**
      * treasure orderer
@@ -722,6 +723,7 @@ public class Interpret extends Data {
         TCTX = Page.get(MainLocale.UTIL, "tc", 6);
         PCTX = Page.get(MainLocale.UTIL, "aq", PC_CORRES.length);
         ORB = Page.get(MainLocale.UTIL, "ot", ORB_TOT);
+        SCORES = Page.get(MainLocale.UTIL, "sc", SCORE_TOT);
         EABI = new String[EABIIND.length];
         for (int i = 0; i < EABI.length; i++)
             EABI[i] = SABIS[EABIIND[i]];
@@ -1184,7 +1186,9 @@ public class Interpret extends Data {
 
         if (!st.scoreBonus.isEmpty()) {
             for (Stage.ScoreBonus bonus : st.scoreBonus)
-                ans.append("\nScoreBonus: ").append(bonus.proc).append(" score ").append(bonus.score);
+                ans.append("\nScoreBonus: ").append(SCORES[bonus.proc])
+                        .append(" score ").append(bonus.score)
+                        .append(" dire ").append(bonus.dire);
         }
 
         return ans.toString();
