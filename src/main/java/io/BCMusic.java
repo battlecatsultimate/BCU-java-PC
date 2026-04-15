@@ -124,7 +124,7 @@ public class BCMusic extends Data {
 		}
 	}
 
-	public static synchronized void EndTheme(boolean win) {
+	public static synchronized void endJingle(int sfx) {
 		if (!play || End != null)
 			return;
 		if (BG != null) {
@@ -135,7 +135,6 @@ public class BCMusic extends Data {
 		if (VOL_UI == 0)
 			return;
 
-		byte sfx = win ? SE_VICTORY : SE_DEFEAT;
 		try {
 			if (CACHE[sfx] == null)
 				End = new BCPlayer(openFile(UserProfile.getBCData().musics.get(sfx)), sfx);

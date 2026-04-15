@@ -366,10 +366,13 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 			basis.sb.changeBG(basis.sb.st.bg);
 		}
 
-		if (sb.ebase.health <= 0 || sb.ubase.health <= 0) {
-			BCMusic.EndTheme(sb.ebase.health <= 0);
+		if (!sb.isActive()) {
+			if (sb.st.trail)
+				BCMusic.endJingle(sb.st.lim != null && sb.st.lim.score < sb.score ? Data.SE_DEFEAT : Data.SE_DOJO);
+			else
+				BCMusic.endJingle(sb.ubase.health <= 0 ? Data.SE_DEFEAT : Data.SE_VICTORY);
 
-			if (sb.ebase.health <= 0) {
+			if (sb.st.trail || sb.ebase.health <= 0) {
 				if(!exPopupShown && CommonStatic.getConfig().exContinuation && sb.st.info != null && (sb.st.info.hasExConnection() || sb.st.info.getExStages() != null)) {
 					exPopupShown = true;
 
