@@ -35,6 +35,7 @@ import page.view.BGViewPage;
 import page.view.CastleViewPage;
 import page.view.EnemyViewPage;
 import page.view.MusicPage;
+import utilpc.UtilPC;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -66,6 +67,7 @@ public class PackEditPage extends Page {
 	private final JScrollPane jspr = new JScrollPane(jlr);
 	private final JList<UserPack> jlt = new JList<>(vpack);
 	private final JScrollPane jspt = new JScrollPane(jlt);
+	private final JTF searchp = new JTF();
 
 	private final JBTN addp = new JBTN(MainLocale.PAGE, "add");
 	private final JBTN remp = new JBTN(MainLocale.PAGE, "rem");
@@ -141,7 +143,8 @@ public class PackEditPage extends Page {
 		int w = 50, dw = 150;
 
 		set(lbp, x, y, w, 100, 400, 50);
-		set(jspp, x, y, w, 150, 400, 600);
+		set(searchp, x, y, w, 150, 400, 50);
+		set(jspp, x, y, w, 200, 400, 550);
 		set(addp, x, y, w, 800, 200, 50);
 		set(remp, x, y, w + 200, 800, 200, 50);
 		set(jtfp, x, y, w, 850, 400, 50);
@@ -617,6 +620,21 @@ public class PackEditPage extends Page {
 			changing = false;
 		});
 
+		searchp.setTypeLnr(x -> {
+			String txt = searchp.getText();
+			Vector<UserPack> p = new Vector<>();
+			int minDiff = MainBCU.searchTolerance;
+			for (UserPack pack : vpack) {
+				String pname = pack.toString();
+				if (!pack.desc.names.toString().isEmpty())
+					pname += pack.desc.id;
+				int diff = UtilPC.damerauLevenshteinDistance(pname.toLowerCase(), txt.toLowerCase());
+				minDiff = Math.min(minDiff, diff);
+				if (diff == minDiff)
+					p.add(pack);
+			}
+			jlp.setListData(p);
+		});
 	}
 
 	private void checkAddr() {
@@ -695,6 +713,9 @@ public class PackEditPage extends Page {
 		addListeners$2();
 		addListeners$3();
 		addListeners$4();
+
+		add(searchp);
+		searchp.setHint("Search pack");
 	}
 
 	private void setEnemy(Enemy e) {
