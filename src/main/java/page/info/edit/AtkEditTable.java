@@ -121,7 +121,7 @@ class AtkEditTable extends Page {
 		} else
 			adm.specialTrait = false;
 
-		fireDimensionChanged();
+		getFront().fireDimensionChanged();
 	}
 
 	private void ini() {
