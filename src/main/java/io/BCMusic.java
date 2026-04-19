@@ -273,9 +273,8 @@ public class BCMusic extends Data {
 			} else {
 				Clip c = openFile(m);
 				if (c.getMicrosecondLength() < 10_000_000L)
-					loadSound(-1, CACHE_CUSTOM.put(mus, m.data.getBytes()));
-				else
-					loadSound(-1, c); // TODO stop audio if battle is exited after
+					CACHE_CUSTOM.put(mus, m.data.getBytes());
+				loadSound(-1, c); // TODO stop audio if battle is exited after
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
