@@ -35,12 +35,14 @@ public class LimitTable extends Page {
 	private final JTF max = new JTF();
 	private final JTF jcg = new JTF();
 	private final JTF jlr = new JTF();
+	private final JTF sco = new JTF();
 	private final JBTN cgb = new JBTN(MainLocale.INFO, "ht15");
 	private final JBTN lrb = new JBTN(MainLocale.INFO, "ht16");
 	private final JTG one = new JTG(MainLocale.INFO, "ht12");
 	private final JTG rich = new JTG(MainLocale.INFO, "ht17");
 	private final JTG snip = new JTG(MainLocale.INFO, "ht18");
 	private final JL rar = new JL(MainLocale.INFO, "ht10");
+	private final JL doj = new JL(MainLocale.INFO, "ht19");
 	private final JTG[] brars = new JTG[6];
 
 	private final UserPack pac;
@@ -56,7 +58,7 @@ public class LimitTable extends Page {
 		ini();
 	}
 
-	protected void abler(boolean b) {
+	protected void abler(boolean b, boolean dojo) {
 		min.setEnabled(b);
 		num.setEnabled(b);
 		max.setEnabled(b);
@@ -67,6 +69,7 @@ public class LimitTable extends Page {
 		jcg.setEnabled(b);
 		lrb.setEnabled(b);
 		jlr.setEnabled(b);
+		sco.setEnabled(b && dojo);
 		for (JTG jtb : brars)
 			jtb.setEnabled(b);
 	}
@@ -94,9 +97,11 @@ public class LimitTable extends Page {
 	@Override
 	protected void resized(int x, int y) {
 		int w = 1400 / 8;
+
 		set(rar, x, y, 0, 0, w, 50);
 		for (int i = 0; i < brars.length; i++)
 			set(brars[i], x, y, w + w * i, 0, w, 50);
+
 		set(min, x, y, 0, 50, w, 50);
 		set(max, x, y, w, 50, w, 50);
 		set(num, x, y, w * 2, 50, w, 50);
@@ -105,11 +110,14 @@ public class LimitTable extends Page {
 		set(jcg, x, y, w * 5, 50, w, 50);
 		set(lrb, x, y, w * 6, 50, w, 50);
 		set(jlr, x, y, w * 7, 50, w, 50);
+
 		set(rich, x, y, 0, 100, w, 50);
 		set(snip, x, y, w, 100, w, 50);
+		set(doj, x, y, w * 4, 100, w, 50);
+		set(sco, x, y, w * 5, 100, w, 50);
 	}
 
-	protected void setLimit(Limit l) {
+	protected void setLimit(Limit l, boolean isDojo) {
 		lim = l;
 		if (l == null) {
 			for (int i = 0; i < brars.length; i++)
@@ -122,10 +130,10 @@ public class LimitTable extends Page {
 			one.setSelected(false);
 			rich.setSelected(true);
 			snip.setSelected(true);
-			abler(false);
+			abler(false, isDojo);
 			return;
 		}
-		abler(true);
+		abler(true, isDojo);
 		if (lim.rare > 0) {
 			for (int i = 0; i < brars.length; i++)
 				brars[i].setSelected(((lim.rare >> i) & 1) > 0);
@@ -138,6 +146,7 @@ public class LimitTable extends Page {
 		num.setText(limits[1] + ": " + lim.num);
 		jcg.setText("" + lim.group);
 		jlr.setText("" + lim.lvr);
+		sco.setText("" + lim.score);
 		one.setSelected(lim.line == 1);
 		rich.setSelected(lim.rich == 0);
 		snip.setSelected(lim.sniper == 0);
@@ -182,11 +191,13 @@ public class LimitTable extends Page {
 		add(one);
 		add(rich);
 		add(snip);
+		add(doj);
 		set(min);
 		set(max);
 		set(num);
 		set(jcg);
 		set(jlr);
+		set(sco);
 
 		for (int i = 0; i < brars.length; i++) {
 			add(brars[i] = new JTG(rarity[i]));
@@ -214,6 +225,11 @@ public class LimitTable extends Page {
 			if (val > 80 && lim.num > lastLimit)
 				Opts.pop("Excessive unit spawns will cause performance problems","Performance warning");
 			lastLimit = lim.num;
+		}
+		if (jtf == sco) {
+			if (val < 0)
+				return;
+			lim.score = val;
 		}
 	}
 

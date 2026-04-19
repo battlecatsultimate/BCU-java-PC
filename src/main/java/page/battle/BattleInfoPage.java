@@ -340,8 +340,12 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 
 		if (!sb.st.trail)
 			ebase.setText("HP: " + h + "/" + mh + ", " + 10000 * h / mh / 100.0 + "%");
-		else
-			ebase.setText("SCORE: " + sb.score);
+		else {
+			String score = "SCORE: " + sb.score;
+			if (sb.est.lim != null && sb.est.lim.score > 0)
+				score += "/" + sb.est.lim.score;
+			ebase.setText(score);
+		}
 		ubase.setText("HP: " + sb.ubase.health);
 
 		timer.setText(sb.time + "f");
@@ -368,7 +372,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 
 		if (!sb.isActive()) {
 			if (sb.st.trail)
-				BCMusic.endJingle(sb.st.lim != null && sb.st.lim.score < sb.score ? Data.SE_DEFEAT : Data.SE_DOJO);
+				BCMusic.endJingle(sb.st.lim != null && sb.score < sb.st.lim.score ? Data.SE_DEFEAT : Data.SE_DOJO);
 			else
 				BCMusic.endJingle(sb.ubase.health <= 0 ? Data.SE_DEFEAT : Data.SE_VICTORY);
 

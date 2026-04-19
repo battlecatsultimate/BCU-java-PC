@@ -522,7 +522,7 @@ public class StageEditPage extends Page {
 	private void setData(Stage st) {
 		stage = st;
 		hinf.setData(st);
-		linf.setLimit(st != null ? st.lim : null);
+		linf.setLimit(st != null ? st.lim : null, st != null && st.trail);
 		sinf.setData(st);
 		jt.setData(st);
 		strt.setEnabled(st != null);

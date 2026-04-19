@@ -136,7 +136,7 @@ public class LimitEditPage extends Page {
 		stag.setEditable(l != null);
 		star.setText(l == null ? "" : l.star == -1 ? "all stars" : ((l.star + 1) + " star"));
 		stag.setText(l == null ? "" : l.sid == -1 ? "all stages" : l.sid + " - " + st.getCont().list.get(l.sid));
-		lt.setLimit(l);
+		lt.setLimit(l, st.trail);
 		slt.setStageLimit(l != null ? l.stageLimit == null ? l.stageLimit = new StageLimit() : l.stageLimit : null);
 	}
 
