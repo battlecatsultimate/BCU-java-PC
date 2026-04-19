@@ -248,6 +248,26 @@ public class AdvStEditPage extends Page {
 			bonus.dire = v.length >= 2 ? MathUtil.clip(v[1], -1, 1) : 1;
 			setScoreBonus(bonus);
 		});
+
+		adds.setLnr(x -> {
+			if (isAdj() || jsco.getValueIsAdjusting())
+				return;
+			Stage.ScoreBonus bonus = new Stage.ScoreBonus(0, 1000, 1);
+			st.scoreBonus.add(bonus);
+			jsco.setListData(st.scoreBonus.toArray(new Stage.ScoreBonus[0]));
+			setScoreBonus(bonus);
+		});
+
+		rems.setLnr(x -> {
+			if (isAdj() || jsco.getValueIsAdjusting())
+				return;
+			int index = jsco.getSelectedIndex();
+			if (index == -1)
+				return;
+			st.scoreBonus.remove(index);
+			jsco.setListData(st.scoreBonus.toArray(new Stage.ScoreBonus[0]));
+			setScoreBonus(!st.scoreBonus.isEmpty() ? st.scoreBonus.get(Math.max(0, index - 1)) : null);
+		});
 	}
 
 	private void ini() {
