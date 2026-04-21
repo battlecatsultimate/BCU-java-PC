@@ -1,7 +1,10 @@
 package page.pack;
 
+import common.pack.Identifier;
 import common.pack.PackData.UserPack;
+import common.pack.Source;
 import common.pack.UserProfile;
+import common.system.VImg;
 import common.util.unit.AbEnemy;
 import common.util.unit.EneRand;
 import main.Opts;
@@ -11,12 +14,17 @@ import page.JTG;
 import page.Page;
 import page.info.filter.EnemyFindPage;
 import page.support.AnimLCR;
+import utilpc.UtilPC;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.RenderedImage;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -43,6 +51,7 @@ public class EREditPage extends Page {
 	private final JScrollPane jspe = new JScrollPane(jle);
 	private final JTF name = new JTF();
 	private final JTG[] type = new JTG[3];
+	private final JBTN usei = new JBTN(0, "useicon");
 
 	private final UserPack pack;
 
@@ -116,6 +125,7 @@ public class EREditPage extends Page {
 		for (int i = 0; i < 3; i++)
 			set(type[i], x, y, 1550 + 250 * i, 250, 200, 50);
 
+		set(usei, x, y, 1550, 350, 200, 50);
 		set(addl, x, y, 1800, 350, 200, 50);
 		set(reml, x, y, 2050, 350, 200, 50);
 
@@ -204,6 +214,28 @@ public class EREditPage extends Page {
 
 		});
 
+		usei.addActionListener(x -> {
+			EneRand rand = jlst.getSelectedValue();
+			if (rand == null || jt.getSelectedRow() == -1 || jt.getSelectedRow() >= rand.list.size())
+				return;
+			Identifier<AbEnemy> enem = rand.list.get(jt.getSelectedRow()).ent;
+			if (enem == null)
+				return;
+			VImg icon = enem.get().getIcon();
+			if (icon == null)
+				return;
+			try {
+				OutputStream os = ((Source.Workspace) pack.source).writeFile(Source.BasePath.ENERAND, rand.id);
+				ImageIO.write((RenderedImage) icon.getImg().bimg(), "PNG", os);
+				os.flush();
+				os.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			rand.icon = pack.source.readImage(Source.BasePath.ENERAND.toString(), rand.id.id);
+			fireDimensionChanged();
+		});
+
 		for (int i = 0; i < 3; i++) {
 			int I = i;
 			type[i].addActionListener(arg0 -> {
@@ -227,10 +259,20 @@ public class EREditPage extends Page {
 		add(reml);
 		add(jspe);
 		add(name);
+		add(usei);
 		for (int i = 0; i < 3; i++)
 			add(type[i] = new JTG(1, "ert" + i));
 		setES();
 		jle.setCellRenderer(new AnimLCR());
+		jlst.setCellRenderer(new DefaultListCellRenderer() {
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+				JLabel jl = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				EneRand rand = (EneRand) value;
+				jl.setIcon(UtilPC.getIcon(rand.getIcon()));
+				return jl;
+			}
+		});
 		addListeners();
 
 	}
