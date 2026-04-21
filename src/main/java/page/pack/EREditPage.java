@@ -14,6 +14,7 @@ import page.JTG;
 import page.Page;
 import page.info.filter.EnemyFindPage;
 import page.support.AnimLCR;
+import page.support.Importer;
 import utilpc.UtilPC;
 
 import javax.imageio.ImageIO;
@@ -22,6 +23,7 @@ import java.awt.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -52,6 +54,7 @@ public class EREditPage extends Page {
 	private final JTF name = new JTF();
 	private final JTG[] type = new JTG[3];
 	private final JBTN usei = new JBTN(0, "useicon");
+	private final JBTN addi = new JBTN(0, "addicon");
 
 	private final UserPack pack;
 
@@ -122,10 +125,10 @@ public class EREditPage extends Page {
 		set(jspe, x, y, 950, 150, 400, 1100);
 		set(jspjt, x, y, 1400, 450, 850, 800);
 
+		set(addi, x, y, 1550, 150, 200, 50);
+		set(usei, x, y, 1800, 150, 200, 50);
 		for (int i = 0; i < 3; i++)
 			set(type[i], x, y, 1550 + 250 * i, 250, 200, 50);
-
-		set(usei, x, y, 1550, 350, 200, 50);
 		set(addl, x, y, 1800, 350, 200, 50);
 		set(reml, x, y, 2050, 350, 200, 50);
 
@@ -214,6 +217,12 @@ public class EREditPage extends Page {
 
 		});
 
+		addi.addActionListener(x -> {
+			EneRand rand = jlst.getSelectedValue();
+			if (rand != null)
+				change(rand, r -> getFile("Choose your file", r));
+		});
+
 		usei.addActionListener(x -> {
 			EneRand rand = jlst.getSelectedValue();
 			if (rand == null || jt.getSelectedRow() == -1 || jt.getSelectedRow() >= rand.list.size())
@@ -232,7 +241,7 @@ public class EREditPage extends Page {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			rand.icon = pack.source.readImage(Source.BasePath.ENERAND.toString(), rand.id.id);
+			rand.reloadIcon();
 			fireDimensionChanged();
 		});
 
@@ -246,6 +255,10 @@ public class EREditPage extends Page {
 			});
 		}
 
+		jt.getSelectionModel().addListSelectionListener(e -> {
+            int ind = jt.getSelectedRow();
+            usei.setEnabled(ind > -1);
+        });
 	}
 
 	private void ini() {
@@ -260,6 +273,7 @@ public class EREditPage extends Page {
 		add(jspe);
 		add(name);
 		add(usei);
+		add(addi);
 		for (int i = 0; i < 3; i++)
 			add(type[i] = new JTG(1, "ert" + i));
 		setES();
@@ -287,6 +301,8 @@ public class EREditPage extends Page {
 			jt.setEnabled(b);
 			for (JTG btn : type)
 				btn.setEnabled(b);
+			addi.setEnabled(b);
+			usei.setEnabled(false);
 			rand = st;
 			jt.setData(st);
 			name.setText(st == null ? "" : rand.name);
@@ -316,4 +332,26 @@ public class EREditPage extends Page {
 		setER(pack.randEnemies.getList().get(0));
 	}
 
+	private void getFile(String str, EneRand rand) {
+		BufferedImage bimg = new Importer(str + " (Ideal dimension: 89x32)", Importer.FileType.PNG).getImg();
+		if (bimg == null)
+			return;
+//		if (bimg.getWidth() != 128 && bimg.getHeight() != 256) {
+//			getFile("Wrong img size. Img size: w=128, h=256", rand);
+//			return;
+//		}
+
+		try {
+			OutputStream os = ((Source.Workspace) pack.source).writeFile(Source.BasePath.ENERAND, rand.id);
+			ImageIO.write(bimg, "PNG", os);
+			os.flush();
+			os.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			getFile("Failed to save file", rand);
+			return;
+		}
+		rand.reloadIcon();
+		fireDimensionChanged();
+	}
 }
