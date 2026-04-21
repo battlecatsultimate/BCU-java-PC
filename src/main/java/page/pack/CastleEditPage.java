@@ -2,9 +2,9 @@ package page.pack;
 
 import common.CommonStatic;
 import common.pack.PackData.UserPack;
+import common.pack.Source;
 import common.pack.Source.Workspace;
 import common.system.VImg;
-import common.util.Data;
 import common.util.stage.CastleImg;
 import common.util.stage.CastleList;
 import main.MainBCU;
@@ -158,7 +158,7 @@ public class CastleEditPage extends Page {
 		}
 
 		try {
-			OutputStream os = ((Workspace) pack.source).writeFile("castles/" + Data.trio(vimg.id.id) + ".png");
+			OutputStream os = ((Workspace) pack.source).writeFile(Source.BasePath.CASTLE, vimg.id);
 			ImageIO.write(bimg, "PNG", os);
 			os.flush();
 			os.close();
