@@ -26,7 +26,7 @@ public abstract class ProcTable extends Page {
 				Data.P_BREAK, Data.P_SHIELDBREAK, Data.P_WARP, Data.P_CURSE, Data.P_SATK, Data.P_POIATK, Data.P_VOLC,
 				Data.P_MINIVOLC, Data.P_BOUNTY, Data.P_ATKBASE, Data.P_METALKILL, Data.P_BLAST,
 				Data.P_SEAL, Data.P_SUMMON, Data.P_MOVEWAVE, Data.P_SNIPER, Data.P_BOSS, Data.P_TIME, Data.P_THEME,
-				Data.P_POISON, Data.P_ARMOR, Data.P_SPEED, Data.P_DELAY, Data.P_LETHARGY
+				Data.P_POISON, Data.P_ARMOR, Data.P_SPEED, Data.P_DELAY, Data.P_LETHARGY, Data.P_CHANGEMONEYPROC
 		};
 
 		//Procs for enemies
@@ -35,7 +35,7 @@ public abstract class ProcTable extends Page {
 				Data.P_BREAK, Data.P_SHIELDBREAK, Data.P_WARP, Data.P_CURSE, Data.P_SATK, Data.P_POIATK, Data.P_VOLC,
 				Data.P_MINIVOLC, Data.P_ATKBASE, Data.P_METALKILL, Data.P_BLAST,
 				Data.P_SEAL, Data.P_SUMMON, Data.P_MOVEWAVE, Data.P_SNIPER, Data.P_BOSS, Data.P_TIME, Data.P_THEME,
-				Data.P_POISON, Data.P_ARMOR, Data.P_SPEED, Data.P_DELAY, Data.P_LETHARGY
+				Data.P_POISON, Data.P_ARMOR, Data.P_SPEED, Data.P_DELAY, Data.P_LETHARGY, Data.P_CHANGEMONEYPROC
 		};
 
 		protected AtkProcTable(Page p, boolean edit, boolean unit) {
