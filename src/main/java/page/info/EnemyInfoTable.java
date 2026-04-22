@@ -205,7 +205,7 @@ public class EnemyInfoTable extends Page {
 		int l = main.length + atks.length;
 		if (displaySpecial)
 			l += special.length;
-		return (l + (proc.length + (proc.length % 2 == 1 ? 1 : 0)) / 2) * 50 + (e.getExplaination().replace("<br>", "").length() > 0 ? 200 : 0);
+		return (l + (proc.length + (proc.length % 2 == 1 ? 1 : 0)) / 2) * 50 + (!e.getExplaination().replace("<br>", "").isEmpty() ? 200 : 0);
 	}
 
 	private void ini() {

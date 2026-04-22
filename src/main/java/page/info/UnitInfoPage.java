@@ -93,7 +93,7 @@ public class UnitInfoPage extends Page {
 
 			set(info[i], x, y, 0, h, 1600, ih);
 
-			h += ih + (n.val.forms[i].getExplaination().replace("<br>", "").length() == 0 ? 50 : 0);
+			h += ih + (n.val.forms[i].getExplaination().replace("<br>", "").isEmpty() ? 50 : 0);
 		}
 
 		cont.setPreferredSize(size(x, y, 1600, h).toDimension());
