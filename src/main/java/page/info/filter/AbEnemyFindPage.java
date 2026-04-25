@@ -18,7 +18,6 @@ public class AbEnemyFindPage extends Page implements SupPage<AbEnemy> {
     private final AbEnemyFilterBox efb;
     private final JScrollPane jsp = new JScrollPane(elt);
     private final JTF seatf = new JTF();
-    private final JBTN seabt = new JBTN(0, "search");
 
     public AbEnemyFindPage(Page p) {
         super(p);
@@ -73,7 +72,6 @@ public class AbEnemyFindPage extends Page implements SupPage<AbEnemy> {
         set(source, x, y, 0, 50, 600, 50);
         set(show, x, y, 250, 0, 200, 50);
         set(seatf, x, y, 550, 0, 1000, 50);
-        set(seabt, x, y, 1600, 0, 200, 50);
 
         if (show.isSelected()) {
             int[] siz = efb.getSizer();
@@ -108,18 +106,8 @@ public class AbEnemyFindPage extends Page implements SupPage<AbEnemy> {
                 remove(efb);
         });
 
-        seabt.setLnr((b) -> {
-            if (efb != null) {
-                efb.name = seatf.getText();
-                efb.callBack(null);
-            }
-        });
-
         seatf.setTypeLnr(e -> {
-            if (efb != null) {
-                efb.name = seatf.getText();
-                efb.callBack(1);
-            }
+            setSearch(seatf.getText());
         });
     }
 
@@ -130,7 +118,6 @@ public class AbEnemyFindPage extends Page implements SupPage<AbEnemy> {
         add(jsp);
         add(source);
         add(seatf);
-        add(seabt);
         show.setSelected(true);
         addListeners();
     }
