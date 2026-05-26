@@ -300,7 +300,7 @@ public class MainBCU {
 		}
 	}
 
-	public static final int ver = 50609;
+	public static final int ver = 50700;
 	public static final boolean isPrerelease = false;
 	private static final DecimalFormat df = new DecimalFormat("#.##");
 
