@@ -228,7 +228,10 @@ public class GLGraphics implements GeoAuto {
 			if (color == null)
 				return;
 
-			applyColor(color >> 16 & 255, color >> 8 & 255, color & 255);
+			if (gra.comp.mode == TRANS)
+				applyColorWithOpacity(color >> 16 & 255, color >> 8 & 255, color & 255, gra.comp.p0);
+			else
+				applyColor(color >> 16 & 255, color >> 8 & 255, color & 255);
 		}
 
 		public void setColor(int r, int g, int b) {
