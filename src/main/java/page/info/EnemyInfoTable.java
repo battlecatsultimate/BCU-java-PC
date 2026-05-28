@@ -65,30 +65,13 @@ public class EnemyInfoTable extends Page {
 
 		atks = new JL[e.de.rawAtkData().length + atkList.size()][8];
 		List<Interpret.ProcDisplay> ls = Interpret.getAbi(e.de);
-		ls.addAll(Interpret.getProc(e.de, true, new double[]{multi  * e.de.multi(b) / 100, mulatk  * e.de.multi(b) / 100}));
+		ls.addAll(Interpret.getProc(e.de, new double[]{multi * e.de.multi(b) / 100, mulatk  * e.de.multi(b) / 100}));
 		proc = new JLabel[ls.size()];
 		for (int i = 0; i < ls.size(); i++) {
 			Interpret.ProcDisplay disp = ls.get(i);
 			add(proc[i] = new JLabel(disp.toString()));
 			proc[i].setBorder(BorderFactory.createEtchedBorder());
 			proc[i].setIcon(UtilPC.getScaledIcon(disp.getIcon(), 40, 40));
-			Data.Proc.ProcItem item = disp.getProc();
-			if (item instanceof Data.Proc.SUMMON && ((Data.Proc.SUMMON) item).id != null) {
-				Object summon = ((Data.Proc.SUMMON) item).id.get();
-				if (!(summon instanceof EneRand)) {
-					proc[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
-					proc[i].addMouseListener(new MouseAdapter() {
-						@Override
-						public void mouseClicked(MouseEvent e) {
-							int mult = ((Data.Proc.SUMMON) item).mult;
-							if (summon instanceof Unit)
-								changePanel(new UnitInfoPage(getFront(), (Unit) summon, new Level(mult, 0, new int[0])));
-							else if (summon instanceof Enemy)
-								changePanel(new EnemyInfoPage(getFront(), new ENode((Enemy) summon, new int[] { mult, mult })));
-						}
-					});
-				}
-			}
 		}
 		ini();
 	}
@@ -106,24 +89,30 @@ public class EnemyInfoTable extends Page {
 			atks[i + atkData.length][1].setText("" + Math.round(atkList.get(i).atk * mula));
 
 		List<Interpret.ProcDisplay> ls = Interpret.getAbi(e.de);
-		ls.addAll(Interpret.getProc(e.de, true, new double[]{mul, mula}));
+		ls.addAll(Interpret.getProc(e.de, new double[]{mul, mula}));
 
 		for (int i = 0; i < ls.size(); i++) {
 			Interpret.ProcDisplay disp = ls.get(i);
 			proc[i].setText(disp.toString());
 			Data.Proc.ProcItem item = disp.getProc();
 			if (item instanceof Data.Proc.SUMMON && ((Data.Proc.SUMMON) item).id != null) {
-				Object summon = ((Data.Proc.SUMMON) item).id.get();
-				if (!(summon instanceof EneRand)) {
+				Data.Proc.SUMMON summon = (Data.Proc.SUMMON) item;
+				Object mask = ((Data.Proc.SUMMON) item).id.get();
+				if (!(mask instanceof EneRand)) {
 					proc[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
 					proc[i].addMouseListener(new MouseAdapter() {
 						@Override
-						public void mouseClicked(MouseEvent e) {
-							int mult = ((Data.Proc.SUMMON) item).mult;
-							if (summon instanceof Unit)
-								changePanel(new UnitInfoPage(getFront(), (Unit) summon, new Level(mult, 0, new int[0])));
-							else if (summon instanceof Enemy)
-								changePanel(new EnemyInfoPage(getFront(), new ENode((Enemy) summon, new int[] { mult, mult })));
+						public void mouseClicked(MouseEvent x) {
+							int mult = summon.mult;
+							int multa = summon.mult;
+							if (!summon.type.fix_buff) {
+								mult = (int) (mult * multi * e.de.multi(b) / 100);
+								multa = (int) (multa * mulatk * e.de.multi(b) / 100);
+							}
+							if (mask instanceof Unit)
+								changePanel(new UnitInfoPage(getFront(), (Unit) mask, new Level(mult, 0, new int[0])));
+							else if (mask instanceof Enemy)
+								changePanel(new EnemyInfoPage(getFront(), new ENode((Enemy) mask, new int[] { mult, multa })));
 						}
 					});
 				}

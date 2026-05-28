@@ -383,17 +383,12 @@ public class Interpret extends Data {
         return ans;
     }
 
-    public static List<ProcDisplay> getProc(MaskEntity du, boolean isEnemy, double[] magnification) {
+    public static List<ProcDisplay> getProc(MaskEntity du, double[] magnification) {
+        boolean isEnemy = du instanceof MaskEnemy;
         Formatter.Context ctx = new Formatter.Context(isEnemy, MainBCU.seconds, magnification);
-        final boolean common;
+        final boolean common = !(du instanceof CustomEntity) || ((CustomEntity) du).common;
 
-        if (du instanceof CustomEntity) {
-            common = ((CustomEntity) du).common;
-        } else {
-            common = true;
-        }
-
-        ArrayList<ProcDisplay> l = new ArrayList<>();
+        List<ProcDisplay> l = new ArrayList<>();
         List<Boolean> share = new ArrayList<>();
 
         if (common) {
@@ -424,6 +419,7 @@ public class Interpret extends Data {
         } else {
             LinkedHashMap<String, List<Integer>> atkMap = new LinkedHashMap<>();
             List<BufferedImage> procIcons = new ArrayList<>();
+            List<ProcItem> atkMapProc = new ArrayList<>();
 
             MaskAtk ma = du.getRepAtk();
 
@@ -461,6 +457,7 @@ public class Interpret extends Data {
 
                         atkMap.put(formatted, inds);
                         procIcons.add(UtilPC.getIcon(1, j));
+                        atkMapProc.add(item);
                     }
                 }
             }
@@ -470,13 +467,14 @@ public class Interpret extends Data {
                 List<Integer> inds = atkMap.get(key);
 
                 if (inds == null) {
-                    l.add(new ProcDisplay(key, procIcons.get(i++), null));
+                    l.add(new ProcDisplay(key, procIcons.get(i), atkMapProc.get(i)));
+                    i++;
                 } else {
-                    if (inds.size() == du.getAtkCount()) {
-                        l.add(new ProcDisplay(key, procIcons.get(i++), null));
-                    } else {
-                        l.add(new ProcDisplay(key + " " + getAtkNumbers(inds), procIcons.get(i++), null));
-                    }
+                    if (inds.size() == du.getAtkCount())
+                        l.add(new ProcDisplay(key, procIcons.get(i), atkMapProc.get(i)));
+                    else
+                        l.add(new ProcDisplay(key + " " + getAtkNumbers(inds), procIcons.get(i), atkMapProc.get(i)));
+                    i++;
                 }
             }
         }
