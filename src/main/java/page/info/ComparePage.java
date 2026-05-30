@@ -23,10 +23,7 @@ import utilpc.UtilPC;
 import javax.swing.*;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
+import java.util.*;
 
 public class ComparePage extends Page {
 
@@ -637,7 +634,7 @@ public class ComparePage extends Page {
             }
             main[9][index].setText(String.valueOf(m.getSpeed()));
 
-            ArrayList<Trait> trs = m.getTraits();
+            List<Trait> trs = m.getTraits();
             trs.sort(Comparator.comparingInt(t -> t.id.id));
             trs.sort(Comparator.comparing(t -> t.id.pack));
             trs.sort(Comparator.comparing(t -> !t.id.pack.equals("000000")));

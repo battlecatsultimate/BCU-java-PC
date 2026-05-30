@@ -22,7 +22,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -141,7 +140,7 @@ public class UnitInfoTable extends Page {
 		hp = (int) (hp * (1 + b.sele.getInc(Data.C_DEF) / 100f));
 		attack = (int) (attack * (1 + b.sele.getInc(Data.C_ATK) / 100f));
 
-		ArrayList<Trait> trs = ef.du.getTraits();
+		List<Trait> trs = ef.du.getTraits();
 		trs.sort(Comparator.comparing((Trait t) -> t.id.id)
 				.thenComparing(t -> !t.id.pack.equals("000000")));
 		String[] traits = new String[trs.size()];
