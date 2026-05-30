@@ -32,3 +32,4 @@
 /*.jar
 /.gradle/
 /build/
+*.log

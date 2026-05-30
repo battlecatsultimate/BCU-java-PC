@@ -46,7 +46,7 @@ public class EntityAbilities extends Page {
             mag[1] = ((Magnification) lvl).atk * ((MaskEnemy) me).multi(BasisSet.current()) / 100;
         }
 
-        ls.addAll(Interpret.getProc(me, isEnemy, mag));
+        ls.addAll(Interpret.getProc(me, mag));
 
         proc = new JLabel[ls.size()];
 

@@ -360,6 +360,7 @@ public class BGEditPage extends Page {
 			top.setEnabled(bgr.parts.length > Background.TOP);
 
 			top.setSelected(bgr.top);
+			overlay.setSelected(bgr.overlay != null);
 
 			for (int i = 0; i < 4; i++) {
 				setCSText(i);

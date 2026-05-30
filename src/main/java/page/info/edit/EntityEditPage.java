@@ -5,6 +5,7 @@ import common.battle.Basis;
 import common.battle.BasisSet;
 import common.battle.data.AtkDataModel;
 import common.battle.data.CustomEntity;
+import common.battle.data.MaskEntity;
 import common.pack.Identifier;
 import common.pack.IndexContainer.Indexable;
 import common.pack.PackData;
@@ -17,6 +18,7 @@ import common.util.lang.Editors;
 import common.util.pack.Background;
 import common.util.pack.Soul;
 import common.util.stage.Music;
+import common.util.unit.AbEnemy;
 import common.util.unit.Enemy;
 import common.util.unit.Form;
 import common.util.unit.Unit;
@@ -313,14 +315,34 @@ public abstract class EntityEditPage extends Page implements SwingEditor.EditCtr
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     protected void renew() {
-        if (efp != null && efp.getSelected() != null && Opts.conf("do you want to overwrite stats? This operation cannot be undone")) {
-            Enemy e = efp.getSelected();
-            ce.importData(e.de);
-            setData(ce);
-        }
-        if (ufp != null && ufp.getForm() != null && Opts.conf("do you want to overwrite stats? This operation cannot be undone")) {
-            Form f = ufp.getForm();
-            ce.importData(f.du);
+        MaskEntity me = null;
+        if (efp != null && efp.getSelected() != null)
+            me = efp.getSelected().de;
+        else if (ufp != null && ufp.getForm() != null)
+            me = ufp.getForm().du;
+        if (me != null) {
+            Set<AbEnemy> enemies = me.getEnemySummon();
+            PackData.UserPack cur = UserProfile.getUserPack(pack);
+            if (cur == null)
+                return;
+            for (AbEnemy s : enemies) {
+                String sp = s.getID().pack;
+                if (!sp.equals(Identifier.DEF) && !sp.equals(pack) && !cur.desc.dependency.contains(sp)) {
+                    Opts.pop("The selected entity summons enemy " + s.getID() + ", which is not part of pack's parents", "incompatible enemy");
+                    return;
+                }
+            }
+            Set<Unit> units = me.getUnitSummon();
+            for (Unit s : units) {
+                String sp = s.getID().pack;
+                if (!sp.equals(Identifier.DEF) && !sp.equals(pack) && !cur.desc.dependency.contains(sp)) {
+                    Opts.pop("The selected summons unit " + s.getID() + ", which is not part of pack's parents", "incompatible unit");
+                    return;
+                }
+            }
+            if (!Opts.conf("do you want to overwrite stats? This operation cannot be undone"))
+                return;
+            ce.importData(me);
             setData(ce);
         }
 
@@ -330,6 +352,7 @@ public abstract class EntityEditPage extends Page implements SwingEditor.EditCtr
                 editor.callback(val);
             }
         }
+
         sup = null;
         editor = null;
         efp = null;
@@ -540,8 +563,8 @@ public abstract class EntityEditPage extends Page implements SwingEditor.EditCtr
         if (p == null)
             return;
 
-        e.setLnr(x -> changePanel(efp = new EnemyFindPage(getThis(), pack, p.desc.dependency.toArray(new String[0]))));
-        u.setLnr(x -> changePanel(ufp = new UnitFindPage(getThis(), pack, p.desc.dependency)));
+        e.setLnr(x -> changePanel(efp = new EnemyFindPage(getThis())));
+        u.setLnr(x -> changePanel(ufp = new UnitFindPage(getThis())));
         a.setLnr(x -> {
             if (editable) {
                 AnimCE anim = (AnimCE) jcba.getSelectedItem();

@@ -286,7 +286,7 @@ public class BasisPage extends LubCont {
 
 		lvorb.setLnr(x -> {
 			if (lub.sf != null) {
-				changePanel(new LevelEditPage(this, lu().lu.getLv(lub.sf), lub.sf, lub.lim.stageLimit));
+				changePanel(new LevelEditPage(this, lu().lu.getLv(lub.sf), lub.sf, lub.lim == null ? null : lub.lim.stageLimit));
 			}
 		});
 

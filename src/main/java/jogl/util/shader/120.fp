@@ -12,22 +12,22 @@ void main() {
 
     if(mode == 1)
     {
-        c.a *= para;
+        c.w *= para;
         c.xyz *= para;
     }
     else if(mode == 2)
     {
-        c.a *= para;
-        c.xyz = 1.0 - c.a + c.xyz * c.a;
+        c.w *= para;
+        c.xyz = 1.0 - c.w + c.xyz * c.w;
     }
     else if (mode == 3)
     {
-        c.a *= para;
+        c.w *= para;
     }
     else if (mode == 4)
     {
-        c.xyz = solid.xyz * solid.a * c.a;
-        c.a *= solid.a;
+        c.xyz = solid.xyz * solid.w * c.w;
+        c.w *= solid.w;
     }
 
     gl_FragColor = c;

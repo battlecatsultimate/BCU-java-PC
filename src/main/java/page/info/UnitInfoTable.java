@@ -22,7 +22,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -57,7 +56,7 @@ public class UnitInfoTable extends Page {
 		MaskUnit du = pc ? f.du.getPCoin().improve(multi.getTalents()) : f.du;
 		List<Interpret.ProcDisplay> ls = Interpret.getAbi(du);
 		double mul = f.unit.lv.getMult(multi.getLv() + multi.getPlusLv());
-		ls.addAll(Interpret.getProc(du, false, new double[]{Math.round(du.getHp() * mul) * b.t().getDefMulti(), multi.getLv() + multi.getPlusLv()}));
+		ls.addAll(Interpret.getProc(du, new double[]{Math.round(du.getHp() * mul) * b.t().getDefMulti(), multi.getLv() + multi.getPlusLv()}));
 		if (pc)
 			ls.add(new Interpret.ProcDisplay("", null, null));
 		proc = new JLabel[ls.size()];
@@ -65,23 +64,7 @@ public class UnitInfoTable extends Page {
 			Interpret.ProcDisplay display = ls.get(i);
 			add(proc[i] = new JLabel(display.toString()));
 			proc[i].setBorder(BorderFactory.createEtchedBorder());
-			proc[i].setIcon(UtilPC.getScaledIcon(display.getIcon(), 40, 40));Data.Proc.ProcItem item = display.getProc();
-			if (item instanceof Data.Proc.SUMMON && ((Data.Proc.SUMMON) item).id != null) {
-				Object summon = ((Data.Proc.SUMMON) item).id.get();
-				if (!(summon instanceof EneRand)) {
-					proc[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
-					proc[i].addMouseListener(new MouseAdapter() {
-						@Override
-						public void mouseClicked(MouseEvent e) {
-							int mult = ((Data.Proc.SUMMON) item).mult;
-							if (summon instanceof Unit)
-								changePanel(new UnitInfoPage(getFront(), (Unit) summon, new Level(mult, 0, new int[0])));
-							else if (summon instanceof Enemy)
-								changePanel(new EnemyInfoPage(getFront(), new ENode((Enemy) summon, new int[] { mult, mult })));
-						}
-					});
-				}
-			}
+			proc[i].setIcon(UtilPC.getScaledIcon(display.getIcon(), 40, 40));
 
 		}
 		pcoin = pc ? proc[ls.size() - 1] : null;
@@ -99,7 +82,7 @@ public class UnitInfoTable extends Page {
 		MaskUnit du = f.maxu();
 		List<Interpret.ProcDisplay> ls = Interpret.getAbi(du);
 		double mul = f.unit.lv.getMult(multi.getLv() + multi.getPlusLv());
-		ls.addAll(Interpret.getProc(du, false, new double[]{Math.round(du.getHp() * mul) * b.t().getDefMulti(), multi.getLv() + multi.getPlusLv()}));
+		ls.addAll(Interpret.getProc(du, new double[]{Math.round(du.getHp() * mul) * b.t().getDefMulti(), multi.getLv() + multi.getPlusLv()}));
 		boolean pc = de.du.getPCoin() != null;
 		if (pc)
 			ls.add(new Interpret.ProcDisplay("", null, null));
@@ -110,22 +93,6 @@ public class UnitInfoTable extends Page {
 			proc[i].setBorder(BorderFactory.createEtchedBorder());
 			proc[i].setIcon(UtilPC.getScaledIcon(display.getIcon(), 40, 40));
 			Data.Proc.ProcItem item = display.getProc();
-			if (item instanceof Data.Proc.SUMMON && ((Data.Proc.SUMMON) item).id != null) {
-				Object summon = ((Data.Proc.SUMMON) item).id.get();
-				if (!(summon instanceof EneRand)) {
-					proc[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
-					proc[i].addMouseListener(new MouseAdapter() {
-						@Override
-						public void mouseClicked(MouseEvent e) {
-							int mult = ((Data.Proc.SUMMON) item).mult;
-							if (summon instanceof Unit)
-								changePanel(new UnitInfoPage(getFront(), (Unit) summon, new Level(mult, 0, new int[0])));
-							else if (summon instanceof Enemy)
-								changePanel(new EnemyInfoPage(getFront(), new ENode((Enemy) summon, new int[] { mult, mult })));
-						}
-					});
-				}
-			}
 			if (item instanceof Data.Proc.SPIRIT && item.exists()) {
 				proc[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
 				proc[i].addMouseListener(new MouseAdapter() {
@@ -173,7 +140,7 @@ public class UnitInfoTable extends Page {
 		hp = (int) (hp * (1 + b.sele.getInc(Data.C_DEF) / 100f));
 		attack = (int) (attack * (1 + b.sele.getInc(Data.C_ATK) / 100f));
 
-		ArrayList<Trait> trs = ef.du.getTraits();
+		List<Trait> trs = ef.du.getTraits();
 		trs.sort(Comparator.comparing((Trait t) -> t.id.id)
 				.thenComparing(t -> !t.id.pack.equals("000000")));
 		String[] traits = new String[trs.size()];
@@ -208,7 +175,7 @@ public class UnitInfoTable extends Page {
 		atks[1].setText(satk.toString());
 
 		List<Interpret.ProcDisplay> ls = Interpret.getAbi(ef.du);
-		ls.addAll(Interpret.getProc(ef.du, false, new double[]{mul, multi.getLv() + multi.getPlusLv()}));
+		ls.addAll(Interpret.getProc(ef.du, new double[]{mul, multi.getLv() + multi.getPlusLv()}));
 		for (JLabel l : proc) {
 			if (l != pcoin)
 				l.setText("");
@@ -220,17 +187,21 @@ public class UnitInfoTable extends Page {
 			proc[i].setIcon(UtilPC.getScaledIcon(display.getIcon(), 40, 40));
 			Data.Proc.ProcItem item = display.getProc();
 			if (item instanceof Data.Proc.SUMMON && ((Data.Proc.SUMMON) item).id != null) {
-				Object summon = ((Data.Proc.SUMMON) item).id.get();
-				if (!(summon instanceof EneRand)) {
+				Data.Proc.SUMMON summon = (Data.Proc.SUMMON) item;
+				Object mask = summon.id.get();
+				if (!(mask instanceof EneRand)) {
 					proc[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
 					proc[i].addMouseListener(new MouseAdapter() {
 						@Override
 						public void mouseClicked(MouseEvent e) {
 							int mult = ((Data.Proc.SUMMON) item).mult;
-							if (summon instanceof Unit)
-								changePanel(new UnitInfoPage(getFront(), (Unit) summon, new Level(mult, 0, new int[0])));
-							else if (summon instanceof Enemy)
-								changePanel(new EnemyInfoPage(getFront(), new ENode((Enemy) summon, new int[] { mult, mult })));
+							if (!summon.type.fix_buff) {
+								mult += multi.getLv() + multi.getPlusLv();
+							}
+							if (mask instanceof Unit)
+								changePanel(new UnitInfoPage(getFront(), (Unit) mask, new Level(mult, 0, new int[0])));
+							else if (mask instanceof Enemy)
+								changePanel(new EnemyInfoPage(getFront(), new ENode((Enemy) mask, new int[] { mult, mult })));
 						}
 					});
 				}
