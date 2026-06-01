@@ -10,6 +10,7 @@ import page.Page;
 
 import javax.swing.*;
 import java.io.File;
+import java.util.Comparator;
 import java.util.Vector;
 
 public class RecdManagePage extends AbRecdPage {
@@ -53,6 +54,7 @@ public class RecdManagePage extends AbRecdPage {
 		Vector<Replay> replays = new Vector<>(Replay.getMap().values());
 //		for (PackData.UserPack pack : UserProfile.getUserPacks())
 //			replays.addAll(pack.getReplays());
+		replays.sort(Comparator.comparing(rep0 -> rep0.rl.id));
 		jlr.setListData(replays);
 		jlr.setSelectedValue(r, true);
 		setRecd(r);
@@ -87,6 +89,7 @@ public class RecdManagePage extends AbRecdPage {
 			if (!Replay.getMap().containsKey(name) || Opts.conf("A replay named " + name + " already exists. Do you wish to overwrite?"))
 				r.rename(name, true);
 			rena.setText(r.rl.id);
+			fireDimensionChanged();
 		});
 
 		dele.addActionListener(arg0 -> {

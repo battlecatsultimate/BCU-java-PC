@@ -7,6 +7,8 @@ import page.Page;
 import page.battle.AbRecdPage;
 
 import javax.swing.*;
+import java.util.Comparator;
+import java.util.List;
 
 public class RecdPackPage extends AbRecdPage {
 
@@ -42,7 +44,9 @@ public class RecdPackPage extends AbRecdPage {
 	protected void setList() {
 		change(true);
 		Replay r = jlr.getSelectedValue();
-		jlr.setListData(pac.getReplays().toArray(new Replay[0]));
+		List<Replay> replays = pac.getReplays();
+		replays.sort(Comparator.comparing(rep0 -> rep0.rl.id));
+		jlr.setListData(replays.toArray(new Replay[0]));
 		jlr.setSelectedValue(r, true);
 		setRecd(r);
 		change(false);
