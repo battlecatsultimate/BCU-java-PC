@@ -3,9 +3,11 @@ package page.battle;
 import common.CommonStatic;
 import common.battle.BasisLU;
 import common.battle.BasisSet;
+import common.util.stage.BattlePreset;
 import common.util.stage.Limit;
 import common.util.stage.RandStage;
 import common.util.stage.Stage;
+import main.Opts;
 import page.JBTN;
 import page.JTG;
 import page.MainLocale;
@@ -35,6 +37,7 @@ public class BattleSetupPage extends LubCont {
 	private final JScrollPane jsps = new JScrollPane(jls);
 	private final JLabel jl = new JLabel();
 	private final JBTN jlu = new JBTN(0, "line");
+	private final JBTN jpre = new JBTN(0, "usepreset");
 	private final LineUpBox lub = new LineUpBox(this);
 	private final ModifierList mod = new ModifierList();
 	private final JScrollPane jmod = new JScrollPane(mod);
@@ -81,6 +84,7 @@ public class BattleSetupPage extends LubCont {
 		if (lub.getLU() != b.sele.lu)
 			lub.setLU(b.sele);
 		b.sele.lu.renew();
+		jpre.setEnabled(st.preset != null && !BattlePreset.isLineupPreset(b.sele, st.preset));
 		mod.setBasis(BasisSet.current());
 		mod.setComboList(BasisSet.current().sele.lu.coms);
 		mod.setBanned(lub.getLim().stageLimit != null ? lub.getLim().stageLimit.bannedCatCombo : null);
@@ -95,9 +99,12 @@ public class BattleSetupPage extends LubCont {
 		set(jl, x, y, 50, 350, 200, 50);
 		set(jlu, x, y, 50, 400, 200, 50);
 		set(strt, x, y, 50, 500, 200, 50);
+
 		set(rich, x, y, 300, 100, 200, 50);
 		set(snip, x, y, 300, 200, 200, 50);
+		set(jpre, x, y, 300, 400, 200, 50);
 		set(tmax, x, y, 300, 500, 200, 50);
+
 		set(lub, x, y, 550, 50, 600, 300);
 		set(jmod, x, y, 550, 350, 600, 200);
 		set(plus, x, y, 1200, 100, 200, 50);
@@ -161,6 +168,14 @@ public class BattleSetupPage extends LubCont {
 
 			plus.setEnabled(CommonStatic.getConfig().levelLimit != 0);
 		});
+
+		jpre.addActionListener(x -> {
+			if (!Opts.conf("This will replace your current lineup with the stage's preset lineup. Would you like to continue?"))
+				return;
+
+			BattlePreset.generateBasis(BasisSet.current().sele, st.preset);
+			renew();
+		});
 	}
 
 	private void ini() {
@@ -171,6 +186,7 @@ public class BattleSetupPage extends LubCont {
 		add(strt);
 		add(rich);
 		add(snip);
+		add(jpre);
 		add(tmax);
 		add(lub);
 		add(jstt);
