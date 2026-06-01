@@ -84,7 +84,7 @@ public class BattleSetupPage extends LubCont {
 		if (lub.getLU() != b.sele.lu)
 			lub.setLU(b.sele);
 		b.sele.lu.renew();
-		jpre.setEnabled(st.preset != null && !BattlePreset.isLineupPreset(b.sele, st.preset));
+		jpre.setEnabled(st.preset != null && !BattlePreset.isLineupPreset(st.preset));
 		mod.setBasis(BasisSet.current());
 		mod.setComboList(BasisSet.current().sele.lu.coms);
 		mod.setBanned(lub.getLim().stageLimit != null ? lub.getLim().stageLimit.bannedCatCombo : null);
@@ -170,10 +170,10 @@ public class BattleSetupPage extends LubCont {
 		});
 
 		jpre.addActionListener(x -> {
-			if (!Opts.conf("This will replace your current lineup with the stage's preset lineup. Would you like to continue?"))
+			if (!Opts.conf("This will replace your current lineup, and adjust treasure/cannon values for the lineup's set. Continue anyway?"))
 				return;
 
-			BattlePreset.generateBasis(BasisSet.current().sele, st.preset);
+			BattlePreset.generateBasis(st.preset);
 			renew();
 		});
 	}
