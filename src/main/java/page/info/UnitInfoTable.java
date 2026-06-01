@@ -35,7 +35,6 @@ public class UnitInfoTable extends Page {
 	private final JL[] atks;
 	private final JLabel[] proc;
 	private final JTF jtf = new JTF();
-	private final JLabel pcoin;
 	private final JTextArea descr = new JTextArea();
 	private final JTextArea cfdesc = new JTextArea();
 
@@ -60,15 +59,7 @@ public class UnitInfoTable extends Page {
 		if (pc)
 			ls.add(new Interpret.ProcDisplay("", null, null));
 		proc = new JLabel[ls.size()];
-		for (int i = 0; i < ls.size(); i++) {
-			Interpret.ProcDisplay display = ls.get(i);
-			add(proc[i] = new JLabel(display.toString()));
-			proc[i].setBorder(BorderFactory.createEtchedBorder());
-			proc[i].setIcon(UtilPC.getScaledIcon(display.getIcon(), 40, 40));
-
-		}
-		pcoin = pc ? proc[ls.size() - 1] : null;
-		ini();
+		ini(ls);
 	}
 
 	protected UnitInfoTable(Page p, Form de, boolean sp) {
@@ -87,24 +78,7 @@ public class UnitInfoTable extends Page {
 		if (pc)
 			ls.add(new Interpret.ProcDisplay("", null, null));
 		proc = new JLabel[ls.size()];
-		for (int i = 0; i < ls.size(); i++) {
-			Interpret.ProcDisplay display = ls.get(i);
-			add(proc[i] = new JLabel(display.toString()));
-			proc[i].setBorder(BorderFactory.createEtchedBorder());
-			proc[i].setIcon(UtilPC.getScaledIcon(display.getIcon(), 40, 40));
-			Data.Proc.ProcItem item = display.getProc();
-			if (item instanceof Data.Proc.SPIRIT && item.exists()) {
-				proc[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
-				proc[i].addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						changePanel(new UnitInfoPage(getFront(), (Unit) ((Data.Proc.SPIRIT) item).id.get(), multi));
-					}
-				});
-			}
-		}
-		pcoin = pc ? proc[ls.size() - 1] : null;
-		ini();
+		ini(ls);
 	}
 
 	@Override
@@ -122,6 +96,7 @@ public class UnitInfoTable extends Page {
 	}
 
 	protected void reset() {
+		JLabel pcoin = getPCoinLabel();
 		EForm ef = new EForm(f, multi);
 		double mul = f.unit.lv.getMult(multi.getLv() + multi.getPlusLv());
 		double atk = b.t().getAtkMulti();
@@ -181,6 +156,7 @@ public class UnitInfoTable extends Page {
 				l.setText("");
 			l.setIcon(null);
 		}
+
 		for (int i = 0; i < ls.size(); i++) {
 			Interpret.ProcDisplay display = ls.get(i);
 			proc[i].setText(display.toString());
@@ -262,6 +238,7 @@ public class UnitInfoTable extends Page {
 				multi = f.regulateLv(Level.lvList(f.unit, CommonStatic.parseIntsN(jtf.getText()), null), multi);
 				String[] strs = UtilPC.lvText(f, multi);
 				jtf.setText(strs[0]);
+				JLabel pcoin = getPCoinLabel();
 				if (pcoin != null)
 					pcoin.setText(strs[1]);
 				reset();
@@ -270,7 +247,24 @@ public class UnitInfoTable extends Page {
 		});
 	}
 
-	private void ini() {
+	private void ini(List<Interpret.ProcDisplay> ls) {
+		for (int i = 0; i < ls.size(); i++) {
+			Interpret.ProcDisplay display = ls.get(i);
+			add(proc[i] = new JLabel(display.toString()));
+			proc[i].setBorder(BorderFactory.createEtchedBorder());
+			proc[i].setIcon(UtilPC.getScaledIcon(display.getIcon(), 40, 40));
+			Data.Proc.ProcItem item = display.getProc();
+			if (item instanceof Data.Proc.SPIRIT && item.exists()) {
+				proc[i].setCursor(new Cursor(Cursor.HAND_CURSOR));
+				proc[i].addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						changePanel(new UnitInfoPage(getFront(), (Unit) ((Data.Proc.SPIRIT) item).id.get(), multi));
+					}
+				});
+			}
+		}
+		JLabel pcoin = getPCoinLabel();
 		for (int i = 0; i < main.length; i++)
 			for (int j = 0; j < main[i].length; j++)
 				if (i * j != 1 && (i != 0 || j < 5)) {
@@ -466,5 +460,9 @@ public class UnitInfoTable extends Page {
 	public void setDisplaySpecial(boolean s) {
 		displaySpecial = s;
 		fireDimensionChanged();
+	}
+
+	public JLabel getPCoinLabel() {
+		return f.du.getPCoin() != null ? proc[proc.length - 1] : null;
 	}
 }
