@@ -1162,7 +1162,7 @@ public interface BattleBox {
 			gra.gradRectAlpha(sb.pos, - (int) (maxH * bf.sb.siz - midh - midY * bf.sb.siz), (int) ((sb.st.len * ratio + 400) * bf.sb.siz), (int) ((BackgroundEffect.BGHeight * 3 + midY) * bf.sb.siz), sb.pos, 0, sb.bg.overlayAlpha, sb.bg.overlay[1], sb.pos, (int) (BackgroundEffect.BGHeight * 3 * bf.sb.siz - maxH * bf.sb.siz + midh + midY * bf.sb.siz), sb.bg.overlayAlpha, sb.bg.overlay[0]);
 		}
 
-		protected synchronized void drag(Point p) {
+		protected synchronized void drag(Point p, int button) {
 			if (mouse != null) {
 				P temp = new PP(p);
 				adjust((int) (temp.x - mouse.x), 0);
@@ -1498,8 +1498,8 @@ public interface BattleBox {
 		getPainter().click(p, button);
 	}
 
-	default void drag(Point p) {
-		getPainter().drag(p);
+	default void drag(Point p, int button) {
+		getPainter().drag(p, button);
 	}
 
 	int getHeight();

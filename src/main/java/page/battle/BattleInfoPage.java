@@ -173,7 +173,7 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	@Override
 	protected void mouseDragged(MouseEvent e) {
 		if (e.getSource() == bb)
-			bb.drag(e.getPoint());
+			bb.drag(e.getPoint(), e.getButton());
 	}
 
 	@Override

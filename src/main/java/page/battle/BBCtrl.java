@@ -24,6 +24,11 @@ public class BBCtrl extends BBPainter {
 	private Point dragInit, dragEnd;
 
 	/**
+	 * The mouse button used when dragging (e.g. left click)
+	 */
+	private int dragButton;
+
+	/**
 	 * Boolean which tells dragging up/down is performed or not
 	 */
 	protected boolean performed = false;
@@ -96,6 +101,11 @@ public class BBCtrl extends BBPainter {
 
 	@Override
 	protected synchronized void release() {
+		if (dragging) {
+			int totalDrag = Math.abs(dragInit.x - dragEnd.x) + Math.abs(dragInit.y - dragEnd.y);
+			if (totalDrag < 5)
+				click(dragEnd, dragButton);
+		}
 		super.release();
 		performed = false;
 		dragInit = null;
@@ -103,20 +113,19 @@ public class BBCtrl extends BBPainter {
 	}
 
 	@Override
-	protected synchronized void drag(Point p) {
-		if(!CommonStatic.getConfig().twoRow) {
-			if(!dragging) {
-				dragInit = p;
-			}
-
-			dragging = true;
-
-			dragEnd = p;
-
-			checkDragUpDown();
+	protected synchronized void drag(Point p, int button) {
+		if(!dragging) {
+			dragInit = p;
+			dragButton = button;
 		}
 
-		super.drag(p);
+		dragging = true;
+		dragEnd = p;
+
+		if(!CommonStatic.getConfig().twoRow)
+			checkDragUpDown();
+
+		super.drag(p, button);
 	}
 
 	private void checkDragUpDown() {
