@@ -1031,6 +1031,7 @@ public class Interpret extends Data {
         ans.append("<br>Cooldown on start: ").append(lim.coolStart);
         ans.append("<br>Cooldown multipliers: ").append(Arrays.toString(lim.cooldownMultiplier));
         ans.append("<br>Cost multipliers: ").append(Arrays.toString(lim.costMultiplier));
+        ans.append("<br>Rarity Limits: ").append(Arrays.toString(lim.rarityDeployLimit));
         ans.append("<br>Enemy speed: ");
         if (lim.enemySpeedOverride > -1) {
             ans.append(lim.enemySpeedOverrideMode.getPre()).append(lim.enemySpeedOverride).append(lim.enemySpeedOverrideMode.getPost());
