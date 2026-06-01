@@ -213,8 +213,9 @@ public class UtilPC {
 			StringBuilder lab = new StringBuilder();
 			StringBuilder str = new StringBuilder("Lv." + lv.getLv() + " + " + lv.getPlusLv() + ", {");
 
+			int[] lvs = lv.getTalents();
 			for (int i = 0; i < pc.info.size(); i++) {
-				str.append(lv.getTalents()[i]);
+				str.append(lvs.length <= i ? 0 : lvs[i]);
 				if (pc.info.get(i)[13] == 1)
 					str.append("*");
 

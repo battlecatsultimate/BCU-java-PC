@@ -13,17 +13,12 @@ import common.util.Data.Proc.ProcItem;
 import common.util.lang.Formatter;
 import common.util.lang.MultiLangCont;
 import common.util.lang.ProcLang;
-import common.util.stage.CharaGroup;
-import common.util.stage.MapColc;
+import common.util.stage.*;
 import common.util.stage.MapColc.DefMapColc;
-import common.util.stage.Stage;
-import common.util.stage.StageLimit;
 import common.util.stage.info.CustomStageInfo;
 import common.util.stage.info.DefStageInfo;
 import common.util.stage.info.StageInfo;
-import common.util.unit.Combo;
-import common.util.unit.Enemy;
-import common.util.unit.Unit;
+import common.util.unit.*;
 import io.BCJSON;
 import main.MainBCU;
 import page.MainLocale;
@@ -1278,6 +1273,41 @@ public class Interpret extends Data {
         }
 
         ans.append("</table></html>");
+
+        return ans.toString();
+    }
+
+    public static String readBattlePreset(BattlePreset bp) {
+        StringBuilder ans = new StringBuilder("<html>");
+
+        ans.append("<br><table><tr><th align='left'>")
+                .append(Page.get(MainLocale.INFO, "unit")).append("</th><th align='left'>")
+                .append("Level").append("</th><th align='left'>")
+                .append(Page.get(MainLocale.INFO, "orb")).append("</th></tr>");
+
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 5; j++) {
+                Form form = bp.fs[i][j];
+                Level lv = bp.levels[i][j];
+                if (form == null)
+                    continue;
+                int[][] orbs = lv.getOrbs();
+
+                ans.append("<tr><td>")
+                        .append(form).append("</td><td>")
+                        .append(UtilPC.lvText(form, lv)[0]).append("</td>");
+                if (lv.getOrbs() != null) {
+                    // todo: read orb data
+                }
+                ans.append("</tr>");
+            }
+        }
+
+        ans.append("</table><br><br>");
+
+        // todo: add more battle preset info
+
+        ans.append("</html>");
 
         return ans.toString();
     }
