@@ -84,10 +84,10 @@ public class BattleSetupPage extends LubCont {
 		if (lub.getLU() != b.sele.lu)
 			lub.setLU(b.sele);
 		b.sele.lu.renew();
-		jpre.setEnabled(st.preset != null && !BattlePreset.isLineupPreset(st.preset));
-		mod.setBasis(BasisSet.current());
+		jpre.setEnabled(st.preset != null && !BattlePreset.isCurrentLineupPreset(st.preset));
 		mod.setComboList(BasisSet.current().sele.lu.coms);
 		mod.setBanned(lub.getLim().stageLimit != null ? lub.getLim().stageLimit.bannedCatCombo : null);
+		mod.setStage(st);
 	}
 
 	@Override

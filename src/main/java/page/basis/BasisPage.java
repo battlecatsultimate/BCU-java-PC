@@ -296,7 +296,7 @@ public class BasisPage extends LubCont {
 			jbcsR[i].addActionListener(e -> {
 				current().sele.nyc[I]++;
 				current().sele.nyc[I] %= NyCastle.TOT;
-				jlcn.reset();
+				jlcn.renew();
 			});
 
 			jbcsL[i].addActionListener(e -> {
@@ -304,7 +304,7 @@ public class BasisPage extends LubCont {
 					current().sele.nyc[I] = NyCastle.TOT - 1;
 				else
 					current().sele.nyc[I] = (current().sele.nyc[I] - 1) % NyCastle.TOT;
-				jlcn.reset();
+				jlcn.renew();
 			});
 		}
 
@@ -637,7 +637,7 @@ public class BasisPage extends LubCont {
 		bsjtf.setText(BasisSet.current().name);
 		bsrem.setEnabled(current() != BasisSet.def());
 		setB(b);
-		jlcn.setBasis(bs);
+		jlcn.renew();
 		trea.callBack(null);
 	}
 

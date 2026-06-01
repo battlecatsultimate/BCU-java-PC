@@ -4,6 +4,8 @@ import common.battle.BasisLU;
 import common.battle.BasisSet;
 import common.pack.Identifier;
 import common.pack.UserProfile;
+import common.util.stage.BattlePreset;
+import common.util.stage.Stage;
 import common.util.unit.Combo;
 import main.MainBCU;
 import page.MainLocale;
@@ -16,9 +18,9 @@ import java.util.List;
 import java.util.Set;
 
 public class ModifierList extends JList<Object> {
-    private BasisSet lineup;
     private List<Combo> combos;
     private Set<Integer> banned;
+    private Stage st;
 
     private static final long serialVersionUID = 1L;
 
@@ -28,6 +30,7 @@ public class ModifierList extends JList<Object> {
 
     public ModifierList() { // todo: include orb modifiers
         super();
+        BasisSet lineup = BasisSet.current();
         setCellRenderer(new DefaultListCellRenderer() {
             private static final long serialVersionUID = 1L;
 
@@ -53,10 +56,11 @@ public class ModifierList extends JList<Object> {
             }
         });
 
-        reset();
+        renew();
     }
 
-    protected void reset() {
+    public void renew() {
+        BasisSet lineup = BasisSet.current();
         List<Object> list = new ArrayList<>();
 
         if (lineup != null) {
@@ -74,22 +78,28 @@ public class ModifierList extends JList<Object> {
 
         if (combos != null)
             list.addAll(combos);
+        if (st != null) {
+            if (st.preset != null && BattlePreset.isCurrentLineupPreset(st.preset)) {
+                if (st.preset.baseHealthBoost > 0)
+                    list.add("Preset Boost: +" + st.preset.baseHealthBoost + " Base HP");
+            }
+        }
 
         setListData(list.toArray(new Object[0]));
     }
 
     public void setComboList(List<Combo> lf) {
         combos = lf;
-        reset();
+        renew();
     }
 
     public void setBanned(Set<Integer> lb) {
         banned = lb;
-        reset();
+        renew();
     }
 
-    public void setBasis(BasisSet b) {
-        lineup = b;
-        reset();
+    public void setStage(Stage s) {
+        st = s;
+        renew();
     }
 }
