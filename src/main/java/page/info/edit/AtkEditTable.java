@@ -120,6 +120,7 @@ class AtkEditTable extends Page {
 			spt.setText(MainLocale.PAGE, !isUnit && adm.dire == -1 ? "igtr" : "cntr");
 		} else
 			adm.specialTrait = false;
+		fpre.setEnabled(!adm.str.equals("sacrifice"));
 
 		getFront().fireDimensionChanged();
 	}
