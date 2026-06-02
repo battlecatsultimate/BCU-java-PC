@@ -54,7 +54,7 @@ public class EnemyInfoTable extends Page {
 		multi = mul;
 		mulatk = mula;
 		if (e.de instanceof CustomEnemy) {
-			for (int i = 0; i < CustomEntity.specialAttackCount; i++) {
+			for (int i = 0; i < CustomEntity.SPECIAL_ATTACK_COUNT; i++) {
 				AtkDataModel model = (AtkDataModel) e.de.getAtkModel(e.de.getAtkCount() + i);
 				if (model != null)
 					atkList.add(model);
