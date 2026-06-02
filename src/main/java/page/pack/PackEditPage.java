@@ -462,7 +462,12 @@ public class PackEditPage extends Page {
 			jle.repaint();
 		});
 
-		vene.setLnr(() -> new EnemyViewPage(getThis(), pac.getSID()));
+		vene.setLnr(() -> {
+			if (ene != null)
+				return new EnemyViewPage(getThis(), ene);
+			else
+				return new EnemyViewPage(getThis(), pac.getSID());
+		});
 
 		ener.setLnr(() -> new EREditPage(getThis(), pac));
 
