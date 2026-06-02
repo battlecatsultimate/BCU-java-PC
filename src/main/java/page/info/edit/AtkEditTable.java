@@ -193,7 +193,7 @@ class AtkEditTable extends Page {
 				adm.atk = findIdealAtkValue(v);
 			}
 			if (jtf == fpre) {
-				if (v < 0)
+				if (v < 0 || adm.str.equals("sacrifice"))
 					v = 1;
 				adm.pre = v;
 			}

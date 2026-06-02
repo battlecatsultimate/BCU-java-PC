@@ -762,6 +762,7 @@ public abstract class EntityEditPage extends Page implements SwingEditor.EditCtr
 
             if (text.equals("sacrifice")) {
                 remAtk(adm);
+                adm.pre = 1;
                 ce.glas = adm;
             }
 
