@@ -291,7 +291,7 @@ public abstract class EntityEditPage extends Page implements SwingEditor.EditCtr
                 + "use name \"counterattack\" for a more customizable counterattack (Needs Counter proc parameters still)<br>"
                 + "use name \"burrow\" for attack during burrow down animation<br>"
                 + "use name \"resurface\" for attack during burrow up animation<br>"
-                + "use name \"revive\" for attack during reviving</html>"
+                + "use name \"revive\" for attack during reviving<br>"
                 + "use name \"sacrifice\" for attack on self destruct</html>");
         ftp.setToolTipText("<html>"
                 + "+1 for normal attack<br>"
