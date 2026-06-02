@@ -1324,4 +1324,13 @@ public class Interpret extends Data {
         String type = Page.get(0, group.type == 0 ? "include" : "exclude");
         return "<html>" + type + "<br>" + group.set.stream().map(Unit::toString).collect(Collectors.joining("<br>")) + "</html>";
     }
+
+    public static String layer(int v0, int v1) {
+        if (v0 == v1)
+            return String.valueOf(v0);
+
+        int min = Math.min(v0, v1);
+        int max = Math.max(v0, v1);
+        return min + "~" + max;
+    }
 }

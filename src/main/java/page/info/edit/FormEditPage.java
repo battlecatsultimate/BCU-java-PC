@@ -15,6 +15,7 @@ import page.JTF;
 import page.Page;
 import page.info.UnitInfoPage;
 import page.info.filter.UnitEditBox;
+import utilpc.Interpret;
 
 public class FormEditPage extends EntityEditPage {
 
@@ -109,7 +110,7 @@ public class FormEditPage extends EntityEditPage {
 					}
 				}
 
-				flr.setText(interpretLayer(cu.back, cu.front));
+				flr.setText(Interpret.layer(cu.back, cu.front));
 			} catch (Exception ignored) { }
 		}
 		if (jtf == fli) {
@@ -236,7 +237,7 @@ public class FormEditPage extends EntityEditPage {
 		flv.setText(lv + "");
 		frs.setText(bas.t().getFinRes(cu.getRespawn(), 0) + "");
 		fdr.setText((int) Math.round(cu.getPrice() * 1.5) + "");
-		flr.setText(interpretLayer(cu.back, cu.front));
+		flr.setText(Interpret.layer(cu.back, cu.front));
 		fli.setText(String.valueOf(cu.getLimit()));
 		fli.setToolTipText("<html>This unit will always stay at least "
 				+ cu.getLimit()
@@ -246,12 +247,5 @@ public class FormEditPage extends EntityEditPage {
 			cu.pcoin.verify();
 			cu.pcoin.update();
 		}
-	}
-
-	private String interpretLayer(int back, int front) {
-		if (front == back)
-			return String.valueOf(front);
-		else
-			return back + "~" + front;
 	}
 }
