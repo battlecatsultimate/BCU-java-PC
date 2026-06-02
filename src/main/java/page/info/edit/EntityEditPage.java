@@ -486,7 +486,7 @@ public abstract class EntityEditPage extends Page implements SwingEditor.EditCtr
         extra.clear();
 
         for (int i = 0; i < ce.getAtkCount() + CustomEntity.SPECIAL_ATTACK_COUNT; i++) {
-            AtkDataModel model = (AtkDataModel) ce.getAtkModel(i);
+            AtkDataModel model = (AtkDataModel) ce.getAtkModel(ce.getAtkCount() + i);
             if (model != null) {
                 n++;
                 extra.add(model);
