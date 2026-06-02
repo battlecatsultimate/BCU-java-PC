@@ -4,6 +4,7 @@ import common.CommonStatic;
 import common.battle.BasisSet;
 import common.battle.data.AtkDataModel;
 import common.battle.data.CustomEnemy;
+import common.battle.data.CustomEntity;
 import common.pack.UserProfile;
 import common.system.ENode;
 import common.util.Data;
@@ -52,16 +53,15 @@ public class EnemyInfoTable extends Page {
 		e = de;
 		multi = mul;
 		mulatk = mula;
-		if (e.de.getRevenge() != null)
-			atkList.add(e.de.getRevenge());
-		if (e.de.getResurrection() != null)
-			atkList.add(e.de.getResurrection());
+		if (e.de instanceof CustomEnemy) {
+			for (int i = 0; i < CustomEntity.specialAttackCount; i++) {
+				AtkDataModel model = (AtkDataModel) e.de.getAtkModel(e.de.getAtkCount() + i);
+				if (model != null)
+					atkList.add(model);
+			}
+		}
 		if (e.de.getCounter() != null)
 			atkList.add(e.de.getCounter());
-		if (e.de.getGouge() != null)
-			atkList.add(e.de.getGouge());
-		if (e.de.getResurface() != null)
-			atkList.add(e.de.getResurface());
 
 		atks = new JL[e.de.rawAtkData().length + atkList.size()][8];
 		List<Interpret.ProcDisplay> ls = Interpret.getAbi(e.de);

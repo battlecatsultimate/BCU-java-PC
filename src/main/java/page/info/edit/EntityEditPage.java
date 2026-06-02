@@ -285,19 +285,24 @@ public abstract class EntityEditPage extends Page implements SwingEditor.EditCtr
         setFocusTraversalPolicy(ljp);
         setFocusCycleRoot(true);
         addListeners();
-        atkn.setToolTipText("<html>use name \"revenge\" for attack during HB animation<br>"
+        atkn.setToolTipText("<html>"
+                + "use name \"revenge\" for attack during HB animation<br>"
                 + "use name \"resurrection\" for attack during death animation<br>"
                 + "use name \"counterattack\" for a more customizable counterattack (Needs Counter proc parameters still)<br>"
                 + "use name \"burrow\" for attack during burrow down animation<br>"
                 + "use name \"resurface\" for attack during burrow up animation<br>"
-                + "use name \"revive\" for attack during reviving</html>");
-        ftp.setToolTipText(
-                "<html>" + "+1 for normal attack<br>" + "+2 to attack kb<br>" + "+4 to attack underground<br>"
-                        + "+8 to attack corpse<br>" + "+16 to attack soul<br>" + "+32 to attack ghost<br>" +
-                        "+64 to attack entities that can revive others<br>" + "+128 to attack enter animations</html>");
-        fwp.setToolTipText(
-                "<html>" + "The amount of slots this entity will take of the limit"
-                        + " when spawned</html>");
+                + "use name \"revive\" for attack during reviving</html>"
+                + "use name \"sacrifice\" for attack on self destruct</html>");
+        ftp.setToolTipText("<html>"
+                + "+1 for normal attack<br>"
+                + "+2 to attack kb<br>"
+                + "+4 to attack underground<br>"
+                + "+8 to attack corpse<br>"
+                + "+16 to attack soul<br>"
+                + "+32 to attack ghost<br>"
+                + "+64 to attack entities that can revive others<br>"
+                + "+128 to attack enter animations</html>");
+        fwp.setToolTipText("<html>The amount of slots this entity will take of the limit when spawned</html>");
 
         add.setEnabled(editable);
         rem.setEnabled(editable);
@@ -508,6 +513,11 @@ public abstract class EntityEditPage extends Page implements SwingEditor.EditCtr
         if (ce.revi != null) {
             n++;
             extra.add(ce.revi);
+        }
+
+        if (ce.glas != null) {
+            n++;
+            extra.add(ce.glas);
         }
 
         String[] ints = new String[n];
@@ -750,6 +760,11 @@ public abstract class EntityEditPage extends Page implements SwingEditor.EditCtr
                 ce.revi = adm;
             }
 
+            if (text.equals("sacrifice")) {
+                remAtk(adm);
+                ce.glas = adm;
+            }
+
             return;
         }
 
@@ -837,6 +852,9 @@ public abstract class EntityEditPage extends Page implements SwingEditor.EditCtr
                     break;
                 case "revive":
                     ce.revi = null;
+                    break;
+                case "sacrifice":
+                    ce.glas = null;
                     break;
                 default:
                     ce.resu = null;
