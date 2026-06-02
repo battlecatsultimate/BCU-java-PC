@@ -485,39 +485,17 @@ public abstract class EntityEditPage extends Page implements SwingEditor.EditCtr
 
         extra.clear();
 
-        if (ce.rev != null) {
-            n++;
-            extra.add(ce.rev);
-        }
-
-        if (ce.res != null) {
-            n++;
-            extra.add(ce.res);
+        for (int i = 0; i < ce.getAtkCount() + CustomEntity.SPECIAL_ATTACK_COUNT; i++) {
+            AtkDataModel model = (AtkDataModel) ce.getAtkModel(i);
+            if (model != null) {
+                n++;
+                extra.add(model);
+            }
         }
 
         if (ce.cntr != null) {
             n++;
             extra.add(ce.cntr);
-        }
-
-        if (ce.bur != null) {
-            n++;
-            extra.add(ce.bur);
-        }
-
-        if (ce.resu != null) {
-            n++;
-            extra.add(ce.resu);
-        }
-
-        if (ce.revi != null) {
-            n++;
-            extra.add(ce.revi);
-        }
-
-        if (ce.glas != null) {
-            n++;
-            extra.add(ce.glas);
         }
 
         String[] ints = new String[n];
