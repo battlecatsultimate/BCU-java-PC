@@ -6,6 +6,7 @@ import common.battle.SBCtrl;
 import common.system.P;
 import common.system.fake.FakeImage;
 import common.util.unit.Form;
+import main.MainBCU;
 import page.battle.BattleBox.BBPainter;
 import page.battle.BattleBox.OuterBox;
 import utilpc.PP;
@@ -101,7 +102,7 @@ public class BBCtrl extends BBPainter {
 
 	@Override
 	protected synchronized void release() {
-		if (dragging) {
+		if (dragging && MainBCU.clickWithinDragWindow) {
 			int totalDrag = Math.abs(dragInit.x - dragEnd.x) + Math.abs(dragInit.y - dragEnd.y);
 			if (totalDrag < 5)
 				click(dragEnd, dragButton);

@@ -88,6 +88,7 @@ public class ConfigPage extends Page {
 	private final JTF tole = new JTF(String.valueOf(MainBCU.searchTolerance));
 	private final JTG dyna = new JTG(MainLocale.PAGE, "dynamic");
 	private final JCB reallv = new JCB(MainLocale.PAGE, "reallv");
+	private final JCB jcdrag = new JCB(MainLocale.PAGE, "dragcomp");
 
 	private final JL comv = new JL(Page.get(MainLocale.PAGE, "CORE Ver: ") + AssetLoader.CORE_VER);
 
@@ -157,6 +158,7 @@ public class ConfigPage extends Page {
 		set(shake, x, y, 50, 1200, 300, 50);
 
 		set(reallv, x, y, 350, 950, 300, 50);
+		set(jcdrag, x, y, 350, 1000, 300, 50);
 
 		set(jlot, x, y, 650, 900, 300, 50);
 		set(jcbac, x, y, 650, 950, 300, 50);
@@ -404,7 +406,6 @@ public class ConfigPage extends Page {
 		});
 
 		vres.addActionListener(l -> CommonStatic.getConfig().viewerColor = -1);
-
 		excont.addActionListener(l -> CommonStatic.getConfig().exContinuation = excont.isSelected());
 
 		savetime.setLnr(c -> {
@@ -414,14 +415,13 @@ public class ConfigPage extends Page {
 		});
 
 		shake.addActionListener(c -> CommonStatic.getConfig().shake = shake.isSelected());
-
 		reallv.addActionListener(c -> CommonStatic.getConfig().realLevel = reallv.isSelected());
+		jcdrag.addActionListener(c -> MainBCU.clickWithinDragWindow = jcdrag.isSelected());
 
 		tole.setLnr(c -> {
 			MainBCU.searchTolerance = Math.max(0, CommonStatic.parseIntN(tole.getText()));
 			tole.setText(String.valueOf(MainBCU.searchTolerance));
 		});
-
 		dyna.setLnr(c -> {
 			MainBCU.useDynamic = dyna.isSelected();
 			tole.setEnabled(!dyna.isSelected());
@@ -484,6 +484,7 @@ public class ConfigPage extends Page {
 		add(jcmus);
 		add(shake);
 		add(reallv);
+		add(jcdrag);
 		add(tole);
 		add(dyna);
 		add(jtol);
@@ -539,6 +540,8 @@ public class ConfigPage extends Page {
 		shake.setSelected(cfg().shake);
 		reallv.setSelected(cfg().realLevel);
 		reallv.setToolTipText(get(MainLocale.PAGE, "reallvtip"));
+		jcdrag.setSelected(MainBCU.clickWithinDragWindow);
+		jcdrag.setToolTipText(get(MainLocale.PAGE, "dragcomptip"));
 		dyna.setSelected(MainBCU.useDynamic);
 		tole.setEnabled(!MainBCU.useDynamic);
 		jls.setCellRenderer(new DefaultListCellRenderer() {
