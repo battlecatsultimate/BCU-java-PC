@@ -505,7 +505,12 @@ public class UnitManagePage extends Page {
 
 		});
 
-		vuni.setLnr((e) -> changePanel(new UnitViewPage(this, pac.getSID())));
+		vuni.setLnr((e) -> {
+			if (uni != null)
+				changePanel(new UnitViewPage(this, uni));
+			else
+				changePanel(new UnitViewPage(this, pac.getSID()));
+		});
 	}
 
 	private void ini() {
