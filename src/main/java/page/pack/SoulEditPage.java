@@ -203,6 +203,40 @@ public class SoulEditPage extends Page {
 
             changing = false;
         });
+
+        jbla.addActionListener(x -> {
+            if (changing || soul == null)
+                return;
+
+            changing = true;
+
+            CommonStatic.LayerType[] types = CommonStatic.LayerType.values();
+            soul.layertype = types[(soul.layertype.ordinal() + 1) % types.length];
+            setSoul(soul);
+
+            changing = false;
+        });
+
+        jlay.setLnr(x -> {
+            if (changing || soul == null)
+                return;
+
+            changing = true;
+
+            int[] ints = CommonStatic.parseIntsN(jlay.getText());
+            if (ints.length == 0) {
+                soul.layer_0 = soul.layer_1 = 0;
+            } else if (ints.length == 1) {
+                soul.layer_0 = soul.layer_1 = ints[0];
+            } else {
+                soul.layer_0 = ints[0];
+                soul.layer_1 = ints[1];
+            }
+
+            setSoul(soul);
+
+            changing = false;
+        });
     }
 
     private void ini(PackData.UserPack pack) {
@@ -285,19 +319,11 @@ public class SoulEditPage extends Page {
             jcbm.setSelectedItem(Identifier.get(s.audio));
             jbla.setText(0, "laytype" + s.layertype.ordinal());
             jbla.setToolTipText(Page.get(0, "laytip" + s.layertype.ordinal()));
-
-            if (!s.layertype.equals(CommonStatic.LayerType.ORIG)) {
-                jlay.setEnabled(true);
-                jlay.setEditable(true);
+            if (!s.layertype.equals(CommonStatic.LayerType.ORIG))
                 jlay.setText(Interpret.layer(s.layer_0, s.layer_1));
-            } else {
-                jlay.setEnabled(false);
-                jlay.setEditable(false);
-                jlay.setText(null);
-            }
         } else {
-            jlay.setText(null);
             jbla.setText(null);
+            jlay.setText(null);
         }
 
         boolean editable = s != null && pac.editable;
@@ -306,7 +332,7 @@ public class SoulEditPage extends Page {
         jcbm.setEnabled(editable);
         jnam.setEnabled(editable);
         jbla.setEnabled(editable);
-        jlay.setEnabled(editable);
+        jlay.setEnabled(editable && !s.layertype.equals(CommonStatic.LayerType.ORIG));
 
         changing = boo;
     }
