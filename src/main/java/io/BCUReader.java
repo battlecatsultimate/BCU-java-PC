@@ -31,10 +31,7 @@ import page.view.ViewBox;
 import utilpc.Interpret;
 
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayDeque;
@@ -58,7 +55,7 @@ public class BCUReader extends DataIO {
 	public static void readInfo() {
 		File f = new File(CommonStatic.ctx.getBCUFolder(), "./user/config.json");
 		if (f.exists()) {
-			try (Reader r = new InputStreamReader(Files.newInputStream(f.toPath()), StandardCharsets.UTF_8)) {
+			try (InputStream stream = Files.newInputStream(f.toPath()); Reader r = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
 				JsonElement je = JsonParser.parseReader(r);
 				r.close();
 				Config cfg = CommonStatic.getConfig();
