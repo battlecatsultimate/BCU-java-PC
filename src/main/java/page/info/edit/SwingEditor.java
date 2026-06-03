@@ -11,6 +11,7 @@ import common.util.lang.Editors.Editor;
 import common.util.lang.Editors.EditorGroup;
 import common.util.lang.Editors.EditorSupplier;
 import common.util.lang.Formatter;
+import common.util.lang.LocaleCenter;
 import common.util.lang.ProcLang;
 import common.util.pack.Background;
 import common.util.stage.Music;
@@ -108,6 +109,8 @@ public abstract class SwingEditor extends Editor {
                             return new IdEditor<>(group, field, f, table::getUnitSup, edit);
                     }
 				}
+				if (fc.isEnum())
+					return new EnumEditor(group, field, f, edit);
 				throw new Exception("unexpected class " + fc);
 			} catch (Exception e) {
 				CommonStatic.ctx.noticeErr(e, ErrType.ERROR, "failed to generate editor");
@@ -250,6 +253,59 @@ public abstract class SwingEditor extends Editor {
 			update();
 		}
 
+	}
+
+	public static class EnumEditor extends SwingEditor {
+		public final JBTN input;
+		public final LocaleCenter.Binder binder;
+
+		public EnumEditor(EditorGroup eg, Editors.EdiField field, String f, boolean edit) {
+			super(eg, field, f, edit);
+			binder = ProcLang.get().get(par.proc).get(name);
+			input = new JBTN(binder);
+			input.setLnr(this::edit);
+		}
+
+		@Override
+		public void setVisible(boolean res) {
+			input.setVisible(res);
+		}
+
+		@Override
+		public boolean isInvisible() {
+			return !input.isVisible();
+		}
+
+		@Override
+		public void resize(int x, int y, int x0, int y0, int w0, int h0) {
+			Page.set(input, x, y, x0, y0, 350, h0);
+		}
+
+		@Override
+		protected void add(Consumer<JComponent> con) {
+			con.accept(input);
+		}
+
+		@Override
+		protected void setData() {
+			field.setData(par.obj);
+			Object obj = field.get();
+			binder.setNameValue(binder.getNameValue().split(":")[0] + ": " + (obj != null ? ((Enum<?>) obj).ordinal() : "?"));
+
+			input.setEnabled(edit && field.obj != null);
+			input.getLSC().update();
+		}
+
+		private void edit(ActionEvent fe) {
+			Object obj = field.get();
+			if (obj != null) {
+				Enum<?> val = (Enum<?>) obj;
+				Enum<?>[] enums = val.getDeclaringClass().getEnumConstants();
+				Enum<?> ans = enums[(val.ordinal() + 1) % enums.length];
+				field.set(ans);
+			}
+			update();
+		}
 	}
 
 	public interface PageSup<T extends IndexContainer.Indexable<?, T>> {
