@@ -66,7 +66,7 @@ publishing {
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
-    options.release = 8
+    options.release = 21
 }
 
 tasks.withType<Javadoc> {
@@ -74,5 +74,5 @@ tasks.withType<Javadoc> {
 }
 
 kotlin {
-    jvmToolchain(8)
+    jvmToolchain(21)
 }
