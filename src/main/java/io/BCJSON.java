@@ -26,9 +26,18 @@ public class BCJSON {
 	public static void check() {
 		LoadPage.prog("checking update information");
 		UpdateJson json = Data.silent(UpdateCheck::checkUpdate);
+
+		CommonStatic.Config cfg = CommonStatic.getConfig();
 		List<Downloader> assets = null, musics = null, libs = null, lang;
 		UpdateJson.JarJson[] jars = null;
 		try {
+			for (UpdateJson.AnnouncementJson announce : json.pc_announcement) {
+				if (cfg.receivedAnnouncements.contains(announce.id + "_PC") || MainBCU.ver < announce.min_ver || MainBCU.ver > announce.max_ver)
+					continue;
+
+                if (Opts.warningLong(announce.title + "\n" + String.join("\n\n", announce.text), "Announcement", 700, 350))
+					cfg.receivedAnnouncements.add(announce.id + "_PC");
+			}
 			jars = getLatestJars(json);
 			libs = UpdateCheck.checkPCLibs(json);
 			assets = UpdateCheck.checkAsset(json, "pc");
@@ -40,7 +49,7 @@ public class BCJSON {
 
 		if (json != null) {
 			int count = json.music;
-			if (CommonStatic.getConfig().updateOldMusic) {
+			if (cfg.updateOldMusic) {
 				try {
 					musics = UpdateCheck.checkMusic(count).get();
 				} catch (Exception ignored) {
@@ -88,7 +97,7 @@ public class BCJSON {
 						.append("\n");
 			}
 			sb.append("\nDo you want to update jar?");
-			boolean updateIt = Opts.confLong(sb.toString());
+			boolean updateIt = Opts.confLong(sb.toString(), 1000, 400);
 
 			if (updateIt) {
 				UpdateJson.JarJson jar = jars[0];
