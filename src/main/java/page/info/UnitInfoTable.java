@@ -137,7 +137,7 @@ public class UnitInfoTable extends Page {
 		int[][] atkData = ef.du.rawAtkData();
 		StringBuilder satk = new StringBuilder();
 		for (int[] atkDatum : atkData) {
-			if (satk.length() > 0)
+			if (!satk.isEmpty())
 				satk.append(" / ");
 
 			int a = (int) (Math.round(atkDatum[0] * mul) * b.t().getAtkMulti());
@@ -397,9 +397,9 @@ public class UnitInfoTable extends Page {
 		StringBuilder pre = new StringBuilder();
 		StringBuilder use = new StringBuilder();
 		for (int[] atkDatum : atkData) {
-			if (pre.length() > 0)
+			if (!pre.isEmpty())
 				pre.append(" / ");
-			if (use.length() > 0)
+			if (!use.isEmpty())
 				use.append(" / ");
 
 			if (MainBCU.seconds)

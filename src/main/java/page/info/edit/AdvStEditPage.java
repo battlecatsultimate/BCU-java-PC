@@ -10,7 +10,6 @@ import common.util.stage.Stage;
 import common.util.stage.info.CustomStageInfo;
 import common.util.unit.AbEnemy;
 import main.Opts;
-import org.jcodec.common.tools.MathUtil;
 import page.JBTN;
 import page.JL;
 import page.JTF;
@@ -245,7 +244,7 @@ public class AdvStEditPage extends Page {
 			int[] v = CommonStatic.parseIntsN(jtfs.getText());
 			Stage.ScoreBonus bonus = jsco.getSelectedValue();
 			bonus.score = v.length >= 1 ? v[0] : 1000;
-			bonus.dire = v.length >= 2 ? MathUtil.clip(v[1], -1, 1) : 1;
+			bonus.dire = v.length >= 2 ? Math.clamp(v[1], -1, 1) : 1;
 			setScoreBonus(bonus);
 		});
 

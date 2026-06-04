@@ -311,42 +311,26 @@ public class Interpret extends Data {
             l.add(new ProcDisplay(Page.get(MainLocale.UTIL, "ld0") + ": " + tb + ", " + Page.get(MainLocale.UTIL, "ld1") + ": " + p0 + "~" + p1 + ", "
                     + Page.get(MainLocale.UTIL, "ld2") + ": " + r, bi, null));
         }
-        AtkDataModel rev = me.getRevenge();
-        for (int z = 0; z < 6; z++) {
-            if (rev != null) {
-                int revs = rev.getShortPoint();
-                int revl = rev.getLongPoint();
-                if (revs != 0 || revl != 0) {
-                    BufferedImage bi;
-                    if (rev.isOmni())
-                        bi = (UtilPC.getIcon(2, ATK_OMNI));
-                    else
-                        bi = (UtilPC.getIcon(2, ATK_LD));
-                    l.add(new ProcDisplay(Page.get(MainLocale.UTIL, "ld1") + ": " + revs + "~" + revl +
-                            ", " + Page.get(MainLocale.UTIL, "ld2") + ": " + (revl - revs) +
-                            " [" + Page.get(MainLocale.UTIL, "aa" + (z + 6)) + "]", bi, null));
+        if (me instanceof CustomEntity) {
+            for (int z = 0; z < CustomEntity.SPECIAL_ATTACK_COUNT; z++) {
+                MaskAtk rev = me.getAtkModel(me.getAtkCount() + z);
+                if (rev != null) {
+                    int revs = rev.getShortPoint();
+                    int revl = rev.getLongPoint();
+                    if (revs != 0 || revl != 0) {
+                        BufferedImage bi;
+                        if (rev.isOmni())
+                            bi = (UtilPC.getIcon(2, ATK_OMNI));
+                        else
+                            bi = (UtilPC.getIcon(2, ATK_LD));
+                        l.add(new ProcDisplay(Page.get(MainLocale.UTIL, "ld1") + ": " + revs + "~" + revl +
+                                ", " + Page.get(MainLocale.UTIL, "ld2") + ": " + (revl - revs) +
+                                " [" + Page.get(MainLocale.UTIL, "aa" + (z + 6)) + "]", bi, null));
+                    }
                 }
             }
-            switch (z) {
-                case 0:
-                    rev = me.getResurrection();
-                    break;
-                case 1:
-                    rev = me.getCounter();
-                    break;
-                case 2:
-                    rev = me.getGouge();
-                    break;
-                case 3:
-                    rev = me.getResurface();
-                    break;
-                case 4:
-                    rev = me.getRevive();
-                    break;
-                default:
-                    rev = null;
-            }
         }
+
         String imu = Page.get(MainLocale.UTIL, "imu");
         for (int i = 0; i < ABIS.length; i++)
             if (((me.getAbi() >> i) & 1) > 0)
@@ -485,8 +469,8 @@ public class Interpret extends Data {
                     l.get(i).text = l.get(i).text + " " + getAtkNumbers(atks);
         }
 
-        MaskAtk rev = du.getRevenge();
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < CustomEntity.SPECIAL_ATTACK_COUNT; i++) {
+            MaskAtk rev = du.getAtkModel(du.getAtkCount() + i);
             if (rev != null) {
                 for (int j = 0; j < Data.PROC_TOT; j++) {
                     ProcItem item = rev.getProc().getArr(j);
@@ -499,14 +483,6 @@ public class Interpret extends Data {
                     l.add(new ProcDisplay(formatted + " [" + Page.get(MainLocale.UTIL, "aa" + (6 + i)) + "]", UtilPC.getIcon(1, j), item));
                 }
             }
-            rev = switch (i) {
-                case 0 -> du.getResurrection();
-                case 1 -> du.getCounter();
-                case 2 -> du.getGouge();
-                case 3 -> du.getResurface();
-                case 4 -> du.getRevive();
-                default -> null;
-            };
         }
 
         return l;

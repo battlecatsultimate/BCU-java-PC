@@ -8,7 +8,6 @@ import common.util.stage.CharaGroup;
 import common.util.stage.LvRestrict;
 import common.util.unit.Form;
 import common.util.unit.Unit;
-import org.jcodec.common.tools.MathUtil;
 import page.*;
 import page.info.filter.UnitFindPage;
 import page.support.UnitLCR;
@@ -377,10 +376,10 @@ public class CGLREditPage extends Page {
 			public void focusLost(FocusEvent fe) {
 				int[] inp = CommonStatic.parseIntsN(jtf.getText());
 				if (jtf == jcgor)
-					lr.groups.get(sb).orb = inp.length == 0 ? -1 : MathUtil.clip(inp[0], -1, 2);
+					lr.groups.get(sb).orb = inp.length == 0 ? -1 : Math.clamp(inp[0], -1, 2);
 				for (int i = 0; i < jtfor.length; i++)
 					if (jtf == jtfor[i])
-						lr.orb[i] = inp.length == 0 ? -1 : MathUtil.clip(inp[0], -1, 2);
+						lr.orb[i] = inp.length == 0 ? -1 : Math.clamp(inp[0], -1, 2);
 				for (int i = 0; i < inp.length; i++)
 					if (inp[i] < 0)
 						inp[i] = 0;

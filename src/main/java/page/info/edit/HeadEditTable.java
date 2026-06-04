@@ -12,7 +12,6 @@ import common.util.stage.CastleList;
 import common.util.stage.Music;
 import common.util.stage.Stage;
 import main.Opts;
-import org.jcodec.common.tools.MathUtil;
 import page.*;
 import page.view.BGViewPage;
 import page.view.CastleViewPage;
@@ -529,7 +528,7 @@ class HeadEditTable extends Page {
 		}
 
 		if (jtf == cos) {
-			sta.getCont().price = MathUtil.clip(val - 1, 0, 9);
+			sta.getCont().price = Math.clamp(val - 1, 0, 9);
 		}
 	}
 

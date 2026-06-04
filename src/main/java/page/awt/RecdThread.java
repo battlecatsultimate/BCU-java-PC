@@ -188,7 +188,7 @@ public abstract class RecdThread extends Thread {
 				synchronized (bimgs) {
 					size = bimgs.size();
 				}
-				if (bimgs.size() == 0 && end)
+				if (bimgs.isEmpty() && end)
 					break;
 			}
 			if (size > 0) {

@@ -60,8 +60,6 @@ public class EnemyInfoTable extends Page {
 					atkList.add(model);
 			}
 		}
-		if (e.de.getCounter() != null)
-			atkList.add(e.de.getCounter());
 
 		atks = new JL[e.de.rawAtkData().length + atkList.size()][8];
 		List<Interpret.ProcDisplay> ls = Interpret.getAbi(e.de);

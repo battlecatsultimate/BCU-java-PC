@@ -7,7 +7,6 @@ import common.pack.PackData;
 import common.pack.UserProfile;
 import common.system.ENode;
 import common.util.unit.Enemy;
-import org.jcodec.common.tools.MathUtil;
 import page.*;
 import page.info.EnemyInfoPage;
 import page.info.filter.EnemyEditBox;
@@ -60,7 +59,7 @@ public class EnemyEditPage extends EntityEditPage {
 			ce.drop = Math.round(v[0] / bas.t().getDropMulti());
 		}
 		if (jtf == fsr) {
-			v[0] = MathUtil.clip(v[0], 0, 4);
+			v[0] = Math.clamp(v[0], 0, 4);
 			ce.star = v[0];
 		}
 	}

@@ -106,7 +106,7 @@ public abstract class UnitFilterBox extends Page {
 			String fname = MultiLangCont.getStatic().FNAME.getCont(e);
 			if (fname == null)
 				fname = e.names.toString();
-			if (fname == "")
+			if (fname.isEmpty())
 				continue;
 			fname = fname.toLowerCase();
 
