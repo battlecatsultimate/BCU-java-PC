@@ -49,8 +49,8 @@ public class Opts {
 		return warning(text, "confirmation");
 	}
 
-	public static boolean confLong(String text) {
-		return warningLong(text, "confirmation");
+	public static boolean confLong(String text, int w, int h) {
+		return warningLong(text, "confirmation", w, h);
 	}
 
 	public static void dloadErr(String text) {
@@ -153,13 +153,13 @@ public class Opts {
 		return val == JOptionPane.OK_OPTION;
 	}
 
-	public static boolean warningLong(String text, String title) {
+	public static boolean warningLong(String text, String title, int w, int h) {
 		JTextArea txt = new JTextArea(text);
 		JScrollPane scroll = new JScrollPane(txt);
 		txt.setLineWrap(true);
 		txt.setWrapStyleWord(true);
 		txt.setEditable(false);
-		scroll.setPreferredSize(UtilPC.size(1000, 500));
+		scroll.setPreferredSize(UtilPC.size(w, h));
 		int opt = JOptionPane.OK_CANCEL_OPTION;
 		int val = JOptionPane.showConfirmDialog(null, scroll, title, opt);
 		return val == JOptionPane.OK_OPTION;
