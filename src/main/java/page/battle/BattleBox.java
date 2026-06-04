@@ -354,16 +354,12 @@ public interface BattleBox {
 		}
 
 		private int getFireLang() {
-			switch (CommonStatic.getConfig().lang) {
-				case ZH:
-					return 18;
-				case KR:
-					return 16;
-				case JP:
-					return 12;
-				default:
-					return 14;
-			}
+            return switch (CommonStatic.getConfig().lang) {
+                case ZH -> 18;
+                case KR -> 16;
+                case JP -> 12;
+                default -> 14;
+            };
 		}
 
 		private void drawLineupWithTwoRows(FakeGraphics g, int w, int h, float hr, float term, float termh) {

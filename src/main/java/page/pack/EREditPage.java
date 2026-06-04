@@ -83,8 +83,8 @@ public class EREditPage extends Page {
 
 	@Override
 	protected void mouseClicked(MouseEvent e) {
-		int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-		if (e.getSource() == jt && (e.getModifiers() & modifier) == 0)
+		int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+		if (e.getSource() == jt && (e.getModifiersEx() & modifier) == 0)
 			jt.clicked(e.getPoint());
 	}
 

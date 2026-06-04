@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-public strictfp class PP extends P {
+public class PP extends P {
 
 	public PP(Dimension d) {
 		super((float) d.getWidth(), (float) d.getHeight());

@@ -265,20 +265,14 @@ public class LevelEditPage extends Page {
 	}
 
 	private String getGrade(int grade) {
-		switch (grade) {
-		case 0:
-			return "D";
-		case 1:
-			return "C";
-		case 2:
-			return "B";
-		case 3:
-			return "A";
-		case 4:
-			return "S";
-		default:
-			return "Unknown Grade " + grade;
-		}
+        return switch (grade) {
+            case 0 -> "D";
+            case 1 -> "C";
+            case 2 -> "B";
+            case 3 -> "A";
+            case 4 -> "S";
+            default -> "Unknown Grade " + grade;
+        };
 	}
 
 	private String getTrait(int trait) {

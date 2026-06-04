@@ -3,7 +3,7 @@ package main;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public strictfp class Printer {
+public class Printer {
 
 	public static void e(String source, int line, String description) {
 		print(source, line, description);

@@ -156,8 +156,8 @@ public class MaModelEditPage extends Page implements AbEditPage {
             int[][] parts = mmet.mm.parts;
             Point p0 = mb.getPoint(p);
             Point p1 = mb.getPoint(p = e.getPoint());
-            int modifiers = e.getModifiers();
-            int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+            int modifiers = e.getModifiersEx();
+            int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
             boolean isCtrlDown = (modifiers & modifier) != 0; // note: do NOT use for right mouse check
             int[] part;
 

@@ -19,7 +19,7 @@ import java.net.URLClassLoader;
 import java.util.*;
 import java.util.Map.Entry;
 
-public strictfp class MainLocale {
+public class MainLocale {
 
 	public static final int PAGE = 0, INFO = 1, INTERNET = 2, UTIL = 3;
 	public static final Map<String, MainLocale> NAMP = new TreeMap<>();

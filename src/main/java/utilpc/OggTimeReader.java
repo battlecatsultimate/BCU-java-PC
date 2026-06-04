@@ -77,21 +77,13 @@ public class OggTimeReader {
 		}
 		skip(1);
 		int headerVersion = getNextByte();
-		String header;
-		switch (headerVersion) {
-		case 0x00:
-			header = "Continuation";
-			break;
-		case 0x02:
-			header = "Begin";
-			break;
-		case 0x04:
-			header = "End";
-			break;
-		default:
-			header = "Unknown";
-		}
-		if (header.equals("Unknown")) {
+		String header = switch (headerVersion) {
+            case 0x00 -> "Continuation";
+            case 0x02 -> "Begin";
+            case 0x04 -> "End";
+            default -> "Unknown";
+        };
+        if (header.equals("Unknown")) {
 			return -1;
 		}
 		skip(20);
@@ -117,21 +109,13 @@ public class OggTimeReader {
 		int ver = getNextByte();
 		System.out.println("Version : " + ver);
 		int headerVersion = getNextByte();
-		String header;
-		switch (headerVersion) {
-		case 0x00:
-			header = "Continuation";
-			break;
-		case 0x02:
-			header = "Begin";
-			break;
-		case 0x04:
-			header = "End";
-			break;
-		default:
-			header = "Unknown";
-		}
-		System.out.println("Header : " + header);
+		String header = switch (headerVersion) {
+            case 0x00 -> "Continuation";
+            case 0x02 -> "Begin";
+            case 0x04 -> "End";
+            default -> "Unknown";
+        };
+        System.out.println("Header : " + header);
 		if (header.equals("Unknown")) {
 			return -1;
 		}

@@ -31,7 +31,7 @@ public class MenuBarHandler {
         bar.add(menu);
         bar.add(history);
 
-        int shortcut = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+        int shortcut = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
 
         JMenuItem save = new JMenuItem("Save All");
         save.setAccelerator(KeyStroke.getKeyStroke('S', shortcut));

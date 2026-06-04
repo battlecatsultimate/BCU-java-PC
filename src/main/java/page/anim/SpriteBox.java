@@ -306,8 +306,8 @@ class SpriteBox extends JPanel implements KeyListener, MouseInputListener, Mouse
 			anim.ICedited();
 		} else {
 			int[] line = anim.imgcut.cuts[sele];
-			int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-			if ((e.getModifiers() & modifier) > 0) {
+			int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+			if ((e.getModifiersEx() & modifier) > 0) {
 				line[2] = Math.max(line[2] + (p1.x - p0.x), 1);
 				line[3] = Math.max(line[3] + (p1.y - p0.y), 1);
 			} else {

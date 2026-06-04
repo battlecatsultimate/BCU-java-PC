@@ -499,25 +499,14 @@ public class Interpret extends Data {
                     l.add(new ProcDisplay(formatted + " [" + Page.get(MainLocale.UTIL, "aa" + (6 + i)) + "]", UtilPC.getIcon(1, j), item));
                 }
             }
-            switch (i) {
-                case 0:
-                    rev = du.getResurrection();
-                    break;
-                case 1:
-                    rev = du.getCounter();
-                    break;
-                case 2:
-                    rev = du.getGouge();
-                    break;
-                case 3:
-                    rev = du.getResurface();
-                    break;
-                case 4:
-                    rev = du.getRevive();
-                    break;
-                default:
-                    rev = null;
-            }
+            rev = switch (i) {
+                case 0 -> du.getResurrection();
+                case 1 -> du.getCounter();
+                case 2 -> du.getGouge();
+                case 3 -> du.getResurface();
+                case 4 -> du.getRevive();
+                default -> null;
+            };
         }
 
         return l;
@@ -539,112 +528,60 @@ public class Interpret extends Data {
     }
 
     public static int getValue(int ind, Treasure t) {
-        switch (ind) {
-            case 0:
-                return t.tech[LV_RES];
-            case 1:
-                return t.tech[LV_ACC];
-            case 2:
-                return t.trea[T_ATK];
-            case 3:
-                return t.trea[T_DEF];
-            case 4:
-                return t.trea[T_RES];
-            case 5:
-                return t.trea[T_ACC];
-            case 6:
-                return t.fruit[T_RED];
-            case 7:
-                return t.fruit[T_FLOAT];
-            case 8:
-                return t.fruit[T_BLACK];
-            case 9:
-                return t.fruit[T_ANGEL];
-            case 10:
-                return t.fruit[T_METAL];
-            case 11:
-                return t.fruit[T_ZOMBIE];
-            case 12:
-                return t.fruit[T_ALIEN];
-            case 13:
-                return t.alien;
-            case 14:
-                return t.star;
-            case 15:
-                return t.gods[0];
-            case 16:
-                return t.gods[1];
-            case 17:
-                return t.gods[2];
-            case 18:
-                return t.tech[LV_BASE];
-            case 19:
-                return t.tech[LV_WORK];
-            case 20:
-                return t.tech[LV_WALT];
-            case 21:
-                return t.tech[LV_RECH];
-            case 22:
-                return t.tech[LV_CATK];
-            case 23:
-                return t.tech[LV_CRG];
-            case 24:
-                return t.trea[T_WORK];
-            case 25:
-                return t.trea[T_WALT];
-            case 26:
-                return t.trea[T_RECH];
-            case 27:
-                return t.trea[T_CATK];
-            case 28:
-                return t.trea[T_BASE];
-            case 29:
-                return t.bslv[BASE_H];
-            case 30:
-                return t.bslv[BASE_SLOW];
-            case 31:
-                return t.bslv[BASE_WALL];
-            case 32:
-                return t.bslv[BASE_STOP];
-            case 33:
-                return t.bslv[BASE_WATER];
-            case 34:
-                return t.bslv[BASE_GROUND];
-            case 35:
-                return t.bslv[BASE_BARRIER];
-            case 36:
-                return t.bslv[BASE_CURSE];
-            case 37:
-                return t.base[DECO_BASE_SLOW - 1];
-            case 38:
-                return t.base[DECO_BASE_WALL - 1];
-            case 39:
-                return t.base[DECO_BASE_STOP - 1];
-            case 40:
-                return t.base[DECO_BASE_WATER - 1];
-            case 41:
-                return t.base[DECO_BASE_GROUND - 1];
-            case 42:
-                return t.base[DECO_BASE_BARRIER - 1];
-            case 43:
-                return t.base[DECO_BASE_CURSE - 1];
-            case 44:
-                return t.deco[DECO_BASE_SLOW - 1];
-            case 45:
-                return t.deco[DECO_BASE_WALL - 1];
-            case 46:
-                return t.deco[DECO_BASE_STOP - 1];
-            case 47:
-                return t.deco[DECO_BASE_WATER - 1];
-            case 48:
-                return t.deco[DECO_BASE_GROUND - 1];
-            case 49:
-                return t.deco[DECO_BASE_BARRIER - 1];
-            case 50:
-                return t.deco[DECO_BASE_CURSE - 1];
-            default:
-                return -1;
-        }
+        return switch (ind) {
+            case 0 -> t.tech[LV_RES];
+            case 1 -> t.tech[LV_ACC];
+            case 2 -> t.trea[T_ATK];
+            case 3 -> t.trea[T_DEF];
+            case 4 -> t.trea[T_RES];
+            case 5 -> t.trea[T_ACC];
+            case 6 -> t.fruit[T_RED];
+            case 7 -> t.fruit[T_FLOAT];
+            case 8 -> t.fruit[T_BLACK];
+            case 9 -> t.fruit[T_ANGEL];
+            case 10 -> t.fruit[T_METAL];
+            case 11 -> t.fruit[T_ZOMBIE];
+            case 12 -> t.fruit[T_ALIEN];
+            case 13 -> t.alien;
+            case 14 -> t.star;
+            case 15 -> t.gods[0];
+            case 16 -> t.gods[1];
+            case 17 -> t.gods[2];
+            case 18 -> t.tech[LV_BASE];
+            case 19 -> t.tech[LV_WORK];
+            case 20 -> t.tech[LV_WALT];
+            case 21 -> t.tech[LV_RECH];
+            case 22 -> t.tech[LV_CATK];
+            case 23 -> t.tech[LV_CRG];
+            case 24 -> t.trea[T_WORK];
+            case 25 -> t.trea[T_WALT];
+            case 26 -> t.trea[T_RECH];
+            case 27 -> t.trea[T_CATK];
+            case 28 -> t.trea[T_BASE];
+            case 29 -> t.bslv[BASE_H];
+            case 30 -> t.bslv[BASE_SLOW];
+            case 31 -> t.bslv[BASE_WALL];
+            case 32 -> t.bslv[BASE_STOP];
+            case 33 -> t.bslv[BASE_WATER];
+            case 34 -> t.bslv[BASE_GROUND];
+            case 35 -> t.bslv[BASE_BARRIER];
+            case 36 -> t.bslv[BASE_CURSE];
+            case 37 -> t.base[DECO_BASE_SLOW - 1];
+            case 38 -> t.base[DECO_BASE_WALL - 1];
+            case 39 -> t.base[DECO_BASE_STOP - 1];
+            case 40 -> t.base[DECO_BASE_WATER - 1];
+            case 41 -> t.base[DECO_BASE_GROUND - 1];
+            case 42 -> t.base[DECO_BASE_BARRIER - 1];
+            case 43 -> t.base[DECO_BASE_CURSE - 1];
+            case 44 -> t.deco[DECO_BASE_SLOW - 1];
+            case 45 -> t.deco[DECO_BASE_WALL - 1];
+            case 46 -> t.deco[DECO_BASE_STOP - 1];
+            case 47 -> t.deco[DECO_BASE_WATER - 1];
+            case 48 -> t.deco[DECO_BASE_GROUND - 1];
+            case 49 -> t.deco[DECO_BASE_BARRIER - 1];
+            case 50 -> t.deco[DECO_BASE_CURSE - 1];
+            default -> -1;
+        };
     }
 
     public static boolean isER(Enemy e, int t) {

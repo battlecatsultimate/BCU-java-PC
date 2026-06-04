@@ -18,6 +18,7 @@ import utilpc.UtilPC;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serial;
 import java.util.Vector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -57,6 +58,7 @@ public class PCoinEditTable extends Page {
         protected void setListIcons() {
             setCellRenderer(new DefaultListCellRenderer() {
 
+                @Serial
                 private static final long serialVersionUID = 1L;
 
                 @Override

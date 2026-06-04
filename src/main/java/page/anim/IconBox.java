@@ -36,8 +36,8 @@ public interface IconBox extends ViewBox {
 				return;
 			}
 			Point t = e.getPoint();
-			int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
-			if ((e.getModifiers() & modifier) > 0) {
+			int modifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+			if ((e.getModifiersEx() & modifier) > 0) {
 				line[2] += t.x - p.x;
 				line[3] += t.y - p.y;
 

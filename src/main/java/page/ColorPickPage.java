@@ -121,28 +121,14 @@ public class ColorPickPage extends Page {
             if(i < 6) {
                 radios[i].addActionListener(l -> {
                     if(radios[fi].isSelected()) {
-                        ColorPicker.MODE mode;
-
-                        switch (fi) {
-                            case 0:
-                                mode = ColorPicker.MODE.HUE;
-                                break;
-                            case 1:
-                                mode = ColorPicker.MODE.SATURATION;
-                                break;
-                            case 2:
-                                mode = ColorPicker.MODE.BRIGHTNESS;
-                                break;
-                            case 3:
-                                mode = ColorPicker.MODE.RED;
-                                break;
-                            case 4:
-                                mode = ColorPicker.MODE.GREEN;
-                                break;
-                            default:
-                                mode = ColorPicker.MODE.BLUE;
-                                break;
-                        }
+                        ColorPicker.MODE mode = switch (fi) {
+                            case 0 -> ColorPicker.MODE.HUE;
+                            case 1 -> ColorPicker.MODE.SATURATION;
+                            case 2 -> ColorPicker.MODE.BRIGHTNESS;
+                            case 3 -> ColorPicker.MODE.RED;
+                            case 4 -> ColorPicker.MODE.GREEN;
+                            default -> ColorPicker.MODE.BLUE;
+                        };
 
                         picker.setMode(mode);
                     }
@@ -152,42 +138,42 @@ public class ColorPickPage extends Page {
             texts[i].setLnr(e -> {
                 switch (fi) {
                     case 0:
-                        float h = Math.min(360, Math.max(0, CommonStatic.parseIntN(texts[fi].getText()))) / 360f;
+                        float h = Math.clamp(CommonStatic.parseIntN(texts[fi].getText()), 0, 360) / 360f;
 
                         picker.hsb[0] = h;
 
                         picker.updateRgb();
                         break;
                     case 1:
-                        float s = Math.min(100, Math.max(0, CommonStatic.parseIntN(texts[fi].getText()))) / 100f;
+                        float s = Math.clamp(CommonStatic.parseIntN(texts[fi].getText()), 0, 100) / 100f;
 
                         picker.hsb[1] = s;
 
                         picker.updateRgb();
                         break;
                     case 2:
-                        float b = Math.min(100, Math.max(0, CommonStatic.parseIntN(texts[fi].getText()))) / 100f;
+                        float b = Math.clamp(CommonStatic.parseIntN(texts[fi].getText()), 0, 100) / 100f;
 
                         picker.hsb[2] = b;
 
                         picker.updateRgb();
                         break;
                     case 3:
-                        int r = Math.min(255, Math.max(0, CommonStatic.parseIntN(texts[fi].getText())));
+                        int r = Math.clamp(CommonStatic.parseIntN(texts[fi].getText()), 0, 255);
 
                         picker.rgb[0] = r;
 
                         picker.updateHsb();
                         break;
                     case 4:
-                        int g = Math.min(255, Math.max(0, CommonStatic.parseIntN(texts[fi].getText())));
+                        int g = Math.clamp(CommonStatic.parseIntN(texts[fi].getText()), 0, 255);
 
                         picker.rgb[1] = g;
 
                         picker.updateHsb();
                         break;
                     case 5:
-                        int bl = Math.min(255, Math.max(0, CommonStatic.parseIntN(texts[fi].getText())));
+                        int bl = Math.clamp(CommonStatic.parseIntN(texts[fi].getText()), 0, 255);
 
                         picker.rgb[2] = bl;
 
