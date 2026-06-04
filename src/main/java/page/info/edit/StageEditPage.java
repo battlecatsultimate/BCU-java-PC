@@ -423,6 +423,7 @@ public class StageEditPage extends Page {
 		setAA(null);
 		setBA(null);
 		jle.setCellRenderer(new AnimLCR());
+		enam.setHint("Search enemy");
 		assignSubPage(sinf);
 		addListeners$0();
 		addListeners$1();
