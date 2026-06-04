@@ -459,11 +459,7 @@ public class StageEditPage extends Page {
 		if (obj instanceof StageMap) {
 			StageMap stm = (StageMap)obj;
 			for (Stage s : stm.list)
-				if (s.info != null)
-					((CustomStageInfo)s.info).destroy();
-			for (Stage s : stm.list)
-				for (CustomStageInfo si : ((MapColc.PackMapColc)mc).si)
-					si.remove(s);
+				finishRemoving(s);
 		} else {
 			Stage st = (Stage)obj;
 			if (st.info != null)
