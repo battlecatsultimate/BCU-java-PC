@@ -27,6 +27,7 @@ public class StageLimitTable extends Page {
     }
 
     private final JL mone = new JL(MainLocale.INFO, "ht20");
+    private final JL maxc = new JL(MainLocale.INFO, "ht28");
     private final JL cano = new JL(MainLocale.INFO, "ht26");
     private final JL cres = new JL(MainLocale.INFO, "ht21");
     private final JL cost = new JL(MainLocale.INFO, "ht23");
@@ -37,6 +38,7 @@ public class StageLimitTable extends Page {
     private final JL ralimi = new JL(MainLocale.INFO, "ht11");
     private final JL radupe = new JL(MainLocale.INFO, "ht27");
     private final JTF jmon = new JTF();
+    private final JTF jmac = new JTF();
     private final JTF jcan = new JTF();
     private final JTF jcre = new JTF();
     private final JTF jcos = new JTF();
@@ -72,8 +74,8 @@ public class StageLimitTable extends Page {
 
         set(mone, x, y, 0, 0, w, 50);
         set(jmon, x, y, w, 0, w, 50);
-        set(cano, x, y, w * 2, 0, w, 50);
-        set(jcan, x, y, w * 3, 0, w, 50);
+        set(maxc, x, y, w * 2, 0, w, 50);
+        set(jmac, x, y, w * 3, 0, w, 50);
 
         set(cost, x, y, 0, 50, w, 50);
         set(jcos, x, y, w, 50, w, 50);
@@ -98,6 +100,9 @@ public class StageLimitTable extends Page {
             set(jdupe[i], x, y, wid, 50 * ((i / r) + 9), w, 50);
         }
 
+        set(cano, x, y, 0, 550, w, 50);
+        set(jcan, x, y, w, 550, w, 50);
+
         set(jsco, x, y, (int) (w * 5.5), 0, w * 2, 250);
         set(banc, x, y, w * 6, 250, w, 50);
 
@@ -108,6 +113,8 @@ public class StageLimitTable extends Page {
     private void ini() {
         add(mone);
         reg(jmon);
+        add(maxc);
+        reg(jmac);
         add(cano);
         reg(jcan);
 
@@ -170,6 +177,7 @@ public class StageLimitTable extends Page {
             jdupe[i].setText(r + (stli.deployDuplicationTimes[i] == 0 ? "--" : stli.deployDuplicationTimes[i] + ", " + stli.deployDuplicationDelay[i] + "f"));
         }
         jmon.setText(stli.maxMoney == 0 ? "--" : stli.maxMoney + "");
+        jmac.setText(stli.maxUnitSpawn == -1 ? "--" : stli.maxUnitSpawn + "");
         jcan.setText(stli.cannonMultiplier + "%");
         jcos.setText(stli.globalCost == -1 ? "--" : stli.globalCost + "");
         jcre.setText(stli.globalCooldown == 0 ? "--" : stli.globalCooldown + "");
@@ -199,6 +207,7 @@ public class StageLimitTable extends Page {
         }
 
         jmon.setEnabled(b);
+        jmac.setEnabled(b);
         jcan.setEnabled(b);
         jcre.setEnabled(b);
         jcos.setEnabled(b);
@@ -229,6 +238,8 @@ public class StageLimitTable extends Page {
     private void input(JTF jtf, String text) {
         if (jtf == jmon)
             stli.maxMoney = Math.max(CommonStatic.parseIntN(text), 0);
+        else if (jtf == jmac)
+            stli.maxUnitSpawn = Math.max(CommonStatic.parseIntN(text), -1);
         else if (jtf == jcan)
             stli.cannonMultiplier = Math.max(CommonStatic.parseIntN(text), 0);
         else if (jtf == jcos)
@@ -241,16 +252,13 @@ public class StageLimitTable extends Page {
                 stli.unitSpeedOverrideMode = StageLimit.SpeedOverrideMode.MULTIPLY;
             else
                 stli.unitSpeedOverrideMode = StageLimit.SpeedOverrideMode.SET;
-        }
-        else if (jtf == jesp) {
+        } else if (jtf == jesp) {
             stli.enemySpeedOverride = Math.max(CommonStatic.parseIntN(text), -1);
             if (text.startsWith("x") || text.startsWith("*"))
                 stli.enemySpeedOverrideMode = StageLimit.SpeedOverrideMode.MULTIPLY;
             else
                 stli.enemySpeedOverrideMode = StageLimit.SpeedOverrideMode.SET;
-        }
-
-        else {
+        } else {
             for (int i = 0; i < rarityTxt.length; i++) {
                 if (jcost[i] == jtf) {
                     stli.costMultiplier[i] = Math.max(CommonStatic.parseIntN(text), 0);
