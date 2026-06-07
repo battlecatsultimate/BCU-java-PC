@@ -146,7 +146,7 @@ public class BattleSetupPage extends LubCont {
 			Limit lim = st.getLim(star);
 			if (rich.isSelected() && lim.rich == 0)
 				ints[0] |= 1;
-			if (snip.isSelected() && lim.rich == 0)
+			if (snip.isSelected() && lim.sniper == 0)
 				ints[0] |= 2;
 			BasisLU b = BasisSet.current().sele;
 			if (conf == 0) {
