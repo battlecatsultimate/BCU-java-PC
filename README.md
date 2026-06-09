@@ -58,12 +58,20 @@ Some issues below can be fixed by running the jar via Terminal. If it suggests d
     2. In your BCU folder, locate the jar you will run.
     3. Drag and drop the jar onto the Terminal window.
     4. Press the Enter key.
-
+  
 - *The files downloaded are not in the BCU folder (For example, the `BCU_lib` folder was not downloaded automatically into your BCU folder)*
     - Follow the instructions above to use Terminal.
 - *WARNING: NSWindow drag regions should only be invalidated on the Main Thread! This will throw an exception in the future.*
     - This usually happens only if JOGL is enabled. In order to keep JOGL on, make sure your JDK version is 8, then follow the instructions above to use Terminal.
     - NOTE: As of July 2024, this should no longer be occurring. If this is something you are experiencing, please report it through either GitHub Issues or in the BCU English Discord server!
+  
+#### Linux Issues
+Most common issue on linux is making sure the correct java version is used when launching BCU. Depending on your distro, you can swap your default java very easy. The current java version required for BCU is java 8.
+- For Arch Linux distros, use `archlinux-java status` to check your current default java. If it's incorrect, use `archlinux-java set java-8-openjdk` to swap to java 8 as default. You may need to run this command with sudo.
+- For Debian/Ubuntu Linux distros, use `sudo update-alternatives --config java`. It will bring up all installed versions of java with the current active one marked and provides a dialog to help switch.
+- For Fedora Linux distros, use `sudo alternatives --config java`. It will bring up all installed versions of java with the current active one marked and provide a dialog to help switch.
+
+If you have trouble launching BCU via Linux's GUI, open terminal and navagate to the folder where the bcu jar file is and use `java -jar nameofbcu.jar` to launch it.
 
 ## Links & Resources
 
