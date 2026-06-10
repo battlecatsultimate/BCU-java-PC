@@ -587,7 +587,7 @@ public class UnitManagePage extends Page {
 		} else {
 			edit.setToolTipText(null);
 		}
-		remf.setEnabled(b && frm.fid > 0 && !comboList(f.unit).contains(f));
+		remf.setEnabled(b && frm.fid > 0 && f.unit.findCombo(pac, f.fid).isEmpty());
 		jtff.setEnabled(b);
 		if (frm != null) {
 			jtff.setText(f.names.toString());
@@ -658,8 +658,9 @@ public class UnitManagePage extends Page {
 			jlu.setSelectedValue(uni, true);
 			changing = boo;
 		}
-		boolean b = unit != null && pac.editable;
-		remu.setEnabled(b && comboList(unit).isEmpty());
+		boolean b = uni != null && pac.editable;
+		boolean canRemove = uni != null && uni.findCombo(pac).isEmpty() && uni.findCharaGroup(pac).isEmpty();
+		remu.setEnabled(b && canRemove);
 		rar.setEnabled(b);
 		cbl.setEnabled(b);
 		addf.setEnabled(b && getSelectedAnim() != null && unit.forms.length < 4);
@@ -718,14 +719,5 @@ public class UnitManagePage extends Page {
 				return (AnimCE) node.getUserObject();
 		}
 		return null;
-	}
-
-	private List<Form> comboList(Unit u) {
-		List<Form> forms = new ArrayList<>();
-		for (Combo c : pac.combos)
-			for (Form f : c.forms)
-				if (Arrays.stream(u.forms).anyMatch(uf -> uf == f))
-					forms.add(f);
-		return forms;
 	}
 }
