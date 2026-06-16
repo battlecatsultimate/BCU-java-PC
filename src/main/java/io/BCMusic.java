@@ -1,5 +1,6 @@
 package io;
 
+import common.CommonStatic;
 import common.pack.Identifier;
 import common.pack.UserProfile;
 import common.util.Data;
@@ -17,6 +18,7 @@ public class BCMusic extends Data {
 	private static final short TOT = 191;
 	private static final byte[][] CACHE = new byte[TOT][];
 	public final static Map<Identifier<Music>, byte[]> CACHE_CUSTOM = new LinkedHashMap<>();
+	public final static Map<Integer, byte[]> CACHE_ASSET = new LinkedHashMap<>();
 
 	public static boolean play = true;
 	public static Identifier<Music> music = null;
@@ -275,6 +277,26 @@ public class BCMusic extends Data {
 				if (c.getMicrosecondLength() < 10_000_000L)
 					CACHE_CUSTOM.put(mus, m.data.getBytes());
 				loadSound(-1, c); // TODO stop audio if battle is exited after
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static synchronized void setAssetSE(int id) {
+		if (!play || VOL_SE == 0)
+			return;
+
+		try {
+			if (CACHE_ASSET.containsKey(id)) {
+				loadSound(-1, CACHE_ASSET.get(id));
+			} else {
+				byte[] dat = CommonStatic.getBCAssets().assetSfx[id].getData().getBytes();
+				System.out.println(dat.length);
+				Clip c = openFile(dat);
+				if (c.getMicrosecondLength() < 10_000_000L)
+					CACHE_ASSET.put(id, dat);
+				loadSound(-1, c);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
