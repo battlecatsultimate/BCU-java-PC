@@ -29,8 +29,9 @@ public class MusicPage extends Page implements SupPage<Music> {
 	public MusicPage(Page p) {
 		super(p);
 		List<Music> mus = new ArrayList<>();
-		for (PackData pac : UserProfile.getAllPacks())
+		for (PackData pac : UserProfile.getAllPacks()) {
 			mus.addAll(pac.musics.getList());
+		}
 
 		jlf.setListData(mus.toArray(new Music[0]));
 		ini();
