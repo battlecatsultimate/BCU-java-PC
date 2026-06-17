@@ -28,7 +28,7 @@ public class BCJSON {
 		UpdateJson json = Data.silent(UpdateCheck::checkUpdate);
 
 		CommonStatic.Config cfg = CommonStatic.getConfig();
-		List<Downloader> assets = null, musics = null, libs = null, lang;
+		List<Downloader> assets = null, musics = null, custMusics = null, libs = null, lang;
 		UpdateJson.JarJson[] jars = null;
 		try {
 			for (UpdateJson.AnnouncementJson announce : json.pc_announcement) {
@@ -57,6 +57,9 @@ public class BCJSON {
 				}
 			} else
 				musics = UpdateCheck.checkNewMusic(count);
+
+			int customCount = json.customMusic;
+			custMusics = UpdateCheck.checkNewCustomMusic(customCount);
 		}
 
 		ArrayList<String> langList = new ArrayList<>();
@@ -74,6 +77,7 @@ public class BCJSON {
 		clearList(libs, true);
 		clearList(assets, true);
 		clearList(musics, false);
+		clearList(custMusics, false);
 		clearList(lang, false);
 
 		Downloader font = UpdateCheck.checkFont();

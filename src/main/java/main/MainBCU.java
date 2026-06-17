@@ -101,6 +101,8 @@ public class MainBCU {
 			AssetLoader.load(LoadPage::prog);
 			LoadPage.prog("reading BC data");
 			UserProfile.getBCData().load(LoadPage::prog, LoadPage::prog);
+			LoadPage.prog("reading BCU custom data");
+			UserProfile.getBCUData().load(LoadPage::prog, LoadPage::prog);
 			LoadPage.prog("reading backups");
 			Backup.loadBackups();
 

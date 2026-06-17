@@ -15,13 +15,16 @@ import java.util.Map;
 public class BCMusic extends Data {
 	private static final byte INVALID = 0, CANNON_CHARGE = 1, TOUCH = 2;
 	private static final short TOT = 191;
+	private static final short BCU_TOT = 1;
 	private static final byte[][] CACHE = new byte[TOT][];
+	private static final byte[][] BCU_CACHE = new byte[BCU_TOT][];
 	public final static Map<Identifier<Music>, byte[]> CACHE_CUSTOM = new LinkedHashMap<>();
 
 	public static boolean play = true;
 	public static Identifier<Music> music = null;
 	public static int VOL_BG = 20, VOL_SE = 20, VOL_UI = 20;
 	private static boolean[] secall = new boolean[TOT];
+	private static boolean[] bcu_secall = new boolean[BCU_TOT];
 
 	public static BCPlayer BG;
 	private static BCPlayer End;
@@ -214,6 +217,18 @@ public class BCMusic extends Data {
 					e.printStackTrace();
 				}
 		secall = new boolean[TOT];
+
+		for (int i = 0; i < BCU_TOT; i++)
+			if (bcu_secall[i] && allow)
+				try {
+					if (BCU_CACHE[i] == null)
+						loadSound(i, UserProfile.getBCUData().musics.get(i), false, 0);
+					else
+						loadSound(i, BCU_CACHE[i]);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		bcu_secall = new boolean[BCU_TOT];
 	}
 
 	public static synchronized void play(Identifier<Music> mus) {
@@ -255,6 +270,12 @@ public class BCMusic extends Data {
 		secall[ind] = true;
 	}
 
+	public static synchronized void setBCUSE(int ind) {
+		if (!play || VOL_SE == 0)
+			return;
+		bcu_secall[ind] = true;
+	}
+
 	public static synchronized void setSE(Identifier<Music> mus) {
 		if (!play || VOL_SE == 0)
 			return;
@@ -266,14 +287,17 @@ public class BCMusic extends Data {
 
 		try {
 			Music m = Identifier.get(mus);
-			if (m == null)
+			if (m == null) {
+				System.out.println("Sound does not exist");
 				return;
+			}
 			if (CACHE_CUSTOM.containsKey(mus)) {
 				loadSound(-1, CACHE_CUSTOM.get(mus));
 			} else {
 				Clip c = openFile(m);
 				if (c.getMicrosecondLength() < 10_000_000L)
 					CACHE_CUSTOM.put(mus, m.data.getBytes());
+				System.out.println("Attempting to load sound");
 				loadSound(-1, c); // TODO stop audio if battle is exited after
 			}
 		} catch (Exception e) {
