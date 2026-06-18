@@ -202,7 +202,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 		set(time, x, y, 1300, 200, 200, 50);
 		set(revt, x, y, 1300, 250, 200, 50);
 		set(shift, x, y, 1300, 400, 200, 50);
-		shift.setToolTipText("Shifts the selected parts by an amount of frames specified in the box to the right, to make walk cycles and such easier.\nYou must select parts on the left to use this feature.");
+		shift.setToolTipText("<html>Shifts the selected parts by an amount of frames specified in the box to the right, to make walk cycles and such easier.<br>You must select parts on the left to use this feature.");
 		set(tshift, x, y, 1550, 400, 200, 50);
 
 		set(lkip, x, y, 1500, 50, 200, 50);
