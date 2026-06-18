@@ -263,7 +263,6 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 			for (Part p : maet.getSelected()) {
 				for (int[] line : p.moves) {
 					line[0] += shiftamt;
-					System.out.println(line[0]);
 				}
 				// no clue what this is for but it stops this from working
 				// p.off += shiftamt;
