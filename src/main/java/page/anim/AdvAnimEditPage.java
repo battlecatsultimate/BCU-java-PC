@@ -55,7 +55,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 	private final JBTN revt = new JBTN(0, "revt");
 	private final JBTN conn = new JBTN(0, "newscale");
 	private final JBTN cono = new JBTN(0, "oldscale");
-	private final JBTN shift = new JBTN("Shift parts by frames");
+	private final JBTN shift = new JBTN(0, "Shift parts by frames");
 	private final JTF tshift = new JTF();
 	private final JL lkip = new JL();
 	private final JL inft = new JL();
