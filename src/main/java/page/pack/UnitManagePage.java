@@ -587,7 +587,7 @@ public class UnitManagePage extends Page {
 		} else {
 			edit.setToolTipText(null);
 		}
-		remf.setEnabled(b && frm.fid > 0);
+		remf.setEnabled(b && frm.fid > 0 && f.unit.findCombo(pac, f.fid).isEmpty());
 		jtff.setEnabled(b);
 		if (frm != null) {
 			jtff.setText(f.names.toString());
@@ -659,7 +659,7 @@ public class UnitManagePage extends Page {
 			changing = boo;
 		}
 		boolean b = uni != null && pac.editable;
-		boolean canRemove = uni != null;
+		boolean canRemove = uni != null && uni.findCombo(pac).isEmpty() && uni.findCharaGroup(pac).isEmpty();
 		remu.setEnabled(b && canRemove);
 		rar.setEnabled(b);
 		cbl.setEnabled(b);
