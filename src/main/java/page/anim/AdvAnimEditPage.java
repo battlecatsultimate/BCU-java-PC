@@ -55,6 +55,8 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 	private final JBTN revt = new JBTN(0, "revt");
 	private final JBTN conn = new JBTN(0, "newscale");
 	private final JBTN cono = new JBTN(0, "oldscale");
+	private final JBTN shift = new JBTN(0, "Shift parts by frames");
+	private final JTF tshift = new JTF();
 	private final JL lkip = new JL();
 	private final JL inft = new JL();
 	private final JL inff = new JL();
@@ -199,6 +201,9 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 		set(clea, x, y, 1300, 150, 200, 50);
 		set(time, x, y, 1300, 200, 200, 50);
 		set(revt, x, y, 1300, 250, 200, 50);
+		set(shift, x, y, 1300, 400, 200, 50);
+		shift.setToolTipText("<html>Shifts the selected parts by an amount of frames specified in the box to the right, to make walk cycles and such easier.<br>You must select parts on the left to use this feature.");
+		set(tshift, x, y, 1550, 400, 200, 50);
 
 		set(lkip, x, y, 1500, 50, 200, 50);
 		set(keep, x, y, 1500, 100, 200, 50);
@@ -247,6 +252,26 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 	}
 
 	private void addListeners$4() {
+
+		shift.setLnr(x -> {
+			if (changing)
+				return;
+			changing = true;
+			int shiftamt = CommonStatic.parseIntN("".equals(tshift.getText()) ? "0" : tshift.getText());
+			tshift.setText("");
+
+			for (Part p : maet.getSelected()) {
+				for (int[] line : p.moves) {
+					line[0] += shiftamt;
+				}
+				// no clue what this is for but it stops this from working
+				// p.off += shiftamt;
+				p.validate();
+			}
+			maet.ma.validate();
+			maet.anim.unSave("maanim shift parts");
+			changing = false;
+		});
 
 		tmul.setLnr(x -> {
 			if (changing)
@@ -665,6 +690,8 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 		add(revt);
 		add(conn);
 		add(cono);
+		add(shift);
+		add(tshift);
 		setA();
 
 		addListeners$0();
