@@ -46,7 +46,7 @@ public class BCJSON {
 					"If you have not previously downloaded all BC assets, please close BCU.<br>" +
 					"This text box will NOT close BCU.</html>", "POSSIBLY FATAL ERROR"); // TODO: Make this into a confirmation box instead.
 			e.printStackTrace();
-			CommonStatic.def.save(false, true);
+			//CommonStatic.def.save(false, false);
 		}
 
 		if (json != null) {
