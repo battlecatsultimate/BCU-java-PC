@@ -40,8 +40,8 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	private final JBTN back = new JBTN(MainLocale.PAGE, "back");
 	private final JBTN paus = new JBTN(MainLocale.PAGE, "pause");
 	private final JBTN next = new JBTN(MainLocale.PAGE, "nextf");
-	private final JBTN rply = new JBTN();
-	private final JBTN row = new JBTN();
+	private final JBTN rply = new JBTN(); // Replay
+	private final JBTN row = new JBTN(); // Two & One Row
 	private final EntityTable ut = new EntityTable(-1, false);
 	private final EntityTable ust = new EntityTable(-1, true);
 	private final ComingTable ct = new ComingTable(this);
