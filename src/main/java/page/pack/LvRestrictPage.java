@@ -58,7 +58,16 @@ public class LvRestrictPage extends Page {
 	public LvRestrictPage(Page p, UserPack pac, boolean b) {
 		this(p);
 		jlpk.setSelectedValue(pac, true);
-		jlpk.setEnabled(b);
+		if (!b) {
+			ArrayList<PackData> parentedPacks = new ArrayList<>();
+			for (int i = 0; i < jlpk.getModel().getSize(); i++) {
+				PackData pk = jlpk.getModel().getElementAt(i);
+				if (pk != pac && pk instanceof PackData.UserPack && !((UserPack) pac).desc.dependency.contains(((UserPack) pk).desc.id))
+					continue;
+
+				parentedPacks.add(pk);
+			}
+		}
 	}
 
 	@Override
