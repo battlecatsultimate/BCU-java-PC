@@ -59,15 +59,9 @@ public class MenuBarHandler {
 
         JMenuItem home = new JMenuItem("Main Menu");
         home.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0));
-        home.addActionListener(e -> {
-            if(MainFrame.getPanel().getBackButton() != null)  {
-                do {
-                    MainFrame.getPanel().getBackButton().doClick();
-                } while (MainFrame.getPanel().getBackButton() != null);
-            }
-            else {
-                home.setEnabled(true);
-            } //Genuinely Godawful solution, unfortunately I do not know how to code properly, please forgive me.
+        home.addActionListener(arg0 -> {
+            MainFrame.changePanel(new MainPage());
+
         });
 
         JCheckBoxMenuItem realvl = new JCheckBoxMenuItem("Real Leveling");
