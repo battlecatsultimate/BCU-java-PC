@@ -57,7 +57,8 @@ public class LvRestrictPage extends Page {
 
 	public LvRestrictPage(Page p, UserPack pac, boolean b) {
 		this(p);
-		jlpk.setSelectedValue(pac, true);
+		jlpk.setSelectedValue(pac, true); //No clue what  this line is actually doing, I assume it's meant to be grabbing dependencies, but it doesn't.
+		jlpk.setEnabled(true);
 	}
 
 	@Override
