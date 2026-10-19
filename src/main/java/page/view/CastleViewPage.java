@@ -115,7 +115,6 @@ public class CastleViewPage extends Page {
 	private void ini() {
 		add(back);
 		add(find);
-		//add(export);
 		add(jspsm);
 		add(jspst);
 		add(jl);
