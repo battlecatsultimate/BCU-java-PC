@@ -20,7 +20,6 @@ public class CastleViewPage extends Page {
 
 	private final JBTN back = new JBTN(0, "back");
 	private final JBTN find = new JBTN(0, "stage");
-	//private final JBTN export = new JBTN(0, "export");
 	private final JList<CastleList> jlsm = new JList<>();
 	private final JScrollPane jspsm = new JScrollPane(jlsm);
 	private final JList<CastleImg> jlst = new JList<>();
