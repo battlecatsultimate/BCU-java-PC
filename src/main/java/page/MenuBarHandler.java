@@ -61,7 +61,6 @@ public class MenuBarHandler {
         home.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0));
         home.addActionListener(arg0 -> {
             MainFrame.changePanel(new MainPage());
-
         });
 
         JCheckBoxMenuItem realvl = new JCheckBoxMenuItem("Real Leveling");
