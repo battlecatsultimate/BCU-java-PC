@@ -59,7 +59,7 @@ public class MenuBarHandler {
 
         JMenuItem home = new JMenuItem("Main Menu");
         home.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0));
-        home.addActionListener(arg0 -> {
+        home.addActionListener(e -> {
             MainFrame.changePanel(new MainPage());
         });
 
