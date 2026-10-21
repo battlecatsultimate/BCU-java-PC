@@ -134,7 +134,7 @@ public class MusicEditPage extends Page {
 			File source = ((Source.Workspace) pack.source).getMusFile(sele.id);
 			try {
 				if (!source.delete())
-					Opts.warnPop("Failed to delete music " + sele.id.id, "Delete Failed");
+					Opts.warnPop("Failed to delete music " + sele.id.id, "Delete Failed"); // TODO: Figure out what causes this to always fail.
 				else
 					readMusic();
 			} catch (Exception e) {
