@@ -43,8 +43,8 @@ public class BCJSON {
 			assets = UpdateCheck.checkAsset(json, "pc");
 		} catch (Exception e) {
 			Opts.pop("<html> Failure to check for BCU updates due to internet connection issues.<br>" +
-					"If you have not previously downloaded all BC assets, please close BCU.<br>" +
-					"This text box will NOT close BCU.</html>", "POSSIBLY FATAL ERROR"); // TODO: Make this into a confirmation box instead.
+					"If you know that there is a real BCU update, please close BCU and reopen it with internet.<br>" +
+					"This text box will NOT close BCU.</html>", "Offline Warning"); // TODO: Make this into a confirmation box instead.
 			e.printStackTrace();
 			//CommonStatic.def.save(false, false);
 		}
