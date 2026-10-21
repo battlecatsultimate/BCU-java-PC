@@ -32,7 +32,6 @@ public class CastleEditPage extends Page {
 	private final JL jl = new JL();
 	private final JL sp = new JL("Boss Spawn");
 	private final JTF spwn = new JTF();
-
 	private final JBTN addc = new JBTN(MainLocale.PAGE, "add");
 	private final JBTN remc = new JBTN(MainLocale.PAGE, "rem");
 	private final JBTN impc = new JBTN(MainLocale.PAGE, "import");
