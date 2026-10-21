@@ -159,8 +159,8 @@ class AtkEditTable extends Page {
 
 		fpre.setToolTipText(
 				"<html>use 0 for random attack attaching to previous one.<br>pre=0 for first attack will invalidate it</html>");
-		StringBuilder ttt = new StringBuilder("<html>enter ID of abilities separated by comma or space.<br>" + "it changes the ability state"
-				+ "(has to hot has, not has to has)<br>"
+		StringBuilder ttt = new StringBuilder("<html>Enter ID of abilities separated by comma or space.<br>" + "it changes the ability state"
+				+ "(has to not has, not has to has)<br>"
 				+ "it won't change back until you make another attack to change it<br>");
 
 		for (int i = 0; i < Interpret.SABIS.length; i++)
