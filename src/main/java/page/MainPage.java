@@ -262,7 +262,7 @@ public class MainPage extends Page {
 		long t = Runtime.getRuntime().totalMemory();
 		long m = Runtime.getRuntime().maxMemory();
 		double per = 100.0 * (t - f) / m;
-		memo.setText("memory used: " + (t - f >> 20) + " MB / " + (m >> 20) + " MB, " + (int) per + "%");
+		memo.setText("Heap memory used: " + (t - f >> 20) + " MB / " + (m >> 20) + " MB, " + (int) per + "%");
 	}
 
 	private void refrTips() {
