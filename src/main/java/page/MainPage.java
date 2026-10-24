@@ -52,7 +52,7 @@ public class MainPage extends Page {
 	private final JBTN save = new JBTN(0, "save");
 	private final JBTN allf = new JBTN(0, "allfile");
 	private final JBTN auth = new JBTN(0, "author");
-	private final JBTN comp = new JBTN(0, "compare");
+	private final JBTN comp = new JBTN(0, "Compare");
 	private final JBTN bckp = new JBTN(0, "backup");
 	private final JBTN logs = new JBTN(0, "logs");
 
