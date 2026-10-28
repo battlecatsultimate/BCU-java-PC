@@ -1,6 +1,7 @@
 package page;
 
 import common.CommonStatic;
+import io.BCMusic;
 import io.BCUWriter;
 import main.MainBCU;
 import main.Opts;
@@ -75,6 +76,18 @@ public class MenuBarHandler {
             ViewBox.Conf.white = whitebg.isSelected();
         });
 
+        JCheckBoxMenuItem hitboxes = new JCheckBoxMenuItem("Hitboxes");
+        hitboxes.setAccelerator(KeyStroke.getKeyStroke('H', shortcut));
+        hitboxes.addActionListener(e -> {
+            cfg().ref = hitboxes.isSelected();
+        });
+
+        JCheckBoxMenuItem music = new JCheckBoxMenuItem("Music & SFX");
+        music.setAccelerator(KeyStroke.getKeyStroke('M', shortcut));
+        music.addActionListener(e -> {
+            BCMusic.play = music.isSelected();
+        });
+
         JCheckBoxMenuItem fps = new JCheckBoxMenuItem("60fps");
         fps.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_NUM_LOCK, 0));
         fps.addActionListener(e -> {
@@ -88,6 +101,8 @@ public class MenuBarHandler {
         fps.setEnabled(true);
         realvl.setEnabled(true);
         whitebg.setEnabled(true);
+        hitboxes.setEnabled(true);
+        music.setEnabled(true);
 
         menu.add(save);
         history.add(back);
@@ -95,6 +110,8 @@ public class MenuBarHandler {
         settings.add(fps);
         settings.add(realvl);
         settings.add(whitebg);
+        settings.add(hitboxes);
+        settings.add(music);
 
         fileItems.add(save);
         fileItems.add(back);
@@ -102,6 +119,8 @@ public class MenuBarHandler {
         fileItems.add(fps);
         fileItems.add(realvl);
         fileItems.add(whitebg);
+        fileItems.add(hitboxes);
+        fileItems.add(music);
     }
 
     public static JMenuItem getFileItem(String n) {

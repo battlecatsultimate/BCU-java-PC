@@ -34,7 +34,7 @@ public class ConfigPage extends Page {
 	private final JBTN rlpk = new JBTN(MainLocale.PAGE, "rlpks");
 	private final JCB prel = new JCB(MainLocale.PAGE, "preload");
 	private final JCB whit = new JCB(MainLocale.PAGE, "white");
-	private final JCB refe = new JCB(MainLocale.PAGE, "axis");
+	private final JCB refe = new JCB(MainLocale.PAGE, "axis"); //Hitbox Toggle
 	private final JCB jogl = new JCB(MainLocale.PAGE, "JOGL");
 	private final JTG exla = new JTG(MainLocale.PAGE, "exlang");
 	private final JTG extt = new JTG(MainLocale.PAGE, "extip");

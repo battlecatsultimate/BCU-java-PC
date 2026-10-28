@@ -323,7 +323,7 @@ public class PackEditPage extends Page {
 
 		extr.setLnr(x -> {
 			if (pac.editable) {
-				Object[] result = Opts.showTextCheck("Password", "Decide the password of pack : ", pac.desc.allowAnim);
+				Object[] result = Opts.showTextCheck("Password", "Decide the password of pack: ", pac.desc.allowAnim);
 
 				if (result == null)
 					return;
@@ -339,7 +339,7 @@ public class PackEditPage extends Page {
 		});
 
 		unpk.setLnr(x -> {
-			String pass = Opts.read("Enter the password : ");
+			String pass = Opts.read("Enter the password: ");
 
 			if(pass == null)
 				return;

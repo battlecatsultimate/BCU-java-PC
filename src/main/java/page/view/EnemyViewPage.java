@@ -123,7 +123,7 @@ public class EnemyViewPage extends AbViewPage {
 								if (((PackData.UserPack) pack).editable || ((PackData.UserPack) pack).desc.allowAnim)
 									copyAnim();
 								else {
-									String pass = Opts.read("Enter the password : ");
+									String pass = Opts.read("Enter the password: ");
 
 									if (pass == null)
 										return;

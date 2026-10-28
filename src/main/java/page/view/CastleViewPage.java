@@ -72,7 +72,6 @@ public class CastleViewPage extends Page {
 		set(jspsm, x, y, 50, 100, 300, 1100);
 		set(jspst, x, y, 400, 550, 300, 650);
 		set(jl, x, y, 800, 50, 1000, 1000);
-
 		set(find, x, y, 450, 300, 200, 50);
 		set(jbs, x, y, 400, 500, 200, 50);
 		set(bs, x, y, 600, 500, 100, 50);
