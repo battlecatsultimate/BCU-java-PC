@@ -33,4 +33,3 @@ Class-Path: ./BCU_lib/annotations-13.0.jar ./BCU_lib/antlr-2.7.7.jar ./B
  with-guava.jar ./BCU_lib/opencensus-api-0.31.1.jar ./BCU_lib/opencensus
  -contrib-http-util-0.31.1.jar ./BCU_lib/tritonus-share-0.3.7.4.jar ./BC
  U_lib/vorbisspi-1.0.3.3.jar
-
