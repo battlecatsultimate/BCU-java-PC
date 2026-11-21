@@ -136,7 +136,7 @@ public class Interpret extends Data {
             Data.P_COUNTER, Data.P_IMUATK, Data.P_DMGCUT, Data.P_DMGCAP, Data.P_IMUKB, Data.P_IMUSTOP, Data.P_IMUSLOW, Data.P_IMUWAVE,
             Data.P_IMUWEAK, Data.P_IMUWARP, Data.P_IMUCURSE, Data.P_IMUSEAL, Data.P_IMUMOVING, Data.P_IMUARMOR, Data.P_IMUPOI, Data.P_IMUPOIATK,
             Data.P_IMUVOLC, Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_DEATHSURGE, Data.P_SPIRIT, Data.P_BLAST, Data.P_IMUBLAST,
-            Data.P_DELAY, Data.P_IMUDELAY, Data.P_LETHARGY };
+            Data.P_DELAY, Data.P_IMUDELAY, Data.P_LETHARGY, Data.P_CDDEC };
 
     private static final DecimalFormat df;
     public static String[] lvl = new String[] { "Sm", "M", "L", "XL", "XXL", "EX" };
@@ -1032,6 +1032,7 @@ public class Interpret extends Data {
         ans.append("<br>Cooldown multipliers: ").append(Arrays.toString(lim.cooldownMultiplier));
         ans.append("<br>Cost multipliers: ").append(Arrays.toString(lim.costMultiplier));
         ans.append("<br>Rarity Limits: ").append(Arrays.toString(lim.rarityDeployLimit));
+        ans.append("<br>Lineup Rarity Limits: ").append(Arrays.toString(lim.rarityLineupLimit));
         ans.append("<br>Enemy speed: ");
         if (lim.enemySpeedOverride > -1) {
             ans.append(lim.enemySpeedOverrideMode.getPre()).append(lim.enemySpeedOverride).append(lim.enemySpeedOverrideMode.getPost());

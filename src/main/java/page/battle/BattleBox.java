@@ -1064,6 +1064,9 @@ public interface BattleBox {
 
 			if (bf.sb.maxCatSpawns != -1)
 				drawMaxSpawn(g);
+
+			Res.drawFeverHud(g, sb.fever, w, box.getHeight(), sb.time);
+			Res.drawFeverEffect(g, sb.fever, w, box.getHeight());
 		}
 
 		private void drawTime(FakeGraphics g, float nameheight) {

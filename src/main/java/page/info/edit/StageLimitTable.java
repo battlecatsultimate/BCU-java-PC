@@ -37,6 +37,7 @@ public class StageLimitTable extends Page {
     private final JL racool = new JL(MainLocale.INFO, "cdo");
     private final JL ralimi = new JL(MainLocale.INFO, "ht11");
     private final JL radupe = new JL(MainLocale.INFO, "ht27");
+    private final JL ralup = new JL(MainLocale.INFO, "ht29");
     private final JTF jmon = new JTF();
     private final JTF jmac = new JTF();
     private final JTF jcan = new JTF();
@@ -48,6 +49,7 @@ public class StageLimitTable extends Page {
     private final JTF[] jcost = new JTF[rarityTxt.length];
     private final JTF[] jlimi = new JTF[rarityTxt.length];
     private final JTF[] jdupe = new JTF[rarityTxt.length];
+    private final JTF[] jlup = new JTF[rarityTxt.length];
     private final JTG cdst = new JTG(MainLocale.INFO, "ht22");
 
     private final CrossList<String> jlco = new CrossList<>(Interpret.getComboFilter(0));
@@ -92,12 +94,14 @@ public class StageLimitTable extends Page {
         set(racool, x, y, 0, 250, w, 50);
         set(ralimi, x, y, 0, 350, w, 50);
         set(radupe, x, y, 0, 450, w, 50);
+        set(ralup, x, y, 0, 600, w, 50);
         for (int i = 0; i < rarityTxt.length; i++) {
             int wid = w * ((i % r) + 1);
             set(jcost[i], x, y, wid, 50 * ((i / r) + 3), w, 50);
             set(jcool[i], x, y, wid, 50 * ((i / r) + 5), w, 50);
             set(jlimi[i], x, y, wid, 50 * ((i / r) + 7), w, 50);
             set(jdupe[i], x, y, wid, 50 * ((i / r) + 9), w, 50);
+            set(jlup[i], x, y, wid, 50 * ((i / r) + 12), w, 50);
         }
 
         set(cano, x, y, 0, 550, w, 50);
@@ -138,6 +142,7 @@ public class StageLimitTable extends Page {
         add(racost);
         add(ralimi);
         add(radupe);
+        add(ralup);
         add(cdst);
 
         for (int i = 0; i < rarityTxt.length; i++) {
@@ -145,6 +150,7 @@ public class StageLimitTable extends Page {
             reg(jcost[i] = new JTF());
             reg(jlimi[i] = new JTF());
             reg(jdupe[i] = new JTF());
+            reg(jlup[i] = new JTF());
         }
 
         jlco.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -174,6 +180,7 @@ public class StageLimitTable extends Page {
             jcost[i].setText(r + stli.costMultiplier[i] + "%");
             jcool[i].setText(r + stli.cooldownMultiplier[i] + "%");
             jlimi[i].setText(r + (stli.rarityDeployLimit[i] == -1 ? "--" : stli.rarityDeployLimit[i]));
+            jlup[i].setText(r + (stli.rarityLineupLimit[i] == -1 ? "--" : stli.rarityLineupLimit[i]));
             jdupe[i].setText(r + (stli.deployDuplicationTimes[i] == 0 ? "--" : stli.deployDuplicationTimes[i] + ", " + stli.deployDuplicationDelay[i] + "f"));
         }
         jmon.setText(stli.maxMoney == 0 ? "--" : stli.maxMoney + "");
@@ -204,6 +211,7 @@ public class StageLimitTable extends Page {
             jcool[i].setEnabled(b);
             jlimi[i].setEnabled(b);
             jdupe[i].setEnabled(b);
+            jlup[i].setEnabled(b);
         }
 
         jmon.setEnabled(b);
@@ -268,6 +276,9 @@ public class StageLimitTable extends Page {
                     break;
                 } else if (jlimi[i] == jtf) {
                     stli.rarityDeployLimit[i] = Math.max(CommonStatic.parseIntN(text), -1);
+                } else if (jlup[i] == jtf) {
+                    stli.rarityLineupLimit[i] = Math.max(CommonStatic.parseIntN(text), -1);
+                    break;
                 } else if (jdupe[i] == jtf) {
                     int[] nums = CommonStatic.parseIntsN(text);
                     if (nums.length == 0) {
