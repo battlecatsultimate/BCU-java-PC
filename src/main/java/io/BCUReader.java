@@ -93,6 +93,18 @@ public class BCUReader extends DataIO {
 				BattleInfoPage.DEF_LARGE = jo.get("large_screen").getAsBoolean();
 				MainBCU.nimbus = jo.get("style_nimbus").getAsBoolean();
 				MainBCU.light = !MainBCU.nimbus || jo.get("style_light").getAsBoolean();
+				if(jo.has("custom_bg")) {
+					MainBCU.customBG = jo.get("custom_bg").getAsBoolean();
+				}
+				if(jo.has("borderless")) {
+					MainBCU.borderless = jo.get("borderless").getAsBoolean();
+				}
+				if(jo.has("highlight_text")) {
+					MainBCU.highlightText = jo.get("highlight_text").getAsBoolean();
+				}
+				if(jo.has("outline_text")) {
+					MainBCU.outlineText = jo.get("outline_text").getAsBoolean();
+				}
 				if(jo.has("author")) {
 					MainBCU.author = jo.get("author").getAsString();
 				}

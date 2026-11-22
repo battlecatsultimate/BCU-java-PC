@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
+import utilpc.OutlineText;
 
 public class AdvAnimEditPage extends Page implements TreeCont {
 
@@ -743,6 +744,7 @@ public class AdvAnimEditPage extends Page implements TreeCont {
 
 			jtl.setLabelTable(labels);
 		}
+		OutlineText.outlineLabels(jtl);
 	}
 
 	private void setC(int ind) {

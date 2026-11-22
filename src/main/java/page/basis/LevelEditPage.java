@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static common.util.Data.ORB_TOT;
+import utilpc.OutlineText;
 
 public class LevelEditPage extends Page {
 
@@ -40,7 +41,7 @@ public class LevelEditPage extends Page {
 	private final StageLimit sl;
 
 	private final JBTN bck = new JBTN(0, "back");
-	private final JLabel pcoin = new JLabel();
+	private final JLabel pcoin = new OutlineText.Label("");
 	private final JTF levels = new JTF();
 	private final JList<String> orbList = new JList<>();
 	private final JScrollPane orbScroll = new JScrollPane(orbList);

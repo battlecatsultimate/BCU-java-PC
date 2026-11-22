@@ -1,9 +1,12 @@
 package page;
 
 import common.system.P;
+import main.MainBCU;
 import main.Opts;
 import main.Printer;
+import utilpc.BGImage;
 import utilpc.PP;
+import utilpc.Theme;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
@@ -12,7 +15,9 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainFrame extends JFrame {
 
@@ -38,6 +43,65 @@ public class MainFrame extends JFrame {
 		if(back != null && p != null) {
 			back.setEnabled(p.getBackButton() != null);
 		}
+	}
+
+	/** Switches between the light and dark Nimbus theme from any screen
+	 * this is currently unnused since this stuff was way too buggy, may revisit later
+	 */
+	public static void setLightTheme(boolean light) {
+		if (!MainBCU.nimbus)
+			return;
+
+		MainBCU.light = light;
+
+		if (light) {
+			Theme.LIGHT.setTheme();
+			Page.BGCOLOR = new Color(255, 255, 255);
+		} else {
+			Theme.DARK.setTheme();
+			Page.BGCOLOR = new Color(40, 40, 40);
+		}
+		if (F != null) {
+			if (mainPanel != null)
+				mainPanel.setBackground(Page.BGCOLOR);
+
+			// a poor attempt to fix font size issues
+			Map<Component, Font> menuFonts = new HashMap<>();
+			if (F.getJMenuBar() != null)
+				collectMenuFonts(F.getJMenuBar(), menuFonts);
+			SwingUtilities.updateComponentTreeUI(F);
+			for (Map.Entry<Component, Font> e : menuFonts.entrySet())
+				e.getKey().setFont(e.getValue());
+
+			if (mainPanel != null)
+				mainPanel.themeChanged();
+		}
+	}
+
+	private static void collectMenuFonts(MenuElement element, Map<Component, Font> fonts) {
+		Component c = element.getComponent();
+
+		if (c != null)
+			fonts.put(c, c.getFont());
+
+		for (MenuElement sub : element.getSubElements())
+			collectMenuFonts(sub, fonts);
+	}
+	// turns the custom menu Background on or off from any screen
+	public static void setCustomBG(boolean enabled) {
+		MainBCU.customBG = enabled;
+		BGImage.reset();
+
+		if (F != null)
+			F.repaint();
+	}
+
+	// switches between the normal window and a borderless window covering the screen
+	public static void setBorderless(boolean borderless) {
+		MainBCU.borderless = borderless;
+
+		if (F != null)
+			F.FsetBorderless(borderless);
 	}
 
 	public static void exitAll() {
@@ -77,6 +141,9 @@ public class MainFrame extends JFrame {
 
 	private boolean settingsize = false, changingPanel = false;
 
+	// where the window was before it became borderless
+	private Rectangle windowedBounds = null;
+
 	public MainFrame(String ver) {
 		super(Page.get(MainLocale.PAGE, "title") + " Ver " + ver);
 		//setIcon();
@@ -101,7 +168,44 @@ public class MainFrame extends JFrame {
 		Fresized();
 	}
 
+	private static Rectangle screenBounds(Rectangle r) {
+		Point c = new Point(r.x + r.width / 2, r.y + r.height / 2);
+
+		for (GraphicsDevice d : GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) {
+			Rectangle b = d.getDefaultConfiguration().getBounds();
+
+			if (b.contains(c))
+				return b;
+		}
+		return new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
+	}
+
+	private void FsetBorderless(boolean borderless) {
+		if (isUndecorated() == borderless)
+			return;
+
+		Rectangle target;
+
+		if (borderless) {
+			windowedBounds = getBounds();
+			target = screenBounds(windowedBounds);
+		} else
+			target = windowedBounds != null ? windowedBounds : crect;
+
+		dispose();
+		setUndecorated(borderless);
+
+		if (target != null)
+			setBounds(target);
+
+		setVisible(true);
+		Fresized();
+	}
+
 	public void sizer() {
+		if (MainBCU.borderless)
+			setUndecorated(true);
+
 		if (crect == null) {
 			PP screen = new PP(Toolkit.getDefaultToolkit().getScreenSize());
 			rect = new PP(0, 0).toRectangle(new P(screen.x, screen.y));
@@ -115,7 +219,7 @@ public class MainFrame extends JFrame {
 				y = ny;
 			}
 		} else {
-			rect = crect;
+			rect = MainBCU.borderless ? screenBounds(crect) : crect;
 			setBounds(rect);
 			setVisible(true);
 		}
@@ -236,6 +340,8 @@ public class MainFrame extends JFrame {
 	}
 
 	private void setCrect() {
+		if (isUndecorated())
+			return;
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 		Rectangle r = getBounds();
 		if ((r.x + r.width) >= 0 && r.y >= 0 && r.x < d.width && (r.y - r.height) < d.height)

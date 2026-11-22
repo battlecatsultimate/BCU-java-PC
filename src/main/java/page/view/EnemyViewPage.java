@@ -20,6 +20,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import utilpc.OutlineText;
 
 public class EnemyViewPage extends AbViewPage {
 
@@ -28,7 +29,7 @@ public class EnemyViewPage extends AbViewPage {
 	private final JList<Enemy> jlu = new JList<>();
 	private final JScrollPane jspu = new JScrollPane(jlu);
 	private final JBTN stat = new JBTN(0, "stat");
-	private final JLabel source = new JLabel("Source of enemy icon: DB");
+	private final JLabel source = new OutlineText.Label("Source of enemy icon: DB");
 
 	public EnemyViewPage(Page p, Enemy e) {
 		this(p, e.getID().pack);

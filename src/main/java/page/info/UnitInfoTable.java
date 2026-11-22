@@ -250,7 +250,7 @@ public class UnitInfoTable extends Page {
 	private void ini(List<Interpret.ProcDisplay> ls) {
 		for (int i = 0; i < ls.size(); i++) {
 			Interpret.ProcDisplay display = ls.get(i);
-			add(proc[i] = new JLabel(display.toString()));
+			add(proc[i] = Interpret.newLabel(display.toString()));
 			proc[i].setBorder(BorderFactory.createEtchedBorder());
 			proc[i].setIcon(UtilPC.getScaledIcon(display.getIcon(), 40, 40));
 			Data.Proc.ProcItem item = display.getProc();

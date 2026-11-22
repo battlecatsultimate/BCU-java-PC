@@ -37,6 +37,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import utilpc.OutlineText;
 
 public class ImgCutEditPage extends Page implements AbEditPage {
 
@@ -61,8 +62,8 @@ public class ImgCutEditPage extends Page implements AbEditPage {
 	private final JBTN merg = new JBTN(0, "merge");
 	private final JBTN spri = new JBTN(0, "sprite");
 	private final JBTN white = new JBTN(0, "whiteBG");
-	private final JLabel icon = new JLabel();
-	private final JLabel uni = new JLabel();
+	private final JLabel icon = new OutlineText.Label("");
+	private final JLabel uni = new OutlineText.Label("");
 	private final JTree jta = new JTree();
 	private final AnimGroupTree agt;
 	private final JScrollPane jspu = new JScrollPane(jta);

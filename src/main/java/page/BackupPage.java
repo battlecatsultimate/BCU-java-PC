@@ -34,6 +34,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Queue;
+import utilpc.OutlineText;
 
 public class BackupPage extends Page {
 
@@ -47,8 +48,8 @@ public class BackupPage extends Page {
     private final JBTN sntr = new JBTN(0, "enter");
     private final JBTN rept = new JBTN(0, "restore partial");
     private final JBTN expt = new JBTN(0, "export");
-    private final JLabel jln = new JLabel();
-    private final JLabel jli = new JLabel();
+    private final JLabel jln = new OutlineText.Label("");
+    private final JLabel jli = new OutlineText.Label("");
     private final JList<Backup> jlm = new JList<>();
     private final JTree jls = new JTree();
     private final JTree jlf = new JTree();

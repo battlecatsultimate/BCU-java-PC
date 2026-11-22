@@ -21,6 +21,7 @@ import common.util.stage.info.StageInfo;
 import common.util.unit.*;
 import io.BCJSON;
 import main.MainBCU;
+import page.JL;
 import page.MainLocale;
 import page.Page;
 
@@ -975,20 +976,28 @@ public class Interpret extends Data {
         return Double.parseDouble(df.format(number));
     }
 
+    // A label with the usual etched border, whose text can be outlined (see OutlineText), instead of a plain JLabel
+    public static JL newLabel(String text) {
+        JL label = new JL();
+
+        label.setText(text);
+
+        return label;
+    }
+
+
     public static void setUnderline(JLabel label) {
         label.addMouseListener(new MouseAdapter() {
-            String text;
-
             @Override
             public void mouseClicked(MouseEvent e) {
                 JLabel j = (JLabel) e.getComponent();
-
-                if (text == null || !j.getText().equals("<html><u>" + text + "</u></html>")) {
-                    text = j.getText();
-                    j.setText("<html><u>" + j.getText() + "</u></html>");
-                } else {
-                    j.setText(text);
-                }
+                Font f = j.getFont();
+                Map<java.awt.font.TextAttribute, Object> attrs = new HashMap<>(f.getAttributes());
+                if (java.awt.font.TextAttribute.UNDERLINE_ON.equals(attrs.get(java.awt.font.TextAttribute.UNDERLINE)))
+                    attrs.put(java.awt.font.TextAttribute.UNDERLINE, -1);
+                else
+                    attrs.put(java.awt.font.TextAttribute.UNDERLINE, java.awt.font.TextAttribute.UNDERLINE_ON);
+                j.setFont(f.deriveFont(attrs));
             }
         });
 

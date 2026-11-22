@@ -17,6 +17,7 @@ import java.util.Vector;
 
 import java.util.HashMap;
 import java.util.Map;
+import utilpc.OutlineText;
 
 public class BGViewPage extends Page implements SupPage<Background> {
 
@@ -26,7 +27,7 @@ public class BGViewPage extends Page implements SupPage<Background> {
 	private final JBTN find = new JBTN(0, "stage");
 	private final JList<Background> jlst = new JList<>();
 	private final JScrollPane jspst = new JScrollPane(jlst);
-	private final JLabel jl = new JLabel();
+	private final JLabel jl = new OutlineText.Label("");
 	private final Map<Background, ImageIcon> thumbnailCache = new HashMap<>();
 
 	public BGViewPage(Page p) {

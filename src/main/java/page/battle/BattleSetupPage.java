@@ -21,6 +21,7 @@ import page.info.StageTable;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.Vector;
+import utilpc.OutlineText;
 
 public class BattleSetupPage extends LubCont {
 
@@ -35,7 +36,7 @@ public class BattleSetupPage extends LubCont {
 	private final JComboBox<String> lvlim = new JComboBox<>();
 	private final JList<String> jls = new JList<>();
 	private final JScrollPane jsps = new JScrollPane(jls);
-	private final JLabel jl = new JLabel();
+	private final JLabel jl = new OutlineText.Label("");
 	private final JBTN jlu = new JBTN(0, "line");
 	private final JBTN jpre = new JBTN(0, "usepreset");
 	private final LineUpBox lub = new LineUpBox(this);

@@ -22,15 +22,16 @@ import page.pack.ResourcePage;
 import page.view.*;
 
 import javax.swing.*;
+import utilpc.OutlineText;
 
 public class MainPage extends Page {
 
 	private static final long serialVersionUID = 1L;
 
-	private final JLabel memo = new JLabel();
-	private final JLabel seicon = new JLabel("Source of enemy icon: battlecats-db.com");
-	private final JLabel sgifau = new JLabel("Author of GIF exporter: Kevin Weiner, FM Software");
-	private final JLabel welcome = new JLabel("Welcome " + MainBCU.author + "!");
+	private final JLabel memo = new OutlineText.Label("");
+	private final JLabel seicon = new OutlineText.Label("Source of enemy icon: battlecats-db.com");
+	private final JLabel sgifau = new OutlineText.Label("Author of GIF exporter: Kevin Weiner, FM Software");
+	private final JLabel welcome = new OutlineText.Label("Welcome " + MainBCU.author + "!");
 	private final JBTN vuni = new JBTN(0, "vuni");
 	private final JBTN vene = new JBTN(0, "vene");
 	private final JBTN vsta = new JBTN(0, "vsta");
@@ -71,9 +72,15 @@ public class MainPage extends Page {
 	}
 
 	@Override
+	protected void themeChanged() {
+		tips.setBackground(BGCOLOR);
+	}
+
+	@Override
 	protected void renew() {
 		Runtime.getRuntime().gc();
 		curr.setEnabled(BattleInfoPage.current != null);
+		tips.setBackground(BGCOLOR);
 		refrTips();
 		setMemo();
 	}
@@ -248,6 +255,9 @@ public class MainPage extends Page {
 		add(refr);
 		add(tips);
 		tips.setBorder(BorderFactory.createEtchedBorder());
+		// html text can't be outlined, so it gets a background to stay readable on a custom one
+		tips.setOpaque(true);
+		tips.setBackground(BGCOLOR);
 		tips.setHorizontalAlignment(SwingConstants.CENTER);
 
 		welcome.setVisible(!MainBCU.author.isEmpty());

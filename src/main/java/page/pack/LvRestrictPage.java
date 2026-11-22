@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import static utilpc.Interpret.RARITY;
+import utilpc.OutlineText;
 
 public class LvRestrictPage extends Page {
 
@@ -32,8 +33,8 @@ public class LvRestrictPage extends Page {
 	private final JScrollPane jspcg = new JScrollPane(jlcg);
 	private final JScrollPane jspus = new JScrollPane(jlus);
 
-	private final JLabel lsb = new JLabel();
-	private final JLabel lal = new JLabel();
+	private final JLabel lsb = new OutlineText.Label("");
+	private final JLabel lal = new OutlineText.Label("");
 	private final JLabel[] lra = new JLabel[Data.RARITY_TOT];
 
 	private boolean changing = false;
@@ -129,7 +130,7 @@ public class LvRestrictPage extends Page {
 		lsb.setBorder(BorderFactory.createEtchedBorder());
 		lal.setBorder(BorderFactory.createEtchedBorder());
 		for (int i = 0; i < lra.length; i++) {
-			add(lra[i] = new JLabel());
+			add(lra[i] = new OutlineText.Label(""));
 			lra[i].setBorder(BorderFactory.createEtchedBorder());
 		}
 		jlus.setCellRenderer(new UnitLCR());

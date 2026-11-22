@@ -7,6 +7,7 @@ import page.Page;
 import page.view.EnemyViewPage;
 
 import javax.swing.*;
+import utilpc.OutlineText;
 
 public class EnemyInfoPage extends Page {
 
@@ -18,7 +19,7 @@ public class EnemyInfoPage extends Page {
 	private final JBTN next = new JBTN(0, "next");
 	private final JBTN find = new JBTN(0, "stage");
 	private final JTG extr = new JTG(0, "extra");
-	private final JLabel source = new JLabel("Source of enemy icon: DB");
+	private final JLabel source = new OutlineText.Label("Source of enemy icon: DB");
 	private final JPanel cont = new JPanel();
 	private final JScrollPane jsp = new JScrollPane(cont);
 	private final EnemyInfoTable info;

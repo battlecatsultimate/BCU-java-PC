@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
+import utilpc.OutlineText;
 
 public class PackEditPage extends Page {
 
@@ -106,10 +107,10 @@ public class PackEditPage extends Page {
 	private final JL lbs = new JL(0, "stage");
 	private final JL lbr = new JL(0, "parent");
 	private final JL lbt = new JL(0, "selepar");
-	private final JLabel pid = new JLabel();
-	private final JLabel pauth = new JLabel();
-	private final JLabel pcore = new JLabel();
-	private final JLabel animall = new JLabel();
+	private final JLabel pid = new OutlineText.Label("");
+	private final JLabel pauth = new OutlineText.Label("");
+	private final JLabel pcore = new OutlineText.Label("");
+	private final JLabel animall = new OutlineText.Label("");
 
 	private UserPack pac;
 	private Enemy ene;

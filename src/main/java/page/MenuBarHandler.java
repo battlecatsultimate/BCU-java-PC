@@ -5,8 +5,11 @@ import main.MainBCU;
 import main.Opts;
 
 import javax.swing.*;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +24,7 @@ public class MenuBarHandler {
 
     public static void initialize() {
         setFileItems();
+        setViewItems();
         MainFrame.F.setJMenuBar(bar);
     }
 
@@ -51,11 +55,53 @@ public class MenuBarHandler {
         save.setEnabled(false);
         back.setEnabled(false);
 
+        JMenuItem exit = new JMenuItem("Exit");
+        exit.addActionListener(e -> MainFrame.F.dispatchEvent(new WindowEvent(MainFrame.F, WindowEvent.WINDOW_CLOSING)));
+
         menu.add(save);
+        menu.add(exit);
         history.add(back);
 
         fileItems.add(save);
         fileItems.add(back);
+    }
+
+    private static void setViewItems() {
+        JMenu view = new JMenu("View");
+        JCheckBoxMenuItem light = new JCheckBoxMenuItem("Light theme");
+        JCheckBoxMenuItem background = new JCheckBoxMenuItem("Custom background");
+        JCheckBoxMenuItem borderless = new JCheckBoxMenuItem("Borderless window");
+        light.addActionListener(e -> MainFrame.setLightTheme(light.isSelected()));
+        background.addActionListener(e -> MainFrame.setCustomBG(background.isSelected()));
+        borderless.addActionListener(e -> MainFrame.setBorderless(borderless.isSelected()));
+        // the states can change in the config page too, so they are read when the menu opens
+        view.addMenuListener(new MenuListener() {
+            @Override
+            public void menuSelected(MenuEvent e) {
+                light.setSelected(MainBCU.light);
+                background.setSelected(MainBCU.customBG);
+                borderless.setSelected(MainBCU.borderless);
+
+                // both only apply to the Nimbus theme
+                light.setEnabled(MainBCU.nimbus);
+                background.setEnabled(MainBCU.nimbus);
+            }
+            @Override
+            public void menuDeselected(MenuEvent e) {
+            }
+            @Override
+            public void menuCanceled(MenuEvent e) {
+            }
+        });
+        /**
+         * dark/light theme toggle is technically functional,
+         * but theres lots of side effects that aren't handled correctly when toggling inside of pages
+         * so the button is simply commented out for now
+         */
+        // view.add(light);
+        view.add(background);
+        view.add(borderless);
+        bar.add(view);
     }
 
     public static JMenuItem getFileItem(String n) {

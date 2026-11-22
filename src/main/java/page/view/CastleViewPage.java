@@ -17,6 +17,7 @@ import java.util.Vector;
 import java.awt.Image;
 import java.util.HashMap;
 import java.util.Map;
+import utilpc.OutlineText;
 
 public class CastleViewPage extends Page {
 
@@ -28,7 +29,7 @@ public class CastleViewPage extends Page {
 	private final JScrollPane jspsm = new JScrollPane(jlsm);
 	private final JList<CastleImg> jlst = new JList<>();
 	private final JScrollPane jspst = new JScrollPane(jlst);
-	private final JLabel jl = new JLabel();
+	private final JLabel jl = new OutlineText.Label("");
 	private final JL jbs = new JL(MainLocale.PAGE, "bspwn");
 	private final JL bs = new JL();
 	private final Map<CastleImg, ImageIcon> thumbnailCache = new HashMap<>();

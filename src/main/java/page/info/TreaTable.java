@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static utilpc.Interpret.*;
+import utilpc.OutlineText;
 
 public class TreaTable extends Page {
 
@@ -151,7 +152,7 @@ public class TreaTable extends Page {
 
 			int ind = TIND[i];
 			int I = i;
-			jln[i] = new JLabel(TREA[ind]);
+			jln[i] = new OutlineText.Label(TREA[ind]);
 			jtf[i] = new JTF(tos(getValue(ind, BasisSet.current().t()), i));
 			Node<Integer> temp = new Node<>(i + 1);
 			if (nc == null)

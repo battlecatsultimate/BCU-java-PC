@@ -23,6 +23,7 @@ import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import utilpc.OutlineText;
 
 public class BattleInfoPage extends KeyHandler implements OuterBox {
 
@@ -56,13 +57,13 @@ public class BattleInfoPage extends KeyHandler implements OuterBox {
 	private final JScrollPane utdsp;
 	private final JTG ustat = new JTG(MainLocale.INFO, "stat");
 	private final JTG estat = new JTG(MainLocale.INFO, "stat");
-	private final JLabel ebase = new JLabel();
-	private final JLabel ubase = new JLabel();
-	private final JLabel timer = new JLabel();
-	private final JLabel ecount = new JLabel();
-	private final JLabel ucount = new JLabel();
-	private final JLabel stream = new JLabel();
-	private final JLabel respawn = new JLabel();
+	private final JLabel ebase = new OutlineText.Label("");
+	private final JLabel ubase = new OutlineText.Label("");
+	private final JLabel timer = new OutlineText.Label("");
+	private final JLabel ecount = new OutlineText.Label("");
+	private final JLabel ucount = new OutlineText.Label("");
+	private final JLabel stream = new OutlineText.Label("");
+	private final JLabel respawn = new OutlineText.Label("");
 	private final JTG jtb = new JTG(MainLocale.PAGE, "larges");
 	private final JSlider jsl = new JSlider();
 	private final BattleBox bb;

@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 
 import java.util.HashMap;
 import java.util.Map;
+import utilpc.OutlineText;
 
 @SuppressWarnings({"ResultOfMethodCallIgnored", "ForLoopReplaceableByForEach"})
 public class BGEditPage extends Page {
@@ -37,7 +38,7 @@ public class BGEditPage extends Page {
 	private final JBTN back = new JBTN(0, "back");
 	private final JList<Background> jlst = new JList<>();
 	private final JScrollPane jspst = new JScrollPane(jlst);
-	private final JLabel jl = new JLabel();
+	private final JLabel jl = new OutlineText.Label("");
 
 	private final JBTN addc = new JBTN(0, "add");
 	private final JBTN remc = new JBTN(0, "rem");

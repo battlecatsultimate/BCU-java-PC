@@ -179,6 +179,8 @@ public interface BattleBox {
 				drawBGOverlay(g, midY);
 			}
 
+			Res.drawFeverEffect(g, sb.fever, box.getWidth(), box.getHeight());
+
 			drawBtm(g);
 			drawTop(g);
 		}
@@ -1066,7 +1068,6 @@ public interface BattleBox {
 				drawMaxSpawn(g);
 
 			Res.drawFeverHud(g, sb.fever, w, box.getHeight(), sb.time);
-			Res.drawFeverEffect(g, sb.fever, w, box.getHeight());
 		}
 
 		private void drawTime(FakeGraphics g, float nameheight) {
