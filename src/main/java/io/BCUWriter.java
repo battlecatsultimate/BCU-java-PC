@@ -292,6 +292,8 @@ public class BCUWriter extends DataIO {
 		jo.addProperty("outline_text", MainBCU.outlineText);
 		jo.addProperty("highlight_text", MainBCU.highlightText);
 		jo.addProperty("borderless", MainBCU.borderless);
+		jo.addProperty("bg_previews", MainBCU.bgPreviews);
+		jo.addProperty("castle_previews", MainBCU.castlePreviews);
 		jo.addProperty("author", MainBCU.author);
 		jo.addProperty("rowlayout", CommonStatic.getConfig().twoRow);
 		jo.addProperty("backup_file", CommonStatic.getConfig().backupFile == null ? "None" : CommonStatic.getConfig().backupFile);

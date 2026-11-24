@@ -36,6 +36,7 @@ public class BGEditPage extends Page {
 	private static final long serialVersionUID = 1L;
 
 	private final JBTN back = new JBTN(0, "back");
+	private final JCB preview = new JCB(MainLocale.PAGE, "previews");
 	private final JList<Background> jlst = new JList<>();
 	private final JScrollPane jspst = new JScrollPane(jlst);
 	private final JLabel jl = new OutlineText.Label("");
@@ -76,6 +77,8 @@ public class BGEditPage extends Page {
 
 	@Override
 	protected void renew() {
+		preview.setSelected(MainBCU.bgPreviews);
+		applyPreviews();
 		if (bvp != null) {
 			bgr = bvp.getSelected();
 			if (bgr != null) {
@@ -100,6 +103,7 @@ public class BGEditPage extends Page {
 		setBounds(0, 0, x, y);
 
 		set(back, x, y, 0, 0, 200, 50);
+		set(preview, x, y, 250, 0, 350, 50);
 		set(jspst, x, y, 50, 100, 300, 1000);
 		set(addc, x, y, 400, 100, 200, 50);
 		set(impc, x, y, 400, 200, 200, 50);
@@ -282,6 +286,13 @@ public class BGEditPage extends Page {
 	private void ini() {
 		setupBackgroundGallery();
 		add(back);
+		add(preview);
+		preview.setSelected(MainBCU.bgPreviews);
+		preview.setToolTipText(get(MainLocale.PAGE, "previewstip"));
+		preview.addActionListener(e -> {
+			MainBCU.bgPreviews = preview.isSelected();
+			applyPreviews();
+		});
 		add(jspst);
 		add(jl);
 		add(addc);
@@ -445,12 +456,24 @@ public class BGEditPage extends Page {
 		return thumbnail;
 	}
 
+	// Switches the list between the preview gallery and a plain text list
+	private void applyPreviews() {
+		if (MainBCU.bgPreviews) {
+			jlst.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+			jlst.setVisibleRowCount(0);
+			jlst.setFixedCellWidth(150);
+			jlst.setFixedCellHeight(100);
+		} else {
+			jlst.setLayoutOrientation(JList.VERTICAL);
+			jlst.setVisibleRowCount(8);
+			jlst.setFixedCellWidth(-1);
+			jlst.setFixedCellHeight(-1);
+		}
+		jlst.revalidate();
+		jlst.repaint();
+	}
 	private void setupBackgroundGallery() {
-		jlst.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-		jlst.setVisibleRowCount(0);
-		// Approximate dimensions of each thumbnail entry.
-		jlst.setFixedCellWidth(150);
-		jlst.setFixedCellHeight(100);
+		applyPreviews();
 		DefaultListCellRenderer renderer = new DefaultListCellRenderer();
 		jlst.setCellRenderer((list, bg, index, isSelected, cellHasFocus) -> {
 			JLabel label = (JLabel) renderer.getListCellRendererComponent(
@@ -458,10 +481,17 @@ public class BGEditPage extends Page {
 			);
 			if (bg != null) {
 				label.setText(bg.id.toString());
-				label.setHorizontalTextPosition(JLabel.CENTER);
-				label.setVerticalTextPosition(JLabel.BOTTOM);
-				label.setHorizontalAlignment(JLabel.CENTER);
-				label.setIcon(getThumbnail(bg));
+				if (MainBCU.bgPreviews) {
+					label.setHorizontalTextPosition(JLabel.CENTER);
+					label.setVerticalTextPosition(JLabel.BOTTOM);
+					label.setHorizontalAlignment(JLabel.CENTER);
+					label.setIcon(getThumbnail(bg));
+				} else {
+					label.setIcon(null);
+					label.setHorizontalTextPosition(JLabel.TRAILING);
+					label.setVerticalTextPosition(JLabel.CENTER);
+					label.setHorizontalAlignment(JLabel.LEADING);
+				}
 			}
 			return label;
 		});

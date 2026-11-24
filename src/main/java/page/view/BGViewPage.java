@@ -18,12 +18,16 @@ import java.util.Vector;
 import java.util.HashMap;
 import java.util.Map;
 import utilpc.OutlineText;
+import main.MainBCU;
+import page.JCB;
+import page.MainLocale;
 
 public class BGViewPage extends Page implements SupPage<Background> {
 
 	private static final long serialVersionUID = 1L;
 
 	private final JBTN back = new JBTN(0, "back");
+	private final JCB preview = new JCB(MainLocale.PAGE, "previews");
 	private final JBTN find = new JBTN(0, "stage");
 	private final JList<Background> jlst = new JList<>();
 	private final JScrollPane jspst = new JScrollPane(jlst);
@@ -62,10 +66,17 @@ public class BGViewPage extends Page implements SupPage<Background> {
 	}
 
 	@Override
+	protected void renew() {
+		preview.setSelected(MainBCU.bgPreviews);
+		applyPreviews();
+	}
+
+	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 
 		set(back, x, y, 0, 0, 200, 50); //back button
+		set(preview, x, y, 500, 0, 350, 50);
 		set(find, x, y, 250, 00, 200, 50); //find stage button
 		set(jspst, x, y, 50, 100, 525, 1100); //list
 		set(jl, x, y, 650, 100, 1600, 1100); // preview
@@ -124,11 +135,26 @@ public class BGViewPage extends Page implements SupPage<Background> {
 		return thumbnail;
 	}
 
+	// Switches the list between the preview gallery and a plain text list
+	private void applyPreviews() {
+		if (MainBCU.bgPreviews) {
+			jlst.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+			jlst.setVisibleRowCount(0);
+			jlst.setFixedCellWidth(200);
+			jlst.setFixedCellHeight(125);
+		} else {
+			jlst.setLayoutOrientation(JList.VERTICAL);
+			jlst.setVisibleRowCount(8);
+			jlst.setFixedCellWidth(-1);
+			jlst.setFixedCellHeight(-1);
+		}
+
+		jlst.revalidate();
+		jlst.repaint();
+	}
+
 	private void setupBackgroundGallery() {
-		jlst.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-		jlst.setVisibleRowCount(0);
-		jlst.setFixedCellWidth(200);
-		jlst.setFixedCellHeight(125);
+		applyPreviews();
 
 		DefaultListCellRenderer renderer = new DefaultListCellRenderer();
 
@@ -138,10 +164,17 @@ public class BGViewPage extends Page implements SupPage<Background> {
 			);
 			if (bg != null) {
 				label.setText(bg.getID().toString());
-				label.setHorizontalTextPosition(JLabel.CENTER);
-				label.setVerticalTextPosition(JLabel.BOTTOM);
-				label.setHorizontalAlignment(JLabel.CENTER);
-				label.setIcon(getThumbnail(bg));
+				if (MainBCU.bgPreviews) {
+					label.setHorizontalTextPosition(JLabel.CENTER);
+					label.setVerticalTextPosition(JLabel.BOTTOM);
+					label.setHorizontalAlignment(JLabel.CENTER);
+					label.setIcon(getThumbnail(bg));
+				} else {
+					label.setIcon(null);
+					label.setHorizontalTextPosition(JLabel.TRAILING);
+					label.setVerticalTextPosition(JLabel.CENTER);
+					label.setHorizontalAlignment(JLabel.LEADING);
+				}
 			}
 			return label;
 		});
@@ -150,6 +183,13 @@ public class BGViewPage extends Page implements SupPage<Background> {
 	private void ini() {
 		setupBackgroundGallery();
 		add(back);
+		add(preview);
+		preview.setSelected(MainBCU.bgPreviews);
+		preview.setToolTipText(get(MainLocale.PAGE, "previewstip"));
+		preview.addActionListener(e -> {
+			MainBCU.bgPreviews = preview.isSelected();
+			applyPreviews();
+		});
 		add(jspst);
 		add(jl);
 		add(find);

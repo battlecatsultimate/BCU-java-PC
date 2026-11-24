@@ -310,6 +310,7 @@ public class MainBCU {
 	public static boolean preload = false, trueRun = true, loaded = false, USE_JOGL = false;
 	public static boolean light = true, nimbus = false, seconds = false, buttonSound = false;
 	public static boolean customBG = false, outlineText = false, highlightText = false, borderless = false;
+	public static boolean bgPreviews = true, castlePreviews = true;
 	public static boolean searchPerKey = false, clickWithinDragWindow = false;
 	public static String author = "";
 	public static ImageBuilder<BufferedImage> builder;

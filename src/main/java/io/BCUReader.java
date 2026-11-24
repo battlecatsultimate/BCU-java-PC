@@ -96,6 +96,12 @@ public class BCUReader extends DataIO {
 				if(jo.has("custom_bg")) {
 					MainBCU.customBG = jo.get("custom_bg").getAsBoolean();
 				}
+				if(jo.has("bg_previews")) {
+					MainBCU.bgPreviews = jo.get("bg_previews").getAsBoolean();
+				}
+				if(jo.has("castle_previews")) {
+					MainBCU.castlePreviews = jo.get("castle_previews").getAsBoolean();
+				}
 				if(jo.has("borderless")) {
 					MainBCU.borderless = jo.get("borderless").getAsBoolean();
 				}
