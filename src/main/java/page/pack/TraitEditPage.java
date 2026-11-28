@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import utilpc.OutlineText;
 
 public class TraitEditPage extends Page {
 
@@ -32,7 +33,7 @@ public class TraitEditPage extends Page {
     private final TraitList jlct = new TraitList(true);
     private final JScrollPane jspct = new JScrollPane(jlct);
 
-    private final JLabel jl = new JLabel();
+    private final JLabel jl = new OutlineText.Label("");
 
     private final JBTN back = new JBTN(MainLocale.PAGE, "back");
     private final JBTN addct = new JBTN(MainLocale.PAGE, "add");

@@ -23,6 +23,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
+import utilpc.OutlineText;
 
 public abstract class AbViewPage extends Page {
 
@@ -42,7 +43,7 @@ public abstract class AbViewPage extends Page {
 	private final JBTN png = new JBTN(MainLocale.PAGE, "png");
 	protected final JBTN camres = new JBTN(MainLocale.PAGE, "rescam");
 	protected final JTG larges = new JTG(MainLocale.PAGE, "larges");
-	private final JLabel jlsc = new JLabel(MainLocale.getLoc(MainLocale.PAGE, "zoom"));
+	private final JLabel jlsc = new OutlineText.Label(MainLocale.getLoc(MainLocale.PAGE, "zoom"));
 	private final JTF jtfs = new JTF();
 
 	protected final ViewBox vb;
@@ -137,6 +138,7 @@ public abstract class AbViewPage extends Page {
 		jst.setPaintTicks(true);
 		jst.setMajorTickSpacing(100);
 		jst.setMinorTickSpacing(25);
+		OutlineText.outlineLabels(jst);
 		jst.setValue(Timer.p * 100 / 33);
 		jtl.setEnabled(false);
 		jtl.setPaintTicks(true);
@@ -252,6 +254,7 @@ public abstract class AbViewPage extends Page {
 
 			jtl.setLabelTable(labels);
 		}
+		OutlineText.outlineLabels(jtl);
 	}
 
 	@Override

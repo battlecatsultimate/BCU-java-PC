@@ -19,6 +19,8 @@ import javax.swing.*;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
+import common.util.lang.MultiLangCont;
+
 public class SoulEditPage extends Page {
 
     private static final long serialVersionUID = 1L;
@@ -100,7 +102,7 @@ public class SoulEditPage extends Page {
         w += 450;
 
         set(lau, x, y, w, 150, 200, 50);
-        set(jcbm, x, y, w + 200, 150, 300, 50);
+        set(jcbm, x, y, w + 200, 150, 600, 50);
         set(lla, x, y, w, 250, 200, 50);
         set(jbla, x, y, w + 200, 250, 200, 50);
         set(jlay, x, y, w + 200, 300, 200, 50);
@@ -265,6 +267,26 @@ public class SoulEditPage extends Page {
 
         jls.setCellRenderer(new SoulLCR());
         jld.setCellRenderer(new AnimLCR());
+        jcbm.setRenderer((list, music, index, isSelected, cellHasFocus) -> {
+            DefaultListCellRenderer renderer = new DefaultListCellRenderer();
+
+            JLabel label = (JLabel) renderer.getListCellRendererComponent(
+                    list, music, index, isSelected, cellHasFocus
+            );
+
+            if (music == null) {
+                label.setText(Page.get(0, "none"));
+            } else if (music.id != null &&
+                    Identifier.DEF.equals(music.id.pack)) {
+
+                String name = MultiLangCont.getStatic().MUSNAME.getCont(music.id.id);
+
+                if (name != null && !name.isEmpty())
+                    label.setText(music + " - " + name);
+            }
+
+            return label;
+        });
 
         setPack(pack);
         addListeners();

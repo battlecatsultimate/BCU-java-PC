@@ -1,5 +1,6 @@
 package page.info.edit;
 
+import common.CommonStatic;
 import common.util.Data;
 import common.util.Data.Proc;
 import common.util.lang.Formatter;
@@ -81,7 +82,7 @@ public abstract class ProcTable extends Page {
 				Data.P_IMUSLOW, Data.P_IMUWAVE, Data.P_IMUWEAK, Data.P_IMUWARP, Data.P_IMUCURSE,
 				Data.P_IMUSEAL, Data.P_IMUMOVING, Data.P_IMUARMOR, Data.P_IMUPOI, Data.P_IMUPOIATK, Data.P_IMUVOLC,
 				Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_BARRIER, Data.P_DEMONSHIELD, Data.P_DEATHSURGE, Data.P_BSTHUNT,
-				Data.P_SPIRIT, Data.P_IMUBLAST, Data.P_IMUDELAY, Data.P_IMULETH
+				Data.P_SPIRIT, Data.P_IMUBLAST, Data.P_IMUDELAY, Data.P_IMULETH, Data.P_CDDEC
 		}; //Procs for units
 		private static final int[] EINDS = { Data.P_STRONG, Data.P_SPEEDUP, Data.P_LETHAL, Data.P_BURROW, Data.P_REVIVE, Data.P_HPREGEN, Data.P_CRITI,
 				Data.P_COUNTER, Data.P_IMUATK, Data.P_DMGCUT, Data.P_DMGCAP, Data.P_IMUKB, Data.P_IMUSTOP,
@@ -157,7 +158,7 @@ public abstract class ProcTable extends Page {
 	}
 
 	private void ini() {
-		Formatter.Context ctx = new Formatter.Context(!isUnit, MainBCU.seconds, new double[]{1.0, 1.0});
+		Formatter.Context ctx = new Formatter.Context(!isUnit, MainBCU.seconds, new double[]{1.0, 1.0}, CommonStatic.getConfig().lang);
 		for (int i = 0; i < group.length; i++) {
 			group[i] = new SwingEditor.SwingEG(inds[i], editable, () -> getFront().callBack(null), ctx);
 			add(group[i].jlm);

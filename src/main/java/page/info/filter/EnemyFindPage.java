@@ -7,13 +7,14 @@ import page.*;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import utilpc.OutlineText;
 
 public class EnemyFindPage extends Page implements SupPage<AbEnemy> {
 
 	private static final long serialVersionUID = 1L;
 
 	private final JBTN back = new JBTN(0, "back");
-	private final JLabel source = new JLabel("Source of enemy icon: DB");
+	private final JLabel source = new OutlineText.Label("Source of enemy icon: DB");
 	private final JTG show = new JTG(0, "showf");
 	private final EnemyListTable elt = new EnemyListTable(this);
 	private final EnemyFilterBox efb;

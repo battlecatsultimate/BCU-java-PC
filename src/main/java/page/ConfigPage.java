@@ -14,6 +14,8 @@ import main.Opts;
 import main.Timer;
 import page.support.ColorPicker;
 import page.view.ViewBox;
+import utilpc.BGImage;
+import utilpc.OutlineText;
 import utilpc.Interpret;
 import utilpc.Theme;
 
@@ -89,6 +91,9 @@ public class ConfigPage extends Page {
 	private final JTG dyna = new JTG(MainLocale.PAGE, "dynamic");
 	private final JCB reallv = new JCB(MainLocale.PAGE, "reallv");
 	private final JCB jcdrag = new JCB(MainLocale.PAGE, "dragcomp");
+	private final JCB custbg = new JCB(MainLocale.PAGE, "custombg");
+	private final JCB outltx = new JCB(MainLocale.PAGE, "outlinetext");
+	private final JCB hltx = new JCB(MainLocale.PAGE, "highlighttext");
 
 	private final JL comv = new JL(Page.get(MainLocale.PAGE, "CORE Ver: ") + AssetLoader.CORE_VER);
 
@@ -187,6 +192,9 @@ public class ConfigPage extends Page {
 		set(rlpk, x, y, 1225, 775, 400, 50);
 		set(vcol, x, y, 1225, 850, 400, 50);
 		set(vres, x, y, 1225, 925, 400, 50);
+		set(custbg, x, y, 1225, 1000, 400, 50);
+		set(outltx, x, y, 1225, 1075, 400, 50);
+		set(hltx, x, y, 1225, 1150, 400, 50);
 
 		set(jlla, x, y, 1750, 100, 300, 50);
 		set(jsps, x, y, 1750, 150, 300, 300);
@@ -347,23 +355,8 @@ public class ConfigPage extends Page {
 		});
 
 		theme.setLnr((b) -> {
-			MainBCU.light = !MainBCU.light;
-
-			if (MainBCU.light) {
-				theme.setText(MainLocale.getLoc(MainLocale.PAGE, "themel"));
-				Theme.LIGHT.setTheme();
-				Page.BGCOLOR = new Color(255, 255, 255);
-				setBackground(BGCOLOR);
-				SwingUtilities.updateComponentTreeUI(this);
-				theme.setToolTipText(MainLocale.getLoc(MainLocale.PAGE, "themel"));
-			} else {
-				theme.setText(MainLocale.getLoc(MainLocale.PAGE, "themed"));
-				Theme.DARK.setTheme();
-				Page.BGCOLOR = new Color(40, 40, 40);
-				setBackground(BGCOLOR);
-				SwingUtilities.updateComponentTreeUI(this);
-				theme.setToolTipText(MainLocale.getLoc(MainLocale.PAGE, "themed"));
-			}
+			MainFrame.setLightTheme(!MainBCU.light);
+			syncTheme();
 		});
 
 		row.addActionListener(a -> {
@@ -417,6 +410,32 @@ public class ConfigPage extends Page {
 		shake.addActionListener(c -> CommonStatic.getConfig().shake = shake.isSelected());
 		reallv.addActionListener(c -> CommonStatic.getConfig().realLevel = reallv.isSelected());
 		jcdrag.addActionListener(c -> MainBCU.clickWithinDragWindow = jcdrag.isSelected());
+		// the two text styles can't be combined, enabling one disables the other
+		outltx.addActionListener(c -> {
+			MainBCU.outlineText = outltx.isSelected();
+
+			if (MainBCU.outlineText) {
+				MainBCU.highlightText = false;
+				hltx.setSelected(false);
+			}
+
+			repaint();
+		});
+		hltx.addActionListener(c -> {
+			MainBCU.highlightText = hltx.isSelected();
+
+			if (MainBCU.highlightText) {
+				MainBCU.outlineText = false;
+				outltx.setSelected(false);
+			}
+
+			repaint();
+		});
+		custbg.addActionListener(c -> {
+			MainBCU.customBG = custbg.isSelected();
+			BGImage.reset();
+			repaint();
+		});
 
 		tole.setLnr(c -> {
 			MainBCU.searchTolerance = Math.max(0, CommonStatic.parseIntN(tole.getText()));
@@ -485,6 +504,9 @@ public class ConfigPage extends Page {
 		add(shake);
 		add(reallv);
 		add(jcdrag);
+		add(custbg);
+		add(outltx);
+		add(hltx);
 		add(tole);
 		add(dyna);
 		add(jtol);
@@ -542,6 +564,15 @@ public class ConfigPage extends Page {
 		reallv.setToolTipText(get(MainLocale.PAGE, "reallvtip"));
 		jcdrag.setSelected(MainBCU.clickWithinDragWindow);
 		jcdrag.setToolTipText(get(MainLocale.PAGE, "dragcomptip"));
+		custbg.setSelected(MainBCU.customBG);
+		custbg.setEnabled(MainBCU.nimbus);
+		custbg.setToolTipText(get(MainLocale.PAGE, "custombgtip"));
+		outltx.setSelected(MainBCU.outlineText);
+		outltx.setEnabled(MainBCU.nimbus);
+		outltx.setToolTipText(get(MainLocale.PAGE, "outlinetexttip"));
+		hltx.setSelected(MainBCU.highlightText);
+		hltx.setEnabled(MainBCU.nimbus);
+		hltx.setToolTipText(get(MainLocale.PAGE, "highlighttexttip"));
 		dyna.setSelected(MainBCU.useDynamic);
 		tole.setEnabled(!MainBCU.useDynamic);
 		jls.setCellRenderer(new DefaultListCellRenderer() {
@@ -567,11 +598,35 @@ public class ConfigPage extends Page {
 		});
 	}
 
+	private boolean shownLight = MainBCU.light;
+
+	private void syncTheme() {
+		shownLight = MainBCU.light;
+
+		String key = MainBCU.light ? "themel" : "themed";
+
+		theme.setText(MainLocale.getLoc(MainLocale.PAGE, key));
+		theme.setToolTipText(MainLocale.getLoc(MainLocale.PAGE, key));
+	}
+
+	// the theme and background can also be changed from the menu bar while this page is open
+	@Override
+	public synchronized void onTimer(int t) {
+		super.onTimer(t);
+
+		if (custbg.isSelected() != MainBCU.customBG)
+			custbg.setSelected(MainBCU.customBG);
+
+		if (shownLight != MainBCU.light)
+			syncTheme();
+	}
+
 	private void set(JSlider sl) {
 		add(sl);
 		sl.setMajorTickSpacing(10);
 		sl.setMinorTickSpacing(5);
 		sl.setPaintTicks(true);
 		sl.setPaintLabels(true);
+		OutlineText.outlineLabels(sl);
 	}
 }

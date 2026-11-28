@@ -300,7 +300,7 @@ public class MainBCU {
 		}
 	}
 
-	public static final int ver = 50809;
+	public static final int ver = 50810;
 	public static final boolean isPrerelease = false;
 	private static final DecimalFormat df = new DecimalFormat("#.##");
 
@@ -309,6 +309,8 @@ public class MainBCU {
 	public static final boolean WRITE = !new File("./.idea").exists();
 	public static boolean preload = false, trueRun = true, loaded = false, USE_JOGL = false;
 	public static boolean light = true, nimbus = false, seconds = false, buttonSound = false;
+	public static boolean customBG = false, outlineText = false, highlightText = false, borderless = false;
+	public static boolean bgPreviews = true, castlePreviews = true;
 	public static boolean searchPerKey = false, clickWithinDragWindow = false;
 	public static String author = "";
 	public static ImageBuilder<BufferedImage> builder;

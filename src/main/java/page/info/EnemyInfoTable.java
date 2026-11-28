@@ -69,7 +69,7 @@ public class EnemyInfoTable extends Page {
 		proc = new JLabel[ls.size()];
 		for (int i = 0; i < ls.size(); i++) {
 			Interpret.ProcDisplay disp = ls.get(i);
-			add(proc[i] = new JLabel(disp.toString()));
+			add(proc[i] = Interpret.newLabel(disp.toString()));
 			proc[i].setBorder(BorderFactory.createEtchedBorder());
 			proc[i].setIcon(UtilPC.getScaledIcon(disp.getIcon(), 40, 40));
 		}

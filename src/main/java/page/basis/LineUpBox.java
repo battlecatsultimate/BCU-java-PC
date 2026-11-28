@@ -56,6 +56,8 @@ public class LineUpBox extends Canvas {
 		if (bimg == null)
 			return;
 		FakeGraphics gra = new FG2D(bimg.getGraphics());
+		// bimg is null while the page is being built (setLimit runs before the lineup is set), so this has to stay below that check
+		boolean[][] overLimit = StageLimit.lineupOverLimit(lim, blu.lu.fs);
 		for (int i = 0; i < 3; i++)
 			for (int j = 0; j < 5; j++) {
 				Form f = getForm(i, j);
@@ -80,7 +82,7 @@ public class LineUpBox extends Canvas {
 						gra.drawImage(slot[2].getImg(), baseX, 100 * i);
 				if (sf == null || sf != f || relative == null) {
 					EForm ef = i != 2 ? blu.lu.efs[i][j] : new EForm(f, blu.lu.getLv(f));
-					if (lim != null && ((lim.line == 1 && i == 1) || lim.unusable(ef.du, price))) {
+					if (lim != null && ((lim.line == 1 && i == 1) || lim.unusable(ef.du, price) || (i != 2 && overLimit[i][j]))) {
 						gra.colRect(baseX, 100 * i, img.getImg().getWidth(), img.getImg().getHeight(), 255, 0, 0, 100);
 						Res.getCost(-1, false,
 							new SymCoord(gra, 1, baseX, 100 * i + img.getImg().getHeight(), 2));

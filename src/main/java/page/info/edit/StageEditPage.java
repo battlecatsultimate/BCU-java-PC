@@ -77,6 +77,8 @@ public class StageEditPage extends Page {
 	private final LimitTable linf;
 	private final StageLimitTable sinf;
 	private final JScrollPane jssl;
+	private final FeverEditTable finf;
+	private final JScrollPane jsff;
 
 	private final MapColc mc;
 	private final String pack;
@@ -96,6 +98,8 @@ public class StageEditPage extends Page {
 		linf = new LimitTable(this, pac);
 		sinf = new StageLimitTable(this, pac);
 		jssl = new JScrollPane(sinf);
+		finf = new FeverEditTable(this);
+		jsff = new JScrollPane(finf);
 		jlsm.setListData(mc, mc.maps);
 		efp = new AbEnemyFindPage(getThis(), pac.desc.id, pac.desc.dependency.toArray(new String[0]));
 		ini();
@@ -167,12 +171,20 @@ public class StageEditPage extends Page {
 			set(hinf, x, y, 900, 50, 1400, 200);
 			set(linf, x, y, 900, 250, 1400, 150);
 			set(jssl, x, y, 900, 50, 0, 0);
+			set(jsff, x, y, 900, 50, 0, 0);
 			subY = 300;
 		} else if (headEdit == 1) {
 			set(hinf, x, y, 900, 50, 0, 0);
 			set(linf, x, y, 900, 50, 0, 0);
 			set(jssl, x, y, 900, 50, 1400, 500);
+			set(jsff, x, y, 900, 50, 0, 0);
 			subY = 450;
+		} else if (headEdit == 2) {
+			set(hinf, x, y, 900, 50, 0, 0);
+			set(linf, x, y, 900, 50, 0, 0);
+			set(jssl, x, y, 900, 50, 0, 0);
+			set(jsff, x, y, 900, 50, 1400, 350);
+			subY = 300;
 		}
 
 		set(addl, x, y, 900, subY + 100, 200, 50);
@@ -204,6 +216,11 @@ public class StageEditPage extends Page {
 		jt.setRowHeight(size(x, y, 50));
 		sinf.resized(x, y);
 		sinf.setPreferredSize(size(x, y, sinf.getPWidth(), sinf.getPHeight()).toDimension());
+		finf.resized(x, y);
+		finf.setPreferredSize(size(x, y, finf.getPWidth(), finf.getPHeight()).toDimension());
+		jsff.getHorizontalScrollBar().setUnitIncrement(25);
+		jsff.getVerticalScrollBar().setUnitIncrement(25);
+		jsff.revalidate();
 		jssl.getHorizontalScrollBar().setUnitIncrement(25);
 		jssl.getVerticalScrollBar().setUnitIncrement(25);
 		jssl.revalidate();
@@ -357,8 +374,9 @@ public class StageEditPage extends Page {
 		rems.setLnr(jlst::deleteItem);
 
 		data.setLnr(x -> {
-			headEdit = (headEdit + 1) % 2;
+			headEdit = (headEdit + 1) % 3;
 			data.setText(MainLocale.PAGE, "head" + headEdit);
+			finf.setData(stage);
 			needResize = true;
 		});
 	}
@@ -402,6 +420,7 @@ public class StageEditPage extends Page {
 		add(hinf);
 		add(linf);
 		add(jssl);
+		add(jsff);
 		add(strt);
 		add(jspsm);
 		add(jspst);
@@ -425,6 +444,7 @@ public class StageEditPage extends Page {
 		jle.setCellRenderer(new AnimLCR());
 		enam.setHint("Search enemy");
 		assignSubPage(sinf);
+		assignSubPage(finf);
 		addListeners$0();
 		addListeners$1();
 		addListeners$2();
@@ -523,6 +543,7 @@ public class StageEditPage extends Page {
 		hinf.setData(st);
 		linf.setLimit(st != null ? st.lim : null, st != null && st.trail);
 		sinf.setData(st);
+		finf.setData(st);
 		jt.setData(st);
 		strt.setEnabled(st != null);
 		recd.setEnabled(st != null);

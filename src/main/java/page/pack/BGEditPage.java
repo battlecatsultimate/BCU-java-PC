@@ -26,15 +26,20 @@ import java.io.IOException;
 import java.util.Vector;
 import java.util.stream.Collectors;
 
+import java.util.HashMap;
+import java.util.Map;
+import utilpc.OutlineText;
+
 @SuppressWarnings({"ResultOfMethodCallIgnored", "ForLoopReplaceableByForEach"})
 public class BGEditPage extends Page {
 
 	private static final long serialVersionUID = 1L;
 
 	private final JBTN back = new JBTN(0, "back");
+	private final JCB preview = new JCB(MainLocale.PAGE, "previews");
 	private final JList<Background> jlst = new JList<>();
 	private final JScrollPane jspst = new JScrollPane(jlst);
-	private final JLabel jl = new JLabel();
+	private final JLabel jl = new OutlineText.Label("");
 
 	private final JBTN addc = new JBTN(0, "add");
 	private final JBTN remc = new JBTN(0, "rem");
@@ -50,6 +55,8 @@ public class BGEditPage extends Page {
 	private final JTF[] os = new JTF[3];
 	private final JComboBox<Integer> eff = new JComboBox<>();
 	private final JBTN reset = new JBTN(MainLocale.PAGE, "reset");
+
+	private final Map<Background, ImageIcon> thumbnailCache = new HashMap<>();
 
 	private final UserPack pack;
 	private BGViewPage bvp;
@@ -70,6 +77,8 @@ public class BGEditPage extends Page {
 
 	@Override
 	protected void renew() {
+		preview.setSelected(MainBCU.bgPreviews);
+		applyPreviews();
 		if (bvp != null) {
 			bgr = bvp.getSelected();
 			if (bgr != null) {
@@ -94,6 +103,7 @@ public class BGEditPage extends Page {
 		setBounds(0, 0, x, y);
 
 		set(back, x, y, 0, 0, 200, 50);
+		set(preview, x, y, 250, 0, 350, 50);
 		set(jspst, x, y, 50, 100, 300, 1000);
 		set(addc, x, y, 400, 100, 200, 50);
 		set(impc, x, y, 400, 200, 200, 50);
@@ -164,6 +174,7 @@ public class BGEditPage extends Page {
 			bgr.top = top.isSelected();
 			bgr.ic = 1;
 			bgr.load();
+			refreshThumbnail();
 		});
 
 		for (int i = 0; i < 4; i++) {
@@ -177,6 +188,7 @@ public class BGEditPage extends Page {
 					if (inp.length == 3)
 						bgr.cs[I] = new int[] { inp[0] & 255, inp[1] & 255, inp[2] & 255 };
 					setCSText(I);
+					refreshThumbnail();
 
 				}
 
@@ -201,6 +213,7 @@ public class BGEditPage extends Page {
 					}
 
 					setOSText(I, I % 3 == 2);
+					refreshThumbnail();
 				}
 			});
 		}
@@ -232,6 +245,7 @@ public class BGEditPage extends Page {
 					os[i].setEnabled(false);
 				}
 			}
+			refreshThumbnail();
 		});
 
 		reset.setLnr(e -> {
@@ -270,7 +284,15 @@ public class BGEditPage extends Page {
 	}
 
 	private void ini() {
+		setupBackgroundGallery();
 		add(back);
+		add(preview);
+		preview.setSelected(MainBCU.bgPreviews);
+		preview.setToolTipText(get(MainLocale.PAGE, "previewstip"));
+		preview.addActionListener(e -> {
+			MainBCU.bgPreviews = preview.isSelected();
+			applyPreviews();
+		});
 		add(jspst);
 		add(jl);
 		add(addc);
@@ -414,7 +436,76 @@ public class BGEditPage extends Page {
 		}
 	}
 
+	private ImageIcon getThumbnail(Background bg) {
+		// Reuse an existing thumbnail if it has already been generated.
+		ImageIcon cached = thumbnailCache.get(bg);
+		if (cached != null)
+			return cached;
+		// Remember whether the background was already loaded.
+		boolean wasLoaded = bg.parts != null;
+		ImageIcon thumbnail;
+		try {
+			thumbnail = UtilPC.getBg(bg, 130, 75);
+		} finally {
+			// Avoid keeping newly loaded background resources in memory.
+			if (!wasLoaded && bg.parts != null)
+				bg.unload();
+		}
+		if (thumbnail != null)
+			thumbnailCache.put(bg, thumbnail);
+		return thumbnail;
+	}
+
+	// Switches the list between the preview gallery and a plain text list
+	private void applyPreviews() {
+		if (MainBCU.bgPreviews) {
+			jlst.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+			jlst.setVisibleRowCount(0);
+			jlst.setFixedCellWidth(150);
+			jlst.setFixedCellHeight(100);
+		} else {
+			jlst.setLayoutOrientation(JList.VERTICAL);
+			jlst.setVisibleRowCount(8);
+			jlst.setFixedCellWidth(-1);
+			jlst.setFixedCellHeight(-1);
+		}
+		jlst.revalidate();
+		jlst.repaint();
+	}
+	private void setupBackgroundGallery() {
+		applyPreviews();
+		DefaultListCellRenderer renderer = new DefaultListCellRenderer();
+		jlst.setCellRenderer((list, bg, index, isSelected, cellHasFocus) -> {
+			JLabel label = (JLabel) renderer.getListCellRendererComponent(
+					list, bg, index, isSelected, cellHasFocus
+			);
+			if (bg != null) {
+				label.setText(bg.id.toString());
+				if (MainBCU.bgPreviews) {
+					label.setHorizontalTextPosition(JLabel.CENTER);
+					label.setVerticalTextPosition(JLabel.BOTTOM);
+					label.setHorizontalAlignment(JLabel.CENTER);
+					label.setIcon(getThumbnail(bg));
+				} else {
+					label.setIcon(null);
+					label.setHorizontalTextPosition(JLabel.TRAILING);
+					label.setVerticalTextPosition(JLabel.CENTER);
+					label.setHorizontalAlignment(JLabel.LEADING);
+				}
+			}
+			return label;
+		});
+	}
+
+	private void refreshThumbnail() {
+		if (bgr == null)
+			return;
+		thumbnailCache.remove(bgr);
+		jlst.repaint();
+	}
+
 	private void setList(Background bcgr) {
+		thumbnailCache.clear();
 		bgr = bcgr;
 		int ind = jlst.getSelectedIndex();
 		Background[] arr = pack.bgs.toArray();

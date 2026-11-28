@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
+import utilpc.OutlineText;
 
 public class MaAnimEditPage extends Page implements AbEditPage {
 
@@ -61,10 +62,10 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 	private final JBTN sort = new JBTN(0, "sort");
 	private final JBTN camres = new JBTN(0, "rescam");
 	private final JBTN zomres = new JBTN(0, "reszom");
-	private final JLabel inft = new JLabel();
-	private final JLabel inff = new JLabel();
-	private final JLabel infv = new JLabel();
-	private final JLabel infm = new JLabel();
+	private final JLabel inft = new OutlineText.Label("");
+	private final JLabel inff = new OutlineText.Label("");
+	private final JLabel infv = new OutlineText.Label("");
+	private final JLabel infm = new OutlineText.Label("");
 	private final JTG lmul = new JTG("Set speed for selected");
 	private final JTF tmul = new JTF();
 	private final EditHead aep;
@@ -734,6 +735,7 @@ public class MaAnimEditPage extends Page implements AbEditPage {
 
 				jtl.setLabelTable(labels);
 			}
+			OutlineText.outlineLabels(jtl);
 		});
 	}
 

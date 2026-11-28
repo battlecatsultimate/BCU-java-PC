@@ -93,6 +93,24 @@ public class BCUReader extends DataIO {
 				BattleInfoPage.DEF_LARGE = jo.get("large_screen").getAsBoolean();
 				MainBCU.nimbus = jo.get("style_nimbus").getAsBoolean();
 				MainBCU.light = !MainBCU.nimbus || jo.get("style_light").getAsBoolean();
+				if(jo.has("custom_bg")) {
+					MainBCU.customBG = jo.get("custom_bg").getAsBoolean();
+				}
+				if(jo.has("bg_previews")) {
+					MainBCU.bgPreviews = jo.get("bg_previews").getAsBoolean();
+				}
+				if(jo.has("castle_previews")) {
+					MainBCU.castlePreviews = jo.get("castle_previews").getAsBoolean();
+				}
+				if(jo.has("borderless")) {
+					MainBCU.borderless = jo.get("borderless").getAsBoolean();
+				}
+				if(jo.has("highlight_text")) {
+					MainBCU.highlightText = jo.get("highlight_text").getAsBoolean();
+				}
+				if(jo.has("outline_text")) {
+					MainBCU.outlineText = jo.get("outline_text").getAsBoolean();
+				}
 				if(jo.has("author")) {
 					MainBCU.author = jo.get("author").getAsString();
 				}
@@ -332,7 +350,7 @@ public class BCUReader extends DataIO {
 							}
 							if (nl.equals("EnemyExplanation.txt")) {
 								Queue<String> qs = readLines(fl);
-								if(qs != null)
+								if (qs != null)
 									for (String str : qs) {
 										String[] strs = str.trim().split("\t");
 										Enemy e = UserProfile.getBCData().enemies.get(CommonStatic.parseIntN(strs[0]));
@@ -342,6 +360,34 @@ public class BCUReader extends DataIO {
 									}
 								continue;
 							}
+
+							if (nl.equals("MusicName.txt")) {
+								Queue<String> musicLines = readLines(fl);
+
+								if (musicLines != null) {
+									for (String line : musicLines) {
+										int separator = line.indexOf(" - ");
+
+										if (separator < 0)
+											continue;
+
+										String idStr = line.substring(0, separator).trim();
+										String name = line.substring(separator + 3).trim();
+
+										if (!CommonStatic.isInteger(idStr) || name.isEmpty())
+											continue;
+
+										MultiLangCont.getStatic().MUSNAME.put(
+												locale,
+												Integer.parseInt(idStr),
+												name
+										);
+									}
+								}
+
+								continue;
+							}
+
 							if (!nl.endsWith(".properties"))
 								continue;
 							MainLocale ml = new MainLocale(nl.split("\\.")[0] + "_" + ni);

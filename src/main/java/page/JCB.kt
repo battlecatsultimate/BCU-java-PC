@@ -1,6 +1,9 @@
 package page
 
 import common.util.lang.LocaleCenter
+import utilpc.OutlineText
+import java.awt.Graphics
+import java.util.function.Consumer
 import javax.swing.BorderFactory
 import javax.swing.JCheckBox
 
@@ -23,6 +26,11 @@ class JCB() : JCheckBox(), LocComp {
 
     override fun getLSC(): LocSubComp {
         return lsc
+    }
+
+    override fun paintComponent(g: Graphics) {
+        if (!OutlineText.paintCheck(this, g, Consumer { super.paintComponent(it) }))
+            super.paintComponent(g)
     }
 
     companion object {

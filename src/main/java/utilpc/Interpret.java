@@ -21,6 +21,7 @@ import common.util.stage.info.StageInfo;
 import common.util.unit.*;
 import io.BCJSON;
 import main.MainBCU;
+import page.JL;
 import page.MainLocale;
 import page.Page;
 
@@ -136,7 +137,7 @@ public class Interpret extends Data {
             Data.P_COUNTER, Data.P_IMUATK, Data.P_DMGCUT, Data.P_DMGCAP, Data.P_IMUKB, Data.P_IMUSTOP, Data.P_IMUSLOW, Data.P_IMUWAVE,
             Data.P_IMUWEAK, Data.P_IMUWARP, Data.P_IMUCURSE, Data.P_IMUSEAL, Data.P_IMUMOVING, Data.P_IMUARMOR, Data.P_IMUPOI, Data.P_IMUPOIATK,
             Data.P_IMUVOLC, Data.P_IMUSPEED, Data.P_IMUSUMMON, Data.P_DEATHSURGE, Data.P_SPIRIT, Data.P_BLAST, Data.P_IMUBLAST,
-            Data.P_DELAY, Data.P_IMUDELAY, Data.P_LETHARGY };
+            Data.P_DELAY, Data.P_IMUDELAY, Data.P_LETHARGY, Data.P_CDDEC };
 
     private static final DecimalFormat df;
     public static String[] lvl = new String[] { "Sm", "M", "L", "XL", "XXL", "EX" };
@@ -380,7 +381,7 @@ public class Interpret extends Data {
 
     public static List<ProcDisplay> getProc(MaskEntity du, double[] magnification) {
         boolean isEnemy = du instanceof MaskEnemy;
-        Formatter.Context ctx = new Formatter.Context(isEnemy, MainBCU.seconds, magnification);
+        Formatter.Context ctx = new Formatter.Context(isEnemy, MainBCU.seconds, magnification, CommonStatic.getConfig().lang);
         final boolean common = !(du instanceof CustomEntity) || ((CustomEntity) du).common;
 
         List<ProcDisplay> l = new ArrayList<>();
@@ -975,20 +976,28 @@ public class Interpret extends Data {
         return Double.parseDouble(df.format(number));
     }
 
+    // A label with the usual etched border, whose text can be outlined (see OutlineText), instead of a plain JLabel
+    public static JL newLabel(String text) {
+        JL label = new JL();
+
+        label.setText(text);
+
+        return label;
+    }
+
+
     public static void setUnderline(JLabel label) {
         label.addMouseListener(new MouseAdapter() {
-            String text;
-
             @Override
             public void mouseClicked(MouseEvent e) {
                 JLabel j = (JLabel) e.getComponent();
-
-                if (text == null || !j.getText().equals("<html><u>" + text + "</u></html>")) {
-                    text = j.getText();
-                    j.setText("<html><u>" + j.getText() + "</u></html>");
-                } else {
-                    j.setText(text);
-                }
+                Font f = j.getFont();
+                Map<java.awt.font.TextAttribute, Object> attrs = new HashMap<>(f.getAttributes());
+                if (java.awt.font.TextAttribute.UNDERLINE_ON.equals(attrs.get(java.awt.font.TextAttribute.UNDERLINE)))
+                    attrs.put(java.awt.font.TextAttribute.UNDERLINE, -1);
+                else
+                    attrs.put(java.awt.font.TextAttribute.UNDERLINE, java.awt.font.TextAttribute.UNDERLINE_ON);
+                j.setFont(f.deriveFont(attrs));
             }
         });
 
@@ -1032,6 +1041,7 @@ public class Interpret extends Data {
         ans.append("<br>Cooldown multipliers: ").append(Arrays.toString(lim.cooldownMultiplier));
         ans.append("<br>Cost multipliers: ").append(Arrays.toString(lim.costMultiplier));
         ans.append("<br>Rarity Limits: ").append(Arrays.toString(lim.rarityDeployLimit));
+        ans.append("<br>Lineup Rarity Limits: ").append(Arrays.toString(lim.rarityLineupLimit));
         ans.append("<br>Enemy speed: ");
         if (lim.enemySpeedOverride > -1) {
             ans.append(lim.enemySpeedOverrideMode.getPre()).append(lim.enemySpeedOverride).append(lim.enemySpeedOverrideMode.getPost());

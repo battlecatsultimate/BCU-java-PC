@@ -2,6 +2,8 @@ package page
 
 import common.util.lang.LocaleCenter
 import javax.swing.BorderFactory
+import utilpc.OutlineText
+import java.awt.Graphics
 import javax.swing.JLabel
 
 class JL() : JLabel(), LocComp {
@@ -23,6 +25,11 @@ class JL() : JLabel(), LocComp {
 
     override fun getLSC(): LocSubComp {
         return lsc
+    }
+
+    override fun paintComponent(g: Graphics) {
+        if (!OutlineText.paint(this, g))
+            super.paintComponent(g)
     }
 
     companion object {

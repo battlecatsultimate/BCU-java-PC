@@ -3,11 +3,12 @@ package page;
 import common.CommonStatic;
 
 import javax.swing.*;
+import utilpc.OutlineText;
 
 public class SavePage extends Page {
     private static final long serialVersionUID = 1L;
 
-    private final JLabel save = new JLabel(Page.get(MainLocale.PAGE, "savepro"));
+    private final JLabel save = new OutlineText.Label(Page.get(MainLocale.PAGE, "savepro"));
     private boolean[] saveOpts = new boolean[]{true, false};
 
     protected SavePage() {

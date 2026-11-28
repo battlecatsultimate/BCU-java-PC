@@ -31,6 +31,7 @@ import java.util.Vector;
 import java.util.stream.Collectors;
 
 import static common.battle.BasisSet.current;
+import utilpc.OutlineText;
 
 public class BasisPage extends LubCont {
 
@@ -54,7 +55,7 @@ public class BasisPage extends LubCont {
 	private final JTF cjtf = new JTF();
 	private final JTF ujtf = new JTF();
 	private final JBTN lvorb = new JBTN(0, "orb");
-	private final JLabel pcoin = new JLabel();
+	private final JLabel pcoin = new OutlineText.Label("");
 	private final Vector<BasisSet> vbs = new Vector<>(BasisSet.list());
 	private final ReorderList<BasisSet> jlbs = new ReorderList<>(vbs);
 	private final JScrollPane jspbs = new JScrollPane(jlbs);

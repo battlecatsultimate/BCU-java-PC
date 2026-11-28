@@ -23,6 +23,7 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import utilpc.OutlineText;
 
 public class DIYViewPage extends AbViewPage implements AbEditPage {
 
@@ -40,7 +41,7 @@ public class DIYViewPage extends AbViewPage implements AbEditPage {
 	private final JTG ics = new JTG(0, "icon");
 	private final JBTN icc = new JBTN(0, "confirm");
 	private final JComboBox<String> jcb = new JComboBox<>(icos);
-	private final JLabel uni = new JLabel();
+	private final JLabel uni = new OutlineText.Label("");
 	private final IconBox ib;
 
 	public DIYViewPage(Page p) {

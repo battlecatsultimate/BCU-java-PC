@@ -16,6 +16,7 @@ import javax.swing.*;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Vector;
+import utilpc.OutlineText;
 
 public class SoulViewPage extends AbViewPage {
 
@@ -23,7 +24,7 @@ public class SoulViewPage extends AbViewPage {
 
 	private final JList<Soul> jlu = new JList<>();
 	private final JScrollPane jspu = new JScrollPane(jlu);
-	private final JLabel source = new JLabel("Source of enemy icon: DB");
+	private final JLabel source = new OutlineText.Label("Source of enemy icon: DB");
 
 	public SoulViewPage(Page p, Soul s) {
 		this(p, s.getID().pack);

@@ -1,6 +1,7 @@
 package page;
 
 import main.MainBCU;
+import utilpc.BGImage;
 import utilpc.PP;
 
 import javax.swing.*;
@@ -86,6 +87,11 @@ public abstract class Page extends JPanel implements RetFunc {
 			accumulateJTable(cls.getSuperclass());
 	}
 
+	@Override
+	protected void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		BGImage.paint(g, this);
+	}
 	@Override
 	public Component add(Component c) {
 		if (c instanceof CustomComp) {
@@ -298,6 +304,9 @@ public abstract class Page extends JPanel implements RetFunc {
 
 	public synchronized void onTimer(int t) {
 
+	}
+
+	protected void themeChanged() {
 	}
 
 	protected void windowActivated() {

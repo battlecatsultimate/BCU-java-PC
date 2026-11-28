@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import common.util.lang.MultiLangCont;
+
 public class MusicPage extends Page implements SupPage<Music> {
 
 	private static final long serialVersionUID = 1L;
@@ -64,10 +66,11 @@ public class MusicPage extends Page implements SupPage<Music> {
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 
-		set(back, x, y, 0, 0, 200, 50);
-		set(jsp, x, y, 50, 100, 300, 800);
-		set(strt, x, y, 400, 100, 200, 50);
-		set(find, x, y, 400, 200, 200, 50);
+		set(back, x, y, 0, 0, 200, 50); //back
+		set(jsp, x, y, 50, 200, 1000, 1000); // music list
+		set(strt, x, y, 50, 100, 200, 50); // start music
+		set(find, x, y, 550, 100, 200, 50); // find stage
+		set(stop, x, y, 300, 100, 200, 50); // stop music
 	}
 
 	@Override
@@ -93,14 +96,39 @@ public class MusicPage extends Page implements SupPage<Music> {
 
 			changePanel(new StageFilterPage(this, jlf.getSelectedValue().getStages()));
 		});
+		stop.addActionListener(arg0 -> {
+			BCMusic.stopAll();
+		});
 	}
 
+	private final JBTN stop = new JBTN(0, "stop");
+
 	private void ini() {
+		DefaultListCellRenderer renderer = new DefaultListCellRenderer();
+
+		jlf.setCellRenderer((list, music, index, isSelected, cellHasFocus) -> {
+			JLabel label = (JLabel) renderer.getListCellRendererComponent(
+					list, music, index, isSelected, cellHasFocus
+			);
+
+			if (music != null && music.id != null &&
+					Identifier.DEF.equals(music.id.pack)) {
+
+				String name = MultiLangCont.getStatic().MUSNAME.getCont(music.id.id);
+
+				if (name != null && !name.isEmpty())
+					label.setText(music + " - " + name);
+			}
+
+			return label;
+		});
+
 		add(back);
 		add(strt);
 		add(jsp);
 		add(find);
 		addListeners();
+		add(stop);
 	}
 
 	@Override

@@ -12,6 +12,7 @@ import page.basis.BasisPage;
 import page.info.StageViewPage;
 
 import javax.swing.*;
+import utilpc.OutlineText;
 
 public abstract class AbRecdPage extends Page {
 
@@ -25,7 +26,7 @@ public abstract class AbRecdPage extends Page {
 	private final JTF seed = new JTF();
 	private final JTG larg = new JTG(0, "larges");
 	private final JBTN imgs = new JBTN(-1, "PNG");
-	private final JLabel len = new JLabel();
+	private final JLabel len = new OutlineText.Label("");
 
 	private final JL ista = new JL();
 	private final JL imap = new JL();

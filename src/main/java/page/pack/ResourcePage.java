@@ -18,6 +18,7 @@ import javax.swing.tree.TreePath;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Queue;
+import utilpc.OutlineText;
 
 public class ResourcePage extends Page {
 
@@ -25,7 +26,7 @@ public class ResourcePage extends Page {
 
 	private final JBTN back = new JBTN(0, "back");
 	private final JBTN rept = new JBTN(0, "extract");
-	private final JLabel jln = new JLabel();
+	private final JLabel jln = new OutlineText.Label("");
 	private final JTextPane jt = new JTextPane();
 	private final JTree jls = new JTree();
 	private final JScrollPane jsps = new JScrollPane(jls);

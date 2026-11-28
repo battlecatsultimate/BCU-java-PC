@@ -22,11 +22,16 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import java.awt.Image;
+import java.util.HashMap;
+import java.util.Map;
+
 public class CastleEditPage extends Page {
 
 	private static final long serialVersionUID = 1L;
 
 	private final JBTN back = new JBTN(0, "back");
+	private final JCB preview = new JCB(MainLocale.PAGE, "previews");
 	private final JList<CastleImg> jlst = new JList<>();
 	private final JScrollPane jspst = new JScrollPane(jlst);
 	private final JL jl = new JL();
@@ -41,6 +46,7 @@ public class CastleEditPage extends Page {
 
 	private final UserPack pack;
 	private final CastleList cas;
+	private final Map<CastleImg, ImageIcon> thumbnailCache = new HashMap<>();
 
 	private boolean changing = false;
 
@@ -58,10 +64,17 @@ public class CastleEditPage extends Page {
 	}
 
 	@Override
+	protected void renew() {
+		preview.setSelected(MainBCU.castlePreviews);
+		applyPreviews();
+	}
+
+	@Override
 	protected void resized(int x, int y) {
 		setBounds(0, 0, x, y);
 
 		set(back, x, y, 0, 0, 200, 50);
+		set(preview, x, y, 250, 0, 350, 50);
 		set(jspst, x, y, 50, 100, 300, 1000);
 		set(addc, x, y, 400, 100, 200, 50);
 		set(impc, x, y, 400, 200, 200, 50);
@@ -172,8 +185,87 @@ public class CastleEditPage extends Page {
 		changing = false;
 	}
 
+	private ImageIcon getThumbnail(CastleImg castle) {
+		// Reuse an existing thumbnail if it has already been generated.
+		if (thumbnailCache.containsKey(castle))
+			return thumbnailCache.get(castle);
+		ImageIcon original = UtilPC.getIcon(castle.img);
+		if (original == null)
+			return null;
+		int originalWidth = original.getIconWidth();
+		int originalHeight = original.getIconHeight();
+		if (originalWidth <= 0 || originalHeight <= 0)
+			return null;
+		// Calculate a scale factor that preserves the aspect ratio.
+		double scale = Math.min(
+				100.0 / originalWidth,
+				75.0 / originalHeight
+		);
+		int width = Math.max(1, (int) (originalWidth * scale));
+		int height = Math.max(1, (int) (originalHeight * scale));
+		Image scaled = original.getImage().getScaledInstance(
+				width,
+				height,
+				Image.SCALE_SMOOTH
+		);
+		ImageIcon thumbnail = new ImageIcon(scaled);
+		thumbnailCache.put(castle, thumbnail);
+		return thumbnail;
+	}
+
+	// Switches the list between the preview gallery and a plain text list
+	private void applyPreviews() {
+		if (MainBCU.castlePreviews) {
+			jlst.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+			jlst.setVisibleRowCount(0);
+			jlst.setFixedCellWidth(130);
+			jlst.setFixedCellHeight(110);
+		} else {
+			jlst.setLayoutOrientation(JList.VERTICAL);
+			jlst.setVisibleRowCount(8);
+			jlst.setFixedCellWidth(-1);
+			jlst.setFixedCellHeight(-1);
+		}
+
+		jlst.revalidate();
+		jlst.repaint();
+	}
+
+	private void setupCastleGallery() {
+		applyPreviews();
+		DefaultListCellRenderer renderer = new DefaultListCellRenderer();
+		jlst.setCellRenderer((list, castle, index, isSelected, cellHasFocus) -> {
+			JLabel label = (JLabel) renderer.getListCellRendererComponent(
+					list, castle, index, isSelected, cellHasFocus
+			);
+			if (castle != null) {
+				label.setText(castle.getID().toString());
+				if (MainBCU.castlePreviews) {
+					label.setHorizontalTextPosition(JLabel.CENTER);
+					label.setVerticalTextPosition(JLabel.BOTTOM);
+					label.setHorizontalAlignment(JLabel.CENTER);
+					label.setIcon(getThumbnail(castle));
+				} else {
+					label.setIcon(null);
+					label.setHorizontalTextPosition(JLabel.TRAILING);
+					label.setVerticalTextPosition(JLabel.CENTER);
+					label.setHorizontalAlignment(JLabel.LEADING);
+				}
+			}
+			return label;
+		});
+	}
+
 	private void ini() {
+		setupCastleGallery();
 		add(back);
+		add(preview);
+		preview.setSelected(MainBCU.castlePreviews);
+		preview.setToolTipText(get(MainLocale.PAGE, "previewstip"));
+		preview.addActionListener(e -> {
+			MainBCU.castlePreviews = preview.isSelected();
+			applyPreviews();
+		});
 		add(jspst);
 		add(jl);
 		add(sp);
@@ -190,6 +282,7 @@ public class CastleEditPage extends Page {
 	}
 
 	private void setList() {
+		thumbnailCache.clear();
 		int ind = jlst.getSelectedIndex();
 		jlst.setListData(cas.toArray());
 		if (ind < 0)
