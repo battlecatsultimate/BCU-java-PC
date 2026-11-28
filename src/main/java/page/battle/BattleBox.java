@@ -4,6 +4,7 @@ import common.CommonStatic;
 import common.CommonStatic.BCAuxAssets;
 import common.CommonStatic.BattleConst;
 import common.battle.BattleField;
+import common.battle.FeverMode;
 import common.battle.StageBasis;
 import common.battle.attack.ContAb;
 import common.battle.attack.ContWaveAb;
@@ -179,7 +180,7 @@ public interface BattleBox {
 				drawBGOverlay(g, midY);
 			}
 
-			Res.drawFeverEffect(g, sb.fever, box.getWidth(), box.getHeight());
+			drawFeverEffect(g, sb.fever, box.getWidth(), box.getHeight());
 
 			drawBtm(g);
 			drawTop(g);
@@ -1067,7 +1068,94 @@ public interface BattleBox {
 			if (bf.sb.maxCatSpawns != -1)
 				drawMaxSpawn(g);
 
-			Res.drawFeverHud(g, sb.fever, w, box.getHeight(), sb.time);
+			drawFeverHud(g, sb.fever, w, box.getHeight(), sb.time);
+		}
+		// fever HUD rendering
+		private static final float FEVER_SCREEN_H = 640f;
+		private static final float FEVER_POINTS_W = 268f, FEVER_POINTS_H = 42f, FEVER_POINTS_Y = 13.5f;
+		private static final float FEVER_POINTS_CAP_L = 20f, FEVER_POINTS_CAP_R = 21f;
+		private static final float FEVER_ICON_X = 14f, FEVER_ICON_Y = 5f;
+		private static final float FEVER_DIGIT_RIGHT = 234f, FEVER_DIGIT_Y = 6.5f, FEVER_DIGIT_ADVANCE = 17f;
+		private static final float FEVER_GAUGE_W = 308f, FEVER_GAUGE_H = 46f, FEVER_GAUGE_Y = 73.5f;
+		private static final float FEVER_GAUGE_INNER_X = 7f, FEVER_GAUGE_INNER_Y = 7f, FEVER_GAUGE_INNER_W = 294f, FEVER_GAUGE_INNER_H = 32f;
+		// the full gauge switches between its two looks every this many frames
+		private static final int FEVER_FLASH_FRAMES = 4;
+
+		/**
+		 * Draws the fever dojo points and the fever gauge on the top middle of the screen
+		 * @param w     width of the screen
+		 * @param h     height of the screen
+		 * @param frame current frame of the battle
+		 */
+		private void drawFeverHud(FakeGraphics g, FeverMode fever, int w, int h, int frame) {
+			if (fever == null || !fever.isEnabled() || !aux.hasFeverHud())
+				return;
+			float s = h / FEVER_SCREEN_H;
+			drawFeverPoints(g, fever.points, w, s);
+			drawFeverGauge(g, fever, w, s, frame);
+		}
+
+		/**
+		 * Draws the effect that is shown when fever mode starts
+		 */
+		private void drawFeverEffect(FakeGraphics g, FeverMode fever, int w, int h) {
+			if (fever == null || fever.effect == null)
+				return;
+			FakeTransform at = g.getTransform();
+			P pos = P.newP(w / 2f, h / 2f);
+			fever.effect.draw(g, pos, h / FEVER_SCREEN_H);
+			P.delete(pos);
+			g.setTransform(at);
+			g.delete(at);
+		}
+
+		private void drawFeverPoints(FakeGraphics g, int points, int w, float s) {
+			float x = (w - FEVER_POINTS_W * s) / 2f;
+			float y = FEVER_POINTS_Y * s;
+			// both ends and the middle are placed on rounded edges, so there are no seams between them
+			int x0 = Math.round(x);
+			int x1 = Math.round(x + FEVER_POINTS_CAP_L * s);
+			int x2 = Math.round(x + (FEVER_POINTS_W - FEVER_POINTS_CAP_R) * s);
+			int x3 = Math.round(x + FEVER_POINTS_W * s);
+			int y0 = Math.round(y);
+			int y1 = Math.round(y + FEVER_POINTS_H * s);
+			g.drawImage(aux.feverPoints[0].getImg(), x0, y0, x1 - x0, y1 - y0);
+			g.drawImage(aux.feverPoints[1].getImg(), x1, y0, x2 - x1, y1 - y0);
+			g.drawImage(aux.feverPoints[2].getImg(), x2, y0, x3 - x2, y1 - y0);
+			FakeImage icon = aux.feverPoints[3].getImg();
+			g.drawImage(icon, x + FEVER_ICON_X * s, y + FEVER_ICON_Y * s, icon.getWidth() * s, icon.getHeight() * s);
+			int[] val = getDigits(points);
+			float dw = aux.num[1][0].getImg().getWidth();
+			float dx = x + (FEVER_DIGIT_RIGHT - (val.length - 1) * FEVER_DIGIT_ADVANCE - dw) * s;
+			for (int i = 0; i < val.length; i++) {
+				FakeImage digit = aux.num[1][val[i]].getImg();
+				g.drawImage(digit, dx + i * FEVER_DIGIT_ADVANCE * s, y + FEVER_DIGIT_Y * s, digit.getWidth() * s, digit.getHeight() * s);
+			}
+		}
+
+		private void drawFeverGauge(FakeGraphics g, FeverMode fever, int w, float s, int frame) {
+			boolean flash = fever.isActive() && (frame / FEVER_FLASH_FRAMES) % 2 == 1;
+			float x = (w - FEVER_GAUGE_W * s) / 2f;
+			float y = FEVER_GAUGE_Y * s;
+			// the full gauge is drawn first, the part that isn't filled is covered with the empty bar
+			g.drawImage(aux.feverGauge[flash ? 3 : 2].getImg(), x, y, FEVER_GAUGE_W * s, FEVER_GAUGE_H * s);
+			float innerW = FEVER_GAUGE_INNER_W * s;
+			float filled = Math.round(fever.getGauge() * innerW);
+			if (filled < innerW)
+				g.drawImage(aux.feverGauge[1].getImg(), x + FEVER_GAUGE_INNER_X * s + filled, y + FEVER_GAUGE_INNER_Y * s, innerW - filled, FEVER_GAUGE_INNER_H * s);
+			FakeImage label = aux.feverGauge[0].getImg();
+			float lw = label.getWidth() * s, lh = label.getHeight() * s;
+			g.drawImage(label, x + (FEVER_GAUGE_W * s - lw) / 2f, y + (FEVER_GAUGE_H * s - lh) / 2f, lw, lh);
+		}
+
+		private int[] getDigits(long value) {
+			String str = Long.toString(Math.max(0, value));
+			int[] ans = new int[str.length()];
+
+			for (int i = 0; i < ans.length; i++)
+				ans[i] = str.charAt(i) - '0';
+
+			return ans;
 		}
 
 		private void drawTime(FakeGraphics g, float nameheight) {
